@@ -1,16 +1,5 @@
 {
   "name": "kiksaus/kikcms",
-  "description": "KikCMS build on Phalcon",
-  "homepage": "http://kiksaus.nl",
-  "authors": [
-    {
-      "name": "Kiksaus",
-      "email": "info@kiksaus.nl"
-    }
-  ],
-  "keywords": [
-    "cms"
-  ],
   "require": {
     "swiftmailer/swiftmailer": "5.4.*"
   },
