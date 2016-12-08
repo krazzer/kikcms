@@ -1,7 +1,6 @@
 {
   "name": "kiksaus/kikcms",
   "description": "KikCMS build on Phalcon",
-  "version": "0.1",
   "homepage": "http://kiksaus.nl",
   "authors": [
     {
@@ -17,7 +16,7 @@
   },
   "autoload": {
     "psr-0": {
-      "": "src/"
+      "KikCMS": "src"
     }
   }
 }
