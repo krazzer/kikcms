@@ -6,6 +6,6 @@ class CmsPoc
 {
     public function test()
     {
-        echo 'If you read this your site succesfully uses the KikCMS CmsPoc test!';
+        return 'KikCMS Poc v2!';
     }
 }
