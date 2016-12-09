@@ -1,0 +1,54 @@
+<?php
+
+namespace KikCMS\Services;
+
+use KikCMS\Config\KikCMSConfig;
+use Phalcon\Config;
+use Phalcon\Di\Injectable;
+
+/**
+ * @property Config $config
+ * @property MailService $mailService
+ */
+class DeployService extends Injectable
+{
+    public function deploy()
+    {
+        // You can only deploy on production!
+        if($this->config->application->env != KikCMSConfig::ENV_PROD){
+            return;
+        }
+
+        // Execute deployment command
+        exec('cd ' . dirname($_SERVER['DOCUMENT_ROOT']) . ' && git pull && composer update', $output);
+
+        // Notify Webmaster
+        $this->sendMessage($output);
+    }
+
+    /**
+     * Send
+     *
+     * @param array $output
+     */
+    private function sendMessage($output)
+    {
+        $hostName = $_SERVER['HTTP_HOST'];
+        $subject  = 'Deploy op ' . $hostName;
+
+        $webmasterEmail = $this->config->application->webmasterEmail;
+        $webmasterName  = $this->config->application->webmasterName;
+
+        $body = 'Deploy uitgevoerd op ' . $hostName . ' gaf de volgende output:' . PHP_EOL . PHP_EOL .
+            implode(PHP_EOL, $output);
+
+        $message = $this->mailService->createMessage()
+            ->setSubject($subject)
+            ->setFrom(['info@kiksaus.nl' => 'Webserver'])
+            ->setTo([$webmasterEmail => $webmasterName])
+            ->setBody($body);
+
+        // Send the message
+        $this->mailService->send($message);
+    }
+}
