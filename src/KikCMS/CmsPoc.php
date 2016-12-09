@@ -6,6 +6,6 @@ class CmsPoc
 {
     public function test()
     {
-        return 'KikCMS Poc v8!';
+        return 'KikCMS Poc v8.';
     }
 }
