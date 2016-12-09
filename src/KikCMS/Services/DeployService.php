@@ -47,9 +47,8 @@ class DeployService extends Injectable
         $webmasterEmail = $this->config->application->webmasterEmail;
         $webmasterName  = $this->config->application->webmasterName;
 
-        $output  = array_map("trim", $output);
         $subject = 'Deploy op ' . $hostName;
-        $body    = 'Deploy uitgevoerd op ' . $hostName . " gaf de volgende output:\n\n" . implode(PHP_EOL, $output);
+        $body    = 'Deploy uitgevoerd op ' . $hostName . " gaf de volgende output:\n\n" . $this->flattenOutput($output);
 
         $message = $this->mailService->createMessage()
             ->setSubject($subject)
@@ -59,5 +58,20 @@ class DeployService extends Injectable
 
         // Send the message
         $this->mailService->send($message);
+    }
+
+    /**
+     * @param array $output
+     * @return array
+     */
+    private function flattenOutput(array $output)
+    {
+        foreach ($output as &$outputLine) {
+            $outputLine = implode(PHP_EOL, array_map('trim', explode(' ' . chr(8), $outputLine)));
+        }
+
+        implode(PHP_EOL, $output);
+
+        return $output;
     }
 }
