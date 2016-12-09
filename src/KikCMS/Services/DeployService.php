@@ -67,11 +67,19 @@ class DeployService extends Injectable
     private function flattenOutput(array $output)
     {
         foreach ($output as &$outputLine) {
-            $outputLine = implode(PHP_EOL, array_map('trim', explode(' ' . chr(8), $outputLine)));
+            $lineParts = explode(' ' . chr(8), $outputLine);
+
+            foreach ($lineParts as $i => $linePart) {
+                $linePart = trim($linePart, ' ' . chr(8));
+
+                if (empty($linePart)) {
+                    unset($lineParts[$i]);
+                }
+            }
+
+            $outputLine = implode(PHP_EOL, $lineParts);
         }
 
-        implode(PHP_EOL, $output);
-
-        return $output;
+        return implode(PHP_EOL, $output);
     }
 }

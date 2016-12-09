@@ -14,8 +14,6 @@ class DeployController extends Controller
 {
     public function indexAction()
     {
-        echo 'Attempt deploy...';
-
         $this->deployService->deploy();
     }
 }
