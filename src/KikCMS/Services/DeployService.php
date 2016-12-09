@@ -19,8 +19,10 @@ class DeployService extends Injectable
             return;
         }
 
+        $deployCommand = 'git fetch origin && git reset --hard origin/master && composer update';
+
         // Execute deployment command
-        exec('cd ' . dirname($_SERVER['DOCUMENT_ROOT']) . ' && git pull && composer update', $output);
+        exec('cd ' . dirname($_SERVER['DOCUMENT_ROOT']) . ' && ' . $deployCommand, $output);
 
         // Notify Webmaster
         $this->sendMessage($output);
