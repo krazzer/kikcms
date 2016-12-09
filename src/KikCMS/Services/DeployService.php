@@ -15,7 +15,7 @@ class DeployService extends Injectable
     public function deploy()
     {
         // You can only deploy on production!
-        if($this->config->application->env != KikCMSConfig::ENV_PROD){
+        if ($this->config->application->env != KikCMSConfig::ENV_PROD) {
             return;
         }
 
@@ -35,18 +35,21 @@ class DeployService extends Injectable
      */
     private function sendMessage($output)
     {
-        $hostName = $_SERVER['HTTP_HOST'];
-        $subject  = 'Deploy op ' . $hostName;
+        $hostName    = $_SERVER['HTTP_HOST'];
+        $serverName  = $_SERVER['SERVER_NAME'];
+        $serverEmail = $_SERVER['SERVER_ADMIN'];
 
         $webmasterEmail = $this->config->application->webmasterEmail;
         $webmasterName  = $this->config->application->webmasterName;
+
+        $subject = 'Deploy op ' . $hostName;
 
         $body = 'Deploy uitgevoerd op ' . $hostName . ' gaf de volgende output:' . PHP_EOL . PHP_EOL .
             implode(PHP_EOL, $output);
 
         $message = $this->mailService->createMessage()
             ->setSubject($subject)
-            ->setFrom(['info@kiksaus.nl' => 'Webserver'])
+            ->setFrom([$serverEmail => $serverName])
             ->setTo([$webmasterEmail => $webmasterName])
             ->setBody($body);
 
