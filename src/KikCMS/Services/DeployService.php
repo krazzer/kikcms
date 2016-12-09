@@ -46,6 +46,7 @@ class DeployService extends Injectable
 
         $message = $this->mailService->createMessage()
             ->setSubject($subject)
+            ->setFrom(['info@kiksaus.nl' => 'Webserver'])
             ->setTo([$webmasterEmail => $webmasterName])
             ->setBody($body);
 
