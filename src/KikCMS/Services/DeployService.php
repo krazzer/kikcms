@@ -19,12 +19,14 @@ class DeployService extends Injectable
             return;
         }
 
-        $rootDir = dirname($_SERVER['DOCUMENT_ROOT']);
+        $rootDir     = dirname($_SERVER['DOCUMENT_ROOT']);
+        $composerDir = $rootDir . '/../../bin/';
 
-        $composerCommand = 'php ' . $rootDir . '/../../bin/composer update';
+        $composerCommand = 'php ' . $composerDir . 'composer update';
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command
+        putenv('COMPOSER_HOME=' . $composerDir);
         exec('cd ' . $rootDir . ' && ' . $deployCommands, $output);
 
         // Notify Webmaster
@@ -45,10 +47,9 @@ class DeployService extends Injectable
         $webmasterEmail = $this->config->application->webmasterEmail;
         $webmasterName  = $this->config->application->webmasterName;
 
+        $output  = array_map("trim", $output);
         $subject = 'Deploy op ' . $hostName;
-
-        $body = 'Deploy uitgevoerd op ' . $hostName . ' gaf de volgende output:' . PHP_EOL . PHP_EOL .
-            implode(PHP_EOL, $output);
+        $body    = 'Deploy uitgevoerd op ' . $hostName . " gaf de volgende output:\n\n" . implode(PHP_EOL, $output);
 
         $message = $this->mailService->createMessage()
             ->setSubject($subject)
