@@ -1,0 +1,24 @@
+{# @var form Phalcon\Forms\Form #}
+{# @var errors array #}
+
+{{ form() }}
+
+    {% for element in form.elements %}
+        {% set hasErrors = errors[element.name] %}
+        <div class="form-group{{ hasErrors ? ' has-error has-feedback' : '' }}"
+             title="{{ hasErrors ? errors[element.name] : '' }}">
+            {% if(placeHolderAsLabel == false) %}
+                {{ form.label(element.name)|raw }}
+            {% endif %}
+            {{ form.render(element.name)|raw }}
+            {% if hasErrors %}
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="form-group">
+        {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-block'}) }}
+    </div>
+
+{{ endForm() }}

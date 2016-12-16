@@ -1,0 +1,19 @@
+{% extends 'base.twig' %}
+
+{%- block title -%}
+    Login
+{%- endblock -%}
+
+{% block cssAssets %}
+    {{ stylesheetLink('cmsassets/css/login.css') }}
+{% endblock %}
+
+{% block content %}
+    <div id="login">
+        <div class="logo">
+            <img src="/cmsassets/images/kikcms.png" />
+        </div>
+
+        {% block loginContent %}{% endblock %}
+    </div>
+{% endblock %}

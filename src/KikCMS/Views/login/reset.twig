@@ -1,0 +1,13 @@
+{% extends 'login/base.twig' %}
+
+{%- block title -%}
+    Wachtwoord resetten
+{%- endblock -%}
+
+{% block loginContent %}
+    <div id="login-form">
+        {{ form.render()|raw }}
+    </div>
+
+    <a href="{{ url('cms/login') }}">Terug naar loginscherm</a>
+{% endblock %}

@@ -1,0 +1,23 @@
+@import 'includes/variables';
+
+body{
+    background: url('/cmsassets/images/login-background.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+#login{
+    margin: 200px auto;
+    width: 450px;
+    padding: 30px;
+    background-color: $colorWhite;
+    border-radius: $defaultBorderRadius;
+    box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.05);
+
+    .logo{
+        margin-bottom: 30px;
+    }
+}
+
+.form-control{
+    border: 1px solid $lightGray;
+}

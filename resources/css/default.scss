@@ -1,0 +1,24 @@
+@import "includes/variables";
+@import "includes/mixins";
+
+html{
+    height: 100%;
+}
+
+body, table{
+    @include fontDefault();
+}
+
+a{
+    color: $colorPink;
+
+    &:hover{
+        color: $pinkDark;
+    }
+}
+
+.form-control:focus{
+    outline: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}

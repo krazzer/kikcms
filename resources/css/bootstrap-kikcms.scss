@@ -1,0 +1,31 @@
+@import "includes/variables";
+@import "includes/mixins";
+
+.btn{
+    @include fontDefault();
+}
+
+.btn-submit{
+    background-color: $colorPink;
+    border-color: $colorPink;
+    transition: all 0.3s;
+    color: $colorWhite;
+
+    &:hover{
+        color: $colorWhite;
+        background-color: $pinkDark;
+        border-color: $pinkDark;
+    }
+
+    &:active{
+        color: $colorWhite;
+        background-color: $pinkDarker;
+        border-color: $pinkDarker;
+    }
+}
+
+.form-control{
+    @include placeholderColor($lightGray);
+    border-radius: $defaultBorderRadius;
+    box-shadow: none;
+}

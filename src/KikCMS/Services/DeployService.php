@@ -12,6 +12,9 @@ use Phalcon\Di\Injectable;
  */
 class DeployService extends Injectable
 {
+    /**
+     * Initiates the deploy sequence
+     */
     public function deploy()
     {
         // You can only deploy on production!
@@ -34,7 +37,7 @@ class DeployService extends Injectable
     }
 
     /**
-     * Send
+     * Send the deploy commands' output to the webmaster
      *
      * @param array $output
      */
@@ -56,7 +59,6 @@ class DeployService extends Injectable
             ->setTo([$webmasterEmail => $webmasterName])
             ->setBody($body);
 
-        // Send the message
         $this->mailService->send($message);
     }
 
