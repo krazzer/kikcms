@@ -3,7 +3,6 @@
 namespace KikCMS\Services;
 
 use KikCMS\Config\KikCMSConfig;
-use Leafo\ScssPhp\Compiler as ScssCompiler;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
