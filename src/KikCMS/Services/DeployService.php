@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 use KikCMS\Config\KikCMSConfig;
+use Leafo\ScssPhp\Compiler as ScssCompiler;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
@@ -25,7 +26,7 @@ class DeployService extends Injectable
         $rootDir     = dirname($_SERVER['DOCUMENT_ROOT']);
         $composerDir = $rootDir . '/../../bin/';
 
-        $composerCommand = 'php ' . $composerDir . 'composer update';
+        $composerCommand = 'php ' . $composerDir . 'composer update ' . KikCMSConfig::PACKAGE_NAME;
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command

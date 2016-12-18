@@ -5,8 +5,9 @@
 
     {% for element in form.elements %}
         {% set hasErrors = errors[element.name] %}
+
         <div class="form-group{{ hasErrors ? ' has-error has-feedback' : '' }}"
-             title="{{ hasErrors ? errors[element.name] : '' }}">
+             title="{{ hasErrors ? errors[element.name]|join("\n") : '' }}">
             {% if(placeHolderAsLabel == false) %}
                 {{ form.label(element.name)|raw }}
             {% endif %}

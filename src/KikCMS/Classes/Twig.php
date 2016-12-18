@@ -31,6 +31,11 @@ class Twig extends Engine implements EngineInterface
 
         $loader = new \Twig_Loader_Filesystem($this->getView()->getViewsDir());
         $this->twig = new \Twig_Environment($loader, $options);
+
+        if($this->twig->isDebug()) {
+            $this->twig->addExtension(new \Twig_Extension_Debug());
+        }
+
         $this->registryFunctions($view, $dependencyInjector);
     }
 
@@ -67,9 +72,6 @@ class Twig extends Engine implements EngineInterface
         $options = ['is_safe' => ['html']];
 
         $functions = [
-            new \Twig_SimpleFunction('dump', function ($parameters) {
-                var_dump($parameters);
-            }, $options),
             new \Twig_SimpleFunction('content', function () use ($view) {
                 return $view->getContent();
             }, $options),

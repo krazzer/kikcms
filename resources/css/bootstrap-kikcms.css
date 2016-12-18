@@ -1,0 +1,34 @@
+/* Colors */
+/* Miscellaneous */
+.btn {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300; }
+
+.btn-submit {
+  background-color: #df137a;
+  border-color: #df137a;
+  transition: all 0.3s;
+  color: #FFFFFF; }
+  .btn-submit:hover {
+    color: #FFFFFF;
+    background-color: #c8116d;
+    border-color: #c8116d; }
+  .btn-submit:active {
+    background-color: #990d53;
+    border-color: #990d53; }
+
+.form-control {
+  border-radius: 3px;
+  box-shadow: none; }
+  .form-control::-webkit-input-placeholder {
+    color: #DDDDDD; }
+  .form-control:-moz-placeholder {
+    color: #DDDDDD;
+    opacity: 1; }
+  .form-control::-moz-placeholder {
+    color: #DDDDDD;
+    opacity: 1; }
+  .form-control:-ms-input-placeholder {
+    color: #DDDDDD; }
+
+/*# sourceMappingURL=bootstrap-kikcms.css.map */

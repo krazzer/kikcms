@@ -1,0 +1,20 @@
+/* Colors */
+/* Miscellaneous */
+html {
+  height: 100%; }
+
+body, table {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300; }
+
+a {
+  color: #df137a; }
+  a:hover {
+    color: #c8116d; }
+
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-box-shadow: none; }
+
+/*# sourceMappingURL=default.css.map */

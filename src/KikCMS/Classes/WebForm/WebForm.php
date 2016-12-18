@@ -94,21 +94,13 @@ class WebForm extends Injectable
                         $messages[] = $this->translator->tl('webform.' . $message->getType(), ['fieldName' => $formElement->getLabel()]);
                     }
 
-                    $errors[$elementName] = implode("\n", $messages);
+                    $errors[$elementName] = $messages;
 
                     $class = $formElement->getAttribute('class');
                     $class = $class ? $class . ' has-errors' : 'has-errors';
 
                     $formElement->setAttribute('class', $class);
                 }
-
-//                $messages = $this->form->getMessages();
-//
-//                foreach ($messages as $message) {
-//                    $messageString = $this->translator->tl('webform.' . $message->getType(), ['fieldName' => $message->getField()]);
-//
-//                    echo $messageString, "<br>";
-//                }
             }
         }
 
