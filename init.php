@@ -9,15 +9,12 @@ use Phalcon\Config\Adapter\Ini as ConfigIni;
 require(SITE_PATH . 'vendor/autoload.php');
 
 try {
-    $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
-    $configDev = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.ini');
-
-    $config->merge($configDev);
+    $config = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
 
     $configSiteFile    = SITE_PATH . 'app/config/config.ini';
     $configSiteDevFile = SITE_PATH . 'app/config/config.dev.ini';
 
-    if ( ! is_readable($configSiteFile)) {
+    if (!is_readable($configSiteFile)) {
         throw new Exception('No config file found! Should be present at ' . $configSiteFile);
     }
 
