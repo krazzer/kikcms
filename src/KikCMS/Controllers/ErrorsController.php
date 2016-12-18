@@ -2,14 +2,13 @@
 
 namespace KikCMS\Controllers;
 
-use ControllerBase;
+use Phalcon\Mvc\Controller;
 
-class ErrorsController extends ControllerBase
+class ErrorsController extends Controller
 {
     public function initialize()
     {
         $this->tag->setTitle('Oops!');
-        parent::initialize();
     }
 
     public function show404Action()

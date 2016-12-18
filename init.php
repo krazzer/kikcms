@@ -2,29 +2,42 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
 
+use KikCMS\Services\Services;
 use Phalcon\Mvc\Application;
 use Phalcon\Config\Adapter\Ini as ConfigIni;
-
-define('KIKCMS_PATH', __DIR__ . '/');
 
 require(SITE_PATH . 'vendor/autoload.php');
 
 try {
-    // Read the configuration
-    $config     = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
-    $siteConfig = new ConfigIni(SITE_PATH . 'app/config/config.ini');
+    $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
+    $configDev = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.ini');
 
-    $config->merge($siteConfig);
+    $config->merge($configDev);
 
-    if (is_readable(SITE_PATH . 'app/config/config.dev.ini')) {
-        $developmentConfig = new ConfigIni(SITE_PATH . 'app/config/config.dev.ini');
-        $config->merge($developmentConfig);
+    $configSiteFile    = SITE_PATH . 'app/config/config.ini';
+    $configSiteDevFile = SITE_PATH . 'app/config/config.dev.ini';
+
+    if ( ! is_readable($configSiteFile)) {
+        throw new Exception('No config file found! Should be present at ' . $configSiteFile);
     }
 
-    /**
-     * Auto-loader configuration
-     */
-    require __DIR__ . '/config/loader.php';
+    $siteConfig = new ConfigIni($configSiteFile);
+    $config->merge($siteConfig);
+
+    if (is_readable($configSiteDevFile)) {
+        $configSiteDev = new ConfigIni($configSiteDevFile);
+        $config->merge($configSiteDev);
+    }
+
+    $loader = new \Phalcon\Loader();
+
+    $loader->registerDirs([
+        SITE_PATH . $config->application->controllersDir,
+        SITE_PATH . $config->application->pluginsDir,
+        SITE_PATH . $config->application->libraryDir,
+        SITE_PATH . $config->application->modelsDir,
+        SITE_PATH . $config->application->formsDir
+    ])->register();
 
     $application = new Application(new Services($config));
 

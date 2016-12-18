@@ -1,8 +1,9 @@
 <?php
 
+namespace KikCMS\Services;
+
 use KikCMS\Classes\Translator;
-use KikCMS\Services\DeployService;
-use KikCMS\Services\MailService;
+use KikCMS\Services\Base\BaseServices;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Dispatcher;
@@ -14,7 +15,7 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Events\Manager as EventsManager;
 
-class Services extends \Base\Services
+class Services extends BaseServices
 {
     /**
      * Register router

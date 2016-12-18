@@ -3,6 +3,7 @@
 namespace KikCMS\Modules;
 
 use KikCMS\Classes\Twig;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Plugins\NotFoundPlugin;
 use KikCMS\Plugins\SecurityPlugin;
 use Phalcon\Loader;
@@ -53,13 +54,14 @@ class KikCMS implements ModuleDefinitionInterface
             $view = new View();
             $view->setViewsDir(__DIR__ . "/../Views/");
             $view->registerEngines([
-                Twig::DEFAULT_EXTENSION => function ($view, $di) {
+                Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
+                    $env   = $di->get('config')->get('application')->get('env');
+                    $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . '/cache/twig/' : false;
+
                     return new Twig($view, $di, [
-                        'cache' => false,
+                        'cache' => $cache,
                         'debug' => true,
                     ]);
-
-                    //SITE_PATH . '/cache/twig/'
                 }
             ]);
 
