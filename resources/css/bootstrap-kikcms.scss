@@ -3,6 +3,10 @@
 
 .btn{
     @include fontDefault();
+
+    &:focus, &:active, &:active:focus{
+        outline: none;
+    }
 }
 
 .btn-submit{
@@ -28,4 +32,10 @@
     @include placeholderColor($lightGray);
     border-radius: $defaultBorderRadius;
     box-shadow: none;
+}
+
+.form-control:focus, .has-error .form-control:focus{
+    outline: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
 }

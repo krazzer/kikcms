@@ -12,9 +12,4 @@ a {
   a:hover {
     color: #c8116d; }
 
-.form-control:focus {
-  outline: none;
-  box-shadow: none;
-  -webkit-box-shadow: none; }
-
 /*# sourceMappingURL=default.css.map */

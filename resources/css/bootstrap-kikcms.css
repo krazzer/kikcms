@@ -3,6 +3,8 @@
 .btn {
   font-family: 'Lato', sans-serif;
   font-weight: 300; }
+  .btn:focus, .btn:active, .btn:active:focus {
+    outline: none; }
 
 .btn-submit {
   background-color: #df137a;
@@ -14,6 +16,7 @@
     background-color: #c8116d;
     border-color: #c8116d; }
   .btn-submit:active {
+    color: #FFFFFF;
     background-color: #990d53;
     border-color: #990d53; }
 
@@ -30,5 +33,10 @@
     opacity: 1; }
   .form-control:-ms-input-placeholder {
     color: #DDDDDD; }
+
+.form-control:focus, .has-error .form-control:focus {
+  outline: none;
+  box-shadow: none;
+  -webkit-box-shadow: none; }
 
 /*# sourceMappingURL=bootstrap-kikcms.css.map */
