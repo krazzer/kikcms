@@ -1,10 +1,13 @@
 <?php
 
 use KikCMS\Services\Services;
+use Monolog\ErrorHandler;
 use Phalcon\Mvc\Application;
 use Phalcon\Config\Adapter\Ini as ConfigIni;
 
 require(SITE_PATH . 'vendor/autoload.php');
+
+$isDev = false;
 
 try {
     $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
@@ -20,7 +23,9 @@ try {
     $siteConfig = new ConfigIni($configSiteFile);
     $config->merge($siteConfig);
 
-    if (is_readable($configSiteDevFile)) {
+    $isDev = is_readable($configSiteDevFile);
+
+    if ($isDev) {
         $config->merge($configDev);
 
         $configSiteDev = new ConfigIni($configSiteDevFile);
@@ -55,10 +60,15 @@ try {
     ]);
 
     // make sure the errorHandler is initialized
+    /** @var ErrorHandler $errorHandler */
     $errorHandler = $application->errorHandler;
 
     echo $application->handle()->getContent();
 } catch (Exception $e) {
-    echo $e->getMessage() . '<br>';
-    echo '<pre>' . $e->getTraceAsString() . '</pre>';
+    if($isDev){
+        echo $e->getMessage() . '<br>';
+        echo '<pre>' . $e->getTraceAsString() . '</pre>';
+    } else {
+        $errorHandler->handleException($e);
+    }
 }
