@@ -45,6 +45,11 @@ class Services extends BaseServices
             "action"     => "index"
         ]);
 
+        $router->add("/cms/:action", [
+            "controller" => "cms",
+            "action"     => 1
+        ]);
+
         $router->add("/cms/login", [
             "controller" => "login",
             "action"     => "index"
@@ -54,6 +59,7 @@ class Services extends BaseServices
             "controller" => "login",
             "action"     => 1
         ]);
+
 
         $router->removeExtraSlashes(true);
 

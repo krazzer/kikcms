@@ -34,20 +34,39 @@ return [
     ],
 
     'login' => [
+        'logout'   => 'U bent succesvol uitgelogd',
         'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
         'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
         'reset'    => [
-            'flash'        => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
-            'error'        => 'Er is iets mis gegaan bij het versturen van de reset link.',
-            'mail'         => [
+            'flash'    => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
+            'error'    => 'Er is iets mis gegaan bij het versturen van de reset link.',
+            'mail'     => [
                 'subject'     => 'KikCMS wachtwoord reset',
                 'body'        => 'Klik op onderstaande link om uw wachtwoord (opnieuw) in te stellen.',
                 'buttonLabel' => 'Wachtwoord opnieuw instellen',
             ],
-            'password'     => [
+            'password' => [
                 'flash'     => 'Uw wachtwoord is succesvol bijgewerkt. U kunt nu inloggen.',
                 'hashError' => 'Ongeldige hash',
             ]
         ]
     ],
+
+    'menu' => [
+        'group' => [
+            'content' => 'Content',
+            'stats'   => 'Statistieken',
+            'cms'     => 'CMS',
+        ],
+        'item'  => [
+            'main-menu'     => 'Hoofmenu',
+            'media'         => 'Media',
+            'templates'     => 'Templates',
+            'menus'         => 'Menu\'s',
+            'stats'         => 'Statistieken',
+            'stats-sources' => 'Bronnen',
+            'users'         => 'Gebruikers',
+            'logout'        => 'Uitloggen',
+        ],
+    ]
 ];

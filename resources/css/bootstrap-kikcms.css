@@ -10,13 +10,13 @@
   background-color: #df137a;
   border-color: #df137a;
   transition: all 0.3s;
-  color: #FFFFFF; }
+  color: #ffffff; }
   .btn-submit:hover {
-    color: #FFFFFF;
+    color: #ffffff;
     background-color: #c8116d;
     border-color: #c8116d; }
   .btn-submit:active {
-    color: #FFFFFF;
+    color: #ffffff;
     background-color: #990d53;
     border-color: #990d53; }
 
@@ -24,15 +24,15 @@
   border-radius: 3px;
   box-shadow: none; }
   .form-control::-webkit-input-placeholder {
-    color: #DDDDDD; }
+    color: #dddddd; }
   .form-control:-moz-placeholder {
-    color: #DDDDDD;
+    color: #dddddd;
     opacity: 1; }
   .form-control::-moz-placeholder {
-    color: #DDDDDD;
+    color: #dddddd;
     opacity: 1; }
   .form-control:-ms-input-placeholder {
-    color: #DDDDDD; }
+    color: #dddddd; }
 
 .form-control:focus, .has-error .form-control:focus {
   outline: none;

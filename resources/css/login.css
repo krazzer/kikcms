@@ -8,7 +8,7 @@ body {
   margin: 200px auto;
   width: 450px;
   padding: 30px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 3px;
   box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.05); }
   #login .logo {
@@ -17,6 +17,6 @@ body {
     margin-bottom: 15px; }
 
 .form-control {
-  border: 1px solid #DDDDDD; }
+  border: 1px solid #dddddd; }
 
 /*# sourceMappingURL=login.css.map */

@@ -145,7 +145,10 @@ class Twig extends Engine implements EngineInterface
             }, $options),
             new \Twig_SimpleFunction('url', function ($route) use ($di) {
                 return $di->get("url")->get($route);
-            }, $options)
+            }, $options),
+            new \Twig_SimpleFunction('tl', function ($string) use ($di) {
+                return $di->get("translator")->tl($string);
+            }, $options),
         ];
 
         if (!empty($userFunctions)) {

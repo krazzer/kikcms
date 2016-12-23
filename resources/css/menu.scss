@@ -1,0 +1,57 @@
+@import 'includes/variables';
+
+#menu{
+    padding: 50px;
+    width: 258px;
+    height: 100%;
+    overflow: auto;
+    position: fixed;
+
+    .logo{
+        background: url('/cmsassets/images/kikcms.png');
+        width: 158px;
+        height: 37px;
+        margin-bottom: 50px;
+        display: block;
+    }
+
+    .menu-group{
+        margin-bottom: 50px;
+
+        .title {
+            padding: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: $lightGray;
+        }
+    }
+
+    .menu-item{
+        font-weight: 400;
+        display: block;
+        padding: 10px;
+        color: #000;
+        border-radius: $defaultBorderRadius;
+        line-height: 14px;
+        margin-bottom: 1px;
+
+        &.selected{
+            background-color: $colorPink;
+            color: $colorWhite;
+        }
+
+        &:hover{
+            text-decoration: none;
+
+            &:not(.selected){
+                background-color: $pinkHover;
+            }
+        }
+    }
+}
+
+#main{
+    padding: 50px 50px 50px 308px;
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,43 @@
+/* Colors */
+/* Miscellaneous */
+#menu {
+  padding: 50px;
+  width: 258px;
+  height: 100%;
+  overflow: auto;
+  position: fixed; }
+  #menu .logo {
+    background: url("/cmsassets/images/kikcms.png");
+    width: 158px;
+    height: 37px;
+    margin-bottom: 50px;
+    display: block; }
+  #menu .menu-group {
+    margin-bottom: 50px; }
+    #menu .menu-group .title {
+      padding: 10px;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: #dddddd; }
+  #menu .menu-item {
+    font-weight: 400;
+    display: block;
+    padding: 10px;
+    color: #000;
+    border-radius: 3px;
+    line-height: 14px;
+    margin-bottom: 1px; }
+    #menu .menu-item.selected {
+      background-color: #df137a;
+      color: #ffffff; }
+    #menu .menu-item:hover {
+      text-decoration: none; }
+      #menu .menu-item:hover:not(.selected) {
+        background-color: #f8e3ee; }
+
+#main {
+  padding: 50px 50px 50px 308px;
+  height: 100%;
+  width: 100%; }
+
+/*# sourceMappingURL=menu.css.map */

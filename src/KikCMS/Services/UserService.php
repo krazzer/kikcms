@@ -112,4 +112,13 @@ class UserService extends Injectable
         $this->session->set('loggedIn', true);
         $this->session->set('userId', $id);
     }
+
+    public function logout()
+    {
+        $this->session->set('loggedIn', false);
+        $this->session->set('userId', null);
+
+        $this->flash->notice($this->translator->tl('login.logout'));
+        $this->response->redirect('cms/login');
+    }
 }

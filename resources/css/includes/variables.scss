@@ -1,9 +1,13 @@
 /* Colors */
-$colorWhite: #FFFFFF;
+$colorWhite: #ffffff;
+
 $colorPink: #df137a;
 $pinkDark: darken($colorPink, 5%);
 $pinkDarker: darken($colorPink, 15%);
-$lightGray: #DDDDDD;
+$pinkHover: #f8e3ee;
+
+$lightGray: #dddddd;
+$gray: #aaaaaa;
 
 /* Miscellaneous */
 $defaultBorderRadius: 3px;

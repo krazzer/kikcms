@@ -1,0 +1,26 @@
+{% extends '@kikcms/base.twig' %}
+
+{% block cssAssets %}
+    {{ stylesheetLink('cmsassets/css/menu.css') }}
+{% endblock %}
+
+{% block content %}
+    <div id="menu">
+        <a class="logo" href="{{ url('cms') }}"></a>
+
+        {% for name, menuGroup in menuStructure %}
+            <div class="menu-group">
+                <div class="title">{{ tl('menu.group.' ~ name) }}</div>
+                {% for menuItem in menuGroup %}
+                    {% set class = menuItem|replace({'-':''}) == currentAction ? ' selected' : '' %}
+                    <a class="menu-item{{ class }}" href="{{ url('cms/' ~ menuItem) }}">
+                        {{ tl('menu.item.' ~ menuItem) }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <div id="main">
+        {% block cmsContent '' %}
+    </div>
+{% endblock %}
