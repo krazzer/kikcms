@@ -6,7 +6,7 @@
 
 {% block loginContent %}
     <div id="login-form">
-        {{ form.render()|raw }}
+        {{ form|raw }}
     </div>
 
     <a href="{{ url('cms/login') }}">Terug naar loginscherm</a>

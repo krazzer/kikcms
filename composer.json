@@ -2,7 +2,8 @@
   "name": "kiksaus/kikcms",
   "require": {
     "swiftmailer/swiftmailer": "5.4.*",
-    "twig/twig": "~1.0"
+    "twig/twig": "~1.0",
+    "monolog/monolog": "^1.22"
   },
   "autoload": {
     "psr-0": {

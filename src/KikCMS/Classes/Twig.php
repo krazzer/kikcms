@@ -30,6 +30,8 @@ class Twig extends Engine implements EngineInterface
         parent::__construct($view, $dependencyInjector);
 
         $loader = new \Twig_Loader_Filesystem($this->getView()->getViewsDir());
+        $loader->addPath($this->getView()->getViewsDir(), 'kikcms');
+
         $this->twig = new \Twig_Environment($loader, $options);
 
         if($this->twig->isDebug()) {

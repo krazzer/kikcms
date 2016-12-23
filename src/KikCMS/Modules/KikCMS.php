@@ -2,8 +2,6 @@
 
 namespace KikCMS\Modules;
 
-use KikCMS\Classes\Twig;
-use KikCMS\Config\KikCMSConfig;
 use KikCMS\Plugins\NotFoundPlugin;
 use KikCMS\Plugins\SecurityPlugin;
 use Phalcon\Loader;
@@ -11,7 +9,7 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Events\Manager as EventManager;
-use Phalcon\Mvc\View;
+use Phalcon\Text;
 
 class KikCMS implements ModuleDefinitionInterface
 {
@@ -42,30 +40,18 @@ class KikCMS implements ModuleDefinitionInterface
             $dispatcher->setDefaultNamespace("KikCMS\\Controllers");
 
             $eventsManager = new EventManager;
-            $eventsManager->attach('dispatch:beforeDispatch', new SecurityPlugin);
+            $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
             $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
+
+            // make sure dashed action names can be fetched by controller, so reset-password calls resetPasswordAction
+            $eventsManager->attach("dispatch", function($event, Dispatcher $dispatcher) {
+                $actionName = Text::camelize($dispatcher->getActionName());
+                $dispatcher->setActionName($actionName);
+            });
 
             $dispatcher->setEventsManager($eventsManager);
 
             return $dispatcher;
-        });
-
-        $di->set("view", function () {
-            $view = new View();
-            $view->setViewsDir(__DIR__ . "/../Views/");
-            $view->registerEngines([
-                Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                    $env   = $di->get('config')->get('application')->get('env');
-                    $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . '/cache/twig/' : false;
-
-                    return new Twig($view, $di, [
-                        'cache' => $cache,
-                        'debug' => true,
-                    ]);
-                }
-            ]);
-
-            return $view;
         });
     }
 }

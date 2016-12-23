@@ -7,7 +7,7 @@ use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
 /**
- * @property Config $config
+ * @property Config $applicationConfig
  * @property MailService $mailService
  */
 class DeployService extends Injectable
@@ -18,7 +18,7 @@ class DeployService extends Injectable
     public function deploy()
     {
         // You can only deploy on production!
-        if ($this->config->application->env != KikCMSConfig::ENV_PROD) {
+        if ($this->applicationConfig->env != KikCMSConfig::ENV_PROD) {
             return;
         }
 
@@ -47,8 +47,8 @@ class DeployService extends Injectable
         $serverName  = $_SERVER['SERVER_NAME'];
         $serverEmail = $_SERVER['SERVER_ADMIN'];
 
-        $webmasterEmail = $this->config->application->webmasterEmail;
-        $webmasterName  = $this->config->application->webmasterName;
+        $webmasterEmail = $this->applicationConfig->webmasterEmail;
+        $webmasterName  = $this->applicationConfig->webmasterName;
 
         $subject = 'Deploy op ' . $hostName;
         $body    = 'Deploy uitgevoerd op ' . $hostName . " gaf de volgende output:\n\n" . $this->flattenOutput($output);

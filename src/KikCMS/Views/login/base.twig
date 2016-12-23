@@ -1,3 +1,4 @@
+{# @var flash \Phalcon\Flash\Session #}
 {% extends 'base.twig' %}
 
 {%- block title -%}
@@ -14,6 +15,7 @@
             <img src="/cmsassets/images/kikcms.png" />
         </div>
 
+        {{ flash.output }}
         {% block loginContent %}{% endblock %}
     </div>
 {% endblock %}

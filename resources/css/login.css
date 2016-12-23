@@ -13,6 +13,8 @@ body {
   box-shadow: 1px 1px 4px 2px rgba(0, 0, 0, 0.05); }
   #login .logo {
     margin-bottom: 30px; }
+  #login .alert {
+    margin-bottom: 15px; }
 
 .form-control {
   border: 1px solid #DDDDDD; }

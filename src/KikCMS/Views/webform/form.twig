@@ -1,25 +1,35 @@
 {# @var form Phalcon\Forms\Form #}
-{# @var errors array #}
+{# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 
-{{ form() }}
+{{ form({name: 'form'}) }}
+
+    {% if errorContainer.hasFormErrors %}
+        <div class="alert alert-danger">
+            {% for error in errorContainer.formErrors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     {% for element in form.elements %}
-        {% set hasErrors = errors[element.name] %}
+        {% set errorMessages = errorContainer.errorsForField(element.name) %}
+        {% set hasError = errorContainer.fieldHasError(element.name) %}
 
-        <div class="form-group{{ hasErrors ? ' has-error has-feedback' : '' }}"
-             title="{{ hasErrors ? errors[element.name]|join("\n") : '' }}">
+        <div class="form-group{{ hasError ? ' has-error has-feedback' : '' }}" title="{{ errorMessages|join("\n") }}">
             {% if(placeHolderAsLabel == false) %}
                 {{ form.label(element.name)|raw }}
             {% endif %}
             {{ form.render(element.name)|raw }}
-            {% if hasErrors %}
+            {% if hasError %}
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             {% endif %}
         </div>
     {% endfor %}
 
     <div class="form-group">
-        {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-block'}) }}
+        {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-block', 'name': 'submit'}) }}
     </div>
+
+    <input type="hidden" name="formId" value="{{ formId }}">
 
 {{ endForm() }}

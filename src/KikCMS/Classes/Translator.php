@@ -9,12 +9,12 @@ class Translator
      * @param string $string
      * @param array $replaces
      *
-     * @return string
+     * @return string|array
      */
-    public function tl(string $string, $replaces = []): string
+    public function tl(string $string, $replaces = [])
     {
         $translations = include(__DIR__ . '/../../../translations/nl.php');
-        $stringParts  = explode('.', strtolower($string));
+        $stringParts  = explode('.', $string);
 
         foreach ($stringParts as $part) {
             if (array_key_exists($part, $translations)) {
@@ -25,7 +25,7 @@ class Translator
         }
 
         if (!is_string($translations)) {
-            return '';
+            return $translations;
         }
 
         $translation = $translations;

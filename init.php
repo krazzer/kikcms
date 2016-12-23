@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
 
 use KikCMS\Services\Services;
 use Phalcon\Mvc\Application;
@@ -9,7 +7,8 @@ use Phalcon\Config\Adapter\Ini as ConfigIni;
 require(SITE_PATH . 'vendor/autoload.php');
 
 try {
-    $config = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
+    $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
+    $configDev = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.ini');
 
     $configSiteFile    = SITE_PATH . 'app/config/config.ini';
     $configSiteDevFile = SITE_PATH . 'app/config/config.dev.ini';
@@ -22,6 +21,8 @@ try {
     $config->merge($siteConfig);
 
     if (is_readable($configSiteDevFile)) {
+        $config->merge($configDev);
+
         $configSiteDev = new ConfigIni($configSiteDevFile);
         $config->merge($configSiteDev);
     }
@@ -52,6 +53,9 @@ try {
             "path"      => __DIR__ . "/src/KikCMS/Modules/KikCMS.php",
         ]
     ]);
+
+    // make sure the errorHandler is initialized
+    $errorHandler = $application->errorHandler;
 
     echo $application->handle()->getContent();
 } catch (Exception $e) {

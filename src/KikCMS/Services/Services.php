@@ -2,20 +2,25 @@
 
 namespace KikCMS\Services;
 
+use KikCMS\Classes\Db\Db;
 use KikCMS\Classes\Translator;
-use KikCMS\Plugins\NotFoundPlugin;
-use KikCMS\Plugins\SecurityPlugin;
+use KikCMS\Classes\Twig;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
+use Monolog\ErrorHandler;
+use Monolog\Formatter\HtmlFormatter;
+use Monolog\Handler\NativeMailerHandler;
+use Monolog\Logger;
+use Phalcon\DiInterface;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\Dispatcher;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Mvc\Url as UrlProvider;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
-use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Validation;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 
@@ -56,84 +61,55 @@ class Services extends BaseServices
     }
 
     /**
-     * We register the events manager
-     */
-    protected function initDispatcher()
-    {
-        $eventsManager = new EventsManager;
-
-        /**
-         * Check if the user is allowed to access certain action using the SecurityPlugin
-         */
-        $eventsManager->attach('dispatch:beforeDispatch', new SecurityPlugin);
-
-        /**
-         * Handle exceptions and not-found exceptions using NotFoundPlugin
-         */
-        $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
-
-        $dispatcher = new Dispatcher;
-        $dispatcher->setEventsManager($eventsManager);
-
-        return $dispatcher;
-    }
-
-    /**
      * The URL component is used to generate all kind of urls in the application
      */
     protected function initUrl()
     {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $domainName = $_SERVER['HTTP_HOST'];
+
+        $baseUrl = $protocol . $domainName . $this->getApplicationConfig()->baseUri;
+
         $url = new UrlProvider();
-        $url->setBaseUri($this->get('config')->application->baseUri);
+        $url->setBaseUri($baseUrl);
+
         return $url;
     }
 
     protected function initView()
     {
         $view = new View();
+        $view->setViewsDir(__DIR__ . "/../Views/");
+        $view->registerEngines([
+            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
+                $env   = $di->get('config')->get('application')->get('env');
+                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . '/cache/twig/' : false;
 
-        $view->setViewsDir(SITE_PATH . $this->get('config')->application->viewsDir);
-
-        $view->registerEngines(array(
-            ".volt" => 'volt'
-        ));
+                return new Twig($view, $di, [
+                    'cache' => $cache,
+                    'debug' => true,
+                ]);
+            }
+        ]);
 
         return $view;
     }
 
     /**
-     * Setting up volt
-     *
-     * @param $view
-     * @param $di
-     *
-     * @return VoltEngine
-     */
-    protected function initSharedVolt($view, $di)
-    {
-        $volt = new VoltEngine($view, $di);
-
-        $volt->setOptions(array(
-            "compiledPath" => SITE_PATH . "cache/volt/"
-        ));
-
-        $compiler = $volt->getCompiler();
-        $compiler->addFunction('is_a', 'is_a');
-
-        return $volt;
-    }
-
-    /**
      * Database connection is created based in the parameters defined in the configuration file
+     *
+     * @return Db
      */
-    protected function initDb()
+    protected function initDb(): Db
     {
-        $config = $this->get('config')->get('database')->toArray();
+        $config = $this->getDatabaseConfig()->toArray();
 
         $dbClass = Pdo::class . '\\' . $config['adapter'];
         unset($config['adapter']);
 
-        return new $dbClass($config);
+        $databaseAdapter = new $dbClass($config);
+
+        return new Db($databaseAdapter);
     }
 
     /**
@@ -142,6 +118,39 @@ class Services extends BaseServices
     protected function initDeployService()
     {
         return new DeployService();
+    }
+
+    /**
+     * @return ErrorHandler
+     */
+    protected function initErrorHandler()
+    {
+        $webmasterEmail = $this->getApplicationConfig()->webmasterEmail;
+        $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
+
+        // initialize error handler
+        $mailHandler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail);
+        $mailHandler->setContentType('text/html');
+        $mailHandler->setFormatter(new HtmlFormatter());
+
+        $log = new Logger('errorlog');
+        $log->pushHandler($mailHandler);
+
+        $errorHandler = new ErrorHandler($log);
+
+        // mail errors instead of showing them in production
+        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD) {
+            $errorHandler->registerErrorHandler();
+            $errorHandler->registerExceptionHandler();
+            $errorHandler->registerFatalHandler();
+        } else {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'on');
+        }
+
+        //todo: show something else when errors are on production
+
+        return $errorHandler;
     }
 
     /**
@@ -167,12 +176,12 @@ class Services extends BaseServices
      */
     protected function initFlash()
     {
-        return new FlashSession(array(
+        return new FlashSession([
             'error'   => 'alert alert-danger',
             'success' => 'alert alert-success',
             'notice'  => 'alert alert-info',
             'warning' => 'alert alert-warning'
-        ));
+        ]);
     }
 
     /**
@@ -182,11 +191,11 @@ class Services extends BaseServices
      */
     protected function initMailService()
     {
-        $sendMailCommand = $this->get('config')->get('application')->get('sendmailCommand');
+        $sendMailCommand = $this->getApplicationConfig()->sendmailCommand;
         $sendMailCommand = $sendMailCommand ?: '/usr/sbin/sendmail -bs';
 
         $transport = Swift_SendmailTransport::newInstance($sendMailCommand);
-        $mailer = Swift_Mailer::newInstance($transport);
+        $mailer    = Swift_Mailer::newInstance($transport);
 
         return new MailService($mailer);
     }
@@ -197,5 +206,24 @@ class Services extends BaseServices
     protected function initTranslator()
     {
         return new Translator();
+    }
+
+    /**
+     * @return UserService
+     */
+    protected function initUserService()
+    {
+        return new UserService();
+    }
+
+    /**
+     * @return Validation
+     */
+    protected function initValidation()
+    {
+        $validation = new Validation();
+        $validation->setDefaultMessages($this->initTranslator()->tl('webform.messages'));
+
+        return $validation;
     }
 }

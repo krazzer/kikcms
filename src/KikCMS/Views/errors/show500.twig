@@ -1,0 +1,11 @@
+{% extends 'login/base.twig' %}
+
+{%- block title 'Internal Error' -%}
+
+{% block loginContent %}
+
+    <h1>Internal Error</h1>
+    <p>Something went wrong, if the error continue please contact us</p>
+    <p>{{ linkTo('index', 'Home', {'class': 'btn btn-primary'}) }}</p>
+
+{% endblock %}
