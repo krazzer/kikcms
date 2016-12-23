@@ -45,7 +45,7 @@ class KikCMS implements ModuleDefinitionInterface
 
             // make sure dashed action names can be fetched by controller, so reset-password calls resetPasswordAction
             $eventsManager->attach("dispatch", function($event, Dispatcher $dispatcher) {
-                $actionName = Text::camelize($dispatcher->getActionName());
+                $actionName = lcfirst(Text::camelize($dispatcher->getActionName()));
                 $dispatcher->setActionName($actionName);
             });
 
