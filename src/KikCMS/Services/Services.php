@@ -42,7 +42,7 @@ class Services extends BaseServices
      */
     protected function initUrl()
     {
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
+        $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
             "https://" : "http://";
 
         $domainName = $_SERVER['HTTP_HOST'];
@@ -121,9 +121,9 @@ class Services extends BaseServices
 
         // mail errors instead of showing them in production
         if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD) {
-
             // show a global error message
-            $errorMessageViewer = function(){
+            $errorMessageViewer = function () {
+                http_response_code(500);
                 echo $this->get('view')->getRender('errors', 'show500');
             };
 

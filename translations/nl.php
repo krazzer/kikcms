@@ -30,6 +30,7 @@ return [
             'Date'              => 'Het veld :label moet een geldige datum zijn',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
+            'csrf'             => 'CSRF validatie mislukt',
         ],
     ],
 

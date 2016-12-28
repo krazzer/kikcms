@@ -102,7 +102,7 @@ class WebForm extends Injectable
      */
     public function getInput(): array
     {
-        $input = $_POST;
+        $input = $this->request->getPost();
 
         unset($input['formId']);
 
@@ -121,7 +121,7 @@ class WebForm extends Injectable
         $this->initialize();
         $this->initializeFields();
 
-        if ($this->formIsSend()) {
+        if ($this->request->isPost()) {
             $errorContainer = $this->getErrors();
 
             if ($errorContainer->isEmpty()) {
@@ -139,6 +139,7 @@ class WebForm extends Injectable
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
+            'security'           => $this->security,
         ]);
     }
 
@@ -164,14 +165,6 @@ class WebForm extends Injectable
     {
         $this->sendLabel = $sendLabel;
         return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    private function formIsSend()
-    {
-        return isset($_POST['formId']) && $_POST['formId'] == $this->getFormId();
     }
 
     /**
@@ -282,6 +275,10 @@ class WebForm extends Injectable
         }
 
         $errorContainer = new ErrorContainer();
+
+        if( ! $this->security->checkToken()){
+            $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
+        }
 
         foreach ($this->form->getElements() as $formElement) {
             $elementName     = $formElement->getName();

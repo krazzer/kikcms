@@ -23,6 +23,6 @@ class ErrorsController extends Controller
 
     public function show500Action()
     {
-
+        $this->response->setStatusCode(500);
     }
 }

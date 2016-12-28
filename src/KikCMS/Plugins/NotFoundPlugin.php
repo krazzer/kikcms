@@ -2,6 +2,7 @@
 
 namespace KikCMS\Plugins;
 
+use KikCMS\Config\KikCMSConfig;
 use Phalcon\Events\Event;
 use Phalcon\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
@@ -39,6 +40,11 @@ class NotFoundPlugin extends Plugin
                     return false;
                 break;
             }
+        }
+
+        // display exceptions right away in development
+        if($this->applicationConfig->env == KikCMSConfig::ENV_DEV){
+            return true;
         }
 
         $dispatcher->forward([

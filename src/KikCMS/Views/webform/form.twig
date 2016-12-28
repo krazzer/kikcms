@@ -1,5 +1,6 @@
 {# @var form Phalcon\Forms\Form #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
+{# @var security \Phalcon\Security #}
 
 {{ form({name: 'form'}) }}
 
@@ -30,6 +31,6 @@
         {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-block', 'name': 'submit'}) }}
     </div>
 
-    <input type="hidden" name="formId" value="{{ formId }}">
+    <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 
 {{ endForm() }}
