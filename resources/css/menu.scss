@@ -6,6 +6,7 @@
     height: 100%;
     overflow: auto;
     position: fixed;
+    background-color: #fff;
 
     .logo{
         background: url('/cmsassets/images/kikcms.png');
@@ -27,7 +28,6 @@
     }
 
     .menu-item{
-        font-weight: 400;
         display: block;
         padding: 10px;
         color: #000;
@@ -54,4 +54,32 @@
     padding: 50px 50px 50px 308px;
     height: 100%;
     width: 100%;
+
+    #main-content{
+        padding-bottom: 50px;
+    }
+}
+
+.datatable table tr{
+
+    &:nth-child(even){
+        background-color: #f9f9f9;
+    }
+
+    &:hover{
+        td{
+            background-color: #eee;
+        }
+    }
+
+    &:focus{
+        td{
+            background-color: $colorPink;
+            color: $colorWhite;
+        }
+    }
+
+    td, th{
+        padding: 15px;
+    }
 }

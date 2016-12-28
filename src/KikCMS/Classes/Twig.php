@@ -24,13 +24,17 @@ class Twig extends Engine implements EngineInterface
      * @param mixed|\Phalcon\Mvc\ViewBaseInterface $view
      * @param mixed|\Phalcon\DiInterface $dependencyInjector
      * @param array $options
+     * @param array $paths
      */
-    public function __construct($view, $dependencyInjector, array $options = [])
+    public function __construct($view, $dependencyInjector, array $options = [], array $paths = [])
     {
         parent::__construct($view, $dependencyInjector);
 
         $loader = new \Twig_Loader_Filesystem($this->getView()->getViewsDir());
-        $loader->addPath($this->getView()->getViewsDir(), 'kikcms');
+
+        foreach($paths as $namespace => $path){
+            $loader->addPath($path, $namespace);
+        }
 
         $this->twig = new \Twig_Environment($loader, $options);
 

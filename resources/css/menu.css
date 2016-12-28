@@ -5,7 +5,8 @@
   width: 258px;
   height: 100%;
   overflow: auto;
-  position: fixed; }
+  position: fixed;
+  background-color: #fff; }
   #menu .logo {
     background: url("/cmsassets/images/kikcms.png");
     width: 158px;
@@ -20,7 +21,6 @@
       font-weight: bold;
       color: #dddddd; }
   #menu .menu-item {
-    font-weight: 400;
     display: block;
     padding: 10px;
     color: #000;
@@ -39,5 +39,17 @@
   padding: 50px 50px 50px 308px;
   height: 100%;
   width: 100%; }
+  #main #main-content {
+    padding-bottom: 50px; }
+
+.datatable table tr:nth-child(even) {
+  background-color: #f9f9f9; }
+.datatable table tr:hover td {
+  background-color: #eee; }
+.datatable table tr:focus td {
+  background-color: #df137a;
+  color: #ffffff; }
+.datatable table tr td, .datatable table tr th {
+  padding: 15px; }
 
 /*# sourceMappingURL=menu.css.map */

@@ -41,7 +41,11 @@ class NotFoundPlugin extends Plugin
             }
         }
 
-        //todo: elegantly handle exceptions
-        return true;
+        $dispatcher->forward([
+            'controller' => 'errors',
+            'action'     => 'show500'
+        ]);
+
+        return false;
     }
 }

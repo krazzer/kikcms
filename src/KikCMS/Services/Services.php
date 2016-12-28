@@ -11,8 +11,9 @@ use Monolog\ErrorHandler;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
+use Phalcon\Cache\Backend\Apc;
+use Phalcon\Cache\Frontend\None;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\Router;
 use Phalcon\Mvc\View;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Mvc\Url as UrlProvider;
@@ -31,39 +32,9 @@ class Services extends BaseServices
      */
     protected function initRouter()
     {
-        $router = new Router();
+        $routing = new Routing();
 
-        $router->setDefaultModule("kikcms");
-
-        $router->add("/deploy", [
-            "controller" => "deploy",
-            "action"     => "index"
-        ]);
-
-        $router->add("/cms", [
-            "controller" => "cms",
-            "action"     => "index"
-        ]);
-
-        $router->add("/cms/:action", [
-            "controller" => "cms",
-            "action"     => 1
-        ]);
-
-        $router->add("/cms/login", [
-            "controller" => "login",
-            "action"     => "index"
-        ]);
-
-        $router->add("/cms/login/:action", [
-            "controller" => "login",
-            "action"     => 1
-        ]);
-
-
-        $router->removeExtraSlashes(true);
-
-        return $router;
+        return $routing->initialize();
     }
 
     /**
@@ -96,6 +67,8 @@ class Services extends BaseServices
                 return new Twig($view, $di, [
                     'cache' => $cache,
                     'debug' => true,
+                ], [
+                    'kikcms' => $view->getViewsDir()
                 ]);
             }
         ]);
@@ -137,7 +110,7 @@ class Services extends BaseServices
         $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
         // initialize error handler
-        $mailHandler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail);
+        $mailHandler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail, Logger::NOTICE);
         $mailHandler->setContentType('text/html');
         $mailHandler->setFormatter(new HtmlFormatter());
 
@@ -147,7 +120,16 @@ class Services extends BaseServices
         $errorHandler = new ErrorHandler($log);
 
         // mail errors instead of showing them in production
-        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD) {
+        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
+
+            // show a global error message
+            $errorMessageViewer = function(){
+                echo $this->get('view')->getRender('errors', 'show500');
+            };
+
+            set_error_handler($errorMessageViewer);
+            set_exception_handler($errorMessageViewer);
+
             $errorHandler->registerErrorHandler();
             $errorHandler->registerExceptionHandler();
             $errorHandler->registerFatalHandler();
@@ -155,8 +137,6 @@ class Services extends BaseServices
             error_reporting(E_ALL);
             ini_set('display_errors', 'on');
         }
-
-        //todo: show something else when errors are on production
 
         return $errorHandler;
     }
@@ -170,12 +150,21 @@ class Services extends BaseServices
     }
 
     /**
+     * @return Apc
+     */
+    protected function initCache()
+    {
+        return new Apc(new None());
+    }
+
+    /**
      * Start the session the first time some component request the session service
      */
     protected function initSession()
     {
         $session = new SessionAdapter();
         $session->start();
+
         return $session;
     }
 

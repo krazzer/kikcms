@@ -2,10 +2,11 @@
 /* Miscellaneous */
 body {
   background: url("/cmsassets/images/login-background.jpg") no-repeat center center;
-  background-size: cover; }
+  background-size: cover;
+  padding-top: 200px; }
 
 #login {
-  margin: 200px auto;
+  margin: 0 auto;
   width: 450px;
   padding: 30px;
   background-color: #ffffff;
