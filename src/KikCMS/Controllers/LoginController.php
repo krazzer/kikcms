@@ -51,7 +51,7 @@ class LoginController extends BaseController
 
         if ( ! $userId || ! $hash || $this->userService->getHash($userId) != $hash) {
             $errorMessage = $this->translator->tl('login.reset.password.hashError');
-            $this->flashSession->error($errorMessage);
+            $this->flash->error($errorMessage);
             $this->response->redirect('cms/login');
         }
 
@@ -75,7 +75,7 @@ class LoginController extends BaseController
             $succesMessage = $this->translator->tl('login.reset.password.flash');
 
             $this->userService->storePassword($userId, $input['password']);
-            $this->flashSession->success($succesMessage);
+            $this->flash->success($succesMessage);
             $this->response->redirect('cms/login');
         });
 
