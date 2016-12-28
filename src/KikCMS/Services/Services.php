@@ -120,7 +120,7 @@ class Services extends BaseServices
         $errorHandler = new ErrorHandler($log);
 
         // mail errors instead of showing them in production
-        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
+        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD) {
 
             // show a global error message
             $errorMessageViewer = function(){
@@ -188,7 +188,7 @@ class Services extends BaseServices
      */
     protected function initMailService()
     {
-        $sendMailCommand = $this->getApplicationConfig()->sendmailCommand;
+        $sendMailCommand = $this->getApplicationConfig()->get('sendmailCommand');
         $sendMailCommand = $sendMailCommand ?: '/usr/sbin/sendmail -bs';
 
         $transport = Swift_SendmailTransport::newInstance($sendMailCommand);
