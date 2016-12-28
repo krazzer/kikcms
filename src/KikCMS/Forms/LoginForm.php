@@ -45,7 +45,7 @@ class LoginForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function verify(array $input): ErrorContainer
+    protected function validate(array $input): ErrorContainer
     {
         $errorContainer = new ErrorContainer();
 

@@ -239,10 +239,10 @@ class WebForm extends Injectable
      * @param array $input
      * @return ErrorContainer
      */
-    protected function verify(array $input): ErrorContainer
+    protected function validate(array $input): ErrorContainer
     {
-        if($this->verifyAction){
-            return call_user_func($this->verifyAction, $input);
+        if($this->validateAction){
+            return call_user_func($this->validateAction, $input);
         }
 
         return new ErrorContainer();
@@ -271,7 +271,7 @@ class WebForm extends Injectable
     private function getErrors(): ErrorContainer
     {
         if ($this->form->isValid($this->getInput())) {
-            return $this->verify($this->getInput());
+            return $this->validate($this->getInput());
         }
 
         $errorContainer = new ErrorContainer();
