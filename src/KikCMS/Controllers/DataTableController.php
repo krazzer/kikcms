@@ -10,24 +10,37 @@ class DataTableController extends BaseController
     public function editAction()
     {
         $editId    = $this->getEditId();
-        $datatable = $this->getDatatable();
+        $dataTable = $this->getDataTable();
 
-        $this->view->form = $datatable->renderEditForm($editId);
+        $this->view->form = $dataTable->renderEditForm($editId);
     }
 
     public function saveAction()
     {
         $editId    = $this->getEditId();
-        $datatable = $this->getDatatable();
+        $dataTable = $this->getDataTable();
 
-        $this->view->form = $datatable->renderEditForm($editId);
-        $this->view->pick('datatable/edit');
+        $this->view->form = $dataTable->renderEditForm($editId);
+        $this->view->pick('data-table/edit');
+    }
+
+    public function pageAction()
+    {
+        $dataTable = $this->getDataTable();
+        $page      = $this->request->getPost('page');
+
+        $this->view->disable();
+
+        return json_encode([
+            'table'      => $dataTable->renderTable($page),
+            'pagination' => $dataTable->renderPagination($page),
+        ]);
     }
 
     /**
      * @return DataTable
      */
-    private function getDatatable()
+    private function getDataTable()
     {
         $instanceName  = $this->request->getPost(DataTable::INSTANCE);
         $instanceClass = $this->session->get(DataTable::SESSION_KEY)[$instanceName]['class'];

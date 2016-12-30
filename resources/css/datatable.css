@@ -27,7 +27,7 @@ body.datatableBlur {
   left: 50%;
   margin-left: -500px;
   border: 1px solid #e1e1e1;
-  border-radius: 3px;
+  border-radius: 4px;
   display: none; }
   .datatableWindow .closeButton {
     width: 30px;
@@ -81,7 +81,7 @@ body.datatableBlur {
   .datatable .toolbar .button {
     float: left;
     margin: 0 8px 0 0;
-    border-radius: 3px;
+    border-radius: 4px;
     padding: 7px 15px;
     cursor: pointer;
     transition: all 0.3s;
@@ -106,6 +106,26 @@ body.datatableBlur {
       left: 14px; }
     .datatable .toolbar .search input {
       padding-left: 38px; }
+  .datatable .toolbar .pagination {
+    margin: 0 10px 0 0; }
+.datatable .pagination {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  float: right;
+  margin: 0; }
+  .datatable .pagination > li > a {
+    padding: 7px 12px;
+    color: #df137a;
+    cursor: pointer;
+    min-width: 36px;
+    text-align: center; }
+  .datatable .pagination > .active > a {
+    color: #fff;
+    background-color: #df137a;
+    border-color: #df137a; }
 .datatable .table table {
   width: 100%; }
   .datatable .table table tr td {

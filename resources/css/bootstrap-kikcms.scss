@@ -1,6 +1,10 @@
 @import "includes/variables";
 @import "includes/mixins";
 
+label{
+    margin-bottom: 2px;
+}
+
 .btn{
     @include fontDefault();
     font-weight: 400;

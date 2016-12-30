@@ -10,6 +10,7 @@ use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Paginator\Adapter\QueryBuilder;
+use stdClass;
 
 /** @property DbWrapper $dbWrapper */
 abstract class DataTable extends Injectable
@@ -24,7 +25,7 @@ abstract class DataTable extends Injectable
     /** @var Builder|null */
     private $query;
 
-    /** @var array */
+    /** @var StdClass */
     private $tableData;
 
     protected abstract function initialize();
@@ -40,8 +41,9 @@ abstract class DataTable extends Injectable
     {
         $this->initializeDatatable();
 
-        return $this->renderView('table', [
+        return $this->renderView('index', [
             'tableData'    => $this->getTableData()->items->toArray(),
+            'pagination'   => $this->getTableData(),
             'headerData'   => $this->getTableHeaderData(),
             'instanceName' => $this->getInstanceName(),
         ]);
@@ -59,6 +61,31 @@ abstract class DataTable extends Injectable
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
 
         return $this->form->renderWithData($this->getEditData($id));
+    }
+
+    /**
+     * @param int $page
+     * @return Response
+     */
+    public function renderPagination(int $page = 1)
+    {
+        return $this->renderView('pagination', [
+            'pagination' => $this->getTableData($page),
+        ]);
+    }
+
+    /**
+     * @param int $page
+     * @return Response
+     */
+    public function renderTable(int $page = 1)
+    {
+        $this->initializeDatatable();
+
+        return $this->renderView('table', [
+            'tableData'  => $this->getTableData($page)->items->toArray(),
+            'headerData' => $this->getTableHeaderData(),
+        ]);
     }
 
     /**
@@ -80,12 +107,12 @@ abstract class DataTable extends Injectable
      */
     private function getEditData(int $id)
     {
-        $editData = $this->dbWrapper->queryRow("
-            SELECT * FROM " . $this->getTable() . " 
-            WHERE id = " . $id
-        );
+        $query = new Builder();
+        $query
+            ->addFrom($this->getTable())
+            ->andWhere('id = ' . $id);
 
-        return $editData;
+        return $query->getQuery()->execute()->getFirst()->toArray();
     }
 
     /**
@@ -97,9 +124,10 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @return array
+     * @param int $page
+     * @return stdClass
      */
-    private function getTableData()
+    private function getTableData(int $page = 1)
     {
         if ($this->tableData) {
             return $this->tableData;
@@ -107,11 +135,30 @@ abstract class DataTable extends Injectable
 
         $paginator = new QueryBuilder(array(
             "builder" => $this->getQuery(),
-            "limit"   => 100,
-            "page"    => 1
+            "limit"   => 25,
+            "page"    => $page
         ));
 
-        $this->tableData = $paginator->getPaginate();
+        $page = $paginator->getPaginate();
+
+        $pages = [];
+
+        if ($page->last <= 6) {
+            for ($i = 1; $i <= $page->last; $i++) {
+                $pages[$i] = $i;
+            }
+        } else {
+            if ($page->current < 4) {
+                $pages = [1, 2, 3, 4, 5, null, $page->last];
+            } elseif($page->current > $page->last - 3) {
+                $pages = [1, null, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
+            } else {
+                $pages = [1, null, $page->current - 1, $page->current, $page->current + 1, null, $page->last];
+            }
+        }
+
+        $page->pages = $pages;
+        $this->tableData = $page;
 
         return $this->tableData;
     }
@@ -154,12 +201,8 @@ abstract class DataTable extends Injectable
             return $this->query;
         }
 
-
-        $query = new Builder();
-        $query->addFrom(DummyProducts::class);
-
-        $this->query = $query;
-            //$this->modelsManager->createBuilder()->from($this->getTable());
+        $this->query = new Builder();
+        $this->query->addFrom(DummyProducts::class);
 
         return $this->query;
     }

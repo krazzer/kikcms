@@ -4,13 +4,14 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Models\DummyProducts;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class Products extends DataTable
 {
     protected function getTable(): string
     {
-        return 'products_dummy';
+        return DummyProducts::class;
     }
 
     protected function initialize()

@@ -119,6 +119,30 @@ body.datatableBlur{
                 padding-left: 38px;
             }
         }
+
+        .pagination{
+            margin: 0 10px 0 0;
+        }
+    }
+
+    .pagination{
+        @include noTextSelect();
+        float: right;
+        margin: 0;
+
+        > li > a{
+            padding: 7px 12px;
+            color: $colorPink;
+            cursor: pointer;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        > .active > a{
+            color: #fff;
+            background-color: $colorPink;
+            border-color: $colorPink;
+        }
     }
 
     .table {

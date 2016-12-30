@@ -5,6 +5,29 @@ DataTable.prototype =
 {
     instance: null,
 
+    init: function () {
+        var self = this;
+
+        this.initTable();
+        this.initPagination();
+    },
+
+    initPagination: function () {
+        var self = this;
+
+        this.getDatatable().find('.pagination a').click(function () {
+            var $pageButton = $(this);
+
+            if ($pageButton.parent().hasClass('active') || $pageButton.parent().hasClass('disabled') ) {
+                return false;
+            }
+
+            var page = $pageButton.html();
+
+            self.actionPage(page);
+        });
+    },
+
     initTable: function () {
         var self = this;
         var $rows = this.getDatatable().find('tbody tr');
@@ -64,6 +87,29 @@ DataTable.prototype =
         });
     },
 
+    actionPage: function (page) {
+        var self = this;
+
+        $.ajax({
+            url: '/cms/datatable/page',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                dataTableInstance: self.instance,
+                page: page
+            },
+            success: function (result) {
+                self.getDatatable().find('.table').html(result.table);
+                self.getDatatable().find('.pagination').html(result.pagination);
+
+                self.initTable();
+                self.initPagination();
+            },
+            error: function (result) {
+            }
+        });
+    },
+
     actionSave: function (closeWindow) {
         var self = this;
         var $window = this.getWindow();
@@ -87,8 +133,7 @@ DataTable.prototype =
         });
     },
 
-    closeWindow: function()
-    {
+    closeWindow: function () {
         $('body').removeClass('datatableBlur');
         this.getWindow().fadeOut();
         this.getWindow().find('.windowContent').html('');

@@ -3,9 +3,11 @@
 namespace KikCMS\Classes\WebForm;
 
 
-use KikCMS\Classes\Datatable\DataTable;
+use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbWrapper;
+use KikCMS\Models\DummyProducts;
 use Phalcon\Http\Response;
+use Phalcon\Mvc\Model;
 
 /**
  * @property DbWrapper $dbWrapper
@@ -84,9 +86,13 @@ class DataForm extends WebForm
             }
         }
 
+        /** @var Model $model */
+        $model = new $this->table();
+        $table = $model->getSource();
+
         if (isset($input[DataTable::EDIT_ID])) {
             $editId = $input[DataTable::EDIT_ID];
-            return $this->dbWrapper->update($this->table, $insertUpdateData, [$this->tableKey => $editId]);
+            return $this->dbWrapper->update($table, $insertUpdateData, [$this->tableKey => $editId]);
         }
     }
 

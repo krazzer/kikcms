@@ -1,5 +1,8 @@
 /* Colors */
 /* Miscellaneous */
+label {
+  margin-bottom: 2px; }
+
 .btn {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
@@ -31,7 +34,7 @@
     border-color: #990d53; }
 
 .form-control {
-  border-radius: 3px;
+  border-radius: 4px;
   box-shadow: none;
   padding: 7px 12px;
   height: 36px;
