@@ -39,7 +39,7 @@ class Routing
         ]);
 
         $router->add("/cms/datatable/:action", [
-            "controller" => "dataTable",
+            "controller" => "data-table",
             "action"     => 1
         ]);
 
