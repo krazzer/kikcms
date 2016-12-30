@@ -3,7 +3,7 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\Datatable\DataTable;
+use KikCMS\Classes\DataTable\DataTable;
 
 class DataTableController extends BaseController
 {
