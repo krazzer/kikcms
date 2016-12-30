@@ -2,7 +2,7 @@
 
 namespace KikCMS\Forms;
 
-use KikCMS\Classes\Db\Db;
+use KikCMS\Classes\Db\DbWrapper;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Services\UserService;
@@ -10,7 +10,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Email;
 
 /**
- * @property Db $db
+ * @property DbWrapper $db
  * @property UserService $userService
  */
 class LoginForm extends WebForm

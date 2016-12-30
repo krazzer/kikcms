@@ -1,11 +1,12 @@
 <?php
 
-namespace KikCMS\Classes\Db;
+namespace KikCMS\Classes;
 
+use Phalcon\Db;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Db\ResultInterface;
 
-class Db
+class DbWrapper
 {
     /** @var Mysql */
     private $db;
@@ -43,7 +44,16 @@ class Db
      */
     public function queryRows(string $query): array
     {
+        $result = $this->db->query($query);
 
+        $result->setFetchMode(Db::FETCH_ASSOC);
+        $resultData = $result->fetchAll();
+
+        if ( ! $resultData) {
+            return [];
+        }
+
+        return $resultData;
     }
 
     /**
@@ -54,16 +64,7 @@ class Db
      */
     public function queryRow(string $query): array
     {
-        $result = $this->db->query($query);
-
-        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
-        $resultData = $result->fetchAll();
-
-        if(!$resultData){
-            return [];
-        }
-
-        return $resultData[0];
+        return $this->queryRows($query)[0];
     }
 
     /**
@@ -76,7 +77,15 @@ class Db
     {
         $result = $this->db->query($query);
 
-        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+        $result->setFetchMode(Db::FETCH_ASSOC);
         return $result->fetchAll();
+    }
+
+    public function update(string $table, array $set, array $where)
+    {
+        $where = array_map(function($key, $value){ return $key . ' = ' .$value; }, array_keys($where), array_values($where));
+        $where = implode(' AND ', $where);
+
+        return $this->db->update($table, array_keys($set), array_values($set), $where);
     }
 }

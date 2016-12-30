@@ -12,16 +12,20 @@
     {{ stylesheetLink('cmsassets/css/bootstrap.min.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ stylesheetLink('cmsassets/css/default.css') }}
+    {% if(datatable) %}{% include '@kikcms/datatable/cssAssets.twig' %}{% endif %}
+
     {% block cssAssets %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Your invoices">
     <meta name="author" content="Phalcon Team">
 </head>
 <body>
+
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/jquery.min.js') }}
 {{ javascriptInclude('cmsassets/js/bootstrap.min.js') }}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
+{% if(datatable) %}{% include '@kikcms/datatable/jsAssets.twig' %}{% endif %}
 {% block jsAssets %}{% endblock %}
 </body>
 </html>

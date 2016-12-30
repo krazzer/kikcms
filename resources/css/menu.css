@@ -11,22 +11,26 @@
     background: url("/cmsassets/images/kikcms.png");
     width: 158px;
     height: 37px;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
     display: block; }
   #menu .menu-group {
-    margin-bottom: 50px; }
+    margin-bottom: 36px; }
+    #menu .menu-group:after {
+      content: "";
+      display: table;
+      clear: both; }
     #menu .menu-group .title {
-      padding: 10px;
+      padding: 8px;
       text-transform: uppercase;
       font-weight: bold;
-      color: #dddddd; }
+      color: #e1e1e1; }
   #menu .menu-item {
     display: block;
     padding: 10px;
     color: #000;
     border-radius: 3px;
     line-height: 14px;
-    margin-bottom: 1px; }
+    margin-bottom: 2px; }
     #menu .menu-item.selected {
       background-color: #df137a;
       color: #ffffff; }
@@ -41,15 +45,5 @@
   width: 100%; }
   #main #main-content {
     padding-bottom: 50px; }
-
-.datatable table tr:nth-child(even) {
-  background-color: #f9f9f9; }
-.datatable table tr:hover td {
-  background-color: #eee; }
-.datatable table tr:focus td {
-  background-color: #df137a;
-  color: #ffffff; }
-.datatable table tr td, .datatable table tr th {
-  padding: 15px; }
 
 /*# sourceMappingURL=menu.css.map */

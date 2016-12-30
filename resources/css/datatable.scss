@@ -1,0 +1,196 @@
+@import "includes/variables";
+@import "includes/mixins";
+
+body > *:not(.datatableWindow){
+    transition: filter, opacity 0.3s;
+}
+
+body.datatableBlur{
+    overflow: hidden;
+
+    > *:not(.datatableWindow){
+        @include blur(4);
+        @include noTextSelect();
+        pointer-events: none;
+        opacity: 0.3;
+    }
+}
+
+.datatableWindow{
+    width: 1000px;
+    position: fixed;
+    top: 40px;
+    bottom: 40px;
+    background-color: rgba(255,255,255,0.9);
+    z-index: 3;
+    left: 50%;
+    margin-left: -500px;
+    border: 1px solid $lightGray;
+    border-radius: $defaultBorderRadius;
+    display: none;
+
+    .closeButton {
+        @include close(30);
+        right: 50px;
+        top: 32px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .header{
+        font-size: 24px;
+        padding: 30px 50px;
+        border-bottom: 1px solid $lightGray;
+        width: 100%;
+    }
+
+    .content{
+        overflow: auto;
+        height: 1057px;
+        padding: 50px;
+    }
+
+    .footer{
+        position: absolute;
+        padding: 10px;
+        border-top: 1px solid $lightGray;
+        bottom: 0;
+        width: 100%;
+        text-align: right;
+
+        button{
+            margin-left: 5px;
+            padding: 10px 35px;
+        }
+    }
+}
+
+.datatable{
+
+    .toolbar{
+        @include clearFix();
+        padding: 50px 0 36px 0;
+        margin-top: -50px;
+        background-color: #fff;
+        width: 100%;
+        z-index: 2;
+        position: relative;
+
+        .button{
+            float: left;
+            margin: 0 8px 0 0;
+            border-radius: $defaultBorderRadius;
+            padding: 7px 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid $lightGray;
+
+            .glyphicon{
+                width: 14px;
+            }
+
+            .lbl{
+                margin-left: 8px;
+            }
+
+            &.delete{
+                display: none;
+            }
+
+            &:hover{
+                background-color: $gray;
+                border-color: $gray;
+                color: #fff;
+            }
+        }
+
+        .search{
+            float: right;
+            width: 220px;
+            position: relative;
+
+            .glyphicon{
+                position: absolute;
+                top: 11px;
+                left: 14px;
+            }
+
+            input{
+                padding-left: 38px;
+            }
+        }
+    }
+
+    .table {
+
+        table {
+            width: 100%;
+
+            tr td {
+                padding: 8px 15px;
+            }
+
+            thead {
+                font-weight: 700;
+                background-color: #fff;
+
+                td {
+                    cursor: pointer;
+                }
+            }
+
+            tbody {
+                overflow: auto;
+                height: 400px;
+
+                tr {
+                    cursor: default;
+
+                    td{
+                        @include noTextSelect();
+                    }
+
+                    &:nth-child(odd) {
+                        background-color: $superLightGray;
+                    }
+
+                    &:hover {
+                        td {
+                            background-color: #eee;
+                        }
+                    }
+
+                    &.selected{
+                        td {
+                            background-color: $colorPink;
+                            color: #fff;
+                        }
+
+                        &:hover{
+                            td{
+                                background-color: darken($colorPink, 5%);
+                            }
+                        }
+                    }
+
+                    td.edit {
+                        text-align: center;
+                        width: 60px;
+                        cursor: pointer;
+
+                        .glyphicon {
+                            display: none;
+                            margin-top: -2px;
+                        }
+                    }
+
+                    &:hover {
+                        td.edit .glyphicon {
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

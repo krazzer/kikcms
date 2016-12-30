@@ -2,37 +2,50 @@
 /* Miscellaneous */
 .btn {
   font-family: 'Lato', sans-serif;
-  font-weight: 300; }
+  font-weight: 300;
+  font-weight: 400; }
   .btn:focus, .btn:active, .btn:active:focus {
     outline: none; }
 
-.btn-submit {
+.btn-secondary {
+  background-color: #e1e1e1; }
+  .btn-secondary:hover {
+    background-color: #d4d4d4;
+    border-color: #d4d4d4; }
+  .btn-secondary:active {
+    background-color: #bbbbbb;
+    border-color: #bbbbbb; }
+
+.btn-submit, .btn-primary {
   background-color: #df137a;
   border-color: #df137a;
   transition: all 0.3s;
   color: #ffffff; }
-  .btn-submit:hover {
+  .btn-submit:hover, .btn-primary:hover {
     color: #ffffff;
     background-color: #c8116d;
     border-color: #c8116d; }
-  .btn-submit:active {
+  .btn-submit:active, .btn-submit:focus, .btn-submit:active:focus, .btn-primary:active, .btn-primary:focus, .btn-primary:active:focus {
     color: #ffffff;
     background-color: #990d53;
     border-color: #990d53; }
 
 .form-control {
   border-radius: 3px;
-  box-shadow: none; }
+  box-shadow: none;
+  padding: 7px 12px;
+  height: 36px;
+  border: 1px solid #e1e1e1; }
   .form-control::-webkit-input-placeholder {
-    color: #dddddd; }
+    color: #e1e1e1; }
   .form-control:-moz-placeholder {
-    color: #dddddd;
+    color: #e1e1e1;
     opacity: 1; }
   .form-control::-moz-placeholder {
-    color: #dddddd;
+    color: #e1e1e1;
     opacity: 1; }
   .form-control:-ms-input-placeholder {
-    color: #dddddd; }
+    color: #e1e1e1; }
 
 .form-control:focus, .has-error .form-control:focus {
   outline: none;

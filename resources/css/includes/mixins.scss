@@ -1,3 +1,42 @@
+@mixin blur($amount)
+{
+    -webkit-filter: blur($amount + px);
+    -ms-filter: blur($amount + px);
+    filter: blur($amount + px);
+}
+
+@mixin clearFix()
+{
+    &:after{
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+@mixin close($size)
+{
+    width: $size + px;
+    height: $size + px;
+
+    &:before, &:after {
+        position: absolute;
+        left: ($size / 2) + px;
+        height: ($size) + px;
+        content: ' ';
+        width: 1px;
+        background-color: #333;
+    }
+
+    &:before {
+        transform: rotate(45deg);
+    }
+
+    &:after {
+        transform: rotate(-45deg);
+    }
+}
+
 @mixin placeholderColor($color) {
     &::-webkit-input-placeholder {
         color: $color;
@@ -18,4 +57,12 @@
 @mixin fontDefault(){
     font-family: 'Lato', sans-serif;
     font-weight: 300;
+}
+
+@mixin noTextSelect(){
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

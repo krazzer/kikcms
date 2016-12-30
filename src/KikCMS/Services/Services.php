@@ -2,17 +2,15 @@
 
 namespace KikCMS\Services;
 
-use KikCMS\Classes\Db\Db;
+use KikCMS\Classes\DbWrapper;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Twig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
-use Monolog\ErrorHandler;
-use Monolog\Formatter\HtmlFormatter;
-use Monolog\Handler\NativeMailerHandler;
-use Monolog\Logger;
+
 use Phalcon\Cache\Backend\Apc;
 use Phalcon\Cache\Frontend\None;
+use Phalcon\Db;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View;
 use Phalcon\Db\Adapter\Pdo;
@@ -22,6 +20,12 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
+
+use Monolog\ErrorHandler;
+use Monolog\Formatter\HtmlFormatter;
+use Monolog\Handler\NativeMailerHandler;
+use Monolog\Logger;
+
 use Swift_Mailer;
 use Swift_SendmailTransport;
 
@@ -81,7 +85,7 @@ class Services extends BaseServices
      *
      * @return Db
      */
-    protected function initDb(): Db
+    protected function initDb()
     {
         $config = $this->getDatabaseConfig()->toArray();
 
@@ -90,7 +94,14 @@ class Services extends BaseServices
 
         $databaseAdapter = new $dbClass($config);
 
-        return new Db($databaseAdapter);
+        return $databaseAdapter;
+    }
+
+    protected function initDbWrapper()
+    {
+        $db = $this->get('db');
+
+        return new DbWrapper($db);
     }
 
     /**

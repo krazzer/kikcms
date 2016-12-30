@@ -1,6 +1,20 @@
 <?php
 
 return [
+    'dataForm' => [
+        'saveSuccess' => 'De gegevens zijn succesvol opgeslagen',
+        'saveFailure' => 'Er is iets mis gegaan bij het opslaan van de gegevens',
+    ],
+
+    'dataTable' => [
+        'noData'            => 'Er is nog geen data om weer te geven',
+        'add'               => 'Nieuw...',
+        'delete'            => 'Verwijderen',
+        'searchPlaceholder' => 'Zoeken binnen resultaten',
+        'save'              => 'Opslaan',
+        'saveAndClose'      => 'Opslaan & sluiten',
+    ],
+
     'webform' => [
         'messages' => [
             'Alnum'             => 'Het veld :label mag alleen letters en cijfers bevatten',
@@ -32,6 +46,8 @@ return [
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'CSRF validatie mislukt',
         ],
+
+        'defaultSendLabel' => 'Versturen',
     ],
 
     'login' => [

@@ -6,7 +6,10 @@ $pinkDark: darken($colorPink, 5%);
 $pinkDarker: darken($colorPink, 15%);
 $pinkHover: #f8e3ee;
 
-$lightGray: #dddddd;
+$lightGray: #e1e1e1;
+$lightGrayDark: darken($lightGray, 5%);;
+$lightGrayDarker: darken($lightGray, 15%);;
+$superLightGray: #f9f9f9;
 $gray: #aaaaaa;
 
 /* Miscellaneous */

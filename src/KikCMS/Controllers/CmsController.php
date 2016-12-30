@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Config\MenuConfig;
+use KikCMS\Datatables\Products;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
 use Phalcon\Http\Response;
@@ -31,6 +32,9 @@ class CmsController extends BaseController
 
     public function mainMenuAction()
     {
+        $datatable = new Products();
+
+        $this->view->datatable = $datatable->render();
         $this->view->pick('cms/default');
     }
 

@@ -3,13 +3,28 @@
 
 .btn{
     @include fontDefault();
+    font-weight: 400;
 
     &:focus, &:active, &:active:focus{
         outline: none;
     }
 }
 
-.btn-submit{
+.btn-secondary{
+    background-color: $lightGray;
+
+    &:hover{
+        background-color: $lightGrayDark;
+        border-color: $lightGrayDark;
+    }
+
+    &:active{
+        background-color: $lightGrayDarker;
+        border-color: $lightGrayDarker;
+    }
+}
+
+.btn-submit, .btn-primary{
     background-color: $colorPink;
     border-color: $colorPink;
     transition: all 0.3s;
@@ -21,7 +36,7 @@
         border-color: $pinkDark;
     }
 
-    &:active{
+    &:active, &:focus, &:active:focus{
         color: $colorWhite;
         background-color: $pinkDarker;
         border-color: $pinkDarker;
@@ -32,6 +47,9 @@
     @include placeholderColor($lightGray);
     border-radius: $defaultBorderRadius;
     box-shadow: none;
+    padding: 7px 12px;
+    height: 36px;
+    border: 1px solid $lightGray;
 }
 
 .form-control:focus, .has-error .form-control:focus{

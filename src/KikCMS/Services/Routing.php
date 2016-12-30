@@ -38,6 +38,11 @@ class Routing
             "action"     => 1
         ]);
 
+        $router->add("/cms/datatable/:action", [
+            "controller" => "datatable",
+            "action"     => 1
+        ]);
+
         $router->removeExtraSlashes(true);
 
         return $router;

@@ -4,8 +4,11 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\KikCMSConfig;
+use KikCMS\Config\StatusCodes;
 use Phalcon\Di\Injectable;
 use Phalcon\Forms\Element;
+use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Forms\ElementInterface;
@@ -14,13 +17,17 @@ use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
 
-/** @property View $view */
-/** @property Validation $validation */
-/** @property Translator $translator */
+/**
+ * @property View $view
+ * @property Validation $validation
+ * @property Translator $translator
+ */
 class WebForm extends Injectable
 {
+    const WEB_FORM_ID = 'webFormId';
+
     /** @var Element[] */
-    private $fields;
+    protected $fields;
 
     /** @var Form */
     private $form;
@@ -41,6 +48,8 @@ class WebForm extends Injectable
     {
         $this->form = new Form();
         $this->form->setValidation($this->validation);
+
+        $this->sendLabel = $this->translator->tl('webform.defaultSendLabel');
     }
 
     /**
@@ -65,7 +74,7 @@ class WebForm extends Injectable
      * @param string $label
      * @param array $validators
      */
-    public function addPasswordField(string $key, string $label, array $validators)
+    public function addPasswordField(string $key, string $label, array $validators = [])
     {
         $password = new Password($key);
         $password->setLabel($label);
@@ -79,13 +88,25 @@ class WebForm extends Injectable
      * @param string $label
      * @param array $validators
      */
-    public function addTextField(string $key, string $label, array $validators)
+    public function addTextField(string $key, string $label, array $validators = [])
     {
         $name = new Text($key);
         $name->setLabel($label);
         $name->addValidators($validators);
 
         $this->addField($name);
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $defaultValue
+     */
+    public function addHiddenField(string $key, $defaultValue)
+    {
+        $hidden = new Hidden($key);
+        $hidden->setDefault($defaultValue);
+
+        $this->addField($hidden);
     }
 
     /**
@@ -104,8 +125,6 @@ class WebForm extends Injectable
     {
         $input = $this->request->getPost();
 
-        unset($input['formId']);
-
         return $input;
     }
 
@@ -121,15 +140,17 @@ class WebForm extends Injectable
         $this->initialize();
         $this->initializeFields();
 
-        if ($this->request->isPost()) {
+        if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
 
             if ($errorContainer->isEmpty()) {
                 $result = $this->successAction($this->getInput());
 
-                if(is_string($result)){
+                if (is_string($result)) {
                     return $result;
                 }
+            } else {
+                $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
             }
         }
 
@@ -140,6 +161,7 @@ class WebForm extends Injectable
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
+            'isDataForm'         => $this instanceof DataForm
         ]);
     }
 
@@ -172,7 +194,7 @@ class WebForm extends Injectable
      */
     private function getFormId(): string
     {
-        return static::class;
+        return str_replace('\\', '', static::class);
     }
 
     /**
@@ -241,7 +263,7 @@ class WebForm extends Injectable
      */
     protected function validate(array $input): ErrorContainer
     {
-        if($this->validateAction){
+        if ($this->validateAction) {
             return call_user_func($this->validateAction, $input);
         }
 
@@ -257,7 +279,7 @@ class WebForm extends Injectable
      */
     protected function successAction(array $input)
     {
-        if($this->successAction){
+        if ($this->successAction) {
             return call_user_func($this->successAction, $input);
         }
 
@@ -270,21 +292,21 @@ class WebForm extends Injectable
      */
     private function getErrors(): ErrorContainer
     {
-        if ($this->form->isValid($this->getInput())) {
-            return $this->validate($this->getInput());
-        }
-
         $errorContainer = new ErrorContainer();
 
-        if( ! $this->security->checkToken()){
+        if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
+        }
+
+        if ($this->form->isValid($this->getInput()) && $errorContainer->isEmpty()) {
+            return $this->validate($this->getInput());
         }
 
         foreach ($this->form->getElements() as $formElement) {
             $elementName     = $formElement->getName();
             $elementMessages = $this->form->getMessagesFor($elementName);
 
-            if (!$elementMessages) {
+            if ( ! $elementMessages) {
                 continue;
             }
 
@@ -316,5 +338,15 @@ class WebForm extends Injectable
                 $field->setAttribute('placeholder', $field->getLabel());
             }
         }
+
+        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
+    }
+
+    /**
+     * Checks whether this form has been posted
+     */
+    private function isPosted()
+    {
+        return $this->request->isPost() && $this->request->get(self::WEB_FORM_ID) == $this->getFormId();
     }
 }
