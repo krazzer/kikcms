@@ -3,7 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Config\MenuConfig;
-use KikCMS\Datatables\Products;
+use KikCMS\DataTables\Products;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
 use Phalcon\Http\Response;

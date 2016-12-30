@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes\Datatable;
+namespace KikCMS\Classes\DataTable;
 
 
 use KikCMS\Classes\DbWrapper;
@@ -9,7 +9,6 @@ use KikCMS\Models\DummyProducts;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset\Simple;
 use Phalcon\Paginator\Adapter\QueryBuilder;
 
 /** @property DbWrapper $dbWrapper */

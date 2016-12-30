@@ -1,9 +1,9 @@
 <?php
 
-namespace KikCMS\Datatables;
+namespace KikCMS\DataTables;
 
 
-use KikCMS\Classes\Datatable\DataTable;
+use KikCMS\Classes\DataTable\DataTable;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class Products extends DataTable
