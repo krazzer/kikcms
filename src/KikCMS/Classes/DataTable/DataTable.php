@@ -71,7 +71,7 @@ abstract class DataTable extends Injectable
      */
     public function renderView($viewName, array $parameters = []): string
     {
-        return $this->view->getRender('datatable', $viewName, $parameters);
+        return $this->view->getRender('data-table', $viewName, $parameters);
     }
 
     /**

@@ -12,7 +12,7 @@
     {{ stylesheetLink('cmsassets/css/bootstrap.min.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ stylesheetLink('cmsassets/css/default.css') }}
-    {% if(datatable) %}{% include '@kikcms/datatable/cssAssets.twig' %}{% endif %}
+    {% if(datatable) %}{% include '@kikcms/data-table/cssAssets.twig' %}{% endif %}
 
     {% block cssAssets %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,7 @@
 {{ javascriptInclude('cmsassets/js/jquery.min.js') }}
 {{ javascriptInclude('cmsassets/js/bootstrap.min.js') }}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
-{% if(datatable) %}{% include '@kikcms/datatable/jsAssets.twig' %}{% endif %}
+{% if(datatable) %}{% include '@kikcms/data-table/jsAssets.twig' %}{% endif %}
 {% block jsAssets %}{% endblock %}
 </body>
 </html>
