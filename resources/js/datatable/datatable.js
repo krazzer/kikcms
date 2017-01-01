@@ -4,12 +4,12 @@ var DataTable = function () {
 DataTable.prototype =
 {
     instance: null,
+    currentSearch: null,
 
     init: function () {
-        var self = this;
-
         this.initTable();
         this.initPagination();
+        this.initSearch();
     },
 
     initPagination: function () {
@@ -22,9 +22,17 @@ DataTable.prototype =
                 return false;
             }
 
-            var page = $pageButton.html();
+            var page = $pageButton.attr('data-page');
 
             self.actionPage(page);
+        });
+    },
+
+    initSearch: function () {
+        this.getDatatable().find('.toolbar .search input').keyup(function () {
+            var $searchInput = $(this);
+
+            console.log($searchInput.val());
         });
     },
 

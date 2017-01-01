@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes;
+namespace KikCMS\Classes\Phalcon;
 
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;

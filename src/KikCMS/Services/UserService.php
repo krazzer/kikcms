@@ -77,17 +77,6 @@ class UserService extends Injectable
     }
 
     /**
-     * @param int $userId
-     * @return string
-     */
-    public function getHash(int $userId): string
-    {
-        $salt = $this->applicationConfig->salt;
-
-        return hash('sha256', $userId.$salt);
-    }
-
-    /**
      * @param $user
      * @return bool
      */

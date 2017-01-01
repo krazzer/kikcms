@@ -1,6 +1,6 @@
 {% for page in pagination.pages %}
     {% if page %}
-        <li class="{{ page == pagination.current ? 'active' : '' }}"><a>{{ page }}</a></li>
+        <li class="{{ page == pagination.current ? 'active' : '' }}"><a data-page="{{ page }}">{{ page }}</a></li>
     {% else %}
         <li class="disabled"><a>...</a></li>
     {% endif %}

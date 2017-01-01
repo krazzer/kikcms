@@ -12,7 +12,7 @@ body.datatableBlur{
         @include blur(4);
         @include noTextSelect();
         pointer-events: none;
-        opacity: 0.3;
+        opacity: 0.2;
     }
 }
 
@@ -216,5 +216,9 @@ body.datatableBlur{
                 }
             }
         }
+    }
+
+    > .footer{
+        @include clearFix();
     }
 }

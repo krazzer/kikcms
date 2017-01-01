@@ -26,7 +26,15 @@ class NotFoundPlugin extends Plugin
      */
     public function beforeException(Event $event, MvcDispatcher $dispatcher, \Exception $exception)
     {
-        error_log($exception->getMessage() . PHP_EOL . $exception->getTraceAsString());
+        error_log($exception->getMessage() . PHP_EOL . $exception->getTraceAsString() . PHP_EOL . $event->getType());
+
+        $controller = $dispatcher->getControllerName();
+        $isLoggedIn = $this->userService->isLoggedIn();
+
+        if ($controller == 'cms' && ! $isLoggedIn) {
+            $this->response->redirect('cms/login');
+            return false;
+        }
 
         if ($exception instanceof DispatcherException) {
             switch ($exception->getCode()) {
@@ -43,7 +51,7 @@ class NotFoundPlugin extends Plugin
         }
 
         // display exceptions right away in development
-        if($this->applicationConfig->env == KikCMSConfig::ENV_DEV){
+        if ($this->applicationConfig->env == KikCMSConfig::ENV_DEV) {
             return true;
         }
 

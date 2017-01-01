@@ -15,7 +15,7 @@ body.datatableBlur {
     -ms-user-select: none;
     user-select: none;
     pointer-events: none;
-    opacity: 0.3; }
+    opacity: 0.2; }
 
 .datatableWindow {
   width: 1000px;
@@ -164,5 +164,9 @@ body.datatableBlur {
           margin-top: -2px; }
       .datatable .table table tbody tr:hover td.edit .glyphicon {
         display: block; }
+.datatable > .footer:after {
+  content: "";
+  display: table;
+  clear: both; }
 
 /*# sourceMappingURL=datatable.css.map */

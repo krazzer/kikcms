@@ -5,7 +5,6 @@ namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbWrapper;
-use KikCMS\Models\DummyProducts;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model;
 
@@ -71,6 +70,7 @@ class DataForm extends WebForm
 
     /**
      * @param array $input
+     * @return bool
      */
     private function saveData(array $input)
     {
@@ -82,7 +82,14 @@ class DataForm extends WebForm
             }
 
             if (isset($input[$key])) {
-                $insertUpdateData[$key] = $input[$key];
+                $value = $input[$key];
+
+                // convert empty string to null
+                if($value === ''){
+                    $value = null;
+                }
+
+                $insertUpdateData[$key] = $value;
             }
         }
 
@@ -94,6 +101,8 @@ class DataForm extends WebForm
             $editId = $input[DataTable::EDIT_ID];
             return $this->dbWrapper->update($table, $insertUpdateData, [$this->tableKey => $editId]);
         }
+
+        return false;
     }
 
     /**

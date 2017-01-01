@@ -44,7 +44,7 @@ return [
             'Date'              => 'Het veld :label moet een geldige datum zijn',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
-            'csrf'             => 'CSRF validatie mislukt',
+            'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
         ],
 
         'defaultSendLabel' => 'Versturen',
@@ -76,14 +76,20 @@ return [
             'cms'     => 'CMS',
         ],
         'item'  => [
-            'main-menu'     => 'Hoofmenu',
-            'media'         => 'Media',
-            'templates'     => 'Templates',
-            'menus'         => 'Menu\'s',
-            'stats'         => 'Statistieken',
-            'stats-sources' => 'Bronnen',
-            'users'         => 'Gebruikers',
-            'logout'        => 'Uitloggen',
+            'menu'      => [
+                'main' => 'Hoofmenu'
+            ],
+            'stats'     => [
+                'index'   => 'Statistieken',
+                'sources' => 'Bronnen',
+            ],
+            'media'     => 'Media',
+            'templates' => 'Templates',
+            'menus'     => 'Menu\'s',
+            'users'     => 'Gebruikers',
+            'logout'    => 'Uitloggen',
         ],
-    ]
+    ],
+
+    'pageNotFound' => 'Pagina niet gevonden',
 ];

@@ -12,10 +12,12 @@
             <span class="lbl">{{ tl('dataTable.delete') }}</span>
         </div>
 
-        <div class="search">
-            <span class="glyphicon glyphicon-search"></span>
-            <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}" />
-        </div>
+        {% if isSearchable %}
+            <div class="search">
+                <span class="glyphicon glyphicon-search"></span>
+                <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}" />
+            </div>
+        {% endif %}
 
         {% if pagination.total_pages > 1 %}
             <ul class="pagination">
@@ -38,8 +40,10 @@
 </div>
 <script>
     window.onload = function() {
-        var {{ instanceName }} = new DataTable();
-        {{ instanceName }}.instance = "{{ instanceName }}";
-        {{ instanceName }}.init();
+        eval(
+            "var {{ instanceName }} = new DataTable();" +
+            "{{ instanceName }}.instance = '{{ instanceName }}';" +
+            "{{ instanceName }}.init();"
+        );
     };
 </script>

@@ -4,7 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbWrapper;
 use KikCMS\Classes\Translator;
-use KikCMS\Classes\Twig;
+use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 

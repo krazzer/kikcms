@@ -49,7 +49,7 @@ class LoginController extends BaseController
         $userId = $this->request->get('userId');
         $hash   = $this->request->get('hash');
 
-        if ( ! $userId || ! $hash || $this->userService->getHash($userId) != $hash) {
+        if ( ! $this->security->checkHash($userId, $hash)) {
             $errorMessage = $this->translator->tl('login.reset.password.hashError');
             $this->flash->error($errorMessage);
             $this->response->redirect('cms/login');
@@ -102,7 +102,7 @@ class LoginController extends BaseController
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
-        $hash = $this->userService->getHash($user['id']);
+        $hash     = $this->security->hash($user['id']);
         $resetUrl = $this->url->get('cms/login/reset-password') . '?userId=' . $user['id'] . '&hash=' . $hash;
 
         $parameters['buttons'] = [['url' => $resetUrl, 'label' => $buttonLabel]];

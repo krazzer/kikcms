@@ -9,7 +9,6 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Events\Manager as EventManager;
-use Phalcon\Text;
 
 class KikCMS implements ModuleDefinitionInterface
 {
@@ -42,12 +41,6 @@ class KikCMS implements ModuleDefinitionInterface
             $eventsManager = new EventManager;
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
             $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
-
-            // make sure dashed action names can be fetched by controller, so reset-password calls resetPasswordAction
-            $eventsManager->attach("dispatch", function($event, Dispatcher $dispatcher) {
-                $actionName = lcfirst(Text::camelize($dispatcher->getActionName()));
-                $dispatcher->setActionName($actionName);
-            });
 
             $dispatcher->setEventsManager($eventsManager);
 

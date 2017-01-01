@@ -9,6 +9,8 @@ use Phalcon\Validation\Validator\PresenceOf;
 
 class Products extends DataTable
 {
+    protected $searchableFields = ['title'];
+
     protected function getTable(): string
     {
         return DummyProducts::class;

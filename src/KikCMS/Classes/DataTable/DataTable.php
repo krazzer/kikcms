@@ -5,7 +5,6 @@ namespace KikCMS\Classes\DataTable;
 
 use KikCMS\Classes\DbWrapper;
 use KikCMS\Classes\WebForm\DataForm;
-use KikCMS\Models\DummyProducts;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -21,6 +20,9 @@ abstract class DataTable extends Injectable
 
     /** @var DataForm */
     protected $form;
+
+    /** @var array */
+    protected $searchableFields = [];
 
     /** @var Builder|null */
     private $query;
@@ -46,6 +48,7 @@ abstract class DataTable extends Injectable
             'pagination'   => $this->getTableData(),
             'headerData'   => $this->getTableHeaderData(),
             'instanceName' => $this->getInstanceName(),
+            'isSearchable' => count($this->searchableFields) > 0,
         ]);
     }
 
@@ -135,10 +138,11 @@ abstract class DataTable extends Injectable
 
         $paginator = new QueryBuilder(array(
             "builder" => $this->getQuery(),
-            "limit"   => 25,
+            "limit"   => 100,
             "page"    => $page
         ));
 
+        // todo: put this in custom paginator
         $page = $paginator->getPaginate();
 
         $pages = [];
@@ -148,9 +152,9 @@ abstract class DataTable extends Injectable
                 $pages[$i] = $i;
             }
         } else {
-            if ($page->current < 4) {
+            if ($page->current < 5) {
                 $pages = [1, 2, 3, 4, 5, null, $page->last];
-            } elseif($page->current > $page->last - 3) {
+            } elseif($page->current > $page->last - 4) {
                 $pages = [1, null, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
             } else {
                 $pages = [1, null, $page->current - 1, $page->current, $page->current + 1, null, $page->last];
@@ -202,7 +206,7 @@ abstract class DataTable extends Injectable
         }
 
         $this->query = new Builder();
-        $this->query->addFrom(DummyProducts::class);
+        $this->query->addFrom($this->getTable());
 
         return $this->query;
     }

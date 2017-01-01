@@ -12,9 +12,9 @@
             <div class="menu-group">
                 <div class="title">{{ tl('menu.group.' ~ name) }}</div>
                 {% for menuItem in menuGroup %}
-                    {% set class = menuItem|replace({'-':''}) == currentAction ? ' selected' : '' %}
+                    {% set class = menuItem == currentCmsUrl ? ' selected' : '' %}
                     <a class="menu-item{{ class }}" href="{{ url('cms/' ~ menuItem) }}">
-                        {{ tl('menu.item.' ~ menuItem) }}
+                        {{ tl('menu.item.' ~ menuItem|replace({'/':'.'})) }}
                     </a>
                 {% endfor %}
             </div>

@@ -28,13 +28,13 @@ class MenuConfig
     const MENU_GROUP_STATS   = 'stats';
     const MENU_GROUP_CMS     = 'cms';
 
-    const MENU_ITEM_MAIN_MENU = 'main-menu';
+    const MENU_ITEM_MAIN_MENU = 'menu/main';
     const MENU_ITEM_MEDIA     = 'media';
     const MENU_ITEM_TEMPLATES = 'templates';
     const MENU_ITEM_MENUS     = 'menus';
 
-    const MENU_ITEM_STATS         = 'stats';
-    const MENU_ITEM_STATS_SOURCES = 'stats-sources';
+    const MENU_ITEM_STATS         = 'stats/index';
+    const MENU_ITEM_STATS_SOURCES = 'stats/sources';
 
     const MENU_ITEM_USERS  = 'users';
     const MENU_ITEM_LOGOUT = 'logout';

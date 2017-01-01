@@ -30,6 +30,11 @@ class SecurityPlugin extends Plugin
             return false;
         }
 
+        if($isLoggedIn && $controller == 'login'){
+            $this->response->redirect('cms');
+            return false;
+        }
+
         return true;
     }
 }

@@ -12,25 +12,17 @@ use Phalcon\Http\Response;
  * @property Config $config
  * @property UserService $userService
  */
-class CmsController extends BaseController
+class CmsController extends BaseCmsController
 {
-    public function initialize()
-    {
-        parent::initialize();
-
-        $this->view->setVar("menuStructure", MenuConfig::MENU_STRUCTURE);
-        $this->view->setVar("currentAction", $this->dispatcher->getActionName());
-    }
-
     /**
      * @return Response
      */
     public function indexAction()
     {
-        $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_MAIN_MENU);
+        return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_MAIN_MENU);
     }
 
-    public function mainMenuAction()
+    public function menuAction()
     {
         $datatable = new Products();
 
