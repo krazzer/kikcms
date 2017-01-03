@@ -184,16 +184,24 @@ body.datatableBlur{
                         }
                     }
 
+                    &.edited{
+                        td {
+                            background-color: $highLightColor;
+                        }
+
+                        &:hover td{
+                            background-color: $highLightColorDark;
+                        }
+                    }
+
                     &.selected{
                         td {
                             background-color: $colorPink;
                             color: #fff;
                         }
 
-                        &:hover{
-                            td{
-                                background-color: darken($colorPink, 5%);
-                            }
+                        &:hover td{
+                            background-color: $pinkDark;
                         }
                     }
 

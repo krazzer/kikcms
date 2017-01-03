@@ -19,9 +19,15 @@ class DataTableController extends BaseController
     {
         $editId    = $this->getEditId();
         $dataTable = $this->getDataTable();
+        $page      = $this->request->getPost(DataTable::PAGE);
 
         $this->view->form = $dataTable->renderEditForm($editId);
-        $this->view->pick('data-table/edit');
+
+        return json_encode([
+            'table'    => $dataTable->renderTable($page),
+            'window'   => $this->view->getRender('data-table', 'edit'),
+            'editedId' => $editId,
+        ]);
     }
 
     public function pageAction()

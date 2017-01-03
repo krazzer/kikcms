@@ -12,4 +12,7 @@ a {
   a:hover {
     color: #c8116d; }
 
+.easeOutBgColor, tr.easeOutBgColor td {
+  transition: background-color 0.5s; }
+
 /*# sourceMappingURL=default.css.map */

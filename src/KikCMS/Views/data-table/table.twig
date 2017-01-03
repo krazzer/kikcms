@@ -11,7 +11,7 @@
 
         <tbody>
         {% for row in tableData %}
-            <tr>
+            <tr data-id="{{ row.id }}">
                 {% for value in row %}
                     <td>{{ value }}</td>
                 {% endfor %}

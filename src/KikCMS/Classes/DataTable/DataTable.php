@@ -16,6 +16,7 @@ abstract class DataTable extends Injectable
 {
     const EDIT_ID     = 'dataTableId';
     const INSTANCE    = 'dataTableInstance';
+    const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
 
     /** @var DataForm */
@@ -154,14 +155,14 @@ abstract class DataTable extends Injectable
         } else {
             if ($page->current < 5) {
                 $pages = [1, 2, 3, 4, 5, null, $page->last];
-            } elseif($page->current > $page->last - 4) {
+            } elseif ($page->current > $page->last - 4) {
                 $pages = [1, null, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
             } else {
                 $pages = [1, null, $page->current - 1, $page->current, $page->current + 1, null, $page->last];
             }
         }
 
-        $page->pages = $pages;
+        $page->pages     = $pages;
         $this->tableData = $page;
 
         return $this->tableData;

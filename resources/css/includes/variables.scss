@@ -7,10 +7,13 @@ $pinkDarker: darken($colorPink, 15%);
 $pinkHover: #f8e3ee;
 
 $lightGray: #e1e1e1;
-$lightGrayDark: darken($lightGray, 5%);;
-$lightGrayDarker: darken($lightGray, 15%);;
+$lightGrayDark: darken($lightGray, 5%);
+$lightGrayDarker: darken($lightGray, 15%);
 $superLightGray: #f9f9f9;
 $gray: #aaaaaa;
+
+$highLightColor: #dff0d8;
+$highLightColorDark: darken($highLightColor, 5%);
 
 /* Miscellaneous */
 $defaultBorderRadius: 4px;

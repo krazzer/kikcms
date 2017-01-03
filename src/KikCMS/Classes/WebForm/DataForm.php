@@ -112,6 +112,6 @@ class DataForm extends WebForm
      */
     private function getSystemFields()
     {
-        return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE];
+        return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
     }
 }

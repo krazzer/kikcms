@@ -124,19 +124,40 @@ DataTable.prototype =
         var $form = $window.find('form');
         var formContents = $form.serialize();
 
+        formContents += '&dataTablePage=' + this.getCurrentPage();
+
         $.ajax({
-            url: '/cms/datatable/save',
-            type: 'post',
-            data: formContents,
             success: function (result, responseText, response) {
+                var $table = self.getDatatable().find('.table');
+                $table.html(result.table);
+
+                self.initTable();
+
+                var $editedRow = $table.find("tr[data-id=" + result.editedId + "]");
+                $editedRow.addClass('edited');
+
+                setTimeout(function(){
+                    $editedRow.addClass('easeOutBgColor');
+                    $editedRow.removeClass('edited');
+
+                    setTimeout(function () {
+                        $editedRow.removeClass('easeOutBgColor');
+                    }, 500);
+                }, 5000);
+
                 if (closeWindow && response.status == 200) {
                     self.closeWindow();
                 } else {
-                    $window.find('.windowContent').html(result);
+                    $window.find('.windowContent').html(result.window);
                     self.initWindow();
                 }
             },
-            error: function (result) {
+            url: '/cms/datatable/save',
+            type: 'post',
+            dataType: 'json',
+            data: formContents,
+            error: function (result, errorType, errorMessage) {
+                alert(errorMessage);
             }
         });
     },
@@ -145,6 +166,16 @@ DataTable.prototype =
         $('body').removeClass('datatableBlur');
         this.getWindow().fadeOut();
         this.getWindow().find('.windowContent').html('');
+    },
+
+    getCurrentPage: function() {
+        var currentPage = this.getDatatable().find('.pagination .active a').attr('data-page');
+
+        if( ! currentPage){
+            return 1;
+        }
+
+        return currentPage;
     },
 
     getDatatable: function () {

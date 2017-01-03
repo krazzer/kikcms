@@ -16,3 +16,7 @@ a{
         color: $pinkDark;
     }
 }
+
+.easeOutBgColor, tr.easeOutBgColor td{
+    transition: background-color 0.5s;
+}

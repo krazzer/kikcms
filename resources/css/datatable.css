@@ -150,6 +150,10 @@ body.datatableBlur {
         background-color: #f9f9f9; }
       .datatable .table table tbody tr:hover td {
         background-color: #eee; }
+      .datatable .table table tbody tr.edited td {
+        background-color: #dff0d8; }
+      .datatable .table table tbody tr.edited:hover td {
+        background-color: #d0e9c6; }
       .datatable .table table tbody tr.selected td {
         background-color: #df137a;
         color: #fff; }
