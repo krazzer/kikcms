@@ -36,7 +36,7 @@ class DeployService extends Injectable
         if( ! $assetSymlinkExists){
             $this->createAssetSymlink();
 
-            $output .= PHP_EOL . PHP_EOL . 'Symlink for assets created.';
+            $output[] = 'Symlink for assets created.';
         }
 
         // Notify Webmaster
@@ -104,7 +104,9 @@ class DeployService extends Injectable
 
     private function createAssetSymlink()
     {
-        exec('cd ' . $this->getRootDir() . ' && ln -s ../vendor/kiksaus/kikcms/resources/ cmsassets');
+        $symlinkCommand = 'ln -s ../vendor/kiksaus/kikcms/resources/ cmsassets';
+
+        exec('cd ' . $this->getRootDir() . '/public_html/ && ' . $symlinkCommand, $output);
     }
 
     /**
