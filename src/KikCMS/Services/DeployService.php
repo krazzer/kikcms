@@ -33,7 +33,7 @@ class DeployService extends Injectable
 
         $assetSymlinkExists = $this->checkAssetSymlink();
 
-        if( ! $assetSymlinkExists){
+        if ( ! $assetSymlinkExists) {
             $this->createAssetSymlink();
 
             $output[] = 'Symlink for assets created.';
@@ -97,9 +97,15 @@ class DeployService extends Injectable
      */
     private function checkAssetSymlink()
     {
-        exec('cd ' . $this->getRootDir() . ' && ls -F', $output);
+        exec('cd ' . $this->getRootDir() . '/public_html/ && ls -F', $output);
 
-        return strstr($output[0], 'cmsassets@');
+        foreach ($output as $line) {
+            if (strstr($line, 'cmsassets@')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function createAssetSymlink()
