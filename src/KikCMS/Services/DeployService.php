@@ -99,7 +99,7 @@ class DeployService extends Injectable
     {
         exec('cd ' . $this->getRootDir() . ' && ls -F', $output);
 
-        return strstr($output, 'cmsassets@');
+        return strstr($output[0], 'cmsassets@');
     }
 
     private function createAssetSymlink()
