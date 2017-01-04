@@ -22,15 +22,22 @@ class DeployService extends Injectable
             return;
         }
 
-        $rootDir     = dirname($_SERVER['DOCUMENT_ROOT']);
-        $composerDir = $rootDir . '/../../bin/';
+        $composerDir = $this->getRootDir() . '/../../bin/';
 
         $composerCommand = 'php ' . $composerDir . 'composer update ' . KikCMSConfig::PACKAGE_NAME;
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command
         putenv('COMPOSER_HOME=' . $composerDir);
-        exec('cd ' . $rootDir . ' && ' . $deployCommands, $output);
+        exec('cd ' . $this->getRootDir() . ' && ' . $deployCommands, $output);
+
+        $assetSymlinkExists = $this->checkAssetSymlink();
+
+        if( ! $assetSymlinkExists){
+            $this->createAssetSymlink();
+
+            $output .= PHP_EOL . PHP_EOL . 'Symlink for assets created.';
+        }
 
         // Notify Webmaster
         $this->sendMessage($output);
@@ -83,5 +90,28 @@ class DeployService extends Injectable
         }
 
         return implode(PHP_EOL, $output);
+    }
+
+    /**
+     * Checks whether the symlink for assets exists
+     */
+    private function checkAssetSymlink()
+    {
+        exec('cd ' . $this->getRootDir() . ' && ls -F', $output);
+
+        return strstr($output, 'cmsassets@');
+    }
+
+    private function createAssetSymlink()
+    {
+        exec('cd ' . $this->getRootDir() . ' && ln -s ../vendor/kiksaus/kikcms/resources/ cmsassets');
+    }
+
+    /**
+     * @return string
+     */
+    private function getRootDir()
+    {
+        return dirname($_SERVER['DOCUMENT_ROOT']);
     }
 }
