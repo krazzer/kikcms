@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'cms' => [
+        'loading' => 'Bezig met laden...',
+    ],
+
     'dataForm' => [
         'saveSuccess' => 'De gegevens zijn succesvol opgeslagen',
         'saveFailure' => 'Er is iets mis gegaan bij het opslaan van de gegevens',
@@ -13,6 +17,10 @@ return [
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
+        'pages'             => [
+            'total'         => 'Totaal',
+            'amountPerPage' => 'Aantal items per pagina',
+        ],
     ],
 
     'webform' => [
@@ -91,5 +99,18 @@ return [
         ],
     ],
 
-    'pageNotFound' => 'Pagina niet gevonden',
+    'error' => [
+        '401' => [
+            'title'       => 'Geen toegang',
+            'description' => 'U heeft geen toegang tot de opgevraagde pagina. <br><br>Heeft u het vermoeden dat u wel toegang tot deze pagina zou moeten hebben? <br>Neem dan contact op met <a href="mailto::webmaster">de webmaster</a>.',
+        ],
+        '404' => [
+            'title'       => 'Pagina niet gevonden',
+            'description' => 'De opgevraagde pagina bestaat niet. <br>Mogelijk is deze nog in ontwikkeling of is hij verwijderd.<br><br>Heeft u het vermoeden dat de pagina wel zou moeten bestaan? <br>Neem dan contact op met <a href="mailto::webmaster">de webmaster</a>.',
+        ],
+        '500' => [
+            'title'       => 'Interne fout',
+            'description' => 'Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.<br>Zij zullen het probleem zo spoedig mogelijk oplossen.',
+        ]
+    ],
 ];

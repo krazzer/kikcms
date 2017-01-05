@@ -16,13 +16,12 @@
             <div class="search">
                 <span class="glyphicon glyphicon-search"></span>
                 <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}" />
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
         {% endif %}
 
         {% if pagination.total_pages > 1 %}
-            <ul class="pagination">
-                {% include '@kikcms/data-table/pagination.twig' %}
-            </ul>
+            <div class="pages">{% include '@kikcms/data-table/pagination.twig' %}</div>
         {% endif %}
     </div>
 
@@ -32,9 +31,7 @@
 
     {% if pagination.total_pages > 1 %}
         <div class="footer">
-            <ul class="pagination">
-                {% include '@kikcms/data-table/pagination.twig' %}
-            </ul>
+            <div class="pages">{% include '@kikcms/data-table/pagination.twig' %}</div>
         </div>
     {% endif %}
 </div>

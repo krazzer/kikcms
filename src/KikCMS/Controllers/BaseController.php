@@ -9,5 +9,6 @@ class BaseController extends Controller
     public function initialize()
     {
         $this->view->setVar("flash", $this->flash);
+        $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
     }
 }

@@ -5,6 +5,11 @@
     filter: blur($amount + px);
 }
 
+@mixin blurTransition()
+{
+    transition: opacity, -webkit-filter, filter 0.3s;
+}
+
 @mixin clearFix()
 {
     &:after{

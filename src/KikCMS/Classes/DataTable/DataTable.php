@@ -14,10 +14,13 @@ use stdClass;
 /** @property DbWrapper $dbWrapper */
 abstract class DataTable extends Injectable
 {
-    const EDIT_ID     = 'dataTableId';
-    const INSTANCE    = 'dataTableInstance';
-    const PAGE        = 'dataTablePage';
-    const SESSION_KEY = 'dataTable';
+    const EDIT_ID       = 'dataTableEditId';
+    const INSTANCE      = 'dataTableInstance';
+    const PAGE          = 'dataTablePage';
+    const SESSION_KEY   = 'dataTable';
+
+    const FILTER_SEARCH = 'search';
+    const FILTER_PAGE   = 'page';
 
     /** @var DataForm */
     protected $form;
@@ -79,15 +82,15 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int $page
+     * @param array $filters
      * @return Response
      */
-    public function renderTable(int $page = 1)
+    public function renderTable(array $filters = [])
     {
         $this->initializeDatatable();
 
         return $this->renderView('table', [
-            'tableData'  => $this->getTableData($page)->items->toArray(),
+            'tableData'  => $this->getTableData($filters)->items->toArray(),
             'headerData' => $this->getTableHeaderData(),
         ]);
     }
@@ -128,19 +131,21 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int $page
+     * @param $filters
      * @return stdClass
      */
-    private function getTableData(int $page = 1)
+    private function getTableData($filters = [])
     {
         if ($this->tableData) {
             return $this->tableData;
         }
 
+        $page = (int) isset($filters[self::FILTER_PAGE]) ? $filters[self::FILTER_PAGE] : 1;
+
         $paginator = new QueryBuilder(array(
-            "builder" => $this->getQuery(),
+            "builder" => $this->getQuery($filters),
             "limit"   => 100,
-            "page"    => $page
+            "page"    => $page,
         ));
 
         // todo: put this in custom paginator
@@ -173,13 +178,11 @@ abstract class DataTable extends Injectable
      */
     private function getTableHeaderData()
     {
-        $tableData = $this->getTableData()->items->getFirst()->toArray();
-
-        if ( ! $tableData) {
+        if( ! $this->getTableData()->items->count()){
             return null;
-        } else {
-            return array_keys($tableData);
         }
+
+        return array_keys($this->getTableData()->items->getFirst()->toArray());
     }
 
     /**
@@ -198,16 +201,23 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @param array $filters
      * @return Builder
      */
-    public function getQuery(): Builder
+    public function getQuery(array $filters = []): Builder
     {
-        if ($this->query != null) {
-            return $this->query;
+        if ($this->query == null) {
+            $this->query = new Builder();
+            $this->query->addFrom($this->getTable());
         }
 
-        $this->query = new Builder();
-        $this->query->addFrom($this->getTable());
+        if(isset($filters[self::FILTER_SEARCH])){
+            $searchValue = $filters[self::FILTER_SEARCH];
+
+            foreach ($this->searchableFields as $field){
+                $this->query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
+            }
+        }
 
         return $this->query;
     }

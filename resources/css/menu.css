@@ -45,5 +45,8 @@
   width: 100%; }
   #main #main-content {
     padding-bottom: 50px; }
+    #main #main-content h1 {
+      margin: 0 0 44px 0;
+      line-height: 36px; }
 
 /*# sourceMappingURL=menu.css.map */

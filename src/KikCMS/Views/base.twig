@@ -20,7 +20,9 @@
     <meta name="author" content="Phalcon Team">
 </head>
 <body>
-
+<div id="notFading">
+    <div id="cmsLoader"><img src="/cmsassets/icons/loader.svg"><span>{{ tl('cms.loading') }}</span></div>
+</div>
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/jquery.min.js') }}
 {{ javascriptInclude('cmsassets/js/bootstrap.min.js') }}

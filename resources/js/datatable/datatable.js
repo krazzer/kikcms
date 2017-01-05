@@ -18,7 +18,7 @@ DataTable.prototype =
         this.getDatatable().find('.pagination a').click(function () {
             var $pageButton = $(this);
 
-            if ($pageButton.parent().hasClass('active') || $pageButton.parent().hasClass('disabled') ) {
+            if ($pageButton.parent().hasClass('active') || $pageButton.parent().hasClass('disabled')) {
                 return false;
             }
 
@@ -29,15 +29,21 @@ DataTable.prototype =
     },
 
     initSearch: function () {
-        this.getDatatable().find('.toolbar .search input').keyup(function () {
-            var $searchInput = $(this);
+        var self = this;
 
-            console.log($searchInput.val());
+        this.getSearchField().searchAble(function (value) {
+            self.action('search', {search: value}, function (result) {
+                self.getDatatable().find('.table').html(result.table);
+                self.getDatatable().find('.pages').html(result.pagination);
+
+                self.initTable();
+                self.initPagination();
+            })
         });
     },
 
     initTable: function () {
-        var self = this;
+        var self  = this;
         var $rows = this.getDatatable().find('tbody tr');
 
         $rows.find('td:not(.edit)').click(function () {
@@ -53,10 +59,16 @@ DataTable.prototype =
             var id = $(this).find('input[name=id]').val();
             self.actionEdit(id);
         });
+
+        var searchValue = this.getSearchField().val();
+
+        if(searchValue){
+            self.getDatatable().find('.table').find('td').highlight(searchValue);
+        }
     },
 
     initWindow: function () {
-        var self = this;
+        var self    = this;
         var $window = this.getWindow();
 
         $window.find('.closeButton').click(function () {
@@ -72,92 +84,80 @@ DataTable.prototype =
         });
     },
 
-    actionEdit: function (id) {
-        var self = this;
-        var $window = this.getWindow();
+    action: function (action, parameters, onSuccess, loadingElement) {
+        var self          = this;
+        var ajaxCompleted = false;
 
-        $('body').addClass('datatableBlur');
-        $window.fadeIn();
+        parameters.dataTableInstance = self.instance;
+
+        setTimeout(function () {
+            if (ajaxCompleted == false) {
+                KikCMS.showLoader(loadingElement);
+            }
+        }, 250);
 
         $.ajax({
-            url: '/cms/datatable/edit',
+            url: '/cms/datatable/' + action,
             type: 'post',
-            data: {
-                dataTableInstance: self.instance,
-                dataTableId: id
+            dataType: 'json',
+            data: parameters,
+            success: function (result, responseText, response) {
+                ajaxCompleted = true;
+                KikCMS.hideLoader(loadingElement);
+
+                onSuccess(result, responseText, response);
             },
-            success: function (result) {
-                $window.find('.windowContent').html(result);
-                self.initWindow();
-            },
-            error: function (result) {
+            error: function (result, errorType, errorMessage) {
+                ajaxCompleted = true;
+                KikCMS.hideLoader(loadingElement);
+
+                alert(errorMessage + '\n\n' + $(result.responseText).text());
             }
+        });
+    },
+
+    actionEdit: function (id) {
+        var self = this;
+
+        this.showWindow();
+
+        this.action('edit', {dataTableEditId: id}, function (result) {
+            self.setWindowContent(result.window);
         });
     },
 
     actionPage: function (page) {
-        var self = this;
+        var self    = this;
+        var filters = this.getFilters();
 
-        $.ajax({
-            url: '/cms/datatable/page',
-            type: 'post',
-            dataType: 'json',
-            data: {
-                dataTableInstance: self.instance,
-                page: page
-            },
-            success: function (result) {
-                self.getDatatable().find('.table').html(result.table);
-                self.getDatatable().find('.pagination').html(result.pagination);
+        filters.page = page;
 
-                self.initTable();
-                self.initPagination();
-            },
-            error: function (result) {
-            }
+        this.action('page', filters, function (result) {
+            self.getDatatable().find('.table').html(result.table);
+            self.getDatatable().find('.pages').html(result.pagination);
+
+            self.initTable();
+            self.initPagination();
         });
     },
 
     actionSave: function (closeWindow) {
-        var self = this;
+        var self    = this;
         var $window = this.getWindow();
-        var $form = $window.find('form');
-        var formContents = $form.serialize();
+        var $form   = $window.find('form');
+        var params  = $form.serializeObject();
 
-        formContents += '&dataTablePage=' + this.getCurrentPage();
+        $.extend(params, this.getFilters());
 
-        $.ajax({
-            success: function (result, responseText, response) {
-                var $table = self.getDatatable().find('.table');
-                $table.html(result.table);
+        this.action('save', params, function (result, responseText, response) {
+            if (response.status == 200) {
+                self.setTableContent(result.table, result.editedId);
+            }
 
-                self.initTable();
-
-                var $editedRow = $table.find("tr[data-id=" + result.editedId + "]");
-                $editedRow.addClass('edited');
-
-                setTimeout(function(){
-                    $editedRow.addClass('easeOutBgColor');
-                    $editedRow.removeClass('edited');
-
-                    setTimeout(function () {
-                        $editedRow.removeClass('easeOutBgColor');
-                    }, 500);
-                }, 5000);
-
-                if (closeWindow && response.status == 200) {
-                    self.closeWindow();
-                } else {
-                    $window.find('.windowContent').html(result.window);
-                    self.initWindow();
-                }
-            },
-            url: '/cms/datatable/save',
-            type: 'post',
-            dataType: 'json',
-            data: formContents,
-            error: function (result, errorType, errorMessage) {
-                alert(errorMessage);
+            if (closeWindow && response.status == 200) {
+                self.closeWindow();
+            } else {
+                self.setWindowContent(result.window);
             }
         });
     },
@@ -168,10 +168,42 @@ DataTable.prototype =
         this.getWindow().find('.windowContent').html('');
     },
 
-    getCurrentPage: function() {
+    showWindow: function () {
+        $('body').addClass('datatableBlur');
+        this.getWindow().fadeIn();
+    },
+
+    setTableContent: function (tableContent, editedId) {
+        var $table = this.getDatatable().find('.table');
+        $table.html(tableContent);
+        this.initTable();
+
+        if (!editedId) {
+            return;
+        }
+
+        var $editedRow = $table.find("tr[data-id=" + editedId + "]");
+        $editedRow.addClass('edited');
+
+        setTimeout(function () {
+            $editedRow.addClass('easeOutBgColor');
+            $editedRow.removeClass('edited');
+
+            setTimeout(function () {
+                $editedRow.removeClass('easeOutBgColor');
+            }, 500);
+        }, 5000);
+    },
+
+    setWindowContent: function (contents) {
+        this.getWindow().find('.windowContent').html(contents);
+        this.initWindow();
+    },
+
+    getCurrentPage: function () {
         var currentPage = this.getDatatable().find('.pagination .active a').attr('data-page');
 
-        if( ! currentPage){
+        if (!currentPage) {
             return 1;
         }
 
@@ -182,14 +214,27 @@ DataTable.prototype =
         return $("#" + this.instance);
     },
 
+    getFilters: function () {
+        var filters = {};
+
+        filters.page   = this.getCurrentPage();
+        filters.search = this.getSearchField().val();
+
+        return filters;
+    },
+
+    getSearchField: function () {
+        return this.getDatatable().find('.toolbar .search input');
+    },
+
     getWindow: function () {
         var windowId = this.instance + 'Window';
 
-        if ($('body > #' + windowId).length < 1) {
+        if ($('body > #notFading > #' + windowId).length < 1) {
             var $window = '<div class="datatableWindow" id="' + windowId + '">' +
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
-            $('body').prepend($window);
+            $('body > #notFading').prepend($window);
         }
 
         return $('#' + windowId);

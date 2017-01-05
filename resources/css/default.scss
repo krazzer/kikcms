@@ -17,6 +17,47 @@ a{
     }
 }
 
+#cmsLoader{
+    @include clearFix();
+    position: fixed;
+    left: 35px;
+    top: 35px;
+    padding: 13px 10px;
+    border: 1px solid $lightGray;
+    background-color: rgba(255,255,255,0.95);
+    border-radius: $defaultBorderRadius;
+    z-index: 10;
+    transition: opacity 0.3s;
+    opacity: 0;
+
+    &.show{
+        opacity: 1;
+    }
+
+    img{
+        height: 40px;
+        float: left;
+
+        .sand{
+            fill: green;
+        }
+    }
+
+    span{
+        float: left;
+        padding: 9px 12px 0 12px;
+        display: inline-block;
+        font-weight: 400;
+    }
+}
+
+.elementLoading{
+    @include blur(8);
+    @include noTextSelect();
+    pointer-events: none;
+    opacity: 0.7;
+}
+
 .easeOutBgColor, tr.easeOutBgColor td{
     transition: background-color 0.5s;
 }

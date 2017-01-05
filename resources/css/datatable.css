@@ -5,7 +5,7 @@ body > *:not(.datatableWindow) {
 
 body.datatableBlur {
   overflow: hidden; }
-  body.datatableBlur > *:not(.datatableWindow) {
+  body.datatableBlur > *:not(#notFading) {
     -webkit-filter: blur(4px);
     -ms-filter: blur(4px);
     filter: blur(4px);
@@ -84,7 +84,7 @@ body.datatableBlur {
     border-radius: 4px;
     padding: 7px 15px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: background-color 0.3s;
     border: 1px solid #e1e1e1; }
     .datatable .toolbar .button .glyphicon {
       width: 14px; }
@@ -100,74 +100,92 @@ body.datatableBlur {
     float: right;
     width: 220px;
     position: relative; }
-    .datatable .toolbar .search .glyphicon {
+    .datatable .toolbar .search .glyphicon-search {
       position: absolute;
       top: 11px;
       left: 14px; }
+    .datatable .toolbar .search .glyphicon-remove {
+      pointer-events: auto;
+      cursor: pointer;
+      display: none; }
     .datatable .toolbar .search input {
       padding-left: 38px; }
-  .datatable .toolbar .pagination {
+  .datatable .toolbar .pages {
     margin: 0 10px 0 0; }
-.datatable .pagination {
+.datatable .pages {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   float: right;
-  margin: 0; }
-  .datatable .pagination > li > a {
-    padding: 7px 12px;
-    color: #df137a;
-    cursor: pointer;
-    min-width: 36px;
-    text-align: center; }
-  .datatable .pagination > .active > a {
-    color: #fff;
-    background-color: #df137a;
-    border-color: #df137a; }
-.datatable .table table {
-  width: 100%; }
-  .datatable .table table tr td {
-    padding: 8px 15px; }
-  .datatable .table table thead {
-    font-weight: 700;
-    background-color: #fff; }
-    .datatable .table table thead td {
-      cursor: pointer; }
-  .datatable .table table tbody {
-    overflow: auto;
-    height: 400px; }
-    .datatable .table table tbody tr {
-      cursor: default; }
-      .datatable .table table tbody tr td {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none; }
-      .datatable .table table tbody tr:nth-child(odd) {
-        background-color: #f9f9f9; }
-      .datatable .table table tbody tr:hover td {
-        background-color: #eee; }
-      .datatable .table table tbody tr.edited td {
-        background-color: #dff0d8; }
-      .datatable .table table tbody tr.edited:hover td {
-        background-color: #d0e9c6; }
-      .datatable .table table tbody tr.selected td {
-        background-color: #df137a;
-        color: #fff; }
-      .datatable .table table tbody tr.selected:hover td {
-        background-color: #c8116d; }
-      .datatable .table table tbody tr td.edit {
-        text-align: center;
-        width: 60px;
+  max-height: 36px;
+  overflow: hidden; }
+  .datatable .pages .pagination {
+    margin: 0;
+    padding: 0; }
+    .datatable .pages .pagination > li > a {
+      padding: 7px 12px;
+      color: #df137a;
+      cursor: pointer;
+      min-width: 36px;
+      text-align: center; }
+    .datatable .pages .pagination > .active > a {
+      color: #fff;
+      background-color: #df137a;
+      border-color: #df137a; }
+.datatable .table {
+  transition: opacity, -webkit-filter, filter 0.3s; }
+  .datatable .table table {
+    width: 100%; }
+    .datatable .table table tr td {
+      padding: 8px 15px; }
+    .datatable .table table thead {
+      font-weight: 700;
+      background-color: #fff; }
+      .datatable .table table thead td {
         cursor: pointer; }
-        .datatable .table table tbody tr td.edit .glyphicon {
-          display: none;
-          margin-top: -2px; }
-      .datatable .table table tbody tr:hover td.edit .glyphicon {
-        display: block; }
+    .datatable .table table tbody {
+      overflow: auto;
+      height: 400px; }
+      .datatable .table table tbody tr {
+        cursor: default; }
+        .datatable .table table tbody tr td {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none; }
+          .datatable .table table tbody tr td .highlight {
+            background-color: #dff0d8; }
+        .datatable .table table tbody tr:nth-child(odd) {
+          background-color: #f9f9f9; }
+        .datatable .table table tbody tr:hover td {
+          background-color: #eee; }
+        .datatable .table table tbody tr.edited td {
+          background-color: #dff0d8; }
+        .datatable .table table tbody tr.edited:hover td {
+          background-color: #d0e9c6; }
+        .datatable .table table tbody tr.selected td {
+          background-color: #df137a;
+          color: #fff; }
+          .datatable .table table tbody tr.selected td .highlight {
+            background-color: #c8116d; }
+        .datatable .table table tbody tr.selected:hover td {
+          background-color: #c8116d; }
+          .datatable .table table tbody tr.selected:hover td .highlight {
+            background-color: #990d53; }
+        .datatable .table table tbody tr td.edit {
+          text-align: center;
+          width: 60px;
+          cursor: pointer; }
+          .datatable .table table tbody tr td.edit .glyphicon {
+            display: none;
+            margin-top: -2px; }
+        .datatable .table table tbody tr:hover td.edit .glyphicon {
+          display: block; }
+  .datatable .table .no-data {
+    padding: 8px 0; }
 .datatable > .footer:after {
   content: "";
   display: table;

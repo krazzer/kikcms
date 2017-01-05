@@ -12,6 +12,46 @@ a {
   a:hover {
     color: #c8116d; }
 
+#cmsLoader {
+  position: fixed;
+  left: 35px;
+  top: 35px;
+  padding: 13px 10px;
+  border: 1px solid #e1e1e1;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  z-index: 10;
+  transition: opacity 0.3s;
+  opacity: 0; }
+  #cmsLoader:after {
+    content: "";
+    display: table;
+    clear: both; }
+  #cmsLoader.show {
+    opacity: 1; }
+  #cmsLoader img {
+    height: 40px;
+    float: left; }
+    #cmsLoader img .sand {
+      fill: green; }
+  #cmsLoader span {
+    float: left;
+    padding: 9px 12px 0 12px;
+    display: inline-block;
+    font-weight: 400; }
+
+.elementLoading {
+  -webkit-filter: blur(8px);
+  -ms-filter: blur(8px);
+  filter: blur(8px);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.7; }
+
 .easeOutBgColor, tr.easeOutBgColor td {
   transition: background-color 0.5s; }
 

@@ -1,7 +1,14 @@
-{% for page in pagination.pages %}
-    {% if page %}
-        <li class="{{ page == pagination.current ? 'active' : '' }}"><a data-page="{{ page }}">{{ page }}</a></li>
-    {% else %}
-        <li class="disabled"><a>...</a></li>
-    {% endif %}
-{% endfor %}
+{% set totalsText = tl('dataTable.pages.total') ~ ': ' ~ pagination.total_items %}
+{% set amountPerPageText = tl('dataTable.pages.amountPerPage') ~ ': ' ~ pagination.limit %}
+
+{% if pagination.total_items > pagination.limit %}
+    <ul class="pagination" title="{{ totalsText }}, {{ amountPerPageText }}">
+    {% for page in pagination.pages %}
+        {% if page %}
+            <li class="{{ page == pagination.current ? 'active' : '' }}"><a data-page="{{ page }}">{{ page }}</a></li>
+        {% else %}
+            <li class="disabled"><a>...</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}

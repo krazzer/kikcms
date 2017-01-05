@@ -1,61 +1,120 @@
+$.fn.searchAble = function (onSearch) {
+    var lastInput    = '';
+    var lastSearch   = '';
+    var $searchField = this;
+    var $removeIcon  = $searchField.next('.glyphicon-remove');
 
-var Profile = {
-    check: function (id) {
-        if ($.trim($("#" + id)[0].value) == '') {
-            $("#" + id)[0].focus();
-            $("#" + id + "_alert").show();
+    $removeIcon.click(function () {
+        $searchField.val('');
+        $searchField.trigger('keyup');
+    });
 
-            return false;
-        };
+    $searchField.on('keyup', function (e) {
+        var currentSearch = $searchField.val();
 
-        return true;
+        if (currentSearch == '') {
+            $removeIcon.hide();
+        } else {
+            $removeIcon.show();
+        }
+
+        if (e.keyCode == keyCode.ENTER) {
+            lastSearch = currentSearch;
+            onSearch(currentSearch);
+            return;
+        }
+
+        lastInput = currentSearch;
+
+        setTimeout(function () {
+            if (currentSearch == lastInput && currentSearch != lastSearch) {
+                lastSearch = currentSearch;
+                onSearch(currentSearch);
+            }
+        }, 500);
+    });
+};
+
+$.fn.serializeObject = function () {
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function () {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+var KikCmsClass = function () {
+};
+
+KikCmsClass.prototype =
+{
+    showLoader: function (loadingElement) {
+        this.getLoader().addClass('show');
+
+        if (loadingElement) {
+            loadingElement.addClass('elementLoading');
+        }
     },
-    validate: function () {
-        if (SignUp.check("name") == false) {
-            return false;
+
+    hideLoader: function (loadingElement) {
+        var self = this;
+        this.getLoader().removeClass('show');
+
+        if (loadingElement) {
+            loadingElement.removeClass('elementLoading');
+
+            setTimeout(function () {
+                self.getLoader().css({top: 35, left: 35});
+            }, 300);
         }
-        if (SignUp.check("email") == false) {
-            return false;
-        }
-        $("#profileForm")[0].submit();
+    },
+
+    getLoader: function () {
+        return $('#cmsLoader');
     }
 };
 
-var SignUp = {
-    check: function (id) {
-        if ($.trim($("#" + id)[0].value) == '') {
-            $("#" + id)[0].focus();
-            $("#" + id + "_alert").show();
+var KikCMS = new KikCmsClass();
 
-            return false;
-        };
+var keyCode = {
+    BACKSPACE: 8, COMMA: 188, DELETE: 46, DOWN: 40, END: 35, ENTER: 13, ESCAPE: 27, HOME: 36, LEFT: 37,
+    PAGE_DOWN: 34, PAGE_UP: 33, PERIOD: 190, RIGHT: 39, SPACE: 32, TAB: 9, UP: 38
+};
 
-        return true;
-    },
-    validate: function () {
-        if (SignUp.check("name") == false) {
-            return false;
+jQuery.fn.highlight = function (pat) {
+    function innerHighlight(node, pat) {
+        var skip = 0;
+        if (node.nodeType == 3) {
+            var pos = node.data.toUpperCase().indexOf(pat);
+            pos -= (node.data.substr(0, pos).toUpperCase().length - node.data.substr(0, pos).length);
+            if (pos >= 0) {
+                var spannode       = document.createElement('span');
+                spannode.className = 'highlight';
+                var middlebit      = node.splitText(pos);
+                var endbit         = middlebit.splitText(pat.length);
+                var middleclone    = middlebit.cloneNode(true);
+                spannode.appendChild(middleclone);
+                middlebit.parentNode.replaceChild(spannode, middlebit);
+                skip = 1;
+            }
         }
-        if (SignUp.check("username") == false) {
-            return false;
+        else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+            for (var i = 0; i < node.childNodes.length; ++i) {
+                i += innerHighlight(node.childNodes[i], pat);
+            }
         }
-        if (SignUp.check("email") == false) {
-            return false;
-        }
-        if (SignUp.check("password") == false) {
-            return false;
-        }
-        if ($("#password")[0].value != $("#repeatPassword")[0].value) {
-            $("#repeatPassword")[0].focus();
-            $("#repeatPassword_alert").show();
-
-            return false;
-        }
-        $("#registerForm")[0].submit();
+        return skip;
     }
-}
 
-$(document).ready(function () {
-    $("#registerForm .alert").hide();
-    $("div.profile .alert").hide();
-});
+    return this.length && pat && pat.length ? this.each(function () {
+        innerHighlight(this, pat.toUpperCase());
+    }) : this;
+};

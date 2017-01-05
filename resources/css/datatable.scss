@@ -8,7 +8,7 @@ body > *:not(.datatableWindow){
 body.datatableBlur{
     overflow: hidden;
 
-    > *:not(.datatableWindow){
+    > *:not(#notFading){
         @include blur(4);
         @include noTextSelect();
         pointer-events: none;
@@ -82,7 +82,7 @@ body.datatableBlur{
             border-radius: $defaultBorderRadius;
             padding: 7px 15px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: background-color 0.3s;
             border: 1px solid $lightGray;
 
             .glyphicon{
@@ -109,10 +109,16 @@ body.datatableBlur{
             width: 220px;
             position: relative;
 
-            .glyphicon{
+            .glyphicon-search{
                 position: absolute;
                 top: 11px;
                 left: 14px;
+            }
+
+            .glyphicon-remove{
+                pointer-events: auto;
+                cursor: pointer;
+                display: none;
             }
 
             input{
@@ -120,32 +126,39 @@ body.datatableBlur{
             }
         }
 
-        .pagination{
+        .pages{
             margin: 0 10px 0 0;
         }
     }
 
-    .pagination{
+    .pages {
         @include noTextSelect();
         float: right;
-        margin: 0;
+        max-height: 36px;
+        overflow: hidden;
 
-        > li > a{
-            padding: 7px 12px;
-            color: $colorPink;
-            cursor: pointer;
-            min-width: 36px;
-            text-align: center;
-        }
+        .pagination {
+            margin: 0;
+            padding: 0;;
 
-        > .active > a{
-            color: #fff;
-            background-color: $colorPink;
-            border-color: $colorPink;
+            > li > a {
+                padding: 7px 12px;
+                color: $colorPink;
+                cursor: pointer;
+                min-width: 36px;
+                text-align: center;
+            }
+
+            > .active > a {
+                color: #fff;
+                background-color: $colorPink;
+                border-color: $colorPink;
+            }
         }
     }
 
     .table {
+        @include blurTransition();
 
         table {
             width: 100%;
@@ -172,6 +185,10 @@ body.datatableBlur{
 
                     td{
                         @include noTextSelect();
+
+                        .highlight{
+                            background-color: $highLightColor;
+                        }
                     }
 
                     &:nth-child(odd) {
@@ -198,10 +215,18 @@ body.datatableBlur{
                         td {
                             background-color: $colorPink;
                             color: #fff;
+
+                            .highlight{
+                                background-color: $pinkDark;
+                            }
                         }
 
                         &:hover td{
                             background-color: $pinkDark;
+
+                            .highlight{
+                                background-color: $pinkDarker;
+                            }
                         }
                     }
 
@@ -223,6 +248,10 @@ body.datatableBlur{
                     }
                 }
             }
+        }
+
+        .no-data{
+            padding: 8px 0;
         }
     }
 
