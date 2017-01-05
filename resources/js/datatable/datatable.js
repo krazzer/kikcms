@@ -71,10 +71,6 @@ DataTable.prototype =
         var self    = this;
         var $window = this.getWindow();
 
-        $window.find('.closeButton').click(function () {
-            self.closeWindow();
-        });
-
         $window.find('.saveAndClose').click(function () {
             self.actionSave(true);
         });
@@ -87,6 +83,7 @@ DataTable.prototype =
     action: function (action, parameters, onSuccess, loadingElement) {
         var self          = this;
         var ajaxCompleted = false;
+        var retries       = 0;
 
         parameters.dataTableInstance = self.instance;
 
@@ -96,24 +93,41 @@ DataTable.prototype =
             }
         }, 250);
 
-        $.ajax({
-            url: '/cms/datatable/' + action,
-            type: 'post',
-            dataType: 'json',
-            data: parameters,
-            success: function (result, responseText, response) {
-                ajaxCompleted = true;
-                KikCMS.hideLoader(loadingElement);
+        var xmlHttpRequest = function(){
+            $.ajax({
+                url: '/cms/datatable/' + action,
+                type: 'post',
+                dataType: 'json',
+                data: parameters,
+                success: function (result, responseText, response) {
+                    ajaxCompleted = true;
+                    KikCMS.hideLoader(loadingElement);
 
-                onSuccess(result, responseText, response);
-            },
-            error: function (result, errorType, errorMessage) {
-                ajaxCompleted = true;
-                KikCMS.hideLoader(loadingElement);
+                    onSuccess(result, responseText, response);
+                },
+                error: function (result, errorType, errorMessage) {
+                    // try again on connection failure
+                    if(result.readyState == 0 && result.status == 0 && retries < 2){
+                        retries++; xmlHttpRequest(); return;
+                    }
 
-                alert(errorMessage + '\n\n' + $(result.responseText).text());
-            }
-        });
+                    ajaxCompleted = true;
+                    KikCMS.hideLoader(loadingElement);
+
+                    if(result.responseText){
+                        errorMessage += $(result.responseText).text();
+                    }
+
+                    if( ! errorMessage){
+                        errorMessage = 'Er is iets mis gegaan bij de verwerking van uw verzoek. Probeer het later nog eens.';
+                    }
+
+                    alert(errorMessage);
+                }
+            });
+        }
+
+        xmlHttpRequest();
     },
 
     actionEdit: function (id) {
@@ -228,13 +242,19 @@ DataTable.prototype =
     },
 
     getWindow: function () {
+        var self = this;
         var windowId = this.instance + 'Window';
+        var $bodyNotFading = $('body > #notFading');
 
-        if ($('body > #notFading > #' + windowId).length < 1) {
+        if ($bodyNotFading.find(' > #' + windowId).length < 1) {
             var $window = '<div class="datatableWindow" id="' + windowId + '">' +
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
-            $('body > #notFading').prepend($window);
+            $bodyNotFading.prepend($window);
+
+            $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(function () {
+                self.closeWindow();
+            });
         }
 
         return $('#' + windowId);
