@@ -4,6 +4,7 @@ use KikCMS\Services\Services;
 use Phalcon\Mvc\Application;
 use Phalcon\Config\Adapter\Ini as ConfigIni;
 
+require(__DIR__ . '/functions.php');
 require(SITE_PATH . 'vendor/autoload.php');
 
 $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');

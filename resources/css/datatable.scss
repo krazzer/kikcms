@@ -175,6 +175,14 @@ body.datatableBlur{
 
                 td {
                     cursor: pointer;
+
+                    .glyphicon{
+                        position: absolute;
+                        top: auto;
+                        margin-left: 8px;
+                        margin-top: 3px;
+                        color: $gray;
+                    }
                 }
             }
 

@@ -55,7 +55,10 @@ DataTable.prototype =
         var self = this;
 
         this.getSearchField().searchAble(function (value) {
-            self.action('search', {search: value}, function (result) {
+            var filters    = self.getFilters();
+            filters.search = value;
+
+            self.action('search', filters, function (result) {
                 self.getDatatable().find('.table').html(result.table);
                 self.getDatatable().find('.pages').html(result.pagination);
 
@@ -79,7 +82,7 @@ DataTable.prototype =
             self.actionEdit(id);
         });
 
-        $rows.dblclick(function () {
+        $rows.on('dblclick', function () {
             var id = $(this).find('input[name=id]').val();
             self.actionEdit(id);
         });
@@ -89,6 +92,21 @@ DataTable.prototype =
         if (searchValue) {
             self.getDatatable().find('.table').find('td').highlight(searchValue);
         }
+
+        this.getDatatable().find('thead td').click(function () {
+            var $column      = $(this);
+            var column       = $column.attr('data-column');
+            var curDirection = $column.attr('data-sort');
+            var direction    = 'asc';
+
+            if (curDirection == 'asc') {
+                direction = 'desc';
+            } else if (curDirection == 'desc') {
+                direction = '';
+            }
+
+            self.actionSort(column, direction);
+        });
 
         self.updateToolbar();
     },
@@ -144,7 +162,7 @@ DataTable.prototype =
 
                     var key = KikCMS.errorMessages[result.status] ? result.status : 'unknown';
 
-                    if(KikCMS.isDev) {
+                    if (KikCMS.isDev) {
                         $("#ajaxDebugger").html(result.responseText).show();
                     } else {
                         alert(KikCMS.errorMessages[key].title + "\n\n" + KikCMS.errorMessages[key].description);
@@ -217,6 +235,22 @@ DataTable.prototype =
         });
     },
 
+    actionSort: function (column, direction) {
+        var self    = this;
+        var filters = this.getFilters();
+
+        filters.sortColumn    = column;
+        filters.sortDirection = direction;
+
+        this.action('sort', filters, function (result) {
+            self.getDatatable().find('.table').html(result.table);
+            self.getDatatable().find('.pages').html(result.pagination);
+
+            self.initTable();
+            self.initPagination();
+        });
+    },
+
     closeWindow: function () {
         $('body').removeClass('datatableBlur');
         this.getWindow().fadeOut();
@@ -274,6 +308,16 @@ DataTable.prototype =
 
         filters.page   = this.getCurrentPage();
         filters.search = this.getSearchField().val();
+
+        this.getDatatable().find('table thead td[data-sort="asc"]').each(function () {
+            filters.sortDirection = 'asc';
+            filters.sortColumn    = $(this).attr('data-column');
+        });
+
+        this.getDatatable().find('table thead td[data-sort="desc"]').each(function () {
+            filters.sortDirection = 'desc';
+            filters.sortColumn    = $(this).attr('data-column');
+        });
 
         return filters;
     },

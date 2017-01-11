@@ -18,8 +18,10 @@ abstract class DataTable extends Injectable
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
 
-    const FILTER_SEARCH = 'search';
-    const FILTER_PAGE   = 'page';
+    const FILTER_SEARCH         = 'search';
+    const FILTER_PAGE           = 'page';
+    const FILTER_SORT_COLUMN    = 'sortColumn';
+    const FILTER_SORT_DIRECTION = 'sortDirection';
 
     const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple'];
 
@@ -28,6 +30,9 @@ abstract class DataTable extends Injectable
 
     /** @var array */
     protected $searchableFields = [];
+
+    /** @var array */
+    protected $fieldFormatting = [];
 
     /** @var Builder|null */
     private $query;
@@ -48,6 +53,17 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @param string $column
+     * @param string $value
+     *
+     * @return string
+     */
+    public function formatValue(string $column, string $value)
+    {
+        return $this->fieldFormatting[$column]($value);
+    }
+
+    /**
      * Render the datatable
      *
      * @return string
@@ -57,11 +73,13 @@ abstract class DataTable extends Injectable
         $this->initializeDatatable();
 
         return $this->renderView('index', [
-            'tableData'    => $this->getTableData()->items->toArray(),
-            'pagination'   => $this->getTableData(),
-            'headerData'   => $this->getTableHeaderData(),
-            'instanceName' => $this->getInstanceName(),
-            'isSearchable' => count($this->searchableFields) > 0,
+            'tableData'       => $this->getTableData()->items->toArray(),
+            'pagination'      => $this->getTableData(),
+            'headerData'      => $this->getTableHeaderData(),
+            'instanceName'    => $this->getInstanceName(),
+            'isSearchable'    => count($this->searchableFields) > 0,
+            'fieldFormatting' => $this->fieldFormatting,
+            'this'            => $this,
         ]);
     }
 
@@ -103,8 +121,11 @@ abstract class DataTable extends Injectable
         $this->initializeDatatable();
 
         return $this->renderView('table', [
-            'tableData'  => $this->getTableData($filters)->items->toArray(),
-            'headerData' => $this->getTableHeaderData(),
+            'tableData'       => $this->getTableData($filters)->items->toArray(),
+            'headerData'      => $this->getTableHeaderData(),
+            'fieldFormatting' => $this->fieldFormatting,
+            'filters'         => $filters,
+            'this'            => $this,
         ]);
     }
 
@@ -194,12 +215,12 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    private function getTableHeaderData()
+    private function getTableHeaderData(): array
     {
         if ( ! $this->getTableData()->items->count()) {
-            return null;
+            return [];
         }
 
         return array_keys($this->getTableData()->items->getFirst()->toArray());
@@ -239,6 +260,16 @@ abstract class DataTable extends Injectable
             }
         }
 
+        if (isset($filters[self::FILTER_SORT_COLUMN])) {
+            $column    = $filters[self::FILTER_SORT_COLUMN];
+            $direction = $filters[self::FILTER_SORT_DIRECTION];
+            $columns   = $this->getTableHeaderData();
+
+            if (in_array($column, $columns) && in_array($direction, ['asc', 'desc'])) {
+                $this->query->orderBy($column . ' ' . $direction);
+            }
+        }
+
         return $this->query;
     }
 
@@ -251,6 +282,18 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @param string $column
+     * @param callable $callback
+     * @return $this|DataTable
+     */
+    public function setFieldFormatting(string $column, callable $callback)
+    {
+        $this->fieldFormatting[$column] = $callback;
+
+        return $this;
+    }
+
+    /**
      * Retrieve data from fields that are not stored in the current DataTable's Table
      *
      * @param $id
@@ -260,8 +303,7 @@ abstract class DataTable extends Injectable
     {
         $data = [];
 
-        foreach ($this->form->getFields() as $key => $field)
-        {
+        foreach ($this->form->getFields() as $key => $field) {
             if ($field->isStoredElsewhere()) {
                 $data[$key] = $field->getValue($id);
             }

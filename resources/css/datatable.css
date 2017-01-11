@@ -147,6 +147,12 @@ body.datatableBlur {
       background-color: #fff; }
       .datatable .table table thead td {
         cursor: pointer; }
+        .datatable .table table thead td .glyphicon {
+          position: absolute;
+          top: auto;
+          margin-left: 8px;
+          margin-top: 3px;
+          color: #aaaaaa; }
     .datatable .table table tbody {
       overflow: auto;
       height: 400px; }

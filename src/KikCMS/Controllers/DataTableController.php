@@ -68,11 +68,26 @@ class DataTableController extends BaseController
 
     public function searchAction()
     {
-        $dataTable   = $this->getDataTable();
-        $searchValue = $this->request->getPost(DataTable::FILTER_SEARCH);
+        $dataTable = $this->getDataTable();
+        $filters   = $this->getFilters();
+
+        $filters[DataTable::FILTER_PAGE] = 1;
 
         return json_encode([
-            'table'      => $dataTable->renderTable([DataTable::FILTER_SEARCH => $searchValue]),
+            'table'      => $dataTable->renderTable($filters),
+            'pagination' => $dataTable->renderPagination(1),
+        ]);
+    }
+
+    public function sortAction()
+    {
+        $dataTable = $this->getDataTable();
+        $filters   = $this->getFilters();
+
+        $filters[DataTable::FILTER_PAGE] = 1;
+
+        return json_encode([
+            'table'      => $dataTable->renderTable($filters),
             'pagination' => $dataTable->renderPagination(1),
         ]);
     }
@@ -103,12 +118,20 @@ class DataTableController extends BaseController
     {
         $filters = [];
 
+        // get page filter
         $filters[DataTable::FILTER_PAGE] = $this->request->getPost(DataTable::FILTER_PAGE);
 
+        // get search filter
         $search = $this->request->getPost(DataTable::FILTER_SEARCH);
 
-        if( ! empty($search)){
+        if ( ! empty($search)) {
             $filters[DataTable::FILTER_SEARCH] = $search;
+        }
+
+        // get sort filter
+        if ($this->request->hasPost(DataTable::FILTER_SORT_COLUMN)) {
+            $filters[DataTable::FILTER_SORT_COLUMN]    = $this->request->getPost(DataTable::FILTER_SORT_COLUMN);
+            $filters[DataTable::FILTER_SORT_DIRECTION] = $this->request->getPost(DataTable::FILTER_SORT_DIRECTION);
         }
 
         return $filters;

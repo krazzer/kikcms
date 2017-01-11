@@ -1,9 +1,21 @@
+{# @var this \KikCMS\Classes\DataTable\DataTable #}
+
 {% if(headerData) %}
     <table>
         <thead>
         <tr>
             {% for name in headerData %}
-                <td>{{ name|capitalize }}</td>
+                {% set sortClass = '' %}
+                {% set sortDirection = '' %}
+                {% if filters.sortColumn == name %}
+                    {% if filters.sortDirection == 'asc' %}
+                        {% set sortClass = 'glyphicon glyphicon-sort-by-attributes' %}
+                    {% elseif filters.sortDirection == 'desc' %}
+                        {% set sortClass = 'glyphicon glyphicon-sort-by-attributes-alt' %}
+                    {% endif %}
+                    {% set sortDirection = filters.sortDirection %}
+                {% endif %}
+                <td data-column="{{ name }}" data-sort="{{ sortDirection }}">{{ name|capitalize }}<span class="{{ sortClass }}"></span></td>
             {% endfor %}
             <td></td>
         </tr>
@@ -12,8 +24,14 @@
         <tbody>
         {% for row in tableData %}
             <tr data-id="{{ row.id }}">
-                {% for value in row %}
-                    <td>{{ value }}</td>
+                {% for key, value in row %}
+                    <td>
+                        {% if fieldFormatting[key] is defined %}
+                            {{ this.formatValue(key, value)|raw }}
+                        {% else %}
+                            {{ value }}
+                        {% endif %}
+                    </td>
                 {% endfor %}
                 <td class="edit">
                     <input type="hidden" name="id" value="{{ row.id }}">
