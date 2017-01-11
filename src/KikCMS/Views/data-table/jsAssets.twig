@@ -1,1 +1,7 @@
 {{ javascriptInclude('cmsassets/js/datatable/datatable.js') }}
+
+<script>
+    {% for key in dataTableJsTranslations %}
+        KikCMS.translations['dataTable.{{ key }}'] = "{{ tl('dataTable.' ~ key) }}";
+    {% endfor %}
+</script>

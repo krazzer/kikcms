@@ -3,11 +3,11 @@
 namespace KikCMS\Services;
 
 
-use KikCMS\Classes\DbWrapper;
+use KikCMS\Classes\DbService;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
-/** @property DbWrapper $dbWrapper */
+/** @property DbService $dbService */
 /** @property Config $applicationConfig */
 class UserService extends Injectable
 {
@@ -18,9 +18,9 @@ class UserService extends Injectable
      */
     public function getByEmail($email)
     {
-        $user = $this->dbWrapper->queryRow("
+        $user = $this->dbService->queryRow("
             SELECT * FROM kikcms_user 
-            WHERE email = " . $this->dbWrapper->escape($email) . "
+            WHERE email = " . $this->dbService->escape($email) . "
         ");
 
         return $user;
@@ -55,6 +55,7 @@ class UserService extends Injectable
 
             $this->storePassword($user['id'], $password);
             $this->setLoggedIn($user['id']);
+
             return true;
         }
 
@@ -71,7 +72,7 @@ class UserService extends Injectable
 
         $this->db->query("
             UPDATE kikcms_user
-            SET password = " . $this->dbWrapper->escape($hash) . "
+            SET password = " . $this->dbService->escape($hash) . "
             WHERE id = " . (int) $id . "
         ");
     }

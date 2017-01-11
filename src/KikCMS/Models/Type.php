@@ -4,10 +4,12 @@ namespace KikCMS\Models;
 
 use KikCMS\Classes\Model\Model;
 
-class DummyProducts extends Model
+class Type extends Model
 {
+    const FIELD_ID = 'id';
+
     public function initialize()
     {
-        $this->setSource('products_dummy');
+        $this->setSource('type');
     }
 }

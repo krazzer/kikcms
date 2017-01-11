@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\Phalcon;
 
+use Phalcon\Config;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
@@ -153,6 +154,12 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('tl', function ($string, $parameters = []) use ($di) {
                 return $di->get("translator")->tl($string, $parameters);
             }, $options),
+            new \Twig_SimpleFunction('config', function ($string) use ($di) {
+                return $this->getConfig($string, $di);
+            }),
+            new \Twig_SimpleFunction('ucfirst', function ($string) {
+                return ucfirst($string);
+            }, $options),
         ];
 
         if (!empty($userFunctions)) {
@@ -162,5 +169,24 @@ class Twig extends Engine implements EngineInterface
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
+    }
+
+    /**
+     * @param string $string
+     * @param DiInterface $di
+     * @return null|string
+     */
+    private function getConfig(string $string, DiInterface $di)
+    {
+        $string = explode('.', $string);
+
+        /** @var Config $configGroup */
+        $configGroup = $di->get("config")->get($string[0]);
+
+        if( ! $configGroup){
+            return null;
+        }
+
+        return $configGroup->get($string[1]);
     }
 }

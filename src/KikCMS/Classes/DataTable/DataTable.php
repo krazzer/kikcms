@@ -3,24 +3,25 @@
 namespace KikCMS\Classes\DataTable;
 
 
-use KikCMS\Classes\DbWrapper;
 use KikCMS\Classes\WebForm\DataForm;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
+use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Paginator\Adapter\QueryBuilder;
 use stdClass;
 
-/** @property DbWrapper $dbWrapper */
 abstract class DataTable extends Injectable
 {
-    const EDIT_ID       = 'dataTableEditId';
-    const INSTANCE      = 'dataTableInstance';
-    const PAGE          = 'dataTablePage';
-    const SESSION_KEY   = 'dataTable';
+    const EDIT_ID     = 'dataTableEditId';
+    const INSTANCE    = 'dataTableInstance';
+    const PAGE        = 'dataTablePage';
+    const SESSION_KEY = 'dataTable';
 
     const FILTER_SEARCH = 'search';
     const FILTER_PAGE   = 'page';
+
+    const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple'];
 
     /** @var DataForm */
     protected $form;
@@ -37,6 +38,14 @@ abstract class DataTable extends Injectable
     protected abstract function initialize();
 
     protected abstract function getTable(): string;
+
+    /**
+     * @param array $ids
+     */
+    public function delete(array $ids)
+    {
+        $this->db->delete($this->getTableSource(), "id IN (" . implode(',', $ids) . ")");
+    }
 
     /**
      * Render the datatable
@@ -66,6 +75,10 @@ abstract class DataTable extends Injectable
 
         $this->form->addHiddenField(self::EDIT_ID, $id);
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
+
+        if ($this->form->isPosted()) {
+            return $this->form->render();
+        }
 
         return $this->form->renderWithData($this->getEditData($id));
     }
@@ -119,7 +132,10 @@ abstract class DataTable extends Injectable
             ->addFrom($this->getTable())
             ->andWhere('id = ' . $id);
 
-        return $query->getQuery()->execute()->getFirst()->toArray();
+        $data = $query->getQuery()->execute()->getFirst()->toArray();
+        $data += $this->getDataStoredElseWhere($id);
+
+        return $data;
     }
 
     /**
@@ -159,11 +175,15 @@ abstract class DataTable extends Injectable
             }
         } else {
             if ($page->current < 5) {
-                $pages = [1, 2, 3, 4, 5, null, $page->last];
+                $secondLast = $page->last - 1 == 6 ? 6 : null;
+                $pages      = [1, 2, 3, 4, 5, $secondLast, $page->last];
             } elseif ($page->current > $page->last - 4) {
-                $pages = [1, null, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
+                $second = $page->last - 5 == 2 ? 2 : null;
+                $pages  = [1, $second, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
             } else {
-                $pages = [1, null, $page->current - 1, $page->current, $page->current + 1, null, $page->last];
+                $secondLast = $page->current + 2 == 6 ? 6 : null;
+                $second     = $page->current - 2 == 2 ? 2 : null;
+                $pages      = [1, $second, $page->current - 1, $page->current, $page->current + 1, $secondLast, $page->last];
             }
         }
 
@@ -178,7 +198,7 @@ abstract class DataTable extends Injectable
      */
     private function getTableHeaderData()
     {
-        if( ! $this->getTableData()->items->count()){
+        if ( ! $this->getTableData()->items->count()) {
             return null;
         }
 
@@ -211,10 +231,10 @@ abstract class DataTable extends Injectable
             $this->query->addFrom($this->getTable());
         }
 
-        if(isset($filters[self::FILTER_SEARCH])){
+        if (isset($filters[self::FILTER_SEARCH])) {
             $searchValue = $filters[self::FILTER_SEARCH];
 
-            foreach ($this->searchableFields as $field){
+            foreach ($this->searchableFields as $field) {
                 $this->query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
             }
         }
@@ -228,5 +248,37 @@ abstract class DataTable extends Injectable
     public function setQuery(Builder $query)
     {
         $this->query = $query;
+    }
+
+    /**
+     * Retrieve data from fields that are not stored in the current DataTable's Table
+     *
+     * @param $id
+     * @return array
+     */
+    private function getDataStoredElseWhere($id): array
+    {
+        $data = [];
+
+        foreach ($this->form->getFields() as $key => $field)
+        {
+            if ($field->isStoredElsewhere()) {
+                $data[$key] = $field->getValue($id);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @return string
+     */
+    private function getTableSource(): string
+    {
+        $table = $this->getTable();
+
+        /** @var Model $model */
+        $model = new $table();
+        return $model->getSource();
     }
 }

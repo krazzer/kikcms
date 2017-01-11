@@ -12,6 +12,19 @@ a {
   a:hover {
     color: #c8116d; }
 
+#ajaxDebugger {
+  display: none;
+  position: fixed;
+  left: 35px;
+  top: 35px;
+  padding: 10px;
+  border: 1px solid #e1e1e1;
+  background-color: rgba(255, 255, 255, 0.95);
+  z-index: 10;
+  max-width: 1200px;
+  max-height: 800px;
+  overflow: scroll; }
+
 #cmsLoader {
   position: fixed;
   left: 35px;

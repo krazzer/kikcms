@@ -84,14 +84,16 @@ body.datatableBlur {
     border-radius: 4px;
     padding: 7px 15px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    border: 1px solid #e1e1e1; }
+    transition: background-color, opacity 0.3s;
+    border: 1px solid #e1e1e1;
+    opacity: 1; }
     .datatable .toolbar .button .glyphicon {
       width: 14px; }
     .datatable .toolbar .button .lbl {
       margin-left: 8px; }
-    .datatable .toolbar .button.delete {
-      display: none; }
+    .datatable .toolbar .button.faded {
+      opacity: 0;
+      pointer-events: none; }
     .datatable .toolbar .button:hover {
       background-color: #aaaaaa;
       border-color: #aaaaaa;

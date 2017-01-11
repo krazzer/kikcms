@@ -3,11 +3,12 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
+use KikCMS\Classes\Phalcon\FormElements\MultiCheckbox;
 use KikCMS\Classes\Translator;
-use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Di\Injectable;
 use Phalcon\Forms\Element;
+use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Text;
@@ -26,8 +27,11 @@ class WebForm extends Injectable
 {
     const WEB_FORM_ID = 'webFormId';
 
-    /** @var Element[] */
+    /** @var Field[] */
     protected $fields;
+
+    /** @var string */
+    protected $formTemplate = 'form';
 
     /** @var Form */
     private $form;
@@ -61,52 +65,99 @@ class WebForm extends Injectable
     }
 
     /**
-     * @param Element $field
+     * @param Element $element
+     * @param string $type
+     * @return Field
      */
-    public function addField(Element $field)
+    public function addField(Element $element, string $type = 'default'): Field
     {
-        $this->fields[$field->getName()] = $field;
-        $this->form->add($field);
+        $field = $this->createNewField();
+        $field->setElement($element);
+        $field->setType($type);
+
+        $this->fields[$element->getName()] = $field;
+        $this->form->add($element);
+
+        return $field;
     }
 
     /**
      * @param string $key
      * @param string $label
      * @param array $validators
+     * @return Field
      */
-    public function addPasswordField(string $key, string $label, array $validators = [])
+    public function addCheckboxField(string $key, string $label, array $validators = []): Field
+    {
+        $checkbox = new Check($key);
+        $checkbox->setLabel($label);
+        $checkbox->setAttribute('type', 'checkbox');
+        $checkbox->addValidators($validators);
+
+        return $this->addField($checkbox, Field::TYPE_CHECKBOX);
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field
+     */
+    public function addPasswordField(string $key, string $label, array $validators = []): Field
     {
         $password = new Password($key);
         $password->setLabel($label);
+        $password->setAttribute('class', 'form-control');
         $password->addValidators($validators);
 
-        $this->addField($password);
+        return $this->addField($password);
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $options
+     *
+     * @return Field
+     */
+    public function addMultiCheckboxField(string $key, string $label, array $options): Field
+    {
+        $multiCheckbox = new MultiCheckbox($key);
+        $multiCheckbox->setAttribute('type', 'multiCheckbox');
+        $multiCheckbox->setLabel($label);
+        $multiCheckbox->setOptions($options);
+
+        return $this->addField($multiCheckbox, Field::TYPE_MULTI_CHECKBOX);
     }
 
     /**
      * @param string $key
      * @param string $label
      * @param array $validators
+     * @return Field
      */
-    public function addTextField(string $key, string $label, array $validators = [])
+    public function addTextField(string $key, string $label, array $validators = []): Field
     {
         $name = new Text($key);
         $name->setLabel($label);
+        $name->setAttribute('class', 'form-control');
         $name->addValidators($validators);
 
-        $this->addField($name);
+        return $this->addField($name);
     }
 
     /**
      * @param string $key
      * @param mixed $defaultValue
+     * @return Field
      */
-    public function addHiddenField(string $key, $defaultValue)
+    public function addHiddenField(string $key, $defaultValue): Field
     {
         $hidden = new Hidden($key);
         $hidden->setDefault($defaultValue);
+        $hidden->setAttribute('type', 'hidden');
 
-        $this->addField($hidden);
+        return $this->addField($hidden);
     }
 
     /**
@@ -116,6 +167,14 @@ class WebForm extends Injectable
     public function getField(string $fieldKey): ElementInterface
     {
         return $this->form->get($fieldKey);
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return $this->fields;
     }
 
     /**
@@ -143,6 +202,15 @@ class WebForm extends Injectable
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
 
+            // set unposted checkboxes to default 0
+            foreach ($this->fields as $key => $field) {
+                $element = $field->getElement();
+
+                if ($element->getAttribute('type') == 'checkbox' && ! $this->request->hasPost($key)) {
+                    $element->setDefault(0);
+                }
+            }
+
             if ($errorContainer->isEmpty()) {
                 $result = $this->successAction($this->getInput());
 
@@ -154,7 +222,7 @@ class WebForm extends Injectable
             }
         }
 
-        return $this->renderView('form', [
+        return $this->renderView($this->formTemplate, [
             'form'               => $this->form,
             'formId'             => $this->getFormId(),
             'sendButtonLabel'    => $this->getSendLabel(),
@@ -214,6 +282,14 @@ class WebForm extends Injectable
     }
 
     /**
+     * Checks whether this form has been posted
+     */
+    public function isPosted()
+    {
+        return $this->request->isPost() && $this->request->get(self::WEB_FORM_ID) == $this->getFormId();
+    }
+
+    /**
      * @param boolean $placeHolderAsLabel
      *
      * @return WebForm|$this
@@ -245,6 +321,14 @@ class WebForm extends Injectable
         $this->validateAction = $validateAction;
 
         return $this;
+    }
+
+    /**
+     * @return Field
+     */
+    protected function createNewField(): Field
+    {
+        return new Field();
     }
 
     /**
@@ -332,21 +416,11 @@ class WebForm extends Injectable
     private function initializeFields()
     {
         foreach ($this->fields as $field) {
-            $field->setAttribute('class', 'form-control');
-
             if ($this->isPlaceHolderAsLabel()) {
-                $field->setAttribute('placeholder', $field->getLabel());
+                $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
             }
         }
 
         $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
-    }
-
-    /**
-     * Checks whether this form has been posted
-     */
-    private function isPosted()
-    {
-        return $this->request->isPost() && $this->request->get(self::WEB_FORM_ID) == $this->getFormId();
     }
 }

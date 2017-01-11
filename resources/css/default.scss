@@ -17,6 +17,20 @@ a{
     }
 }
 
+#ajaxDebugger{
+    display: none;
+    position: fixed;
+    left: 35px;
+    top: 35px;
+    padding: 10px;
+    border: 1px solid $lightGray;
+    background-color: rgba(255,255,255,0.95);
+    z-index: 10;
+    max-width: 1200px;
+    max-height: 800px;
+    overflow: scroll;
+}
+
 #cmsLoader{
     @include clearFix();
     position: fixed;

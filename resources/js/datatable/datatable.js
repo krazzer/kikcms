@@ -10,6 +10,29 @@ DataTable.prototype =
         this.initTable();
         this.initPagination();
         this.initSearch();
+        this.initButtons();
+    },
+
+    initButtons: function () {
+        var self          = this;
+        var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
+
+        $deleteButton.click(function () {
+            var selectedIds = self.getSelectedIds();
+
+            if (selectedIds) {
+                var amount      = selectedIds.length;
+                var confirmText = KikCMS.tl('dataTable.delete.confirmOne');
+
+                if (amount > 1) {
+                    confirmText = KikCMS.tl('dataTable.delete.confirmMultiple', {amount: amount});
+                }
+
+                if (confirm(confirmText)) {
+                    self.actionDelete(selectedIds);
+                }
+            }
+        });
     },
 
     initPagination: function () {
@@ -48,6 +71,7 @@ DataTable.prototype =
 
         $rows.find('td:not(.edit)').click(function () {
             $(this).parent().toggleClass('selected');
+            self.updateToolbar();
         });
 
         $rows.find('td.edit').click(function () {
@@ -62,9 +86,11 @@ DataTable.prototype =
 
         var searchValue = this.getSearchField().val();
 
-        if(searchValue){
+        if (searchValue) {
             self.getDatatable().find('.table').find('td').highlight(searchValue);
         }
+
+        self.updateToolbar();
     },
 
     initWindow: function () {
@@ -93,7 +119,7 @@ DataTable.prototype =
             }
         }, 250);
 
-        var xmlHttpRequest = function(){
+        var xmlHttpRequest = function () {
             $.ajax({
                 url: '/cms/datatable/' + action,
                 type: 'post',
@@ -105,29 +131,44 @@ DataTable.prototype =
 
                     onSuccess(result, responseText, response);
                 },
-                error: function (result, errorType, errorMessage) {
+                error: function (result) {
                     // try again on connection failure
-                    if(result.readyState == 0 && result.status == 0 && retries < 2){
-                        retries++; xmlHttpRequest(); return;
+                    if (result.readyState == 0 && result.status == 0 && retries < 2) {
+                        retries++;
+                        xmlHttpRequest();
+                        return;
                     }
 
                     ajaxCompleted = true;
                     KikCMS.hideLoader(loadingElement);
 
-                    if(result.responseText){
-                        errorMessage += $(result.responseText).text();
-                    }
+                    var key = KikCMS.errorMessages[result.status] ? result.status : 'unknown';
 
-                    if( ! errorMessage){
-                        errorMessage = 'Er is iets mis gegaan bij de verwerking van uw verzoek. Probeer het later nog eens.';
+                    if(KikCMS.isDev) {
+                        $("#ajaxDebugger").html(result.responseText).show();
+                    } else {
+                        alert(KikCMS.errorMessages[key].title + "\n\n" + KikCMS.errorMessages[key].description);
                     }
-
-                    alert(errorMessage);
                 }
             });
-        }
+        };
 
         xmlHttpRequest();
+    },
+
+    actionDelete: function (ids) {
+        var self   = this;
+        var params = this.getFilters();
+
+        params.ids = ids;
+
+        this.action('delete', params, function (result) {
+            self.getDatatable().find('.table').html(result.table);
+            self.getDatatable().find('.pages').html(result.pagination);
+
+            self.initTable();
+            self.initPagination();
+        });
     },
 
     actionEdit: function (id) {
@@ -241,9 +282,19 @@ DataTable.prototype =
         return this.getDatatable().find('.toolbar .search input');
     },
 
+    getSelectedIds: function () {
+        var ids = [];
+
+        this.getDatatable().find('tr.selected .edit input[name=id]').each(function () {
+            ids.push($(this).val());
+        });
+
+        return ids;
+    },
+
     getWindow: function () {
-        var self = this;
-        var windowId = this.instance + 'Window';
+        var self           = this;
+        var windowId       = this.instance + 'Window';
         var $bodyNotFading = $('body > #notFading');
 
         if ($bodyNotFading.find(' > #' + windowId).length < 1) {
@@ -258,5 +309,16 @@ DataTable.prototype =
         }
 
         return $('#' + windowId);
+    },
+
+    updateToolbar: function () {
+        var $selectedRows = this.getDatatable().find('tr.selected');
+        var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
+
+        if ($selectedRows.length > 0) {
+            $deleteButton.removeClass('faded');
+        } else {
+            $deleteButton.addClass('faded');
+        }
     }
 };

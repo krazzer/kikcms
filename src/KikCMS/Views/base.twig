@@ -22,11 +22,16 @@
 <body>
 <div id="notFading">
     <div id="cmsLoader"><img src="/cmsassets/icons/loader.svg"><span>{{ tl('cms.loading') }}</span></div>
+    <div id="ajaxDebugger" onclick="$(this).hide();"></div>
 </div>
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/jquery.min.js') }}
 {{ javascriptInclude('cmsassets/js/bootstrap.min.js') }}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
+<script>
+    KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
+    KikCMS.errorMessages = {{ tl('error')|json_encode|raw }};
+</script>
 {% if(datatable) %}{% include '@kikcms/data-table/jsAssets.twig' %}{% endif %}
 {% block jsAssets %}{% endblock %}
 </body>

@@ -14,6 +14,21 @@ class DataTableController extends BaseController
         $this->view->disable();
     }
 
+    public function deleteAction()
+    {
+        $dataTable = $this->getDataTable();
+        $filters   = $this->getFilters();
+
+        $ids = $this->request->getPost('ids');
+
+        $dataTable->delete($ids);
+
+        return json_encode([
+            'table'      => $dataTable->renderTable($filters),
+            'pagination' => $dataTable->renderPagination($filters[DataTable::FILTER_PAGE]),
+        ]);
+    }
+
     public function editAction()
     {
         $editId    = $this->getEditId();
@@ -89,7 +104,12 @@ class DataTableController extends BaseController
         $filters = [];
 
         $filters[DataTable::FILTER_PAGE] = $this->request->getPost(DataTable::FILTER_PAGE);
-        $filters[DataTable::FILTER_SEARCH] = $this->request->getPost(DataTable::FILTER_SEARCH);
+
+        $search = $this->request->getPost(DataTable::FILTER_SEARCH);
+
+        if( ! empty($search)){
+            $filters[DataTable::FILTER_SEARCH] = $search;
+        }
 
         return $filters;
     }

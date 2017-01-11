@@ -30,7 +30,8 @@
     color: #000;
     border-radius: 4px;
     line-height: 14px;
-    margin-bottom: 2px; }
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff; }
     #menu .menu-item.selected {
       background-color: #df137a;
       color: #ffffff; }
@@ -44,6 +45,7 @@
   height: 100%;
   width: 100%; }
   #main #main-content {
+    min-width: 800px;
     padding-bottom: 50px; }
     #main #main-content h1 {
       margin: 0 0 44px 0;

@@ -3,19 +3,11 @@
 namespace KikCMS\Classes;
 
 use Phalcon\Db;
-use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Db\ResultInterface;
+use Phalcon\Di\Injectable;
 
-class DbWrapper
+class DbService extends Injectable
 {
-    /** @var Mysql */
-    private $db;
-
-    public function __construct(Mysql $dbAdapter)
-    {
-        $this->db = $dbAdapter;
-    }
-
     /**
      * @param string $value
      * @return string

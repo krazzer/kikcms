@@ -82,8 +82,9 @@ body.datatableBlur{
             border-radius: $defaultBorderRadius;
             padding: 7px 15px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color, opacity 0.3s;
             border: 1px solid $lightGray;
+            opacity: 1;
 
             .glyphicon{
                 width: 14px;
@@ -93,8 +94,9 @@ body.datatableBlur{
                 margin-left: 8px;
             }
 
-            &.delete{
-                display: none;
+            &.faded{
+                opacity: 0;
+                pointer-events: none;
             }
 
             &:hover{

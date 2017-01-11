@@ -11,15 +11,21 @@ return [
     ],
 
     'dataTable' => [
-        'noData'            => 'Er is nog geen data om weer te geven',
+        'noData'            => 'Er is geen data gevonden om weer te geven...',
         'add'               => 'Nieuw...',
-        'delete'            => 'Verwijderen',
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
-        'pages'             => [
+
+        'pages' => [
             'total'         => 'Totaal',
             'amountPerPage' => 'Aantal items per pagina',
+        ],
+
+        'delete' => [
+            'label'           => 'Verwijderen',
+            'confirmOne'      => 'Wilt u zeker weten dit record verwijderen?',
+            'confirmMultiple' => 'Wilt u zeker weten deze :amount records verwijderen?',
         ],
     ],
 
@@ -62,14 +68,17 @@ return [
         'logout'   => 'U bent succesvol uitgelogd',
         'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
         'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
-        'reset'    => [
-            'flash'    => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
-            'error'    => 'Er is iets mis gegaan bij het versturen van de reset link.',
-            'mail'     => [
+
+        'reset' => [
+            'flash' => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
+            'error' => 'Er is iets mis gegaan bij het versturen van de reset link.',
+
+            'mail' => [
                 'subject'     => 'KikCMS wachtwoord reset',
                 'body'        => 'Klik op onderstaande link om uw wachtwoord (opnieuw) in te stellen.',
                 'buttonLabel' => 'Wachtwoord opnieuw instellen',
             ],
+
             'password' => [
                 'flash'     => 'Uw wachtwoord is succesvol bijgewerkt. U kunt nu inloggen.',
                 'hashError' => 'Ongeldige hash',
@@ -83,34 +92,44 @@ return [
             'stats'   => 'Statistieken',
             'cms'     => 'CMS',
         ],
-        'item'  => [
-            'menu'      => [
-                'main' => 'Hoofmenu'
-            ],
-            'stats'     => [
-                'index'   => 'Statistieken',
-                'sources' => 'Bronnen',
-            ],
+
+        'item' => [
             'media'     => 'Media',
             'templates' => 'Templates',
             'menus'     => 'Menu\'s',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
+
+            'menu' => [
+                'main' => 'Hoofmenu'
+            ],
+
+            'stats' => [
+                'index'   => 'Statistieken',
+                'sources' => 'Bronnen',
+            ],
         ],
     ],
 
     'error' => [
         '401' => [
             'title'       => 'Geen toegang',
-            'description' => 'U heeft geen toegang tot de opgevraagde pagina. <br><br>Heeft u het vermoeden dat u wel toegang tot deze pagina zou moeten hebben? <br>Neem dan contact op met <a href="mailto::webmaster">de webmaster</a>.',
+            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
         ],
+
         '404' => [
             'title'       => 'Pagina niet gevonden',
-            'description' => 'De opgevraagde pagina bestaat niet. <br>Mogelijk is deze nog in ontwikkeling of is hij verwijderd.<br><br>Heeft u het vermoeden dat de pagina wel zou moeten bestaan? <br>Neem dan contact op met <a href="mailto::webmaster">de webmaster</a>.',
+            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op met de webmaster.",
         ],
+
         '500' => [
             'title'       => 'Interne fout',
-            'description' => 'Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.<br>Zij zullen het probleem zo spoedig mogelijk oplossen.',
+            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij zullen het probleem zo spoedig mogelijk oplossen.",
+        ],
+
+        'unknown' => [
+            'title'       => 'Onbekende fout',
+            'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
         ]
     ],
 ];

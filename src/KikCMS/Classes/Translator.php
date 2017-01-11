@@ -16,6 +16,10 @@ class Translator
         $translations = include(__DIR__ . '/../../../translations/nl.php');
         $stringParts  = explode('.', $string);
 
+        if( ! array_key_exists($stringParts[0], $translations)){
+            return null;
+        }
+
         foreach ($stringParts as $part) {
             if (array_key_exists($part, $translations)) {
                 $translations = $translations[$part];

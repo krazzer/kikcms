@@ -2,7 +2,7 @@
 
 namespace KikCMS\Plugins;
 
-use KikCMS\Config\KikCMSConfig;
+use Exception;
 use Phalcon\Events\Event;
 use Phalcon\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
@@ -21,13 +21,12 @@ class NotFoundPlugin extends Plugin
      *
      * @param Event $event
      * @param MvcDispatcher $dispatcher
-     * @param \Exception $exception
+     * @param Exception $exception
+     *
      * @return bool
      */
-    public function beforeException(Event $event, MvcDispatcher $dispatcher, \Exception $exception)
+    public function beforeException(Event $event, MvcDispatcher $dispatcher, Exception $exception)
     {
-        error_log($exception->getMessage() . PHP_EOL . $exception->getTraceAsString() . PHP_EOL . $event->getType());
-
         $controller = $dispatcher->getControllerName();
         $isLoggedIn = $this->userService->isLoggedIn();
 
@@ -50,16 +49,9 @@ class NotFoundPlugin extends Plugin
             }
         }
 
-        // display exceptions right away in development
-        if ($this->applicationConfig->env == KikCMSConfig::ENV_DEV) {
-            return true;
-        }
+        // prevent unused parameter warning
+        $event->setType($event->getType());
 
-        $dispatcher->forward([
-            'controller' => 'errors',
-            'action'     => 'show500'
-        ]);
-
-        return false;
+        return true;
     }
 }

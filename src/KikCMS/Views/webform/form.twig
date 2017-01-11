@@ -1,6 +1,7 @@
 {# @var form Phalcon\Forms\Form #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 {# @var security \Phalcon\Security #}
+{% use '@kikcms/webform/fields.twig' %}
 
 {{ form({name: 'form'}) }}
 
@@ -15,27 +16,18 @@
     {% for element in form.elements %}
         {% set errorMessages = errorContainer.errorsForField(element.name) %}
         {% set hasError = errorContainer.fieldHasError(element.name) %}
+        {% set type = element.attribute('type') ?: 'default' %}
+        {% set classes = 'form-group' ~ (hasError ? ' has-error has-feedback' : '') %}
+        {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
 
-        {% if element.getLabel %}
-            <div class="form-group{{ hasError ? ' has-error has-feedback' : '' }}" title="{{ errorMessages|join("\n") }}">
-                {% if(placeHolderAsLabel == false) %}
-                    {{ form.label(element.name)|raw }}
-                {% endif %}
-                {{ form.render(element.name)|raw }}
-                {% if hasError %}
-                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-                {% endif %}
-            </div>
-        {% else %}
-            {{ form.render(element.name)|raw }}
-        {% endif %}
+        {{ block('field' ~ ucfirst(type)) }}
     {% endfor %}
 
-    {% if not isDataForm %}
+    {% block submitButton %}
         <div class="form-group">
             {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-block', 'name': 'submit'}) }}
         </div>
-    {% endif %}
+    {% endblock %}
 
     <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 

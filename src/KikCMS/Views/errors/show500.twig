@@ -1,10 +1,16 @@
 {% extends '@kikcms/cms/base.twig' %}
 
-{%- block title tl('error.404.title') -%}
+{%- block title tl('error.500.title') -%}
 
 {% block cmsContent %}
 
     <h1>{{ tl('error.500.title') }}</h1>
-    <p>{{ tl('error.500.description') }}</p>
+    <p>{{ tl('error.500.description')|nl2br }}</p>
+
+    {% if error %}
+        <p>&nbsp;</p>
+        <p><b>{{ error.message }} in {{ error.file }} on line {{ error.line }}</b></p>
+        <p>{{ error.traceAsString|nl2br }}</p>
+    {% endif %}
 
 {% endblock %}

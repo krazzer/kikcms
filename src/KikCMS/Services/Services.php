@@ -2,12 +2,14 @@
 
 namespace KikCMS\Services;
 
-use KikCMS\Classes\DbWrapper;
+use KikCMS\Classes\DbService;
+use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 
+use Monolog\ErrorHandler;
 use Phalcon\Cache\Backend\Apc;
 use Phalcon\Cache\Frontend\None;
 use Phalcon\Db;
@@ -21,13 +23,13 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
 
-use Monolog\ErrorHandler;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 
 use Swift_Mailer;
 use Swift_SendmailTransport;
+use Throwable;
 
 class Services extends BaseServices
 {
@@ -97,17 +99,18 @@ class Services extends BaseServices
         return $databaseAdapter;
     }
 
-    protected function initDbWrapper()
+    /**
+     * @return DbService
+     */
+    protected function initDbService(): DbService
     {
-        $db = $this->get('db');
-
-        return new DbWrapper($db);
+        return new DbService();
     }
 
     /**
      * @return DeployService
      */
-    protected function initDeployService()
+    protected function initDeployService(): DeployService
     {
         return new DeployService();
     }
@@ -117,39 +120,47 @@ class Services extends BaseServices
      */
     protected function initErrorHandler()
     {
-        $webmasterEmail = $this->getApplicationConfig()->webmasterEmail;
-        $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
+        $isProduction = $this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD;
+        $errorHandler = new ErrorHandler($this->get('logger'));
 
-        // initialize error handler
-        $mailHandler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail, Logger::NOTICE);
-        $mailHandler->setContentType('text/html');
-        $mailHandler->setFormatter(new HtmlFormatter());
+        set_exception_handler(function (Throwable $error) use ($isProduction) {
+            http_response_code(500);
 
-        $log = new Logger('errorlog');
-        $log->pushHandler($mailHandler);
+            echo $this->get('view')->getRender('errors', 'show500', [
+                'error' => $isProduction ? null : $error,
+            ]);
+        });
 
-        $errorHandler = new ErrorHandler($log);
-
-        // mail errors instead of showing them in production
-        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD) {
-            // show a global error message
-            $errorMessageViewer = function () {
-                http_response_code(500);
-                echo $this->get('view')->getRender('errors', 'show500');
-            };
-
-            set_error_handler($errorMessageViewer);
-            set_exception_handler($errorMessageViewer);
-
-            $errorHandler->registerErrorHandler();
-            $errorHandler->registerExceptionHandler();
-            $errorHandler->registerFatalHandler();
-        } else {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 'on');
-        }
+        $errorHandler->registerExceptionHandler();
+        $errorHandler->registerErrorHandler();
+        $errorHandler->registerFatalHandler();
 
         return $errorHandler;
+    }
+
+    /**
+     * @return Logger
+     */
+    protected function initLogger()
+    {
+        $isProduction = $this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD;
+
+        $logger = new Logger('logger');
+
+        if ($isProduction) {
+            $webmasterEmail = $this->getApplicationConfig()->webmasterEmail;
+            $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
+
+            $handler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail, Logger::NOTICE);
+            $handler->setContentType('text/html');
+            $handler->setFormatter(new HtmlFormatter());
+
+            $logger->pushHandler($handler);
+        }
+
+        $logger->pushHandler(new ErrorLogHandler());
+
+        return $logger;
     }
 
     /**

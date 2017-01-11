@@ -56,6 +56,10 @@ var KikCmsClass = function () {
 
 KikCmsClass.prototype =
 {
+    translations: {},
+    errorMessages: {},
+    isDev: false,
+
     showLoader: function (loadingElement) {
         this.getLoader().addClass('show');
 
@@ -79,6 +83,16 @@ KikCmsClass.prototype =
 
     getLoader: function () {
         return $('#cmsLoader');
+    },
+
+    tl: function (key, params) {
+        var translation = this.translations[key];
+
+        $.each(params, function (key, value) {
+            translation = translation.replace(new RegExp(':' + key, 'g'), value);
+        });
+
+        return translation;
     }
 };
 
@@ -99,8 +113,8 @@ jQuery.fn.highlight = function (pat) {
                 var spannode       = document.createElement('span');
                 spannode.className = 'highlight';
                 var middlebit      = node.splitText(pos);
-                var endbit         = middlebit.splitText(pat.length);
-                var middleclone    = middlebit.cloneNode(true);
+                middlebit.splitText(pat.length);
+                var middleclone = middlebit.cloneNode(true);
                 spannode.appendChild(middleclone);
                 middlebit.parentNode.replaceChild(spannode, middlebit);
                 skip = 1;

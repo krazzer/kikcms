@@ -5,6 +5,6 @@
 {% block cmsContent %}
 
     <h1>{{ tl('error.401.title') }}</h1>
-    <p>{{ tl('error.401.description', {'webmaster' : webmasterEmail}) }}</p>
+    <p>{{ tl('error.401.description')|nl2br }}</p>
 
 {% endblock %}
