@@ -58,7 +58,7 @@ abstract class DataTable extends Injectable
      *
      * @return string
      */
-    public function formatValue(string $column, string $value)
+    public function formatValue(string $column, $value)
     {
         return $this->fieldFormatting[$column]($value);
     }
