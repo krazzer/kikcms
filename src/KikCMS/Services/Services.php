@@ -131,6 +131,14 @@ class Services extends BaseServices
             ]);
         });
 
+        register_shutdown_function(function() use ($isProduction){
+            http_response_code(500);
+
+            echo $this->get('view')->getRender('errors', 'show500', [
+                'error' => $isProduction ? null : error_get_last(),
+            ]);
+        });
+
         $errorHandler->registerExceptionHandler();
         $errorHandler->registerErrorHandler();
         $errorHandler->registerFatalHandler();
