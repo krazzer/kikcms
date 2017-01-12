@@ -68,9 +68,13 @@ class DataForm extends WebForm
      */
     public function successAction(array $input)
     {
-        $saveDataSuccess = $this->saveData($input);
+        $editId = $this->saveData($input);
 
-        if ($saveDataSuccess) {
+        if($editId && !array_key_exists(DataTable::EDIT_ID, $input)){
+            $this->addHiddenField(DataTable::EDIT_ID, $editId);
+        }
+
+        if ($editId) {
             $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
@@ -104,9 +108,9 @@ class DataForm extends WebForm
 
     /**
      * @param array $input
-     * @return bool
+     * @return mixed
      */
-    private function saveData(array $input): bool
+    private function saveData(array $input)
     {
         $insertUpdateData = $this->getInsertUpdateData($input);
 
@@ -120,8 +124,11 @@ class DataForm extends WebForm
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
                 $this->dbService->update($table, $insertUpdateData, [$this->tableKey => $editId]);
-                $this->storeFields($input, $editId);
+            } else {
+                $editId = $this->dbService->insert($table, $insertUpdateData);
             }
+
+            $this->storeFields($input, $editId);
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
@@ -129,7 +136,9 @@ class DataForm extends WebForm
             return false;
         }
 
-        return $this->db->commit();
+        $this->db->commit();
+
+        return $editId;
     }
 
     /**

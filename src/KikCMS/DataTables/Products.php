@@ -12,7 +12,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 class Products extends DataTable
 {
     /** @inheritdoc */
-    protected $searchableFields = ['title'];
+    protected $searchableFields = ['title', 'description'];
 
     /**
      * @inheritdoc
@@ -33,6 +33,7 @@ class Products extends DataTable
         $this->form->addTextField('price', 'Prijs');
         $this->form->addTextField('stock', 'Voorraad');
         $this->form->addCheckboxField('sale', 'Sale');
+        $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
 
         $this->form->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap)
             ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
@@ -43,6 +44,16 @@ class Products extends DataTable
 
         $this->setFieldFormatting('sale', function($value){
             return $value == 1 ? '<span style="color:green;" class="glyphicon glyphicon-ok"></span>' : '';
+        });
+
+        $this->setFieldFormatting('description', function($value){
+            $value = html_entity_decode(strip_tags($value));
+
+            if(mb_strlen($value) > 50){
+                return mb_substr($value, 0, 50) . '...';
+            }
+
+            return $value;
         });
     }
 }

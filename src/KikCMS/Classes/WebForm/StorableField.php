@@ -65,7 +65,9 @@ class StorableField extends Field
 
     /**
      * Retrieve the value stored elsewhere by the given relation id
+     *
      * @param $id
+     * @return mixed
      */
     public function getValue($id)
     {

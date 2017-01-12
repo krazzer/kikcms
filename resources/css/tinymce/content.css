@@ -1,0 +1,159 @@
+/* Colors */
+/* Miscellaneous */
+.mce-content-body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  padding: 0 10px 10px; }
+  .mce-content-body table {
+    border-spacing: 0;
+    border-collapse: separate;
+    border: 1px solid #aaaaaa; }
+    .mce-content-body table tr:nth-child(even) {
+      background: #FAFAFA; }
+
+/*
+* {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: 50% 50% no-repeat;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+    font-weight: 400;
+}
+
+:focus {
+    outline: 0
+}
+
+b, b *, strong, strong * {
+    font-weight: 700;
+}
+
+ol, ul {
+    list-style: none
+}
+
+button, input, input:not([type]), input[type=color], input[type=text], input[type=time], input[type=url],
+input[type=week], input[type=button], input[type=reset], input[type=submit], input[type=date], input[type=datetime],
+input[type=datetime-local], input[type=email], input[type=month], input[type=number], input[type=password],
+input[type=search], input[type=tel], pre, select, textarea {
+    font: inherit
+}
+
+.codepen body {
+    margin: 5px 0 0
+}
+
+.codepen body textarea {
+    display: none
+}
+
+.mce-container textarea {
+    display: initial !important
+}
+
+.mce-txt{
+    @include fontDefault();
+}
+
+.mce-content-body {
+    @include fontDefault();
+    font-size: 14px;
+    color: #626262;
+    padding: 0 25px 25px
+}
+
+.mce-content-body {
+    ol, ul {
+        margin-bottom: 20px;
+        margin-left: 15px;
+        list-style-position: outside;
+    }
+
+    ol {
+        list-style-type: decimal
+    }
+
+    ul {
+        list-style-type: disc
+    }
+
+    a[href] {
+        text-decoration: underline
+    }
+
+    table {
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: separate;
+        border: 1px solid #aaa;
+
+        tr:nth-child(even) {
+            background: #FAFAFA
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @include fontDefault();
+        line-height: 1.4em;
+        margin: 25px 0 15px
+    }
+
+    h1 {
+        font-size: 34px
+    }
+
+    h2 {
+        font-size: 30px
+    }
+
+    h3 {
+        font-size: 26px
+    }
+
+    h4 {
+        font-size: 22px
+    }
+
+    h5 {
+        font-size: 18px
+    }
+
+    h6 {
+        font-size: 14px
+    }
+
+    p {
+        margin: 25px 0
+    }
+
+    ol li, ul li {
+        margin-left: 10px;
+        margin-bottom: 10px;
+        color: #626262;
+    }
+
+    table {
+
+        caption, td, th {
+            padding: 15px 7px;
+            font: inherit
+        }
+
+        th {
+            font-weight: 400;
+            color: #6E6E6E;
+            background-size: 2px 10px;
+            background: no-repeat 100% 100%;
+
+            &:last-child {
+                background: 0 0
+            }
+        }
+    }
+}*/
+
+/*# sourceMappingURL=content.css.map */

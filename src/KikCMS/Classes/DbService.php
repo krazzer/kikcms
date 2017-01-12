@@ -56,7 +56,13 @@ class DbService extends Injectable
      */
     public function queryRow(string $query): array
     {
-        return $this->queryRows($query)[0];
+        $result = $this->queryRows($query);
+
+        if( ! $result){
+            return [];
+        }
+
+        return $result[0];
     }
 
     /**
@@ -73,11 +79,31 @@ class DbService extends Injectable
         return $result->fetchAll();
     }
 
+    /**
+     * @param string $table
+     * @param array $set
+     * @param array $where
+     *
+     * @return bool
+     */
     public function update(string $table, array $set, array $where)
     {
         $where = array_map(function($key, $value){ return $key . ' = ' .$value; }, array_keys($where), array_values($where));
         $where = implode(' AND ', $where);
 
         return $this->db->update($table, array_keys($set), array_values($set), $where);
+    }
+
+    /**
+     * @param string $table
+     * @param array $insert
+     *
+     * @return mixed
+     */
+    public function insert(string $table, array $insert)
+    {
+        $this->db->insert($table, array_values($insert), array_keys($insert));
+
+        return $this->db->lastInsertId();
     }
 }

@@ -3,6 +3,9 @@
 label {
   margin-bottom: 2px; }
 
+textarea.form-control {
+  height: 240px; }
+
 .btn {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
@@ -34,7 +37,7 @@ label {
     border-color: #990d53; }
 
 .form-control {
-  border-radius: 4px;
+  border-radius: 3px;
   box-shadow: none;
   padding: 7px 12px;
   height: 36px;
@@ -58,6 +61,9 @@ label {
 .form-control-feedback {
   top: 1px;
   right: 3px; }
+
+.has-feedback label ~ .form-control-feedback {
+  top: 23px; }
 
 .form-group {
   overflow: hidden; }

@@ -5,7 +5,7 @@ body > *:not(.datatableWindow) {
 
 body.datatableBlur {
   overflow: hidden; }
-  body.datatableBlur > *:not(#notFading) {
+  body.datatableBlur > #menu, body.datatableBlur #main {
     -webkit-filter: blur(4px);
     -ms-filter: blur(4px);
     filter: blur(4px);
@@ -27,7 +27,7 @@ body.datatableBlur {
   left: 50%;
   margin-left: -500px;
   border: 1px solid #e1e1e1;
-  border-radius: 4px;
+  border-radius: 3px;
   display: none; }
   .datatableWindow .closeButton {
     width: 30px;
@@ -81,7 +81,7 @@ body.datatableBlur {
   .datatable .toolbar .button {
     float: left;
     margin: 0 8px 0 0;
-    border-radius: 4px;
+    border-radius: 3px;
     padding: 7px 15px;
     cursor: pointer;
     transition: background-color, opacity 0.3s;

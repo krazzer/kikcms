@@ -12,6 +12,7 @@ use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\TextArea;
 use Phalcon\Forms\ElementInterface;
 use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
@@ -148,6 +149,38 @@ class WebForm extends Injectable
 
     /**
      * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field
+     */
+    public function addTextAreaField(string $key, string $label, array $validators = []): Field
+    {
+        $name = new TextArea($key);
+        $name->setLabel($label);
+        $name->setAttribute('class', 'form-control');
+        $name->addValidators($validators);
+
+        return $this->addField($name);
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field
+     */
+    public function addWysiwygField(string $key, string $label, array $validators = []): Field
+    {
+        $name = new TextArea($key);
+        $name->setLabel($label);
+        $name->setAttribute('class', 'form-control wysiwyg');
+        $name->addValidators($validators);
+
+        return $this->addField($name);
+    }
+
+    /**
+     * @param string $key
      * @param mixed $defaultValue
      * @return Field
      */
@@ -162,10 +195,23 @@ class WebForm extends Injectable
 
     /**
      * @param string $fieldKey
+     * @return bool
+     */
+    public function hasField(string $fieldKey): bool
+    {
+        return $this->form->has($fieldKey);
+    }
+
+    /**
+     * @param string $fieldKey
      * @return ElementInterface
      */
     public function getField(string $fieldKey): ElementInterface
     {
+        if( ! $this->form->has($fieldKey)){
+            return null;
+        }
+
         return $this->form->get($fieldKey);
     }
 

@@ -16,6 +16,7 @@ return [
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
+        'closeWarning'      => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten dit venster sluiten?',
 
         'pages' => [
             'total'         => 'Totaal',

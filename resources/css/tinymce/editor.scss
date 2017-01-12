@@ -1,0 +1,52 @@
+@import "../includes/mixins";
+@import "../includes/variables";
+
+.form-group .mce-panel{
+    border-color: $lightGray !important;
+    background-color: $superLightGray;
+
+    .mce-btn{
+        background-color: $superLightGray;
+    }
+
+    .mce-path{
+        display: none;
+    }
+
+    .mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last{
+        border: none;
+    }
+
+    .mce-menubtn, .mce-btn{
+        border-radius: $defaultBorderRadius;
+
+        &:hover{
+            background-color: #fff;
+        }
+    }
+}
+
+.mce-container, .mce-widget{
+    .mce-txt, .mce-text{
+        @include fontDefault();
+        font-weight: 400;
+    }
+}
+
+.mce-tinymce{
+    border-radius: $defaultBorderRadius;
+    background-color: #fff;
+
+    iframe{
+        border-bottom-left-radius: $defaultBorderRadius;
+        border-bottom-right-radius: $defaultBorderRadius;
+    }
+}
+
+.mce-stack-layout-item{
+}
+
+.mce-edit-area{
+    border-bottom-left-radius: $defaultBorderRadius;
+    border-bottom-right-radius: $defaultBorderRadius;
+}

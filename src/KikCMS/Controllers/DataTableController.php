@@ -14,6 +14,17 @@ class DataTableController extends BaseController
         $this->view->disable();
     }
 
+    public function addAction()
+    {
+        $dataTable = $this->getDataTable();
+
+        $this->view->form = $dataTable->renderAddForm();
+
+        return json_encode([
+            'window' => $this->view->getRender('data-table', 'add')
+        ]);
+    }
+
     public function deleteAction()
     {
         $dataTable = $this->getDataTable();
@@ -46,11 +57,20 @@ class DataTableController extends BaseController
         $editId    = $this->getEditId();
         $dataTable = $this->getDataTable();
 
-        $this->view->form = $dataTable->renderEditForm($editId);
+        if ($editId === null) {
+            $this->view->form = $dataTable->renderAddForm();
+            $view = 'add';
+
+            // if the form was succesfully saved, a edit id can be fetched
+            $editId = $dataTable->getEditId();
+        } else {
+            $this->view->form = $dataTable->renderEditForm($editId);
+            $view = 'edit';
+        }
 
         return json_encode([
             'table'    => $dataTable->renderTable($this->getFilters()),
-            'window'   => $this->view->getRender('data-table', 'edit'),
+            'window'   => $this->view->getRender('data-table', $view),
             'editedId' => $editId,
         ]);
     }
@@ -104,11 +124,11 @@ class DataTableController extends BaseController
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    private function getEditId(): int
+    private function getEditId()
     {
-        return (int) $this->request->getPost(DataTable::EDIT_ID);
+        return $this->request->getPost(DataTable::EDIT_ID);
     }
 
     /**

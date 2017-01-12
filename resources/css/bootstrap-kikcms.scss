@@ -5,6 +5,10 @@ label{
     margin-bottom: 2px;
 }
 
+textarea.form-control{
+    height: 240px;
+}
+
 .btn{
     @include fontDefault();
     font-weight: 400;
@@ -65,6 +69,10 @@ label{
 .form-control-feedback{
     top: 1px;
     right: 3px;
+}
+
+.has-feedback label~.form-control-feedback{
+    top: 23px;
 }
 
 .form-group{

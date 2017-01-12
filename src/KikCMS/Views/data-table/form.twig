@@ -1,0 +1,13 @@
+<div class="header">
+    <div class="lbl">{% block headerTitle '' %}</div>
+</div>
+
+<div class="content">
+    {{ flash.output }}
+    {{ form|raw }}
+</div>
+
+<div class="footer">
+    <button type="button" class="btn btn-secondary save">{{ tl('dataTable.save') }}</button>
+    <button type="button" class="btn btn-primary saveAndClose">{{ tl('dataTable.saveAndClose') }}</button>
+</div>

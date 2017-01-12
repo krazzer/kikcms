@@ -23,7 +23,7 @@ abstract class DataTable extends Injectable
     const FILTER_SORT_COLUMN    = 'sortColumn';
     const FILTER_SORT_DIRECTION = 'sortDirection';
 
-    const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple'];
+    const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple', 'closeWarning'];
 
     /** @var DataForm */
     protected $form;
@@ -81,6 +81,22 @@ abstract class DataTable extends Injectable
             'fieldFormatting' => $this->fieldFormatting,
             'this'            => $this,
         ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function renderAddForm()
+    {
+        $this->initializeDatatable();
+
+        $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
+
+        if ($this->form->isPosted()) {
+            return $this->form->render();
+        }
+
+        return $this->form->render();
     }
 
     /**
@@ -215,6 +231,20 @@ abstract class DataTable extends Injectable
         $this->session->set(self::SESSION_KEY, [$instance => [
             'class' => static::class
         ]]);
+    }
+
+    /**
+     * Retrieve the current editId from the DataForm
+     *
+     * @return mixed|null
+     */
+    public function getEditId()
+    {
+        if( ! $this->form->hasField(self::EDIT_ID)){
+            return null;
+        }
+
+        return $this->form->getField(self::EDIT_ID)->getValue();
     }
 
     /**

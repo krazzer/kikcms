@@ -5,6 +5,7 @@ DataTable.prototype =
 {
     instance: null,
     currentSearch: null,
+    currentFormInput: null,
 
     init: function () {
         this.initTable();
@@ -16,6 +17,7 @@ DataTable.prototype =
     initButtons: function () {
         var self          = this;
         var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
+        var $addButton    = this.getDatatable().find('.toolbar .button.add');
 
         $deleteButton.click(function () {
             var selectedIds = self.getSelectedIds();
@@ -32,6 +34,10 @@ DataTable.prototype =
                     self.actionDelete(selectedIds);
                 }
             }
+        });
+
+        $addButton.click(function () {
+            self.actionAdd();
         });
     },
 
@@ -115,6 +121,29 @@ DataTable.prototype =
         var self    = this;
         var $window = this.getWindow();
 
+        tinymce.remove(this.getWysiwygSelector());
+
+        tinymce.init({
+            selector: this.getWysiwygSelector(),
+            setup: function (editor) {
+                editor.on('change', function () {
+                    tinymce.triggerSave();
+                });
+            },
+            language_url : '/cmsassets/js/tinymce/nl.js',
+            language: 'nl',
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
+                'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
+                'textcolor colorpicker textpattern imagetools codesample toc'
+            ],
+            toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+            ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
+            image_advtab: true,
+            content_css: ['/cmsassets/css/tinymce/content.css']
+        });
+
         $window.find('.saveAndClose').click(function () {
             self.actionSave(true);
         });
@@ -122,6 +151,8 @@ DataTable.prototype =
         $window.find('.save').click(function () {
             self.actionSave(false);
         });
+
+        this.currentFormInput = $window.find('form').serialize();
     },
 
     action: function (action, parameters, onSuccess, loadingElement) {
@@ -172,6 +203,16 @@ DataTable.prototype =
         };
 
         xmlHttpRequest();
+    },
+
+    actionAdd: function () {
+        var self = this;
+
+        this.showWindow();
+
+        this.action('add', {}, function (result) {
+            self.setWindowContent(result.window);
+        });
     },
 
     actionDelete: function (ids) {
@@ -252,9 +293,23 @@ DataTable.prototype =
     },
 
     closeWindow: function () {
+        var $window = this.getWindow();
+        var confirmed = true;
+
+        if(this.currentFormInput != $window.find('form').serialize()){
+            confirmed = confirm(KikCMS.tl('dataTable.closeWarning'));
+        }
+
+        if( ! confirmed){
+            return;
+        }
+
         $('body').removeClass('datatableBlur');
-        this.getWindow().fadeOut();
-        this.getWindow().find('.windowContent').html('');
+
+        $window.fadeOut();
+        $window.find('.windowContent').html('');
+
+        this.currentFormInput = null;
     },
 
     showWindow: function () {
@@ -353,6 +408,11 @@ DataTable.prototype =
         }
 
         return $('#' + windowId);
+    },
+
+    getWysiwygSelector: function () {
+        var windowId = this.getWindow().attr("id");
+        return '#' + windowId + ' textarea.wysiwyg';
     },
 
     updateToolbar: function () {

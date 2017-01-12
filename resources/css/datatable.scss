@@ -8,7 +8,7 @@ body > *:not(.datatableWindow){
 body.datatableBlur{
     overflow: hidden;
 
-    > *:not(#notFading){
+    > #menu, #main{
         @include blur(4);
         @include noTextSelect();
         pointer-events: none;
