@@ -2,6 +2,7 @@
 
 namespace KikCMS\Services;
 
+use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Translator;
@@ -132,10 +133,16 @@ class Services extends BaseServices
         });
 
         register_shutdown_function(function() use ($isProduction){
+            $error = error_get_last();
+
+            if( ! $error) {
+                return;
+            }
+
             http_response_code(500);
 
             echo $this->get('view')->getRender('errors', 'show500', [
-                'error' => $isProduction ? null : error_get_last(),
+                'error' => $isProduction ? null : $error,
             ]);
         });
 
