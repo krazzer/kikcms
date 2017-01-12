@@ -3,12 +3,12 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\WebForm\DataForm;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Paginator\Adapter\QueryBuilder;
 use stdClass;
 
 abstract class DataTable extends Injectable
@@ -180,36 +180,12 @@ abstract class DataTable extends Injectable
         $page = (int) isset($filters[self::FILTER_PAGE]) ? $filters[self::FILTER_PAGE] : 1;
 
         $paginator = new QueryBuilder(array(
-            "builder" => $this->getQuery($filters),
-            "limit"   => 100,
-            "page"    => $page,
+            "builder"  => $this->getQuery($filters),
+            "limit"    => 100,
+            "page"     => $page,
         ));
 
-        // todo: put this in custom paginator
-        $page = $paginator->getPaginate();
-
-        $pages = [];
-
-        if ($page->last <= 6) {
-            for ($i = 1; $i <= $page->last; $i++) {
-                $pages[$i] = $i;
-            }
-        } else {
-            if ($page->current < 5) {
-                $secondLast = $page->last - 1 == 6 ? 6 : null;
-                $pages      = [1, 2, 3, 4, 5, $secondLast, $page->last];
-            } elseif ($page->current > $page->last - 4) {
-                $second = $page->last - 5 == 2 ? 2 : null;
-                $pages  = [1, $second, $page->last - 4, $page->last - 3, $page->last - 2, $page->last - 1, $page->last];
-            } else {
-                $secondLast = $page->current + 2 == 6 ? 6 : null;
-                $second     = $page->current - 2 == 2 ? 2 : null;
-                $pages      = [1, $second, $page->current - 1, $page->current, $page->current + 1, $secondLast, $page->last];
-            }
-        }
-
-        $page->pages     = $pages;
-        $this->tableData = $page;
+        $this->tableData = $paginator->getPaginate();
 
         return $this->tableData;
     }
