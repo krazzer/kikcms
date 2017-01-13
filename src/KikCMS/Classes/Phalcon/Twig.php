@@ -33,13 +33,13 @@ class Twig extends Engine implements EngineInterface
 
         $loader = new \Twig_Loader_Filesystem($this->getView()->getViewsDir());
 
-        foreach($paths as $namespace => $path){
+        foreach ($paths as $namespace => $path) {
             $loader->addPath($path, $namespace);
         }
 
         $this->twig = new \Twig_Environment($loader, $options);
 
-        if($this->twig->isDebug()) {
+        if ($this->twig->isDebug()) {
             $this->twig->addExtension(new \Twig_Extension_Debug());
         }
 
@@ -53,15 +53,16 @@ class Twig extends Engine implements EngineInterface
      */
     public function render($path, $params, $mustClean = false)
     {
-        if (!$params) {
+        if ( ! $params) {
             $params = [];
         }
 
-        $content = $this->twig->render(str_replace($this->getView()->getViewsDir(), '', $path), $params);
+        $view    = str_replace($this->getView()->getViewsDir(), '', $path);
+        $content = $this->twig->render($view, $params);
+
         if ($mustClean) {
             $this->getView()->setContent($content);
-
-            return ;
+            return;
         }
 
         echo $content;
@@ -71,8 +72,8 @@ class Twig extends Engine implements EngineInterface
      * Registers common function in Twig
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
-     * @param array                      $userFunctions
+     * @param \Phalcon\DiInterface $di
+     * @param array $userFunctions
      */
     protected function registryFunctions($view, DiInterface $di, $userFunctions = [])
     {
@@ -162,7 +163,7 @@ class Twig extends Engine implements EngineInterface
             }, $options),
         ];
 
-        if (!empty($userFunctions)) {
+        if ( ! empty($userFunctions)) {
             $functions = array_merge($functions, $userFunctions);
         }
 
@@ -183,7 +184,7 @@ class Twig extends Engine implements EngineInterface
         /** @var Config $configGroup */
         $configGroup = $di->get("config")->get($string[0]);
 
-        if( ! $configGroup){
+        if ( ! $configGroup) {
             return null;
         }
 

@@ -1,8 +1,0 @@
-{{ javascriptInclude('cmsassets/js/datatable/datatable.js') }}
-<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-
-<script>
-    {% for key in dataTableJsTranslations %}
-        KikCMS.translations['dataTable.{{ key }}'] = "{{ tl('dataTable.' ~ key) }}";
-    {% endfor %}
-</script>

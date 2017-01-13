@@ -3,11 +3,14 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
-use KikCMS\Classes\Phalcon\FormElements\MultiCheckbox;
+use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
+use KikCMS\Classes\WebForm\Fields\Autocomplete;
+use KikCMS\Classes\WebForm\Fields\Checkbox;
+use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
+use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Di\Injectable;
-use Phalcon\Forms\Element;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
@@ -66,18 +69,29 @@ class WebForm extends Injectable
     }
 
     /**
-     * @param Element $element
-     * @param string $type
+     * Adds assets required
+     */
+    public function addAssets()
+    {
+        if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
+            $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
+            $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
+        }
+
+        if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
+            $this->view->assets->addJs('/cmsassets/js/typeahead.js');
+        }
+    }
+
+    /**
+     * @param Field $field
      * @return Field
      */
-    public function addField(Element $element, string $type = 'default'): Field
+    public function addField(Field $field): Field
     {
-        $field = $this->createNewField();
-        $field->setElement($element);
-        $field->setType($type);
-
-        $this->fields[$element->getName()] = $field;
-        $this->form->add($element);
+        $field->setForm($this);
+        $this->fields[$field->getKey()] = $field;
+        $this->form->add($field->getElement());
 
         return $field;
     }
@@ -86,7 +100,23 @@ class WebForm extends Injectable
      * @param string $key
      * @param string $label
      * @param array $validators
-     * @return Field
+     * @return Field|Autocomplete
+     */
+    public function addAutoCompleteField(string $key, string $label, array $validators = []): Field
+    {
+        $autoComplete = new Text($key);
+        $autoComplete->setLabel($label);
+        $autoComplete->setAttribute('class', 'form-control autocomplete');
+        $autoComplete->addValidators($validators);
+
+        return $this->addField(new Autocomplete($autoComplete));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field|Checkbox
      */
     public function addCheckboxField(string $key, string $label, array $validators = []): Field
     {
@@ -95,7 +125,7 @@ class WebForm extends Injectable
         $checkbox->setAttribute('type', 'checkbox');
         $checkbox->addValidators($validators);
 
-        return $this->addField($checkbox, Field::TYPE_CHECKBOX);
+        return $this->addField(new Checkbox($checkbox));
     }
 
     /**
@@ -111,7 +141,7 @@ class WebForm extends Injectable
         $password->setAttribute('class', 'form-control');
         $password->addValidators($validators);
 
-        return $this->addField($password);
+        return $this->addField(new Field($password));
     }
 
     /**
@@ -119,16 +149,16 @@ class WebForm extends Injectable
      * @param string $label
      * @param array $options
      *
-     * @return Field
+     * @return Field|MultiCheckbox
      */
     public function addMultiCheckboxField(string $key, string $label, array $options): Field
     {
-        $multiCheckbox = new MultiCheckbox($key);
+        $multiCheckbox = new MultiCheck($key);
         $multiCheckbox->setAttribute('type', 'multiCheckbox');
         $multiCheckbox->setLabel($label);
         $multiCheckbox->setOptions($options);
 
-        return $this->addField($multiCheckbox, Field::TYPE_MULTI_CHECKBOX);
+        return $this->addField(new MultiCheckbox($multiCheckbox));
     }
 
     /**
@@ -144,7 +174,7 @@ class WebForm extends Injectable
         $name->setAttribute('class', 'form-control');
         $name->addValidators($validators);
 
-        return $this->addField($name);
+        return $this->addField(new Field($name));
     }
 
     /**
@@ -160,14 +190,14 @@ class WebForm extends Injectable
         $name->setAttribute('class', 'form-control');
         $name->addValidators($validators);
 
-        return $this->addField($name);
+        return $this->addField(new Field($name));
     }
 
     /**
      * @param string $key
      * @param string $label
      * @param array $validators
-     * @return Field
+     * @return Field|Wysiwyg
      */
     public function addWysiwygField(string $key, string $label, array $validators = []): Field
     {
@@ -176,7 +206,7 @@ class WebForm extends Injectable
         $name->setAttribute('class', 'form-control wysiwyg');
         $name->addValidators($validators);
 
-        return $this->addField($name);
+        return $this->addField(new Wysiwyg($name));
     }
 
     /**
@@ -190,7 +220,7 @@ class WebForm extends Injectable
         $hidden->setDefault($defaultValue);
         $hidden->setAttribute('type', 'hidden');
 
-        return $this->addField($hidden);
+        return $this->addField(new Field($hidden));
     }
 
     /**
@@ -208,7 +238,7 @@ class WebForm extends Injectable
      */
     public function getField(string $fieldKey): ElementInterface
     {
-        if( ! $this->form->has($fieldKey)){
+        if ( ! $this->form->has($fieldKey)) {
             return null;
         }
 
@@ -244,6 +274,7 @@ class WebForm extends Injectable
 
         $this->initialize();
         $this->initializeFields();
+        $this->addAssets();
 
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
@@ -275,7 +306,6 @@ class WebForm extends Injectable
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
-            'isDataForm'         => $this instanceof DataForm
         ]);
     }
 
@@ -289,7 +319,7 @@ class WebForm extends Injectable
      */
     public function renderView($viewName, array $parameters): string
     {
-        return $this->view->getRender('webform', $viewName, $parameters);
+        return $this->view->getPartial('webform/' . $viewName, $parameters);
     }
 
     /**
@@ -370,14 +400,6 @@ class WebForm extends Injectable
     }
 
     /**
-     * @return Field
-     */
-    protected function createNewField(): Field
-    {
-        return new Field();
-    }
-
-    /**
      * Override to build up the form
      */
     protected function initialize()
@@ -454,6 +476,21 @@ class WebForm extends Injectable
         }
 
         return $errorContainer;
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    private function hasFieldWithType(string $type): bool
+    {
+        foreach ($this->fields as $field) {
+            if ($field->getType() == $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

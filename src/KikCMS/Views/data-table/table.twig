@@ -1,4 +1,4 @@
-{# @var this \KikCMS\Classes\DataTable\DataTable #}
+{# @var self \KikCMS\Classes\DataTable\DataTable #}
 
 {% if(headerData) %}
     <table>
@@ -27,7 +27,7 @@
                 {% for key, value in row %}
                     <td>
                         {% if fieldFormatting[key] is defined %}
-                            {{ this.formatValue(key, value)|raw }}
+                            {{ self.formatValue(key, value)|raw }}
                         {% else %}
                             {{ value }}
                         {% endif %}

@@ -4,7 +4,7 @@ namespace KikCMS\Classes\DataTable;
 
 
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
-use KikCMS\Classes\WebForm\DataForm;
+use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model;
@@ -34,15 +34,23 @@ abstract class DataTable extends Injectable
     /** @var array */
     protected $fieldFormatting = [];
 
-    /** @var Builder|null */
-    private $query;
-
     /** @var StdClass */
     private $tableData;
 
     protected abstract function initialize();
 
     protected abstract function getTable(): string;
+
+    /**
+     * @return Builder
+     */
+    protected function getDefaultQuery()
+    {
+        $defaultQuery = new Builder();
+        $defaultQuery->addFrom($this->getTable());
+
+        return $defaultQuery;
+    }
 
     /**
      * @param array $ids
@@ -64,13 +72,14 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Render the datatable
+     * Renders the datatable
      *
      * @return string
      */
     public function render()
     {
         $this->initializeDatatable();
+        $this->addAssets();
 
         return $this->renderView('index', [
             'tableData'       => $this->getTableData()->items->toArray(),
@@ -79,7 +88,7 @@ abstract class DataTable extends Injectable
             'instanceName'    => $this->getInstanceName(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
-            'this'            => $this,
+            'self'            => $this,
         ]);
     }
 
@@ -114,7 +123,7 @@ abstract class DataTable extends Injectable
             return $this->form->render();
         }
 
-        return $this->form->renderWithData($this->getEditData($id));
+        return $this->form->renderWithData($id);
     }
 
     /**
@@ -141,7 +150,7 @@ abstract class DataTable extends Injectable
             'headerData'      => $this->getTableHeaderData(),
             'fieldFormatting' => $this->fieldFormatting,
             'filters'         => $filters,
-            'this'            => $this,
+            'self'            => $this,
         ]);
     }
 
@@ -155,24 +164,7 @@ abstract class DataTable extends Injectable
      */
     public function renderView($viewName, array $parameters = []): string
     {
-        return $this->view->getRender('data-table', $viewName, $parameters);
-    }
-
-    /**
-     * @param int $id
-     * @return array
-     */
-    private function getEditData(int $id)
-    {
-        $query = new Builder();
-        $query
-            ->addFrom($this->getTable())
-            ->andWhere('id = ' . $id);
-
-        $data = $query->getQuery()->execute()->getFirst()->toArray();
-        $data += $this->getDataStoredElseWhere($id);
-
-        return $data;
+        return $this->view->getPartial('data-table/' . $viewName, $parameters);
     }
 
     /**
@@ -197,8 +189,8 @@ abstract class DataTable extends Injectable
 
         $paginator = new QueryBuilder(array(
             "builder"  => $this->getQuery($filters),
-            "limit"    => 100,
             "page"     => $page,
+            "limit"    => 100,
         ));
 
         $this->tableData = $paginator->getPaginate();
@@ -253,16 +245,13 @@ abstract class DataTable extends Injectable
      */
     public function getQuery(array $filters = []): Builder
     {
-        if ($this->query == null) {
-            $this->query = new Builder();
-            $this->query->addFrom($this->getTable());
-        }
+        $query = $this->getDefaultQuery();
 
         if (isset($filters[self::FILTER_SEARCH])) {
             $searchValue = $filters[self::FILTER_SEARCH];
 
             foreach ($this->searchableFields as $field) {
-                $this->query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
+                $query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
             }
         }
 
@@ -272,19 +261,11 @@ abstract class DataTable extends Injectable
             $columns   = $this->getTableHeaderData();
 
             if (in_array($column, $columns) && in_array($direction, ['asc', 'desc'])) {
-                $this->query->orderBy($column . ' ' . $direction);
+                $query->orderBy($column . ' ' . $direction);
             }
         }
 
-        return $this->query;
-    }
-
-    /**
-     * @param Builder $query
-     */
-    public function setQuery(Builder $query)
-    {
-        $this->query = $query;
+        return $query;
     }
 
     /**
@@ -300,25 +281,6 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Retrieve data from fields that are not stored in the current DataTable's Table
-     *
-     * @param $id
-     * @return array
-     */
-    private function getDataStoredElseWhere($id): array
-    {
-        $data = [];
-
-        foreach ($this->form->getFields() as $key => $field) {
-            if ($field->isStoredElsewhere()) {
-                $data[$key] = $field->getValue($id);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * @return string
      */
     private function getTableSource(): string
@@ -328,5 +290,16 @@ abstract class DataTable extends Injectable
         /** @var Model $model */
         $model = new $table();
         return $model->getSource();
+    }
+
+    /**
+     * Sets the js & css assets required
+     */
+    private function addAssets()
+    {
+        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
+        $this->view->assets->addCss('cmsassets/css/datatable.css');
+
+        $this->form->addAssets();
     }
 }

@@ -294,15 +294,6 @@ DataTable.prototype =
 
     closeWindow: function () {
         var $window = this.getWindow();
-        var confirmed = true;
-
-        if(this.currentFormInput != $window.find('form').serialize()){
-            confirmed = confirm(KikCMS.tl('dataTable.closeWarning'));
-        }
-
-        if( ! confirmed){
-            return;
-        }
 
         $('body').removeClass('datatableBlur');
 
@@ -403,6 +394,12 @@ DataTable.prototype =
             $bodyNotFading.prepend($window);
 
             $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(function () {
+                if(self.currentFormInput != self.getWindow().find('form').serialize()){
+                    if( ! confirm(KikCMS.tl('dataTable.closeWarning'))){
+                        return;
+                    }
+                }
+
                 self.closeWindow();
             });
         }

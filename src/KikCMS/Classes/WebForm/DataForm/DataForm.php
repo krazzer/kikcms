@@ -1,15 +1,18 @@
 <?php
 
-namespace KikCMS\Classes\WebForm;
+namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
-use KikCMS\Classes\Phalcon\FormElements\MultiCheckbox;
+use KikCMS\Classes\WebForm\ErrorContainer;
+use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\StatusCodes;
 use Monolog\Logger;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
@@ -26,6 +29,9 @@ class DataForm extends WebForm
     /** @var string */
     protected $formTemplate = 'dataForm';
 
+    /** @var FieldStorage[] */
+    protected $fieldStorage;
+
     /**
      * @param string $table
      */
@@ -34,23 +40,6 @@ class DataForm extends WebForm
         parent::__construct();
 
         $this->table = $table;
-    }
-
-    /**
-     * @inheritdoc
-     * @return StorableField
-     */
-    public function addMultiCheckboxField(string $key, string $label, array $options): Field
-    {
-        return parent::addMultiCheckboxField($key, $label, $options);
-    }
-
-    /**
-     * @return StorableField[]
-     */
-    public function getFields(): array
-    {
-        return parent::getFields();
     }
 
     /**
@@ -83,12 +72,13 @@ class DataForm extends WebForm
     }
 
     /**
-     * @param array $editData
+     * @param int $editId
      * @return Response|string
      */
-    public function renderWithData(array $editData)
+    public function renderWithData(int $editId)
     {
-        /** @var StorableField $field */
+        $editData = $this->getEditData($editId);
+
         foreach ($this->fields as $key => &$field) {
             if (array_key_exists($key, $editData)) {
                 $field->getElement()->setDefault($editData[$key]);
@@ -99,11 +89,58 @@ class DataForm extends WebForm
     }
 
     /**
-     * @return Field|StorableField
+     * @param FieldStorage $fieldStorage
      */
-    protected function createNewField(): Field
+    public function addFieldStorage(FieldStorage $fieldStorage)
     {
-        return new StorableField();
+        $this->fieldStorage[$fieldStorage->getField()->getKey()] = $fieldStorage;
+    }
+
+    /**
+     * Retrieve data from fields that are not stored in the current DataTable's Table
+     *
+     * @param $id
+     * @return array
+     */
+    public function getDataStoredElseWhere($id): array
+    {
+        $data = [];
+
+        /** @var Field $field */
+        foreach ($this->getFields() as $key => $field) {
+            if ($this->isStoredElsewhere($field)) {
+                $data[$key] = $this->fieldStorage[$field->getKey()]->getValue($id);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param $field
+     *
+     * @return bool
+     */
+    public function isStoredElsewhere(Field $field): bool
+    {
+        return array_key_exists($field->getKey(), $this->fieldStorage);
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    private function getEditData(int $id)
+    {
+        $query = new Builder();
+        $query
+            ->addFrom($this->table)
+            ->andWhere('id = ' . $id);
+
+        $data = $query->getQuery()->execute()->getFirst()->toArray();
+        $data += $this->getDataStoredElseWhere($id);
+
+        return $data;
     }
 
     /**
@@ -161,14 +198,13 @@ class DataForm extends WebForm
     {
         $insertUpdateData = [];
 
-        /** @var StorableField $field */
         foreach ($this->fields as $key => $field) {
             if (in_array($key, $this->getSystemFields())) {
                 continue;
             }
 
             // will be saved in another table, so skip here
-            if ($field->isStoredElsewhere()) {
+            if ($this->isStoredElsewhere($field)) {
                 continue;
             }
 
@@ -209,31 +245,12 @@ class DataForm extends WebForm
      */
     private function storeFields(array $input, $editId)
     {
-        /** @var StorableField $field */
         foreach ($this->fields as $key => $field) {
-            if ( ! $field->isStoredElsewhere()) {
+            if ( ! $this->isStoredElsewhere($field)) {
                 continue;
             }
 
-            if ($field->getType() == Field::TYPE_MULTI_CHECKBOX) {
-                /** @var MultiCheckbox $element */
-                $element     = $field->getElement();
-                $table       = $field->getTable();
-                $relationKey = $field->getFieldStorage()->getRelationKey();
-
-                $ids            = array_keys($element->getOptions());
-                $whereCondition = $relationKey . ' = ' . $editId . ' AND ' . $key . ' IN (' . implode(',', $ids) . ')';
-
-                $this->db->delete($table, $whereCondition);
-
-                if ( ! isset($input[$key])) {
-                    continue;
-                }
-
-                foreach ($input[$key] as $id) {
-                    $this->db->insert($table, [$editId, $id], [$relationKey, $key]);
-                }
-            }
+            $this->fieldStorage[$key]->store($input, $editId);
         }
     }
 }

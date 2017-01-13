@@ -2,7 +2,6 @@
 
 namespace KikCMS\Services;
 
-use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Translator;
@@ -11,6 +10,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 
 use Monolog\ErrorHandler;
+use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend\Apc;
 use Phalcon\Cache\Frontend\None;
 use Phalcon\Db;
@@ -79,6 +79,8 @@ class Services extends BaseServices
                 ]);
             }
         ]);
+
+        $view->assets = new Manager();
 
         return $view;
     }

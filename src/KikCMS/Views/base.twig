@@ -12,8 +12,7 @@
     {{ stylesheetLink('cmsassets/css/bootstrap.min.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ stylesheetLink('cmsassets/css/default.css') }}
-    {% if(datatable) %}{% include '@kikcms/data-table/cssAssets.twig' %}{% endif %}
-
+    {{ assets.outputCss() }}
     {% block cssAssets %}{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Your invoices">
@@ -32,7 +31,12 @@
     KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
     KikCMS.errorMessages = {{ tl('error')|json_encode|raw }};
 </script>
-{% if(datatable) %}{% include '@kikcms/data-table/jsAssets.twig' %}{% endif %}
+<script>
+    {% for key in dataTableJsTranslations %}
+        KikCMS.translations['dataTable.{{ key }}'] = "{{ tl('dataTable.' ~ key) }}";
+    {% endfor %}
+</script>
+{{ assets.outputJs() }}
 {% block jsAssets %}{% endblock %}
 </body>
 </html>

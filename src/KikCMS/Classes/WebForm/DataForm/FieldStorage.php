@@ -1,10 +1,10 @@
 <?php
 
-namespace KikCMS\Classes\WebForm;
+namespace KikCMS\Classes\WebForm\DataForm;
 
+use KikCMS\Classes\Model\Model;
+use KikCMS\Classes\WebForm\Field;
 use Phalcon\Di\Injectable;
-use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * Manages where and how a certain DataForms' field should be stored and retrieved
@@ -12,29 +12,29 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 class FieldStorage extends Injectable
 {
     /** @var string */
-    private $table;
+    protected $tableModel;
 
     /** @var Field */
-    private $field;
+    protected $field;
 
     /** @var string */
-    private $relationKey;
+    protected $relationKey;
 
     /**
      * @return string
      */
-    public function getTable(): string
+    public function getTableModel(): string
     {
-        return $this->table;
+        return $this->tableModel;
     }
 
     /**
-     * @param string $table
+     * @param string $tableModel
      * @return FieldStorage
      */
-    public function setTable(string $table): FieldStorage
+    public function setTableModel(string $tableModel): FieldStorage
     {
-        $this->table = $table;
+        $this->tableModel = $tableModel;
         return $this;
     }
 
@@ -71,34 +71,20 @@ class FieldStorage extends Injectable
      */
     public function getValue($id)
     {
-        $fieldKey = $this->field->getElement()->getName();
+    }
 
-        switch($this->field->getType())
-        {
-            case Field::TYPE_MULTI_CHECKBOX:
+    /**
+     * Return the actual table
+     *
+     * @return string
+     */
+    public function getTable(): string
+    {
+        $tableModel = $this->getTableModel();
 
-                $altQuery = new Builder();
-                $altQuery
-                    ->columns($fieldKey)
-                    ->addFrom($this->getTable())
-                    ->andWhere($this->getRelationKey() . ' = ' . $id);
-
-                /** @var Simple $results */
-                $results = $altQuery->getQuery()->execute();
-                $rows    = $results->toArray();
-                $values  = [];
-
-                foreach ($rows as $row) {
-                    $values[] = $row[$fieldKey];
-                }
-
-                return $values;
-            break;
-
-            default:
-                return null;
-            break;
-        }
+        /** @var Model $model */
+        $model = new $tableModel();
+        return $model->getSource();
     }
 
     /**
@@ -109,6 +95,13 @@ class FieldStorage extends Injectable
     {
         $this->relationKey = $relationKey;
         return $this;
+    }
 
+    /**
+     * @param array $input
+     * @param $editId
+     */
+    public function store(array $input, $editId)
+    {
     }
 }

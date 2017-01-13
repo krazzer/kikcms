@@ -4,7 +4,7 @@ namespace KikCMS\Classes\Phalcon\FormElements;
 
 use Phalcon\Forms\Element;
 
-class MultiCheckbox extends Element
+class MultiCheck extends Element
 {
     /** @var array */
     private $options;

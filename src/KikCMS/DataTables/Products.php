@@ -7,12 +7,13 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Models\DummyProducts;
 use KikCMS\Models\ProductType;
 use KikCMS\Models\Type;
+use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class Products extends DataTable
 {
     /** @inheritdoc */
-    protected $searchableFields = ['title', 'description'];
+    protected $searchableFields = ['title', 'description', 'name'];
 
     /**
      * @inheritdoc
@@ -25,6 +26,20 @@ class Products extends DataTable
     /**
      * @inheritdoc
      */
+    protected function getDefaultQuery()
+    {
+        $defaultQuery = new Builder();
+        $defaultQuery->addFrom($this->getTable(), 'p');
+        $defaultQuery->leftJoin(Type::class, 't.id = p.category_id', 't');
+        $defaultQuery->columns(['p.id', 'p.title', 'p.price', 'p.stock', 't.name as category', 'p.description']);
+        $defaultQuery->orderBy('title ASC');
+
+        return $defaultQuery;
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize()
     {
         $typeNameMap = Type::findAssoc();
@@ -32,6 +47,8 @@ class Products extends DataTable
         $this->form->addTextField('title', 'Naam', [new PresenceOf()]);
         $this->form->addTextField('price', 'Prijs');
         $this->form->addTextField('stock', 'Voorraad');
+        $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceTableModel(Type::class);
+
         $this->form->addCheckboxField('sale', 'Sale');
         $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
 
@@ -39,7 +56,7 @@ class Products extends DataTable
             ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
 
         $this->setFieldFormatting('price', function($value){
-            return '&euro; ' . number_format($value, 2, ',', '.');
+            return '&euro;&nbsp;' . number_format($value, 2, ',', '.');
         });
 
         $this->setFieldFormatting('sale', function($value){
