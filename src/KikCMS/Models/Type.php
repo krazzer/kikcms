@@ -6,10 +6,7 @@ use KikCMS\Classes\Model\Model;
 
 class Type extends Model
 {
-    const FIELD_ID = 'id';
+    const TABLE = 'type';
 
-    public function initialize()
-    {
-        $this->setSource('type');
-    }
+    const FIELD_ID = 'id';
 }

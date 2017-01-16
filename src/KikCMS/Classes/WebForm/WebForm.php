@@ -7,6 +7,7 @@ use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
+use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
@@ -107,6 +108,8 @@ class WebForm extends Injectable
         $autoComplete = new Text($key);
         $autoComplete->setLabel($label);
         $autoComplete->setAttribute('class', 'form-control autocomplete');
+        $autoComplete->setAttribute('autocomplete', 'off');
+        $autoComplete->setAttribute('data-field-key', $key);
         $autoComplete->addValidators($validators);
 
         return $this->addField(new Autocomplete($autoComplete));
@@ -220,7 +223,7 @@ class WebForm extends Injectable
         $hidden->setDefault($defaultValue);
         $hidden->setAttribute('type', 'hidden');
 
-        return $this->addField(new Field($hidden));
+        return $this->addField(new HiddenField($hidden));
     }
 
     /**
@@ -236,7 +239,7 @@ class WebForm extends Injectable
      * @param string $fieldKey
      * @return ElementInterface
      */
-    public function getField(string $fieldKey): ElementInterface
+    public function getElement(string $fieldKey): ElementInterface
     {
         if ( ! $this->form->has($fieldKey)) {
             return null;
@@ -246,7 +249,16 @@ class WebForm extends Injectable
     }
 
     /**
-     * @return array
+     * @param string $fieldKey
+     * @return Field
+     */
+    public function getField(string $fieldKey): Field
+    {
+        return $this->fields[$fieldKey];
+    }
+
+    /**
+     * @return Field[]
      */
     public function getFields(): array
     {
@@ -283,7 +295,7 @@ class WebForm extends Injectable
             foreach ($this->fields as $key => $field) {
                 $element = $field->getElement();
 
-                if ($element->getAttribute('type') == 'checkbox' && ! $this->request->hasPost($key)) {
+                if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
                     $element->setDefault(0);
                 }
             }
@@ -301,6 +313,7 @@ class WebForm extends Injectable
 
         return $this->renderView($this->formTemplate, [
             'form'               => $this->form,
+            'fields'             => $this->fields,
             'formId'             => $this->getFormId(),
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
@@ -444,14 +457,14 @@ class WebForm extends Injectable
      */
     private function getErrors(): ErrorContainer
     {
-        $errorContainer = new ErrorContainer();
+        $errorContainer = $this->validate($this->getInput());
 
         if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
 
         if ($this->form->isValid($this->getInput()) && $errorContainer->isEmpty()) {
-            return $this->validate($this->getInput());
+            return $errorContainer;
         }
 
         foreach ($this->form->getElements() as $formElement) {

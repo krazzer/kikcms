@@ -5,10 +5,10 @@ body > *:not(.datatableWindow){
     transition: filter, opacity 0.3s;
 }
 
-body.datatableBlur{
+:root > body.datatableBlur{
     overflow: hidden;
 
-    > #menu, #main{
+    > #menu, > #main{
         @include blur(4);
         @include noTextSelect();
         pointer-events: none;

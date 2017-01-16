@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes;
 
+use KikCMS\Classes\Model\Model;
 use Phalcon\Db;
 use Phalcon\Db\ResultInterface;
 use Phalcon\Di\Injectable;
@@ -80,14 +81,15 @@ class DbService extends Injectable
     }
 
     /**
-     * @param string $table
+     * @param string $model
      * @param array $set
      * @param array $where
      *
      * @return bool
      */
-    public function update(string $table, array $set, array $where)
+    public function update(string $model, array $set, array $where)
     {
+        $table = $this->getTableForModel($model);
         $where = array_map(function($key, $value){ return $key . ' = ' .$value; }, array_keys($where), array_values($where));
         $where = implode(' AND ', $where);
 
@@ -95,15 +97,28 @@ class DbService extends Injectable
     }
 
     /**
-     * @param string $table
+     * @param string $model
      * @param array $insert
      *
      * @return mixed
      */
-    public function insert(string $table, array $insert)
+    public function insert(string $model, array $insert)
     {
+        $table = $this->getTableForModel($model);
+
         $this->db->insert($table, array_values($insert), array_keys($insert));
 
         return $this->db->lastInsertId();
+    }
+
+    /**
+     * @param string $model
+     * @return string
+     */
+    private function getTableForModel(string $model): string
+    {
+        /** @var Model $model */
+        $model = new $model();
+        return $model->getSource();
     }
 }

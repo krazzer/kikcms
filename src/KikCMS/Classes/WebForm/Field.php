@@ -15,7 +15,8 @@ class Field
     const TYPE_AUTOCOMPLETE   = 'autocomplete';
     const TYPE_CHECKBOX       = 'checkbox';
     const TYPE_MULTI_CHECKBOX = 'multiCheckbox';
-    const TYPE_WYSIWYG        = 'wysiwys';
+    const TYPE_WYSIWYG        = 'wysiwyg';
+    const TYPE_HIDDEN         = 'hidden';
 
     /** @var WebForm|DataForm */
     protected $form;

@@ -62,7 +62,7 @@ class LoginController extends BaseController
         $passwordResetForm->addPasswordField('password_repeat', 'Herhaal wachtwoord', [
             new PresenceOf(),
             new Identical([
-                'value'   => $passwordResetForm->getField('password')->getValue(),
+                'value'   => $passwordResetForm->getElement('password')->getValue(),
                 'message' => $this->translator->tl('webform.messages.passwordMismatch'),
             ]),
             $passwordStringLength

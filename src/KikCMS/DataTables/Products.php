@@ -18,7 +18,7 @@ class Products extends DataTable
     /**
      * @inheritdoc
      */
-    protected function getTable(): string
+    protected function getModel(): string
     {
         return DummyProducts::class;
     }
@@ -29,9 +29,9 @@ class Products extends DataTable
     protected function getDefaultQuery()
     {
         $defaultQuery = new Builder();
-        $defaultQuery->addFrom($this->getTable(), 'p');
-        $defaultQuery->leftJoin(Type::class, 't.id = p.category_id', 't');
-        $defaultQuery->columns(['p.id', 'p.title', 'p.price', 'p.stock', 't.name as category', 'p.description']);
+        $defaultQuery->addFrom($this->getModel(), 'pr');
+        $defaultQuery->leftJoin(Type::class, 't.id = pr.category_id', 't');
+        $defaultQuery->columns(['pr.id', 'pr.title', 'pr.price', 'pr.stock', 't.name as category', 'pr.description']);
         $defaultQuery->orderBy('title ASC');
 
         return $defaultQuery;
@@ -47,7 +47,7 @@ class Products extends DataTable
         $this->form->addTextField('title', 'Naam', [new PresenceOf()]);
         $this->form->addTextField('price', 'Prijs');
         $this->form->addTextField('stock', 'Voorraad');
-        $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceTableModel(Type::class);
+        $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class);
 
         $this->form->addCheckboxField('sale', 'Sale');
         $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');

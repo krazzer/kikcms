@@ -1,4 +1,5 @@
 {# @var form Phalcon\Forms\Form #}
+{# @var fields \KikCMS\Classes\WebForm\Field[] #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 {# @var security \Phalcon\Security #}
 {% use '@kikcms/webform/fields.twig' %}
@@ -13,10 +14,11 @@
         </div>
     {% endif %}
 
-    {% for element in form.elements %}
+    {% for field in fields %}
+        {% set element = field.element %}
         {% set errorMessages = errorContainer.errorsForField(element.name) %}
         {% set hasError = errorContainer.fieldHasError(element.name) %}
-        {% set type = element.attribute('type') ?: 'default' %}
+        {% set type = field.type ?: 'default' %}
         {% set classes = 'form-group' ~ (hasError ? ' has-error has-feedback' : '') %}
         {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
 

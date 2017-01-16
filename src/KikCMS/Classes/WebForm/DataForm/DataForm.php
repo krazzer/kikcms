@@ -11,7 +11,6 @@ use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\StatusCodes;
 use Monolog\Logger;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -21,10 +20,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 class DataForm extends WebForm
 {
     /** @var string */
-    protected $table;
-
-    /** @var string */
-    protected $tableKey = 'id';
+    protected $model;
 
     /** @var string */
     protected $formTemplate = 'dataForm';
@@ -32,60 +28,17 @@ class DataForm extends WebForm
     /** @var FieldStorage[] */
     protected $fieldStorage;
 
+    /** @var FieldTransformer[] */
+    protected $fieldTransformers;
+
     /**
-     * @param string $table
+     * @param string $model
      */
-    public function __construct(string $table)
+    public function __construct(string $model)
     {
         parent::__construct();
 
-        $this->table = $table;
-    }
-
-    /**
-     * @param array $input
-     * @return ErrorContainer
-     */
-    public function validate(array $input): ErrorContainer
-    {
-        return new ErrorContainer();
-    }
-
-    /**
-     * @param array $input
-     * @return void
-     */
-    public function successAction(array $input)
-    {
-        $editId = $this->saveData($input);
-
-        if($editId && !array_key_exists(DataTable::EDIT_ID, $input)){
-            $this->addHiddenField(DataTable::EDIT_ID, $editId);
-        }
-
-        if ($editId) {
-            $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
-        } else {
-            $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
-            $this->flash->error($this->translator->tl('dataForm.saveFailure'));
-        }
-    }
-
-    /**
-     * @param int $editId
-     * @return Response|string
-     */
-    public function renderWithData(int $editId)
-    {
-        $editData = $this->getEditData($editId);
-
-        foreach ($this->fields as $key => &$field) {
-            if (array_key_exists($key, $editData)) {
-                $field->getElement()->setDefault($editData[$key]);
-            }
-        }
-
-        return $this->render();
+        $this->model = $model;
     }
 
     /**
@@ -94,6 +47,14 @@ class DataForm extends WebForm
     public function addFieldStorage(FieldStorage $fieldStorage)
     {
         $this->fieldStorage[$fieldStorage->getField()->getKey()] = $fieldStorage;
+    }
+
+    /**
+     * @param FieldTransformer $fieldTransformer
+     */
+    public function addFieldTransformer(FieldTransformer $fieldTransformer)
+    {
+        $this->fieldTransformers[$fieldTransformer->getField()->getKey()] = $fieldTransformer;
     }
 
     /**
@@ -127,6 +88,52 @@ class DataForm extends WebForm
     }
 
     /**
+     * @param int $editId
+     * @return Response|string
+     */
+    public function renderWithData(int $editId)
+    {
+        $editData = $this->getEditData($editId);
+
+        foreach ($this->fields as $key => &$field) {
+            if (array_key_exists($key, $editData)) {
+                $field->getElement()->setDefault($editData[$key]);
+            }
+        }
+
+        return $this->render();
+    }
+
+    /**
+     * @param array $input
+     * @return void
+     */
+    public function successAction(array $input)
+    {
+        $editId = $this->saveData($input);
+
+        if ($editId && ! array_key_exists(DataTable::EDIT_ID, $input)) {
+            $this->addHiddenField(DataTable::EDIT_ID, $editId);
+        }
+
+        if ($editId) {
+            $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+        } else {
+            $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
+            $this->flash->error($this->translator->tl('dataForm.saveFailure'));
+        }
+    }
+
+    /**
+     * @param array $input
+     * @return ErrorContainer
+     */
+    public function validate(array $input): ErrorContainer
+    {
+        return new ErrorContainer();
+    }
+
+    /**
      * @param int $id
      * @return array
      */
@@ -134,11 +141,12 @@ class DataForm extends WebForm
     {
         $query = new Builder();
         $query
-            ->addFrom($this->table)
+            ->addFrom($this->model)
             ->andWhere('id = ' . $id);
 
         $data = $query->getQuery()->execute()->getFirst()->toArray();
-        $data += $this->getDataStoredElseWhere($id);
+        $data = $data + $this->getDataStoredElseWhere($id);
+        $data = $this->transformDataForDisplay($data);
 
         return $data;
     }
@@ -151,18 +159,14 @@ class DataForm extends WebForm
     {
         $insertUpdateData = $this->getInsertUpdateData($input);
 
-        /** @var Model $model */
-        $model = new $this->table();
-        $table = $model->getSource();
-
         $this->db->begin();
 
         try {
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
-                $this->dbService->update($table, $insertUpdateData, [$this->tableKey => $editId]);
+                $this->dbService->update($this->model, $insertUpdateData, ['id' => $editId]);
             } else {
-                $editId = $this->dbService->insert($table, $insertUpdateData);
+                $editId = $this->dbService->insert($this->model, $insertUpdateData);
             }
 
             $this->storeFields($input, $editId);
@@ -213,7 +217,10 @@ class DataForm extends WebForm
                 $input[$key] = isset($input[$key]) ? 1 : 0;
             }
 
-            $insertUpdateData[$key] = $this->formatInputValue($input[$key]);
+            $value = $this->transformInputForStorage($input, $key);
+            $value = $this->formatInputValue($value);
+
+            $insertUpdateData[$key] = $value;
         }
 
         return $insertUpdateData;
@@ -252,5 +259,42 @@ class DataForm extends WebForm
 
             $this->fieldStorage[$key]->store($input, $editId);
         }
+    }
+
+    /**
+     * Update the data with any autocomplete field value
+     *
+     * @param array $data
+     * @return array
+     */
+    private function transformDataForDisplay(array $data): array
+    {
+        foreach ($this->fields as $key => $field)
+        {
+            if( ! array_key_exists($key, $this->fieldTransformers) || ! $data[$key]){
+                continue;
+            }
+
+            $data[$key] = $this->fieldTransformers[$key]->toDisplay($data[$key]);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $input
+     * @param string $key
+     *
+     * @return mixed
+     */
+    private function transformInputForStorage(array $input, string $key)
+    {
+        $value = $input[$key];
+
+        if( ! $value || ! array_key_exists($key, $this->fieldTransformers)){
+            return $value;
+        }
+
+        return $this->fieldTransformers[$key]->toStorage($value);
     }
 }

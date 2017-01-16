@@ -3,9 +3,9 @@
 body > *:not(.datatableWindow) {
   transition: filter, opacity 0.3s; }
 
-body.datatableBlur {
+:root > body.datatableBlur {
   overflow: hidden; }
-  body.datatableBlur > #menu, body.datatableBlur #main {
+  :root > body.datatableBlur > #menu, :root > body.datatableBlur > #main {
     -webkit-filter: blur(4px);
     -ms-filter: blur(4px);
     filter: blur(4px);

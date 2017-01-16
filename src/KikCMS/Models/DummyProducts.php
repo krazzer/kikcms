@@ -6,8 +6,6 @@ use KikCMS\Classes\Model\Model;
 
 class DummyProducts extends Model
 {
-    public function initialize()
-    {
-        $this->setSource('products_dummy');
-    }
+    const TABLE = 'products_dummy';
+    const ALIAS = 'pr';
 }

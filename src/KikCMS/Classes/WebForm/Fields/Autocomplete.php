@@ -3,12 +3,14 @@
 namespace KikCMS\Classes\WebForm\Fields;
 
 
+use KikCMS\Classes\Phalcon\Validator\NameExists;
+use KikCMS\Classes\WebForm\DataForm\FieldTransformer\NameToId;
 use KikCMS\Classes\WebForm\Field;
 
 class Autocomplete extends Field
 {
-    /** @var string */
-    private $sourceTableModel;
+    /** @var string of the model used for finding results */
+    private $sourceModel;
 
     /**
      * @inheritdoc
@@ -21,16 +23,19 @@ class Autocomplete extends Field
     /**
      * @return string
      */
-    public function getSourceTableModel(): string
+    public function getSourceModel(): string
     {
-        return $this->sourceTableModel;
+        return $this->sourceModel;
     }
 
     /**
-     * @param string $sourceTableModel
+     * @param string $sourceModel
      */
-    public function setSourceTableModel(string $sourceTableModel)
+    public function setSourceModel(string $sourceModel)
     {
-        $this->sourceTableModel = $sourceTableModel;
+        $this->sourceModel = $sourceModel;
+
+        $this->form->addFieldTransformer(new NameToId($this));
+        $this->getElement()->addValidator(new NameExists([NameExists::OPTION_MODEL => $sourceModel]));
     }
 }

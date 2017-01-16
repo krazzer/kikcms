@@ -37,9 +37,15 @@ abstract class DataTable extends Injectable
     /** @var StdClass */
     private $tableData;
 
+    /**
+     * Tracks whether the function 'initializeDatatable' has been run yet
+     * @var bool
+     */
+    private $initialized;
+
     protected abstract function initialize();
 
-    protected abstract function getTable(): string;
+    protected abstract function getModel(): string;
 
     /**
      * @return Builder
@@ -47,9 +53,17 @@ abstract class DataTable extends Injectable
     protected function getDefaultQuery()
     {
         $defaultQuery = new Builder();
-        $defaultQuery->addFrom($this->getTable());
+        $defaultQuery->addFrom($this->getModel());
 
         return $defaultQuery;
+    }
+
+    /**
+     * @return DataForm
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 
     /**
@@ -69,6 +83,27 @@ abstract class DataTable extends Injectable
     public function formatValue(string $column, $value)
     {
         return $this->fieldFormatting[$column]($value);
+    }
+
+    /**
+     * Initializes the dataTable
+     */
+    public function initializeDatatable()
+    {
+        if($this->initialized){
+            return;
+        }
+
+        $instance = $this->getInstanceName();
+
+        $this->form = new DataForm($this->getModel());
+        $this->initialize();
+
+        $this->session->set(self::SESSION_KEY, [$instance => [
+            'class' => static::class
+        ]]);
+
+        $this->initialized = true;
     }
 
     /**
@@ -211,21 +246,6 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Initializes the dataTable
-     */
-    private function initializeDatatable()
-    {
-        $instance = $this->getInstanceName();
-
-        $this->form = new DataForm($this->getTable());
-        $this->initialize();
-
-        $this->session->set(self::SESSION_KEY, [$instance => [
-            'class' => static::class
-        ]]);
-    }
-
-    /**
      * Retrieve the current editId from the DataForm
      *
      * @return mixed|null
@@ -236,7 +256,7 @@ abstract class DataTable extends Injectable
             return null;
         }
 
-        return $this->form->getField(self::EDIT_ID)->getValue();
+        return $this->form->getElement(self::EDIT_ID)->getValue();
     }
 
     /**
@@ -285,7 +305,7 @@ abstract class DataTable extends Injectable
      */
     private function getTableSource(): string
     {
-        $table = $this->getTable();
+        $table = $this->getModel();
 
         /** @var Model $model */
         $model = new $table();

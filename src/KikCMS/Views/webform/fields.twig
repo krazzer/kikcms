@@ -1,16 +1,19 @@
 {# @var element Phalcon\Forms\Element #}
+{# @var form \Phalcon\Forms\Form #}
 
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
-        {% if(placeHolderAsLabel == false) %}
-            {{ form.label(element.name)|raw }}
-        {% endif %}
+        {%- block fieldDefaultInputAndFIeld -%}
+            {% if(placeHolderAsLabel == false) %}
+                {{ form.label(element.name)|raw }}
+            {% endif %}
 
-        {{ form.render(element.name)|raw }}
+            {{ form.render(element.name)|raw }}
 
-        {% if hasError %}
-            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-        {% endif %}
+            {% if hasError %}
+                <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            {% endif %}
+        {% endblock %}
     </div>
 {%- endblock -%}
 
@@ -40,4 +43,12 @@
             </div>
         {% endfor %}
     </div>
+{% endblock %}
+
+{%- block fieldAutocomplete %}
+    {{ block('fieldDefault') }}
+{% endblock %}
+
+{%- block fieldWysiwyg %}
+    {{ block('fieldDefault') }}
 {% endblock %}

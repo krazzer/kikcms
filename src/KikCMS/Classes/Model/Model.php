@@ -2,11 +2,24 @@
 
 namespace KikCMS\Classes\Model;
 
+use Exception;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\Resultset;
 
 class Model extends PhalconModel
 {
+    const TABLE = null;
+    const ALIAS = null;
+
+    public function initialize()
+    {
+        if ( ! static::TABLE) {
+            throw new Exception('const ' . static::class . '::TABLE must be set');
+        }
+
+        $this->setSource(static::TABLE);
+    }
+
     /**
      * @inheritdoc
      *
@@ -39,5 +52,43 @@ class Model extends PhalconModel
         }
 
         return $returnArray;
+    }
+
+    /**
+     * @param $id
+     *
+     * @return Model|null
+     */
+    public static function getById($id)
+    {
+        return self::findFirst('id = ' . $id);
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Model|null
+     */
+    public static function getByName(string $name)
+    {
+        return self::findFirst([
+            "conditions" => "name = ?1",
+            "bind"       => [1 => $name]
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getNameList()
+    {
+        $results = self::find();
+        $names   = [];
+
+        foreach ($results as $result) {
+            $names[] = $result->name;
+        }
+
+        return $names;
     }
 }

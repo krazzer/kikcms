@@ -14,6 +14,22 @@ DataTable.prototype =
         this.initButtons();
     },
 
+    initAutocomplete: function () {
+        var self = this;
+
+        this.getWindow().find('.autocomplete').each(function () {
+            var $field      = $(this);
+            var fieldKey    = $field.attr('data-field-key');
+
+            self.action('getAutocompleteData', {field: fieldKey}, function (data) {
+                $field.typeahead({
+                    items: 30,
+                    source: data
+                });
+            });
+        });
+    },
+
     initButtons: function () {
         var self          = this;
         var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
@@ -121,6 +137,21 @@ DataTable.prototype =
         var self    = this;
         var $window = this.getWindow();
 
+        this.initAutocomplete();
+        this.initWysiwyg();
+
+        $window.find('.saveAndClose').click(function () {
+            self.actionSave(true);
+        });
+
+        $window.find('.save').click(function () {
+            self.actionSave(false);
+        });
+
+        this.currentFormInput = $window.find('form').serialize();
+    },
+
+    initWysiwyg: function () {
         tinymce.remove(this.getWysiwygSelector());
 
         tinymce.init({
@@ -130,7 +161,7 @@ DataTable.prototype =
                     tinymce.triggerSave();
                 });
             },
-            language_url : '/cmsassets/js/tinymce/nl.js',
+            language_url: '/cmsassets/js/tinymce/nl.js',
             language: 'nl',
             theme: 'modern',
             plugins: [
@@ -143,16 +174,6 @@ DataTable.prototype =
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce/content.css']
         });
-
-        $window.find('.saveAndClose').click(function () {
-            self.actionSave(true);
-        });
-
-        $window.find('.save').click(function () {
-            self.actionSave(false);
-        });
-
-        this.currentFormInput = $window.find('form').serialize();
     },
 
     action: function (action, parameters, onSuccess, loadingElement) {
@@ -394,8 +415,8 @@ DataTable.prototype =
             $bodyNotFading.prepend($window);
 
             $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(function () {
-                if(self.currentFormInput != self.getWindow().find('form').serialize()){
-                    if( ! confirm(KikCMS.tl('dataTable.closeWarning'))){
+                if (self.currentFormInput != self.getWindow().find('form').serialize()) {
+                    if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
                         return;
                     }
                 }
