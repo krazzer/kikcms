@@ -28,6 +28,7 @@ body > *:not(.datatableWindow){
     border: 1px solid $lightGray;
     border-radius: $defaultBorderRadius;
     display: none;
+    min-height: 300px;
 
     .closeButton {
         @include close(30);
@@ -46,7 +47,7 @@ body > *:not(.datatableWindow){
 
     .content{
         overflow: auto;
-        height: 1057px;
+        height: 600px;
         padding: 50px;
     }
 

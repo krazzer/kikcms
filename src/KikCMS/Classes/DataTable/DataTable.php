@@ -75,6 +75,8 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * Used by Twig
+     *
      * @param string $column
      * @param string $value
      *
@@ -267,6 +269,7 @@ abstract class DataTable extends Injectable
     {
         $query = $this->getDefaultQuery();
 
+        // add search
         if (isset($filters[self::FILTER_SEARCH])) {
             $searchValue = $filters[self::FILTER_SEARCH];
 
@@ -275,6 +278,7 @@ abstract class DataTable extends Injectable
             }
         }
 
+        // add sort
         if (isset($filters[self::FILTER_SORT_COLUMN])) {
             $column    = $filters[self::FILTER_SORT_COLUMN];
             $direction = $filters[self::FILTER_SORT_DIRECTION];

@@ -149,6 +149,19 @@ DataTable.prototype =
         });
 
         this.currentFormInput = $window.find('form').serialize();
+        this.initWindowSize();
+
+        $(window).resize(this.initWindowSize.bind(this));
+    },
+
+    initWindowSize: function(){
+        var $window = this.getWindow();
+
+        var windowHeight = $window.height();
+        var headerHeight = $window.find('.header').outerHeight();
+        var footerHeight = $window.find('.footer').outerHeight();
+
+        $window.find('.content').css('height', windowHeight - headerHeight - footerHeight);
     },
 
     initWysiwyg: function () {

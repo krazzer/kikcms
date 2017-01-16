@@ -28,7 +28,8 @@ body > *:not(.datatableWindow) {
   margin-left: -500px;
   border: 1px solid #e1e1e1;
   border-radius: 3px;
-  display: none; }
+  display: none;
+  min-height: 300px; }
   .datatableWindow .closeButton {
     width: 30px;
     height: 30px;
@@ -54,7 +55,7 @@ body > *:not(.datatableWindow) {
     width: 100%; }
   .datatableWindow .content {
     overflow: auto;
-    height: 1057px;
+    height: 600px;
     padding: 50px; }
   .datatableWindow .footer {
     position: absolute;
