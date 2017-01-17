@@ -25,11 +25,11 @@
 </div>
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/jquery.min.js') }}
-{{ javascriptInclude('cmsassets/js/bootstrap.min.js') }}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 <script>
     KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
     KikCMS.errorMessages = {{ tl('error')|json_encode|raw }};
+    KikCMS.translations = {{ tl('error')|json_encode|raw }};
 </script>
 <script>
     {% for key in dataTableJsTranslations %}

@@ -60,25 +60,12 @@ KikCmsClass.prototype =
     errorMessages: {},
     isDev: false,
 
-    showLoader: function (loadingElement) {
+    showLoader: function () {
         this.getLoader().addClass('show');
-
-        if (loadingElement) {
-            loadingElement.addClass('elementLoading');
-        }
     },
 
-    hideLoader: function (loadingElement) {
-        var self = this;
+    hideLoader: function () {
         this.getLoader().removeClass('show');
-
-        if (loadingElement) {
-            loadingElement.removeClass('elementLoading');
-
-            setTimeout(function () {
-                self.getLoader().css({top: 35, left: 35});
-            }, 300);
-        }
     },
 
     getLoader: function () {

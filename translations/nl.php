@@ -70,6 +70,7 @@ return [
         'logout'   => 'U bent succesvol uitgelogd',
         'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
         'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
+        'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
 
         'reset' => [
             'flash' => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
@@ -122,6 +123,11 @@ return [
         '404' => [
             'title'       => 'Pagina niet gevonden',
             'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op met de webmaster.",
+        ],
+
+        '440' => [
+            'title'       => 'Sessie verlopen',
+            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nOm eventueel niet opgeslagen wijzigingen niet kwijt te raken, kunt u inloggen in een nieuw venster.",
         ],
 
         '500' => [

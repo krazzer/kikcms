@@ -18,8 +18,8 @@ DataTable.prototype =
         var self = this;
 
         this.getWindow().find('.autocomplete').each(function () {
-            var $field      = $(this);
-            var fieldKey    = $field.attr('data-field-key');
+            var $field   = $(this);
+            var fieldKey = $field.attr('data-field-key');
 
             self.action('getAutocompleteData', {field: fieldKey}, function (data) {
                 $field.typeahead({
@@ -154,7 +154,7 @@ DataTable.prototype =
         $(window).resize(this.initWindowSize.bind(this));
     },
 
-    initWindowSize: function(){
+    initWindowSize: function () {
         var $window = this.getWindow();
 
         var windowHeight = $window.height();
@@ -189,7 +189,7 @@ DataTable.prototype =
         });
     },
 
-    action: function (action, parameters, onSuccess, loadingElement) {
+    action: function (action, parameters, onSuccess, onError) {
         var self          = this;
         var ajaxCompleted = false;
         var retries       = 0;
@@ -198,7 +198,7 @@ DataTable.prototype =
 
         setTimeout(function () {
             if (ajaxCompleted == false) {
-                KikCMS.showLoader(loadingElement);
+                KikCMS.showLoader();
             }
         }, 250);
 
@@ -210,7 +210,7 @@ DataTable.prototype =
                 data: parameters,
                 success: function (result, responseText, response) {
                     ajaxCompleted = true;
-                    KikCMS.hideLoader(loadingElement);
+                    KikCMS.hideLoader();
 
                     onSuccess(result, responseText, response);
                 },
@@ -222,12 +222,16 @@ DataTable.prototype =
                         return;
                     }
 
+                    if (typeof(onError) != 'undefined') {
+                        onError();
+                    }
+
                     ajaxCompleted = true;
-                    KikCMS.hideLoader(loadingElement);
+                    KikCMS.hideLoader();
 
                     var key = KikCMS.errorMessages[result.status] ? result.status : 'unknown';
 
-                    if (KikCMS.isDev) {
+                    if (KikCMS.isDev && result.status != 440) {
                         $("#ajaxDebugger").html(result.responseText).show();
                     } else {
                         alert(KikCMS.errorMessages[key].title + "\n\n" + KikCMS.errorMessages[key].description);
@@ -246,6 +250,8 @@ DataTable.prototype =
 
         this.action('add', {}, function (result) {
             self.setWindowContent(result.window);
+        }, function () {
+            self.closeWindow();
         });
     },
 
@@ -271,6 +277,8 @@ DataTable.prototype =
 
         this.action('edit', {dataTableEditId: id}, function (result) {
             self.setWindowContent(result.window);
+        }, function () {
+            self.closeWindow();
         });
     },
 

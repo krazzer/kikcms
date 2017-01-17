@@ -2,6 +2,7 @@
 
 namespace KikCMS\Plugins;
 
+use KikCMS\Classes\Translator;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
@@ -9,6 +10,7 @@ use Phalcon\Mvc\Dispatcher;
 
 /**
  * @property UserService $userService
+ * @property Translator $translator
  */
 class SecurityPlugin extends Plugin
 {
@@ -26,7 +28,13 @@ class SecurityPlugin extends Plugin
         $allowedControllers = ['login', 'deploy', 'errors'];
 
         if (!$isLoggedIn && !in_array($controller, $allowedControllers)) {
-            $this->response->redirect('cms/login');
+            if($this->request->isAjax()){
+                $this->response->setStatusCode(440, 'Session expired');
+            } else {
+                $this->flash->notice($this->translator->tl('login.expired'));
+                $this->response->redirect('cms/login');
+            }
+
             return false;
         }
 
