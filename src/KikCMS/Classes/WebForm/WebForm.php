@@ -333,7 +333,6 @@ class WebForm extends Injectable
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
-            'identifier'         => $this->identifier,
             'security'           => $this->security,
         ];
 
