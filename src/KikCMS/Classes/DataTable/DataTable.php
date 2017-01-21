@@ -55,7 +55,7 @@ abstract class DataTable extends Injectable
 
     protected abstract function initialize();
 
-    protected abstract function getModel(): string;
+    public abstract function getModel(): string;
 
     /**
      * @return Builder
