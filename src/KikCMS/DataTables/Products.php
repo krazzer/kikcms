@@ -18,7 +18,7 @@ class Products extends DataTable
     /**
      * @inheritdoc
      */
-    protected function getModel(): string
+    public function getModel(): string
     {
         return DummyProducts::class;
     }
