@@ -35,12 +35,21 @@
         </div>
     {% endif %}
 </div>
+
 <script>
-    window.onload = function() {
+    eval("var {{ instanceName }} = null;");
+
+    var loadDataTable = function () {
         eval(
-            "var {{ instanceName }} = new DataTable();" +
+                "{{ instanceName }} = new DataTable();" +
             "{{ instanceName }}.instance = '{{ instanceName }}';" +
             "{{ instanceName }}.init();"
         );
     };
+
+    {% if isAjax %}
+    loadDataTable();
+    {% else %}
+    window.onload = loadDataTable;
+    {% endif %}
 </script>

@@ -7,11 +7,14 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\StatusCodes;
 use Monolog\Logger;
+use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
+use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldStorage;
 
 /**
  * @property DbService $dbService
@@ -26,10 +29,10 @@ class DataForm extends WebForm
     protected $formTemplate = 'dataForm';
 
     /** @var FieldStorage[] */
-    protected $fieldStorage;
+    protected $fieldStorage = [];
 
     /** @var FieldTransformer[] */
-    protected $fieldTransformers;
+    protected $fieldTransformers = [];
 
     /**
      * @param string $model
@@ -55,6 +58,31 @@ class DataForm extends WebForm
     public function addFieldTransformer(FieldTransformer $fieldTransformer)
     {
         $this->fieldTransformers[$fieldTransformer->getField()->getKey()] = $fieldTransformer;
+    }
+
+
+    /**
+     * @param DataTable $dataTable
+     * @param string $label
+     *
+     * @return Field|DataTableField
+     */
+    public function addDataTableField(DataTable $dataTable, string $label)
+    {
+        $key = 'dt' . (count($this->keys['dt']) + 1);
+
+        $dataTableElement = new Hidden($key);
+        $dataTableElement->setLabel($label);
+        $dataTableElement->setDefault($dataTable->getInstanceName());
+
+        $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
+
+        $dataTableFieldStorage = new DataTableFieldStorage();
+        $dataTableFieldStorage->setField($dataTableField);
+
+        $this->addFieldStorage($dataTableFieldStorage);
+
+        return $dataTableField;
     }
 
     /**
@@ -101,7 +129,7 @@ class DataForm extends WebForm
             }
         }
 
-        return $this->render();
+        return $this->render([DataTable::EDIT_ID => $editId]);
     }
 
     /**
@@ -217,6 +245,10 @@ class DataForm extends WebForm
                 $input[$key] = isset($input[$key]) ? 1 : 0;
             }
 
+            if ( ! array_key_exists($key, $input)) {
+                continue;
+            }
+
             $value = $this->transformInputForStorage($input, $key);
             $value = $this->formatInputValue($value);
 
@@ -247,6 +279,8 @@ class DataForm extends WebForm
     }
 
     /**
+     * Store field data that is not stored in de DataTable's main table
+     *
      * @param array $input
      * @param $editId
      */
@@ -269,9 +303,8 @@ class DataForm extends WebForm
      */
     private function transformDataForDisplay(array $data): array
     {
-        foreach ($this->fields as $key => $field)
-        {
-            if( ! array_key_exists($key, $this->fieldTransformers) || ! $data[$key]){
+        foreach ($this->fields as $key => $field) {
+            if ( ! array_key_exists($key, $this->fieldTransformers) || ! $data[$key]) {
                 continue;
             }
 
@@ -291,7 +324,7 @@ class DataForm extends WebForm
     {
         $value = $input[$key];
 
-        if( ! $value || ! array_key_exists($key, $this->fieldTransformers)){
+        if ( ! $value || ! array_key_exists($key, $this->fieldTransformers)) {
             return $value;
         }
 

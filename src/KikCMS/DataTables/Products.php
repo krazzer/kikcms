@@ -29,10 +29,14 @@ class Products extends DataTable
     protected function getDefaultQuery()
     {
         $defaultQuery = new Builder();
-        $defaultQuery->addFrom($this->getModel(), 'pr');
+        $defaultQuery->from(['pr' => $this->getModel()]);
         $defaultQuery->leftJoin(Type::class, 't.id = pr.category_id', 't');
         $defaultQuery->columns(['pr.id', 'pr.title', 'pr.price', 'pr.stock', 't.name as category', 'pr.description']);
         $defaultQuery->orderBy('title ASC');
+
+        if ( ! $this instanceof SubProducts) {
+            $defaultQuery->andWhere('parent_id IS NULL');
+        }
 
         return $defaultQuery;
     }
@@ -45,12 +49,15 @@ class Products extends DataTable
         $typeNameMap = Type::findAssoc();
 
         $this->form->addTextField('title', 'Naam', [new PresenceOf()]);
+
+        $this->form->addDataTableField(new SubProducts(), "Sub producten");
+
         $this->form->addTextField('price', 'Prijs');
         $this->form->addTextField('stock', 'Voorraad');
         $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class);
-
         $this->form->addCheckboxField('sale', 'Sale');
         $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
+
 
         $this->form->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap)
             ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);

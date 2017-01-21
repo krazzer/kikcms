@@ -3,6 +3,8 @@
 namespace KikCMS\Plugins;
 
 use Exception;
+use KikCMS\Classes\Exceptions\SessionExpiredException;
+use KikCMS\Config\StatusCodes;
 use Phalcon\Events\Event;
 use Phalcon\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
@@ -32,6 +34,11 @@ class NotFoundPlugin extends Plugin
 
         if ($controller == 'cms' && ! $isLoggedIn) {
             $this->response->redirect('cms/login');
+            return false;
+        }
+
+        if ($exception instanceof SessionExpiredException) {
+            $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
             return false;
         }
 

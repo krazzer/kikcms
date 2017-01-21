@@ -22,6 +22,7 @@ abstract class DataTable extends Injectable
     const FILTER_PAGE           = 'page';
     const FILTER_SORT_COLUMN    = 'sortColumn';
     const FILTER_SORT_DIRECTION = 'sortDirection';
+    const FILTER_PARENT_EDIT_ID = 'parentEditId';
 
     const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple', 'closeWarning'];
 
@@ -34,8 +35,17 @@ abstract class DataTable extends Injectable
     /** @var array */
     protected $fieldFormatting = [];
 
+    /** @var string when using a DataTable in a DataTable, this key will be the reference to the parent table */
+    protected $parentRelationKey;
+
     /** @var StdClass */
     private $tableData;
+
+    /** @var string */
+    private $cachedInstanceKey;
+
+    /** @var int amount of rows shown on one page */
+    private $limit = 100;
 
     /**
      * Tracks whether the function 'initializeDatatable' has been run yet
@@ -53,7 +63,7 @@ abstract class DataTable extends Injectable
     protected function getDefaultQuery()
     {
         $defaultQuery = new Builder();
-        $defaultQuery->addFrom($this->getModel());
+        $defaultQuery->from($this->getModel());
 
         return $defaultQuery;
     }
@@ -88,11 +98,39 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getInstanceName()
+    {
+        if ( ! $this->cachedInstanceKey) {
+            $this->cachedInstanceKey = uniqid('dataTable');
+        }
+
+        return $this->cachedInstanceKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentRelationKey(): string
+    {
+        return $this->parentRelationKey;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasParent(): bool
+    {
+        return $this->parentRelationKey != null;
+    }
+
+    /**
      * Initializes the dataTable
      */
     public function initializeDatatable()
     {
-        if($this->initialized){
+        if ($this->initialized) {
             return;
         }
 
@@ -101,9 +139,17 @@ abstract class DataTable extends Injectable
         $this->form = new DataForm($this->getModel());
         $this->initialize();
 
-        $this->session->set(self::SESSION_KEY, [$instance => [
-            'class' => static::class
-        ]]);
+        $this->form->setIdentifier('form_' . $instance);
+
+        if ($this->session->has(self::SESSION_KEY)) {
+            $dataTableSessionData = $this->session->get(self::SESSION_KEY);
+        } else {
+            $dataTableSessionData = [];
+        }
+
+        $dataTableSessionData[$instance] = ['class' => static::class];
+
+        $this->session->set(self::SESSION_KEY, $dataTableSessionData);
 
         $this->initialized = true;
     }
@@ -111,32 +157,39 @@ abstract class DataTable extends Injectable
     /**
      * Renders the datatable
      *
+     * @param array $filters
      * @return string
      */
-    public function render()
+    public function render(array $filters = [])
     {
         $this->initializeDatatable();
         $this->addAssets();
 
         return $this->renderView('index', [
-            'tableData'       => $this->getTableData()->items->toArray(),
-            'pagination'      => $this->getTableData(),
+            'tableData'       => $this->getTableData($filters)->items->toArray(),
+            'pagination'      => $this->getTableData($filters),
             'headerData'      => $this->getTableHeaderData(),
             'instanceName'    => $this->getInstanceName(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
+            'isAjax'          => $this->request->isAjax(),
             'self'            => $this,
         ]);
     }
 
     /**
+     * @param int|null $parentEditId
      * @return Response
      */
-    public function renderAddForm()
+    public function renderAddForm(int $parentEditId = null)
     {
         $this->initializeDatatable();
 
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
+
+        if ($this->parentRelationKey && $parentEditId !== null) {
+            $this->form->addHiddenField($this->parentRelationKey, $parentEditId);
+        }
 
         if ($this->form->isPosted()) {
             return $this->form->render();
@@ -157,7 +210,7 @@ abstract class DataTable extends Injectable
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
 
         if ($this->form->isPosted()) {
-            return $this->form->render();
+            return $this->form->render([self::EDIT_ID => $id]);
         }
 
         return $this->form->renderWithData($id);
@@ -205,56 +258,13 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @return string
-     */
-    private function getInstanceName()
-    {
-        return 'dataTable' . str_replace('\\', '', static::class);
-    }
-
-    /**
-     * @param $filters
-     * @return stdClass
-     */
-    private function getTableData($filters = [])
-    {
-        if ($this->tableData) {
-            return $this->tableData;
-        }
-
-        $page = (int) isset($filters[self::FILTER_PAGE]) ? $filters[self::FILTER_PAGE] : 1;
-
-        $paginator = new QueryBuilder(array(
-            "builder"  => $this->getQuery($filters),
-            "page"     => $page,
-            "limit"    => 100,
-        ));
-
-        $this->tableData = $paginator->getPaginate();
-
-        return $this->tableData;
-    }
-
-    /**
-     * @return array
-     */
-    private function getTableHeaderData(): array
-    {
-        if ( ! $this->getTableData()->items->count()) {
-            return [];
-        }
-
-        return array_keys($this->getTableData()->items->getFirst()->toArray());
-    }
-
-    /**
      * Retrieve the current editId from the DataForm
      *
      * @return mixed|null
      */
     public function getEditId()
     {
-        if( ! $this->form->hasField(self::EDIT_ID)){
+        if ( ! $this->form->hasField(self::EDIT_ID)) {
             return null;
         }
 
@@ -282,10 +292,20 @@ abstract class DataTable extends Injectable
         if (isset($filters[self::FILTER_SORT_COLUMN])) {
             $column    = $filters[self::FILTER_SORT_COLUMN];
             $direction = $filters[self::FILTER_SORT_DIRECTION];
-            $columns   = $this->getTableHeaderData();
 
-            if (in_array($column, $columns) && in_array($direction, ['asc', 'desc'])) {
+            if (in_array($direction, ['asc', 'desc'])) {
                 $query->orderBy($column . ' ' . $direction);
+            }
+        }
+
+        // add subDataTable filter
+        if ($this->hasParent()) {
+            $parentEditId = $filters[self::FILTER_PARENT_EDIT_ID];
+            $query->andWhere($this->parentRelationKey . ' = ' . (int) $parentEditId);
+
+            if ($parentEditId === 0) {
+                $ids = $this->getCachedNewIds();
+                $query->andWhere("pr.id IN ('" . implode("','", $ids) . "')");
             }
         }
 
@@ -305,15 +325,64 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @return string
+     * @param string $instanceName
      */
-    private function getTableSource(): string
+    public function setInstanceName(string $instanceName)
     {
-        $table = $this->getModel();
+        $this->cachedInstanceKey = $instanceName;
+    }
 
-        /** @var Model $model */
-        $model = new $table();
-        return $model->getSource();
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     * @return $this|DataTable
+     */
+    public function setLimit(int $limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Store the given id in cache, so we know which sub items' parentRelationKey needs to be updated after the parent is saved
+     *
+     * @param int $editId
+     */
+    public function cacheNewId(int $editId)
+    {
+        $cacheKey = $this->getNewIdsCacheKey();
+
+        if ($this->cache->exists($cacheKey)) {
+            $editKeys = $this->cache->get($cacheKey);
+        } else {
+            $editKeys = [];
+        }
+
+        $editKeys[] = $editId;
+
+        $this->cache->save($cacheKey, $editKeys);
+    }
+
+    /**
+     * @return array
+     */
+    public function getCachedNewIds()
+    {
+        $cacheKey = $this->getNewIdsCacheKey();
+
+        if ( ! $this->cache->exists($cacheKey)) {
+            return [];
+        }
+
+        return $this->cache->get($cacheKey);
     }
 
     /**
@@ -325,5 +394,61 @@ abstract class DataTable extends Injectable
         $this->view->assets->addCss('cmsassets/css/datatable.css');
 
         $this->form->addAssets();
+    }
+
+    /**
+     * @return string
+     */
+    private function getNewIdsCacheKey()
+    {
+        return $this->getInstanceName() . '-ids';
+    }
+
+    /**
+     * @param $filters
+     * @return stdClass
+     */
+    private function getTableData($filters = [])
+    {
+        if ($this->tableData) {
+            return $this->tableData;
+        }
+
+        $page = (int) isset($filters[self::FILTER_PAGE]) ? $filters[self::FILTER_PAGE] : 1;
+
+        $paginator = new QueryBuilder(array(
+            "builder" => $this->getQuery($filters),
+            "page"    => $page,
+            "limit"   => $this->limit,
+        ));
+
+        $this->tableData = $paginator->getPaginate();
+
+        return $this->tableData;
+    }
+
+    /**
+     * @param array $filters
+     * @return array
+     */
+    private function getTableHeaderData(array $filters = []): array
+    {
+        if ( ! $this->getTableData($filters)->items->count()) {
+            return [];
+        }
+
+        return array_keys($this->getTableData($filters)->items->getFirst()->toArray());
+    }
+
+    /**
+     * @return string
+     */
+    private function getTableSource(): string
+    {
+        $table = $this->getModel();
+
+        /** @var Model $model */
+        $model = new $table();
+        return $model->getSource();
     }
 }

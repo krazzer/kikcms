@@ -6,6 +6,7 @@ DataTable.prototype =
     instance: null,
     currentSearch: null,
     currentFormInput: null,
+    parentEditId: null,
 
     init: function () {
         this.initTable();
@@ -32,8 +33,8 @@ DataTable.prototype =
 
     initButtons: function () {
         var self          = this;
-        var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
-        var $addButton    = this.getDatatable().find('.toolbar .button.add');
+        var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
+        var $addButton    = this.getDataTable().find('.toolbar .button.add');
 
         $deleteButton.click(function () {
             var selectedIds = self.getSelectedIds();
@@ -60,7 +61,7 @@ DataTable.prototype =
     initPagination: function () {
         var self = this;
 
-        this.getDatatable().find('.pagination a').click(function () {
+        this.getDataTable().find('.pagination a').click(function () {
             var $pageButton = $(this);
 
             if ($pageButton.parent().hasClass('active') || $pageButton.parent().hasClass('disabled')) {
@@ -81,8 +82,8 @@ DataTable.prototype =
             filters.search = value;
 
             self.action('search', filters, function (result) {
-                self.getDatatable().find('.table').html(result.table);
-                self.getDatatable().find('.pages').html(result.pagination);
+                self.getDataTable().find('.table').html(result.table);
+                self.getDataTable().find('.pages').html(result.pagination);
 
                 self.initTable();
                 self.initPagination();
@@ -92,7 +93,7 @@ DataTable.prototype =
 
     initTable: function () {
         var self  = this;
-        var $rows = this.getDatatable().find('tbody tr');
+        var $rows = this.getDataTable().find('tbody tr');
 
         $rows.find('td:not(.edit)').click(function () {
             $(this).parent().toggleClass('selected');
@@ -112,10 +113,10 @@ DataTable.prototype =
         var searchValue = this.getSearchField().val();
 
         if (searchValue) {
-            self.getDatatable().find('.table').find('td').highlight(searchValue);
+            self.getDataTable().find('.table').find('td').highlight(searchValue);
         }
 
-        this.getDatatable().find('thead td').click(function () {
+        this.getDataTable().find('thead td').click(function () {
             var $column      = $(this);
             var column       = $column.attr('data-column');
             var curDirection = $column.attr('data-sort');
@@ -158,15 +159,13 @@ DataTable.prototype =
         var $window = this.getWindow();
 
         var windowHeight = $window.height();
-        var headerHeight = $window.find('.header').outerHeight();
-        var footerHeight = $window.find('.footer').outerHeight();
+        var headerHeight = $window.find('.windowContent > .header').outerHeight();
+        var footerHeight = $window.find('.windowContent > .footer').outerHeight();
 
         $window.find('.content').css('height', windowHeight - headerHeight - footerHeight);
     },
 
     initWysiwyg: function () {
-        tinymce.remove(this.getWysiwygSelector());
-
         tinymce.init({
             selector: this.getWysiwygSelector(),
             setup: function (editor) {
@@ -190,11 +189,14 @@ DataTable.prototype =
     },
 
     action: function (action, parameters, onSuccess, onError) {
-        var self          = this;
         var ajaxCompleted = false;
         var retries       = 0;
 
-        parameters.dataTableInstance = self.instance;
+        parameters.dataTableInstance = this.instance;
+
+        if (this.parentEditId != null) {
+            parameters.parentEditId = this.parentEditId;
+        }
 
         setTimeout(function () {
             if (ajaxCompleted == false) {
@@ -262,8 +264,8 @@ DataTable.prototype =
         params.ids = ids;
 
         this.action('delete', params, function (result) {
-            self.getDatatable().find('.table').html(result.table);
-            self.getDatatable().find('.pages').html(result.pagination);
+            self.getDataTable().find('.table').html(result.table);
+            self.getDataTable().find('.pages').html(result.pagination);
 
             self.initTable();
             self.initPagination();
@@ -289,8 +291,8 @@ DataTable.prototype =
         filters.page = page;
 
         this.action('page', filters, function (result) {
-            self.getDatatable().find('.table').html(result.table);
-            self.getDatatable().find('.pages').html(result.pagination);
+            self.getDataTable().find('.table').html(result.table);
+            self.getDataTable().find('.pages').html(result.pagination);
 
             self.initTable();
             self.initPagination();
@@ -314,6 +316,7 @@ DataTable.prototype =
                 self.closeWindow();
             } else {
                 self.setWindowContent(result.window);
+                $window.find('.alert').hide().fadeIn();
             }
         });
     },
@@ -326,8 +329,8 @@ DataTable.prototype =
         filters.sortDirection = direction;
 
         this.action('sort', filters, function (result) {
-            self.getDatatable().find('.table').html(result.table);
-            self.getDatatable().find('.pages').html(result.pagination);
+            self.getDataTable().find('.table').html(result.table);
+            self.getDataTable().find('.pages').html(result.pagination);
 
             self.initTable();
             self.initPagination();
@@ -336,22 +339,38 @@ DataTable.prototype =
 
     closeWindow: function () {
         var $window = this.getWindow();
+        var level   = parseInt($window.attr('data-level'));
 
-        $('body').removeClass('datatableBlur');
+        if (level == 0) {
+            $('body').removeClass('datatableBlur');
+        } else {
+            $('.dataTableWindow.level' + (level - 1)).removeClass('blur');
+        }
+
+        $('.dataTableWindow.level' + (level + 1)).remove();
 
         $window.fadeOut();
+        tinymce.remove(this.getWysiwygSelector());
         $window.find('.windowContent').html('');
 
         this.currentFormInput = null;
     },
 
     showWindow: function () {
-        $('body').addClass('datatableBlur');
-        this.getWindow().fadeIn();
+        var $window = this.getWindow();
+        var level   = parseInt($window.attr('data-level'));
+
+        if (level == 0) {
+            $('body').addClass('datatableBlur');
+        } else {
+            $('.dataTableWindow.level' + (level - 1)).addClass('blur');
+        }
+
+        $window.fadeIn();
     },
 
     setTableContent: function (tableContent, editedId) {
-        var $table = this.getDatatable().find('.table');
+        var $table = this.getDataTable().find('.table');
         $table.html(tableContent);
         this.initTable();
 
@@ -378,7 +397,7 @@ DataTable.prototype =
     },
 
     getCurrentPage: function () {
-        var currentPage = this.getDatatable().find('.pagination .active a').attr('data-page');
+        var currentPage = this.getDataTable().find('.pagination .active a').attr('data-page');
 
         if (!currentPage) {
             return 1;
@@ -387,7 +406,7 @@ DataTable.prototype =
         return currentPage;
     },
 
-    getDatatable: function () {
+    getDataTable: function () {
         return $("#" + this.instance);
     },
 
@@ -397,12 +416,12 @@ DataTable.prototype =
         filters.page   = this.getCurrentPage();
         filters.search = this.getSearchField().val();
 
-        this.getDatatable().find('table thead td[data-sort="asc"]').each(function () {
+        this.getDataTable().find('table thead td[data-sort="asc"]').each(function () {
             filters.sortDirection = 'asc';
             filters.sortColumn    = $(this).attr('data-column');
         });
 
-        this.getDatatable().find('table thead td[data-sort="desc"]').each(function () {
+        this.getDataTable().find('table thead td[data-sort="desc"]').each(function () {
             filters.sortDirection = 'desc';
             filters.sortColumn    = $(this).attr('data-column');
         });
@@ -411,13 +430,13 @@ DataTable.prototype =
     },
 
     getSearchField: function () {
-        return this.getDatatable().find('.toolbar .search input');
+        return this.getDataTable().find('.toolbar .search input');
     },
 
     getSelectedIds: function () {
         var ids = [];
 
-        this.getDatatable().find('tr.selected .edit input[name=id]').each(function () {
+        this.getDataTable().find('tr.selected .edit input[name=id]').each(function () {
             ids.push($(this).val());
         });
 
@@ -425,12 +444,19 @@ DataTable.prototype =
     },
 
     getWindow: function () {
-        var self           = this;
-        var windowId       = this.instance + 'Window';
-        var $bodyNotFading = $('body > #notFading');
+        var self              = this;
+        var windowId          = this.instance + 'Window';
+        var $bodyNotFading    = $('body > #notFading');
+        var level             = 0;
+        var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
+
+        if (parentWindowLevel) {
+            level = parseInt(parentWindowLevel) + 1;
+            windowId += 'Level' + level;
+        }
 
         if ($bodyNotFading.find(' > #' + windowId).length < 1) {
-            var $window = '<div class="datatableWindow" id="' + windowId + '">' +
+            var $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
             $bodyNotFading.prepend($window);
@@ -455,8 +481,8 @@ DataTable.prototype =
     },
 
     updateToolbar: function () {
-        var $selectedRows = this.getDatatable().find('tr.selected');
-        var $deleteButton = this.getDatatable().find('.toolbar .button.delete');
+        var $selectedRows = this.getDataTable().find('tr.selected');
+        var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
 
         if ($selectedRows.length > 0) {
             $deleteButton.removeClass('faded');

@@ -7,6 +7,7 @@ use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
@@ -33,10 +34,13 @@ class WebForm extends Injectable
     const WEB_FORM_ID = 'webFormId';
 
     /** @var Field[] */
-    protected $fields;
+    protected $fields = [];
 
     /** @var string */
     protected $formTemplate = 'form';
+
+    /** @var array tracks field key increments */
+    protected $keys;
 
     /** @var Form */
     private $form;
@@ -70,7 +74,7 @@ class WebForm extends Injectable
     }
 
     /**
-     * Adds assets required
+     * Adds required assets
      */
     public function addAssets()
     {
@@ -207,6 +211,7 @@ class WebForm extends Injectable
         $name = new TextArea($key);
         $name->setLabel($label);
         $name->setAttribute('class', 'form-control wysiwyg');
+        $name->setAttribute('id', $key . '_' . uniqid());
         $name->addValidators($validators);
 
         return $this->addField(new Wysiwyg($name));
@@ -217,7 +222,7 @@ class WebForm extends Injectable
      * @param mixed $defaultValue
      * @return Field
      */
-    public function addHiddenField(string $key, $defaultValue): Field
+    public function addHiddenField(string $key, $defaultValue = null): Field
     {
         $hidden = new Hidden($key);
         $hidden->setDefault($defaultValue);
@@ -278,9 +283,10 @@ class WebForm extends Injectable
     /**
      * Render the form
      *
-     * @return string|Response
+     * @param array $parameters
+     * @return Response|string
      */
-    public function render()
+    public function render($parameters = [])
     {
         $errorContainer = new ErrorContainer();
 
@@ -291,12 +297,21 @@ class WebForm extends Injectable
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
 
+            //todo: move this to somewhere else
             // set unposted checkboxes to default 0
             foreach ($this->fields as $key => $field) {
                 $element = $field->getElement();
 
                 if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
                     $element->setDefault(0);
+                }
+
+                // re-use generated dataTable instance
+                /** @var DataTableField $field */
+                if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
+                    $instance = $this->request->getPost($key);
+                    $field->getDataTable()->setInstanceName($instance);
+                    $this->getField($key)->getElement()->setDefault($instance);
                 }
             }
 
@@ -311,15 +326,18 @@ class WebForm extends Injectable
             }
         }
 
-        return $this->renderView($this->formTemplate, [
+        $defaultParameters = [
             'form'               => $this->form,
             'fields'             => $this->fields,
             'formId'             => $this->getFormId(),
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
+            'identifier'         => $this->identifier,
             'security'           => $this->security,
-        ]);
+        ];
+
+        return $this->renderView($this->formTemplate, array_merge($defaultParameters, $parameters));
     }
 
     /**
@@ -379,6 +397,14 @@ class WebForm extends Injectable
     }
 
     /**
+     * @param string $identifier
+     */
+    public function setIdentifier(string $identifier)
+    {
+        $this->identifier = $identifier;
+    }
+
+    /**
      * @param boolean $placeHolderAsLabel
      *
      * @return WebForm|$this
@@ -417,6 +443,20 @@ class WebForm extends Injectable
      */
     protected function initialize()
     {
+    }
+
+    /**
+     * Initialize fields
+     */
+    protected function initializeFields()
+    {
+        foreach ($this->fields as $field) {
+            if ($this->isPlaceHolderAsLabel()) {
+                $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
+            }
+        }
+
+        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
     }
 
     /**
@@ -488,6 +528,11 @@ class WebForm extends Injectable
             $formElement->setAttribute('class', $class);
         }
 
+        // add a global error message if there are field errors but no form errors
+        if ( ! $errorContainer->hasFormErrors() && $errorContainer->hasFieldErrors()) {
+            $errorContainer->addFormError($this->translator->tl('webform.messages.fieldErrors'));
+        }
+
         return $errorContainer;
     }
 
@@ -504,19 +549,5 @@ class WebForm extends Injectable
         }
 
         return false;
-    }
-
-    /**
-     * Initialize fields
-     */
-    private function initializeFields()
-    {
-        foreach ($this->fields as $field) {
-            if ($this->isPlaceHolderAsLabel()) {
-                $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
-            }
-        }
-
-        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
     }
 }

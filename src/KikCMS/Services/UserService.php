@@ -105,9 +105,11 @@ class UserService extends Injectable
 
     public function logout()
     {
-        $this->session->set('loggedIn', false);
-        $this->session->set('userId', null);
+        // remove current session data
+        $this->session->destroy();
 
+        // start a new session so we can still flash
+        $this->session->start();
         $this->flash->notice($this->translator->tl('login.logout'));
         $this->response->redirect('cms/login');
     }

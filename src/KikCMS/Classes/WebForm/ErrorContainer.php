@@ -97,6 +97,14 @@ class ErrorContainer
     /**
      * @return bool
      */
+    public function hasFieldErrors(): bool
+    {
+        return ! empty($this->getFieldErrors());
+    }
+
+    /**
+     * @return bool
+     */
     public function isEmpty(): bool
     {
         return empty($this->getFieldErrors()) && !$this->hasFormErrors();

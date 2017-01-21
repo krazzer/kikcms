@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
@@ -11,8 +12,9 @@ use KikCMS\Services\Base\BaseServices;
 
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
-use Phalcon\Cache\Backend\Apc;
-use Phalcon\Cache\Frontend\None;
+use Phalcon\Cache\Backend;
+use Phalcon\Cache\Backend\File;
+use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View;
@@ -189,11 +191,13 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Apc
+     * @return Backend
      */
     protected function initCache()
     {
-        return new Apc(new None());
+        return new File(new Json(["lifetime" => 3600 * 24]), [
+            'cacheDir' => SITE_PATH . 'cache/cache/'
+        ]);
     }
 
     /**
@@ -234,6 +238,14 @@ class Services extends BaseServices
         $mailer    = Swift_Mailer::newInstance($transport);
 
         return new MailService($mailer);
+    }
+
+    /**
+     * @return Security
+     */
+    protected function initSecurity()
+    {
+        return new Security();
     }
 
     /**

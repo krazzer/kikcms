@@ -5,6 +5,7 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 
@@ -13,6 +14,9 @@ use KikCMS\Classes\WebForm\Fields\Autocomplete;
  */
 class DataTableController extends BaseController
 {
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         parent::initialize();
@@ -20,17 +24,23 @@ class DataTableController extends BaseController
         $this->view->disable();
     }
 
+    /**
+     * @return string
+     */
     public function addAction()
     {
         $dataTable = $this->getDataTable();
 
-        $this->view->form = $dataTable->renderAddForm();
+        $this->view->form = $dataTable->renderAddForm($this->getParentEditId());
 
         return json_encode([
             'window' => $this->view->getRender('data-table', 'add')
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function deleteAction()
     {
         $dataTable = $this->getDataTable();
@@ -46,6 +56,9 @@ class DataTableController extends BaseController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function editAction()
     {
         $editId    = $this->getEditId();
@@ -58,6 +71,9 @@ class DataTableController extends BaseController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function getAutocompleteDataAction()
     {
         //todo: move to webFormController
@@ -76,20 +92,29 @@ class DataTableController extends BaseController
         return json_encode($model::getNameList());
     }
 
+    /**
+     * @return string
+     */
     public function saveAction()
     {
-        $editId    = $this->getEditId();
-        $dataTable = $this->getDataTable();
+        $editId       = $this->getEditId();
+        $dataTable    = $this->getDataTable();
+        $parentEditId = $this->getParentEditId();
 
         if ($editId === null) {
-            $this->view->form = $dataTable->renderAddForm();
-            $view = 'add';
+            $this->view->form = $dataTable->renderAddForm($parentEditId);
+            $view             = 'add';
 
-            // if the form was succesfully saved, a edit id can be fetched
+            // if the form was succesfully saved, an edit id can be fetched
             $editId = $dataTable->getEditId();
+
+            // if the datatable has a unsaved parent, cache the new id
+            if ($dataTable->hasParent() && $parentEditId === 0 && $editId) {
+                $dataTable->cacheNewId($editId);
+            }
         } else {
             $this->view->form = $dataTable->renderEditForm($editId);
-            $view = 'edit';
+            $view             = 'edit';
         }
 
         return json_encode([
@@ -99,6 +124,9 @@ class DataTableController extends BaseController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function pageAction()
     {
         $dataTable = $this->getDataTable();
@@ -110,6 +138,9 @@ class DataTableController extends BaseController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function searchAction()
     {
         $dataTable = $this->getDataTable();
@@ -123,6 +154,9 @@ class DataTableController extends BaseController
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function sortAction()
     {
         $dataTable = $this->getDataTable();
@@ -138,13 +172,25 @@ class DataTableController extends BaseController
 
     /**
      * @return DataTable
+     * @throws SessionExpiredException
      */
     private function getDataTable()
     {
-        $instanceName  = $this->request->getPost(DataTable::INSTANCE);
+        $instanceName = $this->request->getPost(DataTable::INSTANCE);
+
+        if ( ! $this->session->has(DataTable::SESSION_KEY) ||
+            ! array_key_exists($instanceName, $this->session->get(DataTable::SESSION_KEY))
+        ) {
+            throw new SessionExpiredException();
+        }
+
         $instanceClass = $this->session->get(DataTable::SESSION_KEY)[$instanceName]['class'];
 
-        return new $instanceClass();
+        /** @var DataTable $dataTable */
+        $dataTable = new $instanceClass();
+        $dataTable->setInstanceName($instanceName);
+
+        return $dataTable;
     }
 
     /**
@@ -153,6 +199,21 @@ class DataTableController extends BaseController
     private function getEditId()
     {
         return $this->request->getPost(DataTable::EDIT_ID);
+    }
+
+    /**
+     * @return int|null
+     */
+    private function getParentEditId()
+    {
+        $parentEditId = $this->request->getPost(DataTable::FILTER_PARENT_EDIT_ID);
+
+        // cast to int
+        if ($parentEditId !== null) {
+            $parentEditId = (int) $parentEditId;
+        }
+
+        return $parentEditId;
     }
 
     /**
@@ -176,6 +237,11 @@ class DataTableController extends BaseController
         if ($this->request->hasPost(DataTable::FILTER_SORT_COLUMN)) {
             $filters[DataTable::FILTER_SORT_COLUMN]    = $this->request->getPost(DataTable::FILTER_SORT_COLUMN);
             $filters[DataTable::FILTER_SORT_DIRECTION] = $this->request->getPost(DataTable::FILTER_SORT_DIRECTION);
+        }
+
+        // get parent edit id filter
+        if ($this->request->hasPost(DataTable::FILTER_PARENT_EDIT_ID)) {
+            $filters[DataTable::FILTER_PARENT_EDIT_ID] = $this->getParentEditId();
         }
 
         return $filters;

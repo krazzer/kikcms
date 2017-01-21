@@ -1,27 +1,42 @@
 @import "includes/variables";
 @import "includes/mixins";
 
-body > *:not(.datatableWindow){
+body > *:not(.dataTableWindow) {
     transition: filter, opacity 0.3s;
+}
+
+body > #overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 1;
 }
 
 :root > body.datatableBlur{
     overflow: hidden;
 
     > #menu, > #main{
-        @include blur(4);
+        @include blur(6);
         @include noTextSelect();
         pointer-events: none;
-        opacity: 0.2;
+        opacity: 0.5;
+    }
+
+    #overlay {
+        display: block;
     }
 }
 
-.datatableWindow{
+.dataTableWindow {
     width: 1000px;
     position: fixed;
     top: 40px;
     bottom: 40px;
-    background-color: rgba(255,255,255,0.9);
+    background-color: rgba(255, 255, 255, 0.97);
     z-index: 3;
     left: 50%;
     margin-left: -500px;
@@ -30,7 +45,32 @@ body > *:not(.datatableWindow){
     display: none;
     min-height: 300px;
 
-    .closeButton {
+    &.level1 {
+        z-index: 4;
+        top: 50px;
+        bottom: 50px;
+        width: 1020px;
+        margin-left: -510px;
+    }
+
+    &.blur {
+        .windowContent {
+            @include blur(3);
+            opacity: 0.5;
+        }
+    }
+
+    @for $i from 1 through 10 {
+        &.level#{$i} {
+            z-index: 3 + $i;
+            top: 40px + ($i * 10);
+            bottom: 40px + ($i * 10);
+            width: 1000px + ($i * 20);
+            margin-left: -500px - ($i * 10);
+        }
+    }
+
+    > .closeButton {
         @include close(30);
         right: 50px;
         top: 32px;
@@ -38,30 +78,60 @@ body > *:not(.datatableWindow){
         cursor: pointer;
     }
 
-    .header{
-        font-size: 24px;
-        padding: 30px 50px;
-        border-bottom: 1px solid $lightGray;
-        width: 100%;
+    > .windowContent {
+
+        > .header {
+            font-size: 24px;
+            padding: 30px 50px;
+            border-bottom: 1px solid $lightGray;
+            width: 100%;
+        }
+
+        > .content {
+            overflow: auto;
+            height: 600px;
+            padding: 50px;
+        }
+
+        > .footer {
+            position: absolute;
+            padding: 10px;
+            border-top: 1px solid $lightGray;
+            bottom: 0;
+            width: 100%;
+            text-align: right;
+
+            button {
+                margin-left: 5px;
+                padding: 10px 35px;
+            }
+        }
     }
 
-    .content{
-        overflow: auto;
-        height: 600px;
-        padding: 50px;
-    }
+    .datatable {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
 
-    .footer{
-        position: absolute;
-        padding: 10px;
-        border-top: 1px solid $lightGray;
-        bottom: 0;
-        width: 100%;
-        text-align: right;
+        .toolbar, .footer, .table .no-data {
+            padding: 12px;
+        }
 
-        button{
-            margin-left: 5px;
-            padding: 10px 35px;
+        .footer {
+            display: none;
+        }
+
+        .table {
+            margin-bottom: 0;
+
+            tbody tr:last-child {
+                td:first-child {
+                    border-bottom-left-radius: $defaultBorderRadius;
+                }
+
+                td:last-child {
+                    border-bottom-right-radius: $defaultBorderRadius;
+                }
+            }
         }
     }
 }
@@ -70,9 +140,7 @@ body > *:not(.datatableWindow){
 
     .toolbar{
         @include clearFix();
-        padding: 50px 0 36px 0;
-        margin-top: -50px;
-        background-color: #fff;
+        padding: 0 0 36px 0;
         width: 100%;
         z-index: 2;
         position: relative;
@@ -86,6 +154,10 @@ body > *:not(.datatableWindow){
             transition: background-color, opacity 0.3s;
             border: 1px solid $lightGray;
             opacity: 1;
+
+            &.add {
+                background-color: #fff;
+            }
 
             .glyphicon{
                 width: 14px;
@@ -111,6 +183,7 @@ body > *:not(.datatableWindow){
             float: right;
             width: 220px;
             position: relative;
+            margin: 0 0 0 10px;
 
             .glyphicon-search{
                 position: absolute;
@@ -127,10 +200,6 @@ body > *:not(.datatableWindow){
             input{
                 padding-left: 38px;
             }
-        }
-
-        .pages{
-            margin: 0 10px 0 0;
         }
     }
 
@@ -172,9 +241,9 @@ body > *:not(.datatableWindow){
 
             thead {
                 font-weight: 700;
-                background-color: #fff;
 
                 td {
+                    position: relative;
                     cursor: pointer;
 
                     .glyphicon{

@@ -61,6 +61,7 @@ return [
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
+            'fieldErrors'      => 'Niet alle velden zijn goed ingevuld. Controleer de velden in het rood.',
         ],
 
         'defaultSendLabel' => 'Versturen',
@@ -127,7 +128,7 @@ return [
 
         '440' => [
             'title'       => 'Sessie verlopen',
-            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nOm eventueel niet opgeslagen wijzigingen niet kwijt te raken, kunt u inloggen in een nieuw venster.",
+            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al in een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
         ],
 
         '500' => [
