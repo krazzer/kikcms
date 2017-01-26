@@ -24,7 +24,11 @@ abstract class DataTable extends Injectable
     const FILTER_SORT_DIRECTION = 'sortDirection';
     const FILTER_PARENT_EDIT_ID = 'parentEditId';
 
-    const JS_TRANSLATIONS = ['delete.confirmOne', 'delete.confirmMultiple', 'closeWarning'];
+    const JS_TRANSLATIONS = [
+        'dataTable.delete.confirmOne',
+        'dataTable.delete.confirmMultiple',
+        'dataTable.closeWarning'
+    ];
 
     /** @var DataForm */
     protected $form;
@@ -402,6 +406,8 @@ abstract class DataTable extends Injectable
     {
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
+
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
 
         $this->form->addAssets();
     }

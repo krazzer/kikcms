@@ -29,12 +29,9 @@
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 <script>
     KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
-    KikCMS.errorMessages = {{ tl('error')|json_encode|raw }};
-    KikCMS.translations = {{ tl('error')|json_encode|raw }};
-</script>
-<script>
-    {% for key in dataTableJsTranslations %}
-        KikCMS.translations['dataTable.{{ key }}'] = "{{ tl('dataTable.' ~ key) }}";
+
+    {% for key in jsTranslations %}
+    KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
     {% endfor %}
 </script>
 {{ assets.outputJs() }}

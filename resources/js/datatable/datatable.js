@@ -231,12 +231,12 @@ DataTable.prototype =
                     ajaxCompleted = true;
                     KikCMS.hideLoader();
 
-                    var key = KikCMS.errorMessages[result.status] ? result.status : 'unknown';
+                    var key = KikCMS.translations.error[result.status] ? result.status : 'unknown';
 
                     if (KikCMS.isDev && result.status != 440) {
                         $("#ajaxDebugger").html(result.responseText).show();
                     } else {
-                        alert(KikCMS.errorMessages[key].title + "\n\n" + KikCMS.errorMessages[key].description);
+                        alert(KikCMS.translations.error[key].title + "\n\n" + KikCMS.translations.error[key].description);
                     }
                 }
             });
