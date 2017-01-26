@@ -23,16 +23,3 @@ function first(array $array)
 {
     return array_values($array)[0];
 }
-
-/**
- * Get current time in milliseconds
- *
- * @return float
- */
-function msec()
-{
-    list($usec, $sec) = explode(" ", microtime());
-    $mSec = ((float) $usec / 1000) + (float) $sec;
-
-    return $mSec * 1000;
-}
