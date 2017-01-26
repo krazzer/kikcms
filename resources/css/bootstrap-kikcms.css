@@ -66,6 +66,9 @@ textarea.form-control {
   top: 23px; }
 
 .form-group {
-  overflow: hidden; }
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin-bottom: 12px;
+}
 
 /*# sourceMappingURL=bootstrap-kikcms.css.map */
