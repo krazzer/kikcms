@@ -15,6 +15,9 @@ class Products extends DataTable
     /** @inheritdoc */
     protected $searchableFields = ['title', 'description', 'name'];
 
+    /** @inheritdoc */
+    protected $orderableFields = ['id' => 'pr.id'];
+
     /**
      * @inheritdoc
      */
@@ -31,7 +34,7 @@ class Products extends DataTable
         $defaultQuery = new Builder();
         $defaultQuery->from(['pr' => $this->getModel()]);
         $defaultQuery->leftJoin(Type::class, 't.id = pr.category_id', 't');
-        $defaultQuery->columns(['pr.id', 'pr.title', 'pr.price', 'pr.stock', 't.name as category', 'pr.description']);
+        $defaultQuery->columns(['pr.id', 'pr.title', 'pr.price', 'pr.stock', 'category' => 't.name', 'pr.description']);
         $defaultQuery->orderBy('title ASC');
 
         if ( ! $this instanceof SubProducts) {
@@ -57,7 +60,6 @@ class Products extends DataTable
         $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class);
         $this->form->addCheckboxField('sale', 'Sale');
         $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
-
 
         $this->form->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap)
             ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);

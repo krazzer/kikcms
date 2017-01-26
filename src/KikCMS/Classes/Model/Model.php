@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Model;
 use Exception;
 use Phalcon\Mvc\Model as PhalconModel;
 use Phalcon\Mvc\Model\Resultset;
+use ReflectionClass;
 
 class Model extends PhalconModel
 {
@@ -75,6 +76,25 @@ class Model extends PhalconModel
             "conditions" => "name = ?1",
             "bind"       => [1 => $name]
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getFields()
+    {
+        $fields = [];
+
+        $oClass    = new ReflectionClass(get_called_class());
+        $constants = $oClass->getConstants();
+
+        foreach ($constants as $constant => $value) {
+            if (strpos($constant, 'FIELD_') !== false) {
+                $fields[] = $value;
+            }
+        }
+
+        return $fields;
     }
 
     /**

@@ -32,7 +32,11 @@ abstract class DataTable extends Injectable
     /** @var array */
     protected $searchableFields = [];
 
-    /** @var array */
+    /** @var array assoc that contains the column name as key, and the value that will be used for sorting in the query
+     * i.e. [id => p.id] will make sure the id column is sorted by p.id, this can be used to avoid ambiguity  */
+    protected $orderableFields = [];
+
+    /** @var array assoc column as key, callable as value, that will be used to format a value in the result table */
     protected $fieldFormatting = [];
 
     /** @var string when using a DataTable in a DataTable, this key will be the reference to the parent table */
@@ -283,6 +287,7 @@ abstract class DataTable extends Injectable
         if (isset($filters[self::FILTER_SEARCH])) {
             $searchValue = $filters[self::FILTER_SEARCH];
 
+            //todo: search doesn't work when there already is a where
             foreach ($this->searchableFields as $field) {
                 $query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
             }
@@ -294,7 +299,11 @@ abstract class DataTable extends Injectable
             $direction = $filters[self::FILTER_SORT_DIRECTION];
 
             if (in_array($direction, ['asc', 'desc'])) {
-                $query->orderBy($column . ' ' . $direction);
+                if (array_key_exists($column, $this->orderableFields)) {
+                    $column = $this->orderableFields[$column];
+                }
+
+                $query->orderBy('' . $column . ' ' . $direction);
             }
         }
 
@@ -305,7 +314,8 @@ abstract class DataTable extends Injectable
 
             if ($parentEditId === 0) {
                 $ids = $this->getCachedNewIds();
-                $query->andWhere("pr.id IN ('" . implode("','", $ids) . "')");
+                //todo: use alias
+                $query->inWhere("pr.id", $ids);
             }
         }
 
