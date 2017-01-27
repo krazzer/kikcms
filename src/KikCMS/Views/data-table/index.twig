@@ -15,7 +15,7 @@
         {% if isSearchable %}
             <div class="search">
                 <span class="glyphicon glyphicon-search"></span>
-                <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}" />
+                <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}"/>
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             </div>
         {% endif %}
@@ -42,8 +42,8 @@
     var loadDataTable = function () {
         eval(
                 "{{ instanceName }} = new DataTable();" +
-            "{{ instanceName }}.instance = '{{ instanceName }}';" +
-            "{{ instanceName }}.init();"
+                "{{ instanceName }}.instance = '{{ instanceName }}';" +
+                "{{ instanceName }}.init();"
         );
     };
 

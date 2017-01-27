@@ -4,11 +4,10 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Forms\ProductForm;
 use KikCMS\Models\DummyProducts;
-use KikCMS\Models\ProductType;
 use KikCMS\Models\Type;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Validation\Validator\PresenceOf;
 
 class Products extends DataTable
 {
@@ -24,6 +23,14 @@ class Products extends DataTable
     public function getModel(): string
     {
         return DummyProducts::class;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFormClass(): string
+    {
+        return ProductForm::class;
     }
 
     /**
@@ -49,37 +56,41 @@ class Products extends DataTable
      */
     protected function initialize()
     {
-        $typeNameMap = Type::findAssoc();
+        $this->setFieldFormatting('price', [$this, 'formatPrice']);
+        $this->setFieldFormatting('sale', [$this, 'formatSale']);
+        $this->setFieldFormatting('description', [$this, 'formatDescription']);
+    }
 
-        $this->form->addTextField('title', 'Naam', [new PresenceOf()]);
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function formatPrice($value)
+    {
+        return '&euro;&nbsp;' . number_format($value, 2, ',', '.');
+    }
 
-        $this->form->addDataTableField(new SubProducts(), "Sub producten");
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function formatSale($value)
+    {
+        return $value == 1 ? '<span style="color: green;" class="glyphicon glyphicon-ok"></span>' : '';
+    }
 
-        $this->form->addTextField('price', 'Prijs');
-        $this->form->addTextField('stock', 'Voorraad');
-        $this->form->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class);
-        $this->form->addCheckboxField('sale', 'Sale');
-        $this->form->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function formatDescription($value)
+    {
+        $value = html_entity_decode(strip_tags($value));
 
-        $this->form->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap)
-            ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
+        if (mb_strlen($value) > 50) {
+            return mb_substr($value, 0, 50) . '...';
+        }
 
-        $this->setFieldFormatting('price', function($value){
-            return '&euro;&nbsp;' . number_format($value, 2, ',', '.');
-        });
-
-        $this->setFieldFormatting('sale', function($value){
-            return $value == 1 ? '<span style="color:green;" class="glyphicon glyphicon-ok"></span>' : '';
-        });
-
-        $this->setFieldFormatting('description', function($value){
-            $value = html_entity_decode(strip_tags($value));
-
-            if(mb_strlen($value) > 50){
-                return mb_substr($value, 0, 50) . '...';
-            }
-
-            return $value;
-        });
+        return $value;
     }
 }

@@ -60,6 +60,58 @@ KikCmsClass.prototype =
     errorMessages: {},
     isDev: false,
 
+    action: function (actionUrl, parameters, onSuccess, onError) {
+        var ajaxCompleted = false;
+        var self          = this;
+        var retries       = 0;
+
+        setTimeout(function () {
+            if (ajaxCompleted == false) {
+                KikCMS.showLoader();
+            }
+        }, 250);
+
+        var xmlHttpRequest = function () {
+            $.ajax({
+                url: actionUrl,
+                type: 'post',
+                dataType: 'json',
+                data: parameters,
+                success: function (result, responseText, response) {
+                    ajaxCompleted = true;
+                    self.hideLoader();
+
+                    onSuccess(result, responseText, response);
+                },
+                error: function (result) {
+                    // try again on connection failure
+                    if (result.readyState == 0 && result.status == 0 && retries < 2) {
+                        retries++;
+                        xmlHttpRequest();
+                        return;
+                    }
+
+                    if (typeof(onError) != 'undefined') {
+                        onError();
+                    }
+
+                    ajaxCompleted = true;
+                    self.hideLoader();
+
+                    var key = self.translations.error[result.status] ? result.status : 'unknown';
+
+                    if (self.isDev && result.status != 440) {
+                        $("#ajaxDebugger").html(result.responseText).show();
+                    } else {
+                        alert(self.translations.error[key].title + "\n\n" + self.translations.error[key].description);
+                    }
+                }
+            });
+        };
+
+        xmlHttpRequest();
+    },
+
     showLoader: function () {
         this.getLoader().addClass('show');
     },
@@ -70,6 +122,30 @@ KikCmsClass.prototype =
 
     getLoader: function () {
         return $('#cmsLoader');
+    },
+
+    initWebForms: function ($element) {
+        var self = this;
+
+        $element.find('.webForm').each(function () {
+            var $webForm = $(this);
+
+            $webForm.find('.autocomplete').each(function () {
+                var $field       = $(this);
+                var fieldKey     = $field.attr('data-field-key');
+                var webFormClass = $webForm.attr('data-class');
+
+                self.action('/cms/webform/getAutocompleteData', {
+                    field: fieldKey,
+                    webFormClass: webFormClass
+                }, function (data) {
+                    $field.typeahead({
+                        items: 30,
+                        source: data
+                    });
+                });
+            });
+        });
     },
 
     tl: function (key, params) {
@@ -84,6 +160,10 @@ KikCmsClass.prototype =
 };
 
 var KikCMS = new KikCmsClass();
+
+$(function () {
+    KikCMS.initWebForms($(document));
+});
 
 var keyCode = {
     BACKSPACE: 8, COMMA: 188, DELETE: 46, DOWN: 40, END: 35, ENTER: 13, ESCAPE: 27, HOME: 36, LEFT: 37,

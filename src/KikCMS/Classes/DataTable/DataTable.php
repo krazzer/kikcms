@@ -65,6 +65,8 @@ abstract class DataTable extends Injectable
 
     public abstract function getModel(): string;
 
+    public abstract function getFormClass(): string;
+
     /**
      * @return Builder
      */
@@ -74,14 +76,6 @@ abstract class DataTable extends Injectable
         $defaultQuery->from($this->getModel());
 
         return $defaultQuery;
-    }
-
-    /**
-     * @return DataForm
-     */
-    public function getForm()
-    {
-        return $this->form;
     }
 
     /**
@@ -103,6 +97,14 @@ abstract class DataTable extends Injectable
     public function formatValue(string $column, $value)
     {
         return $this->fieldFormatting[$column]($value);
+    }
+
+    /**
+     * @return DataForm
+     */
+    public function getForm(): DataForm
+    {
+        return $this->form;
     }
 
     /**
@@ -142,9 +144,11 @@ abstract class DataTable extends Injectable
             return;
         }
 
-        $instance = $this->getInstanceName();
+        $instance  = $this->getInstanceName();
+        $formClass = $this->getFormClass();
 
-        $this->form = new DataForm($this->getModel());
+        $this->form = new $formClass($this->getModel());
+        $this->form->initializeForm();
         $this->initialize();
 
         $this->form->setIdentifier('form_' . $instance);
@@ -331,7 +335,7 @@ abstract class DataTable extends Injectable
      * @param callable $callback
      * @return $this|DataTable
      */
-    public function setFieldFormatting(string $column, callable $callback)
+    public function setFieldFormatting(string $column, $callback)
     {
         $this->fieldFormatting[$column] = $callback;
 

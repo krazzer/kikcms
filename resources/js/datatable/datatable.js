@@ -15,22 +15,6 @@ DataTable.prototype =
         this.initButtons();
     },
 
-    initAutocomplete: function () {
-        var self = this;
-
-        this.getWindow().find('.autocomplete').each(function () {
-            var $field   = $(this);
-            var fieldKey = $field.attr('data-field-key');
-
-            self.action('getAutocompleteData', {field: fieldKey}, function (data) {
-                $field.typeahead({
-                    items: 30,
-                    source: data
-                });
-            });
-        });
-    },
-
     initButtons: function () {
         var self          = this;
         var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
@@ -138,7 +122,7 @@ DataTable.prototype =
         var self    = this;
         var $window = this.getWindow();
 
-        this.initAutocomplete();
+        KikCMS.initWebForms($window);
         this.initWysiwyg();
 
         $window.find('.saveAndClose').click(function () {
@@ -189,60 +173,13 @@ DataTable.prototype =
     },
 
     action: function (action, parameters, onSuccess, onError) {
-        var ajaxCompleted = false;
-        var retries       = 0;
-
         parameters.dataTableInstance = this.instance;
 
         if (this.parentEditId != null) {
             parameters.parentEditId = this.parentEditId;
         }
 
-        setTimeout(function () {
-            if (ajaxCompleted == false) {
-                KikCMS.showLoader();
-            }
-        }, 250);
-
-        var xmlHttpRequest = function () {
-            $.ajax({
-                url: '/cms/datatable/' + action,
-                type: 'post',
-                dataType: 'json',
-                data: parameters,
-                success: function (result, responseText, response) {
-                    ajaxCompleted = true;
-                    KikCMS.hideLoader();
-
-                    onSuccess(result, responseText, response);
-                },
-                error: function (result) {
-                    // try again on connection failure
-                    if (result.readyState == 0 && result.status == 0 && retries < 2) {
-                        retries++;
-                        xmlHttpRequest();
-                        return;
-                    }
-
-                    if (typeof(onError) != 'undefined') {
-                        onError();
-                    }
-
-                    ajaxCompleted = true;
-                    KikCMS.hideLoader();
-
-                    var key = KikCMS.translations.error[result.status] ? result.status : 'unknown';
-
-                    if (KikCMS.isDev && result.status != 440) {
-                        $("#ajaxDebugger").html(result.responseText).show();
-                    } else {
-                        alert(KikCMS.translations.error[key].title + "\n\n" + KikCMS.translations.error[key].description);
-                    }
-                }
-            });
-        };
-
-        xmlHttpRequest();
+        KikCMS.action('/cms/datatable/' + action, parameters, onSuccess, onError);
     },
 
     actionAdd: function () {

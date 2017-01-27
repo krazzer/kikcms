@@ -6,8 +6,6 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
-use KikCMS\Classes\Model\Model;
-use KikCMS\Classes\WebForm\Fields\Autocomplete;
 
 /**
  * @property DbService dbService
@@ -69,27 +67,6 @@ class DataTableController extends BaseController
         return json_encode([
             'window' => $this->view->getRender('data-table', 'edit')
         ]);
-    }
-
-    /**
-     * @return string
-     */
-    public function getAutocompleteDataAction()
-    {
-        //todo: move to webFormController
-        $fieldKey  = $this->request->getPost('field');
-        $dataTable = $this->getDataTable();
-
-        // initialize, so we know about any autocomplete fields
-        $dataTable->initializeDatatable();
-
-        /** @var Autocomplete $field */
-        $field = $dataTable->getForm()->getField($fieldKey);
-
-        /** @var Model $model */
-        $model = $field->getSourceModel();
-
-        return json_encode($model::getNameList());
     }
 
     /**

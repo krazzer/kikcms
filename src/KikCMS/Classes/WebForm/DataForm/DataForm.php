@@ -20,11 +20,8 @@ use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldSto
  * @property DbService $dbService
  * @property Logger $logger
  */
-class DataForm extends WebForm
+abstract class DataForm extends WebForm
 {
-    /** @var string */
-    protected $model;
-
     /** @var string */
     protected $formTemplate = 'dataForm';
 
@@ -35,14 +32,9 @@ class DataForm extends WebForm
     protected $fieldTransformers = [];
 
     /**
-     * @param string $model
+     * @return string
      */
-    public function __construct(string $model)
-    {
-        parent::__construct();
-
-        $this->model = $model;
-    }
+    public abstract function getModel(): string;
 
     /**
      * @param FieldStorage $fieldStorage
@@ -59,7 +51,6 @@ class DataForm extends WebForm
     {
         $this->fieldTransformers[$fieldTransformer->getField()->getKey()] = $fieldTransformer;
     }
-
 
     /**
      * @param DataTable $dataTable
@@ -169,7 +160,7 @@ class DataForm extends WebForm
     {
         $query = new Builder();
         $query
-            ->addFrom($this->model)
+            ->addFrom($this->getModel())
             ->andWhere('id = ' . $id);
 
         $data = $query->getQuery()->execute()->getFirst()->toArray();
@@ -192,9 +183,9 @@ class DataForm extends WebForm
         try {
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
-                $this->dbService->update($this->model, $insertUpdateData, ['id' => $editId]);
+                $this->dbService->update($this->getModel(), $insertUpdateData, ['id' => $editId]);
             } else {
-                $editId = $this->dbService->insert($this->model, $insertUpdateData);
+                $editId = $this->dbService->insert($this->getModel(), $insertUpdateData);
             }
 
             $this->storeFields($input, $editId);

@@ -4,7 +4,8 @@
 {# @var security \Phalcon\Security #}
 {% use '@kikcms/webform/fields.twig' %}
 
-{{ form({name: 'form'}) }}
+<div class="webForm" data-class="{{ class }}">
+    {{ form({name: 'form'}) }}
 
     {% if errorContainer.hasFormErrors %}
         <div class="alert alert-danger">
@@ -33,4 +34,5 @@
 
     <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 
-{{ endForm() }}
+    {{ endForm() }}
+</div>

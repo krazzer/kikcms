@@ -29,9 +29,10 @@ use Phalcon\Validation;
  * @property Validation $validation
  * @property Translator $translator
  */
-class WebForm extends Injectable
+abstract class WebForm extends Injectable
 {
-    const WEB_FORM_ID = 'webFormId';
+    const WEB_FORM_ID    = 'webFormId';
+    const WEB_FORM_CLASS = 'webFormClass';
 
     /** @var Field[] */
     protected $fields = [];
@@ -56,6 +57,9 @@ class WebForm extends Injectable
 
     /** @var callable */
     private $validateAction;
+
+    /** @var bool */
+    private $initialized = false;
 
     public function __construct()
     {
@@ -290,7 +294,7 @@ class WebForm extends Injectable
     {
         $errorContainer = new ErrorContainer();
 
-        $this->initialize();
+        $this->initializeForm();
         $this->initializeFields();
         $this->addAssets();
 
@@ -334,6 +338,7 @@ class WebForm extends Injectable
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
+            'class'              => static::class,
         ];
 
         return $this->renderView($this->formTemplate, array_merge($defaultParameters, $parameters));
@@ -442,6 +447,19 @@ class WebForm extends Injectable
      */
     protected function initialize()
     {
+    }
+
+    /**
+     * Override to build up the form
+     */
+    public function initializeForm()
+    {
+        if ($this->initialized) {
+            return;
+        }
+
+        $this->initialize();
+        $this->initialized = true;
     }
 
     /**

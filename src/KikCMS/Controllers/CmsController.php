@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Products;
+use KikCMS\Forms\ProductForm;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
 use Phalcon\Http\Response;
@@ -28,6 +29,16 @@ class CmsController extends BaseCmsController
 
         $this->view->datatable = $datatable->render();
         $this->view->pick('cms/default');
+    }
+
+    public function formAction()
+    {
+        $dataForm = new ProductForm();
+        $dataForm->addTextField('title', "Naam product");
+
+        $this->view->form = $dataForm->renderWithData(23);
+
+        $this->view->pick('cms/form');
     }
 
     public function mediaAction()

@@ -103,6 +103,7 @@ return [
             'menus'     => 'Menu\'s',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
+            'form'      => 'Dataform test',
 
             'menu' => [
                 'main' => 'Hoofmenu'

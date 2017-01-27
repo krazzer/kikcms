@@ -38,8 +38,18 @@ class Routing
             "action"     => 1
         ]);
 
+        $router->add("/cms/login/reset-password", [
+            "controller" => "login",
+            "action"     => "resetPassword"
+        ]);
+
         $router->add("/cms/datatable/:action", [
             "controller" => "data-table",
+            "action"     => 1
+        ]);
+
+        $router->add("/cms/webform/:action", [
+            "controller" => "web-form",
             "action"     => 1
         ]);
 
