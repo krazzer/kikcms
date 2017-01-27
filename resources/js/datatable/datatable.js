@@ -8,6 +8,11 @@ DataTable.prototype =
     currentFormInput: null,
     parentEditId: null,
 
+    getFormSerialized: function () {
+        var $formGroups = this.getWindow().find('form > *:not(.type-dataTable) input, select, textarea, form > input');
+        return $formGroups.serialize();
+    },
+
     init: function () {
         this.initTable();
         this.initPagination();
@@ -133,7 +138,7 @@ DataTable.prototype =
             self.actionSave(false);
         });
 
-        this.currentFormInput = $window.find('form').serialize();
+        this.currentFormInput = this.getFormSerialized();
         this.initWindowSize();
 
         $(window).resize(this.initWindowSize.bind(this));
@@ -239,8 +244,7 @@ DataTable.prototype =
     actionSave: function (closeWindow) {
         var self    = this;
         var $window = this.getWindow();
-        var $form   = $window.find('form');
-        var params  = $form.serializeObject();
+        var params  = $window.find('form').serializeObject();
 
         $.extend(params, this.getFilters());
 
@@ -399,7 +403,7 @@ DataTable.prototype =
             $bodyNotFading.prepend($window);
 
             $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(function () {
-                if (self.currentFormInput != self.getWindow().find('form').serialize()) {
+                if (self.currentFormInput != self.getFormSerialized()) {
                     if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
                         return;
                     }
