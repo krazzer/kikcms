@@ -20,20 +20,24 @@
             </div>
         {% endif %}
 
-        {% if pagination.total_pages > 1 %}
-            <div class="pages">{% include '@kikcms/data-table/pagination.twig' %}</div>
-        {% endif %}
+        <div class="pages">
+            {% if pagination.total_pages > 1 %}
+                {% include '@kikcms/data-table/pagination.twig' %}
+            {% endif %}
+        </div>
     </div>
 
     <div class="table">
         {% include '@kikcms/data-table/table.twig' %}
     </div>
 
-    {% if pagination.total_pages > 1 %}
-        <div class="footer">
-            <div class="pages">{% include '@kikcms/data-table/pagination.twig' %}</div>
+    <div class="footer">
+        <div class="pages">
+            {% if pagination.total_pages > 1 %}
+                {% include '@kikcms/data-table/pagination.twig' %}
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 </div>
 
 <script>

@@ -77,6 +77,7 @@ class DataTableController extends BaseController
         $editId       = $this->getEditId();
         $dataTable    = $this->getDataTable();
         $parentEditId = $this->getParentEditId();
+        $filters      = $this->getFilters();
 
         if ($editId === null) {
             $this->view->form = $dataTable->renderAddForm($parentEditId);
@@ -95,9 +96,10 @@ class DataTableController extends BaseController
         }
 
         return json_encode([
-            'table'    => $dataTable->renderTable($this->getFilters()),
-            'window'   => $this->view->getRender('data-table', $view),
-            'editedId' => $editId,
+            'window'     => $this->view->getRender('data-table', $view),
+            'table'      => $dataTable->renderTable($this->getFilters()),
+            'pagination' => $dataTable->renderPagination($filters[DataTable::FILTER_PAGE]),
+            'editedId'   => $editId,
         ]);
     }
 

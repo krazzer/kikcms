@@ -71,11 +71,8 @@ DataTable.prototype =
             filters.search = value;
 
             self.action('search', filters, function (result) {
-                self.getDataTable().find('.table').html(result.table);
-                self.getDataTable().find('.pages').html(result.pagination);
-
-                self.initTable();
-                self.initPagination();
+                self.setTableContent(result.table);
+                self.setPagesContent(result.pagination);
             })
         });
     },
@@ -206,11 +203,16 @@ DataTable.prototype =
         params.ids = ids;
 
         this.action('delete', params, function (result) {
-            self.getDataTable().find('.table').html(result.table);
-            self.getDataTable().find('.pages').html(result.pagination);
+            var currentPage = parseInt(params.page);
 
-            self.initTable();
-            self.initPagination();
+            // if everything of the current page is removed, go back one page
+            if (currentPage > 1 && $(result.table).hasClass('no-data')) {
+                self.actionPage(currentPage - 1);
+                return;
+            }
+
+            self.setTableContent(result.table);
+            self.setPagesContent(result.pagination);
         });
     },
 
@@ -233,11 +235,8 @@ DataTable.prototype =
         filters.page = page;
 
         this.action('page', filters, function (result) {
-            self.getDataTable().find('.table').html(result.table);
-            self.getDataTable().find('.pages').html(result.pagination);
-
-            self.initTable();
-            self.initPagination();
+            self.setTableContent(result.table);
+            self.setPagesContent(result.pagination);
         });
     },
 
@@ -251,6 +250,7 @@ DataTable.prototype =
         this.action('save', params, function (result, responseText, response) {
             if (response.status == 200) {
                 self.setTableContent(result.table, result.editedId);
+                self.setPagesContent(result.pagination);
             }
 
             if (closeWindow && response.status == 200) {
@@ -270,11 +270,8 @@ DataTable.prototype =
         filters.sortDirection = direction;
 
         this.action('sort', filters, function (result) {
-            self.getDataTable().find('.table').html(result.table);
-            self.getDataTable().find('.pages').html(result.pagination);
-
-            self.initTable();
-            self.initPagination();
+            self.setTableContent(result.table);
+            self.setPagesContent(result.pagination);
         });
     },
 
@@ -310,9 +307,17 @@ DataTable.prototype =
         $window.fadeIn();
     },
 
+    setPagesContent: function (pagesContent) {
+        var $pagination = this.getDataTable().find('.pages');
+        $pagination.html(pagesContent);
+
+        this.initPagination();
+    },
+
     setTableContent: function (tableContent, editedId) {
         var $table = this.getDataTable().find('.table');
         $table.html(tableContent);
+
         this.initTable();
 
         if (!editedId) {

@@ -108,6 +108,14 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return $this->limit;
+    }
+
+    /**
      * @return string
      */
     public function getInstanceName()
@@ -348,14 +356,6 @@ abstract class DataTable extends Injectable
     public function setInstanceName(string $instanceName)
     {
         $this->cachedInstanceKey = $instanceName;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit(): int
-    {
-        return $this->limit;
     }
 
     /**
