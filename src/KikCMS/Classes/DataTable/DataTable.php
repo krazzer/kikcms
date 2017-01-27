@@ -23,12 +23,15 @@ abstract class DataTable extends Injectable
 
     const JS_TRANSLATIONS = [
         'dataTable.delete.confirmOne',
-        'dataTable.delete.confirmMultiple',
+        'dataTable.delete.confirm',
         'dataTable.closeWarning'
     ];
 
     /** @var DataForm */
     protected $form;
+
+    /** @var string translation container, with labels for add, edit, delete and deleteOne */
+    protected $labels;
 
     /** @var array */
     protected $searchableFields = [];
@@ -118,6 +121,14 @@ abstract class DataTable extends Injectable
     public function getForm(): DataForm
     {
         return $this->form;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getLabels()
+    {
+        return $this->labels;
     }
 
     /**
@@ -222,6 +233,7 @@ abstract class DataTable extends Injectable
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'isAjax'          => $this->request->isAjax(),
+            'labels'          => $this->labels,
             'self'            => $this,
         ]);
     }
@@ -405,7 +417,16 @@ abstract class DataTable extends Injectable
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
 
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
+        $translations = DataTable::JS_TRANSLATIONS;
+
+        if ($this->labels) {
+            $translations[] = $this->labels . '.add';
+            $translations[] = $this->labels . '.edit';
+            $translations[] = $this->labels . '.delete';
+            $translations[] = $this->labels . '.deleteOne';
+        }
+
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, $translations);
 
         $this->form->addAssets();
     }

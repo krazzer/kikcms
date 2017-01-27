@@ -24,7 +24,7 @@ class Translator
             if (array_key_exists($part, $translations)) {
                 $translations = $translations[$part];
             } else {
-                break;
+                $translations = null;
             }
         }
 
@@ -35,6 +35,10 @@ class Translator
         $translation = $translations;
 
         foreach ($replaces as $key => $replace) {
+            if ( ! is_string($replace)) {
+                continue;
+            }
+
             $translation = str_replace(':' . $key, $replace, $translation);
         }
 

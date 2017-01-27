@@ -13,6 +13,7 @@ return [
     'dataTable' => [
         'noData'            => 'Er is geen data gevonden om weer te geven...',
         'add'               => 'Nieuw...',
+        'edit'              => 'Bewerken',
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
@@ -24,9 +25,25 @@ return [
         ],
 
         'delete' => [
-            'label'           => 'Verwijderen',
-            'confirmOne'      => 'Wilt u zeker weten dit record verwijderen?',
-            'confirmMultiple' => 'Wilt u zeker weten deze :amount records verwijderen?',
+            'label'      => 'Verwijderen',
+            'confirmOne' => 'Wilt u zeker weten dit record verwijderen?',
+            'confirm'    => 'Wilt u zeker weten deze :amount records verwijderen?',
+        ],
+    ],
+
+    'dataTables' => [
+        'products' => [
+            'add'       => "Nieuw product",
+            'edit'      => "Product '<i>:title</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount producten verwijderen?",
+            'deleteOne' => "Wilt u zeker weten dit product verwijderen?",
+        ],
+
+        'subProducts' => [
+            'add'       => "Nieuw sub product",
+            'edit'      => "Sub product ':title' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount sub producten verwijderen?",
+            'deleteOne' => "Wilt u zeker weten dit sub product verwijderen?",
         ],
     ],
 

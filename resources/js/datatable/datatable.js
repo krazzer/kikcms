@@ -4,9 +4,28 @@ var DataTable = function () {
 DataTable.prototype =
 {
     instance: null,
+    labels: null,
     currentSearch: null,
     currentFormInput: null,
     parentEditId: null,
+
+    getDeleteConfirmMessage: function (amount) {
+        var confirmText = KikCMS.tl('dataTable.delete.confirmOne');
+
+        if (KikCMS.tl(this.labels + '.deleteOne')) {
+            confirmText = KikCMS.tl(this.labels + '.deleteOne')
+        }
+
+        if (amount > 1) {
+            if (KikCMS.tl(this.labels + '.delete')) {
+                confirmText = KikCMS.tl(this.labels + '.delete', {amount: amount});
+            } else {
+                confirmText = KikCMS.tl('dataTable.delete.confirm', {amount: amount});
+            }
+        }
+
+        return confirmText;
+    },
 
     getFormSerialized: function () {
         var $formGroups = this.getWindow().find('form > *:not(.type-dataTable) input, select, textarea, form > input');
@@ -30,11 +49,7 @@ DataTable.prototype =
 
             if (selectedIds) {
                 var amount      = selectedIds.length;
-                var confirmText = KikCMS.tl('dataTable.delete.confirmOne');
-
-                if (amount > 1) {
-                    confirmText = KikCMS.tl('dataTable.delete.confirmMultiple', {amount: amount});
-                }
+                var confirmText = self.getDeleteConfirmMessage(amount);
 
                 if (confirm(confirmText)) {
                     self.actionDelete(selectedIds);

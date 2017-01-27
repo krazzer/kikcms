@@ -17,6 +17,9 @@ class Products extends DataTable
     /** @inheritdoc */
     protected $orderableFields = ['id' => 'pr.id'];
 
+    /** @inheritdoc */
+    protected $labels = 'dataTables.products';
+
     /**
      * @inheritdoc
      */

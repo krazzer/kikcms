@@ -31,6 +31,9 @@ abstract class DataForm extends WebForm
     /** @var FieldTransformer[] */
     protected $fieldTransformers = [];
 
+    /** @var array local cache for edit data */
+    private $cachedEditData = [];
+
     /**
      * @return string
      */
@@ -156,8 +159,12 @@ abstract class DataForm extends WebForm
      * @param int $id
      * @return array
      */
-    private function getEditData(int $id)
+    public function getEditData(int $id)
     {
+        if (isset($this->cachedEditData[$id])) {
+            return $this->cachedEditData[$id];
+        }
+
         $query = new Builder();
         $query
             ->addFrom($this->getModel())
@@ -166,6 +173,8 @@ abstract class DataForm extends WebForm
         $data = $query->getQuery()->execute()->getFirst()->toArray();
         $data = $data + $this->getDataStoredElseWhere($id);
         $data = $this->transformDataForDisplay($data);
+
+        $this->cachedEditData[$id] = $data;
 
         return $data;
     }

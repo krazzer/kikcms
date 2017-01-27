@@ -30,7 +30,8 @@ class DataTableController extends BaseController
     {
         $dataTable = $this->getDataTable();
 
-        $this->view->form = $dataTable->renderAddForm($this->getParentEditId());
+        $this->view->form   = $dataTable->renderAddForm($this->getParentEditId());
+        $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
             'window' => $this->view->getRender('data-table', 'add')
@@ -63,7 +64,9 @@ class DataTableController extends BaseController
         $editId    = $this->getEditId();
         $dataTable = $this->getDataTable();
 
-        $this->view->form = $dataTable->renderEditForm($editId);
+        $this->view->form     = $dataTable->renderEditForm($editId);
+        $this->view->labels   = $dataTable->getLabels();
+        $this->view->editData = $dataTable->getForm()->getEditData($editId);
 
         return json_encode([
             'window' => $this->view->getRender('data-table', 'edit')
@@ -95,6 +98,9 @@ class DataTableController extends BaseController
             $this->view->form = $dataTable->renderEditForm($editId);
             $view             = 'edit';
         }
+
+        $this->view->labels   = $dataTable->getLabels();
+        $this->view->editData = $dataTable->getForm()->getEditData($editId);
 
         return json_encode([
             'window'     => $this->view->getRender('data-table', $view),

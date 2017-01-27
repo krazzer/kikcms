@@ -8,6 +8,9 @@ class SubProducts extends Products
     /** @inheritdoc */
     protected $parentRelationKey = 'parent_id';
 
+    /** @inheritdoc */
+    protected $labels = 'dataTables.subProducts';
+
     /**
      * @inheritdoc
      */

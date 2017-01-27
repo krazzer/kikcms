@@ -1,10 +1,11 @@
 <div class="datatable" id="{{ instanceName }}">
 
     <div class="toolbar">
-
         <div class="button add">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            <span class="lbl">{{ tl('dataTable.add') }}</span>
+            <span class="lbl">
+                {{ tl(labels ~ '.add') ?: tl('dataTable.add') }}
+            </span>
         </div>
 
         <div class="button delete faded">
@@ -39,7 +40,6 @@
         </div>
     </div>
 </div>
-
 <script>
     eval("var {{ instanceName }} = null;");
 
@@ -47,6 +47,7 @@
         eval(
                 "{{ instanceName }} = new DataTable();" +
                 "{{ instanceName }}.instance = '{{ instanceName }}';" +
+                "{{ instanceName }}.labels = '{{ labels }}';" +
                 "{{ instanceName }}.init();"
         );
     };

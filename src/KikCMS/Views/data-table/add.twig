@@ -1,3 +1,5 @@
 {% extends '@kikcms/data-table/form.twig' %}
 
-{% block headerTitle 'Toevoegen' %}
+{% block headerTitle %}
+    {{ tl(labels ~ '.add') ?: tl('dataTable.add') }}
+{% endblock %}
