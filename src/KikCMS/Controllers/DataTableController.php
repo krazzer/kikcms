@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\DataTable\FilterQueryBuilder;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 
@@ -50,7 +51,7 @@ class DataTableController extends BaseController
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters[DataTable::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
         ]);
     }
 
@@ -98,7 +99,7 @@ class DataTableController extends BaseController
         return json_encode([
             'window'     => $this->view->getRender('data-table', $view),
             'table'      => $dataTable->renderTable($this->getFilters()),
-            'pagination' => $dataTable->renderPagination($filters[DataTable::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
             'editedId'   => $editId,
         ]);
     }
@@ -113,7 +114,7 @@ class DataTableController extends BaseController
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters[DataTable::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
         ]);
     }
 
@@ -125,7 +126,7 @@ class DataTableController extends BaseController
         $dataTable = $this->getDataTable();
         $filters   = $this->getFilters();
 
-        $filters[DataTable::FILTER_PAGE] = 1;
+        $filters[FilterQueryBuilder::FILTER_PAGE] = 1;
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
@@ -141,7 +142,7 @@ class DataTableController extends BaseController
         $dataTable = $this->getDataTable();
         $filters   = $this->getFilters();
 
-        $filters[DataTable::FILTER_PAGE] = 1;
+        $filters[FilterQueryBuilder::FILTER_PAGE] = 1;
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
@@ -185,7 +186,7 @@ class DataTableController extends BaseController
      */
     private function getParentEditId()
     {
-        $parentEditId = $this->request->getPost(DataTable::FILTER_PARENT_EDIT_ID);
+        $parentEditId = $this->request->getPost(FilterQueryBuilder::FILTER_PARENT_EDIT_ID);
 
         // cast to int
         if ($parentEditId !== null) {
@@ -203,24 +204,24 @@ class DataTableController extends BaseController
         $filters = [];
 
         // get page filter
-        $filters[DataTable::FILTER_PAGE] = $this->request->getPost(DataTable::FILTER_PAGE);
+        $filters[FilterQueryBuilder::FILTER_PAGE] = $this->request->getPost(FilterQueryBuilder::FILTER_PAGE);
 
         // get search filter
-        $search = $this->request->getPost(DataTable::FILTER_SEARCH);
+        $search = $this->request->getPost(FilterQueryBuilder::FILTER_SEARCH);
 
         if ( ! empty($search)) {
-            $filters[DataTable::FILTER_SEARCH] = $search;
+            $filters[FilterQueryBuilder::FILTER_SEARCH] = $search;
         }
 
         // get sort filter
-        if ($this->request->hasPost(DataTable::FILTER_SORT_COLUMN)) {
-            $filters[DataTable::FILTER_SORT_COLUMN]    = $this->request->getPost(DataTable::FILTER_SORT_COLUMN);
-            $filters[DataTable::FILTER_SORT_DIRECTION] = $this->request->getPost(DataTable::FILTER_SORT_DIRECTION);
+        if ($this->request->hasPost(FilterQueryBuilder::FILTER_SORT_COLUMN)) {
+            $filters[FilterQueryBuilder::FILTER_SORT_COLUMN]    = $this->request->getPost(FilterQueryBuilder::FILTER_SORT_COLUMN);
+            $filters[FilterQueryBuilder::FILTER_SORT_DIRECTION] = $this->request->getPost(FilterQueryBuilder::FILTER_SORT_DIRECTION);
         }
 
         // get parent edit id filter
-        if ($this->request->hasPost(DataTable::FILTER_PARENT_EDIT_ID)) {
-            $filters[DataTable::FILTER_PARENT_EDIT_ID] = $this->getParentEditId();
+        if ($this->request->hasPost(FilterQueryBuilder::FILTER_PARENT_EDIT_ID)) {
+            $filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID] = $this->getParentEditId();
         }
 
         return $filters;

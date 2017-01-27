@@ -21,12 +21,6 @@ abstract class DataTable extends Injectable
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
 
-    const FILTER_SEARCH         = 'search';
-    const FILTER_PAGE           = 'page';
-    const FILTER_SORT_COLUMN    = 'sortColumn';
-    const FILTER_SORT_DIRECTION = 'sortDirection';
-    const FILTER_PARENT_EDIT_ID = 'parentEditId';
-
     const JS_TRANSLATIONS = [
         'dataTable.delete.confirmOne',
         'dataTable.delete.confirmMultiple',
@@ -103,6 +97,22 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * Get the table's key with alias if present, used for queries. i.e. p.id
+     *
+     * @return string
+     */
+    public function getAliasedTableKey(): string
+    {
+        $alias = $this->dbService->getAliasForModel($this->getModel());
+
+        if ( ! $alias) {
+            return 'id';
+        }
+
+        return $alias . '.id';
+    }
+
+    /**
      * @return DataForm
      */
     public function getForm(): DataForm
@@ -136,6 +146,22 @@ abstract class DataTable extends Injectable
     public function getParentRelationKey(): string
     {
         return $this->parentRelationKey;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearchableFields(): array
+    {
+        return $this->searchableFields;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrderableFields(): array
+    {
+        return $this->orderableFields;
     }
 
     /**
@@ -300,46 +326,9 @@ abstract class DataTable extends Injectable
      */
     public function getQuery(array $filters = []): Builder
     {
-        $query = $this->getDefaultQuery();
+        $queryBuilder = new FilterQueryBuilder($this);
 
-        // add search
-        if (isset($filters[self::FILTER_SEARCH])) {
-            $searchValue      = $filters[self::FILTER_SEARCH];
-            $searchConditions = [];
-
-            foreach ($this->searchableFields as $field) {
-                $searchConditions[] = $field . ' LIKE "%' . $searchValue . '%"';
-            }
-
-            $query->andWhere(implode(' OR ', $searchConditions));
-        }
-
-        // add sort
-        if (isset($filters[self::FILTER_SORT_COLUMN])) {
-            $column    = $filters[self::FILTER_SORT_COLUMN];
-            $direction = $filters[self::FILTER_SORT_DIRECTION];
-
-            if (in_array($direction, ['asc', 'desc'])) {
-                if (array_key_exists($column, $this->orderableFields)) {
-                    $column = $this->orderableFields[$column];
-                }
-
-                $query->orderBy('' . $column . ' ' . $direction);
-            }
-        }
-
-        // add subDataTable filter
-        if ($this->hasParent()) {
-            $parentEditId = $filters[self::FILTER_PARENT_EDIT_ID];
-            $query->andWhere($this->parentRelationKey . ' = ' . (int) $parentEditId);
-
-            if ($parentEditId === 0) {
-                $ids = $this->getCachedNewIds();
-                $query->inWhere($this->getAliasedTableKey(), $ids);
-            }
-        }
-
-        return $query;
+        return $queryBuilder->getQuery($this->getDefaultQuery(), $filters);
     }
 
     /**
@@ -374,7 +363,8 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Store the given id in cache, so we know which sub items' parentRelationKey needs to be updated after the parent is saved
+     * Store the given id in cache, so we know which sub items' parentRelationKey
+     * needs to be updated after the parent is saved
      *
      * @param int $editId
      */
@@ -421,22 +411,6 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Get the table's key with alias if present, used for queries. i.e. p.id
-     *
-     * @return string
-     */
-    private function getAliasedTableKey(): string
-    {
-        $alias = $this->dbService->getAliasForModel($this->getModel());
-
-        if ( ! $alias) {
-            return 'id';
-        }
-
-        return $alias . '.id';
-    }
-
-    /**
      * @return string
      */
     private function getNewIdsCacheKey()
@@ -454,7 +428,7 @@ abstract class DataTable extends Injectable
             return $this->tableData;
         }
 
-        $page = (int) isset($filters[self::FILTER_PAGE]) ? $filters[self::FILTER_PAGE] : 1;
+        $page = (int) isset($filters[FilterQueryBuilder::FILTER_PAGE]) ? $filters[FilterQueryBuilder::FILTER_PAGE] : 1;
 
         $paginator = new QueryBuilder(array(
             "builder" => $this->getQuery($filters),

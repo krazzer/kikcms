@@ -300,24 +300,7 @@ abstract class WebForm extends Injectable
 
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
-
-            //todo: move this to somewhere else
-            // set unposted checkboxes to default 0
-            foreach ($this->fields as $key => $field) {
-                $element = $field->getElement();
-
-                if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
-                    $element->setDefault(0);
-                }
-
-                // re-use generated dataTable instance
-                /** @var DataTableField $field */
-                if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
-                    $instance = $this->request->getPost($key);
-                    $field->getDataTable()->setInstanceName($instance);
-                    $this->getField($key)->getElement()->setDefault($instance);
-                }
-            }
+            $this->updateFieldsByPostData();
 
             if ($errorContainer->isEmpty()) {
                 $result = $this->successAction($this->getInput());
@@ -566,5 +549,28 @@ abstract class WebForm extends Injectable
         }
 
         return false;
+    }
+
+    /**
+     * Update the forms' input after a post is done
+     */
+    private function updateFieldsByPostData()
+    {
+        foreach ($this->fields as $key => $field) {
+            $element = $field->getElement();
+
+            // set unposted checkboxes to default 0
+            if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
+                $element->setDefault(0);
+            }
+
+            // re-use earlier generated dataTable instance
+            /** @var DataTableField $field */
+            if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
+                $instance = $this->request->getPost($key);
+                $field->getDataTable()->setInstanceName($instance);
+                $this->getField($key)->getElement()->setDefault($instance);
+            }
+        }
     }
 }
