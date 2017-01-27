@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\DbService;
+use KikCMS\Models\KikcmsUser;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
@@ -14,16 +15,11 @@ class UserService extends Injectable
     /**
      * @param $email
      *
-     * @return array
+     * @return KikcmsUser
      */
     public function getByEmail($email)
     {
-        $user = $this->dbService->queryRow("
-            SELECT * FROM kikcms_user 
-            WHERE email = " . $this->dbService->escape($email) . "
-        ");
-
-        return $user;
+        return KikcmsUser::findFirst('email = ' . $this->dbService->escape($email));
     }
 
     /**
@@ -43,18 +39,18 @@ class UserService extends Injectable
         }
 
         // password not yet set, returns true, but should not be allowed to login
-        if( ! $user['password']){
+        if ( ! $user->password) {
             return true;
         }
 
-        if (password_verify($password, $user['password'])) {
-            if ( ! password_needs_rehash($user['password'], PASSWORD_DEFAULT)) {
-                $this->setLoggedIn($user['id']);
+        if (password_verify($password, $user->password)) {
+            if ( ! password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
+                $this->setLoggedIn($user->id);
                 return true;
             }
 
-            $this->storePassword($user['id'], $password);
-            $this->setLoggedIn($user['id']);
+            $this->storePassword($user, $password);
+            $this->setLoggedIn($user->id);
 
             return true;
         }
@@ -63,27 +59,24 @@ class UserService extends Injectable
     }
 
     /**
-     * @param int $id
+     * @param KikcmsUser $user
      * @param string $password
      */
-    public function storePassword(int $id, string $password)
+    public function storePassword(KikcmsUser $user, string $password)
     {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $this->db->query("
-            UPDATE kikcms_user
-            SET password = " . $this->dbService->escape($hash) . "
-            WHERE id = " . (int) $id . "
-        ");
+        $user->password = $hashedPassword;
+        $user->save();
     }
 
     /**
-     * @param $user
+     * @param KikcmsUser $user
      * @return bool
      */
-    public function isActive($user)
+    public function isActive(KikcmsUser $user)
     {
-        return $user['active'] == 1 && $user['password'];
+        return $user->active == 1 && $user->password;
     }
 
     /**

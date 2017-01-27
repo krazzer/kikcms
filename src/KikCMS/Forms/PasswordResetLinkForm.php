@@ -28,8 +28,7 @@ class PasswordResetLinkForm extends WebForm
      */
     protected function successAction(array $input)
     {
-        $email = $input['email'];
-        $user  = $this->userService->getByEmail($email);
+        $user = $this->userService->getByEmail($input['email']);
 
         if ( ! $user) {
             // pretend we send the mail, so the user won't know whether the given email adres exists or not
@@ -42,12 +41,12 @@ class PasswordResetLinkForm extends WebForm
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
-        $hash     = $this->security->hash($user['id']);
-        $resetUrl = $this->url->get('cms/login/reset-password') . '?userId=' . $user['id'] . '&hash=' . $hash;
+        $hash     = $this->security->hash($user->id);
+        $resetUrl = $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash;
 
         $parameters['buttons'] = [['url' => $resetUrl, 'label' => $buttonLabel]];
 
-        if ($this->mailService->sendServiceMail($email, $subject, $body, $parameters)) {
+        if ($this->mailService->sendServiceMail($user->email, $subject, $body, $parameters)) {
             $this->flash->success($this->translator->tl('login.reset.flash'));
             unset($_POST);
         } else {

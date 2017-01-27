@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Models\KikcmsUser;
 use KikCMS\Services\UserService;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
@@ -42,7 +43,9 @@ class PasswordResetForm extends WebForm
         $userId        = $this->request->get('userId');
         $succesMessage = $this->translator->tl('login.reset.password.flash');
 
-        $this->userService->storePassword($userId, $input['password']);
+        $user = KikcmsUser::getById($userId);
+
+        $this->userService->storePassword($user, $input['password']);
         $this->flash->success($succesMessage);
         $this->response->redirect('cms/login');
     }
