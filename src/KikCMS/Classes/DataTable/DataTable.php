@@ -3,14 +3,17 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use KikCMS\Classes\DbService;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Query\Builder;
 use stdClass;
 
+/**
+ * @property DbService $dbService;
+ */
 abstract class DataTable extends Injectable
 {
     const EDIT_ID     = 'dataTableEditId';
@@ -301,12 +304,14 @@ abstract class DataTable extends Injectable
 
         // add search
         if (isset($filters[self::FILTER_SEARCH])) {
-            $searchValue = $filters[self::FILTER_SEARCH];
+            $searchValue      = $filters[self::FILTER_SEARCH];
+            $searchConditions = [];
 
-            //todo: search doesn't work when there already is a where
             foreach ($this->searchableFields as $field) {
-                $query->orWhere($field . ' LIKE "%' . $searchValue . '%"');
+                $searchConditions[] = $field . ' LIKE "%' . $searchValue . '%"';
             }
+
+            $query->andWhere(implode(' OR ', $searchConditions));
         }
 
         // add sort
@@ -330,8 +335,7 @@ abstract class DataTable extends Injectable
 
             if ($parentEditId === 0) {
                 $ids = $this->getCachedNewIds();
-                //todo: use alias
-                $query->inWhere("pr.id", $ids);
+                $query->inWhere($this->getAliasedTableKey(), $ids);
             }
         }
 
@@ -414,6 +418,22 @@ abstract class DataTable extends Injectable
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
 
         $this->form->addAssets();
+    }
+
+    /**
+     * Get the table's key with alias if present, used for queries. i.e. p.id
+     *
+     * @return string
+     */
+    private function getAliasedTableKey(): string
+    {
+        $alias = $this->dbService->getAliasForModel($this->getModel());
+
+        if ( ! $alias) {
+            return 'id';
+        }
+
+        return $alias . '.id';
     }
 
     /**

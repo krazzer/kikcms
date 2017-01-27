@@ -5,7 +5,7 @@ namespace KikCMS\DataTables;
 
 class SubProducts extends Products
 {
-    //todo: move $parentRelationKey to fieldStorage
+    /** @inheritdoc */
     protected $parentRelationKey = 'parent_id';
 
     /**

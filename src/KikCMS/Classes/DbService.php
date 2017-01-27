@@ -141,6 +141,18 @@ class DbService extends Injectable
 
     /**
      * @param string $model
+     * @return string|null
+     */
+    public function getAliasForModel(string $model)
+    {
+        /** @var Model $model */
+        $model = new $model();
+
+        return $model::ALIAS;
+    }
+
+    /**
+     * @param string $model
      * @return string
      */
     private function getTableForModel(string $model): string
