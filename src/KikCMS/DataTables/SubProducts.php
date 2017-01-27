@@ -3,6 +3,8 @@
 namespace KikCMS\DataTables;
 
 
+use KikCMS\Forms\ProductSubForm;
+
 class SubProducts extends Products
 {
     /** @inheritdoc */
@@ -10,6 +12,11 @@ class SubProducts extends Products
 
     /** @inheritdoc */
     protected $labels = 'dataTables.subProducts';
+
+    public function getFormClass(): string
+    {
+        return ProductSubForm::class;
+    }
 
     /**
      * @inheritdoc

@@ -17,3 +17,5 @@ $highLightColorDark: darken($highLightColor, 5%);
 
 /* Miscellaneous */
 $defaultBorderRadius: 3px;
+
+$lowerThanDesktop: "(max-width: 1080px)";

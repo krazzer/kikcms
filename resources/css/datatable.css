@@ -11,7 +11,9 @@ body > #overlay {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
-  z-index: 1;
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 0.3s;
 }
 
 :root > body.datatableBlur {
@@ -26,11 +28,12 @@ body > #overlay {
     -ms-user-select: none;
     user-select: none;
     pointer-events: none;
-    opacity: 0.5;
+      opacity: 0.5;
   }
 
 :root > body.datatableBlur #overlay {
-  display: block;
+    display: block;
+    opacity: 1;
 }
 
 .dataTableWindow {
@@ -47,99 +50,113 @@ body > #overlay {
   display: none;
   min-height: 300px; }
 
+@media (max-width: 1080px) {
+    .dataTableWindow {
+        width: auto;
+        top: 40px;
+        bottom: 40px;
+        left: 40px;
+        right: 40px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level1 {
-  z-index: 4;
-  top: 50px;
-  bottom: 50px;
-  width: 1020px;
-  margin-left: -510px;
+    z-index: 4;
+    top: 50px;
+    bottom: 50px;
+    width: 1020px;
+    margin-left: -510px;
+}
+
+.dataTableWindow.blur {
+    -webkit-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
 }
 
 .dataTableWindow.blur .windowContent {
-  -webkit-filter: blur(3px);
-  -ms-filter: blur(3px);
-  filter: blur(3px);
-  opacity: 0.5;
+    opacity: .5;
 }
 
 .dataTableWindow.level1 {
-  z-index: 4;
-  top: 50px;
-  bottom: 50px;
-  width: 1020px;
-  margin-left: -510px;
+    z-index: 4;
+    top: 60px;
+    bottom: 60px;
+    width: 820px;
+    margin-left: -410px;
 }
 
 .dataTableWindow.level2 {
-  z-index: 5;
-  top: 60px;
-  bottom: 60px;
-  width: 1040px;
-  margin-left: -520px;
+    z-index: 5;
+    top: 70px;
+    bottom: 70px;
+    width: 840px;
+    margin-left: -420px;
 }
 
 .dataTableWindow.level3 {
-  z-index: 6;
-  top: 70px;
-  bottom: 70px;
-  width: 1060px;
-  margin-left: -530px;
+    z-index: 6;
+    top: 80px;
+    bottom: 80px;
+    width: 860px;
+    margin-left: -430px;
 }
 
 .dataTableWindow.level4 {
-  z-index: 7;
-  top: 80px;
-  bottom: 80px;
-  width: 1080px;
-  margin-left: -540px;
+    z-index: 7;
+    top: 90px;
+    bottom: 90px;
+    width: 880px;
+    margin-left: -440px;
 }
 
 .dataTableWindow.level5 {
-  z-index: 8;
-  top: 90px;
-  bottom: 90px;
-  width: 1100px;
-  margin-left: -550px;
+    z-index: 8;
+    top: 100px;
+    bottom: 100px;
+    width: 900px;
+    margin-left: -450px;
 }
 
 .dataTableWindow.level6 {
-  z-index: 9;
-  top: 100px;
-  bottom: 100px;
-  width: 1120px;
-  margin-left: -560px;
+    z-index: 9;
+    top: 110px;
+    bottom: 110px;
+    width: 920px;
+    margin-left: -460px;
 }
 
 .dataTableWindow.level7 {
-  z-index: 10;
-  top: 110px;
-  bottom: 110px;
-  width: 1140px;
-  margin-left: -570px;
+    z-index: 10;
+    top: 120px;
+    bottom: 120px;
+    width: 940px;
+    margin-left: -470px;
 }
 
 .dataTableWindow.level8 {
-  z-index: 11;
-  top: 120px;
-  bottom: 120px;
-  width: 1160px;
-  margin-left: -580px;
+    z-index: 11;
+    top: 130px;
+    bottom: 130px;
+    width: 960px;
+    margin-left: -480px;
 }
 
 .dataTableWindow.level9 {
-  z-index: 12;
-  top: 130px;
-  bottom: 130px;
-  width: 1180px;
-  margin-left: -590px;
+    z-index: 12;
+    top: 140px;
+    bottom: 140px;
+    width: 980px;
+    margin-left: -490px;
 }
 
 .dataTableWindow.level10 {
-  z-index: 13;
-  top: 140px;
-  bottom: 140px;
-  width: 1200px;
-  margin-left: -600px;
+    z-index: 13;
+    top: 150px;
+    bottom: 150px;
+    width: 1000px;
+    margin-left: -500px;
 }
 
 .dataTableWindow > .closeButton {
@@ -188,28 +205,28 @@ body > #overlay {
       padding: 10px 35px; }
 
 .dataTableWindow .datatable {
-  border: 1px solid #e1e1e1;
-  border-radius: 3px;
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
 }
 
 .dataTableWindow .datatable .toolbar, .dataTableWindow .datatable .footer, .dataTableWindow .datatable .table .no-data {
-  padding: 12px;
+    padding: 12px;
 }
 
 .dataTableWindow .datatable .footer {
-  display: none;
+    display: none;
 }
 
 .dataTableWindow .datatable .table {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .dataTableWindow .datatable .table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 .dataTableWindow .datatable .table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 .datatable .toolbar {
@@ -232,7 +249,7 @@ body > #overlay {
     opacity: 1; }
 
 .datatable .toolbar .button.add {
-  background-color: #fff;
+    background-color: #fff;
 }
     .datatable .toolbar .button .glyphicon {
       width: 14px; }
@@ -249,7 +266,7 @@ body > #overlay {
     float: right;
     width: 220px;
     position: relative;
-    margin: 0 0 0 10px;
+      margin: 0 0 0 10px;
   }
     .datatable .toolbar .search .glyphicon-search {
       position: absolute;
@@ -290,7 +307,7 @@ body > #overlay {
     .datatable .table table tr td {
       padding: 8px 15px; }
     .datatable .table table thead {
-      font-weight: 700;
+        font-weight: 700;
     }
       .datatable .table table thead td {
         position: relative;

@@ -296,8 +296,10 @@ DataTable.prototype =
 
         if (level == 0) {
             $('body').removeClass('datatableBlur');
+            $('body #overlay').css('z-index', 3);
         } else {
             $('.dataTableWindow.level' + (level - 1)).removeClass('blur');
+            $('body #overlay').css('z-index', level + 2);
         }
 
         $('.dataTableWindow.level' + (level + 1)).remove();
@@ -317,6 +319,7 @@ DataTable.prototype =
             $('body').addClass('datatableBlur');
         } else {
             $('.dataTableWindow.level' + (level - 1)).addClass('blur');
+            $('body #overlay').css('z-index', level + 3);
         }
 
         $window.fadeIn();
@@ -408,8 +411,8 @@ DataTable.prototype =
         var self              = this;
         var windowId          = this.instance + 'Window';
         var $bodyNotFading    = $('body > #notFading');
-        var level             = 0;
         var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
+        var level             = 0;
 
         if (parentWindowLevel) {
             level = parseInt(parentWindowLevel) + 1;

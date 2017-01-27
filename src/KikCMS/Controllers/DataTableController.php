@@ -95,12 +95,12 @@ class DataTableController extends BaseController
                 $dataTable->cacheNewId($editId);
             }
         } else {
-            $this->view->form = $dataTable->renderEditForm($editId);
-            $view             = 'edit';
+            $this->view->form     = $dataTable->renderEditForm($editId);
+            $this->view->editData = $dataTable->getForm()->getEditData($editId);
+            $view                 = 'edit';
         }
 
-        $this->view->labels   = $dataTable->getLabels();
-        $this->view->editData = $dataTable->getForm()->getEditData($editId);
+        $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
             'window'     => $this->view->getRender('data-table', $view),

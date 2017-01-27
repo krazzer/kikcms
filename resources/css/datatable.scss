@@ -13,7 +13,9 @@ body > #overlay {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);
-    z-index: 1;
+    opacity: 0;
+    z-index: 3;
+    transition: opacity 0.3s;
 }
 
 :root > body.datatableBlur{
@@ -28,6 +30,7 @@ body > #overlay {
 
     #overlay {
         display: block;
+        opacity: 1;
     }
 }
 
@@ -45,6 +48,15 @@ body > #overlay {
     display: none;
     min-height: 300px;
 
+    @media #{$lowerThanDesktop}{
+        width: auto;
+        top: 40px;
+        bottom: 40px;
+        left: 40px;
+        right: 40px;
+        margin-left: 0;
+    }
+
     &.level1 {
         z-index: 4;
         top: 50px;
@@ -54,19 +66,20 @@ body > #overlay {
     }
 
     &.blur {
+        @include blur(3);
+
         .windowContent {
-            @include blur(3);
-            opacity: 0.5;
+            opacity: .5;
         }
     }
 
     @for $i from 1 through 10 {
         &.level#{$i} {
             z-index: 3 + $i;
-            top: 40px + ($i * 10);
-            bottom: 40px + ($i * 10);
-            width: 1000px + ($i * 20);
-            margin-left: -500px - ($i * 10);
+            top: 50px + ($i * 10);
+            bottom: 50px + ($i * 10);
+            width: 800px + ($i * 20);
+            margin-left: -400px - ($i * 10);
         }
     }
 
