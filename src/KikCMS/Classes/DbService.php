@@ -10,6 +10,34 @@ use Phalcon\Di\Injectable;
 class DbService extends Injectable
 {
     /**
+     * @param string $model
+     * @param array $where
+     *
+     * @return bool
+     */
+    public function delete(string $model, array $where)
+    {
+        $table        = $this->getTableForModel($model);
+        $whereClauses = [];
+
+        foreach ($where as $column => $condition) {
+            if (is_array($condition)) {
+                if ( ! empty($condition)) {
+                    $whereClauses[] = $column . " IN (" . implode(',', $condition) . ")";
+                }
+            } else {
+                $whereClauses[] = $column . ' = ' . $this->escape($condition);
+            }
+        }
+
+        if ( ! $whereClauses) {
+            return true;
+        }
+
+        return $this->db->delete($table, implode(' AND ', $whereClauses));
+    }
+
+    /**
      * @param string $value
      * @return string
      */

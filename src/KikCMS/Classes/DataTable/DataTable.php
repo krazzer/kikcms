@@ -83,7 +83,7 @@ abstract class DataTable extends Injectable
      */
     public function delete(array $ids)
     {
-        $this->db->delete($this->getTableSource(), "id IN (" . implode(',', $ids) . ")");
+        $this->dbService->delete($this->getModel(), ['id' => $ids]);
     }
 
     /**
@@ -458,17 +458,5 @@ abstract class DataTable extends Injectable
         }
 
         return array_keys($this->getTableData($filters)->items->getFirst()->toArray());
-    }
-
-    /**
-     * @return string
-     */
-    private function getTableSource(): string
-    {
-        $table = $this->getModel();
-
-        /** @var Model $model */
-        $model = new $table();
-        return $model->getSource();
     }
 }
