@@ -91,25 +91,29 @@ KikCmsClass.prototype =
                         return;
                     }
 
-                    if (typeof(onError) != 'undefined') {
-                        onError();
-                    }
-
                     ajaxCompleted = true;
-                    self.hideLoader();
-
-                    var key = self.translations.error[result.status] ? result.status : 'unknown';
-
-                    if (self.isDev && result.status != 440) {
-                        $("#ajaxDebugger").html(result.responseText).show();
-                    } else {
-                        alert(self.translations.error[key].title + "\n\n" + self.translations.error[key].description);
-                    }
+                    self.showError(result, onError);
                 }
             });
         };
 
         xmlHttpRequest();
+    },
+
+    showError: function (result, onError) {
+        if (typeof(onError) != 'undefined') {
+            onError();
+        }
+
+        this.hideLoader();
+
+        var key = this.translations.error[result.status] ? result.status : 'unknown';
+
+        if (this.isDev && result.status != 440) {
+            $("#ajaxDebugger").html(result.responseText).show();
+        } else {
+            alert(this.translations.error[key].title + "\n\n" + this.translations.error[key].description);
+        }
     },
 
     showLoader: function () {
