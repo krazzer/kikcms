@@ -80,6 +80,15 @@ body > #overlay {
             bottom: 50px + ($i * 10);
             width: 800px + ($i * 20);
             margin-left: -400px - ($i * 10);
+
+            @media #{$lowerThanDesktop}{
+                width: auto;
+                top: 50px;
+                bottom: 50px;
+                left: 50px;
+                right: 50px;
+                margin-left: 0;
+            }
         }
     }
 

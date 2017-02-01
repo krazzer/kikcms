@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
+use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
@@ -323,6 +324,11 @@ abstract class WebForm extends Injectable
             'security'           => $this->security,
             'class'              => static::class,
         ];
+
+        // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the form for subDataTables
+        if ($this->hasField(DataTable::EDIT_ID)) {
+            $defaultParameters[DataTable::EDIT_ID] = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
+        }
 
         return $this->renderView($this->formTemplate, array_merge($defaultParameters, $parameters));
     }

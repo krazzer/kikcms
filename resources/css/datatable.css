@@ -87,12 +87,34 @@ body > #overlay {
     margin-left: -410px;
 }
 
+@media (max-width: 1080px) {
+    .dataTableWindow.level1 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level2 {
     z-index: 5;
     top: 70px;
     bottom: 70px;
     width: 840px;
     margin-left: -420px;
+}
+
+@media (max-width: 1080px) {
+    .dataTableWindow.level2 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level3 {
@@ -103,12 +125,34 @@ body > #overlay {
     margin-left: -430px;
 }
 
+@media (max-width: 1080px) {
+    .dataTableWindow.level3 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level4 {
     z-index: 7;
     top: 90px;
     bottom: 90px;
     width: 880px;
     margin-left: -440px;
+}
+
+@media (max-width: 1080px) {
+    .dataTableWindow.level4 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level5 {
@@ -119,12 +163,34 @@ body > #overlay {
     margin-left: -450px;
 }
 
+@media (max-width: 1080px) {
+    .dataTableWindow.level5 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level6 {
     z-index: 9;
     top: 110px;
     bottom: 110px;
     width: 920px;
     margin-left: -460px;
+}
+
+@media (max-width: 1080px) {
+    .dataTableWindow.level6 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level7 {
@@ -135,12 +201,34 @@ body > #overlay {
     margin-left: -470px;
 }
 
+@media (max-width: 1080px) {
+    .dataTableWindow.level7 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level8 {
     z-index: 11;
     top: 130px;
     bottom: 130px;
     width: 960px;
     margin-left: -480px;
+}
+
+@media (max-width: 1080px) {
+    .dataTableWindow.level8 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level9 {
@@ -151,12 +239,34 @@ body > #overlay {
     margin-left: -490px;
 }
 
+@media (max-width: 1080px) {
+    .dataTableWindow.level9 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
+}
+
 .dataTableWindow.level10 {
     z-index: 13;
     top: 150px;
     bottom: 150px;
     width: 1000px;
     margin-left: -500px;
+}
+
+@media (max-width: 1080px) {
+    .dataTableWindow.level10 {
+        width: auto;
+        top: 50px;
+        bottom: 50px;
+        left: 50px;
+        right: 50px;
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow > .closeButton {
