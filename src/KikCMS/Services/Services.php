@@ -129,25 +129,11 @@ class Services extends BaseServices
         $errorHandler = new ErrorHandler($this->get('logger'));
 
         set_exception_handler(function (Throwable $error) use ($isProduction) {
-            http_response_code(500);
-
-            echo $this->get('view')->getRender('errors', 'show500', [
-                'error' => $isProduction ? null : $error,
-            ]);
+            $this->handleError($error, $isProduction);
         });
 
-        register_shutdown_function(function() use ($isProduction){
-            $error = error_get_last();
-
-            if( ! $error) {
-                return;
-            }
-
-            http_response_code(500);
-
-            echo $this->get('view')->getRender('errors', 'show500', [
-                'error' => $isProduction ? null : $error,
-            ]);
+        register_shutdown_function(function () use ($isProduction) {
+            $this->handleError(error_get_last(), $isProduction);
         });
 
         $errorHandler->registerExceptionHandler();
@@ -273,5 +259,46 @@ class Services extends BaseServices
         $validation->setDefaultMessages($this->initTranslator()->tl('webform.messages'));
 
         return $validation;
+    }
+
+    /**
+     * @param mixed $error
+     * @param bool $isProduction
+     */
+    private function handleError($error, bool $isProduction)
+    {
+        if ( ! $error) {
+            return;
+        }
+
+        $errorType = is_object($error) ?
+            isset($error->type) ? $error->type : null :
+            isset($error['type']) ? $error['type'] : null;
+
+        // don't show recoverable errors in production
+        if ($errorType && ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+            return;
+        }
+
+        http_response_code(500);
+
+        if ($this->isAjaxRequest() && ! $isProduction) {
+            echo $this->get('view')->getRender('errors', 'error500content', ['error' => $error]);
+            return;
+        }
+
+        echo $this->get('view')->getRender('errors', 'show500', [
+            'error' => $isProduction ? null : $error,
+        ]);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAjaxRequest(): bool
+    {
+        $ajaxHeader = 'HTTP_X_REQUESTED_WITH';
+
+        return ! empty($_SERVER[$ajaxHeader]) && strtolower($_SERVER[$ajaxHeader]) == 'xmlhttprequest';
     }
 }

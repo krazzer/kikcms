@@ -4,13 +4,6 @@
 
 {% block cmsContent %}
 
-    <h1>{{ tl('error.500.title') }}</h1>
-    <p>{{ tl('error.500.description')|nl2br }}</p>
-
-    {% if error %}
-        <p>&nbsp;</p>
-        <p><b>{{ error.message }} in {{ error.file }} on line {{ error.line }}</b></p>
-        <p>{{ error.traceAsString|nl2br }}</p>
-    {% endif %}
+    {% include '@kikcms/errors/error500content.twig' %}
 
 {% endblock %}
