@@ -25,7 +25,7 @@ class SubProducts extends Products
     {
         parent::initialize();
 
-        $this->setLimit(10);
+        $this->setLimit(15);
 
         $this->setFieldFormatting('title', function ($value) {
             $value = html_entity_decode(strip_tags($value));

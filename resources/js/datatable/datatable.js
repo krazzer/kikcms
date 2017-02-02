@@ -28,7 +28,7 @@ DataTable.prototype =
     },
 
     getFormSerialized: function () {
-        var $formGroups = this.getWindow().find('form > *:not(.type-dataTable) input, select, textarea, form > input');
+        var $formGroups = this.getWindow().find('form .form-group:not(.type-dataTable) input, select, textarea, form > input');
         return $formGroups.serialize();
     },
 
@@ -135,9 +135,35 @@ DataTable.prototype =
         self.updateToolbar();
     },
 
+    initTabs: function () {
+        var $window      = this.getWindow();
+        var $tabContents = $window.find('.tab-contents');
+
+        $window.find('.tabs .tab').each(function () {
+            var $tab        = $(this);
+            var tabKey      = $tab.attr('data-tab');
+            var $tabContent = $tabContents.find('.tab-' + tabKey);
+
+            $tab.click(function () {
+                $tab.siblings().removeClass('active');
+                $tab.addClass('active');
+
+                $tabContents.find('.tab-content').removeClass('active');
+                $tabContent.addClass('active');
+            });
+
+            if ($tabContent.find('.has-error').length > 0) {
+                $tab.addClass('error');
+            }
+        });
+    },
+
     initWindow: function () {
         var self    = this;
         var $window = this.getWindow();
+
+        this.initWindowSize();
+        this.initTabs();
 
         KikCMS.initWebForms($window);
         this.initWysiwyg();
@@ -151,7 +177,6 @@ DataTable.prototype =
         });
 
         this.currentFormInput = this.getFormSerialized();
-        this.initWindowSize();
 
         $(window).resize(this.initWindowSize.bind(this));
     },
@@ -162,8 +187,9 @@ DataTable.prototype =
         var windowHeight = $window.height();
         var headerHeight = $window.find('.windowContent > .header').outerHeight();
         var footerHeight = $window.find('.windowContent > .footer').outerHeight();
+        var tabsHeight   = $window.find('.windowContent > .tabs').outerHeight();
 
-        $window.find('.content').css('height', windowHeight - headerHeight - footerHeight);
+        $window.find('.content').css('height', windowHeight - headerHeight - footerHeight - tabsHeight);
     },
 
     initWysiwyg: function () {
@@ -194,6 +220,12 @@ DataTable.prototype =
 
         if (this.parentEditId != null) {
             parameters.parentEditId = this.parentEditId;
+        }
+
+        var currentTab = this.getWindow().find('.tabs .tab.active').attr('data-tab');
+
+        if (typeof currentTab !== 'undefined') {
+            parameters.currentTab = currentTab;
         }
 
         KikCMS.action('/cms/datatable/' + action, parameters, onSuccess, onError);

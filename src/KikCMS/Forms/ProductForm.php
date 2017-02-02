@@ -19,18 +19,25 @@ class ProductForm extends DataForm
     {
         $typeNameMap = Type::findAssoc();
 
-        $this->addTextField('title', 'Naam', [new PresenceOf()]);
+        $productTypeField = $this->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap);
+        $productTypeField->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
 
-        $this->addDataTableField(new SubProducts(), "Sub producten");
+        $this->addTab('Algemeen', [
+            $this->addTextField('title', 'Naam', [new PresenceOf()]),
+            $this->addTextField('price', 'Prijs'),
+            $this->addTextField('stock', 'Voorraad'),
+            $this->addCheckboxField('sale', 'Sale'),
+        ]);
 
-        $this->addTextField('price', 'Prijs');
-        $this->addTextField('stock', 'Voorraad');
-        $this->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class);
-        $this->addCheckboxField('sale', 'Sale');
-        $this->addWysiwygField('description', 'Omschrijving')->getElement()->setAttribute('style', 'height:350px;');
+        $this->addTab('Sub producten', [
+            $subProductsField = $this->addDataTableField(new SubProducts(), "Sub producten")
+        ]);
 
-        $this->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap)
-            ->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
+        $this->addTab('Omschrijving', [
+            $this->addWysiwygField('description', 'Omschrijving'),
+            $this->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class),
+            $productTypeField
+        ]);
     }
 
     /**

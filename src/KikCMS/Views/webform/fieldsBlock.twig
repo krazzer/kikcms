@@ -1,0 +1,12 @@
+{% block fields %}
+    {% for field in fields %}
+        {% set element = field.element %}
+        {% set errorMessages = errorContainer.errorsForField(element.name) %}
+        {% set hasError = errorContainer.fieldHasError(element.name) %}
+        {% set type = field.type ?: 'default' %}
+        {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback' : '') %}
+        {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
+
+        {{ block('field' ~ ucfirst(type)) }}
+    {% endfor %}
+{% endblock %}

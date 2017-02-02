@@ -38,6 +38,9 @@ abstract class WebForm extends Injectable
     /** @var Field[] */
     protected $fields = [];
 
+    /** @var Tab[] */
+    protected $tabs = [];
+
     /** @var string */
     protected $formTemplate = 'form';
 
@@ -190,6 +193,21 @@ abstract class WebForm extends Injectable
     }
 
     /**
+     * @param string $name
+     * @param Field[] $fields
+     */
+    public function addTab(string $name, array $fields)
+    {
+        $tab = new Tab($name, $fields);
+
+        foreach ($fields as $key => $field) {
+            $field->setTab($tab);
+        }
+
+        $this->tabs[] = $tab;
+    }
+
+    /**
      * @param string $key
      * @param string $label
      * @param array $validators
@@ -215,6 +233,7 @@ abstract class WebForm extends Injectable
     {
         $name = new TextArea($key);
         $name->setLabel($label);
+        $name->setAttribute('style', 'height: 350px');
         $name->setAttribute('class', 'form-control wysiwyg');
         $name->setAttribute('id', $key . '_' . uniqid());
         $name->addValidators($validators);
@@ -243,6 +262,14 @@ abstract class WebForm extends Injectable
     public function hasField(string $fieldKey): bool
     {
         return $this->form->has($fieldKey);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCurrentTab()
+    {
+        return $this->request->getPost('currentTab', null, 0);
     }
 
     /**
@@ -286,6 +313,14 @@ abstract class WebForm extends Injectable
     }
 
     /**
+     * @return Tab[]
+     */
+    public function getTabs()
+    {
+        return $this->tabs;
+    }
+
+    /**
      * Render the form
      *
      * @param array $parameters
@@ -317,6 +352,9 @@ abstract class WebForm extends Injectable
         $defaultParameters = [
             'form'               => $this->form,
             'fields'             => $this->fields,
+            'tabs'               => $this->tabs,
+            'currentTab'         => $this->getCurrentTab(),
+            'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
             'formId'             => $this->getFormId(),
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
@@ -540,6 +578,22 @@ abstract class WebForm extends Injectable
         }
 
         return $errorContainer;
+    }
+
+    /**
+     * return Field[]
+     */
+    private function getFieldsWithoutTab()
+    {
+        $fieldsWithoutTab = [];
+
+        foreach ($this->fields as $field) {
+            if ( ! $field->getTab()) {
+                $fieldsWithoutTab[] = $field;
+            }
+        }
+
+        return $fieldsWithoutTab;
     }
 
     /**

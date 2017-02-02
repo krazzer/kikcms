@@ -13,6 +13,9 @@ use KikCMS\Classes\Exceptions\SessionExpiredException;
  */
 class DataTableController extends BaseController
 {
+    const TEMPLATE_ADD  = 'add';
+    const TEMPLATE_EDIT = 'edit';
+
     /**
      * @inheritdoc
      */
@@ -34,7 +37,7 @@ class DataTableController extends BaseController
         $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
-            'window' => $this->view->getRender('data-table', 'add')
+            'window' => $dataTable->renderWindow(self::TEMPLATE_ADD)
         ]);
     }
 
@@ -69,7 +72,7 @@ class DataTableController extends BaseController
         $this->view->editData = $dataTable->getForm()->getEditData($editId);
 
         return json_encode([
-            'window' => $this->view->getRender('data-table', 'edit')
+            'window' => $dataTable->renderWindow(self::TEMPLATE_EDIT)
         ]);
     }
 
@@ -85,7 +88,7 @@ class DataTableController extends BaseController
 
         if ($editId === null) {
             $this->view->form = $dataTable->renderAddForm($parentEditId);
-            $view             = 'add';
+            $view             = self::TEMPLATE_ADD;
 
             // if the form was succesfully saved, an edit id can be fetched
             $editId = $dataTable->getEditId();
@@ -97,13 +100,13 @@ class DataTableController extends BaseController
         } else {
             $this->view->form     = $dataTable->renderEditForm($editId);
             $this->view->editData = $dataTable->getForm()->getEditData($editId);
-            $view                 = 'edit';
+            $view                 = self::TEMPLATE_EDIT;
         }
 
         $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
-            'window'     => $this->view->getRender('data-table', $view),
+            'window'     => $dataTable->renderWindow($view),
             'table'      => $dataTable->renderTable($this->getFilters()),
             'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
             'editedId'   => $editId,

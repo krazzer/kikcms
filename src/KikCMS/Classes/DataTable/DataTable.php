@@ -410,6 +410,18 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @param string $template
+     * @return string
+     */
+    public function renderWindow(string $template)
+    {
+        return $this->renderView($template, [
+            'tabs'       => $this->form->getTabs(),
+            'currentTab' => $this->form->getCurrentTab(),
+        ]);
+    }
+
+    /**
      * Sets the js & css assets required
      */
     private function addAssets()

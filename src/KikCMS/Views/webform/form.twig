@@ -1,8 +1,11 @@
 {# @var form Phalcon\Forms\Form #}
 {# @var fields \KikCMS\Classes\WebForm\Field[] #}
+{# @var tabs \KikCMS\Classes\WebForm\Tab[] #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 {# @var security \Phalcon\Security #}
+
 {% use '@kikcms/webform/fields.twig' %}
+{% use '@kikcms/webform/fieldsBlock.twig' %}
 
 <div class="webForm" data-class="{{ class }}">
     {{ form({name: 'form'}) }}
@@ -15,16 +18,21 @@
         </div>
     {% endif %}
 
-    {% for field in fields %}
-        {% set element = field.element %}
-        {% set errorMessages = errorContainer.errorsForField(element.name) %}
-        {% set hasError = errorContainer.fieldHasError(element.name) %}
-        {% set type = field.type ?: 'default' %}
-        {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback' : '') %}
-        {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
+    {% if tabs %}
+        <div class="tab-contents">
+            {% for index, tab in tabs %}
+                <div class="tab-{{ index }} tab-content{{ index == currentTab ? ' active' }}">
+                    {% set fields = tab.fields %}
+                    {{ block('fields') }}
+                </div>
+            {% endfor %}
+        </div>
+        {% set fields = fieldsWithoutTab %}
+        {{ block('fields') }}
 
-        {{ block('field' ~ ucfirst(type)) }}
-    {% endfor %}
+    {% else %}
+        {{ block('fields') }}
+    {% endif %}
 
     {% block submitButton %}
         <div class="form-group">

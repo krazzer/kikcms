@@ -1,6 +1,18 @@
+{# @var tabs \KikCMS\Classes\WebForm\Tab[] #}
+
 <div class="header">
     <div class="lbl">{% block headerTitle '' %}</div>
 </div>
+
+{% if tabs %}
+    <div class="tabs">
+        {% for index, tab in tabs -%}
+            <div class="tab {{ index == currentTab ? ' active' }}" data-tab="{{ index }}">
+                {{ tab.name }}
+            </div>
+        {%- endfor %}
+    </div>
+{% endif %}
 
 <div class="content">
     {{ flash.output }}

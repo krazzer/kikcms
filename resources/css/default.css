@@ -17,13 +17,17 @@ a {
   position: fixed;
   left: 35px;
   top: 35px;
-  padding: 10px;
+  padding: 20px;
   border: 1px solid #e1e1e1;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.97);
   z-index: 10;
   max-width: 1200px;
   max-height: 800px;
   overflow: scroll; }
+
+#ajaxDebugger h1 {
+  margin-top: 0;
+}
 
 #cmsLoader {
   position: fixed;

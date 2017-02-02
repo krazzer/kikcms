@@ -9,11 +9,15 @@ $pinkHover: #f8e3ee;
 $lightGray: #e1e1e1;
 $lightGrayDark: darken($lightGray, 5%);
 $lightGrayDarker: darken($lightGray, 15%);
+$lightGrayLight: #f0f0f0;
 $superLightGray: #f9f9f9;
 $gray: #aaaaaa;
 
 $highLightColor: #dff0d8;
 $highLightColorDark: darken($highLightColor, 5%);
+
+$colorErrorBg: #f2dede;
+$colorErrorText: #a94442;
 
 /* Miscellaneous */
 $defaultBorderRadius: 3px;

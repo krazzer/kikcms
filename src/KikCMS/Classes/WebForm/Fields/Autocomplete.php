@@ -30,6 +30,7 @@ class Autocomplete extends Field
 
     /**
      * @param string $sourceModel
+     * @return $this
      */
     public function setSourceModel(string $sourceModel)
     {
@@ -37,5 +38,7 @@ class Autocomplete extends Field
 
         $this->form->addFieldTransformer(new NameToId($this));
         $this->getElement()->addValidator(new NameExists([NameExists::OPTION_MODEL => $sourceModel]));
+
+        return $this;
     }
 }

@@ -59,16 +59,17 @@ textarea.form-control {
   -webkit-box-shadow: none; }
 
 .form-control-feedback {
-  top: 1px;
+  top: 2px;
   right: 3px; }
 
 .has-feedback label ~ .form-control-feedback {
-  top: 23px; }
+  top: 24px;
+}
 
 .form-group {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    margin-bottom: 12px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-bottom: 15px;
 }
 
 /*# sourceMappingURL=bootstrap-kikcms.css.map */

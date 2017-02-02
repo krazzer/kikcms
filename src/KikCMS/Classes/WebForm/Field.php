@@ -25,6 +25,9 @@ class Field
     /** @var Element */
     private $element;
 
+    /** @var Tab */
+    private $tab;
+
     /**
      * @param Element $element
      */
@@ -34,11 +37,43 @@ class Field
     }
 
     /**
+     * Add a class to the element
+     *
+     * @param string $class
+     * @return $this
+     */
+    public function addElementClass(string $class)
+    {
+        $classes = explode(' ', $this->getElement()->getAttribute('class'));
+
+        if ( ! in_array($class, $classes)) {
+            $classes[] = $class;
+        }
+
+        $this->getElement()->setAttribute('class', implode(' ', $classes));
+
+        return $this;
+    }
+
+    /**
      * @return Element
      */
     public function getElement(): Element
     {
         return $this->element;
+    }
+
+    /**
+     * @param string $attribute
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function setAttribute(string $attribute, $value)
+    {
+        $this->element->setAttribute($attribute, $value);
+
+        return $this;
     }
 
     /**
@@ -75,6 +110,24 @@ class Field
     {
         $this->form = $form;
 
+        return $this;
+    }
+
+    /**
+     * @return Tab|null
+     */
+    public function getTab()
+    {
+        return $this->tab;
+    }
+
+    /**
+     * @param Tab $tab
+     * @return Field
+     */
+    public function setTab(Tab $tab): Field
+    {
+        $this->tab = $tab;
         return $this;
     }
 
