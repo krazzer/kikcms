@@ -4,11 +4,14 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Phalcon\Security;
+use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
+use KikCMS\Classes\Storage\File as FileStorageFile;
 
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
@@ -36,6 +39,32 @@ use Throwable;
 
 class Services extends BaseServices
 {
+    /**
+     * @return FileStorage
+     */
+    protected function initFileStorage()
+    {
+        $fileStorage = new FileStorageFile();
+        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+
+        return $fileStorage;
+    }
+
+    /**
+     * @return FinderFileService
+     */
+    protected function initFinderFileService()
+    {
+        /** @var FileStorage $fileStorage */
+        $fileStorage = $this->get('fileStorage');
+
+        $finderFileService = new FinderFileService($fileStorage);
+        $finderFileService->setMediaDir('media');
+        $finderFileService->setThumbDir('thumbs');
+
+        return $finderFileService;
+    }
+
     /**
      * Register router
      */

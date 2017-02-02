@@ -10,8 +10,8 @@ class MenuConfig
     const MENU_STRUCTURE = [
         self::MENU_GROUP_CONTENT => [
             self::MENU_ITEM_MAIN_MENU,
-            self::MENU_ITEM_DATA_FORM,
             self::MENU_ITEM_MEDIA,
+            self::MENU_ITEM_DATA_FORM,
             self::MENU_ITEM_TEMPLATES,
             self::MENU_ITEM_MENUS,
         ],

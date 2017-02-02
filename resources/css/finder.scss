@@ -1,0 +1,34 @@
+@import "includes/variables";
+@import "includes/mixins";
+
+.finder {
+
+    .files {
+        position: relative;
+        min-height: 500px;
+        background-color: $superLightGray;
+        border-radius: $defaultBorderRadius;
+        padding: 20px;
+
+        .progress {
+            width: 100%;
+            position: absolute;
+            height: 3px;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+    }
+
+    .button.upload {
+        position: relative;
+
+        .lbl {
+            font-weight: 300;
+        }
+
+        input {
+            display: none;
+        }
+    }
+}

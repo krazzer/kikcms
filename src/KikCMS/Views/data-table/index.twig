@@ -1,4 +1,4 @@
-<div class="datatable" id="{{ instanceName }}">
+<div class="datatable toolbarComponent" id="{{ instanceName }}">
 
     <div class="toolbar">
         <div class="button add">
@@ -9,8 +9,8 @@
         </div>
 
         <div class="button delete faded">
-            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-            <span class="lbl">{{ tl('dataTable.delete.label') }}</span>
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span class="lbl">{{ tl('delete') }}</span>
         </div>
 
         {% if isSearchable %}

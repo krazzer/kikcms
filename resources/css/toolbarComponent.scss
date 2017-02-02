@@ -1,0 +1,85 @@
+/* Toolbar components have a toolbar like the dataTable and the Finder */
+@import "includes/variables";
+@import "includes/mixins";
+
+.toolbarComponent {
+
+    .toolbar {
+        @include clearFix();
+        padding: 0 0 36px 0;
+        width: 100%;
+        z-index: 2;
+        position: relative;
+
+        .button {
+            float: left;
+            margin: 0 8px 0 0;
+            border-radius: $defaultBorderRadius;
+            padding: 7px 15px;
+            cursor: pointer;
+            transition: background-color, opacity 0.3s;
+            border: 1px solid $lightGray;
+            opacity: 1;
+
+            &.add {
+                background-color: #fff;
+            }
+
+            .glyphicon {
+                width: 14px;
+            }
+
+            .lbl {
+                margin-left: 8px;
+            }
+
+            &.faded {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            &:hover {
+                background-color: $gray;
+                border-color: $gray;
+                color: #fff;
+
+                &.disabled {
+                    background-color: inherit;
+                    border-color: $lightGray;
+                    color: $lightGray;
+                }
+            }
+
+            &.disabled {
+                color: $lightGray;
+
+                .glyphicon {
+                    color: $lightGray;
+                }
+            }
+        }
+
+        .search {
+            float: right;
+            width: 220px;
+            position: relative;
+            margin: 0 0 0 10px;
+
+            .glyphicon-search {
+                position: absolute;
+                top: 11px;
+                left: 14px;
+            }
+
+            .glyphicon-remove {
+                pointer-events: auto;
+                cursor: pointer;
+                display: none;
+            }
+
+            input {
+                padding-left: 38px;
+            }
+        }
+    }
+}

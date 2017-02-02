@@ -60,7 +60,7 @@ KikCmsClass.prototype =
     errorMessages: {},
     isDev: false,
 
-    action: function (actionUrl, parameters, onSuccess, onError) {
+    action: function (actionUrl, parameters, onSuccess, onError, xhr) {
         var ajaxCompleted = false;
         var self          = this;
         var retries       = 0;
@@ -76,6 +76,7 @@ KikCmsClass.prototype =
                 url: actionUrl,
                 type: 'post',
                 dataType: 'json',
+                xhr: xhr,
                 data: parameters,
                 success: function (result, responseText, response) {
                     ajaxCompleted = true;
@@ -93,7 +94,10 @@ KikCmsClass.prototype =
 
                     ajaxCompleted = true;
                     self.showError(result, onError);
-                }
+                },
+                cache: false,
+                contentType: false,
+                processData: false
             });
         };
 

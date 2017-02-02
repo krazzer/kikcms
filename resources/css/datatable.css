@@ -13,7 +13,7 @@ body > #overlay {
   background-color: rgba(0, 0, 0, 0.1);
   opacity: 0;
   z-index: 3;
-  transition: opacity 0.3s;
+    transition: opacity 0.3s;
 }
 
 :root > body.datatableBlur {
@@ -28,12 +28,12 @@ body > #overlay {
     -ms-user-select: none;
     user-select: none;
     pointer-events: none;
-    opacity: 0.5;
+      opacity: 0.5;
   }
 
 :root > body.datatableBlur #overlay {
     display: block;
-  opacity: 1;
+    opacity: 1;
 }
 
 .dataTableWindow {
@@ -57,7 +57,7 @@ body > #overlay {
       bottom: 40px;
       left: 40px;
       right: 40px;
-      margin-left: 0;
+        margin-left: 0;
     }
 }
 
@@ -66,17 +66,17 @@ body > #overlay {
     top: 50px;
     bottom: 50px;
     width: 1020px;
-  margin-left: -510px;
+    margin-left: -510px;
 }
 
 .dataTableWindow.blur {
     -webkit-filter: blur(3px);
     -ms-filter: blur(3px);
-  filter: blur(3px);
+    filter: blur(3px);
 }
 
 .dataTableWindow.blur .windowContent {
-  opacity: .5;
+    opacity: .5;
 }
 
 .dataTableWindow.level1 {
@@ -84,18 +84,18 @@ body > #overlay {
     top: 60px;
     bottom: 60px;
     width: 820px;
-  margin-left: -410px;
+    margin-left: -410px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level1 {
+    .dataTableWindow.level1 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level2 {
@@ -103,18 +103,18 @@ body > #overlay {
     top: 70px;
     bottom: 70px;
     width: 840px;
-  margin-left: -420px;
+    margin-left: -420px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level2 {
+    .dataTableWindow.level2 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level3 {
@@ -122,18 +122,18 @@ body > #overlay {
     top: 80px;
     bottom: 80px;
     width: 860px;
-  margin-left: -430px;
+    margin-left: -430px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level3 {
+    .dataTableWindow.level3 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level4 {
@@ -141,18 +141,18 @@ body > #overlay {
     top: 90px;
     bottom: 90px;
     width: 880px;
-  margin-left: -440px;
+    margin-left: -440px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level4 {
+    .dataTableWindow.level4 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level5 {
@@ -160,18 +160,18 @@ body > #overlay {
     top: 100px;
     bottom: 100px;
     width: 900px;
-  margin-left: -450px;
+    margin-left: -450px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level5 {
+    .dataTableWindow.level5 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level6 {
@@ -179,18 +179,18 @@ body > #overlay {
     top: 110px;
     bottom: 110px;
     width: 920px;
-  margin-left: -460px;
+    margin-left: -460px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level6 {
+    .dataTableWindow.level6 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level7 {
@@ -198,18 +198,18 @@ body > #overlay {
     top: 120px;
     bottom: 120px;
     width: 940px;
-  margin-left: -470px;
+    margin-left: -470px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level7 {
+    .dataTableWindow.level7 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level8 {
@@ -217,18 +217,18 @@ body > #overlay {
     top: 130px;
     bottom: 130px;
     width: 960px;
-  margin-left: -480px;
+    margin-left: -480px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level8 {
+    .dataTableWindow.level8 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level9 {
@@ -236,18 +236,18 @@ body > #overlay {
     top: 140px;
     bottom: 140px;
     width: 980px;
-  margin-left: -490px;
+    margin-left: -490px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level9 {
+    .dataTableWindow.level9 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow.level10 {
@@ -255,18 +255,18 @@ body > #overlay {
     top: 150px;
     bottom: 150px;
     width: 1000px;
-  margin-left: -500px;
+    margin-left: -500px;
 }
 
 @media (max-width: 1080px) {
-  .dataTableWindow.level10 {
+    .dataTableWindow.level10 {
         width: auto;
         top: 50px;
         bottom: 50px;
         left: 50px;
         right: 50px;
-    margin-left: 0;
-  }
+        margin-left: 0;
+    }
 }
 
 .dataTableWindow > .closeButton {
@@ -293,48 +293,48 @@ body > #overlay {
 
 .dataTableWindow > .windowContent > .header {
     font-size: 24px;
-  padding: 30px 100px 30px 50px;
+    padding: 30px 100px 30px 50px;
     border-bottom: 1px solid #e1e1e1;
     width: 100%; }
 
 .dataTableWindow > .windowContent > .tabs {
-  border-bottom: 1px solid #e1e1e1;
-  white-space: nowrap;
-  overflow: auto;
+    border-bottom: 1px solid #e1e1e1;
+    white-space: nowrap;
+    overflow: auto;
 }
 
 .dataTableWindow > .windowContent > .tabs:after {
-  content: "";
-  display: table;
-  clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .dataTableWindow > .windowContent > .tabs .tab {
-  display: inline-block;
-  cursor: pointer;
-  padding: 15px 50px;
+    display: inline-block;
+    cursor: pointer;
+    padding: 15px 50px;
 }
 
 .dataTableWindow > .windowContent > .tabs .tab.error {
-  background-color: #f2dede;
+    background-color: #f2dede;
 }
 
 .dataTableWindow > .windowContent > .tabs .tab.active {
-  background-color: #f0f0f0;
+    background-color: #f0f0f0;
 }
 
 .dataTableWindow > .windowContent > .content {
     overflow: auto;
     height: 600px;
-  padding: 30px 50px;
+    padding: 30px 50px;
 }
 
 .dataTableWindow > .windowContent > .content .tab-contents .tab-content {
-  display: none;
+    display: none;
 }
 
 .dataTableWindow > .windowContent > .content .tab-contents .tab-content.active {
-  display: block;
+    display: block;
 }
 
 .dataTableWindow > .windowContent > .footer {
@@ -351,78 +351,28 @@ body > #overlay {
 
 .dataTableWindow .datatable {
     border: 1px solid #e1e1e1;
-  border-radius: 3px;
+    border-radius: 3px;
 }
 
 .dataTableWindow .datatable .toolbar, .dataTableWindow .datatable .footer, .dataTableWindow .datatable .table .no-data {
-  padding: 12px;
+    padding: 12px;
 }
 
 .dataTableWindow .datatable .footer {
-  display: none;
-}
+      display: none; }
 
 .dataTableWindow .datatable .table {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .dataTableWindow .datatable .table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 3px;
+    border-bottom-left-radius: 3px;
 }
 
 .dataTableWindow .datatable .table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
-.datatable .toolbar {
-  padding: 0 0 36px 0;
-  width: 100%;
-  z-index: 2;
-  position: relative; }
-  .datatable .toolbar:after {
-    content: "";
-    display: table;
-    clear: both; }
-  .datatable .toolbar .button {
-    float: left;
-    margin: 0 8px 0 0;
-    border-radius: 3px;
-    padding: 7px 15px;
-    cursor: pointer;
-    transition: background-color, opacity 0.3s;
-    border: 1px solid #e1e1e1;
-    opacity: 1; }
-
-.datatable .toolbar .button.add {
-  background-color: #fff;
-}
-    .datatable .toolbar .button .glyphicon {
-      width: 14px; }
-    .datatable .toolbar .button .lbl {
-      margin-left: 8px; }
-    .datatable .toolbar .button.faded {
-      opacity: 0;
-      pointer-events: none; }
-    .datatable .toolbar .button:hover {
-      background-color: #aaaaaa;
-      border-color: #aaaaaa;
-      color: #fff; }
-  .datatable .toolbar .search {
-    float: right;
-    width: 220px;
-    position: relative;
-    margin: 0 0 0 10px;
-  }
-    .datatable .toolbar .search .glyphicon-search {
-      position: absolute;
-      top: 11px;
-      left: 14px; }
-    .datatable .toolbar .search .glyphicon-remove {
-      pointer-events: auto;
-      cursor: pointer;
-      display: none; }
-    .datatable .toolbar .search input {
-      padding-left: 38px; }
 .datatable .pages {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -452,7 +402,7 @@ body > #overlay {
     .datatable .table table tr td {
       padding: 8px 15px; }
     .datatable .table table thead {
-      font-weight: 700;
+        font-weight: 700;
     }
       .datatable .table table thead td {
         position: relative;

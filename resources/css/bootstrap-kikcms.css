@@ -62,14 +62,18 @@ textarea.form-control {
   top: 2px;
   right: 3px; }
 
+.glyphicon-remove {
+    top: 2px;
+}
+
 .has-feedback label ~ .form-control-feedback {
-  top: 24px;
+    top: 24px;
 }
 
 .form-group {
   padding-top: 1px;
   padding-bottom: 1px;
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 /*# sourceMappingURL=bootstrap-kikcms.css.map */

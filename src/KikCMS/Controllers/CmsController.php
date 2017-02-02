@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Products;
 use KikCMS\Forms\ProductForm;
@@ -43,7 +44,10 @@ class CmsController extends BaseCmsController
 
     public function mediaAction()
     {
-        $this->view->pick('cms/default');
+        $finder = new Finder();
+
+        $this->view->finder = $finder->render();
+        $this->view->pick('cms/media');
     }
 
     public function logoutAction()

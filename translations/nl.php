@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'delete' => 'Verwijderen',
+
     'cms' => [
         'loading' => 'Bezig met laden...',
     ],
@@ -25,7 +27,6 @@ return [
         ],
 
         'delete' => [
-            'label'      => 'Verwijderen',
             'confirmOne' => 'Wilt u zeker weten dit record verwijderen?',
             'confirm'    => 'Wilt u zeker weten deze :amount records verwijderen?',
         ],
@@ -45,6 +46,17 @@ return [
             'delete'    => "Wilt u zeker weten deze :amount sub producten verwijderen?",
             'deleteOne' => "Wilt u zeker weten dit sub product verwijderen?",
         ],
+    ],
+
+    'media' => [
+        'title'             => 'Media',
+        'button'            => [
+            'upload'         => 'Uploaden',
+            'uploadTitle'    => 'Bestanden uploaden vanaf uw computer',
+            'newFolderTitle' => 'Nieuwe map aanmaken',
+            'moveTitle'      => 'Geef eerder bekeken mappen weer',
+        ],
+        'searchPlaceholder' => 'Zoeken naar bestanden',
     ],
 
     'webform' => [

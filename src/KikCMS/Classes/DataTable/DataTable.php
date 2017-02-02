@@ -427,6 +427,7 @@ abstract class DataTable extends Injectable
     private function addAssets()
     {
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
+        $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
 
         $translations = DataTable::JS_TRANSLATIONS;
