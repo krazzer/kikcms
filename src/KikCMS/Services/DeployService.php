@@ -39,6 +39,8 @@ class DeployService extends Injectable
             $output[] = 'Symlink for assets created.';
         }
 
+        $this->checkAndCreateRequiredDirs();
+
         // Notify Webmaster
         $this->sendMessage($output);
     }
@@ -121,5 +123,27 @@ class DeployService extends Injectable
     private function getRootDir()
     {
         return dirname($_SERVER['DOCUMENT_ROOT']);
+    }
+
+    /**
+     * Checks if required directories exists and create them if not
+     */
+    private function checkAndCreateRequiredDirs()
+    {
+        $requiredDirs = [
+            'cache',
+            'cache/cache',
+            'storage',
+            'storage/media',
+            'storage/thumbs',
+        ];
+
+        foreach ($requiredDirs as $dir) {
+            $dirPath = SITE_PATH . $dir;
+
+            if ( ! file_exists($dirPath)) {
+                mkdir($dirPath);
+            }
+        }
     }
 }
