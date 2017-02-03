@@ -2,18 +2,17 @@
 
 {% for finderFile in files %}
 
-    <div class="file">
+    <div class="file file-{{ finderFile.id }}" data-id="{{ finderFile.id }}"
+         data-url="/finder/file/{{ finderFile.id }}">
 
-        {% if thumbnails[finderFile.id] %}
-            <div class="thumb">
+        <div class="thumb">
+            {% if thumbnails[finderFile.id] %}
                 <img src="{{ thumbnails[finderFile.id] }}"/>
-            </div>
-        {% else %}
-            <div class="thumb">
+            {% else %}
                 <span class="extension">{{ finderFile.extension }}</span>
                 <span class="glyphicon glyphicon-file"></span>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
 
         <div class="name">
             <span>{{ finderFile.name }}</span>

@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Finder;
 
 
 use KikCMS\Classes\Database\Now;
+use KikCMS\Classes\DbService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Models\FinderDir;
@@ -14,6 +15,7 @@ use Phalcon\Http\Request\File;
 /**
  * Handles FinderFiles
  * @property ImageHandler $imageHandler
+ * @property DbService $dbService
  */
 class FinderFileService extends Injectable
 {
@@ -39,9 +41,9 @@ class FinderFileService extends Injectable
     /**
      * @param File $file
      * @param int $dirId
-     * @return int
+     * @return bool|int
      */
-    public function create(File $file, $dirId = 0): int
+    public function create(File $file, $dirId = 0)
     {
         $finderFile = new FinderFile();
 
@@ -53,11 +55,29 @@ class FinderFileService extends Injectable
         $finderFile->updated   = new Now();
         $finderFile->dir_id    = $dirId;
 
-        $finderFile->save();
+        if ( ! $finderFile->save()) {
+            return false;
+        }
 
         $this->fileStorage->store($file, $this->mediaDir, $finderFile->id);
 
         return (int) $finderFile->id;
+    }
+
+    /**
+     * @param int[] $fileIds
+     */
+    public function deleteFilesByIds(array $fileIds)
+    {
+        $finderFiles  = FinderFile::getByIdList($fileIds);
+        $filesRemoved = $this->dbService->delete(FinderFile::class, ['id' => $fileIds]);
+
+        if ($filesRemoved) {
+            foreach ($finderFiles as $finderFile) {
+                unlink($this->getFilePath($finderFile));
+                unlink($this->getThumbPath($finderFile));
+            }
+        }
     }
 
     /**

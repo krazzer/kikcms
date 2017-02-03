@@ -28,17 +28,34 @@ class FinderController extends BaseController
     /**
      * @return string
      */
+    public function deleteAction()
+    {
+        $finder  = new Finder();
+        $fileIds = $this->request->getPost('fileIds');
+
+        $this->finderFileService->deleteFilesByIds($fileIds);
+
+        return json_encode(['files' => $finder->renderFiles()]);
+    }
+
+    /**
+     * @return string
+     */
     public function uploadAction()
     {
-        $finder = new Finder();
+        $finder        = new Finder();
+        $uploadedFiles = $this->request->getUploadedFiles();
+        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
 
-        $finder->uploadFiles($this->request->getUploadedFiles());
-
-        return '';
+        return json_encode([
+            'uploadStatus' => $uploadStatus,
+            'files'        => $finder->renderFiles(),
+        ]);
     }
 
     /**
      * @param int $fileId
+     * @return string
      * @throws NotFoundException
      */
     public function thumbAction(int $fileId)
@@ -50,13 +67,23 @@ class FinderController extends BaseController
 
         $filePath = $this->finderFileService->getThumbPath($finderFile);
 
-        //todo: make easy way to output files
-        $this->response->setContentType($finderFile->getMimeType());
-        $this->response->setHeader('Content-Disposition', 'inline; filename="' . $finderFile->getName() . '"');
-        $this->response->setHeader('Cache-control', 'max-age=2592000, public');
-        $this->response->setHeader('Expires', gmdate('D, d M Y H:i:s', strtotime('+1 years')) . ' GMT');
-        $this->response->setHeader('Pragma', 'cache');
+        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
+    }
 
-        echo file_get_contents($filePath);
+    /**
+     * @param int $fileId
+     * @return string
+     * @throws NotFoundException
+     */
+    public function fileAction(int $fileId)
+    {
+        /** @var FinderFile $finderFile */
+        if ( ! $finderFile = FinderFile::getById($fileId)) {
+            throw new NotFoundException();
+        }
+
+        $filePath = $this->finderFileService->getFilePath($finderFile);
+
+        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
     }
 }

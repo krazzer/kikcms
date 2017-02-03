@@ -57,6 +57,7 @@ class Routing
 
         /** Finder */
         $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb");
+        $router->add("/finder/file/{fileId:[0-9]+}", "Finder::file");
 
         $router->removeExtraSlashes(true);
 

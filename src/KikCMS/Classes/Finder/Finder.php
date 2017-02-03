@@ -18,12 +18,28 @@ class Finder extends Injectable
     {
         $this->addAssets();
 
-        $files = $this->finderFileService->getByDir();
+        $files  = $this->finderFileService->getByDir();
+        $thumbs = $this->finderFileService->getThumbNailMap($files);
 
         return $this->renderView('index', [
-            'instance'   => $this->getInstance(),
+            'instance'       => $this->getInstance(),
+            'files'          => $files,
+            'thumbnails'     => $thumbs,
+            'maxFileUploads' => $this->getMaxFileUploads(),
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function renderFiles()
+    {
+        $files  = $this->finderFileService->getByDir();
+        $thumbs = $this->finderFileService->getThumbNailMap($files);
+
+        return $this->renderView('files', [
             'files'      => $files,
-            'thumbnails' => $this->finderFileService->getThumbNailMap($files),
+            'thumbnails' => $thumbs,
         ]);
     }
 
@@ -62,12 +78,32 @@ class Finder extends Injectable
 
     /**
      * @param File[] $files
+     * @return array with the status for each file i.e.: [0 => 123, 1 => false] number is new finderId, false is fail
      */
     public function uploadFiles(array $files)
     {
-        //todo: add defense
-        foreach ($files as $file) {
-            $this->finderFileService->create($file);
+        $uploadStatus = [];
+
+        foreach ($files as $index => $file) {
+            $result = $this->finderFileService->create($file);
+
+            $uploadStatus[$index] = $result;
         }
+
+        return $uploadStatus;
+    }
+
+    /**
+     * @return int
+     */
+    private function getMaxFileUploads(): int
+    {
+        $maxFileUploads = ini_get('max_file_uploads');
+
+        if ( ! $maxFileUploads) {
+            return 20;
+        }
+
+        return $maxFileUploads;
     }
 }

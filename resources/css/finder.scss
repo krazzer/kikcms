@@ -4,9 +4,8 @@
 .finder {
 
     .files {
-        @include clearFix();
+        @include noTextSelect();
         position: relative;
-        min-height: 500px;
         background-color: $superLightGray;
         border-radius: $defaultBorderRadius;
         border: 1px solid $lightGray;
@@ -21,67 +20,84 @@
             display: none;
         }
 
-        .file {
-            float: left;
-            width: 120px;
-            height: 156px;
-            margin: 10px 0 0 10px;
+        .files-container {
+            @include clearFix();
+            min-height: 500px;
 
-            &.selected {
+            .file {
+                float: left;
+                width: 120px;
+                height: 156px;
+                margin: 10px 0 0 10px;
+
+                &.created {
+
+                    .thumb {
+                        background-color: $highLightColor;
+                    }
+                }
+
+                &.selected {
+
+                    .thumb {
+                        background-color: $lightGray;
+                    }
+
+                    .name {
+                        span {
+                            color: #fff;
+                            background-color: $selectedTextBlue;
+                        }
+                    }
+                }
 
                 .thumb {
-                    background-color: $lightGray;
+                    border-radius: $defaultBorderRadius;
+                    position: relative;
+                    width: 120px;
+                    height: 120px;
+                    text-align: center;
+                    display: table-cell;
+                    vertical-align: middle;
+
+                    img {
+                        border-radius: $defaultBorderRadius;
+                    }
+
+                    .glyphicon {
+                        text-align: center;
+                        font-size: 96px;
+                        width: 72px;
+                        overflow: hidden;
+                        color: $gray;
+
+                        &:before {
+                            margin-left: -8px;
+                        }
+                    }
+
+                    .extension {
+                        position: absolute;
+                        z-index: 1;
+                        font-size: 30px;
+                        text-transform: uppercase;
+                        font-weight: 900;
+                        top: 50px;
+                        width: 72px;
+                        text-align: center;
+                        color: $lightGrayDark;
+                        cursor: default;
+                    }
                 }
 
                 .name {
-                    span {
-                        color: #fff;
-                        background-color: $selectedTextBlue;
-                    }
-                }
-            }
-
-            .thumb {
-                border-radius: $defaultBorderRadius;
-                position: relative;
-                width: 120px;
-                height: 120px;
-                padding: 12px;
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-
-                img {
-                    border-radius: $defaultBorderRadius;
-                }
-
-                .glyphicon {
                     text-align: center;
-                    font-size: 96px;
-                    margin-left: 4px;
-                    color: $gray;
+                    max-width: 120px;
+                    max-height: 50px;
+                    overflow: hidden;
+                    line-height: 16px;
+                    margin-top: 5px;
                 }
-
-                .extension {
-                    position: absolute;
-                    z-index: 1;
-                    font-size: 30px;
-                    text-transform: uppercase;
-                    font-weight: 900;
-                    top: 50px;
-                    width: 96px;
-                    text-align: center;
-                    color: $lightGrayDark;
-                }
-            }
-
-            .name {
-                text-align: center;
-                max-width: 120px;
-                max-height: 50px;
-                overflow: hidden;
-                line-height: 16px;
-                margin-top: 5px;
             }
         }
     }

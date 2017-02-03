@@ -66,6 +66,19 @@ class Model extends PhalconModel
     }
 
     /**
+     * @param int[] $ids
+     *
+     * @return Resultset
+     */
+    public static function getByIdList(array $ids)
+    {
+        return self::find([
+            'conditions' => 'id IN ({ids:array})',
+            'bind'       => ['ids' => $ids]
+        ]);
+    }
+
+    /**
      * @param string $name
      *
      * @return Model|null

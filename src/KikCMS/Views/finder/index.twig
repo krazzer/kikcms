@@ -14,7 +14,7 @@
             <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
             <span class="lbl">
                 {{ tl('media.button.upload') }}
-                <input type="file" name="files[]" multiple/>
+                <input type="file" name="files[]" multiple data-max-file-uploads="{{ max_file_uploads }}"/>
             </span>
         </label>
 
@@ -22,19 +22,19 @@
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
         </div>
 
-        <div class="button delete faded">
+        <div class="button delete faded" title="{{ tl('media.button.deleteTitle') }}">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>
 
-        <div class="button copy faded">
+        <div class="button copy faded" title="{{ tl('media.button.copyTitle') }}">
             <span class="glyphicon glyphicon-copy" aria-hidden="true"></span>
         </div>
 
-        <div class="button cut faded">
+        <div class="button cut faded" title="{{ tl('media.button.cutTitle') }}">
             <span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
         </div>
 
-        <div class="button paste faded">
+        <div class="button paste faded" title="{{ tl('media.button.pasteTitle') }}">
             <span class="glyphicon glyphicon-paste" aria-hidden="true"></span>
         </div>
 
