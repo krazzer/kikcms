@@ -18,8 +18,12 @@ class Finder extends Injectable
     {
         $this->addAssets();
 
+        $files = $this->finderFileService->getByDir();
+
         return $this->renderView('index', [
-            'instance' => $this->getInstance(),
+            'instance'   => $this->getInstance(),
+            'files'      => $files,
+            'thumbnails' => $this->finderFileService->getThumbNailMap($files),
         ]);
     }
 
@@ -53,7 +57,6 @@ class Finder extends Injectable
     {
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/finder.css');
-
         $this->view->assets->addJs('cmsassets/js/finder/finder.js');
     }
 
@@ -62,7 +65,7 @@ class Finder extends Injectable
      */
     public function uploadFiles(array $files)
     {
-        //todo: add devense
+        //todo: add defense
         foreach ($files as $file) {
             $this->finderFileService->create($file);
         }

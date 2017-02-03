@@ -28,6 +28,7 @@ class Routing
             "action"     => 1
         ]);
 
+        /** Login */
         $router->add("/cms/login", [
             "controller" => "login",
             "action"     => "index"
@@ -43,6 +44,7 @@ class Routing
             "action"     => "resetPassword"
         ]);
 
+        /** DataTable / WebForm */
         $router->add("/cms/datatable/:action", [
             "controller" => "data-table",
             "action"     => 1
@@ -52,6 +54,9 @@ class Routing
             "controller" => "web-form",
             "action"     => 1
         ]);
+
+        /** Finder */
+        $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb");
 
         $router->removeExtraSlashes(true);
 

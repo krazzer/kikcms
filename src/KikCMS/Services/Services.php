@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Classes\Translator;
@@ -63,6 +64,14 @@ class Services extends BaseServices
         $finderFileService->setThumbDir('thumbs');
 
         return $finderFileService;
+    }
+
+    /**
+     * @return ImageHandler
+     */
+    protected function initImageHandler()
+    {
+        return new ImageHandler();
     }
 
     /**

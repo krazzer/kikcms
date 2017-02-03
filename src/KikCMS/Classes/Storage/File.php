@@ -13,7 +13,7 @@ class File implements FileStorage
     private $storageDir;
 
     /**
-     * @return mixed
+     * @inheritdoc
      */
     public function getStorageDir()
     {
@@ -21,8 +21,7 @@ class File implements FileStorage
     }
 
     /**
-     * @param mixed $storageDir
-     * @return File
+     * @inheritdoc
      */
     public function setStorageDir($storageDir)
     {

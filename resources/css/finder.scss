@@ -4,11 +4,13 @@
 .finder {
 
     .files {
+        @include clearFix();
         position: relative;
         min-height: 500px;
         background-color: $superLightGray;
         border-radius: $defaultBorderRadius;
-        padding: 20px;
+        border: 1px solid $lightGray;
+        padding: 0 10px 10px 0;
 
         .progress {
             width: 100%;
@@ -17,6 +19,70 @@
             top: 0;
             left: 0;
             display: none;
+        }
+
+        .file {
+            float: left;
+            width: 120px;
+            height: 156px;
+            margin: 10px 0 0 10px;
+
+            &.selected {
+
+                .thumb {
+                    background-color: $lightGray;
+                }
+
+                .name {
+                    span {
+                        color: #fff;
+                        background-color: $selectedTextBlue;
+                    }
+                }
+            }
+
+            .thumb {
+                border-radius: $defaultBorderRadius;
+                position: relative;
+                width: 120px;
+                height: 120px;
+                padding: 12px;
+                text-align: center;
+                display: table-cell;
+                vertical-align: middle;
+
+                img {
+                    border-radius: $defaultBorderRadius;
+                }
+
+                .glyphicon {
+                    text-align: center;
+                    font-size: 96px;
+                    margin-left: 4px;
+                    color: $gray;
+                }
+
+                .extension {
+                    position: absolute;
+                    z-index: 1;
+                    font-size: 30px;
+                    text-transform: uppercase;
+                    font-weight: 900;
+                    top: 50px;
+                    width: 96px;
+                    text-align: center;
+                    color: $lightGrayDark;
+                }
+            }
+
+            .name {
+                text-align: center;
+                max-width: 120px;
+                max-height: 50px;
+                overflow: hidden;
+                line-height: 16px;
+                margin-top: 5px;
+            }
         }
     }
 

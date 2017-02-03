@@ -71,34 +71,39 @@ KikCmsClass.prototype =
             }
         }, 250);
 
+        var ajaxRequestSettings = {
+            url: actionUrl,
+            type: 'post',
+            dataType: 'json',
+            xhr: xhr,
+            data: parameters,
+            success: function (result, responseText, response) {
+                ajaxCompleted = true;
+                self.hideLoader();
+
+                onSuccess(result, responseText, response);
+            },
+            error: function (result) {
+                // try again on connection failure
+                if (result.readyState == 0 && result.status == 0 && retries < 2) {
+                    retries++;
+                    xmlHttpRequest();
+                    return;
+                }
+
+                ajaxCompleted = true;
+                self.showError(result, onError);
+            }
+        };
+
+        if (typeof xhr !== 'undefined') {
+            ajaxRequestSettings.cache       = false;
+            ajaxRequestSettings.contentType = false;
+            ajaxRequestSettings.processData = false;
+        }
+
         var xmlHttpRequest = function () {
-            $.ajax({
-                url: actionUrl,
-                type: 'post',
-                dataType: 'json',
-                xhr: xhr,
-                data: parameters,
-                success: function (result, responseText, response) {
-                    ajaxCompleted = true;
-                    self.hideLoader();
-
-                    onSuccess(result, responseText, response);
-                },
-                error: function (result) {
-                    // try again on connection failure
-                    if (result.readyState == 0 && result.status == 0 && retries < 2) {
-                        retries++;
-                        xmlHttpRequest();
-                        return;
-                    }
-
-                    ajaxCompleted = true;
-                    self.showError(result, onError);
-                },
-                cache: false,
-                contentType: false,
-                processData: false
-            });
+            $.ajax(ajaxRequestSettings);
         };
 
         xmlHttpRequest();

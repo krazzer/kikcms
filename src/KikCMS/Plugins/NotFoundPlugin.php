@@ -3,6 +3,7 @@
 namespace KikCMS\Plugins;
 
 use Exception;
+use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Events\Event;
@@ -54,6 +55,15 @@ class NotFoundPlugin extends Plugin
                     return false;
                 break;
             }
+        }
+
+        if ($exception instanceof NotFoundException) {
+            $dispatcher->forward([
+                'controller' => 'errors',
+                'action'     => 'show404'
+            ]);
+
+            return false;
         }
 
         // prevent unused parameter warning

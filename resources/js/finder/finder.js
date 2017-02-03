@@ -7,6 +7,15 @@ Finder.prototype =
 
     init: function () {
         this.initUpload();
+        this.initFiles();
+    },
+
+    initFiles: function () {
+        this.getFinder().find('.files .file').click(function () {
+            var $file = $(this);
+
+            $file.addClass('selected');
+        });
     },
 
     initUpload: function () {

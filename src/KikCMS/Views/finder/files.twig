@@ -1,0 +1,24 @@
+{# @var files \KikCMS\Models\FinderFile[] #}
+
+{% for finderFile in files %}
+
+    <div class="file">
+
+        {% if thumbnails[finderFile.id] %}
+            <div class="thumb">
+                <img src="{{ thumbnails[finderFile.id] }}"/>
+            </div>
+        {% else %}
+            <div class="thumb">
+                <span class="extension">{{ finderFile.extension }}</span>
+                <span class="glyphicon glyphicon-file"></span>
+            </div>
+        {% endif %}
+
+        <div class="name">
+            <span>{{ finderFile.name }}</span>
+        </div>
+
+    </div>
+
+{% endfor %}
