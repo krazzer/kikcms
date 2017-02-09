@@ -9,7 +9,7 @@ class Routing
 {
     public function initialize()
     {
-        $router = new Router();
+        $router = new Router(false);
 
         $router->setDefaultModule("kikcms");
 
@@ -56,8 +56,19 @@ class Routing
         ]);
 
         /** Finder */
+        $router->add("/finder/:action", [
+            "controller" => "finder",
+            "action"     => 1
+        ]);
+
         $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb");
         $router->add("/finder/file/{fileId:[0-9]+}", "Finder::file");
+
+        /** Not Found */
+        $router->notFound([
+            "controller" => "errors",
+            "action"     => "show404",
+        ]);
 
         $router->removeExtraSlashes(true);
 

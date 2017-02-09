@@ -14,6 +14,8 @@ class BaseController extends Controller
     }
 
     /**
+     * Outputs a file with headers so the browser should cache
+     *
      * @param string $filePath
      * @param string $mimeType
      * @param string $fileName

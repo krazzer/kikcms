@@ -67,6 +67,19 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param FinderFile $finderFile
+     */
+    public function createThumb(FinderFile $finderFile)
+    {
+        $filePath  = $this->getFilePath($finderFile);
+        $thumbPath = $this->getThumbPath($finderFile);
+
+        $image = $this->imageHandler->create($filePath);
+        $image->resize(96, 96);
+        $image->save($thumbPath, 90);
+    }
+
+    /**
      * @param int[] $fileIds
      */
     public function deleteFilesByIds(array $fileIds)
@@ -143,15 +156,6 @@ class FinderFileService extends Injectable
             if ( ! $this->isImage($finderFile)) {
                 $thumbNails[$fileId] = null;
                 continue;
-            }
-
-            $filePath  = $this->getFilePath($finderFile);
-            $thumbPath = $this->getThumbPath($finderFile);
-
-            if ( ! file_exists($thumbPath)) {
-                $image = $this->imageHandler->create($filePath);
-                $image->resize(96, 96);
-                $image->save($thumbPath, 90);
             }
 
             $thumbNails[$fileId] = '/finder/thumb/' . $fileId;

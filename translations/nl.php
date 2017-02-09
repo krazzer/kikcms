@@ -140,10 +140,7 @@ return [
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
             'form'      => 'Dataform test',
-
-            'menu' => [
-                'main' => 'Hoofmenu'
-            ],
+            'pages'     => "Pagina's",
 
             'stats' => [
                 'index'   => 'Statistieken',

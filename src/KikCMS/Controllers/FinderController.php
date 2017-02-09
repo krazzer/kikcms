@@ -80,9 +80,13 @@ class FinderController extends BaseController
             throw new NotFoundException();
         }
 
-        $filePath = $this->finderFileService->getThumbPath($finderFile);
+        $thumbPath = $this->finderFileService->getThumbPath($finderFile);
 
-        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
+        if ( ! file_exists($thumbPath)) {
+            $this->finderFileService->createThumb($finderFile);
+        }
+
+        return $this->outputFile($thumbPath, $finderFile->getMimeType(), $finderFile->getName());
     }
 
     /**

@@ -21,10 +21,10 @@ class CmsController extends BaseCmsController
      */
     public function indexAction()
     {
-        return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_MAIN_MENU);
+        return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_PAGES);
     }
 
-    public function menuAction()
+    public function pagesAction()
     {
         $datatable = new Products();
 

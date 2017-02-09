@@ -9,6 +9,7 @@ class ErrorsController extends BaseCmsController
     {
         parent::initialize();
 
+        $this->view->reset();
         $this->view->hideMenu = $this->request->isAjax();
     }
 
