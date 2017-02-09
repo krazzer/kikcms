@@ -97,6 +97,10 @@
                     overflow: hidden;
                     line-height: 16px;
                     margin-top: 5px;
+
+                    .highlight {
+                        background-color: $highLightColor;
+                    }
                 }
             }
         }

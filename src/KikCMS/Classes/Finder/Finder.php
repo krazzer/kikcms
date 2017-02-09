@@ -11,30 +11,38 @@ use Phalcon\Http\Request\File;
  */
 class Finder extends Injectable
 {
+    const JS_TRANSLATIONS = [
+        'media.deleteConfirm',
+        'media.deleteConfirmOne',
+        'media.createFolder',
+    ];
+
     /**
+     * @param array $filters
      * @return string
      */
-    public function render()
+    public function render($filters = [])
     {
         $this->addAssets();
 
-        $files  = $this->finderFileService->getByDir();
+        $files  = $this->finderFileService->getByFilters($filters);
         $thumbs = $this->finderFileService->getThumbNailMap($files);
 
         return $this->renderView('index', [
-            'instance'       => $this->getInstance(),
             'files'          => $files,
             'thumbnails'     => $thumbs,
+            'instance'       => $this->getInstance(),
             'maxFileUploads' => $this->getMaxFileUploads(),
         ]);
     }
 
     /**
+     * @param array $filters
      * @return string
      */
-    public function renderFiles()
+    public function renderFiles($filters = [])
     {
-        $files  = $this->finderFileService->getByDir();
+        $files  = $this->finderFileService->getByFilters($filters);
         $thumbs = $this->finderFileService->getThumbNailMap($files);
 
         return $this->renderView('files', [
@@ -74,6 +82,8 @@ class Finder extends Injectable
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/finder.css');
         $this->view->assets->addJs('cmsassets/js/finder/finder.js');
+
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
     }
 
     /**

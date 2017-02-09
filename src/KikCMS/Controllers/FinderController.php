@@ -7,6 +7,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;
 
 /**
@@ -36,6 +37,20 @@ class FinderController extends BaseController
         $this->finderFileService->deleteFilesByIds($fileIds);
 
         return json_encode(['files' => $finder->renderFiles()]);
+    }
+
+    /**
+     * @return string
+     */
+    public function searchAction()
+    {
+        $finder = new Finder();
+
+        $filters = [
+            FinderConfig::FILTER_SEARCH => $this->request->getPost('search')
+        ];
+
+        return json_encode(['files' => $finder->renderFiles($filters)]);
     }
 
     /**

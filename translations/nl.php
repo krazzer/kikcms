@@ -61,6 +61,9 @@ return [
             'pasteTitle'     => 'Plak de geselecteerde bestanden',
         ],
         'searchPlaceholder' => 'Zoeken naar bestanden',
+        'deleteConfirm'     => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
+        'deleteConfirmOne'  => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
+        'createFolder'      => 'Geef een naam op voor de nieuwe map',
     ],
 
     'webform' => [

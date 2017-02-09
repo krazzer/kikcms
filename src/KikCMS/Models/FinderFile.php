@@ -11,6 +11,7 @@ class FinderFile extends Model
 
     const FIELD_ID     = 'id';
     const FIELD_DIR_ID = 'dir_id';
+    const FIELD_NAME   = 'name';
 
     /**
      * @return DateTime

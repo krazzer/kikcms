@@ -27,6 +27,7 @@ Finder.prototype =
         this.initFiles();
         this.initKeyEvents();
         this.initButtons();
+        this.initSearch();
     },
 
     initButtons: function () {
@@ -34,7 +35,14 @@ Finder.prototype =
 
         this.getToolbar().find('.delete').click(function () {
             var selectedIds = self.getSelectedFileIds();
-            console.log(selectedIds);
+
+            var confirmMessage = selectedIds.length > 1
+                ? KikCMS.tl('media.deleteConfirm', {amount: selectedIds.length})
+                : KikCMS.tl('media.deleteConfirmOne')
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
 
             self.action('delete', {fileIds: selectedIds}, function (result) {
                 self.setFilesContainer(result.files);
@@ -126,6 +134,17 @@ Finder.prototype =
         });
     },
 
+    initSearch: function () {
+        var self = this;
+
+        this.getSearchField().searchAble(function (value) {
+            self.action('search', {search: value}, function (result) {
+                self.setFilesContainer(result.files);
+                self.getFileContainer().find('.file .name span').highlight(value);
+            })
+        });
+    },
+
     initUpload: function () {
         var self          = this;
         var $uploadButton = this.getFinder().find('.button.upload');
@@ -205,6 +224,10 @@ Finder.prototype =
                 }, 500);
             }, 5000);
         })
+    },
+
+    getSearchField: function () {
+        return this.getToolbar().find('.search input');
     },
 
     getSelectedFileIds: function () {

@@ -7,10 +7,12 @@ use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderDir;
 use KikCMS\Models\FinderFile;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
+use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Handles FinderFiles
@@ -89,13 +91,29 @@ class FinderFileService extends Injectable
         $dirId     = $finderDir ? $finderDir->id : 0;
         $resultSet = FinderFile::find(FinderFile::FIELD_DIR_ID . ' = ' . (int) $dirId);
 
-        $files = [];
+        return $this->getFiles($resultSet);
+    }
 
-        foreach ($resultSet as $result) {
-            $files[] = $result;
+    /**
+     * @param array $filters
+     * @return FinderFile[]
+     */
+    public function getByFilters(array $filters)
+    {
+        if (isset($filters[FinderConfig::FILTER_SEARCH])) {
+            $resultSet = FinderFile::find([
+                'conditions' => 'name LIKE {search}',
+                'bind'       => ['search' => '%' . $filters[FinderConfig::FILTER_SEARCH] . '%']
+            ]);
+
+            return $this->getFiles($resultSet);
         }
 
-        return $files;
+        if (isset($filters[FinderConfig::FILTER_DIR])) {
+            return $this->getByDir($filters[FinderConfig::FILTER_DIR]);
+        }
+
+        return $this->getByDir();
     }
 
     /**
@@ -184,6 +202,21 @@ class FinderFileService extends Injectable
     public function setThumbDir(string $thumbDir)
     {
         $this->thumbDir = $thumbDir;
+    }
+
+    /**
+     * @param Resultset $resultSet
+     * @return File[]
+     */
+    private function getFiles(Resultset $resultSet)
+    {
+        $files = [];
+
+        foreach ($resultSet as $result) {
+            $files[] = $result;
+        }
+
+        return $files;
     }
 
     /**
