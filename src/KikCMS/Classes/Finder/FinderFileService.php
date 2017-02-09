@@ -16,6 +16,7 @@ use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Handles FinderFiles
+ *
  * @property ImageHandler $imageHandler
  * @property DbService $dbService
  */
@@ -88,7 +89,7 @@ class FinderFileService extends Injectable
         $thumbPath = $this->getThumbPath($finderFile);
 
         $image = $this->imageHandler->create($filePath);
-        $image->resize(96, 96);
+        $image->resize(192, 192);
         $image->save($thumbPath, 90);
     }
 

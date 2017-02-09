@@ -74,6 +74,8 @@
 
                     img {
                         border-radius: $defaultBorderRadius;
+                        max-width: 96px;
+                        max-height: 96px;
                     }
 
                     .glyphicon {
@@ -112,13 +114,6 @@
 
                     .highlight {
                         background-color: $highLightColor;
-                    }
-                }
-
-                &.folder {
-
-                    img {
-                        width: 96px;
                     }
                 }
             }
