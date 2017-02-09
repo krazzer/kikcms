@@ -71,7 +71,6 @@ class FinderController extends BaseController
         return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
     }
 
-
     /**
      * @return string
      */
@@ -83,6 +82,22 @@ class FinderController extends BaseController
         return json_encode([
             'files' => $finder->renderFiles($filters),
             'path'  => $finder->renderPath($filters[FinderConfig::FILTER_FOLDER_ID]),
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function pasteAction()
+    {
+        $finder  = new Finder();
+        $filters = $this->getFilters();
+        $fileIds = $this->request->getPost('fileIds');
+
+        $this->finderFileService->moveFilesToFolderById($fileIds, $filters[FinderConfig::FILTER_FOLDER_ID]);
+
+        return json_encode([
+            'files' => $finder->renderFiles($filters),
         ]);
     }
 

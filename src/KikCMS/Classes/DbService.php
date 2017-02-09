@@ -17,24 +17,10 @@ class DbService extends Injectable
      */
     public function delete(string $model, array $where)
     {
-        $table        = $this->getTableForModel($model);
-        $whereClauses = [];
+        $table       = $this->getTableForModel($model);
+        $whereClause = $this->getWhereClauseByArray($where);
 
-        foreach ($where as $column => $condition) {
-            if (is_array($condition)) {
-                if ( ! empty($condition)) {
-                    $whereClauses[] = $column . " IN (" . implode(',', $condition) . ")";
-                }
-            } else {
-                $whereClauses[] = $column . ' = ' . $this->escape($condition);
-            }
-        }
-
-        if ( ! $whereClauses) {
-            return true;
-        }
-
-        return $this->db->delete($table, implode(' AND ', $whereClauses));
+        return $this->db->delete($table, $whereClause);
     }
 
     /**
@@ -87,7 +73,7 @@ class DbService extends Injectable
     {
         $result = $this->queryRows($query);
 
-        if( ! $result){
+        if ( ! $result) {
             return [];
         }
 
@@ -118,8 +104,7 @@ class DbService extends Injectable
     public function update(string $model, array $set, array $where)
     {
         $table = $this->getTableForModel($model);
-        $where = array_map(function($key, $value){ return $key . ' = ' .$value; }, array_keys($where), array_values($where));
-        $where = implode(' AND ', $where);
+        $where = $this->getWhereClauseByArray($where);
 
         return $this->db->update($table, array_keys($set), array_values($set), $where);
     }
@@ -160,5 +145,26 @@ class DbService extends Injectable
         /** @var Model $model */
         $model = new $model();
         return $model->getSource();
+    }
+
+    /**
+     * @param array $where
+     * @return string
+     */
+    private function getWhereClauseByArray(array $where): string
+    {
+        $whereClauses = [];
+
+        foreach ($where as $column => $condition) {
+            if (is_array($condition)) {
+                if ( ! empty($condition)) {
+                    $whereClauses[] = $column . " IN (" . implode(',', $condition) . ")";
+                }
+            } else {
+                $whereClauses[] = $column . ' = ' . $this->escape($condition);
+            }
+        }
+
+        return implode(' AND ', $whereClauses);
     }
 }

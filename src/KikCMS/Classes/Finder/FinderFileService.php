@@ -239,6 +239,20 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param int[] $fileIds
+     * @param int $folderId
+     */
+    public function moveFilesToFolderById(array $fileIds, int $folderId)
+    {
+        //todo: check for moving a parent folder into subfolder
+        $this->dbService->update(FinderFile::class, [
+            FinderFile::FIELD_FOLDER_ID => $folderId
+        ], [
+            FinderFile::FIELD_ID => $fileIds
+        ]);
+    }
+
+    /**
      * @param string $thumbDir
      */
     public function setThumbDir(string $thumbDir)

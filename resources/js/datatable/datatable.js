@@ -481,9 +481,9 @@ DataTable.prototype =
         var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
 
         if ($selectedRows.length > 0) {
-            $deleteButton.removeClass('faded');
+            $deleteButton.fadeIn();
         } else {
-            $deleteButton.addClass('faded');
+            $deleteButton.fadeOut();
         }
     }
 };

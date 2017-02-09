@@ -17,9 +17,7 @@
             border-radius: $defaultBorderRadius;
             padding: 7px 15px;
             cursor: pointer;
-            transition: background-color, opacity 0.3s;
             border: 1px solid $lightGray;
-            opacity: 1;
 
             &.add {
                 background-color: #fff;
@@ -31,11 +29,6 @@
 
             .lbl {
                 margin-left: 8px;
-            }
-
-            &.faded {
-                opacity: 0;
-                pointer-events: none;
             }
 
             &:hover {

@@ -20,9 +20,7 @@
     border-radius: 3px;
     padding: 7px 15px;
     cursor: pointer;
-    transition: background-color, opacity 0.3s;
     border: 1px solid #e1e1e1;
-    opacity: 1;
 }
 
 .toolbarComponent .toolbar .button.add {
@@ -35,11 +33,6 @@
 
 .toolbarComponent .toolbar .button .lbl {
     margin-left: 8px;
-}
-
-.toolbarComponent .toolbar .button.faded {
-    opacity: 0;
-    pointer-events: none;
 }
 
 .toolbarComponent .toolbar .button:hover {

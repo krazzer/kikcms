@@ -5,6 +5,7 @@ Finder.prototype =
 {
     instance: null,
     shiftKeyPressed: false,
+    cutFileIds: [],
 
     action: function (action, parameters, onSuccess) {
         if (typeof parameters.folderId == 'undefined') {
@@ -27,6 +28,11 @@ Finder.prototype =
         })
     },
 
+    actionCut: function () {
+        this.cutFileIds = this.getSelectedFileIds();
+        this.initCutFiles();
+    },
+
     actionDelete: function () {
         var self        = this;
         var selectedIds = this.getSelectedFileIds();
@@ -40,6 +46,15 @@ Finder.prototype =
         }
 
         this.action('delete', {fileIds: selectedIds}, function (result) {
+            self.setFilesContainer(result.files);
+        })
+    },
+
+    actionPaste: function () {
+        var self = this;
+
+        this.action('paste', {fileIds: this.cutFileIds}, function (result) {
+            self.cutFileIds = [];
             self.setFilesContainer(result.files);
         })
     },
@@ -79,6 +94,21 @@ Finder.prototype =
     initButtons: function () {
         this.getToolbar().find('.delete').click(this.actionDelete.bind(this));
         this.getToolbar().find('.addFolder').click(this.actionAddFolder.bind(this));
+        this.getToolbar().find('.cut').click(this.actionCut.bind(this));
+        this.getToolbar().find('.paste').click(this.actionPaste.bind(this));
+    },
+
+    initCutFiles: function () {
+        var self = this;
+
+        self.getFileContainer().find('.file').removeClass('cut');
+
+        $.each(this.cutFileIds, function (index, fileId) {
+            var $file = self.getFileContainer().find('.file-' + fileId);
+            $file.addClass('cut');
+        });
+
+        this.updateToolbar();
     },
 
     initFiles: function () {
@@ -158,6 +188,7 @@ Finder.prototype =
         });
 
         this.updateToolbar();
+        this.initCutFiles();
     },
 
     initKeyEvents: function () {
@@ -319,9 +350,15 @@ Finder.prototype =
         var $toolbar        = this.getToolbar();
 
         if (aFileIsSelected) {
-            $toolbar.find('.delete, .copy, .cut').removeClass('faded');
+            $toolbar.find('.delete, .copy, .cut').fadeIn();
         } else {
-            $toolbar.find('.delete, .copy, .cut').addClass('faded');
+            $toolbar.find('.delete, .copy, .cut').fadeOut();
+        }
+
+        if (this.cutFileIds.length > 0) {
+            $toolbar.find('.paste').fadeIn();
+        } else {
+            $toolbar.find('.paste').fadeOut();
         }
     }
 };

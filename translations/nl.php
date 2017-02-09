@@ -58,7 +58,7 @@ return [
             'deleteTitle'    => 'Verwijder de geselecteerde bestanden',
             'copyTitle'      => 'Kopieër de geselecteerde bestanden',
             'cutTitle'       => 'Knip de geselecteerde bestanden',
-            'pasteTitle'     => 'Plak de geselecteerde bestanden',
+            'pasteTitle'     => 'Plak de geknipte bestanden',
         ],
         'searchPlaceholder' => 'Zoeken naar bestanden',
         'deleteConfirm'     => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
