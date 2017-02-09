@@ -12,6 +12,10 @@ a {
   a:hover {
     color: #c8116d; }
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 300;
+}
+
 #ajaxDebugger {
   display: none;
   position: fixed;

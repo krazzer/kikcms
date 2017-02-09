@@ -399,6 +399,10 @@ body > #overlay {
   transition: opacity, -webkit-filter, filter 0.3s; }
   .datatable .table table {
     width: 100%; }
+
+.datatable .table table tr {
+    height: 36px;
+}
     .datatable .table table tr td {
       padding: 8px 15px; }
     .datatable .table table thead {

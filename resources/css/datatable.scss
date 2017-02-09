@@ -224,6 +224,10 @@ body > #overlay {
         table {
             width: 100%;
 
+            tr {
+                height: 36px;
+            }
+
             tr td {
                 padding: 8px 15px;
             }
