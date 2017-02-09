@@ -15,6 +15,7 @@ class Finder extends Injectable
         'media.deleteConfirm',
         'media.deleteConfirmOne',
         'media.createFolder',
+        'media.defaultFolderName',
     ];
 
     /**
@@ -52,6 +53,25 @@ class Finder extends Injectable
     }
 
     /**
+     * @param $folderId
+     * @return string
+     */
+    public function renderPath(int $folderId)
+    {
+        $path = $this->finderFileService->getFolderPath($folderId);
+        $path = array_reverse($path, true);
+
+        if (count($path) == 1) {
+            return '';
+        }
+
+        return $this->renderView('path', [
+            'path'            => $path,
+            'currentFolderId' => $folderId
+        ]);
+    }
+
+    /**
      * Renders a view
      *
      * @param $viewName
@@ -62,6 +82,24 @@ class Finder extends Injectable
     public function renderView($viewName, array $parameters = []): string
     {
         return $this->view->getPartial('finder/' . $viewName, $parameters);
+    }
+
+    /**
+     * @param File[] $files
+     * @param int $folderId
+     * @return array with the status for each file i.e.: [0 => 123, 1 => false] number is new finderId, false is fail
+     */
+    public function uploadFiles(array $files, $folderId = 0)
+    {
+        $uploadStatus = [];
+
+        foreach ($files as $index => $file) {
+            $result = $this->finderFileService->create($file, $folderId);
+
+            $uploadStatus[$index] = $result;
+        }
+
+        return $uploadStatus;
     }
 
     /**
@@ -84,23 +122,6 @@ class Finder extends Injectable
         $this->view->assets->addJs('cmsassets/js/finder/finder.js');
 
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
-    }
-
-    /**
-     * @param File[] $files
-     * @return array with the status for each file i.e.: [0 => 123, 1 => false] number is new finderId, false is fail
-     */
-    public function uploadFiles(array $files)
-    {
-        $uploadStatus = [];
-
-        foreach ($files as $index => $file) {
-            $result = $this->finderFileService->create($file);
-
-            $uploadStatus[$index] = $result;
-        }
-
-        return $uploadStatus;
     }
 
     /**

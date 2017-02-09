@@ -8,7 +8,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Config\FinderConfig;
-use KikCMS\Models\FinderDir;
+use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
@@ -42,10 +42,10 @@ class FinderFileService extends Injectable
 
     /**
      * @param File $file
-     * @param int $dirId
+     * @param int $folderId
      * @return bool|int
      */
-    public function create(File $file, $dirId = 0)
+    public function create(File $file, $folderId = 0)
     {
         $finderFile = new FinderFile();
 
@@ -55,7 +55,7 @@ class FinderFileService extends Injectable
         $finderFile->size      = $file->getSize();
         $finderFile->created   = new Now();
         $finderFile->updated   = new Now();
-        $finderFile->dir_id    = $dirId;
+        $finderFile->folder_id = $folderId;
 
         if ( ! $finderFile->save()) {
             return false;
@@ -64,6 +64,19 @@ class FinderFileService extends Injectable
         $this->fileStorage->store($file, $this->mediaDir, $finderFile->id);
 
         return (int) $finderFile->id;
+    }
+
+    /**
+     * @param string $folderName
+     * @param int $folderId
+     */
+    public function createFolder(string $folderName, $folderId = 0)
+    {
+        $finderDir            = new FinderFolder();
+        $finderDir->name      = $folderName;
+        $finderDir->folder_id = $folderId;
+
+        $finderDir->save();
     }
 
     /**
@@ -96,13 +109,15 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderDir|null $finderDir
+     * @param int $folderId
      * @return FinderFile[]
      */
-    public function getByDir(FinderDir $finderDir = null)
+    public function getByFolderId(int $folderId = 0)
     {
-        $dirId     = $finderDir ? $finderDir->id : 0;
-        $resultSet = FinderFile::find(FinderFile::FIELD_DIR_ID . ' = ' . (int) $dirId);
+        $resultSet = FinderFile::find([
+            FinderFile::FIELD_FOLDER_ID . ' = ' . $folderId,
+            'order' => 'is_folder DESC, name ASC'
+        ]);
 
         return $this->getFiles($resultSet);
     }
@@ -116,17 +131,18 @@ class FinderFileService extends Injectable
         if (isset($filters[FinderConfig::FILTER_SEARCH])) {
             $resultSet = FinderFile::find([
                 'conditions' => 'name LIKE {search}',
-                'bind'       => ['search' => '%' . $filters[FinderConfig::FILTER_SEARCH] . '%']
+                'bind'       => ['search' => '%' . $filters[FinderConfig::FILTER_SEARCH] . '%'],
+                'order'      => 'is_folder DESC, name ASC'
             ]);
 
             return $this->getFiles($resultSet);
         }
 
-        if (isset($filters[FinderConfig::FILTER_DIR])) {
-            return $this->getByDir($filters[FinderConfig::FILTER_DIR]);
+        if (isset($filters[FinderConfig::FILTER_FOLDER_ID])) {
+            return $this->getByFolderId($filters[FinderConfig::FILTER_FOLDER_ID]);
         }
 
-        return $this->getByDir();
+        return $this->getByFolderId();
     }
 
     /**
@@ -137,6 +153,27 @@ class FinderFileService extends Injectable
     public function getFilePath(FinderFile $finderFile)
     {
         return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $finderFile->id;
+    }
+
+    /**
+     * @param int $folderId
+     * @param array $path
+     *
+     * @return array
+     */
+    public function getFolderPath(int $folderId, $path = [])
+    {
+        if ($folderId == 0) {
+            $path[0] = "Home";
+            return $path;
+        }
+
+        /** @var FinderFolder $folder */
+        $folder = FinderFolder::getById($folderId);
+
+        $path[$folderId] = $folder->name;
+
+        return $this->getFolderPath($folder->getFolderId(), $path);
     }
 
     /**

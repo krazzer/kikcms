@@ -1,0 +1,9 @@
+<ul class="breadcrumb">
+    {% for id, name in path %}
+        {% if currentFolderId == id %}
+            <li class="active">{{ name }}</li>
+        {% else %}
+            <li><a data-id="{{ id }}">{{ name }}</a></li>
+        {% endif %}
+    {% endfor %}
+</ul>

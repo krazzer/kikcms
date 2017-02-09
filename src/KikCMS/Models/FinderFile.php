@@ -9,9 +9,9 @@ class FinderFile extends Model
 {
     const TABLE = 'finder_file';
 
-    const FIELD_ID     = 'id';
-    const FIELD_DIR_ID = 'dir_id';
-    const FIELD_NAME   = 'name';
+    const FIELD_ID        = 'id';
+    const FIELD_FOLDER_ID = 'folder_id';
+    const FIELD_NAME      = 'name';
 
     /**
      * @return DateTime
@@ -27,6 +27,14 @@ class FinderFile extends Model
     public function getExtension()
     {
         return $this->extension;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFolderId(): int
+    {
+        return (int) $this->folder_id;
     }
 
     /**
@@ -59,5 +67,13 @@ class FinderFile extends Model
     public function getMimeType()
     {
         return $this->mimetype;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFolder(): bool
+    {
+        return (bool) $this->is_folder;
     }
 }

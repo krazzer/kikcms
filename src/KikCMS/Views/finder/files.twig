@@ -2,12 +2,16 @@
 
 {% for finderFile in files %}
 
-    <div class="file file-{{ finderFile.id }}" data-id="{{ finderFile.id }}"
-         data-url="/finder/file/{{ finderFile.id }}">
+    <div class="file file-{{ finderFile.id }}{{ finderFile.isFolder ? ' folder' }}" data-id="{{ finderFile.id }}"
+            {% if not finderFile.isFolder %}
+        data-url="/finder/file/{{ finderFile.id }}"
+            {% endif %}>
 
         <div class="thumb">
             {% if thumbnails[finderFile.id] %}
                 <img src="{{ thumbnails[finderFile.id] }}"/>
+            {% elseif(finderFile.isFolder) %}
+                <img src="/cmsassets/images/folder.png"/>
             {% else %}
                 <span class="extension">{{ finderFile.extension }}</span>
                 <span class="glyphicon glyphicon-file"></span>

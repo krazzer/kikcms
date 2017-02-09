@@ -9,7 +9,6 @@
         background-color: $superLightGray;
         border-radius: $defaultBorderRadius;
         border: 1px solid $lightGray;
-        padding: 0 10px 10px 0;
 
         .progress {
             width: 100%;
@@ -20,9 +19,22 @@
             display: none;
         }
 
+        .path {
+            .breadcrumb {
+                margin: 0;
+                background-color: $lightGrayLight;
+                border-radius: $defaultBorderRadius $defaultBorderRadius 0 0;
+
+                a {
+                    cursor: pointer;
+                }
+            }
+        }
+
         .files-container {
             @include clearFix();
             min-height: 500px;
+            padding: 0 10px 10px 0;
 
             .file {
                 float: left;
@@ -100,6 +112,13 @@
 
                     .highlight {
                         background-color: $highLightColor;
+                    }
+                }
+
+                &.folder {
+
+                    img {
+                        width: 96px;
                     }
                 }
             }

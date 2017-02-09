@@ -7,7 +7,52 @@ Finder.prototype =
     shiftKeyPressed: false,
 
     action: function (action, parameters, onSuccess) {
+        if (typeof parameters.folderId == 'undefined') {
+            parameters.folderId = this.getCurrentFolderId();
+        }
+
         KikCMS.action('/finder/' + action, parameters, onSuccess);
+    },
+
+    actionAddFolder: function () {
+        var self       = this;
+        var folderName = prompt(KikCMS.tl('media.createFolder'), KikCMS.tl('media.defaultFolderName'));
+
+        if (!folderName) {
+            return;
+        }
+
+        this.action('createFolder', {folderName: folderName}, function (result) {
+            self.setFilesContainer(result.files);
+        })
+    },
+
+    actionDelete: function () {
+        var self        = this;
+        var selectedIds = this.getSelectedFileIds();
+
+        var confirmMessage = selectedIds.length > 1
+            ? KikCMS.tl('media.deleteConfirm', {amount: selectedIds.length})
+            : KikCMS.tl('media.deleteConfirmOne');
+
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        this.action('delete', {fileIds: selectedIds}, function (result) {
+            self.setFilesContainer(result.files);
+        })
+    },
+
+    actionOpenFolder: function (folderId) {
+        var self = this;
+
+        this.saveCurrentFolderId(folderId);
+
+        this.action('openFolder', {folderId: folderId}, function (result) {
+            self.setFilesContainer(result.files);
+            self.setPath(result.path);
+        })
     },
 
     fileDeSelect: function ($file) {
@@ -28,26 +73,12 @@ Finder.prototype =
         this.initKeyEvents();
         this.initButtons();
         this.initSearch();
+        this.initPath();
     },
 
     initButtons: function () {
-        var self = this;
-
-        this.getToolbar().find('.delete').click(function () {
-            var selectedIds = self.getSelectedFileIds();
-
-            var confirmMessage = selectedIds.length > 1
-                ? KikCMS.tl('media.deleteConfirm', {amount: selectedIds.length})
-                : KikCMS.tl('media.deleteConfirmOne')
-
-            if (!confirm(confirmMessage)) {
-                return;
-            }
-
-            self.action('delete', {fileIds: selectedIds}, function (result) {
-                self.setFilesContainer(result.files);
-            })
-        });
+        this.getToolbar().find('.delete').click(this.actionDelete.bind(this));
+        this.getToolbar().find('.addFolder').click(this.actionAddFolder.bind(this));
     },
 
     initFiles: function () {
@@ -91,6 +122,12 @@ Finder.prototype =
             });
 
             $fileSelectables.on('dblclick', function (e) {
+                if ($file.hasClass('folder')) {
+                    self.actionOpenFolder($file.attr('data-id'));
+                    e.stopPropagation();
+                    return;
+                }
+
                 window.open($file.attr('data-url'));
                 e.stopPropagation();
             });
@@ -98,6 +135,11 @@ Finder.prototype =
 
         $files.on('dblclick', function () {
             var $file = $(this);
+
+            if ($file.hasClass('folder')) {
+                self.actionOpenFolder($file.attr('data-id'));
+                return;
+            }
 
             if ($file.hasClass('selected')) {
                 window.open($file.attr('data-url'));
@@ -134,12 +176,22 @@ Finder.prototype =
         });
     },
 
+    initPath: function () {
+        var self = this;
+
+        this.getFinder().find('.path ul li a').click(function () {
+            var folderId = $(this).attr('data-id');
+            self.actionOpenFolder(folderId);
+        });
+    },
+
     initSearch: function () {
         var self = this;
 
         this.getSearchField().searchAble(function (value) {
             self.action('search', {search: value}, function (result) {
                 self.setFilesContainer(result.files);
+                self.setPath(result.path);
                 self.getFileContainer().find('.file .name span').highlight(value);
             })
         });
@@ -169,6 +221,8 @@ Finder.prototype =
 
             $uploadButton.addClass('disabled');
             $progressBar.parent().fadeIn();
+
+            formData.append('folderId', self.getCurrentFolderId());
 
             KikCMS.action('/finder/upload', formData, function (result) {
                 self.setFilesContainer(result.files, result.uploadStatus);
@@ -226,6 +280,11 @@ Finder.prototype =
         })
     },
 
+    setPath: function (path) {
+        this.getFinder().find('.path').html(path);
+        this.initPath();
+    },
+
     getSearchField: function () {
         return this.getToolbar().find('.search input');
     },
@@ -242,6 +301,14 @@ Finder.prototype =
 
     getToolbar: function () {
         return this.getFinder().find('.toolbar');
+    },
+
+    getCurrentFolderId: function () {
+        return this.getFinder().find('input.currentFolderId').val();
+    },
+
+    saveCurrentFolderId: function (folderId) {
+        this.getFinder().find('input.currentFolderId').val(folderId);
     },
 
     /**
