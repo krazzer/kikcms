@@ -37,20 +37,20 @@ body > #overlay {
 }
 
 .dataTableWindow {
-  width: 1000px;
+    width: 1050px;
   position: fixed;
   top: 40px;
   bottom: 40px;
   background-color: rgba(255, 255, 255, 0.97);
   z-index: 3;
   left: 50%;
-  margin-left: -500px;
+    margin-left: -525px;
   border: 1px solid #e1e1e1;
   border-radius: 3px;
   display: none;
   min-height: 300px; }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow {
       width: auto;
       top: 40px;
@@ -59,14 +59,6 @@ body > #overlay {
       right: 40px;
         margin-left: 0;
     }
-}
-
-.dataTableWindow.level1 {
-    z-index: 4;
-    top: 50px;
-    bottom: 50px;
-    width: 1020px;
-    margin-left: -510px;
 }
 
 .dataTableWindow.blur {
@@ -83,11 +75,11 @@ body > #overlay {
     z-index: 4;
     top: 60px;
     bottom: 60px;
-    width: 820px;
-    margin-left: -410px;
+    width: 920px;
+    margin-left: -460px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level1 {
         width: auto;
         top: 50px;
@@ -102,11 +94,11 @@ body > #overlay {
     z-index: 5;
     top: 70px;
     bottom: 70px;
-    width: 840px;
-    margin-left: -420px;
+    width: 940px;
+    margin-left: -470px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level2 {
         width: auto;
         top: 50px;
@@ -121,11 +113,11 @@ body > #overlay {
     z-index: 6;
     top: 80px;
     bottom: 80px;
-    width: 860px;
-    margin-left: -430px;
+    width: 960px;
+    margin-left: -480px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level3 {
         width: auto;
         top: 50px;
@@ -140,11 +132,11 @@ body > #overlay {
     z-index: 7;
     top: 90px;
     bottom: 90px;
-    width: 880px;
-    margin-left: -440px;
+    width: 980px;
+    margin-left: -490px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level4 {
         width: auto;
         top: 50px;
@@ -159,11 +151,11 @@ body > #overlay {
     z-index: 8;
     top: 100px;
     bottom: 100px;
-    width: 900px;
-    margin-left: -450px;
+    width: 1000px;
+    margin-left: -500px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level5 {
         width: auto;
         top: 50px;
@@ -178,11 +170,11 @@ body > #overlay {
     z-index: 9;
     top: 110px;
     bottom: 110px;
-    width: 920px;
-    margin-left: -460px;
+    width: 1020px;
+    margin-left: -510px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level6 {
         width: auto;
         top: 50px;
@@ -197,11 +189,11 @@ body > #overlay {
     z-index: 10;
     top: 120px;
     bottom: 120px;
-    width: 940px;
-    margin-left: -470px;
+    width: 1040px;
+    margin-left: -520px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level7 {
         width: auto;
         top: 50px;
@@ -216,11 +208,11 @@ body > #overlay {
     z-index: 11;
     top: 130px;
     bottom: 130px;
-    width: 960px;
-    margin-left: -480px;
+    width: 1060px;
+    margin-left: -530px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level8 {
         width: auto;
         top: 50px;
@@ -235,11 +227,11 @@ body > #overlay {
     z-index: 12;
     top: 140px;
     bottom: 140px;
-    width: 980px;
-    margin-left: -490px;
+    width: 1080px;
+    margin-left: -540px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level9 {
         width: auto;
         top: 50px;
@@ -254,11 +246,11 @@ body > #overlay {
     z-index: 13;
     top: 150px;
     bottom: 150px;
-    width: 1000px;
-    margin-left: -500px;
+    width: 1100px;
+    margin-left: -550px;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1130px) {
     .dataTableWindow.level10 {
         width: auto;
         top: 50px;
@@ -325,7 +317,6 @@ body > #overlay {
 
 .dataTableWindow > .windowContent > .content {
     overflow: auto;
-    height: 600px;
     padding: 30px 50px;
 }
 

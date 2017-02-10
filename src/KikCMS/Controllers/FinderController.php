@@ -35,9 +35,12 @@ class FinderController extends BaseController
         $folderName = $this->request->getPost('folderName');
         $filters    = $this->getFilters();
 
-        $this->finderFileService->createFolder($folderName, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $folderId = $this->finderFileService->createFolder($folderName, $filters[FinderConfig::FILTER_FOLDER_ID]);
 
-        return json_encode(['files' => $finder->renderFiles($filters)]);
+        return json_encode([
+            'files'   => $finder->renderFiles($filters),
+            'fileIds' => [$folderId],
+        ]);
     }
 
     /**

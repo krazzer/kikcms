@@ -53,8 +53,17 @@
     </div>
 
     <script>
-        window.onload = function () {
-            eval("var {{ instance }} = new Finder(); {{ instance }}.instance = '{{ instance }}'; {{ instance }}.init();");
+        var loadFinder = function () {
+            eval("var {{ instance }} = new Finder();");
+            eval("{{ instance }}.instance = '{{ instance }}';");
+            eval("{{ instance }}.pickingMode = {{ pickingMode ? 'true' : 'false' }};");
+            eval("{{ instance }}.init();");
         };
+
+        {% if isAjax %}
+        loadFinder();
+        {% else %}
+        window.onload = loadFinder;
+        {% endif %}
     </script>
 </div>

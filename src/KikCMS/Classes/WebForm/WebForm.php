@@ -4,11 +4,13 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
@@ -92,7 +94,13 @@ abstract class WebForm extends Injectable
         }
 
         if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
-            $this->view->assets->addJs('/cmsassets/js/typeahead.js');
+            $this->view->assets->addJs('cmsassets/js/typeahead.js');
+        }
+
+        if ($this->hasFieldWithType(Field::TYPE_FILE)) {
+            $this->view->assets->addJs('cmsassets/js/finder/finder.js');
+            $this->view->assets->addCss('cmsassets/css/finder.css');
+            $this->view->jsTranslations = array_merge($this->view->jsTranslations, Finder::JS_TRANSLATIONS);
         }
     }
 
@@ -141,6 +149,21 @@ abstract class WebForm extends Injectable
         $checkbox->addValidators($validators);
 
         return $this->addField(new Checkbox($checkbox));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field|FileField
+     */
+    public function addFileField(string $key, string $label, array $validators = []): Field
+    {
+        $file = new Text($key);
+        $file->setLabel($label);
+        $file->addValidators($validators);
+
+        return $this->addField(new FileField($file));
     }
 
     /**

@@ -13,6 +13,8 @@ class FinderFile extends Model
     const FIELD_FOLDER_ID = 'folder_id';
     const FIELD_NAME      = 'name';
 
+    const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
     /**
      * @inheritdoc
      * @return FinderFile
@@ -84,5 +86,13 @@ class FinderFile extends Model
     public function isFolder(): bool
     {
         return (bool) $this->is_folder;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isImage(): bool
+    {
+        return in_array($this->getMimeType(), self::IMAGE_TYPES);
     }
 }

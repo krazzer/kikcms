@@ -31,8 +31,6 @@ class FinderFileService extends Injectable
     /** @var string */
     private $thumbDir;
 
-    const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-
     /**
      * @param FileStorage $fileStorage
      */
@@ -70,14 +68,18 @@ class FinderFileService extends Injectable
     /**
      * @param string $folderName
      * @param int $folderId
+     *
+     * @return int
      */
-    public function createFolder(string $folderName, $folderId = 0)
+    public function createFolder(string $folderName, $folderId = 0): int
     {
         $finderDir            = new FinderFolder();
         $finderDir->name      = $folderName;
         $finderDir->folder_id = $folderId;
 
         $finderDir->save();
+
+        return (int) $finderDir->id;
     }
 
     /**
@@ -184,12 +186,13 @@ class FinderFileService extends Injectable
      */
     public function getThumbNailMap(array $finderFiles)
     {
+        //todo: obsolete. Remove with all occurrences
         $thumbNails = [];
 
         foreach ($finderFiles as $finderFile) {
             $fileId = $finderFile->getId();
 
-            if ( ! $this->isImage($finderFile)) {
+            if ( ! $finderFile->isImage()) {
                 $thumbNails[$fileId] = null;
                 continue;
             }
@@ -289,15 +292,6 @@ class FinderFileService extends Injectable
         }
 
         return $files;
-    }
-
-    /**
-     * @param FinderFile $finderFile
-     * @return bool
-     */
-    private function isImage(FinderFile $finderFile)
-    {
-        return in_array($finderFile->getMimeType(), self::IMAGE_TYPES);
     }
 
     /**

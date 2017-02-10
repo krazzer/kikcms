@@ -1,0 +1,9 @@
+{# @var finderFile \KikCMS\Models\FinderFile #}
+{% if finderFile.isImage %}
+    <img src="/finder/thumb/{{ finderFile.id }}"/>
+{% elseif(finderFile.isFolder) %}
+    <img src="/cmsassets/images/folder.png"/>
+{% else %}
+    <span class="extension">{{ finderFile.extension }}</span>
+    <span class="glyphicon glyphicon-file"></span>
+{% endif %}

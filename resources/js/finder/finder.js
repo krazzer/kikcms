@@ -5,6 +5,7 @@ Finder.prototype =
 {
     instance: null,
     shiftKeyPressed: false,
+    pickingMode: false,
     cutFileIds: [],
 
     action: function (action, parameters, onSuccess) {
@@ -24,7 +25,7 @@ Finder.prototype =
         }
 
         this.action('createFolder', {folderName: folderName}, function (result) {
-            self.setFilesContainer(result.files);
+            self.setFilesContainer(result.files, result.fileIds);
         })
     },
 
@@ -89,12 +90,14 @@ Finder.prototype =
 
     fileDeSelect: function ($file) {
         $file.removeClass('selected');
+        $file.trigger('selectionChange');
 
         this.updateToolbar();
     },
 
     fileSelect: function ($file) {
         $file.addClass('selected');
+        $file.trigger('selectionChange');
 
         this.updateToolbar();
     },
@@ -170,7 +173,7 @@ Finder.prototype =
 
             // select a file
             $fileSelectables.click(function (e) {
-                if (!self.shiftKeyPressed) {
+                if (!self.shiftKeyPressed || self.pickingMode) {
                     $fileContainer.find('.file.selected').removeClass('selected');
                 }
 
@@ -196,7 +199,13 @@ Finder.prototype =
                     return;
                 }
 
-                window.open($file.attr('data-url'));
+                //todo: SPOD
+                if (!self.pickingMode) {
+                    window.open($file.attr('data-url'));
+                } else {
+                    $file.trigger("pick");
+                }
+
                 e.stopPropagation();
             });
         });
@@ -209,8 +218,13 @@ Finder.prototype =
                 return;
             }
 
+            //todo: SPOD
             if ($file.hasClass('selected')) {
-                window.open($file.attr('data-url'));
+                if (!self.pickingMode) {
+                    window.open($file.attr('data-url'));
+                } else {
+                    $file.trigger("pick");
+                }
             }
         });
 

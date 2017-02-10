@@ -2,6 +2,7 @@
 
 return [
     'delete' => 'Verwijderen',
+    'cancel' => 'Annuleer',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
@@ -20,6 +21,7 @@ return [
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
         'closeWarning'      => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten dit venster sluiten?',
+        'pickFile'          => 'Bestand kiezen',
 
         'pages' => [
             'total'         => 'Totaal',
@@ -66,6 +68,7 @@ return [
         'createFolder'      => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName' => 'Nieuwe map',
         'editFileName'      => 'Geef een nieuwe naam op voor het bestand',
+        'pickFile'          => 'Kies bestand',
     ],
 
     'webform' => [

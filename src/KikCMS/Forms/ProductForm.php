@@ -24,6 +24,7 @@ class ProductForm extends DataForm
 
         $this->addTab('Algemeen', [
             $this->addTextField('title', 'Naam', [new PresenceOf()]),
+            $this->addFileField('image_id', 'Afbeelding'),
             $this->addTextField('price', 'Prijs'),
             $this->addTextField('stock', 'Voorraad'),
             $this->addCheckboxField('sale', 'Sale'),

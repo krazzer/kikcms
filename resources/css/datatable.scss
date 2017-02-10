@@ -35,14 +35,14 @@ body > #overlay {
 }
 
 .dataTableWindow {
-    width: 1000px;
+    width: 1050px;
     position: fixed;
     top: 40px;
     bottom: 40px;
     background-color: rgba(255, 255, 255, 0.97);
     z-index: 3;
     left: 50%;
-    margin-left: -500px;
+    margin-left: -525px;
     border: 1px solid $lightGray;
     border-radius: $defaultBorderRadius;
     display: none;
@@ -55,14 +55,6 @@ body > #overlay {
         left: 40px;
         right: 40px;
         margin-left: 0;
-    }
-
-    &.level1 {
-        z-index: 4;
-        top: 50px;
-        bottom: 50px;
-        width: 1020px;
-        margin-left: -510px;
     }
 
     &.blur {
@@ -78,8 +70,8 @@ body > #overlay {
             z-index: 3 + $i;
             top: 50px + ($i * 10);
             bottom: 50px + ($i * 10);
-            width: 800px + ($i * 20);
-            margin-left: -400px - ($i * 10);
+            width: 900px + ($i * 20);
+            margin-left: -450px - ($i * 10);
 
             @media #{$lowerThanDesktop}{
                 width: auto;
@@ -132,7 +124,6 @@ body > #overlay {
 
         > .content {
             overflow: auto;
-            height: 600px;
             padding: 30px 50px;
 
             .tab-contents {

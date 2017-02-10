@@ -187,7 +187,11 @@ DataTable.prototype =
         var windowHeight = $window.height();
         var headerHeight = $window.find('.windowContent > .header').outerHeight();
         var footerHeight = $window.find('.windowContent > .footer').outerHeight();
-        var tabsHeight   = $window.find('.windowContent > .tabs').outerHeight();
+        var tabsHeight   = 0;
+
+        if ($window.find('.windowContent > .tabs').length > 0) {
+            tabsHeight = $window.find('.windowContent > .tabs').outerHeight();
+        }
 
         $window.find('.content').css('height', windowHeight - headerHeight - footerHeight - tabsHeight);
     },

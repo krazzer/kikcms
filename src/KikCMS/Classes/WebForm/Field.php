@@ -18,6 +18,7 @@ class Field
     const TYPE_MULTI_CHECKBOX = 'multiCheckbox';
     const TYPE_WYSIWYG        = 'wysiwyg';
     const TYPE_HIDDEN         = 'hidden';
+    const TYPE_FILE           = 'file';
 
     /** @var WebForm|DataForm */
     protected $form;

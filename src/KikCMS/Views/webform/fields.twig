@@ -63,3 +63,32 @@
 {%- block fieldWysiwyg %}
     {{ block('fieldDefault') }}
 {% endblock %}
+
+{%- block fieldFile %}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ form.label(element.name)|raw }}
+        <div class="field">
+            <div class="buttons">
+                <div class="btn btn-default preview"></div>
+                <div class="btn btn-default delete hidden" title="{{ tl('webForm.detachFile') }}"><span
+                            class="glyphicon glyphicon-remove"></span></div>
+                <div class="btn btn-default pick"><span class="glyphicon glyphicon-hand-up"></span><span
+                            class="lbl">{{ tl('dataTable.pickFile') }}</span></div>
+                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}">
+                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                    <span class="lbl">
+                        {{ tl('media.button.upload') }}
+                        <input type="file" name="file"/>
+                    </span>
+                </label>
+            </div>
+            <div class="file-picker">
+                <div class="finder-container"></div>
+                <div class="buttons">
+                    <div class="btn btn-default cancel">{{ tl('cancel') }}</div>
+                    <div class="btn btn-primary disabled pick-file">{{ tl('media.pickFile') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -11,10 +11,17 @@ textarea.form-control{
 
 .btn{
     @include fontDefault();
-    font-weight: 400;
+    font-weight: 300;
+    border-radius: $defaultBorderRadius;
+    padding: 7px 15px;
+    border: 1px solid $lightGray;
 
     &:focus, &:active, &:active:focus{
         outline: none;
+    }
+
+    .glyphicon ~ .lbl {
+        margin-left: 8px;
     }
 }
 
@@ -44,7 +51,12 @@ textarea.form-control{
         border-color: $pinkDark;
     }
 
-    &:active, &:focus, &:active:focus{
+    &.disabled:hover {
+        background-color: $pinkDark;
+        border-color: $pinkDark;
+    }
+
+    &:active, &:focus, &:active:focus, &:active:hover {
         color: $colorWhite;
         background-color: $pinkDarker;
         border-color: $pinkDarker;

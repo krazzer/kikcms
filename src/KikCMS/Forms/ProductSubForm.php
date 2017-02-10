@@ -19,6 +19,7 @@ class ProductSubForm extends DataForm
         $this->addTextField('price', 'Prijs');
         $this->addTextField('stock', 'Voorraad');
         $this->addCheckboxField('sale', 'Sale');
+        $this->addFileField('image_id', 'Afbeelding');
 
         $this->addDataTableField(new SubProducts(), "Sub producten");
     }

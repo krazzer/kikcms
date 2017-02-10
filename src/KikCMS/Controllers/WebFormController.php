@@ -5,9 +5,11 @@ namespace KikCMS\Controllers;
 
 use InvalidArgumentException;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Models\FinderFile;
 
 /**
  * @property DbService dbService
@@ -42,6 +44,33 @@ class WebFormController extends BaseController
         $model = $field->getSourceModel();
 
         return json_encode($model::getNameList());
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilePreviewAction()
+    {
+        $fileId     = $this->request->getPost('fileId');
+        $finderFile = FinderFile::getById($fileId);
+        $finder     = new Finder();
+
+        return json_encode([
+            'preview' => $finder->renderFilePreview($finderFile)
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFinderAction()
+    {
+        $finder = new Finder();
+        $finder->setPickingMode(true);
+
+        return json_encode([
+            'finder' => $finder->render()
+        ]);
     }
 
     /**

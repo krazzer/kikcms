@@ -109,6 +109,20 @@ KikCmsClass.prototype =
         xmlHttpRequest();
     },
 
+    actionPickFile: function ($field, fileId) {
+        var $preview      = $field.find('.preview');
+        var $buttonPick   = $field.find('.buttons .pick');
+        var $buttonDelete = $field.find('.buttons .delete');
+
+        this.action('/cms/webform/getFilePreview', {fileId: fileId}, function (result) {
+            $preview.fadeIn();
+            $preview.html(result.preview);
+
+            $buttonPick.hide();
+            $buttonDelete.removeClass('hidden');
+        });
+    },
+
     showError: function (result, onError) {
         if (typeof(onError) != 'undefined') {
             onError();
@@ -157,6 +171,77 @@ KikCmsClass.prototype =
                         source: data
                     });
                 });
+            });
+        });
+
+        $element.find('.type-file').each(function () {
+            //todo: neatify this code
+            var $field            = $(this);
+            var $filePicker       = $field.find('.file-picker');
+            var $uploadButton     = $field.find('.btn.upload');
+            var $pickButton       = $field.find('.btn.pick, .btn.preview');
+            var $finderPickButton = $filePicker.find('.pick-file');
+
+            $filePicker.find('.buttons .cancel').click(function () {
+                $filePicker.slideUp();
+                $uploadButton.removeClass('disabled');
+            });
+
+            $pickButton.click(function () {
+                if ($filePicker.find('.finder').length >= 1) {
+                    $filePicker.slideToggle();
+                    $uploadButton.toggleClass('disabled');
+                    return;
+                }
+
+                self.action('/cms/webform/getFinder', {}, function (result) {
+                    $filePicker.find('.finder-container').html(result.finder);
+                    $filePicker.slideDown();
+
+                    $filePicker.on("pick", '.file', function () {
+                        var $file          = $(this);
+                        var selectedFileId = $file.attr('data-id');
+
+                        self.actionPickFile($field, selectedFileId);
+
+                        $filePicker.slideUp(function () {
+                            $file.removeClass('selected');
+                            $finderPickButton.addClass('disabled');
+                        });
+
+                        $uploadButton.removeClass('disabled');
+                    });
+
+                    $filePicker.on("selectionChange", '.file', function () {
+                        if ($filePicker.find('.file.selected:not(.folder)').length >= 1) {
+                            $finderPickButton.removeClass('disabled');
+                        } else {
+                            $finderPickButton.addClass('disabled');
+                        }
+                    });
+
+                    $finderPickButton.click(function () {
+                        var $file          = $filePicker.find('.file.selected');
+                        var selectedFileId = $file.attr('data-id');
+
+                        self.actionPickFile($field, selectedFileId);
+
+                        $filePicker.slideUp(function () {
+                            $file.removeClass('selected');
+                            $finderPickButton.addClass('disabled');
+                        });
+
+                        $uploadButton.removeClass('disabled');
+                    });
+
+                    $uploadButton.addClass('disabled');
+                });
+            });
+
+            $uploadButton.click(function (e) {
+                if ($uploadButton.hasClass('disabled')) {
+                    e.preventDefault();
+                }
             });
         });
     },

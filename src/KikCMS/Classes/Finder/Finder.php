@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\Finder;
 
 
+use KikCMS\Models\FinderFile;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
 
@@ -19,6 +20,8 @@ class Finder extends Injectable
         'media.editFileName',
     ];
 
+    private $pickingMode = false;
+
     /**
      * @param array $filters
      * @return string
@@ -34,7 +37,9 @@ class Finder extends Injectable
             'files'          => $files,
             'thumbnails'     => $thumbs,
             'instance'       => $this->getInstance(),
+            'pickingMode'    => $this->pickingMode,
             'maxFileUploads' => $this->getMaxFileUploads(),
+            'isAjax'         => $this->request->isAjax(),
         ]);
     }
 
@@ -50,6 +55,17 @@ class Finder extends Injectable
         return $this->renderView('files', [
             'files'      => $files,
             'thumbnails' => $thumbs,
+        ]);
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     * @return string
+     */
+    public function renderFilePreview(FinderFile $finderFile)
+    {
+        return $this->renderView('file', [
+            'finderFile' => $finderFile,
         ]);
     }
 
@@ -83,6 +99,14 @@ class Finder extends Injectable
     public function renderView($viewName, array $parameters = []): string
     {
         return $this->view->getPartial('finder/' . $viewName, $parameters);
+    }
+
+    /**
+     * @param bool $pickingMode
+     */
+    public function setPickingMode(bool $pickingMode)
+    {
+        $this->pickingMode = $pickingMode;
     }
 
     /**
