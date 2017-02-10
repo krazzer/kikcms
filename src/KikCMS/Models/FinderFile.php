@@ -14,6 +14,15 @@ class FinderFile extends Model
     const FIELD_NAME      = 'name';
 
     /**
+     * @inheritdoc
+     * @return FinderFile
+     */
+    public static function getById($id)
+    {
+        return parent::getById($id);
+    }
+
+    /**
      * @return DateTime
      */
     public function getCreated()

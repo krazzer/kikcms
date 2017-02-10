@@ -110,7 +110,7 @@
 .finder .files .files-container .file .name {
     text-align: center;
     max-width: 120px;
-    max-height: 50px;
+    max-height: 48px;
     overflow: hidden;
     line-height: 16px;
     margin-top: 5px;

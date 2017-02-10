@@ -65,6 +65,7 @@ return [
         'deleteConfirmOne'  => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
         'createFolder'      => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName' => 'Nieuwe map',
+        'editFileName'      => 'Geef een nieuwe naam op voor het bestand',
     ],
 
     'webform' => [

@@ -55,6 +55,24 @@ class FinderController extends BaseController
     }
 
     /**
+     * @return string
+     */
+    public function editFileNameAction()
+    {
+        $finder   = new Finder();
+        $fileId   = $this->request->getPost('fileId');
+        $fileName = $this->request->getPost('fileName');
+        $filters  = $this->getFilters();
+
+        $this->finderFileService->updateFileNameById($fileId, $fileName);
+
+        return json_encode([
+            'files'   => $finder->renderFiles($filters),
+            'fileIds' => [$fileId]
+        ]);
+    }
+
+    /**
      * @param int $fileId
      * @return string
      * @throws NotFoundException

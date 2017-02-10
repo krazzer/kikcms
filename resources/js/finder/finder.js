@@ -50,6 +50,23 @@ Finder.prototype =
         })
     },
 
+    actionEditFileName: function ($file) {
+        var self = this;
+
+        var fileId          = $file.attr('data-id');
+        var currentFileName = KikCMS.removeExtension($file.find('.name span').text());
+
+        var newFileName = prompt(KikCMS.tl('media.editFileName'), currentFileName);
+
+        if (!newFileName) {
+            return;
+        }
+
+        this.action('editFileName', {fileId: fileId, fileName: newFileName}, function (result) {
+            self.setFilesContainer(result.files, result.fileIds);
+        });
+    },
+
     actionPaste: function () {
         var self = this;
 
@@ -131,6 +148,21 @@ Finder.prototype =
                 }
             });
 
+            // click name
+            $file.find('.name span').click(function () {
+                if (!$file.hasClass('selected')) {
+                    return;
+                }
+
+                setTimeout(function () {
+                    if ($file.attr('data-double-clicked')) {
+                        return;
+                    }
+
+                    self.actionEditFileName($file);
+                }, 500);
+            });
+
             // don't drag images
             $file.find('img').on('dragstart', function (e) {
                 e.preventDefault();
@@ -152,6 +184,12 @@ Finder.prototype =
             });
 
             $fileSelectables.on('dblclick', function (e) {
+                $file.attr('data-double-clicked', true);
+
+                setTimeout(function () {
+                    $file.removeAttr('data-double-clicked');
+                }, 500);
+
                 if ($file.hasClass('folder')) {
                     self.actionOpenFolder($file.attr('data-id'));
                     e.stopPropagation();

@@ -260,6 +260,23 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param int $fileId
+     * @param string $fileName
+     */
+    public function updateFileNameById(int $fileId, string $fileName)
+    {
+        $finderFile = FinderFile::getById($fileId);
+
+        if ($finderFile->isFolder()) {
+            $finderFile->name = $fileName;
+        } else {
+            $finderFile->name = $fileName . '.' . $finderFile->extension;
+        }
+
+        $finderFile->save();
+    }
+
+    /**
      * @param Resultset $resultSet
      * @return File[]
      */

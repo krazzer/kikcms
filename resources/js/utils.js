@@ -161,6 +161,10 @@ KikCmsClass.prototype =
         });
     },
 
+    removeExtension: function (filename) {
+        return filename.replace(/\.[^/.]+$/, "");
+    },
+
     tl: function (key, params) {
         var translation = this.translations[key];
 

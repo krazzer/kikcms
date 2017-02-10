@@ -17,4 +17,5 @@ class DummyProducts extends Model
     const FIELD_CATEGORY_ID = 'category_id';
     const FIELD_DESCRIPTION = 'description';
     const FIELD_PARENT_ID   = 'parent_id';
+    const FIELD_IMAGE_ID    = 'image_id';
 }

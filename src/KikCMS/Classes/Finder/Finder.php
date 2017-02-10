@@ -16,6 +16,7 @@ class Finder extends Injectable
         'media.deleteConfirmOne',
         'media.createFolder',
         'media.defaultFolderName',
+        'media.editFileName',
     ];
 
     /**
