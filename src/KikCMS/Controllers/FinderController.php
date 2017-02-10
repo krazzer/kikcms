@@ -97,7 +97,8 @@ class FinderController extends BaseController
         $this->finderFileService->moveFilesToFolderById($fileIds, $filters[FinderConfig::FILTER_FOLDER_ID]);
 
         return json_encode([
-            'files' => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles($filters),
+            'fileIds' => $fileIds,
         ]);
     }
 
@@ -147,14 +148,14 @@ class FinderController extends BaseController
      */
     public function uploadAction()
     {
-        $finder        = new Finder();
-        $uploadedFiles = $this->request->getUploadedFiles();
-        $filters       = $this->getFilters();
-        $uploadStatus  = $finder->uploadFiles($uploadedFiles, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $finder          = new Finder();
+        $uploadedFiles   = $this->request->getUploadedFiles();
+        $filters         = $this->getFilters();
+        $uploadedFileIds = $finder->uploadFiles($uploadedFiles, $filters[FinderConfig::FILTER_FOLDER_ID]);
 
         return json_encode([
-            'uploadStatus' => $uploadStatus,
-            'files'        => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles($filters),
+            'fileIds' => $uploadedFileIds,
         ]);
     }
 

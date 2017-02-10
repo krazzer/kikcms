@@ -169,7 +169,6 @@ class FinderFileService extends Injectable
             return $path;
         }
 
-        /** @var FinderFolder $folder */
         $folder = FinderFolder::getById($folderId);
 
         $path[$folderId] = $folder->name;
@@ -180,14 +179,13 @@ class FinderFileService extends Injectable
     /**
      * Create a map of thumbnails for the given finderFiles
      *
-     * @param array $finderFiles
+     * @param FinderFile[] $finderFiles
      * @return array [int fileId => string|null thumbnail]
      */
     public function getThumbNailMap(array $finderFiles)
     {
         $thumbNails = [];
 
-        /** @var FinderFile $finderFile */
         foreach ($finderFiles as $finderFile) {
             $fileId = $finderFile->getId();
 
@@ -244,7 +242,8 @@ class FinderFileService extends Injectable
      */
     public function moveFilesToFolderById(array $fileIds, int $folderId)
     {
-        //todo: check for moving a parent folder into subfolder
+        $fileIds = $this->removeFileIdsInPath($fileIds, $folderId);
+
         $this->dbService->update(FinderFile::class, [
             FinderFile::FIELD_FOLDER_ID => $folderId
         ], [
@@ -282,5 +281,24 @@ class FinderFileService extends Injectable
     private function isImage(FinderFile $finderFile)
     {
         return in_array($finderFile->getMimeType(), self::IMAGE_TYPES);
+    }
+
+    /**
+     * @param int[] $fileIds
+     * @param int $folderId
+     *
+     * @return int[]
+     */
+    private function removeFileIdsInPath(array $fileIds, int $folderId)
+    {
+        $breadCrumbs = $this->getFolderPath($folderId);
+
+        foreach ($fileIds as $i => $fileId) {
+            if (array_key_exists($fileId, $breadCrumbs)) {
+                unset($fileIds[$i]);
+            }
+        }
+
+        return $fileIds;
     }
 }

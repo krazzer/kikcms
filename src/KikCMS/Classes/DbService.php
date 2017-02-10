@@ -20,6 +20,10 @@ class DbService extends Injectable
         $table       = $this->getTableForModel($model);
         $whereClause = $this->getWhereClauseByArray($where);
 
+        if (empty($whereClause)) {
+            return true;
+        }
+
         return $this->db->delete($table, $whereClause);
     }
 
@@ -103,10 +107,14 @@ class DbService extends Injectable
      */
     public function update(string $model, array $set, array $where)
     {
-        $table = $this->getTableForModel($model);
-        $where = $this->getWhereClauseByArray($where);
+        $table       = $this->getTableForModel($model);
+        $whereClause = $this->getWhereClauseByArray($where);
 
-        return $this->db->update($table, array_keys($set), array_values($set), $where);
+        if (empty($whereClause)) {
+            return true;
+        }
+
+        return $this->db->update($table, array_keys($set), array_values($set), $whereClause);
     }
 
     /**

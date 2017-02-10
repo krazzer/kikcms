@@ -55,7 +55,7 @@ Finder.prototype =
 
         this.action('paste', {fileIds: this.cutFileIds}, function (result) {
             self.cutFileIds = [];
-            self.setFilesContainer(result.files);
+            self.setFilesContainer(result.files, result.fileIds);
         })
     },
 
@@ -256,7 +256,7 @@ Finder.prototype =
             formData.append('folderId', self.getCurrentFolderId());
 
             KikCMS.action('/finder/upload', formData, function (result) {
-                self.setFilesContainer(result.files, result.uploadStatus);
+                self.setFilesContainer(result.files, result.fileIds);
 
                 $uploadButton.removeClass('disabled');
                 $progressBar.parent().fadeOut();
@@ -285,27 +285,27 @@ Finder.prototype =
         return this.getFinder().find('.files .files-container');
     },
 
-    setFilesContainer: function (html, uploadStatus) {
+    setFilesContainer: function (html, fileIds) {
         var $filesContainer = this.getFileContainer();
 
         $filesContainer.html(html);
 
         this.initFiles();
 
-        $.each(uploadStatus, function (index, fileId) {
+        $.each(fileIds, function (index, fileId) {
             if (fileId === false) {
                 return;
             }
 
-            var $createdFile = $filesContainer.find('.file-' + fileId);
-            $createdFile.addClass('created');
+            var $file = $filesContainer.find('.file-' + fileId);
+            $file.addClass('edited');
 
             setTimeout(function () {
-                $createdFile.find('.thumb').addClass('easeOutBgColor');
-                $createdFile.removeClass('created');
+                $file.find('.thumb').addClass('easeOutBgColor');
+                $file.removeClass('edited');
 
                 setTimeout(function () {
-                    $createdFile.find('.thumb').removeClass('easeOutBgColor');
+                    $file.find('.thumb').removeClass('easeOutBgColor');
                 }, 500);
             }, 5000);
         })
@@ -342,15 +342,33 @@ Finder.prototype =
         this.getFinder().find('input.currentFolderId').val(folderId);
     },
 
+    selectedSingleFolder: function () {
+        var $selectedFiles = this.getFileContainer().find('.file.selected');
+
+        if ($selectedFiles.length > 1) {
+            return false;
+        }
+
+        return $selectedFiles.hasClass('folder');
+    },
+
     /**
      * Checks if any toolbar button should be updated by selected files etc
      */
     updateToolbar: function () {
-        var aFileIsSelected = this.getFileContainer().find('.file.selected').length >= 1;
-        var $toolbar        = this.getToolbar();
+        var self     = this;
+        var $toolbar = this.getToolbar();
 
-        if (aFileIsSelected) {
-            $toolbar.find('.delete, .copy, .cut').fadeIn();
+        if (this.getSelectedFileIds().length >= 1) {
+            if (this.selectedSingleFolder()) {
+                setTimeout(function () {
+                    if (self.getSelectedFileIds().length >= 1) {
+                        $toolbar.find('.delete, .copy, .cut').fadeIn();
+                    }
+                }, 500);
+            } else {
+                $toolbar.find('.delete, .copy, .cut').fadeIn();
+            }
         } else {
             $toolbar.find('.delete, .copy, .cut').fadeOut();
         }
