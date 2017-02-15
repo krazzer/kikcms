@@ -295,6 +295,25 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param FinderFile $finderFile
+     * @return array|null returns same results as @see getimagesize
+     */
+    public function getThumbDimensions(FinderFile $finderFile)
+    {
+        if ( ! $finderFile->isImage()) {
+            return null;
+        }
+
+        $thumbPath = $this->getThumbPath($finderFile);
+
+        if ( ! file_exists($thumbPath)) {
+            $this->createThumb($finderFile);
+        }
+
+        return getimagesize($thumbPath);
+    }
+
+    /**
      * @param int[] $fileIds
      * @param int $folderId
      *

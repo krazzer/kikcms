@@ -111,12 +111,23 @@ KikCmsClass.prototype =
 
     actionPickFile: function ($field, fileId) {
         var $preview      = $field.find('.preview');
+        var $previewThumb = $field.find('.preview .thumb');
         var $buttonPick   = $field.find('.buttons .pick');
         var $buttonDelete = $field.find('.buttons .delete');
 
         this.action('/cms/webform/getFilePreview', {fileId: fileId}, function (result) {
+            if (result.dimensions) {
+                $previewThumb.css('width', result.dimensions[0] / 2);
+                $previewThumb.css('height', result.dimensions[1] / 2);
+            } else {
+                $previewThumb.css('width', 'auto');
+                $previewThumb.css('height', 'auto');
+            }
+
             $preview.fadeIn();
-            $preview.html(result.preview);
+            $previewThumb.html(result.preview);
+
+            $field.find('input[type=hidden]').val(fileId);
 
             $buttonPick.hide();
             $buttonDelete.removeClass('hidden');
@@ -179,7 +190,10 @@ KikCmsClass.prototype =
             var $field            = $(this);
             var $filePicker       = $field.find('.file-picker');
             var $uploadButton     = $field.find('.btn.upload');
-            var $pickButton       = $field.find('.btn.pick, .btn.preview');
+            var $deleteButton     = $field.find('.btn.delete');
+            var $pickButton       = $field.find('.btn.pick');
+            var $previewButton    = $field.find('.btn.preview');
+            var $pickAbles        = $field.find('.btn.pick, .btn.preview');
             var $finderPickButton = $filePicker.find('.pick-file');
 
             $filePicker.find('.buttons .cancel').click(function () {
@@ -187,7 +201,16 @@ KikCmsClass.prototype =
                 $uploadButton.removeClass('disabled');
             });
 
-            $pickButton.click(function () {
+            $deleteButton.click(function () {
+                $field.find('input[type=hidden]').val('');
+
+                $pickButton.show();
+                $deleteButton.addClass('hidden');
+                $previewButton.find('img').remove();
+                $previewButton.hide();
+            });
+
+            $pickAbles.click(function () {
                 if ($filePicker.find('.finder').length >= 1) {
                     $filePicker.slideToggle();
                     $uploadButton.toggleClass('disabled');

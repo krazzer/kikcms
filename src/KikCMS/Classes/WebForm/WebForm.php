@@ -88,6 +88,8 @@ abstract class WebForm extends Injectable
      */
     public function addAssets()
     {
+        $this->view->assets->addCss('cmsassets/css/webform.css');
+
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
             $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
@@ -159,7 +161,7 @@ abstract class WebForm extends Injectable
      */
     public function addFileField(string $key, string $label, array $validators = []): Field
     {
-        $file = new Text($key);
+        $file = new Hidden($key);
         $file->setLabel($label);
         $file->addValidators($validators);
 

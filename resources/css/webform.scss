@@ -1,0 +1,62 @@
+@import "includes/variables";
+@import "includes/mixins";
+
+.webForm {
+
+    .type-file {
+
+        input[type=file] {
+            display: none;
+        }
+
+        .btn {
+            margin-right: 4px;
+        }
+
+        .file-picker {
+            display: none;
+            padding: 12px;
+            border: 1px solid $lightGray;
+            border-radius: $defaultBorderRadius;
+            margin-top: 8px;
+
+            .toolbar {
+                padding-bottom: 12px;
+            }
+
+            .files-container {
+                min-height: 342px;
+            }
+
+            > .buttons {
+                text-align: right;
+                padding-top: 12px;
+
+                .btn {
+                    margin-right: 0;
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        .buttons {
+            @include clearFix();
+
+            .preview {
+                position: relative;
+                display: none;
+                padding: 7px;
+                float: left;
+                margin-right: 8px;
+                height: auto;
+                width: auto;
+                cursor: pointer;
+
+                .thumb {
+                    transition: width .3s, height .3s;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+}

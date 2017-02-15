@@ -6,6 +6,7 @@ namespace KikCMS\Controllers;
 use InvalidArgumentException;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Finder\Finder;
+use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\WebForm;
@@ -13,6 +14,7 @@ use KikCMS\Models\FinderFile;
 
 /**
  * @property DbService dbService
+ * @property FinderFileService finderFileService
  */
 class WebFormController extends BaseController
 {
@@ -56,7 +58,8 @@ class WebFormController extends BaseController
         $finder     = new Finder();
 
         return json_encode([
-            'preview' => $finder->renderFilePreview($finderFile)
+            'preview'    => $finder->renderFilePreview($finderFile),
+            'dimensions' => $this->finderFileService->getThumbDimensions($finderFile),
         ]);
     }
 

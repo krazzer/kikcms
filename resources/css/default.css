@@ -92,7 +92,7 @@ h1, h2, h3, h4, h5, h6 {
     max-height: 96px;
 }
 
-.files-container .file .thumb > .glyphicon, .webForm .type-file .preview > .glyphicon {
+.files-container .file .thumb > .glyphicon, .files-container .file .thumb .thumb > .glyphicon, .webForm .type-file .preview > .glyphicon, .webForm .type-file .preview .thumb > .glyphicon {
     text-align: center;
     font-size: 96px;
     width: 72px;
@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
     color: #aaaaaa;
 }
 
-.files-container .file .thumb > .glyphicon:before, .webForm .type-file .preview > .glyphicon:before {
+.files-container .file .thumb > .glyphicon:before, .files-container .file .thumb .thumb > .glyphicon:before, .webForm .type-file .preview > .glyphicon:before, .webForm .type-file .preview .thumb > .glyphicon:before {
     margin-left: -8px;
 }
 
@@ -115,57 +115,6 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     color: #d4d4d4;
     cursor: default;
-}
-
-.webForm .type-file input[type=file] {
-    display: none;
-}
-
-.webForm .type-file .btn {
-    margin-right: 4px;
-}
-
-.webForm .type-file .file-picker {
-    display: none;
-    padding: 12px;
-    border: 1px solid #e1e1e1;
-    border-radius: 3px;
-    margin-top: 8px;
-}
-
-.webForm .type-file .file-picker .toolbar {
-    padding-bottom: 12px;
-}
-
-.webForm .type-file .file-picker .files-container {
-    min-height: 342px;
-}
-
-.webForm .type-file .file-picker > .buttons {
-    text-align: right;
-    padding-top: 12px;
-}
-
-.webForm .type-file .file-picker > .buttons .btn {
-    margin-right: 0;
-    margin-left: 4px;
-}
-
-.webForm .type-file .buttons:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.webForm .type-file .buttons .preview {
-    position: relative;
-    display: none;
-    padding: 7px;
-    float: left;
-    margin-right: 8px;
-    height: auto;
-    width: auto;
-    cursor: pointer;
 }
 
 /*# sourceMappingURL=default.css.map */
