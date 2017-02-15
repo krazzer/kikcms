@@ -30,12 +30,10 @@ class Finder extends Injectable
     {
         $this->addAssets();
 
-        $files  = $this->finderFileService->getByFilters($filters);
-        $thumbs = $this->finderFileService->getThumbNailMap($files);
+        $files = $this->finderFileService->getByFilters($filters);
 
         return $this->renderView('index', [
             'files'          => $files,
-            'thumbnails'     => $thumbs,
             'instance'       => $this->getInstance(),
             'pickingMode'    => $this->pickingMode,
             'maxFileUploads' => $this->getMaxFileUploads(),
@@ -49,12 +47,10 @@ class Finder extends Injectable
      */
     public function renderFiles($filters = [])
     {
-        $files  = $this->finderFileService->getByFilters($filters);
-        $thumbs = $this->finderFileService->getThumbNailMap($files);
+        $files = $this->finderFileService->getByFilters($filters);
 
         return $this->renderView('files', [
-            'files'      => $files,
-            'thumbnails' => $thumbs,
+            'files' => $files,
         ]);
     }
 

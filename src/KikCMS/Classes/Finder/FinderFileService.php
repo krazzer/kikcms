@@ -179,31 +179,6 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * Create a map of thumbnails for the given finderFiles
-     *
-     * @param FinderFile[] $finderFiles
-     * @return array [int fileId => string|null thumbnail]
-     */
-    public function getThumbNailMap(array $finderFiles)
-    {
-        //todo: obsolete. Remove with all occurrences
-        $thumbNails = [];
-
-        foreach ($finderFiles as $finderFile) {
-            $fileId = $finderFile->getId();
-
-            if ( ! $finderFile->isImage()) {
-                $thumbNails[$fileId] = null;
-                continue;
-            }
-
-            $thumbNails[$fileId] = '/finder/thumb/' . $fileId;
-        }
-
-        return $thumbNails;
-    }
-
-    /**
      * @param FinderFile $finderFile
      *
      * @return string
