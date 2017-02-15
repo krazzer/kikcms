@@ -230,6 +230,7 @@ abstract class DataTable extends Injectable
             'pagination'      => $this->getTableData($filters),
             'headerData'      => $this->getTableHeaderData(),
             'instanceName'    => $this->getInstanceName(),
+            'parentEditId'    => $this->getParentEditIdByFilters($filters),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'isAjax'          => $this->request->isAjax(),
@@ -450,6 +451,19 @@ abstract class DataTable extends Injectable
     private function getNewIdsCacheKey()
     {
         return $this->getInstanceName() . '-ids';
+    }
+
+    /**
+     * @param array $filters
+     * @return int
+     */
+    private function getParentEditIdByFilters(array $filters): int
+    {
+        if ( ! isset($filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID])) {
+            return 0;
+        }
+
+        return $filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID];
     }
 
     /**

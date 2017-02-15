@@ -126,8 +126,7 @@ KikCmsClass.prototype =
 
             $preview.fadeIn();
             $previewThumb.html(result.preview);
-
-            $field.find('input[type=hidden]').val(fileId);
+            $field.find(' > input[type=hidden]').val(fileId);
 
             $buttonPick.hide();
             $buttonDelete.removeClass('hidden');

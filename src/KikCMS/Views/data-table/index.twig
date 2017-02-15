@@ -47,6 +47,7 @@
         eval(
                 "{{ instanceName }} = new DataTable();" +
                 "{{ instanceName }}.instance = '{{ instanceName }}';" +
+                "{{ instanceName }}.parentEditId = {{ parentEditId }};" +
                 "{{ instanceName }}.labels = '{{ labels }}';" +
                 "{{ instanceName }}.init();"
         );

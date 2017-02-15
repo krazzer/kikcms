@@ -199,12 +199,7 @@ Finder.prototype =
                     return;
                 }
 
-                //todo: SPOD
-                if (!self.pickingMode) {
-                    window.open($file.attr('data-url'));
-                } else {
-                    $file.trigger("pick");
-                }
+                self.pickFile($file);
 
                 e.stopPropagation();
             });
@@ -218,13 +213,8 @@ Finder.prototype =
                 return;
             }
 
-            //todo: SPOD
             if ($file.hasClass('selected')) {
-                if (!self.pickingMode) {
-                    window.open($file.attr('data-url'));
-                } else {
-                    $file.trigger("pick");
-                }
+                self.pickFile($file);
             }
         });
 
@@ -335,6 +325,14 @@ Finder.prototype =
 
     getFileContainer: function () {
         return this.getFinder().find('.files .files-container');
+    },
+
+    pickFile: function ($file) {
+        if (!this.pickingMode) {
+            window.open($file.attr('data-url'));
+        } else {
+            $file.trigger("pick");
+        }
     },
 
     setFilesContainer: function (html, fileIds) {
