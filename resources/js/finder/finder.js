@@ -47,6 +47,11 @@ Finder.prototype =
         }
 
         this.action('delete', {fileIds: selectedIds}, function (result) {
+            if (result.errorMessage) {
+                alert(result.errorMessage);
+                return;
+            }
+
             self.setFilesContainer(result.files);
         })
     },

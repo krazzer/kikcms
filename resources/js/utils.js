@@ -124,7 +124,7 @@ KikCmsClass.prototype =
                 $previewThumb.css('height', 'auto');
             }
 
-            $preview.fadeIn();
+            $preview.removeClass('hidden');
             $previewThumb.html(result.preview);
             $field.find(' > input[type=hidden]').val(fileId);
 
@@ -203,10 +203,10 @@ KikCmsClass.prototype =
             $deleteButton.click(function () {
                 $field.find('input[type=hidden]').val('');
 
-                $pickButton.show();
+                $pickButton.removeClass('hidden');
                 $deleteButton.addClass('hidden');
                 $previewButton.find('img').remove();
-                $previewButton.hide();
+                $previewButton.addClass('hidden');
             });
 
             $pickAbles.click(function () {

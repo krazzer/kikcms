@@ -65,20 +65,28 @@
 {% endblock %}
 
 {%- block fieldFile %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
     <div{{ fieldContainterAttributes|raw }}>
         {{ form.label(element.name)|raw }}
         {{ form.render(element.name)|raw }}
+
         <div class="field">
             <div class="buttons">
-                <div class="btn btn-default preview">
-                    <div class="thumb"></div>
+                <div class="btn btn-default preview{{ not element.value ? ' hidden' }}">
+                    <div class="thumb">
+                        {% if element.value %}
+                            {% set finderFile = field.finderFileById(element.value) %}
+                            {% include "@kikcms/finder/file.twig" %}
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div class="btn btn-default delete hidden" title="{{ tl('webForm.detachFile') }}">
+                <div class="btn btn-default delete{{ not element.value ? ' hidden' }}"
+                     title="{{ tl('webForm.detachFile') }}">
                     <span class="glyphicon glyphicon-remove"></span>
                 </div>
 
-                <div class="btn btn-default pick">
+                <div class="btn btn-default pick{{ element.value ? ' hidden' }}">
                     <span class="glyphicon glyphicon-hand-up"></span>
                     <span class="lbl">{{ tl('dataTable.pickFile') }}</span>
                 </div>

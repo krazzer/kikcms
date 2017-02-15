@@ -37,7 +37,7 @@ abstract class DataTable extends Injectable
     protected $searchableFields = [];
 
     /** @var array assoc that contains the column name as key, and the value that will be used for sorting in the query
-     * i.e. [id => p.id] will make sure the id column is sorted by p.id, this can be used to avoid ambiguity  */
+     * i.e. [id => p.id] will make sure the id column is sorted by p.id, this must be used to avoid ambiguity  */
     protected $orderableFields = [];
 
     /** @var array assoc column as key, callable as value, that will be used to format a value in the result table */

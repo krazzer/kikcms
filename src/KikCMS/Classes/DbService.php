@@ -2,7 +2,9 @@
 
 namespace KikCMS\Classes;
 
+use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Config\DbConfig;
 use Phalcon\Db;
 use Phalcon\Db\ResultInterface;
 use Phalcon\Di\Injectable;
@@ -12,8 +14,8 @@ class DbService extends Injectable
     /**
      * @param string $model
      * @param array $where
-     *
      * @return bool
+     * @throws \Exception
      */
     public function delete(string $model, array $where)
     {
@@ -24,7 +26,15 @@ class DbService extends Injectable
             return true;
         }
 
-        return $this->db->delete($table, $whereClause);
+        try {
+            return $this->db->delete($table, $whereClause);
+        } catch (\Exception $e) {
+            if ($e->errorInfo[1] == DbConfig::ERROR_CODE_FK_CONSTRAINT_FAIL) {
+                throw new DbForeignKeyDeleteException();
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**

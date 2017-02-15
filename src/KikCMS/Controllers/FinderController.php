@@ -4,15 +4,18 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Classes\Translator;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;
 
 /**
  * @property DbService $dbService
  * @property FinderFileService $finderFileService
+ * @property Translator $translator
  */
 class FinderController extends BaseController
 {
@@ -48,13 +51,21 @@ class FinderController extends BaseController
      */
     public function deleteAction()
     {
-        $finder  = new Finder();
-        $fileIds = $this->request->getPost('fileIds');
-        $filters = $this->getFilters();
+        $finder       = new Finder();
+        $fileIds      = $this->request->getPost('fileIds');
+        $filters      = $this->getFilters();
+        $errorMessage = null;
 
-        $this->finderFileService->deleteFilesByIds($fileIds);
+        try {
+            $this->finderFileService->deleteFilesByIds($fileIds);
+        } catch (DbForeignKeyDeleteException $e) {
+            $errorMessage = $this->translator->tl('media.deleteErrorLinked');
+        }
 
-        return json_encode(['files' => $finder->renderFiles($filters)]);
+        return json_encode([
+            'files'        => $finder->renderFiles($filters),
+            'errorMessage' => $errorMessage
+        ]);
     }
 
     /**

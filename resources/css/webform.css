@@ -3,11 +3,9 @@
 .webForm .type-file input[type=file] {
     display: none;
 }
-
 .webForm .type-file .btn {
     margin-right: 4px;
 }
-
 .webForm .type-file .file-picker {
     display: none;
     padding: 12px;
@@ -33,16 +31,13 @@
     margin-right: 0;
     margin-left: 4px;
 }
-
 .webForm .type-file .buttons:after {
     content: "";
     display: table;
     clear: both;
 }
-
 .webForm .type-file .buttons .preview {
     position: relative;
-    display: none;
     padding: 7px;
     float: left;
     margin-right: 8px;
