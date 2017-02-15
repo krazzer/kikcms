@@ -3,12 +3,15 @@
 namespace KikCMS\Classes\Finder;
 
 
+use KikCMS\Classes\Translator;
+use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderFile;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
 
 /**
  * @property FinderFileService $finderFileService
+ * @property Translator $translator
  */
 class Finder extends Injectable
 {
@@ -18,6 +21,7 @@ class Finder extends Injectable
         'media.createFolder',
         'media.defaultFolderName',
         'media.editFileName',
+        'media.uploadMaxFilesWarning',
     ];
 
     private $pickingMode = false;
@@ -108,16 +112,32 @@ class Finder extends Injectable
     /**
      * @param File[] $files
      * @param int $folderId
-     * @return array with the status for each file i.e.: [0 => 123, 1 => false] number is new finderId, false is fail
+     *
+     * @return UploadStatus
      */
-    public function uploadFiles(array $files, $folderId = 0)
+    public function uploadFiles(array $files, $folderId = 0): UploadStatus
     {
-        $uploadStatus = [];
+        $uploadStatus = new UploadStatus();
 
         foreach ($files as $index => $file) {
+            if ( ! $this->mimeTypeAllowed($file)) {
+                $message = $this->translator->tl('media.upload.error.mime', [
+                    'extension' => $file->getExtension(),
+                    'fileName'  => $file->getName()
+                ]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
             $result = $this->finderFileService->create($file, $folderId);
 
-            $uploadStatus[$index] = $result;
+            if ( ! $result) {
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
+            $uploadStatus->addFileId($result);
         }
 
         return $uploadStatus;
@@ -157,5 +177,29 @@ class Finder extends Injectable
         }
 
         return $maxFileUploads;
+    }
+
+    /**
+     * @param File $file
+     * @return bool
+     */
+    private function mimeTypeAllowed(File $file): bool
+    {
+        $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
+        $fileMimeType = $file->getRealType();
+        $extension    = $file->getExtension();
+
+        // check if extension is known
+        if ( ! array_key_exists($extension, MimeConfig::ALL_MIME_TYPES)) {
+            return false;
+        }
+
+        // check if the extension is allowed
+        if ( ! in_array($extension, $allowedMimes)) {
+            return false;
+        }
+
+        // check if the file's mime matches it's extension
+        return in_array($fileMimeType, MimeConfig::ALL_MIME_TYPES[$extension]);
     }
 }

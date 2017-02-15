@@ -1,0 +1,45 @@
+<?php
+
+namespace KikCMS\Classes\Finder;
+
+
+class UploadStatus
+{
+    /** @var string[] */
+    private $errors = [];
+
+    /** @var int[] ids of succesfully created FinderIds */
+    private $fileIds = [];
+
+    /**
+     * @param string $message
+     */
+    public function addError(string $message)
+    {
+        $this->errors[] = $message;
+    }
+
+    /**
+     * @param int $fileId
+     */
+    public function addFileId(int $fileId)
+    {
+        $this->fileIds[] = $fileId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getFileIds(): array
+    {
+        return $this->fileIds;
+    }
+}

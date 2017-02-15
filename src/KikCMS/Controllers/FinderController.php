@@ -169,14 +169,17 @@ class FinderController extends BaseController
      */
     public function uploadAction()
     {
-        $finder          = new Finder();
-        $uploadedFiles   = $this->request->getUploadedFiles();
-        $filters         = $this->getFilters();
-        $uploadedFileIds = $finder->uploadFiles($uploadedFiles, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $finder = new Finder();
+
+        $uploadedFiles = $this->request->getUploadedFiles();
+
+        $filters      = $this->getFilters();
+        $uploadStatus = $finder->uploadFiles($uploadedFiles, $filters[FinderConfig::FILTER_FOLDER_ID]);
 
         return json_encode([
             'files'   => $finder->renderFiles($filters),
-            'fileIds' => $uploadedFileIds,
+            'fileIds' => $uploadStatus->getFileIds(),
+            'errors'  => $uploadStatus->getErrors(),
         ]);
     }
 

@@ -46,14 +46,16 @@ class FinderFileService extends Injectable
      */
     public function create(File $file, $folderId = 0)
     {
+        $mimeType = $file->getRealType();
+
         $finderFile = new FinderFile();
 
         $finderFile->name      = $file->getName();
         $finderFile->extension = $file->getExtension();
-        $finderFile->mimetype  = $file->getRealType();
         $finderFile->size      = $file->getSize();
         $finderFile->created   = new Now();
         $finderFile->updated   = new Now();
+        $finderFile->mimetype  = $mimeType;
         $finderFile->folder_id = $folderId;
 
         if ( ! $finderFile->save()) {

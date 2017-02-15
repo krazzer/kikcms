@@ -51,8 +51,8 @@ return [
     ],
 
     'media' => [
-        'title'             => 'Media',
-        'button'            => [
+        'title'                 => 'Media',
+        'button'                => [
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
             'newFolderTitle' => 'Maak een nieuwe map aan',
@@ -62,13 +62,20 @@ return [
             'cutTitle'       => 'Knip de geselecteerde bestanden',
             'pasteTitle'     => 'Plak de geknipte bestanden',
         ],
-        'searchPlaceholder' => 'Zoeken naar bestanden',
-        'deleteConfirm'     => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
-        'deleteConfirmOne'  => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
-        'createFolder'      => 'Geef een naam op voor de nieuwe map',
-        'defaultFolderName' => 'Nieuwe map',
-        'editFileName'      => 'Geef een nieuwe naam op voor het bestand',
-        'pickFile'          => 'Kies bestand',
+        'searchPlaceholder'     => 'Zoeken naar bestanden',
+        'deleteConfirm'         => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
+        'deleteConfirmOne'      => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
+        'createFolder'          => 'Geef een naam op voor de nieuwe map',
+        'defaultFolderName'     => 'Nieuwe map',
+        'editFileName'          => 'Geef een nieuwe naam op voor het bestand',
+        'pickFile'              => 'Kies bestand',
+        'uploadMaxFilesWarning' => 'U kunt maximaal :amount bestanden tegelijk uploaden',
+        'upload'                => [
+            'error' => [
+                'failed' => 'Er is iets mis gegaan bij het uploaden van :fileName',
+                'mime'   => "Bestandstype ':extension' is niet toegestaan (:fileName)",
+            ],
+        ],
     ],
 
     'webform' => [
