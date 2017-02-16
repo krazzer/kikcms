@@ -24,7 +24,7 @@ class ProductForm extends DataForm
 
         $this->addTab('Algemeen', [
             $this->addTextField('title', 'Naam', [new PresenceOf()]),
-            $this->addFileField('image_id', 'Afbeelding'),
+            $this->addFileField('image_id', 'Afbeelding', [new PresenceOf()]),
             $this->addTextField('price', 'Prijs'),
             $this->addTextField('stock', 'Voorraad'),
             $this->addCheckboxField('sale', 'Sale'),
@@ -34,9 +34,13 @@ class ProductForm extends DataForm
             $subProductsField = $this->addDataTableField(new SubProducts(), "Sub producten")
         ]);
 
+        $categories = Type::findAssoc();
+        $categories = ['' => ''] + $categories;
+
         $this->addTab('Omschrijving', [
             $this->addWysiwygField('description', 'Omschrijving'),
-            $this->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class),
+            //$this->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class),
+            $this->addSelectField('category_id', 'Categorie', $categories, [new PresenceOf()]),
             $productTypeField
         ]);
     }

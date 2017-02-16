@@ -19,6 +19,7 @@ use Phalcon\Di\Injectable;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
+use Phalcon\Forms\Element\Select;
 use Phalcon\Forms\Element\Text;
 use Phalcon\Forms\Element\TextArea;
 use Phalcon\Forms\ElementInterface;
@@ -198,6 +199,24 @@ abstract class WebForm extends Injectable
         $multiCheckbox->setOptions($options);
 
         return $this->addField(new MultiCheckbox($multiCheckbox));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $options
+     * @param array $validators
+     * @return Field
+     */
+    public function addSelectField(string $key, string $label, array $options, array $validators = []): Field
+    {
+        $select = new Select($key);
+        $select->setLabel($label);
+        $select->addValidators($validators);
+        $select->setOptions($options);
+        $select->setAttribute('class', 'form-control');
+
+        return $this->addField(new Field($select));
     }
 
     /**

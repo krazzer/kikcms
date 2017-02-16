@@ -13,6 +13,10 @@
             margin-right: 4px;
         }
 
+        &.has-error .buttons .btn {
+            border-color: $colorErrorText;
+        }
+
         .file-picker {
             display: none;
             padding: 12px;

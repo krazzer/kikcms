@@ -7,6 +7,10 @@
 .webForm .type-file .btn {
     margin-right: 4px;
 }
+
+.webForm .type-file.has-error .buttons .btn {
+    border-color: #a94442;
+}
 .webForm .type-file .file-picker {
     display: none;
     padding: 12px;
