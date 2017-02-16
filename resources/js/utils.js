@@ -109,27 +109,33 @@ KikCmsClass.prototype =
         xmlHttpRequest();
     },
 
-    actionPickFile: function ($field, fileId) {
+    actionPreview: function ($field, fileId, result) {
         var $preview      = $field.find('.preview');
         var $previewThumb = $field.find('.preview .thumb');
         var $buttonPick   = $field.find('.buttons .pick');
         var $buttonDelete = $field.find('.buttons .delete');
 
+        if (result.dimensions) {
+            $previewThumb.css('width', result.dimensions[0] / 2);
+            $previewThumb.css('height', result.dimensions[1] / 2);
+        } else {
+            $previewThumb.css('width', 'auto');
+            $previewThumb.css('height', 'auto');
+        }
+
+        $preview.removeClass('hidden');
+        $previewThumb.html(result.preview);
+        $field.find(' > input[type=hidden].fileId').val(fileId);
+
+        $buttonPick.addClass('hidden');
+        $buttonDelete.removeClass('hidden');
+    },
+
+    actionPickFile: function ($field, fileId) {
+        var self = this;
+
         this.action('/cms/webform/getFilePreview', {fileId: fileId}, function (result) {
-            if (result.dimensions) {
-                $previewThumb.css('width', result.dimensions[0] / 2);
-                $previewThumb.css('height', result.dimensions[1] / 2);
-            } else {
-                $previewThumb.css('width', 'auto');
-                $previewThumb.css('height', 'auto');
-            }
-
-            $preview.removeClass('hidden');
-            $previewThumb.html(result.preview);
-            $field.find(' > input[type=hidden]').val(fileId);
-
-            $buttonPick.hide();
-            $buttonDelete.removeClass('hidden');
+            self.actionPreview($field, fileId, result);
         });
     },
 
@@ -161,7 +167,7 @@ KikCmsClass.prototype =
         return $('#cmsLoader');
     },
 
-    initWebForms: function ($element) {
+    initAutocompleteFields: function ($element) {
         var self = this;
 
         $element.find('.webForm').each(function () {
@@ -183,6 +189,12 @@ KikCmsClass.prototype =
                 });
             });
         });
+    },
+
+    initWebForms: function ($element) {
+        var self = this;
+
+        this.initAutocompleteFields($element);
 
         $element.find('.type-file').each(function () {
             //todo: neatify this code
@@ -194,6 +206,18 @@ KikCmsClass.prototype =
             var $previewButton    = $field.find('.btn.preview');
             var $pickAbles        = $field.find('.btn.pick, .btn.preview');
             var $finderPickButton = $filePicker.find('.pick-file');
+
+            var uploader = new FinderFileUploader({
+                $container: $field,
+                action: '/cms/webform/uploadAndPreview',
+                onSuccess: function (result) {
+                    if (result.fileId) {
+                        self.actionPreview($field, result.fileId, result);
+                    }
+                }
+            });
+
+            uploader.init();
 
             $filePicker.find('.buttons .cancel').click(function () {
                 $filePicker.slideUp();

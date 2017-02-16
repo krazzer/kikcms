@@ -93,41 +93,6 @@ Finder.prototype =
         })
     },
 
-    actionUpload: function (formData) {
-        var self          = this;
-        var $uploadButton = this.getFinder().find('.button.upload');
-        var $progressBar  = this.getFinder().find('.progress-bar');
-
-        $uploadButton.addClass('disabled');
-        $progressBar.parent().fadeIn();
-
-        formData.append('folderId', self.getCurrentFolderId());
-
-        KikCMS.action('/finder/upload', formData, function (result) {
-            self.setFilesContainer(result.files, result.fileIds);
-
-            if (result.errors.length > 0) {
-                alert(result.errors.join("\n"));
-            }
-
-            $uploadButton.removeClass('disabled');
-            $progressBar.parent().fadeOut();
-        }, function () {
-            $uploadButton.removeClass('disabled');
-            $progressBar.parent().fadeOut();
-        }, function () {
-            var myXhr = $.ajaxSettings.xhr();
-            if (myXhr.upload) { // if upload property exists
-                myXhr.upload.addEventListener('progress', function (progress) {
-                    var percentage = (progress.position / progress.totalSize) * 100;
-                    $progressBar.width(percentage + '%');
-                    $progressBar.attr('aria-valuenow', percentage);
-                }, false);
-            }
-            return myXhr;
-        });
-    },
-
     fileDeSelect: function ($file) {
         $file.removeClass('selected');
         $file.trigger('selectionChange');
@@ -311,31 +276,20 @@ Finder.prototype =
     },
 
     initUpload: function () {
-        var self          = this;
-        var $uploadButton = this.getFinder().find('.button.upload');
+        var self = this;
 
-        $uploadButton.find('input').on('click', function (e) {
-            if ($uploadButton.hasClass('disabled')) {
-                e.preventDefault();
+        var uploader = new FinderFileUploader({
+            $container: this.getFinder(),
+            onSuccess: function (result) {
+                self.setFilesContainer(result.files, result.fileIds);
+            },
+            addParametersBeforeUpload: function (formData) {
+                formData.append('folderId', self.getCurrentFolderId());
+                return formData;
             }
         });
 
-        $uploadButton.find('input').on('change', function () {
-            var formData      = new FormData();
-            var fileAmount    = this.files.length;
-            var maxFileAmount = $(this).attr('data-max-file-uploads');
-
-            if (fileAmount > maxFileAmount) {
-                alert(KikCMS.tl('media.uploadMaxFilesWarning', {amount: maxFileAmount}));
-                return;
-            }
-
-            for (var i = 0; i < fileAmount; i++) {
-                formData.append('files[]', this.files[i]);
-            }
-
-            self.actionUpload(formData);
-        });
+        uploader.init();
     },
 
     getFinder: function () {

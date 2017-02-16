@@ -27,6 +27,19 @@ class Finder extends Injectable
     private $pickingMode = false;
 
     /**
+     * Adds html/css required for finder
+     */
+    public function addAssets()
+    {
+        $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
+        $this->view->assets->addCss('cmsassets/css/finder.css');
+        $this->view->assets->addJs('cmsassets/js/finder/finder.js');
+        $this->view->assets->addJs('cmsassets/js/finder/uploader.js');
+
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
+    }
+
+    /**
      * @param array $filters
      * @return string
      */
@@ -154,18 +167,6 @@ class Finder extends Injectable
     }
 
     /**
-     * Adds html/css required for finder
-     */
-    private function addAssets()
-    {
-        $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
-        $this->view->assets->addCss('cmsassets/css/finder.css');
-        $this->view->assets->addJs('cmsassets/js/finder/finder.js');
-
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
-    }
-
-    /**
      * @return int
      */
     private function getMaxFileUploads(): int
@@ -188,6 +189,7 @@ class Finder extends Injectable
         $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
         $fileMimeType = $file->getRealType();
         $extension    = $file->getExtension();
+        $extension    = strtolower($extension);
 
         // check if extension is known
         if ( ! array_key_exists($extension, MimeConfig::ALL_MIME_TYPES)) {

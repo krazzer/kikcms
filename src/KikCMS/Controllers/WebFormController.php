@@ -77,6 +77,32 @@ class WebFormController extends BaseController
     }
 
     /**
+     * @return string
+     */
+    public function uploadAndPreviewAction()
+    {
+        $finder = new Finder();
+
+        $uploadedFiles = $this->request->getUploadedFiles();
+        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
+        $fileIds       = $uploadStatus->getFileIds();
+
+        $fileId = isset($fileIds[0]) ? $fileIds[0] : null;
+
+        $result = [
+            'fileId' => $fileId,
+            'errors' => $uploadStatus->getErrors(),
+        ];
+
+        if ($fileId && $finderFile = FinderFile::getById($fileId)) {
+            $result['preview']    = $finder->renderFilePreview($finderFile);
+            $result['dimensions'] = $this->finderFileService->getThumbDimensions($finderFile);
+        }
+
+        return json_encode($result);
+    }
+
+    /**
      * @return WebForm
      * @throws InvalidArgumentException
      */

@@ -19,9 +19,9 @@ class FileField extends Field
     /**
      * @param int $fileId
      *
-     * @return FinderFile
+     * @return FinderFile|null
      */
-    public function getFinderFileById(int $fileId): FinderFile
+    public function getFinderFileById(int $fileId)
     {
         return FinderFile::getById($fileId);
     }

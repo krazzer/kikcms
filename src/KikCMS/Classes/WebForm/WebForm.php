@@ -100,9 +100,7 @@ abstract class WebForm extends Injectable
         }
 
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
-            $this->view->assets->addJs('cmsassets/js/finder/finder.js');
-            $this->view->assets->addCss('cmsassets/css/finder.css');
-            $this->view->jsTranslations = array_merge($this->view->jsTranslations, Finder::JS_TRANSLATIONS);
+            (new Finder())->addAssets();
         }
     }
 
@@ -164,6 +162,7 @@ abstract class WebForm extends Injectable
         $file = new Hidden($key);
         $file->setLabel($label);
         $file->addValidators($validators);
+        $file->setAttribute('class', 'fileId');
 
         return $this->addField(new FileField($file));
     }
