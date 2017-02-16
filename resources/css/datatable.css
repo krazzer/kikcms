@@ -1,8 +1,8 @@
 /* Colors */
 /* Miscellaneous */
+/* z-indexes */
 body > *:not(.dataTableWindow) {
   transition: filter, opacity 0.3s; }
-
 body > #overlay {
   display: none;
   position: fixed;
@@ -14,6 +14,16 @@ body > #overlay {
   opacity: 0;
   z-index: 3;
     transition: opacity 0.3s;
+}
+
+body .datatableThumbHoverContainer {
+    position: absolute;
+    z-index: 15;
+}
+
+body .datatableThumbHoverContainer img {
+    max-width: 96px;
+    max-height: 96px;
 }
 
 :root > body.datatableBlur {
@@ -421,6 +431,16 @@ body > #overlay {
           user-select: none; }
           .datatable .table table tbody tr td .highlight {
             background-color: #dff0d8; }
+
+.datatable .table table tbody tr td .thumb {
+    width: 34px;
+    height: 34px;
+    top: 0;
+    margin-bottom: -7px;
+    margin-top: -7px;
+    background-size: cover;
+    background-position: center center;
+}
         .datatable .table table tbody tr:nth-child(odd) {
           background-color: #f9f9f9; }
         .datatable .table table tbody tr:hover td {

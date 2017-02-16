@@ -1,5 +1,6 @@
 /* Colors */
 /* Miscellaneous */
+/* z-indexes */
 html, body {
   height: 100%; }
 
@@ -24,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
   padding: 20px;
   border: 1px solid #e1e1e1;
   background-color: rgba(255, 255, 255, 0.97);
-  z-index: 10;
+    z-index: 15;
   max-width: 1200px;
   max-height: 800px;
   overflow: scroll; }
@@ -41,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid #e1e1e1;
   background-color: rgba(255, 255, 255, 0.95);
   border-radius: 3px;
-  z-index: 10;
+    z-index: 15;
   transition: opacity 0.3s;
   opacity: 0; }
   #cmsLoader:after {

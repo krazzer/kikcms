@@ -32,6 +32,16 @@ DataTable.prototype =
         return $formGroups.serialize();
     },
 
+    getThumbHoverContainer: function () {
+        var thumbHoverSelector = 'body > .datatableThumbHoverContainer';
+
+        if ($(thumbHoverSelector).length == 0) {
+            $('body').append('<div class="datatableThumbHoverContainer"></div>');
+        }
+
+        return $(thumbHoverSelector);
+    },
+
     init: function () {
         this.initTable();
         this.initPagination();
@@ -59,6 +69,38 @@ DataTable.prototype =
 
         $addButton.click(function () {
             self.actionAdd();
+        });
+    },
+
+    initImageThumbs: function () {
+        var self = this;
+
+        var positionThumb = function (e) {
+            var scrollTop  = $(window).scrollTop();
+            var scrollLeft = $(window).scrollLeft();
+
+            var left = e.clientX + scrollLeft + 15;
+            var top  = e.clientY + scrollTop + 15;
+
+            self.getThumbHoverContainer().css({left: left, top: top});
+        };
+
+        this.getDataTable().find('table tr td .thumb').each(function () {
+            var $thumb = $(this);
+            var $cell  = $thumb.parent();
+
+            $cell.hover(function (e) {
+                var $thumbHoverContainer = self.getThumbHoverContainer();
+
+                positionThumb(e);
+
+                $thumbHoverContainer.show();
+                $thumbHoverContainer.html('<img src="' + $thumb.attr('data-url') + '" />');
+            }, function () {
+                self.getThumbHoverContainer().hide();
+            });
+
+            $cell.mousemove(positionThumb);
         });
     },
 
@@ -132,7 +174,8 @@ DataTable.prototype =
             self.actionSort(column, direction);
         });
 
-        self.updateToolbar();
+        this.initImageThumbs();
+        this.updateToolbar();
     },
 
     initTabs: function () {

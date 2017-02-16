@@ -1,21 +1,34 @@
 @import "includes/variables";
 @import "includes/mixins";
 
-body > *:not(.dataTableWindow) {
-    transition: filter, opacity 0.3s;
-}
+body {
 
-body > #overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    z-index: 3;
-    transition: opacity 0.3s;
+    > *:not(.dataTableWindow) {
+        transition: filter, opacity 0.3s;
+    }
+
+    > #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        z-index: $zIndexWindowLevel0;
+        transition: opacity 0.3s;
+    }
+
+    .datatableThumbHoverContainer {
+        position: absolute;
+        z-index: $zIndexAboveLevel10Window;
+
+        img {
+            max-width: 96px;
+            max-height: 96px;
+        }
+    }
 }
 
 :root > body.datatableBlur{
@@ -40,7 +53,7 @@ body > #overlay {
     top: 40px;
     bottom: 40px;
     background-color: rgba(255, 255, 255, 0.97);
-    z-index: 3;
+    z-index: $zIndexWindowLevel0;
     left: 50%;
     margin-left: -525px;
     border: 1px solid $lightGray;
@@ -67,7 +80,7 @@ body > #overlay {
 
     @for $i from 1 through 10 {
         &.level#{$i} {
-            z-index: 3 + $i;
+            z-index: $zIndexWindowLevel0 + $i;
             top: 50px + ($i * 10);
             bottom: 50px + ($i * 10);
             width: 900px + ($i * 20);
@@ -252,6 +265,16 @@ body > #overlay {
 
                         .highlight{
                             background-color: $highLightColor;
+                        }
+
+                        .thumb {
+                            width: 34px;
+                            height: 34px;
+                            top: 0;
+                            margin-bottom: -7px;
+                            margin-top: -7px;
+                            background-size: cover;
+                            background-position: center center;
                         }
                     }
 

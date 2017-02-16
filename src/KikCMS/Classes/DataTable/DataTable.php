@@ -87,6 +87,22 @@ abstract class DataTable extends Injectable
     }
 
     /**
+     * @param $value
+     * @return string
+     */
+    protected function formatFinderImage($value): string
+    {
+        if ( ! $value) {
+            return '';
+        }
+
+        $thumbUrl = '/finder/thumb/' . $value;
+        $style    = 'background-image: url(' . $thumbUrl . ')';
+
+        return '<div class="thumb" data-url="' . $thumbUrl . '" style="' . $style . '"></div>';
+    }
+
+    /**
      * Used by Twig
      *
      * @param string $column

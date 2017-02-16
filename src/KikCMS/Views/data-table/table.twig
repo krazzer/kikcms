@@ -15,7 +15,9 @@
                     {% endif %}
                     {% set sortDirection = filters.sortDirection %}
                 {% endif %}
-                <td data-column="{{ name }}" data-sort="{{ sortDirection }}">{{ name|capitalize }}<span class="{{ sortClass }}"></span></td>
+                <td data-column="{{ name }}" data-sort="{{ sortDirection }}">
+                    {{ name|capitalize }}<span class="{{ sortClass }}"></span>
+                </td>
             {% endfor %}
             <td></td>
         </tr>

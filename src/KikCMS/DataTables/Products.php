@@ -44,7 +44,7 @@ class Products extends DataTable
         $defaultQuery = new Builder();
         $defaultQuery->from(['pr' => $this->getModel()]);
         $defaultQuery->leftJoin(Type::class, 't.id = pr.category_id', 't');
-        $defaultQuery->columns(['pr.id', 'pr.title', 'pr.price', 'pr.stock', 'category' => 't.name', 'pr.description']);
+        $defaultQuery->columns(['pr.id', 'pr.title', 'Afbeelding' => 'pr.image_id', 'pr.price', 'pr.stock', 'category' => 't.name', 'pr.description']);
         $defaultQuery->orderBy('title ASC');
 
         if ( ! $this instanceof SubProducts) {
@@ -62,6 +62,7 @@ class Products extends DataTable
         $this->setFieldFormatting('price', [$this, 'formatPrice']);
         $this->setFieldFormatting('sale', [$this, 'formatSale']);
         $this->setFieldFormatting('description', [$this, 'formatDescription']);
+        $this->setFieldFormatting('Afbeelding', [$this, 'formatFinderImage']);
     }
 
     /**
