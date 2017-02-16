@@ -27,6 +27,8 @@ body {
         img {
             max-width: 96px;
             max-height: 96px;
+            border-radius: $defaultBorderRadius;
+            border: 1px solid $lightGray;
         }
     }
 }
@@ -268,6 +270,7 @@ body {
                         }
 
                         .thumb {
+                            cursor: zoom-in;
                             width: 34px;
                             height: 34px;
                             top: 0;
@@ -275,6 +278,7 @@ body {
                             margin-top: -7px;
                             background-size: cover;
                             background-position: center center;
+                            border-radius: $defaultBorderRadius;
                         }
                     }
 

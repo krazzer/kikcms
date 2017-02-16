@@ -73,7 +73,8 @@ DataTable.prototype =
     },
 
     initImageThumbs: function () {
-        var self = this;
+        var self    = this;
+        var $thumbs = this.getDataTable().find('table tr td .thumb');
 
         var positionThumb = function (e) {
             var scrollTop  = $(window).scrollTop();
@@ -85,7 +86,7 @@ DataTable.prototype =
             self.getThumbHoverContainer().css({left: left, top: top});
         };
 
-        this.getDataTable().find('table tr td .thumb').each(function () {
+        $thumbs.each(function () {
             var $thumb = $(this);
             var $cell  = $thumb.parent();
 
@@ -101,6 +102,11 @@ DataTable.prototype =
             });
 
             $cell.mousemove(positionThumb);
+        });
+
+        $thumbs.click(function (e) {
+            window.open('/finder/file/' + $(this).attr('data-id'));
+            e.stopPropagation();
         });
     },
 

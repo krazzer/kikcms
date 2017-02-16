@@ -99,7 +99,7 @@ abstract class DataTable extends Injectable
         $thumbUrl = '/finder/thumb/' . $value;
         $style    = 'background-image: url(' . $thumbUrl . ')';
 
-        return '<div class="thumb" data-url="' . $thumbUrl . '" style="' . $style . '"></div>';
+        return '<div class="thumb" data-url="' . $thumbUrl . '" data-id="' . $value . '" style="' . $style . '"></div>';
     }
 
     /**

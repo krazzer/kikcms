@@ -71,6 +71,10 @@ class Products extends DataTable
      */
     protected function formatPrice($value)
     {
+        if (empty($value)) {
+            return '-';
+        }
+
         return '&euro;&nbsp;' . number_format($value, 2, ',', '.');
     }
 

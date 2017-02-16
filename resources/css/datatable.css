@@ -15,7 +15,6 @@ body > #overlay {
   z-index: 3;
     transition: opacity 0.3s;
 }
-
 body .datatableThumbHoverContainer {
     position: absolute;
     z-index: 15;
@@ -24,6 +23,8 @@ body .datatableThumbHoverContainer {
 body .datatableThumbHoverContainer img {
     max-width: 96px;
     max-height: 96px;
+    border-radius: 3px;
+    border: 1px solid #e1e1e1;
 }
 
 :root > body.datatableBlur {
@@ -433,6 +434,7 @@ body .datatableThumbHoverContainer img {
             background-color: #dff0d8; }
 
 .datatable .table table tbody tr td .thumb {
+    cursor: zoom-in;
     width: 34px;
     height: 34px;
     top: 0;
@@ -440,6 +442,7 @@ body .datatableThumbHoverContainer img {
     margin-top: -7px;
     background-size: cover;
     background-position: center center;
+    border-radius: 3px;
 }
         .datatable .table table tbody tr:nth-child(odd) {
           background-color: #f9f9f9; }
