@@ -12,6 +12,9 @@ class DataTableField extends Field
     /** @var DataTable */
     private $dataTable;
 
+    /** @var string */
+    private $renderedDataTable;
+
     /**
      * @param Element $element
      * @param DataTable $dataTable
@@ -37,5 +40,23 @@ class DataTableField extends Field
     public function getDataTable(): DataTable
     {
         return $this->dataTable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRenderedDataTable(): string
+    {
+        return $this->renderedDataTable;
+    }
+
+    /**
+     * @param string $renderedDataTable
+     * @return DataTableField
+     */
+    public function setRenderedDataTable(string $renderedDataTable): DataTableField
+    {
+        $this->renderedDataTable = $renderedDataTable;
+        return $this;
     }
 }

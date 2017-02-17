@@ -55,11 +55,9 @@
 
 {%- block fieldDataTable %}
     {# @var field \KikCMS\Classes\WebForm\Fields\DataTableField #}
-    {% set filters = {parentEditId: dataTableEditId ?: 0} %}
-
     <div{{ fieldContainterAttributes|raw }}>
         {{ form.label(element.name)|raw }}
-        {{ field.dataTable.render(filters)|raw }}
+        {{ field.renderedDataTable|raw }}
         {{ form.render(element.name)|raw }}
     </div>
 {% endblock %}

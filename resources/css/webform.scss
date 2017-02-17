@@ -63,4 +63,31 @@
             }
         }
     }
+
+    .datatable {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
+
+        .toolbar, .footer, .table .no-data {
+            padding: 12px;
+        }
+
+        .footer {
+            display: none;
+        }
+
+        .table {
+            margin-bottom: 0;
+
+            tbody tr:last-child {
+                td:first-child {
+                    border-bottom-left-radius: $defaultBorderRadius;
+                }
+
+                td:last-child {
+                    border-bottom-right-radius: $defaultBorderRadius;
+                }
+            }
+        }
+    }
 }

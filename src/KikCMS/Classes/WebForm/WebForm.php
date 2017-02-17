@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\DataTable\FilterQueryBuilder;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
@@ -429,6 +430,8 @@ abstract class WebForm extends Injectable
             }
         }
 
+        $this->renderDataTableFields();
+
         $defaultParameters = [
             'form'               => $this->form,
             'fields'             => $this->fields,
@@ -443,11 +446,6 @@ abstract class WebForm extends Injectable
             'class'              => static::class,
             'instance'           => $this->getInstance(),
         ];
-
-        // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the form for subDataTables
-        if ($this->hasField(DataTable::EDIT_ID)) {
-            $defaultParameters[DataTable::EDIT_ID] = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
-        }
 
         return $this->renderView($this->formTemplate, array_merge($defaultParameters, $parameters));
     }
@@ -698,6 +696,32 @@ abstract class WebForm extends Injectable
         }
 
         return false;
+    }
+
+    /**
+     * Pre-renders the DataTable fields, so that any required asset will be correctly added
+     */
+    private function renderDataTableFields()
+    {
+        // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the subDataTable
+        if ($this->hasField(DataTable::EDIT_ID)) {
+            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
+        } else {
+            $parentEditId = 0;
+        }
+
+        $filters = [FilterQueryBuilder::FILTER_PARENT_EDIT_ID => $parentEditId];
+
+        /** @var DataTableField $field */
+        foreach ($this->getFields() as $field) {
+            if ($field->getType() != Field::TYPE_DATA_TABLE) {
+                continue;
+            }
+
+            $renderedDataTable = $field->getDataTable()->render($filters);
+
+            $field->setRenderedDataTable($renderedDataTable);
+        }
     }
 
     /**

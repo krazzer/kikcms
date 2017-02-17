@@ -213,7 +213,6 @@ DataTable.prototype =
 
         this.initWindowSize();
         this.initTabs();
-        this.initWysiwyg();
 
         $window.find('.saveAndClose').click(function () {
             self.actionSave(true);
@@ -241,29 +240,6 @@ DataTable.prototype =
         }
 
         $window.find('.content').css('height', windowHeight - headerHeight - footerHeight - tabsHeight);
-    },
-
-    initWysiwyg: function () {
-        tinymce.init({
-            selector: this.getWysiwygSelector(),
-            setup: function (editor) {
-                editor.on('change', function () {
-                    tinymce.triggerSave();
-                });
-            },
-            language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
-            language: KikCMS.tl('system.langCode'),
-            theme: 'modern',
-            plugins: [
-                'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
-                'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
-                'textcolor colorpicker textpattern imagetools codesample toc'
-            ],
-            toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-            ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
-            image_advtab: true,
-            content_css: ['/cmsassets/css/tinymce/content.css']
-        });
     },
 
     action: function (action, parameters, onSuccess, onError) {
@@ -523,8 +499,8 @@ DataTable.prototype =
     },
 
     getWysiwygSelector: function () {
-        var windowId = this.getWindow().attr("id");
-        return '#' + windowId + ' textarea.wysiwyg';
+        var webFormId = this.getWindow().find('.webForm').attr("id");
+        return '#' + webFormId + ' textarea.wysiwyg';
     },
 
     updateToolbar: function () {

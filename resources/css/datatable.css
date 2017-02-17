@@ -351,30 +351,6 @@ body .datatableThumbHoverContainer img {
       margin-left: 5px;
       padding: 10px 35px; }
 
-.dataTableWindow .datatable {
-    border: 1px solid #e1e1e1;
-    border-radius: 3px;
-}
-
-.dataTableWindow .datatable .toolbar, .dataTableWindow .datatable .footer, .dataTableWindow .datatable .table .no-data {
-    padding: 12px;
-}
-
-.dataTableWindow .datatable .footer {
-      display: none; }
-
-.dataTableWindow .datatable .table {
-    margin-bottom: 0;
-}
-
-.dataTableWindow .datatable .table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 3px;
-}
-
-.dataTableWindow .datatable .table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 3px;
-}
-
 .datatable .pages {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

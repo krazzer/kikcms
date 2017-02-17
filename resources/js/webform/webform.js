@@ -93,6 +93,7 @@ WebForm.prototype =
         this.initAutocompleteFields();
         this.initDateFields();
         this.initFileFields();
+        this.initWysiwyg();
     },
 
     initAutocompleteFields: function () {
@@ -163,12 +164,6 @@ WebForm.prototype =
         });
     },
 
-    initWebForms: function () {
-        this.initAutocompleteFields();
-        this.initDateFields();
-        this.initFileFields();
-    },
-
     initUploader: function ($field) {
         var self = this;
 
@@ -183,6 +178,34 @@ WebForm.prototype =
         });
 
         uploader.init();
+    },
+
+    initWysiwyg: function () {
+        tinymce.init({
+            selector: this.getWysiwygSelector(),
+            setup: function (editor) {
+                editor.on('change', function () {
+                    tinymce.triggerSave();
+                });
+            },
+            language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
+            language: KikCMS.tl('system.langCode'),
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
+                'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
+                'textcolor colorpicker textpattern imagetools codesample toc'
+            ],
+            toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
+            ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
+            image_advtab: true,
+            content_css: ['/cmsassets/css/tinymce/content.css']
+        });
+    },
+
+    getWysiwygSelector: function () {
+        var webformId = this.getWebForm().attr("id");
+        return '#' + webformId + ' textarea.wysiwyg';
     },
 
     removeExtension: function (filename) {
