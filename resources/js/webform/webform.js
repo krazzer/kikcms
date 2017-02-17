@@ -161,12 +161,6 @@ WebForm.prototype =
 
                 self.actionGetFinder($field);
             });
-
-            $previewButton.find('img').each(function () {
-                var $img = $(this);
-
-                $img.parent().css({width: $img.width(), height: $img.height()});
-            });
         });
     },
 
