@@ -41,21 +41,11 @@
     </div>
 </div>
 <script>
-    eval("var {{ instanceName }} = null;");
-
-    var loadDataTable = function () {
-        eval(
-                "{{ instanceName }} = new DataTable();" +
-                "{{ instanceName }}.instance = '{{ instanceName }}';" +
-                "{{ instanceName }}.parentEditId = {{ parentEditId }};" +
-                "{{ instanceName }}.labels = '{{ labels }}';" +
-                "{{ instanceName }}.init();"
-        );
-    };
-
-    {% if isAjax %}
-    loadDataTable();
-    {% else %}
-    window.onload = loadDataTable;
-    {% endif %}
+    $(function () {
+        eval("{{ instanceName }} = new DataTable();");
+        eval("{{ instanceName }}.instance = '{{ instanceName }}';");
+        eval("{{ instanceName }}.parentEditId = {{ parentEditId }};");
+        eval("{{ instanceName }}.labels = '{{ labels }}';");
+        eval("{{ instanceName }}.init();");
+    });
 </script>

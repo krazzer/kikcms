@@ -90,6 +90,7 @@ abstract class WebForm extends Injectable
      */
     public function addAssets()
     {
+        $this->view->assets->addJs('cmsassets/js/webform/webform.js');
         $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
@@ -440,6 +441,7 @@ abstract class WebForm extends Injectable
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
             'class'              => static::class,
+            'instance'           => $this->getInstance(),
         ];
 
         // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the form for subDataTables
@@ -673,6 +675,14 @@ abstract class WebForm extends Injectable
         }
 
         return $fieldsWithoutTab;
+    }
+
+    /**
+     * @return string
+     */
+    private function getInstance()
+    {
+        return uniqid('webForm');
     }
 
     /**

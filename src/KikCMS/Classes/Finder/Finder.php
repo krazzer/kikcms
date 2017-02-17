@@ -54,7 +54,6 @@ class Finder extends Injectable
             'instance'       => $this->getInstance(),
             'pickingMode'    => $this->pickingMode,
             'maxFileUploads' => $this->getMaxFileUploads(),
-            'isAjax'         => $this->request->isAjax(),
         ]);
     }
 

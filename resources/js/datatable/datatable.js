@@ -213,8 +213,6 @@ DataTable.prototype =
 
         this.initWindowSize();
         this.initTabs();
-
-        KikCMS.initWebForms($window);
         this.initWysiwyg();
 
         $window.find('.saveAndClose').click(function () {

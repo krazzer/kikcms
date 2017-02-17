@@ -249,7 +249,6 @@ abstract class DataTable extends Injectable
             'parentEditId'    => $this->getParentEditIdByFilters($filters),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
-            'isAjax'          => $this->request->isAjax(),
             'labels'          => $this->labels,
             'self'            => $this,
         ]);
