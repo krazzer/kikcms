@@ -4,7 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\FilterQueryBuilder;
+use KikCMS\Classes\DataTable\Filters;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 
@@ -33,7 +33,7 @@ class DataTableController extends BaseController
     {
         $dataTable = $this->getDataTable();
 
-        $this->view->form   = $dataTable->renderAddForm($this->getParentEditId());
+        $this->view->form   = $dataTable->renderAddForm($this->getFilters()->getParentEditId());
         $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
@@ -55,7 +55,7 @@ class DataTableController extends BaseController
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($filters),
         ]);
     }
 
@@ -81,10 +81,11 @@ class DataTableController extends BaseController
      */
     public function saveAction()
     {
-        $editId       = $this->getEditId();
-        $dataTable    = $this->getDataTable();
-        $parentEditId = $this->getParentEditId();
-        $filters      = $this->getFilters();
+        $editId    = $this->getEditId();
+        $dataTable = $this->getDataTable();
+        $filters   = $this->getFilters();
+
+        $parentEditId = $filters->getParentEditId();
 
         if ($editId === null) {
             $this->view->form = $dataTable->renderAddForm($parentEditId);
@@ -108,7 +109,7 @@ class DataTableController extends BaseController
         return json_encode([
             'window'     => $dataTable->renderWindow($view),
             'table'      => $dataTable->renderTable($this->getFilters()),
-            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($this->getFilters()),
             'editedId'   => $editId,
         ]);
     }
@@ -123,7 +124,7 @@ class DataTableController extends BaseController
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters[FilterQueryBuilder::FILTER_PAGE]),
+            'pagination' => $dataTable->renderPagination($filters),
         ]);
     }
 
@@ -135,11 +136,11 @@ class DataTableController extends BaseController
         $dataTable = $this->getDataTable();
         $filters   = $this->getFilters();
 
-        $filters[FilterQueryBuilder::FILTER_PAGE] = 1;
+        $filters->setPage(1);
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination(1),
+            'pagination' => $dataTable->renderPagination($filters),
         ]);
     }
 
@@ -151,11 +152,11 @@ class DataTableController extends BaseController
         $dataTable = $this->getDataTable();
         $filters   = $this->getFilters();
 
-        $filters[FilterQueryBuilder::FILTER_PAGE] = 1;
+        $filters->setPage(1);
 
         return json_encode([
             'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination(1),
+            'pagination' => $dataTable->renderPagination($filters),
         ]);
     }
 
@@ -191,47 +192,12 @@ class DataTableController extends BaseController
     }
 
     /**
-     * @return int|null
+     * @return Filters
      */
-    private function getParentEditId()
+    private function getFilters(): Filters
     {
-        $parentEditId = $this->request->getPost(FilterQueryBuilder::FILTER_PARENT_EDIT_ID);
-
-        // cast to int
-        if ($parentEditId !== null) {
-            $parentEditId = (int) $parentEditId;
-        }
-
-        return $parentEditId;
-    }
-
-    /**
-     * @return array
-     */
-    private function getFilters(): array
-    {
-        $filters = [];
-
-        // get page filter
-        $filters[FilterQueryBuilder::FILTER_PAGE] = $this->request->getPost(FilterQueryBuilder::FILTER_PAGE);
-
-        // get search filter
-        $search = $this->request->getPost(FilterQueryBuilder::FILTER_SEARCH);
-
-        if ( ! empty($search)) {
-            $filters[FilterQueryBuilder::FILTER_SEARCH] = $search;
-        }
-
-        // get sort filter
-        if ($this->request->hasPost(FilterQueryBuilder::FILTER_SORT_COLUMN)) {
-            $filters[FilterQueryBuilder::FILTER_SORT_COLUMN]    = $this->request->getPost(FilterQueryBuilder::FILTER_SORT_COLUMN);
-            $filters[FilterQueryBuilder::FILTER_SORT_DIRECTION] = $this->request->getPost(FilterQueryBuilder::FILTER_SORT_DIRECTION);
-        }
-
-        // get parent edit id filter
-        if ($this->request->hasPost(FilterQueryBuilder::FILTER_PARENT_EDIT_ID)) {
-            $filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID] = $this->getParentEditId();
-        }
+        $filters = new Filters();
+        $filters->setByArray($this->request->getPost());
 
         return $filters;
     }

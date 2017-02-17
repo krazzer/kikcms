@@ -57,6 +57,12 @@
     height: auto;
     width: auto;
     cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.webForm .type-file .buttons .preview.hidden {
+    opacity: 0;
 }
 
 .webForm .type-file .buttons .preview .thumb {

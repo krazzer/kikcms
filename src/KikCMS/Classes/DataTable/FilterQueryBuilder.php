@@ -10,49 +10,44 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 class FilterQueryBuilder
 {
-    const FILTER_SEARCH         = 'search';
-    const FILTER_PAGE           = 'page';
-    const FILTER_SORT_COLUMN    = 'sortColumn';
-    const FILTER_SORT_DIRECTION = 'sortDirection';
-    const FILTER_PARENT_EDIT_ID = 'parentEditId';
-
     /** @var DataTable */
     private $dataTable;
 
+    /** @var Filters */
+    private $filters;
+
     /**
      * @param DataTable $dataTable
+     * @param Filters $filters
      */
-    public function __construct(DataTable $dataTable)
+    public function __construct(DataTable $dataTable, Filters $filters)
     {
         $this->dataTable = $dataTable;
+        $this->filters   = $filters;
     }
 
     /**
      * @param Builder $query
-     * @param array $filters
-     *
      * @return Builder
      */
-    public function getQuery(Builder $query, array $filters): Builder
+    public function getQuery(Builder $query): Builder
     {
-        $this->addSearchFilter($query, $filters);
-        $this->addSortFilter($query, $filters);
-        $this->addSubDataTableFilter($query, $filters);
+        $this->addSearchFilter($query);
+        $this->addSortFilter($query);
+        $this->addSubDataTableFilter($query);
 
         return $query;
     }
 
     /**
      * @param Builder $query
-     * @param array $filters
      */
-    private function addSearchFilter(Builder $query, array $filters)
+    private function addSearchFilter(Builder $query)
     {
-        if ( ! isset($filters[self::FILTER_SEARCH])) {
+        if ( ! $searchValue = $this->filters->getSearch()) {
             return;
         }
 
-        $searchValue      = $filters[self::FILTER_SEARCH];
         $searchConditions = [];
 
         foreach ($this->dataTable->getSearchableFields() as $field) {
@@ -64,16 +59,15 @@ class FilterQueryBuilder
 
     /**
      * @param Builder $query
-     * @param array $filters
      */
-    private function addSortFilter(Builder $query, array $filters)
+    private function addSortFilter(Builder $query)
     {
-        if ( ! isset($filters[self::FILTER_SORT_COLUMN])) {
+        if ( ! $this->filters->getSortColumn()) {
             return;
         }
 
-        $column    = $filters[self::FILTER_SORT_COLUMN];
-        $direction = $filters[self::FILTER_SORT_DIRECTION];
+        $column    = $this->filters->getSortColumn();
+        $direction = $this->filters->getSortDirection();
 
         if (in_array($direction, ['asc', 'desc'])) {
             if (array_key_exists($column, $this->dataTable->getOrderableFields())) {
@@ -86,15 +80,14 @@ class FilterQueryBuilder
 
     /**
      * @param Builder $query
-     * @param array $filters
      */
-    private function addSubDataTableFilter(Builder $query, array $filters)
+    private function addSubDataTableFilter(Builder $query)
     {
         if ( ! $this->dataTable->hasParent()) {
             return;
         }
 
-        $parentEditId = $filters[self::FILTER_PARENT_EDIT_ID];
+        $parentEditId = $this->filters->getParentEditId();
         $query->andWhere($this->dataTable->getParentRelationKey() . ' = ' . (int) $parentEditId);
 
         if ($parentEditId === 0) {

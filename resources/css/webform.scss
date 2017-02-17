@@ -55,6 +55,12 @@
                 height: auto;
                 width: auto;
                 cursor: pointer;
+                opacity: 1;
+                transition: opacity 0.3s;
+
+                &.hidden {
+                    opacity: 0;
+                }
 
                 .thumb {
                     transition: width .3s, height .3s;

@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\FilterQueryBuilder;
+use KikCMS\Classes\DataTable\Filters;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Translator;
@@ -703,14 +703,14 @@ abstract class WebForm extends Injectable
      */
     private function renderDataTableFields()
     {
+        $parentEditId = 0;
+
         // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the subDataTable
         if ($this->hasField(DataTable::EDIT_ID)) {
             $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
-        } else {
-            $parentEditId = 0;
         }
 
-        $filters = [FilterQueryBuilder::FILTER_PARENT_EDIT_ID => $parentEditId];
+        $filters = (new Filters())->setParentEditId($parentEditId);
 
         /** @var DataTableField $field */
         foreach ($this->getFields() as $field) {

@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\DataTable\Filters;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Products;
@@ -28,7 +29,7 @@ class CmsController extends BaseCmsController
     {
         $datatable = new Products();
 
-        $this->view->datatable = $datatable->render();
+        $this->view->datatable = $datatable->render(new Filters());
         $this->view->pick('cms/default');
     }
 

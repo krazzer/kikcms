@@ -233,10 +233,10 @@ abstract class DataTable extends Injectable
     /**
      * Renders the datatable
      *
-     * @param array $filters
+     * @param Filters $filters
      * @return string
      */
-    public function render(array $filters = [])
+    public function render(Filters $filters)
     {
         $this->initializeDatatable();
         $this->addAssets();
@@ -244,9 +244,9 @@ abstract class DataTable extends Injectable
         return $this->renderView('index', [
             'tableData'       => $this->getTableData($filters)->items->toArray(),
             'pagination'      => $this->getTableData($filters),
-            'headerData'      => $this->getTableHeaderData(),
+            'headerData'      => $this->getTableHeaderData($filters),
             'instanceName'    => $this->getInstanceName(),
-            'parentEditId'    => $this->getParentEditIdByFilters($filters),
+            'parentEditId'    => $filters->getParentEditId(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'labels'          => $this->labels,
@@ -294,27 +294,27 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int $page
+     * @param Filters $filters
      * @return Response
      */
-    public function renderPagination(int $page = 1)
+    public function renderPagination(Filters $filters)
     {
         return $this->renderView('pagination', [
-            'pagination' => $this->getTableData($page),
+            'pagination' => $this->getTableData($filters),
         ]);
     }
 
     /**
-     * @param array $filters
+     * @param Filters $filters
      * @return Response
      */
-    public function renderTable(array $filters = [])
+    public function renderTable(Filters $filters)
     {
         $this->initializeDatatable();
 
         return $this->renderView('table', [
             'tableData'       => $this->getTableData($filters)->items->toArray(),
-            'headerData'      => $this->getTableHeaderData(),
+            'headerData'      => $this->getTableHeaderData($filters),
             'fieldFormatting' => $this->fieldFormatting,
             'filters'         => $filters,
             'self'            => $this,
@@ -349,14 +349,15 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param array $filters
+     * @param Filters $filters
      * @return Builder
      */
-    public function getQuery(array $filters = []): Builder
+    public function getQuery(Filters $filters): Builder
     {
-        $queryBuilder = new FilterQueryBuilder($this);
+        $queryBuilder = new FilterQueryBuilder($this, $filters);
+        $query        = $this->getDefaultQuery();
 
-        return $queryBuilder->getQuery($this->getDefaultQuery(), $filters);
+        return $queryBuilder->getQuery($query);
     }
 
     /**
@@ -469,33 +470,18 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param array $filters
-     * @return int
-     */
-    private function getParentEditIdByFilters(array $filters): int
-    {
-        if ( ! isset($filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID])) {
-            return 0;
-        }
-
-        return $filters[FilterQueryBuilder::FILTER_PARENT_EDIT_ID];
-    }
-
-    /**
-     * @param $filters
+     * @param Filters $filters
      * @return stdClass
      */
-    private function getTableData($filters = [])
+    private function getTableData(Filters $filters)
     {
         if ($this->tableData) {
             return $this->tableData;
         }
 
-        $page = (int) isset($filters[FilterQueryBuilder::FILTER_PAGE]) ? $filters[FilterQueryBuilder::FILTER_PAGE] : 1;
-
         $paginator = new QueryBuilder(array(
             "builder" => $this->getQuery($filters),
-            "page"    => $page,
+            "page"    => $filters->getPage(),
             "limit"   => $this->limit,
         ));
 
@@ -505,10 +491,10 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param array $filters
+     * @param Filters $filters
      * @return array
      */
-    private function getTableHeaderData(array $filters = []): array
+    private function getTableHeaderData(Filters $filters): array
     {
         if ( ! $this->getTableData($filters)->items->count()) {
             return [];
