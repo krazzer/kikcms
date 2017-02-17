@@ -10,47 +10,6 @@
         width: 100%;
         position: relative;
 
-        .button {
-            float: left;
-            margin: 0 8px 0 0;
-            border-radius: $defaultBorderRadius;
-            padding: 7px 15px;
-            cursor: pointer;
-            border: 1px solid $lightGray;
-
-            &.add {
-                background-color: #fff;
-            }
-
-            .glyphicon {
-                width: 14px;
-            }
-
-            .lbl {
-                margin-left: 8px;
-            }
-
-            &:hover {
-                background-color: $gray;
-                border-color: $gray;
-                color: #fff;
-
-                &.disabled {
-                    background-color: inherit;
-                    border-color: $lightGray;
-                    color: $lightGray;
-                }
-            }
-
-            &.disabled {
-                color: $lightGray;
-
-                .glyphicon {
-                    color: $lightGray;
-                }
-            }
-        }
-
         .search {
             float: right;
             width: 220px;

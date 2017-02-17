@@ -51,8 +51,8 @@ DataTable.prototype =
 
     initButtons: function () {
         var self          = this;
-        var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
-        var $addButton    = this.getDataTable().find('.toolbar .button.add');
+        var $deleteButton = this.getDataTable().find('.toolbar .btn.delete');
+        var $addButton    = this.getDataTable().find('.toolbar .btn.add');
 
         $deleteButton.click(function () {
             var selectedIds = self.getSelectedIds();
@@ -505,7 +505,7 @@ DataTable.prototype =
 
     updateToolbar: function () {
         var $selectedRows = this.getDataTable().find('tr.selected');
-        var $deleteButton = this.getDataTable().find('.toolbar .button.delete');
+        var $deleteButton = this.getDataTable().find('.toolbar .btn.delete');
 
         if ($selectedRows.length > 0) {
             $deleteButton.fadeIn();

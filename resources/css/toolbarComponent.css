@@ -14,47 +14,6 @@
     clear: both;
 }
 
-.toolbarComponent .toolbar .button {
-    float: left;
-    margin: 0 8px 0 0;
-    border-radius: 3px;
-    padding: 7px 15px;
-    cursor: pointer;
-    border: 1px solid #e1e1e1;
-}
-
-.toolbarComponent .toolbar .button.add {
-    background-color: #fff;
-}
-
-.toolbarComponent .toolbar .button .glyphicon {
-    width: 14px;
-}
-
-.toolbarComponent .toolbar .button .lbl {
-    margin-left: 8px;
-}
-
-.toolbarComponent .toolbar .button:hover {
-    background-color: #aaaaaa;
-    border-color: #aaaaaa;
-    color: #fff;
-}
-
-.toolbarComponent .toolbar .button:hover.disabled {
-    background-color: inherit;
-    border-color: #e1e1e1;
-    color: #e1e1e1;
-}
-
-.toolbarComponent .toolbar .button.disabled {
-    color: #e1e1e1;
-}
-
-.toolbarComponent .toolbar .button.disabled .glyphicon {
-    color: #e1e1e1;
-}
-
 .toolbarComponent .toolbar .search {
     float: right;
     width: 220px;

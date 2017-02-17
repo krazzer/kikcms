@@ -79,15 +79,16 @@
 .finder .files .files-container .file .name .highlight {
     background-color: #dff0d8;
 }
-.finder .button.upload {
+
+.finder .btn.upload {
     position: relative;
 }
 
-.finder .button.upload .lbl {
+.finder .btn.upload .lbl {
     font-weight: 300;
 }
 
-.finder .button.upload input {
+.finder .btn.upload input {
     display: none;
 }
 

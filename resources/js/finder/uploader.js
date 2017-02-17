@@ -16,7 +16,7 @@ FinderFileUploader.prototype =
 {
     init: function () {
         var self          = this;
-        var $uploadButton = this.$container.find('.button.upload, .btn.upload');
+        var $uploadButton = this.$container.find('.btn.upload');
 
         $uploadButton.find('input').on('click', function (e) {
             if ($uploadButton.hasClass('disabled')) {
@@ -45,7 +45,7 @@ FinderFileUploader.prototype =
 
     actionUpload: function (formData) {
         var self          = this;
-        var $uploadButton = this.$container.find('.button.upload');
+        var $uploadButton = this.$container.find('.btn.upload');
         var $progressBar  = this.$container.find('.progress-bar');
 
         $uploadButton.addClass('disabled');
