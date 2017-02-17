@@ -17,6 +17,7 @@ use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Di\Injectable;
 use Phalcon\Forms\Element\Check;
+use Phalcon\Forms\Element\Date;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Forms\Element\Password;
 use Phalcon\Forms\Element\Select;
@@ -97,11 +98,21 @@ abstract class WebForm extends Injectable
         }
 
         if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
-            $this->view->assets->addJs('cmsassets/js/typeahead.js');
+            $this->view->assets->addJs('cmsassets/js/vendor/typeahead.js');
         }
 
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
             (new Finder())->addAssets();
+        }
+
+        if ($this->hasFieldWithType(Field::TYPE_DATE)) {
+            $langCode = $this->translator->tl('system.langCode');
+            $this->view->assets->addJs('cmsassets/js/vendor/moment/moment.js');
+            $this->view->assets->addJs('cmsassets/js/vendor/moment/' . $langCode . '.js');
+            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/transition.js');
+            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/collapse.js');
+            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/bootstrap-datetimepicker.min.js');
+            $this->view->assets->addCss('cmsassets/css/vendor/bootstrap-datetimepicker.min.css');
         }
     }
 
@@ -150,6 +161,31 @@ abstract class WebForm extends Injectable
         $checkbox->addValidators($validators);
 
         return $this->addField(new Checkbox($checkbox));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Fields\Date|Field
+     */
+    public function addDateField(string $key, string $label, array $validators = []): Field
+    {
+        $phpDateFormat      = $this->translator->tl('system.phpDateFormat');
+        $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
+
+        $validators[] = new \KikCMS\Classes\Phalcon\Validator\Date([
+            "format"     => $phpDateFormat,
+            "allowEmpty" => true,
+        ]);
+
+        $date = new Date($key);
+        $date->setLabel($label);
+        $date->setAttribute('class', 'form-control');
+        $date->setAttribute('data-format', $momentJsDateFormat);
+        $date->addValidators($validators);
+
+        return $this->addField(new Fields\Date($date));
     }
 
     /**

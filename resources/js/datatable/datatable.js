@@ -253,8 +253,8 @@ DataTable.prototype =
                     tinymce.triggerSave();
                 });
             },
-            language_url: '/cmsassets/js/tinymce/nl.js',
-            language: 'nl',
+            language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
+            language: KikCMS.tl('system.langCode'),
             theme: 'modern',
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',

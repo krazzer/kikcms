@@ -24,7 +24,7 @@ abstract class DataTable extends Injectable
     const JS_TRANSLATIONS = [
         'dataTable.delete.confirmOne',
         'dataTable.delete.confirm',
-        'dataTable.closeWarning'
+        'dataTable.closeWarning',
     ];
 
     /** @var DataForm */

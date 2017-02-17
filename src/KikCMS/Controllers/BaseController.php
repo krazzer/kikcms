@@ -10,7 +10,7 @@ class BaseController extends Controller
     {
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
-        $this->view->setVar("jsTranslations", ['error']);
+        $this->view->setVar("jsTranslations", ['error', 'system.langCode']);
     }
 
     /**

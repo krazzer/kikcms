@@ -25,7 +25,7 @@
     <div id="ajaxDebugger" onclick="$(this).hide();"></div>
 </div>
 {% block content %}{% endblock %}
-{{ javascriptInclude('cmsassets/js/jquery.min.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/jquery.min.js') }}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 <script>
     KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};

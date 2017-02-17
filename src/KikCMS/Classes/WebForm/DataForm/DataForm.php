@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\WebForm\DataForm\FieldTransformer\Date;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
@@ -77,6 +78,18 @@ abstract class DataForm extends WebForm
         $this->addFieldStorage($dataTableFieldStorage);
 
         return $dataTableField;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addDateField(string $key, string $label, array $validators = []): Field
+    {
+        $dateField = parent::addDateField($key, $label, $validators);
+
+        $this->addFieldTransformer(new Date($dateField));
+
+        return $dateField;
     }
 
     /**

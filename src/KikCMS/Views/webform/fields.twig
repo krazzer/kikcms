@@ -1,6 +1,10 @@
 {# @var element Phalcon\Forms\Element #}
 {# @var form \Phalcon\Forms\Form #}
 
+{%- block fieldDate %}
+    {{ block('fieldDefault') }}
+{% endblock %}
+
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
         {%- block fieldDefaultInputAndFIeld -%}

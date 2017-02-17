@@ -4,7 +4,7 @@ namespace KikCMS\Classes\Database;
 
 
 use DateTime;
-use KikCMS\Config\KikCMSConfig;
+use KikCMS\Config\DbConfig;
 
 /**
  * Represents the current dateTime.
@@ -25,6 +25,6 @@ class Now
      */
     public function __toString()
     {
-        return "'" . $this->dateTime->format(KikCMSConfig::SQL_DATE_FORMAT) . "'";
+        return "'" . $this->dateTime->format(DbConfig::SQL_DATE_FORMAT) . "'";
     }
 }

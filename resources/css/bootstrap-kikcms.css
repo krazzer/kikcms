@@ -7,6 +7,7 @@ label {
 textarea.form-control {
   height: 240px; }
 
+input[type=date].form-control
 .btn {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
@@ -15,9 +16,14 @@ textarea.form-control {
     padding: 7px 15px;
     border: 1px solid #e1e1e1;
 }
-  .btn:focus, .btn:active, .btn:active:focus {
+
+input[type=date].form-control
+.btn:focus, input[type=date].form-control
+.btn:active, input[type=date].form-control
+.btn:active:focus {
     outline: none; }
 
+input[type=date].form-control
 .btn .glyphicon ~ .lbl {
     margin-left: 8px;
 }

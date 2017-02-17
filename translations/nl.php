@@ -162,7 +162,7 @@ return [
         ],
     ],
 
-    'error' => [
+    'error'  => [
         '401' => [
             'title'       => 'Geen toegang',
             'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
@@ -187,5 +187,10 @@ return [
             'title'       => 'Onbekende fout',
             'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
         ]
+    ],
+    'system' => [
+        'langCode'           => 'nl',
+        'phpDateFormat'      => 'd-m-Y',
+        'momentJsDateFormat' => 'DD-MM-YYYY',
     ],
 ];

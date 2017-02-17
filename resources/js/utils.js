@@ -191,10 +191,21 @@ KikCmsClass.prototype =
         });
     },
 
+    initDateFields: function ($element) {
+        $element.find('.type-date input[type=date]').each(function () {
+            var $field = $(this);
+
+            $field.datetimepicker({
+                format: $field.attr('data-format')
+            });
+        });
+    },
+
     initWebForms: function ($element) {
         var self = this;
 
         this.initAutocompleteFields($element);
+        this.initDateFields($element);
 
         $element.find('.type-file').each(function () {
             //todo: neatify this code
