@@ -181,6 +181,10 @@ WebForm.prototype =
     },
 
     initWysiwyg: function () {
+        if (typeof(tinymce) == 'undefined') {
+            return;
+        }
+
         tinymce.init({
             selector: this.getWysiwygSelector(),
             setup: function (editor) {
