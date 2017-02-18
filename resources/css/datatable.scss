@@ -128,7 +128,7 @@ body {
                 padding: 15px 50px;
 
                 &.error {
-                    background-color: $colorErrorBg;
+                    color: $colorErrorText;
                 }
 
                 &.active {

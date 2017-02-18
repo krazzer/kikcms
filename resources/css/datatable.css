@@ -319,7 +319,7 @@ body .datatableThumbHoverContainer img {
 }
 
 .dataTableWindow > .windowContent > .tabs .tab.error {
-    background-color: #f2dede;
+    color: #a94442;
 }
 
 .dataTableWindow > .windowContent > .tabs .tab.active {

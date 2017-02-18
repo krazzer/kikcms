@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 
+use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\DataTables\SubProducts;
 use KikCMS\Models\DummyProducts;
@@ -22,9 +23,11 @@ class ProductForm extends DataForm
         $productTypeField = $this->addMultiCheckboxField(ProductType::FIELD_TYPE_ID, 'Typen', $typeNameMap);
         $productTypeField->table(ProductType::class, ProductType::FIELD_PRODUCT_ID);
 
+        $imagesOnly = new FileType([FileType::OPTION_FILETYPES => ['jpg', 'jpeg', 'png', 'gif']]);
+
         $this->addTab('Algemeen', [
             $this->addTextField('title', 'Naam', [new PresenceOf()]),
-            $this->addFileField('image_id', 'Afbeelding', [new PresenceOf()]),
+            $this->addFileField('image_id', 'Afbeelding', [$imagesOnly, new PresenceOf()]),
             $this->addTextField('price', 'Prijs'),
             $this->addTextField('stock', 'Voorraad'),
             $this->addCheckboxField('sale', 'Sale'),

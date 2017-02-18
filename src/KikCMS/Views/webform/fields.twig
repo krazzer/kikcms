@@ -5,6 +5,16 @@
     {{ block('fieldDefault') }}
 {% endblock %}
 
+{%- block errorWarnings -%}
+    {% if errorMessages %}
+        {% for errorMessage in errorMessages %}
+            <span class="help-block alert alert-warning">
+                <i class="glyphicon glyphicon-warning-sign"></i> {{ errorMessage }}
+            </span>
+        {% endfor %}
+    {% endif %}
+{%- endblock -%}
+
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
         {%- block fieldDefaultInputAndFIeld -%}
@@ -109,5 +119,6 @@
                 </div>
             </div>
         </div>
+        {{ block('errorWarnings') }}
     </div>
 {% endblock %}

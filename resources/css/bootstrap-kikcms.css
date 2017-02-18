@@ -78,6 +78,11 @@ textarea.form-control {
   top: 2px;
   right: 3px; }
 
+.form-group .alert {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
 .glyphicon-remove {
     top: 2px;
 }

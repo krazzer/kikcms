@@ -11,11 +11,11 @@
     {{ form({name: 'form'}) }}
 
     {% if errorContainer.hasFormErrors %}
-        <div class="alert alert-danger">
-            {% for error in errorContainer.formErrors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
-        </div>
+        {% for error in errorContainer.formErrors %}
+            <div class="alert alert-danger">
+                <i class="glyphicon glyphicon-warning-sign"></i> {{ error }}
+            </div>
+        {% endfor %}
     {% endif %}
 
     {% if tabs %}

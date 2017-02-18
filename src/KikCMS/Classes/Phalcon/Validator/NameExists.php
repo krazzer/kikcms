@@ -15,9 +15,9 @@ class NameExists extends Validator
     /**
      * @inheritdoc
      */
-    public function validate(Validation $validator, $attribute)
+    public function validate(Validation $validator, $field)
     {
-        $value = $validator->getValue($attribute);
+        $value = $validator->getValue($field);
 
         if( ! $value){
             return true;
@@ -33,7 +33,7 @@ class NameExists extends Validator
         }
 
         $validator->appendMessage(
-            new Message($validator->getDefaultMessage('NameExists'), $attribute)
+            new Message($validator->getDefaultMessage('NameExists'), $field)
         );
 
         return false;
