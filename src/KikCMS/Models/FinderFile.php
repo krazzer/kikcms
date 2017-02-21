@@ -25,6 +25,19 @@ class FinderFile extends Model
     }
 
     /**
+     * @inheritdoc
+     *
+     * @return FinderFile[]
+     */
+    public static function getByIdList(array $ids)
+    {
+        /** @var FinderFile[] $finderFiles */
+        $finderFiles = parent::getByIdList($ids);
+
+        return $finderFiles;
+    }
+
+    /**
      * @return DateTime
      */
     public function getCreated()

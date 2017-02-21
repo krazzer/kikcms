@@ -102,11 +102,22 @@ class FinderFileService extends Injectable
      */
     public function deleteFilesByIds(array $fileIds)
     {
+        $finderFiles = FinderFile::getByIdList($fileIds);
+
+        // get sub files
+        foreach ($finderFiles as $file) {
+            $fileIds = $this->getFileIdsRecursive($file, $fileIds);
+        }
+
         $finderFiles  = FinderFile::getByIdList($fileIds);
         $filesRemoved = $this->dbService->delete(FinderFile::class, ['id' => $fileIds]);
 
         if ($filesRemoved) {
             foreach ($finderFiles as $finderFile) {
+                if ($finderFile->isFolder()) {
+                    continue;
+                }
+
                 unlink($this->getFilePath($finderFile));
                 unlink($this->getThumbPath($finderFile));
             }
@@ -304,6 +315,28 @@ class FinderFileService extends Injectable
             if (array_key_exists($fileId, $breadCrumbs)) {
                 unset($fileIds[$i]);
             }
+        }
+
+        return $fileIds;
+    }
+
+    /**
+     * @param FinderFile $file
+     * @param array $fileIds
+     *
+     * @return array
+     */
+    private function getFileIdsRecursive(FinderFile $file, $fileIds = []): array
+    {
+        if ( ! $file->isFolder()) {
+            $fileIds[] = $file->getId();
+            return $fileIds;
+        }
+
+        $finderFiles = $this->getByFolderId($file->getId());
+
+        foreach ($finderFiles as $subFile) {
+            $fileIds = $this->getFileIdsRecursive($subFile, $fileIds);
         }
 
         return $fileIds;
