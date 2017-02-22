@@ -51,8 +51,8 @@ return [
     ],
 
     'media' => [
-        'title'                 => 'Media',
-        'button'                => [
+        'title'                    => 'Media',
+        'button'                   => [
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
             'newFolderTitle' => 'Maak een nieuwe map aan',
@@ -62,16 +62,17 @@ return [
             'cutTitle'       => 'Knip de geselecteerde bestanden',
             'pasteTitle'     => 'Plak de geknipte bestanden',
         ],
-        'searchPlaceholder'     => 'Zoeken naar bestanden',
-        'deleteConfirm'         => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
-        'deleteConfirmOne'      => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
-        'deleteErrorLinked'     => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, omdat deze ergens aan gekoppeld is.',
-        'createFolder'          => 'Geef een naam op voor de nieuwe map',
-        'defaultFolderName'     => 'Nieuwe map',
-        'editFileName'          => 'Geef een nieuwe naam op voor het bestand',
-        'pickFile'              => 'Kies bestand',
-        'uploadMaxFilesWarning' => 'U kunt maximaal :amount bestanden tegelijk uploaden',
-        'upload'                => [
+        'searchPlaceholder'        => 'Zoeken naar bestanden',
+        'deleteConfirm'            => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
+        'deleteConfirmOne'         => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
+        'deleteErrorLinked'        => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, omdat deze ergens aan gekoppeld is.',
+        'createFolder'             => 'Geef een naam op voor de nieuwe map',
+        'defaultFolderName'        => 'Nieuwe map',
+        'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
+        'pickFile'                 => 'Kies bestand',
+        'uploadMaxFilesWarning'    => 'U kunt maximaal :amount bestanden tegelijk uploaden',
+        'uploadMaxFileSizeWarning' => 'Bestanden mogen maximaal :max zijn',
+        'upload'                   => [
             'error' => [
                 'failed' => 'Er is iets mis gegaan bij het uploaden van :fileName',
                 'mime'   => "Bestandstype ':extension' is niet toegestaan (:fileName)",
@@ -81,9 +82,9 @@ return [
 
     'webform' => [
         'messages' => [
-            'Alnum'             => 'Het veld :label mag alleen letters en cijfers bevatten',
-            'Alpha'             => 'Het veld :label mag alleen letters bevatten',
-            'Between'           => 'Het veld :label mag alleen binnen een bereik van :min tot :max vallen',
+            'Alnum'          => 'Het veld :label mag alleen letters en cijfers bevatten',
+            'Alpha'          => 'Het veld :label mag alleen letters bevatten',
+            'Between'        => 'Het veld :label mag alleen binnen een bereik van :min tot :max vallen',
             'Confirmation'      => 'Het veld :label moet hetzelfde zijn als :with',
             'Digit'             => 'Het veld :label mag alleen een getal zijn',
             'Email'             => 'Het veld :label moet een geldig e-mail adres zijn',
@@ -95,12 +96,12 @@ return [
             'FileSize'          => 'Het bestand :label mag niet groter zijn dan :max',
             'FileType'          => 'Het bestand :label mag alleen van de types :types zijn',
             'FileValid'         => 'Het veld :label is niet geldig',
-            'Identical'         => 'Het veld :label heeft niet de verwachte waarde',
-            'InclusionIn'       => 'Het veld :label moet onderdeel zijn van: :domain',
-            'Numericality'      => 'Het veld :label mag alleen numeriek zijn',
-            'PresenceOf'        => 'Het veld :label is verplicht',
-            'Regex'             => 'Het veld :label heeft niet het verwachte formaat',
-            'TooLong'           => 'Het veld :label mag niet meer dan :max karakters lang zijn',
+            'Identical'      => 'Het veld :label heeft niet de verwachte waarde',
+            'InclusionIn'    => 'Het veld :label moet onderdeel zijn van: :domain',
+            'Numericality'   => 'Het veld :label mag alleen numeriek zijn',
+            'PresenceOf'     => 'Het veld :label is verplicht',
+            'Regex'          => 'Het veld :label heeft niet het verwachte formaat',
+            'TooLong'        => 'Het veld :label mag niet meer dan :max karakters lang zijn',
             'TooShort'       => 'Veld :label moet tenminste :min karakters lang zijn',
             'Uniqueness'     => 'Het veld :label bestaat al, moet uniek zijn',
             'Url'            => 'Het veld :label moet een geldige url zijn',

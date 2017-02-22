@@ -6,6 +6,9 @@ KikCmsClass.prototype =
     translations: {},
     errorMessages: {},
     isDev: false,
+    maxFileUploads: null,
+    maxFileSize: null,
+    maxFileSizeString: null,
 
     action: function (actionUrl, parameters, onSuccess, onError, xhr) {
         var ajaxCompleted = false;

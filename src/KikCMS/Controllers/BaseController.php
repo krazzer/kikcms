@@ -2,15 +2,24 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
 
 class BaseController extends Controller
 {
     public function initialize()
     {
+        $maxFileUploads    = ini_get('max_file_uploads');
+        $maxFileSize       = ByteUtil::stringToBytes(ini_get('upload_max_filesize'));
+        $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
+
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
         $this->view->setVar("jsTranslations", ['error', 'system.langCode']);
+
+        $this->view->setVar("maxFileUploads", $maxFileUploads);
+        $this->view->setVar("maxFileSize", $maxFileSize);
+        $this->view->setVar("maxFileSizeString", $maxFileSizeString);
     }
 
     /**
@@ -24,6 +33,11 @@ class BaseController extends Controller
      */
     protected function outputFile(string $filePath, string $mimeType, string $fileName)
     {
+        if ( ! file_exists($filePath)) {
+            $this->response->setStatusCode(404);
+            return 'Object not found';
+        }
+
         $this->response->setContentType($mimeType);
         $this->response->setHeader('Content-Disposition', 'inline; filename="' . $fileName . '"');
         $this->response->setHeader('Cache-control', 'max-age=2592000, public');

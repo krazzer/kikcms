@@ -38,6 +38,8 @@ class File implements FileStorage
             $fileName = $file->getName();
         }
 
-        $file->moveTo($this->getStorageDir() . $dir . '/' . $fileName);
+        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $file->getExtension();
+
+        $file->moveTo($filePath);
     }
 }

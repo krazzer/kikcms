@@ -63,6 +63,7 @@ class FinderFileService extends Injectable
         }
 
         $this->fileStorage->store($file, $this->mediaDir, $finderFile->id);
+        $this->resizeWithinBoundaries($finderFile);
 
         return (int) $finderFile->id;
     }
@@ -168,7 +169,7 @@ class FinderFileService extends Injectable
      */
     public function getFilePath(FinderFile $finderFile)
     {
-        return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $finderFile->id;
+        return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $finderFile->id . '.' . $finderFile->getExtension();
     }
 
     /**
@@ -302,6 +303,25 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param FinderFile $finderFile
+     * @return array|null returns same results as @see getimagesize
+     */
+    public function getImageDimensions(FinderFile $finderFile)
+    {
+        if ( ! $finderFile->isImage()) {
+            return null;
+        }
+
+        $filePath = $this->getFilePath($finderFile);
+
+        if ( ! file_exists($filePath)) {
+            return null;
+        }
+
+        return getimagesize($filePath);
+    }
+
+    /**
      * @param int[] $fileIds
      * @param int $folderId
      *
@@ -340,5 +360,38 @@ class FinderFileService extends Injectable
         }
 
         return $fileIds;
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     */
+    private function resizeWithinBoundaries(FinderFile $finderFile)
+    {
+        // is no image, so do nothing
+        if ( ! $finderFile->isImage()) {
+            return;
+        }
+
+        $dimensions = $this->getImageDimensions($finderFile);
+
+        // could not fetch dimensions, so do nothing
+        if ( ! $dimensions) {
+            return;
+        }
+
+        $maxWidth  = $this->config->media->maxWidth;
+        $maxHeight = $this->config->media->maxHeight;
+
+        // smaller than required, so do nothing
+        if ($dimensions[0] <= $maxWidth && $dimensions[1] <= $maxHeight) {
+            return;
+        }
+
+        $filePath = $this->getFilePath($finderFile);
+
+        // resize
+        $image = $this->imageHandler->create($filePath);
+        $image->resize($maxWidth, $maxHeight);
+        $image->save($filePath, $this->config->media->jpgQuality);
     }
 }

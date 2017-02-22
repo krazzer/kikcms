@@ -22,6 +22,7 @@ class Finder extends Injectable
         'media.defaultFolderName',
         'media.editFileName',
         'media.uploadMaxFilesWarning',
+        'media.uploadMaxFileSizeWarning',
     ];
 
     private $pickingMode = false;
@@ -50,10 +51,9 @@ class Finder extends Injectable
         $files = $this->finderFileService->getByFilters($filters);
 
         return $this->renderView('index', [
-            'files'          => $files,
-            'instance'       => $this->getInstance(),
-            'pickingMode'    => $this->pickingMode,
-            'maxFileUploads' => $this->getMaxFileUploads(),
+            'files'       => $files,
+            'instance'    => $this->getInstance(),
+            'pickingMode' => $this->pickingMode,
         ]);
     }
 
@@ -132,6 +132,13 @@ class Finder extends Injectable
         $uploadStatus = new UploadStatus();
 
         foreach ($files as $index => $file) {
+
+            if ($file->getError()) {
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
             if ( ! $this->mimeTypeAllowed($file)) {
                 $message = $this->translator->tl('media.upload.error.mime', [
                     'extension' => $file->getExtension(),
@@ -163,20 +170,6 @@ class Finder extends Injectable
     private function getInstance()
     {
         return uniqid('finder');
-    }
-
-    /**
-     * @return int
-     */
-    private function getMaxFileUploads(): int
-    {
-        $maxFileUploads = ini_get('max_file_uploads');
-
-        if ( ! $maxFileUploads) {
-            return 20;
-        }
-
-        return $maxFileUploads;
     }
 
     /**

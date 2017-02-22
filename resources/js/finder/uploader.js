@@ -25,18 +25,29 @@ FinderFileUploader.prototype =
         });
 
         $uploadButton.find('input').on('change', function () {
-            var $fileInput    = $(this);
-            var formData      = new FormData();
-            var fileAmount    = this.files.length;
-            var maxFileAmount = $fileInput.attr('data-max-file-uploads');
+            var formData   = new FormData();
+            var fileAmount = this.files.length;
+            var filesAdded = 0;
 
-            if (fileAmount > maxFileAmount) {
-                alert(KikCMS.tl('media.uploadMaxFilesWarning', {amount: maxFileAmount}));
+            if (fileAmount > KikCMS.maxFileAmount) {
+                alert(KikCMS.tl('media.uploadMaxFilesWarning', {amount: KikCMS.maxFileAmount}));
                 return;
             }
 
             for (var i = 0; i < fileAmount; i++) {
-                formData.append('files[]', this.files[i]);
+                var file = this.files[i];
+
+                if (file.size > KikCMS.maxFileSize) {
+                    alert(KikCMS.tl('media.uploadMaxFileSizeWarning', {max: KikCMS.maxFileSizeString}));
+                    continue;
+                }
+
+                formData.append('files[]', file);
+                filesAdded++;
+            }
+
+            if (!filesAdded) {
+                return;
             }
 
             self.actionUpload(formData);

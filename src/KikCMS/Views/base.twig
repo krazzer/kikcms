@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>KikCMS - {% block title %}{% endblock %}</title>
-    <link rel="shortcut icon" href="/cmsassets/favicon.ico" />
+    <link rel="shortcut icon" href="/cmsassets/favicon.ico"/>
     <link rel="apple-touch-icon" href="/cmsassets/icons/kikcms-icon-76.png">
     <link rel="apple-touch-icon" sizes="76x76" href="/cmsassets/icons/kikcms-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="/cmsassets/icons/kikcms-icon-120.png">
@@ -29,7 +29,10 @@
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 {{ javascriptInclude('cmsassets/js/kikcms.js') }}
 <script>
-    KikCMS.isDev = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
+    KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
+    KikCMS.maxFileUploads    = {{ maxFileUploads }};
+    KikCMS.maxFileSize       = {{ maxFileSize }};
+    KikCMS.maxFileSizeString = '{{ maxFileSizeString }}';
 
     {% for key in jsTranslations %}
     KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
