@@ -2,9 +2,9 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\DataTable\Filters;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
+use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Products;
 use KikCMS\Forms\ProductForm;
 use KikCMS\Services\UserService;
@@ -27,9 +27,17 @@ class CmsController extends BaseCmsController
 
     public function pagesAction()
     {
+        $datatable = new Pages();
+
+        $this->view->datatable = $datatable->render();
+        $this->view->pick('cms/default');
+    }
+
+    public function productsAction()
+    {
         $datatable = new Products();
 
-        $this->view->datatable = $datatable->render(new Filters());
+        $this->view->datatable = $datatable->render();
         $this->view->pick('cms/default');
     }
 

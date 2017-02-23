@@ -23,3 +23,11 @@ function first(array $array)
 {
     return array_values($array)[0];
 }
+
+/**
+ * Log the given parameters
+ */
+function dlog()
+{
+    error_log(print_r(func_get_args(), true));
+}

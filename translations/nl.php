@@ -42,6 +42,13 @@ return [
             'deleteOne' => "Wilt u zeker weten dit product verwijderen?",
         ],
 
+        'pages' => [
+            'add'       => "Nieuwe pagina",
+            'edit'      => "Pagina '<i>:title</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
+            'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
+        ],
+
         'subProducts' => [
             'add'       => "Nieuw sub product",
             'edit'      => "Sub product ':title' bewerken",
@@ -82,9 +89,9 @@ return [
 
     'webform' => [
         'messages' => [
-            'Alnum'          => 'Het veld :label mag alleen letters en cijfers bevatten',
-            'Alpha'          => 'Het veld :label mag alleen letters bevatten',
-            'Between'        => 'Het veld :label mag alleen binnen een bereik van :min tot :max vallen',
+            'Alnum'             => 'Het veld :label mag alleen letters en cijfers bevatten',
+            'Alpha'             => 'Het veld :label mag alleen letters bevatten',
+            'Between'           => 'Het veld :label mag alleen binnen een bereik van :min tot :max vallen',
             'Confirmation'      => 'Het veld :label moet hetzelfde zijn als :with',
             'Digit'             => 'Het veld :label mag alleen een getal zijn',
             'Email'             => 'Het veld :label moet een geldig e-mail adres zijn',
@@ -96,19 +103,19 @@ return [
             'FileSize'          => 'Het bestand :label mag niet groter zijn dan :max',
             'FileType'          => 'Het bestand :label mag alleen van de types :types zijn',
             'FileValid'         => 'Het veld :label is niet geldig',
-            'Identical'      => 'Het veld :label heeft niet de verwachte waarde',
-            'InclusionIn'    => 'Het veld :label moet onderdeel zijn van: :domain',
-            'Numericality'   => 'Het veld :label mag alleen numeriek zijn',
-            'PresenceOf'     => 'Het veld :label is verplicht',
-            'Regex'          => 'Het veld :label heeft niet het verwachte formaat',
-            'TooLong'        => 'Het veld :label mag niet meer dan :max karakters lang zijn',
-            'TooShort'       => 'Veld :label moet tenminste :min karakters lang zijn',
-            'Uniqueness'     => 'Het veld :label bestaat al, moet uniek zijn',
-            'Url'            => 'Het veld :label moet een geldige url zijn',
-            'CreditCard'     => 'Het veld :label moet een geldig credit card nummer zijn',
-            'Date'           => 'Het veld :label moet een geldige datum zijn',
-            'NameExists'     => 'De waarde van het veld :label is niet geldig',
-            'FinderFileType' => 'Het bestand mag alleen van de volgende types zijn: :types',
+            'Identical'         => 'Het veld :label heeft niet de verwachte waarde',
+            'InclusionIn'       => 'Het veld :label moet onderdeel zijn van: :domain',
+            'Numericality'      => 'Het veld :label mag alleen numeriek zijn',
+            'PresenceOf'        => 'Het veld :label is verplicht',
+            'Regex'             => 'Het veld :label heeft niet het verwachte formaat',
+            'TooLong'           => 'Het veld :label mag niet meer dan :max karakters lang zijn',
+            'TooShort'          => 'Veld :label moet tenminste :min karakters lang zijn',
+            'Uniqueness'        => 'Het veld :label bestaat al, moet uniek zijn',
+            'Url'               => 'Het veld :label moet een geldige url zijn',
+            'CreditCard'        => 'Het veld :label moet een geldig credit card nummer zijn',
+            'Date'              => 'Het veld :label moet een geldige datum zijn',
+            'NameExists'        => 'De waarde van het veld :label is niet geldig',
+            'FinderFileType'    => 'Het bestand mag alleen van de volgende types zijn: :types',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
@@ -156,6 +163,7 @@ return [
             'logout'    => 'Uitloggen',
             'form'      => 'Dataform test',
             'pages'     => "Pagina's",
+            'products'  => "Producten",
 
             'stats' => [
                 'index'   => 'Statistieken',

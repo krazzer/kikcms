@@ -236,8 +236,12 @@ abstract class DataTable extends Injectable
      * @param Filters $filters
      * @return string
      */
-    public function render(Filters $filters)
+    public function render(Filters $filters = null)
     {
+        if ($filters == null) {
+            $filters = new Filters();
+        }
+
         $this->initializeDatatable();
         $this->addAssets();
 

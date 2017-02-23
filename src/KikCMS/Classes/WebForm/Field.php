@@ -138,15 +138,17 @@ class Field
      *
      * @param string $table
      * @param $relationKey
+     * @param bool $addLanguageCode
      *
      * @return $this|DataForm
      */
-    public function table(string $table, $relationKey)
+    public function table(string $table, $relationKey, $addLanguageCode = false)
     {
         $fieldStorage = new FieldStorage();
         $fieldStorage->setField($this);
         $fieldStorage->setTableModel($table);
         $fieldStorage->setRelationKey($relationKey);
+        $fieldStorage->setAddLanguageCode($addLanguageCode);
 
         $this->form->addFieldStorage($fieldStorage);
 

@@ -304,7 +304,12 @@ abstract class DataForm extends WebForm
                 continue;
             }
 
-            $this->fieldStorage[$key]->store($input, $editId);
+            if ( ! array_key_exists($key, $input)) {
+                continue;
+            }
+
+            //todo: pass languageCode
+            $this->fieldStorage[$key]->store($input[$key], $editId);
         }
     }
 

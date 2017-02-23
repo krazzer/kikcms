@@ -8,6 +8,7 @@ use KikCMS\Config\DbConfig;
 use Phalcon\Db;
 use Phalcon\Db\ResultInterface;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 class DbService extends Injectable
 {
@@ -152,6 +153,30 @@ class DbService extends Injectable
         $model = new $model();
 
         return $model::ALIAS;
+    }
+
+    /**
+     * Retrieve a single result from the given query
+     *
+     * @param Builder $query
+     * @return string
+     */
+    public function getValue(Builder $query): string
+    {
+        $columns = (array) $query->getColumns();
+
+        if (count($columns) !== 1) {
+            throw new \InvalidArgumentException('The query must request a single column');
+        }
+
+        $column = $columns[0];
+        $result = $query->getQuery()->execute()->getFirst();
+
+        if ( ! $result) {
+            return '';
+        }
+
+        return $result->$column;
     }
 
     /**

@@ -14,10 +14,9 @@ class DataTable extends FieldStorage
     protected $field;
 
     /**
-     * @param array $input
-     * @param mixed $editId
+     * @inheritdoc
      */
-    public function store(array $input, $editId)
+    public function store($value, $relationId)
     {
         $dataTable    = $this->field->getDataTable();
         $keysToUpdate = $dataTable->getCachedNewIds();
@@ -26,7 +25,11 @@ class DataTable extends FieldStorage
             $model       = $dataTable->getModel();
             $relationKey = $dataTable->getParentRelationKey();
 
-            $this->dbService->update($model, [$relationKey => $editId], ['id' => $newId, $relationKey => 0]);
+            $this->dbService->update($model, [$relationKey => $relationId], ['id' => $newId, $relationKey => 0]);
         }
+    }
+
+    public function getValue()
+    {
     }
 }

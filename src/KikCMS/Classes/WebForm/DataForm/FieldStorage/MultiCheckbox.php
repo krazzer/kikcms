@@ -13,10 +13,9 @@ use Phalcon\Mvc\Model\Query\Builder;
 class MultiCheckbox extends FieldStorage
 {
     /**
-     * @param array $input
-     * @param mixed $editId
+     * @inheritdoc
      */
-    public function store(array $input, $editId)
+    public function store(array $value, $relationId)
     {
         /** @var MultiCheckboxField $element */
         $element = $this->field->getElement();
@@ -26,23 +25,19 @@ class MultiCheckbox extends FieldStorage
         $relationKey = $this->getRelationKey();
 
         $ids   = array_keys($element->getOptions());
-        $where = $relationKey . ' = ' . $editId . ' AND ' . $key . ' IN (' . implode(',', $ids) . ')';
+        $where = $relationKey . ' = ' . $relationId . ' AND ' . $key . ' IN (' . implode(',', $ids) . ')';
 
         $this->db->delete($table, $where);
 
-        if ( ! isset($input[$key])) {
-            return;
-        }
-
-        foreach ($input[$key] as $id) {
-            $this->db->insert($table, [$editId, $id], [$relationKey, $key]);
+        foreach ($value as $id) {
+            $this->db->insert($table, [$relationId, $id], [$relationKey, $key]);
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function getValue($id)
+    public function getValue($relationId)
     {
         $fieldKey = $this->field->getKey();
 
@@ -50,7 +45,7 @@ class MultiCheckbox extends FieldStorage
         $altQuery
             ->columns($fieldKey)
             ->addFrom($this->getTableModel())
-            ->andWhere($this->getRelationKey() . ' = ' . $id);
+            ->andWhere($this->getRelationKey() . ' = ' . $relationId);
 
         $rows   = $altQuery->getQuery()->execute()->toArray();
         $values = [];

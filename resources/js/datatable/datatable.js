@@ -364,8 +364,11 @@ DataTable.prototype =
         $('.dataTableWindow.level' + (level + 1)).remove();
 
         $window.fadeOut();
-        tinymce.remove(this.getWysiwygSelector());
         $window.find('.windowContent').html('');
+
+        if (typeof(tinymce) !== 'undefined') {
+            tinymce.remove(this.getWysiwygSelector());
+        }
 
         this.currentFormInput = null;
     },

@@ -2,12 +2,16 @@
 
 namespace KikCMS\Classes\WebForm\DataForm;
 
+use KikCMS\Classes\DbService;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Manages where and how a certain DataForms' field should be stored and retrieved
+ *
+ * @property DbService $dbService
  */
 class FieldStorage extends Injectable
 {
@@ -19,6 +23,28 @@ class FieldStorage extends Injectable
 
     /** @var string */
     protected $relationKey;
+
+    /** @var bool */
+    protected $addLanguageCode = false;
+
+    /** @var string */
+    private $languageCodeField = 'language_code';
+
+    /**
+     * @return boolean
+     */
+    public function isAddLanguageCode(): bool
+    {
+        return $this->addLanguageCode;
+    }
+
+    /**
+     * @param boolean $addLanguageCode
+     */
+    public function setAddLanguageCode(bool $addLanguageCode)
+    {
+        $this->addLanguageCode = $addLanguageCode;
+    }
 
     /**
      * @return string
@@ -66,11 +92,24 @@ class FieldStorage extends Injectable
 
     /**
      * Retrieve the value stored by the given relation id
-     * @param $id
+     *
+     * @param $relationId
+     * @param string $languageCode
+     *
      * @return mixed
      */
-    public function getValue($id)
+    public function getValue($relationId, $languageCode = 'nl')
     {
+        $existsQuery = new Builder();
+        $existsQuery->addFrom($this->tableModel);
+        $existsQuery->columns($this->field->getKey());
+        $existsQuery->where($this->relationKey . ' = ' . $relationId);
+
+        if ($this->addLanguageCode) {
+            $existsQuery->andWhere($this->languageCodeField . ' = ' . $this->db->escapeString($languageCode));
+        }
+
+        return $this->dbService->getValue($existsQuery);
     }
 
     /**
@@ -98,10 +137,23 @@ class FieldStorage extends Injectable
     }
 
     /**
-     * @param array $input
-     * @param $editId
+     * @param mixed $value
+     * @param int $relationId
+     * @param string $languageCode
      */
-    public function store(array $input, $editId)
+    public function store($value, $relationId, $languageCode = 'nl')
     {
+        $set   = [$this->field->getKey() => $value];
+        $where = [$this->getRelationKey() => $relationId];
+
+        if ($this->addLanguageCode) {
+            $where[$this->languageCodeField] = $languageCode;
+        }
+
+        if ($this->getValue($relationId, $languageCode)) {
+            $this->dbService->update($this->getTableModel(), $set, $where);
+        } else {
+            $this->dbService->insert($this->getTableModel(), $set + $where);
+        }
     }
 }
