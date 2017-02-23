@@ -28,6 +28,7 @@
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 {{ javascriptInclude('cmsassets/js/kikcms.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/bootstrap/dropdown.js') }}
 <script>
     KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
     KikCMS.maxFileUploads    = {{ maxFileUploads }};

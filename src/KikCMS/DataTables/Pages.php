@@ -20,6 +20,9 @@ class Pages extends DataTable
     /** @inheritdoc */
     protected $labels = 'dataTables.pages';
 
+    /** @inheritdoc */
+    protected $indexView = 'datatables/page/index';
+
     /**
      * @inheritdoc
      */

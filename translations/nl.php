@@ -47,6 +47,11 @@ return [
             'edit'      => "Pagina '<i>:title</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
             'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
+
+            'addItem' => 'Nieuw...',
+            'menu'    => 'Menu',
+            'link'    => 'Link',
+            'alias'   => 'Alias',
         ],
 
         'subProducts' => [

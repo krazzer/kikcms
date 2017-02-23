@@ -8,6 +8,8 @@
             </span>
         </div>
 
+        {% block additionalButtons '' %}
+
         <div class="btn btn-default delete" style="display: none;">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             <span class="lbl">{{ tl('delete') }}</span>
@@ -23,19 +25,19 @@
 
         <div class="pages">
             {% if pagination.total_pages > 1 %}
-                {% include '@kikcms/data-table/pagination.twig' %}
+                {% include '@kikcms/datatable/pagination.twig' %}
             {% endif %}
         </div>
     </div>
 
     <div class="table">
-        {% include '@kikcms/data-table/table.twig' %}
+        {% include '@kikcms/datatable/table.twig' %}
     </div>
 
     <div class="footer">
         <div class="pages">
             {% if pagination.total_pages > 1 %}
-                {% include '@kikcms/data-table/pagination.twig' %}
+                {% include '@kikcms/datatable/pagination.twig' %}
             {% endif %}
         </div>
     </div>

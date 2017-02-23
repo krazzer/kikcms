@@ -46,6 +46,12 @@ abstract class DataTable extends Injectable
     /** @var string when using a DataTable in a DataTable, this key will be the reference to the parent table */
     protected $parentRelationKey;
 
+    /** @var string */
+    protected $viewDirectory = 'datatable';
+
+    /** @var string */
+    protected $indexView = 'datatable/index';
+
     /** @var StdClass */
     private $tableData;
 
@@ -245,7 +251,7 @@ abstract class DataTable extends Injectable
         $this->initializeDatatable();
         $this->addAssets();
 
-        return $this->renderView('index', [
+        return $this->view->getPartial($this->indexView, [
             'tableData'       => $this->getTableData($filters)->items->toArray(),
             'pagination'      => $this->getTableData($filters),
             'headerData'      => $this->getTableHeaderData($filters),
@@ -335,7 +341,7 @@ abstract class DataTable extends Injectable
      */
     public function renderView($viewName, array $parameters = []): string
     {
-        return $this->view->getPartial('data-table/' . $viewName, $parameters);
+        return $this->view->getPartial($this->viewDirectory . '/' . $viewName, $parameters);
     }
 
     /**

@@ -1,0 +1,21 @@
+{% extends '@kikcms/datatable/index.twig' %}
+
+{% block additionalButtons %}
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            <span class="lbl">
+                {{ tl('dataTables.pages.addItem') }}
+            </span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#"><span class="glyphicon glyphicon-link"></span> &nbsp;{{ tl('dataTables.pages.link') }}</a>
+            </li>
+            <li><a href="#"><span class="glyphicon glyphicon-menu-hamburger"></span>
+                    &nbsp;{{ tl('dataTables.pages.menu') }}</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-share-alt"></span> &nbsp;{{ tl('dataTables.pages.alias') }}
+                </a></li>
+        </ul>
+    </div>
+{% endblock %}

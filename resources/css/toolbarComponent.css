@@ -37,4 +37,8 @@
     padding-left: 38px;
 }
 
+.toolbarComponent .toolbar .dropdown {
+    display: inline-block;
+}
+
 /*# sourceMappingURL=toolbarComponent.css.map */
