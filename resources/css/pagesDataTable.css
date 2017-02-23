@@ -1,0 +1,23 @@
+/* Colors */
+/* Miscellaneous */
+/* z-indexes */
+.datatable .table table tbody tr.pageObject .name {
+  display: block;
+  padding: 7px 12px;
+  border: 1px solid #e1e1e1;
+  background-color: #f9f9f9;
+  border-radius: 3px;
+  color: #000;
+  width: 300px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: move; }
+.datatable .table table tbody tr.pageObject.menu .name {
+  border-color: #aaaaaa;
+  background-color: #aaaaaa;
+  color: #fff; }
+.datatable .table table tbody tr.pageObject.page .name {
+  margin-left: 40px; }
+
+/*# sourceMappingURL=pagesDataTable.css.map */

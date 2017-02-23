@@ -12,7 +12,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 class Pages extends DataTable
 {
     /** @inheritdoc */
-    protected $searchableFields = ['title'];
+    protected $searchableFields = ['name'];
 
     /** @inheritdoc */
     protected $orderableFields = ['id' => 'p.id'];
@@ -21,7 +21,17 @@ class Pages extends DataTable
     protected $labels = 'dataTables.pages';
 
     /** @inheritdoc */
-    protected $indexView = 'datatables/page/index';
+    public $indexView = 'datatables/page/index';
+
+    /** @inheritdoc */
+    public $tableView = 'datatables/page/table';
+
+    protected function addAssets()
+    {
+        parent::addAssets();
+
+        $this->view->assets->addCss('cmsassets/css/pagesDataTable.css');
+    }
 
     /**
      * @inheritdoc
@@ -46,8 +56,9 @@ class Pages extends DataTable
     {
         $defaultQuery = new Builder();
         $defaultQuery->from(['p' => $this->getModel()]);
-        $defaultQuery->columns(['p.id', 'pl.name']);
+        $defaultQuery->columns(['pl.name', 'IFNULL(p.lft, 999999) AS page_order', 'p.id', 'p.type']);
         $defaultQuery->leftJoin(PageLanguage::class, 'p.id = pl.page_id', 'pl');
+        $defaultQuery->orderBy('page_order asc');
 
         return $defaultQuery;
     }
@@ -57,5 +68,15 @@ class Pages extends DataTable
      */
     protected function initialize()
     {
+        $this->setFieldFormatting('name', [$this, 'formatName']);
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function formatName($value)
+    {
+        return '<span class="name">' . $value . '</span>';
     }
 }

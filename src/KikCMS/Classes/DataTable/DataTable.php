@@ -50,7 +50,10 @@ abstract class DataTable extends Injectable
     protected $viewDirectory = 'datatable';
 
     /** @var string */
-    protected $indexView = 'datatable/index';
+    public $indexView = 'datatable/index';
+
+    /** @var string */
+    public $tableView = 'datatable/table';
 
     /** @var StdClass */
     private $tableData;
@@ -322,7 +325,7 @@ abstract class DataTable extends Injectable
     {
         $this->initializeDatatable();
 
-        return $this->renderView('table', [
+        return $this->view->getPartial($this->tableView, [
             'tableData'       => $this->getTableData($filters)->items->toArray(),
             'headerData'      => $this->getTableHeaderData($filters),
             'fieldFormatting' => $this->fieldFormatting,
@@ -451,7 +454,7 @@ abstract class DataTable extends Injectable
     /**
      * Sets the js & css assets required
      */
-    private function addAssets()
+    protected function addAssets()
     {
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
