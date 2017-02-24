@@ -210,8 +210,9 @@ abstract class DataTable extends Injectable
 
     /**
      * Initializes the dataTable
+     * @param int $editId
      */
-    public function initializeDatatable()
+    public function initializeDatatable(int $editId = null)
     {
         if ($this->initialized) {
             return;
@@ -221,7 +222,7 @@ abstract class DataTable extends Injectable
         $formClass = $this->getFormClass();
 
         $this->form = new $formClass($this->getModel());
-        $this->form->initializeForm();
+        $this->form->initializeForm($editId);
         $this->initialize();
 
         $this->form->setIdentifier('form_' . $instance);
@@ -289,21 +290,21 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int $id
+     * @param int $editId
      * @return Response
      */
-    public function renderEditForm(int $id)
+    public function renderEditForm(int $editId)
     {
-        $this->initializeDatatable();
+        $this->initializeDatatable($editId);
 
-        $this->form->addHiddenField(self::EDIT_ID, $id);
+        $this->form->addHiddenField(self::EDIT_ID, $editId);
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
 
         if ($this->form->isPosted()) {
-            return $this->form->render([self::EDIT_ID => $id]);
+            return $this->form->render([self::EDIT_ID => $editId]);
         }
 
-        return $this->form->renderWithData($id);
+        return $this->form->renderWithData($editId);
     }
 
     /**

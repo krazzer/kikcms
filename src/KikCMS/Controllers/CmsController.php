@@ -6,6 +6,7 @@ use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Products;
+use KikCMS\DataTables\Templates;
 use KikCMS\Forms\ProductForm;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
@@ -57,6 +58,12 @@ class CmsController extends BaseCmsController
 
         $this->view->finder = $finder->render();
         $this->view->pick('cms/media');
+    }
+
+    public function templatesAction()
+    {
+        $this->view->datatable = (new Templates())->render();
+        $this->view->pick('cms/default');
     }
 
     public function logoutAction()

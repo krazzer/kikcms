@@ -46,11 +46,11 @@ abstract class WebForm extends Injectable
     /** @var Tab[] */
     protected $tabs = [];
 
+    /** @var array tracks field key increments */
+    protected $keys = [];
+
     /** @var string */
     protected $formTemplate = 'form';
-
-    /** @var array tracks field key increments */
-    protected $keys;
 
     /** @var Form */
     private $form;
@@ -68,7 +68,7 @@ abstract class WebForm extends Injectable
     private $validateAction;
 
     /** @var bool */
-    private $initialized = false;
+    protected $initialized = false;
 
     public function __construct()
     {
@@ -124,6 +124,17 @@ abstract class WebForm extends Injectable
      */
     public function addField(Field $field): Field
     {
+        $key = $field->getKey();
+        $field->setTableField($key);
+
+        if (array_key_exists($key, $this->keys)) {
+            $newKey             = $key . (count($this->keys[$key]) + 1);
+            $this->keys[$key][] = $newKey;
+            $field->getElement()->setName($newKey);
+        } else {
+            $this->keys[$key] = [$key];
+        }
+
         $field->setForm($this);
         $this->fields[$field->getKey()] = $field;
         $this->form->add($field->getElement());
@@ -713,7 +724,7 @@ abstract class WebForm extends Injectable
         $filters = (new Filters())->setParentEditId($parentEditId);
 
         /** @var DataTableField $field */
-        foreach ($this->getFields() as $field) {
+        foreach ($this->getFields() as $key => $field) {
             if ($field->getType() != Field::TYPE_DATA_TABLE) {
                 continue;
             }

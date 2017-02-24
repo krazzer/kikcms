@@ -3,6 +3,8 @@
 namespace KikCMS\Classes;
 
 
+use KikCMS\Config\KikCMSConfig;
+
 class Translator
 {
     /**
@@ -43,5 +45,19 @@ class Translator
         }
 
         return $translation;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContentTypeMap()
+    {
+        $contentTypeMap = [];
+
+        foreach (KikCMSConfig::CONTENT_TYPES as $key => $typeId) {
+            $contentTypeMap[$typeId] = $this->tl('contentTypes.' . $key);
+        }
+
+        return $contentTypeMap;
     }
 }

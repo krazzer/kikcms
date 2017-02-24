@@ -14,6 +14,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
+use KikCMS\Services\Model\FieldService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
@@ -40,6 +41,11 @@ use Throwable;
 
 class Services extends BaseServices
 {
+    /** @inheritdoc */
+    protected $autoDefineServices = [
+        FieldService::class,
+    ];
+
     /**
      * @return FileStorage
      */

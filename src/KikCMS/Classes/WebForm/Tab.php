@@ -24,6 +24,13 @@ class Tab
         $this->fields = $fields;
     }
 
+    public function addField(Field $field)
+    {
+        $this->fields[] = $field;
+
+        $field->setTab($this);
+    }
+
     /**
      * @return string
      */

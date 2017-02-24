@@ -16,7 +16,7 @@ class DataTable extends FieldStorage
     /**
      * @inheritdoc
      */
-    public function store($value, $relationId)
+    public function store($value, $relationId, $languageCode = 'nl')
     {
         $dataTable    = $this->field->getDataTable();
         $keysToUpdate = $dataTable->getCachedNewIds();
@@ -29,7 +29,7 @@ class DataTable extends FieldStorage
         }
     }
 
-    public function getValue()
+    public function getValue($relationId, $languageCode = 'nl')
     {
     }
 }

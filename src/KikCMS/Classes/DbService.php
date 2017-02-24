@@ -159,9 +159,9 @@ class DbService extends Injectable
      * Retrieve a single result from the given query
      *
      * @param Builder $query
-     * @return string
+     * @return string|null
      */
-    public function getValue(Builder $query): string
+    public function getValue(Builder $query)
     {
         $columns = (array) $query->getColumns();
 
@@ -172,8 +172,8 @@ class DbService extends Injectable
         $column = $columns[0];
         $result = $query->getQuery()->execute()->getFirst();
 
-        if ( ! $result) {
-            return '';
+        if ( ! count($result)) {
+            return null;
         }
 
         return $result->$column;

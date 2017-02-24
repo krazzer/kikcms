@@ -8,6 +8,26 @@ return [
         'loading' => 'Bezig met laden...',
     ],
 
+    'contentTypes' => [
+        'text'         => 'Tekstveld',
+        'textarea'     => 'Tekstgebied',
+        'int'          => 'Getalveld',
+        'checkbox'     => 'Checkbox',
+        'tinymce'      => 'TinyMCE',
+        'image'        => 'Afbeelding',
+        'file'         => 'Bestand',
+        'tab'          => 'Tab',
+        'pagepicker'   => 'Pagina kiezer',
+        'date'         => 'Datum',
+        'datetime'     => 'Datum & tijd',
+        'time'         => 'Tijd',
+        'select'       => 'Select',
+        'select_table' => 'Multi checkbox',
+        'radio'        => 'Radiobutton',
+        'color'        => 'Kleurkiezer',
+        'custom'       => 'Custom',
+    ],
+
     'dataForm' => [
         'saveSuccess' => 'De gegevens zijn succesvol opgeslagen',
         'saveFailure' => 'Er is iets mis gegaan bij het opslaan van de gegevens',
@@ -163,7 +183,6 @@ return [
         'item' => [
             'media'     => 'Media',
             'templates' => 'Templates',
-            'menus'     => 'Menu\'s',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
             'form'      => 'Dataform test',

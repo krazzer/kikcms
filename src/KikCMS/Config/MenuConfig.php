@@ -14,7 +14,6 @@ class MenuConfig
             self::MENU_ITEM_MEDIA,
             self::MENU_ITEM_DATA_FORM,
             self::MENU_ITEM_TEMPLATES,
-            self::MENU_ITEM_MENUS,
         ],
         self::MENU_GROUP_STATS   => [
             self::MENU_ITEM_STATS,
@@ -35,7 +34,6 @@ class MenuConfig
     const MENU_ITEM_DATA_FORM = 'form';
     const MENU_ITEM_MEDIA     = 'media';
     const MENU_ITEM_TEMPLATES = 'templates';
-    const MENU_ITEM_MENUS     = 'menus';
 
     const MENU_ITEM_STATS         = 'stats/index';
     const MENU_ITEM_STATS_SOURCES = 'stats/sources';

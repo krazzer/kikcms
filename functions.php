@@ -25,9 +25,28 @@ function first(array $array)
 }
 
 /**
+ * Return the last value of an array
+ *
+ * @param array $array
+ *
+ * @return mixed
+ */
+function last(array $array)
+{
+    return array_values(array_slice($array, -1))[0];
+}
+
+
+/**
  * Log the given parameters
  */
 function dlog()
 {
-    error_log(print_r(func_get_args(), true));
+    $args = func_get_args();
+
+    if (count($args) === 1) {
+        $args = $args[0];
+    }
+
+    error_log(print_r($args, true));
 }

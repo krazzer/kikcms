@@ -64,8 +64,6 @@ abstract class DataForm extends WebForm
      */
     public function addDataTableField(DataTable $dataTable, string $label)
     {
-        $key = 'dt' . (count($this->keys['dt']) + 1);
-
         $dataTableElement = new Hidden($key);
         $dataTableElement->setLabel($label);
         $dataTableElement->setDefault($dataTable->getInstanceName());
@@ -110,6 +108,28 @@ abstract class DataForm extends WebForm
         }
 
         return $data;
+    }
+
+    /**
+     * @param int $editId
+     */
+    public function initialize(int $editId = null)
+    {
+
+    }
+
+    /**
+     * Override to build up the form
+     * @param int $editId
+     */
+    public function initializeForm(int $editId = null)
+    {
+        if ($this->initialized) {
+            return;
+        }
+
+        $this->initialize($editId);
+        $this->initialized = true;
     }
 
     /**

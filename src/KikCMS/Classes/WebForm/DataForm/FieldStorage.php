@@ -27,6 +27,9 @@ class FieldStorage extends Injectable
     /** @var bool */
     protected $addLanguageCode = false;
 
+    /** @var array */
+    private $defaultValues = [];
+
     /** @var string */
     private $languageCodeField = 'language_code';
 
@@ -44,6 +47,24 @@ class FieldStorage extends Injectable
     public function setAddLanguageCode(bool $addLanguageCode)
     {
         $this->addLanguageCode = $addLanguageCode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultValues(): array
+    {
+        return $this->defaultValues;
+    }
+
+    /**
+     * @param array $defaultValues
+     * @return FieldStorage
+     */
+    public function setDefaultValues(array $defaultValues): FieldStorage
+    {
+        $this->defaultValues = $defaultValues;
+        return $this;
     }
 
     /**
@@ -102,8 +123,12 @@ class FieldStorage extends Injectable
     {
         $existsQuery = new Builder();
         $existsQuery->addFrom($this->tableModel);
-        $existsQuery->columns($this->field->getKey());
+        $existsQuery->columns($this->field->getTableField());
         $existsQuery->where($this->relationKey . ' = ' . $relationId);
+
+        foreach ($this->defaultValues as $field => $value) {
+            $existsQuery->andWhere($field . ' = ' . $this->db->escapeString($value));
+        }
 
         if ($this->addLanguageCode) {
             $existsQuery->andWhere($this->languageCodeField . ' = ' . $this->db->escapeString($languageCode));
@@ -143,14 +168,14 @@ class FieldStorage extends Injectable
      */
     public function store($value, $relationId, $languageCode = 'nl')
     {
-        $set   = [$this->field->getKey() => $value];
-        $where = [$this->getRelationKey() => $relationId];
+        $set   = [$this->field->getTableField() => $value];
+        $where = $this->defaultValues + [$this->getRelationKey() => $relationId];
 
         if ($this->addLanguageCode) {
             $where[$this->languageCodeField] = $languageCode;
         }
 
-        if ($this->getValue($relationId, $languageCode)) {
+        if ($this->getValue($relationId, $languageCode) !== null) {
             $this->dbService->update($this->getTableModel(), $set, $where);
         } else {
             $this->dbService->insert($this->getTableModel(), $set + $where);

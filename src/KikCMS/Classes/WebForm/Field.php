@@ -30,6 +30,9 @@ class Field
     /** @var Tab */
     private $tab;
 
+    /** @var string the table field where the value should be saved */
+    private $tableField;
+
     /**
      * @param Element $element
      */
@@ -134,21 +137,41 @@ class Field
     }
 
     /**
+     * @return string
+     */
+    public function getTableField(): string
+    {
+        return $this->tableField;
+    }
+
+    /**
+     * @param string $tableField
+     * @return Field
+     */
+    public function setTableField(string $tableField): Field
+    {
+        $this->tableField = $tableField;
+        return $this;
+    }
+
+    /**
      * Shortcut to set the storage
      *
      * @param string $table
      * @param $relationKey
      * @param bool $addLanguageCode
+     * @param array $defaultValues
      *
      * @return $this|DataForm
      */
-    public function table(string $table, $relationKey, $addLanguageCode = false)
+    public function table(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
     {
         $fieldStorage = new FieldStorage();
         $fieldStorage->setField($this);
         $fieldStorage->setTableModel($table);
         $fieldStorage->setRelationKey($relationKey);
         $fieldStorage->setAddLanguageCode($addLanguageCode);
+        $fieldStorage->setDefaultValues($defaultValues);
 
         $this->form->addFieldStorage($fieldStorage);
 
