@@ -64,7 +64,7 @@ return [
 
         'pages' => [
             'add'       => "Nieuwe pagina",
-            'edit'      => "Pagina '<i>:title</i>' bewerken",
+            'edit'      => "Pagina '<i>:name</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
             'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
 
