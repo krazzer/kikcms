@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer\Date;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
@@ -23,6 +24,9 @@ use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldSto
  */
 abstract class DataForm extends WebForm
 {
+    /** @var DataFormFilters */
+    protected $filters;
+
     /** @var string */
     protected $formTemplate = 'dataForm';
 
@@ -64,7 +68,7 @@ abstract class DataForm extends WebForm
      */
     public function addDataTableField(DataTable $dataTable, string $label)
     {
-        $dataTableElement = new Hidden($key);
+        $dataTableElement = new Hidden('dt');
         $dataTableElement->setLabel($label);
         $dataTableElement->setDefault($dataTable->getInstanceName());
 
@@ -93,10 +97,10 @@ abstract class DataForm extends WebForm
     /**
      * Retrieve data from fields that are not stored in the current DataTable's Table
      *
-     * @param $id
+     * @param int $id
      * @return array
      */
-    public function getDataStoredElseWhere($id): array
+    public function getDataStoredElseWhere(int $id): array
     {
         $data = [];
 
@@ -111,24 +115,23 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @param int $editId
+     * @return DataFormFilters|Filters
      */
-    public function initialize(int $editId = null)
+    public function getFilters(): Filters
     {
-
+        return parent::getFilters();
     }
 
     /**
      * Override to build up the form
-     * @param int $editId
      */
-    public function initializeForm(int $editId = null)
+    public function initializeForm()
     {
         if ($this->initialized) {
             return;
         }
 
-        $this->initialize($editId);
+        $this->initialize();
         $this->initialized = true;
     }
 
@@ -143,12 +146,11 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @param int $editId
      * @return Response|string
      */
-    public function renderWithData(int $editId)
+    public function renderWithData()
     {
-        $editData = $this->getEditData($editId);
+        $editData = $this->getEditData();
 
         foreach ($this->fields as $key => &$field) {
             if (array_key_exists($key, $editData)) {
@@ -156,7 +158,7 @@ abstract class DataForm extends WebForm
             }
         }
 
-        return $this->render([DataTable::EDIT_ID => $editId]);
+        return $this->render();
     }
 
     /**
@@ -165,13 +167,13 @@ abstract class DataForm extends WebForm
      */
     public function successAction(array $input)
     {
-        $editId = $this->saveData($input);
+        $saveSuccess = $this->saveData($input);
 
-        if ($editId && ! array_key_exists(DataTable::EDIT_ID, $input)) {
-            $this->addHiddenField(DataTable::EDIT_ID, $editId);
+        if ($saveSuccess && ! array_key_exists(DataTable::EDIT_ID, $input)) {
+            $this->addHiddenField(DataTable::EDIT_ID, $this->filters->getEditId());
         }
 
-        if ($editId) {
+        if ($saveSuccess) {
             $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
@@ -189,34 +191,47 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @param int $id
      * @return array
      */
-    public function getEditData(int $id)
+    public function getEditData(): array
     {
-        if (isset($this->cachedEditData[$id])) {
-            return $this->cachedEditData[$id];
+        $editId = $this->filters->getEditId();
+
+        if ( ! $editId) {
+            return [];
+        }
+
+        if (isset($this->cachedEditData[$editId])) {
+            return $this->cachedEditData[$editId];
         }
 
         $query = new Builder();
         $query
             ->addFrom($this->getModel())
-            ->andWhere('id = ' . $id);
+            ->andWhere('id = ' . $editId);
 
         $data = $query->getQuery()->execute()->getFirst()->toArray();
-        $data = $data + $this->getDataStoredElseWhere($id);
+        $data = $data + $this->getDataStoredElseWhere($editId);
         $data = $this->transformDataForDisplay($data);
 
-        $this->cachedEditData[$id] = $data;
+        $this->cachedEditData[$editId] = $data;
 
         return $data;
     }
 
     /**
-     * @param array $input
-     * @return mixed
+     * @return Filters|DataFormFilters
      */
-    private function saveData(array $input)
+    public function getEmptyFilters(): Filters
+    {
+        return new DataFormFilters();
+    }
+
+    /**
+     * @param array $input
+     * @return bool
+     */
+    private function saveData(array $input): bool
     {
         $insertUpdateData = $this->getInsertUpdateData($input);
 
@@ -230,6 +245,7 @@ abstract class DataForm extends WebForm
                 $editId = $this->dbService->insert($this->getModel(), $insertUpdateData);
             }
 
+            $this->filters->setEditId($editId);
             $this->storeFields($input, $editId);
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
@@ -238,9 +254,7 @@ abstract class DataForm extends WebForm
             return false;
         }
 
-        $this->db->commit();
-
-        return $editId;
+        return $this->db->commit();
     }
 
     /**

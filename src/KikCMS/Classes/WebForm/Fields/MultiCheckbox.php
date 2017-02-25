@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm\Fields;
 
 
+use KikCMS\Classes\WebForm\DataForm\FieldStorage;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\MultiCheckbox as MultiCheckboxStorage;
 use KikCMS\Classes\WebForm\Field;
 
@@ -17,17 +18,10 @@ class MultiCheckbox extends Field
     }
 
     /**
-     * @inheritdoc
+     * @return FieldStorage|MultiCheckboxStorage
      */
-    public function table(string $table, $relationKey)
+    protected function getNewFieldStorage(): FieldStorage
     {
-        $fieldStorage = new MultiCheckboxStorage();
-        $fieldStorage->setField($this);
-        $fieldStorage->setTableModel($table);
-        $fieldStorage->setRelationKey($relationKey);
-
-        $this->form->addFieldStorage($fieldStorage);
-
-        return $this;
+        return new MultiCheckboxStorage();
     }
 }

@@ -15,7 +15,7 @@ class MultiCheckbox extends FieldStorage
     /**
      * @inheritdoc
      */
-    public function store(array $value, $relationId)
+    public function store($value, $relationId, $languageCode = 'nl')
     {
         /** @var MultiCheckboxField $element */
         $element = $this->field->getElement();
@@ -37,7 +37,7 @@ class MultiCheckbox extends FieldStorage
     /**
      * @inheritdoc
      */
-    public function getValue($relationId)
+    public function getValue($relationId, $languageCode = 'nl')
     {
         $fieldKey = $this->field->getKey();
 

@@ -46,9 +46,9 @@ class CmsController extends BaseCmsController
     {
         $dataForm = new ProductForm();
         $dataForm->addTextField('title', "Naam product");
+        $dataForm->getFilters()->setEditId(23);
 
-        $this->view->form = $dataForm->renderWithData(23);
-
+        $this->view->form = $dataForm->renderWithData();
         $this->view->pick('cms/form');
     }
 

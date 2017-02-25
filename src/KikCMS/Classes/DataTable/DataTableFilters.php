@@ -3,12 +3,15 @@
 namespace KikCMS\Classes\DataTable;
 
 
-class Filters
+use KikCMS\Classes\Renderable\Filters;
+
+class DataTableFilters extends Filters
 {
     const FILTER_SEARCH         = 'search';
     const FILTER_PAGE           = 'page';
     const FILTER_SORT_COLUMN    = 'sortColumn';
     const FILTER_SORT_DIRECTION = 'sortDirection';
+    const FILTER_EDIT_ID        = 'editId';
     const FILTER_PARENT_EDIT_ID = 'parentEditId';
 
     const FILTER_TYPES = [
@@ -16,6 +19,7 @@ class Filters
         self::FILTER_PAGE,
         self::FILTER_SORT_COLUMN,
         self::FILTER_SORT_DIRECTION,
+        self::FILTER_EDIT_ID,
         self::FILTER_PARENT_EDIT_ID,
     ];
 
@@ -32,6 +36,9 @@ class Filters
     private $sortDirection = 'asc';
 
     /** @var int */
+    private $editId = null;
+
+    /** @var int */
     private $parentEditId = 0;
 
     /**
@@ -41,10 +48,27 @@ class Filters
     {
         foreach (self::FILTER_TYPES as $filterType) {
             if (array_key_exists($filterType, $filters)) {
-                $setMethod = 'set' . $filterType;
-                $this->$setMethod($filters[$filterType]);
+                $this->$filterType = $filters[$filterType];
             }
         }
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getEditId()
+    {
+        return $this->editId;
+    }
+
+    /**
+     * @param int $editId
+     * @return DataTableFilters
+     */
+    public function setEditId(int $editId): DataTableFilters
+    {
+        $this->editId = $editId;
+        return $this;
     }
 
     /**
@@ -57,9 +81,9 @@ class Filters
 
     /**
      * @param int $page
-     * @return Filters
+     * @return DataTableFilters
      */
-    public function setPage(int $page): Filters
+    public function setPage(int $page): DataTableFilters
     {
         $this->page = $page;
         return $this;
@@ -75,9 +99,9 @@ class Filters
 
     /**
      * @param string $search
-     * @return Filters
+     * @return DataTableFilters
      */
-    public function setSearch(string $search): Filters
+    public function setSearch(string $search): DataTableFilters
     {
         $this->search = $search;
         return $this;
@@ -93,9 +117,9 @@ class Filters
 
     /**
      * @param string $sortColumn
-     * @return Filters
+     * @return DataTableFilters
      */
-    public function setSortColumn(string $sortColumn): Filters
+    public function setSortColumn(string $sortColumn): DataTableFilters
     {
         $this->sortColumn = $sortColumn;
         return $this;
@@ -111,9 +135,9 @@ class Filters
 
     /**
      * @param string $sortDirection
-     * @return Filters
+     * @return DataTableFilters
      */
-    public function setSortDirection(string $sortDirection): Filters
+    public function setSortDirection(string $sortDirection): DataTableFilters
     {
         $this->sortDirection = $sortDirection;
         return $this;
@@ -129,9 +153,9 @@ class Filters
 
     /**
      * @param int $parentEditId
-     * @return Filters
+     * @return DataTableFilters
      */
-    public function setParentEditId(int $parentEditId): Filters
+    public function setParentEditId(int $parentEditId): DataTableFilters
     {
         $this->parentEditId = $parentEditId;
         return $this;

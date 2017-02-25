@@ -4,9 +4,9 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\Filters;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
@@ -16,7 +16,6 @@ use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
-use Phalcon\Di\Injectable;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Date;
 use Phalcon\Forms\Element\Hidden;
@@ -35,7 +34,7 @@ use Phalcon\Validation;
  * @property Validation $validation
  * @property Translator $translator
  */
-abstract class WebForm extends Injectable
+abstract class WebForm extends Renderable
 {
     const WEB_FORM_ID    = 'webFormId';
     const WEB_FORM_CLASS = 'webFormClass';
@@ -70,8 +69,13 @@ abstract class WebForm extends Injectable
     /** @var bool */
     protected $initialized = false;
 
+    /** @inheritdoc */
+    protected $viewDirectory = 'webform';
+
     public function __construct()
     {
+        parent::__construct();
+
         $this->form = new Form();
         $this->form->setValidation($this->validation);
 
@@ -415,10 +419,9 @@ abstract class WebForm extends Injectable
     /**
      * Render the form
      *
-     * @param array $parameters
      * @return Response|string
      */
-    public function render($parameters = [])
+    public function render(): string
     {
         $errorContainer = new ErrorContainer();
 
@@ -443,35 +446,21 @@ abstract class WebForm extends Injectable
 
         $this->renderDataTableFields();
 
-        $defaultParameters = [
+        return $this->renderView($this->formTemplate, [
             'form'               => $this->form,
             'fields'             => $this->fields,
             'tabs'               => $this->tabs,
+            'filters'            => $this->filters,
             'currentTab'         => $this->getCurrentTab(),
             'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
             'formId'             => $this->getFormId(),
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
+            'instance'           => $this->getInstance(),
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
             'class'              => static::class,
-            'instance'           => $this->getInstance(),
-        ];
-
-        return $this->renderView($this->formTemplate, array_merge($defaultParameters, $parameters));
-    }
-
-    /**
-     * Renders a view
-     *
-     * @param $viewName
-     * @param array $parameters
-     *
-     * @return string
-     */
-    public function renderView($viewName, array $parameters): string
-    {
-        return $this->view->getPartial('webform/' . $viewName, $parameters);
+        ]);
     }
 
     /**
@@ -557,13 +546,6 @@ abstract class WebForm extends Injectable
         $this->validateAction = $validateAction;
 
         return $this;
-    }
-
-    /**
-     * Override to build up the form
-     */
-    protected function initialize()
-    {
     }
 
     /**
@@ -716,12 +698,10 @@ abstract class WebForm extends Injectable
     {
         $parentEditId = 0;
 
-        // if a new id is saved, the field with key dataTableEditId is set, so we pass it to the subDataTable
+        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
         if ($this->hasField(DataTable::EDIT_ID)) {
             $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
         }
-
-        $filters = (new Filters())->setParentEditId($parentEditId);
 
         /** @var DataTableField $field */
         foreach ($this->getFields() as $key => $field) {
@@ -729,7 +709,9 @@ abstract class WebForm extends Injectable
                 continue;
             }
 
-            $renderedDataTable = $field->getDataTable()->render($filters);
+            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
+
+            $renderedDataTable = $field->getDataTable()->render();
 
             $field->setRenderedDataTable($renderedDataTable);
         }
@@ -749,9 +731,9 @@ abstract class WebForm extends Injectable
             }
 
             // re-use earlier generated dataTable instance
-            /** @var DataTableField $field */
             if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
+                /** @var DataTableField $field */
                 $field->getDataTable()->setInstanceName($instance);
                 $this->getField($key)->getElement()->setDefault($instance);
             }

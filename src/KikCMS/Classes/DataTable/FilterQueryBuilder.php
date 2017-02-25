@@ -13,14 +13,14 @@ class FilterQueryBuilder
     /** @var DataTable */
     private $dataTable;
 
-    /** @var Filters */
+    /** @var DataTableFilters */
     private $filters;
 
     /**
      * @param DataTable $dataTable
-     * @param Filters $filters
+     * @param DataTableFilters $filters
      */
-    public function __construct(DataTable $dataTable, Filters $filters)
+    public function __construct(DataTable $dataTable, DataTableFilters $filters)
     {
         $this->dataTable = $dataTable;
         $this->filters   = $filters;

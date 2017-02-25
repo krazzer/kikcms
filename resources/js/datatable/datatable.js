@@ -132,6 +132,7 @@ DataTable.prototype =
         this.getSearchField().searchAble(function (value) {
             var filters    = self.getFilters();
             filters.search = value;
+            filters.page   = 1;
 
             self.action('search', filters, function (result) {
                 self.setTableContent(result.table);
@@ -295,7 +296,7 @@ DataTable.prototype =
 
         this.showWindow();
 
-        this.action('edit', {dataTableEditId: id}, function (result) {
+        this.action('edit', {editId: id}, function (result) {
             self.setWindowContent(result.window);
         }, function () {
             self.closeWindow();
@@ -342,6 +343,7 @@ DataTable.prototype =
 
         filters.sortColumn    = column;
         filters.sortDirection = direction;
+        filters.page          = 1;
 
         this.action('sort', filters, function (result) {
             self.setTableContent(result.table);

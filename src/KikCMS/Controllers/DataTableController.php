@@ -4,7 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\Filters;
+use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 
@@ -33,7 +33,7 @@ class DataTableController extends BaseController
     {
         $dataTable = $this->getDataTable();
 
-        $this->view->form   = $dataTable->renderAddForm($this->getFilters()->getParentEditId());
+        $this->view->form   = $dataTable->renderAddForm();
         $this->view->labels = $dataTable->getLabels();
 
         return json_encode([
@@ -47,15 +47,14 @@ class DataTableController extends BaseController
     public function deleteAction()
     {
         $dataTable = $this->getDataTable();
-        $filters   = $this->getFilters();
 
         $ids = $this->request->getPost('ids');
 
         $dataTable->delete($ids);
 
         return json_encode([
-            'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters),
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
         ]);
     }
 
@@ -64,12 +63,11 @@ class DataTableController extends BaseController
      */
     public function editAction()
     {
-        $editId    = $this->getEditId();
         $dataTable = $this->getDataTable();
 
-        $this->view->form     = $dataTable->renderEditForm($editId);
+        $this->view->form     = $dataTable->renderEditForm();
         $this->view->labels   = $dataTable->getLabels();
-        $this->view->editData = $dataTable->getForm()->getEditData($editId);
+        $this->view->editData = $dataTable->getForm()->getEditData();
 
         return json_encode([
             'window' => $dataTable->renderWindow(self::TEMPLATE_EDIT)
@@ -81,26 +79,26 @@ class DataTableController extends BaseController
      */
     public function saveAction()
     {
-        $editId    = $this->getEditId();
         $dataTable = $this->getDataTable();
-        $filters   = $this->getFilters();
 
-        $parentEditId = $filters->getParentEditId();
+        $editId       = $dataTable->getFilters()->getEditId();
+        $parentEditId = $dataTable->getFilters()->getParentEditId();
 
         if ($editId === null) {
-            $this->view->form = $dataTable->renderAddForm($parentEditId);
-            $view             = self::TEMPLATE_ADD;
+            $this->view->form = $dataTable->renderAddForm();
+
+            $view = self::TEMPLATE_ADD;
 
             // if the form was succesfully saved, an edit id can be fetched
-            $editId = $dataTable->getEditId();
+            $editId = $dataTable->getForm()->getFilters()->getEditId();
 
             // if the datatable has a unsaved parent, cache the new id
             if ($dataTable->hasParent() && $parentEditId === 0 && $editId) {
                 $dataTable->cacheNewId($editId);
             }
         } else {
-            $this->view->form     = $dataTable->renderEditForm($editId);
-            $this->view->editData = $dataTable->getForm()->getEditData($editId);
+            $this->view->form     = $dataTable->renderEditForm();
+            $this->view->editData = $dataTable->getForm()->getEditData();
             $view                 = self::TEMPLATE_EDIT;
         }
 
@@ -108,8 +106,8 @@ class DataTableController extends BaseController
 
         return json_encode([
             'window'     => $dataTable->renderWindow($view),
-            'table'      => $dataTable->renderTable($this->getFilters()),
-            'pagination' => $dataTable->renderPagination($this->getFilters()),
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
             'editedId'   => $editId,
         ]);
     }
@@ -120,11 +118,10 @@ class DataTableController extends BaseController
     public function pageAction()
     {
         $dataTable = $this->getDataTable();
-        $filters   = $this->getFilters();
 
         return json_encode([
-            'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters),
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
         ]);
     }
 
@@ -134,13 +131,10 @@ class DataTableController extends BaseController
     public function searchAction()
     {
         $dataTable = $this->getDataTable();
-        $filters   = $this->getFilters();
-
-        $filters->setPage(1);
 
         return json_encode([
-            'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters),
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
         ]);
     }
 
@@ -150,13 +144,10 @@ class DataTableController extends BaseController
     public function sortAction()
     {
         $dataTable = $this->getDataTable();
-        $filters   = $this->getFilters();
-
-        $filters->setPage(1);
 
         return json_encode([
-            'table'      => $dataTable->renderTable($filters),
-            'pagination' => $dataTable->renderPagination($filters),
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
         ]);
     }
 
@@ -176,29 +167,13 @@ class DataTableController extends BaseController
 
         $instanceClass = $this->session->get(DataTable::SESSION_KEY)[$instanceName]['class'];
 
+        $filters = new DataTableFilters();
+        $filters->setByArray($this->request->getPost());
+
         /** @var DataTable $dataTable */
-        $dataTable = new $instanceClass();
+        $dataTable = new $instanceClass($filters);
         $dataTable->setInstanceName($instanceName);
 
         return $dataTable;
-    }
-
-    /**
-     * @return int|null
-     */
-    private function getEditId()
-    {
-        return $this->request->getPost(DataTable::EDIT_ID);
-    }
-
-    /**
-     * @return Filters
-     */
-    private function getFilters(): Filters
-    {
-        $filters = new Filters();
-        $filters->setByArray($this->request->getPost());
-
-        return $filters;
     }
 }

@@ -21,7 +21,7 @@ class PageForm extends DataForm
     /**
      * @inheritdoc
      */
-    public function initialize(int $editId = null)
+    protected function initialize()
     {
         $this->addTab('Pagina', [
             $this->addTextField('name', 'Naam', [new PresenceOf()])
@@ -29,7 +29,7 @@ class PageForm extends DataForm
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE)
         ]);
 
-        $this->addFieldsForCurrentPage($editId);
+        $this->addFieldsForCurrentPage();
 
         $this->addTab('Geavanceerd', [
             $this->addSelectField(Page::FIELD_TEMPLATE_ID, 'Template', Template::findAssoc())
@@ -44,11 +44,10 @@ class PageForm extends DataForm
         return Page::class;
     }
 
-    /**
-     * @param int|null $editId
-     */
-    private function addFieldsForCurrentPage(int $editId = null)
+    private function addFieldsForCurrentPage()
     {
+        $editId = $this->filters->getEditId();
+
         if ( ! $editId) {
             return;
         }

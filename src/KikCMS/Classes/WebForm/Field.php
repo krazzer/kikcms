@@ -166,7 +166,7 @@ class Field
      */
     public function table(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
     {
-        $fieldStorage = new FieldStorage();
+        $fieldStorage = $this->getNewFieldStorage();
         $fieldStorage->setField($this);
         $fieldStorage->setTableModel($table);
         $fieldStorage->setRelationKey($relationKey);
@@ -176,5 +176,13 @@ class Field
         $this->form->addFieldStorage($fieldStorage);
 
         return $this;
+    }
+
+    /**
+     * @return FieldStorage
+     */
+    protected function getNewFieldStorage(): FieldStorage
+    {
+        return new FieldStorage();
     }
 }

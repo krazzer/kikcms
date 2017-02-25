@@ -5,8 +5,9 @@ namespace KikCMS\Classes\DataTable;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
+use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use stdClass;
@@ -14,9 +15,9 @@ use stdClass;
 /**
  * @property DbService $dbService;
  */
-abstract class DataTable extends Injectable
+abstract class DataTable extends Renderable
 {
-    const EDIT_ID     = 'dataTableEditId';
+    const EDIT_ID     = 'editId';
     const INSTANCE    = 'dataTableInstance';
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
@@ -29,6 +30,9 @@ abstract class DataTable extends Injectable
 
     /** @var DataForm */
     protected $form;
+
+    /** @var DataTableFilters */
+    protected $filters;
 
     /** @var string translation container, with labels for add, edit, delete and deleteOne */
     protected $labels;
@@ -69,8 +73,6 @@ abstract class DataTable extends Injectable
      * @var bool
      */
     private $initialized;
-
-    protected abstract function initialize();
 
     public abstract function getModel(): string;
 
@@ -138,6 +140,22 @@ abstract class DataTable extends Injectable
         }
 
         return $alias . '.id';
+    }
+
+    /**
+     * @return Filters|DataTableFilters
+     */
+    public function getEmptyFilters(): Filters
+    {
+        return new DataTableFilters();
+    }
+
+    /**
+     * @return Filters|DataTableFilters
+     */
+    public function getFilters(): Filters
+    {
+        return parent::getFilters();
     }
 
     /**
@@ -210,9 +228,8 @@ abstract class DataTable extends Injectable
 
     /**
      * Initializes the dataTable
-     * @param int $editId
      */
-    public function initializeDatatable(int $editId = null)
+    public function initializeDatatable()
     {
         if ($this->initialized) {
             return;
@@ -221,8 +238,12 @@ abstract class DataTable extends Injectable
         $instance  = $this->getInstanceName();
         $formClass = $this->getFormClass();
 
-        $this->form = new $formClass($this->getModel());
-        $this->form->initializeForm($editId);
+        /** @var DataForm $dataForm */
+        $dataForm = new $formClass();
+        $dataForm->getFilters()->setEditId($this->filters->getEditId());
+        $dataForm->initializeForm();
+
+        $this->form = $dataForm;
         $this->initialize();
 
         $this->form->setIdentifier('form_' . $instance);
@@ -241,26 +262,19 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * Renders the datatable
-     *
-     * @param Filters $filters
-     * @return string
+     * @inheritdoc
      */
-    public function render(Filters $filters = null)
+    public function render(): string
     {
-        if ($filters == null) {
-            $filters = new Filters();
-        }
-
         $this->initializeDatatable();
         $this->addAssets();
 
         return $this->view->getPartial($this->indexView, [
-            'tableData'       => $this->getTableData($filters)->items->toArray(),
-            'pagination'      => $this->getTableData($filters),
-            'headerData'      => $this->getTableHeaderData($filters),
+            'tableData'       => $this->getTableData()->items->toArray(),
+            'pagination'      => $this->getTableData(),
+            'headerData'      => $this->getTableHeaderData(),
             'instanceName'    => $this->getInstanceName(),
-            'parentEditId'    => $filters->getParentEditId(),
+            'parentEditId'    => $this->filters->getParentEditId(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'labels'          => $this->labels,
@@ -269,17 +283,16 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int|null $parentEditId
      * @return Response
      */
-    public function renderAddForm(int $parentEditId = null)
+    public function renderAddForm()
     {
         $this->initializeDatatable();
 
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
 
-        if ($this->parentRelationKey && $parentEditId !== null) {
-            $this->form->addHiddenField($this->parentRelationKey, $parentEditId);
+        if ($this->parentRelationKey && $this->filters->getParentEditId() !== null) {
+            $this->form->addHiddenField($this->parentRelationKey, $this->filters->getParentEditId());
         }
 
         if ($this->form->isPosted()) {
@@ -290,85 +303,54 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param int $editId
      * @return Response
      */
-    public function renderEditForm(int $editId)
+    public function renderEditForm()
     {
-        $this->initializeDatatable($editId);
+        $this->initializeDatatable();
 
-        $this->form->addHiddenField(self::EDIT_ID, $editId);
+        $this->form->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
         $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
 
         if ($this->form->isPosted()) {
-            return $this->form->render([self::EDIT_ID => $editId]);
+            return $this->form->render();
         }
 
-        return $this->form->renderWithData($editId);
+        return $this->form->renderWithData();
     }
 
     /**
-     * @param Filters $filters
      * @return Response
      */
-    public function renderPagination(Filters $filters)
+    public function renderPagination()
     {
         return $this->renderView('pagination', [
-            'pagination' => $this->getTableData($filters),
+            'pagination' => $this->getTableData(),
         ]);
     }
 
     /**
-     * @param Filters $filters
      * @return Response
      */
-    public function renderTable(Filters $filters)
+    public function renderTable()
     {
         $this->initializeDatatable();
 
         return $this->view->getPartial($this->tableView, [
-            'tableData'       => $this->getTableData($filters)->items->toArray(),
-            'headerData'      => $this->getTableHeaderData($filters),
+            'tableData'       => $this->getTableData()->items->toArray(),
+            'headerData'      => $this->getTableHeaderData(),
             'fieldFormatting' => $this->fieldFormatting,
-            'filters'         => $filters,
+            'filters'         => $this->filters,
             'self'            => $this,
         ]);
     }
 
     /**
-     * Renders a view
-     *
-     * @param $viewName
-     * @param array $parameters
-     *
-     * @return string
-     */
-    public function renderView($viewName, array $parameters = []): string
-    {
-        return $this->view->getPartial($this->viewDirectory . '/' . $viewName, $parameters);
-    }
-
-    /**
-     * Retrieve the current editId from the DataForm
-     *
-     * @return mixed|null
-     */
-    public function getEditId()
-    {
-        if ( ! $this->form->hasField(self::EDIT_ID)) {
-            return null;
-        }
-
-        return $this->form->getElement(self::EDIT_ID)->getValue();
-    }
-
-    /**
-     * @param Filters $filters
      * @return Builder
      */
-    public function getQuery(Filters $filters): Builder
+    public function getQuery(): Builder
     {
-        $queryBuilder = new FilterQueryBuilder($this, $filters);
+        $queryBuilder = new FilterQueryBuilder($this, $this->filters);
         $query        = $this->getDefaultQuery();
 
         return $queryBuilder->getQuery($query);
@@ -484,18 +466,17 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param Filters $filters
      * @return stdClass
      */
-    private function getTableData(Filters $filters)
+    private function getTableData()
     {
         if ($this->tableData) {
             return $this->tableData;
         }
 
         $paginator = new QueryBuilder(array(
-            "builder" => $this->getQuery($filters),
-            "page"    => $filters->getPage(),
+            "builder" => $this->getQuery(),
+            "page"    => $this->filters->getPage(),
             "limit"   => $this->limit,
         ));
 
@@ -505,15 +486,14 @@ abstract class DataTable extends Injectable
     }
 
     /**
-     * @param Filters $filters
      * @return array
      */
-    private function getTableHeaderData(Filters $filters): array
+    private function getTableHeaderData(): array
     {
-        if ( ! $this->getTableData($filters)->items->count()) {
+        if ( ! $this->getTableData()->items->count()) {
             return [];
         }
 
-        return array_keys($this->getTableData($filters)->items->getFirst()->toArray());
+        return array_keys($this->getTableData()->items->getFirst()->toArray());
     }
 }
