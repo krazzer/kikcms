@@ -108,8 +108,8 @@ abstract class DataTable extends Renderable
             return '';
         }
 
-        $thumbUrl = $this->url->get(['for' => 'finderFileThumb', 'fileId' => $value]);
-        $url      = $this->url->get(['for' => 'finderFile', 'fileId' => $value]);
+        $thumbUrl = $this->url->get('finderFileThumb', $value);
+        $url      = $this->url->get('finderFile', $value);
 
         $style = 'background-image: url(' . $thumbUrl . ')';
 

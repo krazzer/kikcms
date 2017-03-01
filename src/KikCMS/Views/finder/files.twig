@@ -3,7 +3,7 @@
 {% for finderFile in files %}
 
     <div class="file file-{{ finderFile.id }}{{ finderFile.isFolder ? ' folder' }}" data-id="{{ finderFile.id }}"
-            {% if not finderFile.isFolder %} data-url="{{ url({for: 'finderFile', fileId: finderFile.id }) }}" {% endif %}>
+            {% if not finderFile.isFolder %} data-url="{{ route('finderFile', finderFile.id) }}" {% endif %}>
 
         <div class="thumb">
             {% include "@kikcms/finder/file.twig" %}

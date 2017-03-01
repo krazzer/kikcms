@@ -7,6 +7,7 @@ use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\Security;
+use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
@@ -24,7 +25,6 @@ use Phalcon\Db;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View;
 use Phalcon\Db\Adapter\Pdo;
-use Phalcon\Mvc\Url as UrlProvider;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
@@ -102,7 +102,7 @@ class Services extends BaseServices
 
         $baseUrl = $protocol . $domainName . $this->getApplicationConfig()->baseUri;
 
-        $url = new UrlProvider();
+        $url = new Url();
         $url->setBaseUri($baseUrl);
 
         return $url;
