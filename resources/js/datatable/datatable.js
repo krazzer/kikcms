@@ -96,7 +96,7 @@ DataTable.prototype =
                 positionThumb(e);
 
                 $thumbHoverContainer.show();
-                $thumbHoverContainer.html('<img src="' + $thumb.attr('data-url') + '" />');
+                $thumbHoverContainer.html('<img src="' + $thumb.attr('data-thumb-url') + '" />');
             }, function () {
                 self.getThumbHoverContainer().hide();
             });
@@ -105,7 +105,7 @@ DataTable.prototype =
         });
 
         $thumbs.click(function (e) {
-            window.open('/finder/file/' + $(this).attr('data-id'));
+            window.open($(this).attr('data-url'));
             e.stopPropagation();
         });
     },

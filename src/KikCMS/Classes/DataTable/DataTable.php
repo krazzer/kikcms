@@ -10,6 +10,7 @@ use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Tag;
 use stdClass;
 
 /**
@@ -107,10 +108,17 @@ abstract class DataTable extends Renderable
             return '';
         }
 
-        $thumbUrl = '/finder/thumb/' . $value;
-        $style    = 'background-image: url(' . $thumbUrl . ')';
+        $thumbUrl = $this->url->get(['for' => 'finderFileThumb', 'fileId' => $value]);
+        $url      = $this->url->get(['for' => 'finderFile', 'fileId' => $value]);
 
-        return '<div class="thumb" data-url="' . $thumbUrl . '" data-id="' . $value . '" style="' . $style . '"></div>';
+        $style = 'background-image: url(' . $thumbUrl . ')';
+
+        return Tag::tagHtml('div', [
+            'class'          => 'thumb',
+            'data-url'       => $url,
+            'data-thumb-url' => $thumbUrl,
+            'style'          => $style
+        ]);
     }
 
     /**

@@ -1,6 +1,6 @@
 {# @var finderFile \KikCMS\Models\FinderFile #}
 {% if finderFile.isImage %}
-    <img src="/finder/thumb/{{ finderFile.id }}"/>
+    <img src="{{ url({for: 'finderFileThumb', fileId: finderFile.id }) }}"/>
 {% elseif(finderFile.isFolder) %}
     <img src="/cmsassets/images/folder.png"/>
 {% else %}

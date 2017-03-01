@@ -61,8 +61,8 @@ class Routing
             "action"     => 1
         ]);
 
-        $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb");
-        $router->add("/finder/file/{fileId:[0-9]+}", "Finder::file");
+        $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
+        $router->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('finderFile');
 
         /** Not Found */
         $router->notFound([
