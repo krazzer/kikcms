@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
+use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
@@ -559,6 +560,14 @@ abstract class WebForm extends Renderable
 
         $this->initialize();
         $this->initialized = true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getEmptyFilters(): Filters
+    {
+        return new Filters();
     }
 
     /**
