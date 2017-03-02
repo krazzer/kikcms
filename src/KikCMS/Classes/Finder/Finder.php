@@ -3,17 +3,18 @@
 namespace KikCMS\Classes\Finder;
 
 
+use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderFile;
-use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
 
 /**
  * @property FinderFileService $finderFileService
  * @property Translator $translator
  */
-class Finder extends Injectable
+class Finder extends Renderable
 {
     const JS_TRANSLATIONS = [
         'media.deleteConfirm',
@@ -25,7 +26,11 @@ class Finder extends Injectable
         'media.uploadMaxFileSizeWarning',
     ];
 
+    /** @var bool */
     private $pickingMode = false;
+
+    /** @inheritdoc */
+    protected $viewDirectory = 'finder';
 
     /**
      * Adds html/css required for finder
@@ -41,14 +46,21 @@ class Finder extends Injectable
     }
 
     /**
-     * @param array $filters
+     * @return FinderFilters|Filters
+     */
+    public function getFilters(): Filters
+    {
+        return parent::getFilters();
+    }
+
+    /**
      * @return string
      */
-    public function render($filters = [])
+    public function render(): string
     {
         $this->addAssets();
 
-        $files = $this->finderFileService->getByFilters($filters);
+        $files = $this->finderFileService->getByFilters($this->getFilters());
 
         return $this->renderView('index', [
             'files'       => $files,
@@ -58,12 +70,11 @@ class Finder extends Injectable
     }
 
     /**
-     * @param array $filters
      * @return string
      */
-    public function renderFiles($filters = [])
+    public function renderFiles()
     {
-        $files = $this->finderFileService->getByFilters($filters);
+        $files = $this->finderFileService->getByFilters($this->getFilters());
 
         return $this->renderView('files', [
             'files' => $files,
@@ -82,11 +93,12 @@ class Finder extends Injectable
     }
 
     /**
-     * @param $folderId
      * @return string
      */
-    public function renderPath(int $folderId)
+    public function renderPath()
     {
+        $folderId = $this->getFilters()->getFolderId();
+
         $path = $this->finderFileService->getFolderPath($folderId);
         $path = array_reverse($path, true);
 
@@ -101,19 +113,6 @@ class Finder extends Injectable
     }
 
     /**
-     * Renders a view
-     *
-     * @param $viewName
-     * @param array $parameters
-     *
-     * @return string
-     */
-    public function renderView($viewName, array $parameters = []): string
-    {
-        return $this->view->getPartial('finder/' . $viewName, $parameters);
-    }
-
-    /**
      * @param bool $pickingMode
      */
     public function setPickingMode(bool $pickingMode)
@@ -123,11 +122,10 @@ class Finder extends Injectable
 
     /**
      * @param File[] $files
-     * @param int $folderId
      *
      * @return UploadStatus
      */
-    public function uploadFiles(array $files, $folderId = 0): UploadStatus
+    public function uploadFiles(array $files): UploadStatus
     {
         $uploadStatus = new UploadStatus();
 
@@ -148,7 +146,7 @@ class Finder extends Injectable
                 continue;
             }
 
-            $result = $this->finderFileService->create($file, $folderId);
+            $result = $this->finderFileService->create($file, $this->getFilters()->getFolderId());
 
             if ( ! $result) {
                 $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
@@ -160,6 +158,21 @@ class Finder extends Injectable
         }
 
         return $uploadStatus;
+    }
+
+    /**
+     * @return Filters|FinderFilters
+     */
+    protected function getEmptyFilters(): Filters
+    {
+        return new FinderFilters();
+    }
+
+    /**
+     * This method may contain logic that will influence the output when rendered
+     */
+    protected function initialize()
+    {
     }
 
     /**

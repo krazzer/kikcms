@@ -17,7 +17,7 @@ abstract class Renderable extends Injectable
     /** @var string where views for this object should be stored */
     protected $viewDirectory;
 
-    /** @var */
+    /** @var string */
     protected $indexView = 'index';
 
     /**
@@ -32,6 +32,11 @@ abstract class Renderable extends Injectable
 
         $this->filters = $filters;
     }
+
+    /**
+     * @return Filters
+     */
+    protected abstract function getEmptyFilters(): Filters;
 
     /**
      * This method may contain logic that will influence the output when rendered
@@ -56,14 +61,6 @@ abstract class Renderable extends Injectable
     public function renderView(string $view, array $parameters): string
     {
         return $this->view->getPartial($this->viewDirectory . '/' . $view, $parameters);
-    }
-
-    /**
-     * @return Filters
-     */
-    protected function getEmptyFilters(): Filters
-    {
-        return new Filters();
     }
 
     /**

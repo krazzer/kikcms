@@ -8,8 +8,8 @@ use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Translator;
-use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;
 
 /**
@@ -34,14 +34,14 @@ class FinderController extends BaseController
      */
     public function createFolderAction()
     {
-        $finder     = new Finder();
+        $finder     = $this->getFinder();
         $folderName = $this->request->getPost('folderName');
-        $filters    = $this->getFilters();
+        $folderId   = $finder->getFilters()->getFolderId();
 
-        $folderId = $this->finderFileService->createFolder($folderName, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $folderId = $this->finderFileService->createFolder($folderName, $folderId);
 
         return json_encode([
-            'files'   => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles(),
             'fileIds' => [$folderId],
         ]);
     }
@@ -51,9 +51,8 @@ class FinderController extends BaseController
      */
     public function deleteAction()
     {
-        $finder       = new Finder();
+        $finder       = $this->getFinder();
         $fileIds      = $this->request->getPost('fileIds');
-        $filters      = $this->getFilters();
         $errorMessage = null;
 
         try {
@@ -63,7 +62,7 @@ class FinderController extends BaseController
         }
 
         return json_encode([
-            'files'        => $finder->renderFiles($filters),
+            'files'        => $finder->renderFiles(),
             'errorMessage' => $errorMessage
         ]);
     }
@@ -73,15 +72,14 @@ class FinderController extends BaseController
      */
     public function editFileNameAction()
     {
-        $finder   = new Finder();
+        $finder   = $this->getFinder();
         $fileId   = $this->request->getPost('fileId');
         $fileName = $this->request->getPost('fileName');
-        $filters  = $this->getFilters();
 
         $this->finderFileService->updateFileNameById($fileId, $fileName);
 
         return json_encode([
-            'files'   => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles(),
             'fileIds' => [$fileId]
         ]);
     }
@@ -108,12 +106,11 @@ class FinderController extends BaseController
      */
     public function openFolderAction()
     {
-        $finder  = new Finder();
-        $filters = $this->getFilters();
+        $finder = $this->getFinder();
 
         return json_encode([
-            'files' => $finder->renderFiles($filters),
-            'path'  => $finder->renderPath($filters[FinderConfig::FILTER_FOLDER_ID]),
+            'files' => $finder->renderFiles(),
+            'path'  => $finder->renderPath(),
         ]);
     }
 
@@ -122,14 +119,14 @@ class FinderController extends BaseController
      */
     public function pasteAction()
     {
-        $finder  = new Finder();
-        $filters = $this->getFilters();
-        $fileIds = $this->request->getPost('fileIds');
+        $finder   = $this->getFinder();
+        $fileIds  = $this->request->getPost('fileIds');
+        $folderId = $finder->getFilters()->getFolderId();
 
-        $this->finderFileService->moveFilesToFolderById($fileIds, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $this->finderFileService->moveFilesToFolderById($fileIds, $folderId);
 
         return json_encode([
-            'files'   => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles(),
             'fileIds' => $fileIds,
         ]);
     }
@@ -139,18 +136,15 @@ class FinderController extends BaseController
      */
     public function searchAction()
     {
-        $finder  = new Finder();
-        $filters = $this->getFilters();
+        $finder = $this->getFinder();
 
-        if ($filters[FinderConfig::FILTER_SEARCH]) {
-            $path = $finder->renderPath(0);
-        } else {
-            $path = $finder->renderPath($filters[FinderConfig::FILTER_FOLDER_ID]);
+        if ($finder->getFilters()->getSearch()) {
+            $finder->getFilters()->setFolderId(0);
         }
 
         return json_encode([
-            'files' => $finder->renderFiles($filters),
-            'path'  => $path,
+            'files' => $finder->renderFiles(),
+            'path'  => $finder->renderPath(),
         ]);
     }
 
@@ -180,35 +174,30 @@ class FinderController extends BaseController
      */
     public function uploadAction()
     {
-        $finder = new Finder();
-
+        $finder        = $this->getFinder();
         $uploadedFiles = $this->request->getUploadedFiles();
-
-        $filters      = $this->getFilters();
-        $uploadStatus = $finder->uploadFiles($uploadedFiles, $filters[FinderConfig::FILTER_FOLDER_ID]);
+        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
 
         return json_encode([
-            'files'   => $finder->renderFiles($filters),
+            'files'   => $finder->renderFiles(),
             'fileIds' => $uploadStatus->getFileIds(),
             'errors'  => $uploadStatus->getErrors(),
         ]);
     }
 
     /**
-     * @return array
+     * Construct a Finder instance with filters from the requests
+     *
+     * @return Finder
      */
-    private function getFilters(): array
+    private function getFinder(): Finder
     {
-        $filters = [];
+        $filters = new FinderFilters();
+        $filters->setByArray($this->request->getPost());
 
-        if ($this->request->hasPost('folderId')) {
-            $filters[FinderConfig::FILTER_FOLDER_ID] = $this->request->getPost('folderId');
-        }
+        $finder = new Finder();
+        $finder->setFilters($filters);
 
-        if ($this->request->hasPost('search') && $this->request->getPost('search')) {
-            $filters[FinderConfig::FILTER_SEARCH] = $this->request->getPost('search');
-        }
-
-        return $filters;
+        return $finder;
     }
 }

@@ -140,26 +140,22 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param array $filters
+     * @param FinderFilters $filters
      * @return FinderFile[]
      */
-    public function getByFilters(array $filters)
+    public function getByFilters(FinderFilters $filters)
     {
-        if (isset($filters[FinderConfig::FILTER_SEARCH])) {
+        if ($filters->getSearch()) {
             $resultSet = FinderFile::find([
                 'conditions' => 'name LIKE {search}',
-                'bind'       => ['search' => '%' . $filters[FinderConfig::FILTER_SEARCH] . '%'],
+                'bind'       => ['search' => '%' . $filters->getSearch() . '%'],
                 'order'      => 'is_folder DESC, name ASC'
             ]);
 
             return $this->getFiles($resultSet);
         }
 
-        if (isset($filters[FinderConfig::FILTER_FOLDER_ID])) {
-            return $this->getByFolderId($filters[FinderConfig::FILTER_FOLDER_ID]);
-        }
-
-        return $this->getByFolderId();
+        return $this->getByFolderId($filters->getFolderId());
     }
 
     /**

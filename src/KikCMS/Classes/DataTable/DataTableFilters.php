@@ -42,18 +42,6 @@ class DataTableFilters extends Filters
     private $parentEditId = 0;
 
     /**
-     * @param array $filters
-     */
-    public function setByArray(array $filters)
-    {
-        foreach (self::FILTER_TYPES as $filterType) {
-            if (array_key_exists($filterType, $filters)) {
-                $this->$filterType = $filters[$filterType];
-            }
-        }
-    }
-
-    /**
      * @return int|null
      */
     public function getEditId()
