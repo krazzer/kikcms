@@ -54,6 +54,10 @@ abstract class DataTable extends Renderable
     /** @var string */
     protected $viewDirectory = 'datatable';
 
+    /** @var bool if you're fairly certain the user will use a wysiwyg editor, set this to true to preload the js
+     * note that if you don't the editor will be loaded dynamically, but will load a bit slower */
+    protected $preLoadWysiwygJs = false;
+
     /** @var string */
     public $indexView = 'datatable/index';
 
@@ -245,10 +249,11 @@ abstract class DataTable extends Renderable
 
         $instance  = $this->getInstanceName();
         $formClass = $this->getFormClass();
+        $editId    = $this->filters->getEditId();
 
         /** @var DataForm $dataForm */
         $dataForm = new $formClass();
-        $dataForm->getFilters()->setEditId($this->filters->getEditId());
+        $dataForm->getFilters()->setEditId($editId);
         $dataForm->initializeForm();
 
         $this->form = $dataForm;
@@ -451,6 +456,10 @@ abstract class DataTable extends Renderable
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
 
+        if ($this->preLoadWysiwygJs) {
+            $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
+        }
+
         $translations = DataTable::JS_TRANSLATIONS;
 
         if ($this->labels) {
@@ -461,8 +470,6 @@ abstract class DataTable extends Renderable
         }
 
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, $translations);
-
-        $this->form->addAssets();
     }
 
     /**

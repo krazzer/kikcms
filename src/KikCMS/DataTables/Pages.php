@@ -21,6 +21,9 @@ class Pages extends DataTable
     protected $labels = 'dataTables.pages';
 
     /** @inheritdoc */
+    protected $preLoadWysiwygJs = true;
+
+    /** @inheritdoc */
     public $indexView = 'datatables/page/index';
 
     /** @inheritdoc */

@@ -100,7 +100,6 @@ abstract class WebForm extends Renderable
         $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
-            $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
         }
 

@@ -97,7 +97,9 @@ WebForm.prototype =
     },
 
     initAutocompleteFields: function () {
-        this.getWebForm().find('.autocomplete').each(function () {
+        var $webForm = this.getWebForm();
+
+        $webForm.find('.autocomplete').each(function () {
             var $field       = $(this);
             var fieldKey     = $field.attr('data-field-key');
             var webFormClass = $webForm.attr('data-class');
@@ -164,27 +166,7 @@ WebForm.prototype =
         });
     },
 
-    initUploader: function ($field) {
-        var self = this;
-
-        var uploader = new FinderFileUploader({
-            $container: $field,
-            action: '/cms/webform/uploadAndPreview',
-            onSuccess: function (result) {
-                if (result.fileId) {
-                    self.actionPreview($field, result.fileId, result);
-                }
-            }
-        });
-
-        uploader.init();
-    },
-
-    initWysiwyg: function () {
-        if (typeof(tinymce) == 'undefined') {
-            return;
-        }
-
+    initTinyMCE: function () {
         tinymce.init({
             selector: this.getWysiwygSelector(),
             setup: function (editor) {
@@ -205,6 +187,42 @@ WebForm.prototype =
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce/content.css']
         });
+    },
+
+    initUploader: function ($field) {
+        var self = this;
+
+        var uploader = new FinderFileUploader({
+            $container: $field,
+            action: '/cms/webform/uploadAndPreview',
+            onSuccess: function (result) {
+                if (result.fileId) {
+                    self.actionPreview($field, result.fileId, result);
+                }
+            }
+        });
+
+        uploader.init();
+    },
+
+    initWysiwyg: function () {
+        var self = this;
+
+        if ($(this.getWysiwygSelector()).length == 0) {
+            return;
+        }
+
+        if (typeof tinymce == 'undefined') {
+            $.getScript('//cdn.tinymce.com/4/tinymce.min.js', function () {
+                window.tinymce.dom.Event.domLoaded = true;
+                tinymce.baseURL                    = "//cdn.tinymce.com/4";
+                tinymce.suffix                     = ".min";
+
+                self.initTinyMCE();
+            });
+        } else {
+            this.initTinyMCE();
+        }
     },
 
     getWysiwygSelector: function () {

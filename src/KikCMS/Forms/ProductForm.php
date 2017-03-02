@@ -42,7 +42,6 @@ class ProductForm extends DataForm
 
         $this->addTab('Omschrijving', [
             $this->addWysiwygField('description', 'Omschrijving'),
-            //$this->addAutoCompleteField('category_id', 'Categorie')->setSourceModel(Type::class),
             $this->addSelectField('category_id', 'Categorie', $categories, [new PresenceOf()]),
             $this->addDateField('available', 'Beschikbaar vanaf'),
             $productTypeField
