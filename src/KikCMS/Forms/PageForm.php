@@ -31,8 +31,10 @@ class PageForm extends DataForm
 
         $this->addFieldsForCurrentPage();
 
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, 'Template', Template::findAssoc());
+
         $this->addTab('Geavanceerd', [
-            $this->addSelectField(Page::FIELD_TEMPLATE_ID, 'Template', Template::findAssoc())
+            $templateField
         ]);
     }
 

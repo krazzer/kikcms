@@ -123,19 +123,6 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Override to build up the form
-     */
-    public function initializeForm()
-    {
-        if ($this->initialized) {
-            return;
-        }
-
-        $this->initialize();
-        $this->initialized = true;
-    }
-
-    /**
      * @param $field
      *
      * @return bool

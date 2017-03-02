@@ -92,6 +92,11 @@ class DataTableController extends BaseController
             // if the form was succesfully saved, an edit id can be fetched
             $editId = $dataTable->getForm()->getFilters()->getEditId();
 
+            if ($editId) {
+                $this->view->editData = $dataTable->getForm()->getEditData();
+                $view                 = self::TEMPLATE_EDIT;
+            }
+
             // if the datatable has a unsaved parent, cache the new id
             if ($dataTable->hasParent() && $parentEditId === 0 && $editId) {
                 $dataTable->cacheNewId($editId);
