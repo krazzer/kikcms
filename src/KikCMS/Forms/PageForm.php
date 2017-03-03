@@ -10,11 +10,11 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
-use KikCMS\Services\Model\FieldService;
+use KikCMS\Services\Model\TemplateService;
 use Phalcon\Validation\Validator\PresenceOf;
 
 /**
- * @property FieldService $fieldService
+ * @property TemplateService $templateService
  */
 class PageForm extends DataForm
 {
@@ -29,13 +29,28 @@ class PageForm extends DataForm
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE)
         ]);
 
-        $this->addFieldsForCurrentPage();
+        $this->addFieldsForCurrentTemplate();
 
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, 'Template', Template::findAssoc());
+        $templateField->getElement()->setDefault($this->getTemplateId());
 
         $this->addTab('Geavanceerd', [
             $templateField
         ]);
+    }
+
+    /**
+     * Overwrite to make sure the template_id is set when changed
+     *
+     * @inheritdoc
+     */
+    public function getEditData(): array
+    {
+        $editData = parent::getEditData();
+
+        $editData[Page::FIELD_TEMPLATE_ID] = $this->getTemplateId();
+
+        return $editData;
     }
 
     /**
@@ -46,17 +61,10 @@ class PageForm extends DataForm
         return Page::class;
     }
 
-    private function addFieldsForCurrentPage()
+    private function addFieldsForCurrentTemplate()
     {
-        $editId = $this->filters->getEditId();
-
-        if ( ! $editId) {
-            return;
-        }
-
-        $page = Page::getById($editId);
-
-        $fields = $this->fieldService->getByPage($page);
+        $templateId = $this->getTemplateId();
+        $fields     = $this->templateService->getFieldsByTemplateId($templateId);
 
         /** @var Field $field */
         foreach ($fields as $field) {
@@ -92,5 +100,31 @@ class PageForm extends DataForm
         $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, true, [
             PageContent::FIELD_FIELD_ID => $field->id
         ]);
+    }
+
+    /**
+     * @return int
+     */
+    private function getTemplateId(): int
+    {
+        $templateId = $this->request->getPost('templateId');
+
+        if ($templateId) {
+            return $templateId;
+        }
+
+        $editId = $this->getFilters()->getEditId();
+
+        if ($editId) {
+            $template = $this->templateService->getTemplateByPageId($editId);
+
+            if ($template) {
+                return $template->id;
+            }
+        }
+
+        $firstTemplate = $this->templateService->getDefaultTemplate();
+
+        return (int) $firstTemplate->id;
     }
 }

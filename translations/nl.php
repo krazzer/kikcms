@@ -112,6 +112,10 @@ return [
         ],
     ],
 
+    'pages' => [
+        'warningTemplateChange' => 'Als u van template wisselt, gaan niet-opgeslagen wijzigingen verloren, wilt u zeker weten doorgaan?',
+    ],
+
     'webform' => [
         'messages' => [
             'Alnum'             => 'Het veld :label mag alleen letters en cijfers bevatten',

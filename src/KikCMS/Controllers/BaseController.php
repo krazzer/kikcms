@@ -15,7 +15,7 @@ class BaseController extends Controller
 
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
-        $this->view->setVar("jsTranslations", ['error', 'system.langCode']);
+        $this->view->setVar("jsTranslations", ['error', 'system.langCode', 'pages.warningTemplateChange']);
 
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);

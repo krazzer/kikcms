@@ -31,7 +31,9 @@ class CmsController extends BaseCmsController
         $datatable = new Pages();
 
         $this->view->datatable = $datatable->render();
-        $this->view->pick('cms/default');
+        $this->view->instance  = $datatable->getInstanceName();
+
+        $this->view->pick('cms/pagesDataTable');
     }
 
     public function productsAction()

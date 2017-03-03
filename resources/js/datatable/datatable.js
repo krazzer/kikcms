@@ -260,11 +260,12 @@ DataTable.prototype =
     },
 
     actionAdd: function () {
-        var self = this;
+        var self   = this;
+        var params = this.getFilters();
 
         this.showWindow();
 
-        this.action('add', {}, function (result) {
+        this.action('add', params, function (result) {
             self.setWindowContent(result.window);
         }, function () {
             self.closeWindow();
@@ -292,11 +293,14 @@ DataTable.prototype =
     },
 
     actionEdit: function (id) {
-        var self = this;
+        var self    = this;
+        var filters = this.getFilters();
 
         this.showWindow();
 
-        this.action('edit', {editId: id}, function (result) {
+        filters.editId = id;
+
+        this.action('edit', filters, function (result) {
             self.setWindowContent(result.window);
         }, function () {
             self.closeWindow();

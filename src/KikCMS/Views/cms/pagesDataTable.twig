@@ -1,0 +1,43 @@
+{# @var datatable \KikCMS\Classes\DataTable\DataTable #}
+{% extends '@kikcms/cms/default.twig' %}
+
+{% block cmsContent %}
+    {{ parent() }}
+    <script>
+
+        $(function () {
+            var $body            = $('body');
+            var pagesDataTable   = window['{{ instance }}'];
+            var parentGetFilters = pagesDataTable.getFilters;
+
+            pagesDataTable.templateId = null;
+
+            pagesDataTable.getFilters = function () {
+                var filters = parentGetFilters;
+
+                if (this.templateId) {
+                    filters.templateId = this.templateId;
+                }
+
+                return filters;
+            };
+
+            // reload the datatable window if the template changes
+            $body.on('change', '#template_id', function () {
+                var $templateField        = $(this);
+                pagesDataTable.templateId = $templateField.val();
+
+                var editId = $templateField.closest('form').find('#editId').val();
+
+                if (editId) {
+                    pagesDataTable.actionEdit(editId);
+                } else {
+                    pagesDataTable.actionAdd();
+                }
+
+                pagesDataTable.templateId = null;
+            });
+        });
+
+    </script>
+{% endblock %}

@@ -169,14 +169,13 @@ class DbService extends Injectable
             throw new \InvalidArgumentException('The query must request a single column');
         }
 
-        $column = $columns[0];
-        $result = $query->getQuery()->execute()->getFirst();
+        $result = $query->getQuery()->execute()->getFirst()->toArray();
 
         if ( ! count($result)) {
             return null;
         }
 
-        return $result->$column;
+        return first($result);
     }
 
     /**
