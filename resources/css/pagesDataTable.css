@@ -1,6 +1,17 @@
 /* Colors */
 /* Miscellaneous */
 /* z-indexes */
+body.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.datatable .table table tbody tr.pageObject td {
+    position: relative;
+}
 .datatable .table table tbody tr.pageObject .name {
   display: block;
   padding: 7px 12px;
@@ -19,5 +30,47 @@
   color: #fff; }
 .datatable .table table tbody tr.pageObject.page .name {
   margin-left: 40px; }
+
+.datatable .table table tbody tr.pageObject .name.dragged {
+    opacity: .2;
+}
+
+.datatable .table table tbody tr.pageObject .name.dragHover {
+    border: 3px solid #3875d7;
+    padding: 5px 10px;
+    cursor: default;
+}
+
+.datatable .table table tbody tr.pageObject.menu .dragHover {
+    border: 3px solid #3875d7;
+}
+
+.datatable .table table tbody tr.pageObject.dragHover.top .name {
+    border-top: 3px solid #3875d7;
+    padding-top: 5px;
+}
+
+.datatable .table table tbody tr.pageObject.dragHover.bottom .name {
+    border-bottom: 3px solid #3875d7;
+    padding-bottom: 5px;
+}
+
+.draggedObject {
+    display: block;
+    padding: 7px 12px;
+    border: 1px solid #e1e1e1;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+    color: #000;
+    width: 250px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: move;
+    display: block;
+    z-index: 3;
+    position: absolute;
+    pointer-events: none;
+}
 
 /*# sourceMappingURL=pagesDataTable.css.map */

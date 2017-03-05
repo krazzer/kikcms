@@ -45,7 +45,7 @@
 </div>
 <script>
     $(function () {
-        eval("{{ instanceName }} = new DataTable();");
+        eval("{{ instanceName }} = new {{ jsClass }}();");
         eval("{{ instanceName }}.instance = '{{ instanceName }}';");
         eval("{{ instanceName }}.parentEditId = {{ parentEditId }};");
         eval("{{ instanceName }}.labels = '{{ labels }}';");

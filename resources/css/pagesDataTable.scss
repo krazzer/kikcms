@@ -1,22 +1,38 @@
 @import 'includes/variables';
 @import 'includes/mixins';
 
+@mixin draggablePageName() {
+    display: block;
+    padding: 7px 12px;
+    border: 1px solid $lightGray;
+    background-color: $superLightGray;
+    border-radius: $defaultBorderRadius;
+    color: #000;
+    width: 250px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: move;
+}
+
+body.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .datatable .table table tbody tr {
 
     &.pageObject {
 
+        td {
+            position: relative;
+        }
+
         .name {
-            display: block;
-            padding: 7px 12px;
-            border: 1px solid $lightGray;
-            background-color: $superLightGray;
-            border-radius: $defaultBorderRadius;
-            color: #000;
-            width: 250px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            cursor: move;
+            @include draggablePageName();
         }
 
         &.menu .name {
@@ -28,5 +44,42 @@
         &.page .name {
             margin-left: 40px;
         }
+
+        .name {
+            &.dragged {
+                opacity: .2;
+            }
+
+            &.dragHover {
+                border: 3px solid $selectedTextBlue;
+                padding: 5px 10px;
+                cursor: default;
+            }
+        }
+
+        &.menu .dragHover {
+            border: 3px solid $selectedTextBlue;
+        }
+
+        &.dragHover {
+            &.top .name {
+                border-top: 3px solid $selectedTextBlue;
+                padding-top: 5px;
+            }
+
+            &.bottom .name {
+                border-bottom: 3px solid $selectedTextBlue;
+                padding-bottom: 5px;
+            }
+        }
     }
+}
+
+.draggedObject {
+    @include draggablePageName();
+
+    display: block;
+    z-index: $zIndexWindowLevel0;
+    position: absolute;
+    pointer-events: none;
 }

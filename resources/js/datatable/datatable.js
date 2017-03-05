@@ -1,8 +1,4 @@
-var DataTable = function () {
-};
-
-DataTable.prototype =
-{
+var DataTable = Class.extend({
     instance: null,
     labels: null,
     currentSearch: null,
@@ -522,4 +518,4 @@ DataTable.prototype =
             $deleteButton.fadeOut();
         }
     }
-};
+});

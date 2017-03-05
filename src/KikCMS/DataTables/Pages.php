@@ -12,6 +12,9 @@ use Phalcon\Mvc\Model\Query\Builder;
 class Pages extends DataTable
 {
     /** @inheritdoc */
+    protected $jsClass = 'PagesDataTable';
+
+    /** @inheritdoc */
     protected $searchableFields = ['name'];
 
     /** @inheritdoc */
@@ -34,6 +37,7 @@ class Pages extends DataTable
         parent::addAssets();
 
         $this->view->assets->addCss('cmsassets/css/pagesDataTable.css');
+        $this->view->assets->addJs('cmsassets/js/pagesDataTable.js');
     }
 
     /**

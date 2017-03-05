@@ -54,6 +54,9 @@ abstract class DataTable extends Renderable
     /** @var string */
     protected $viewDirectory = 'datatable';
 
+    /** @var string */
+    protected $jsClass = 'DataTable';
+
     /** @var bool if you're fairly certain the user will use a wysiwyg editor, set this to true to preload the js
      * note that if you don't the editor will be loaded dynamically, but will load a bit slower */
     protected $preLoadWysiwygJs = false;
@@ -291,6 +294,7 @@ abstract class DataTable extends Renderable
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'labels'          => $this->labels,
+            'jsClass'         => $this->jsClass,
             'self'            => $this,
         ]);
     }
