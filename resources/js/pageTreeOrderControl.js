@@ -8,6 +8,7 @@ var PageTreeOrderControl = Class.extend({
     startY: 0,
 
     $dataTable: null,
+    onDrop: null,
 
     /**
      * Handles dragging pages and hovering pages while dragging
@@ -33,14 +34,12 @@ var PageTreeOrderControl = Class.extend({
 
         $draggableObjects.hover(function () {
             if (self.isDragging) {
-                $(this).addClass(self.dragHoverClass);
-                $(this).parent().parent().removeClass(self.dragHoverClass);
+                $(this).parent().parent().attr('data-drop', 'into');
                 self.hoveringNode = true;
             }
         }, function () {
             if (self.isDragging) {
-                $(this).removeClass(self.dragHoverClass);
-                $(this).parent().parent().addClass(self.dragHoverClass);
+                $(this).parent().parent().removeAttr('data-drop');
                 self.hoveringNode = false;
             }
         });
@@ -48,30 +47,29 @@ var PageTreeOrderControl = Class.extend({
         $pagesObjects.hover(function () {
             if (self.isDragging) {
                 $(this).addClass(self.dragHoverClass);
-
             }
         }, function () {
             if (self.isDragging) {
                 $(this).removeClass(self.dragHoverClass);
+                $(this).removeAttr('data-drop');
             }
         });
 
         $pagesObjects.mousemove(function (e) {
-            var $pageObject = $(this);
-
-            if (!$pageObject.hasClass(self.dragHoverClass)) {
+            if (!self.isDragging) {
                 return;
             }
 
-            var height = $pageObject.outerHeight();
+            var $pageObject = $(this);
 
-            if (e.clientY > $pageObject.offset().top + (height / 2)) {
-                $pageObject.addClass('bottom');
-                $pageObject.removeClass('top');
-            } else {
-                $pageObject.addClass('top');
-                $pageObject.removeClass('bottom');
+            if ($pageObject.attr('data-drop') == 'into') {
+                return;
             }
+
+            var height   = $pageObject.outerHeight();
+            var position = e.clientY > $pageObject.offset().top + (height / 2) ? 'after' : 'before';
+
+            $pageObject.attr('data-drop', position);
         });
 
         $window.mousemove(this.windowMouseMove.bind(this));
@@ -91,6 +89,16 @@ var PageTreeOrderControl = Class.extend({
         this.isDragging = false;
 
         this.getDragObject().remove();
+
+        var $hoveringObject = this.$dataTable.find('.' + this.dragHoverClass);
+
+        if ($hoveringObject.length && this.onDrop) {
+            var targetId = $hoveringObject.attr('data-id');
+            var position = $hoveringObject.attr('data-drop');
+            var id       = this.draggedObject.parent().parent().attr('data-id');
+
+            this.onDrop(id, targetId, position);
+        }
 
         this.draggedObject.removeClass('dragged');
         this.draggedObject = null;

@@ -49,25 +49,20 @@ body.noSelect {
             &.dragged {
                 opacity: .2;
             }
-
-            &.dragHover {
-                border: 3px solid $selectedTextBlue;
-                padding: 5px 10px;
-                cursor: default;
-            }
-        }
-
-        &.menu .dragHover {
-            border: 3px solid $selectedTextBlue;
         }
 
         &.dragHover {
-            &.top .name {
+            &[data-drop="into"] .name {
+                border: 3px solid $selectedTextBlue;
+                padding: 5px 10px;
+            }
+
+            &[data-drop="before"] .name {
                 border-top: 3px solid $selectedTextBlue;
                 padding-top: 5px;
             }
 
-            &.bottom .name {
+            &[data-drop="after"] .name {
                 border-bottom: 3px solid $selectedTextBlue;
                 padding-bottom: 5px;
             }

@@ -30,27 +30,21 @@ body.noSelect {
   color: #fff; }
 .datatable .table table tbody tr.pageObject.page .name {
   margin-left: 40px; }
-
 .datatable .table table tbody tr.pageObject .name.dragged {
     opacity: .2;
 }
 
-.datatable .table table tbody tr.pageObject .name.dragHover {
+.datatable .table table tbody tr.pageObject.dragHover[data-drop="into"] .name {
     border: 3px solid #3875d7;
     padding: 5px 10px;
-    cursor: default;
 }
 
-.datatable .table table tbody tr.pageObject.menu .dragHover {
-    border: 3px solid #3875d7;
-}
-
-.datatable .table table tbody tr.pageObject.dragHover.top .name {
+.datatable .table table tbody tr.pageObject.dragHover[data-drop="before"] .name {
     border-top: 3px solid #3875d7;
     padding-top: 5px;
 }
 
-.datatable .table table tbody tr.pageObject.dragHover.bottom .name {
+.datatable .table table tbody tr.pageObject.dragHover[data-drop="after"] .name {
     border-bottom: 3px solid #3875d7;
     padding-bottom: 5px;
 }

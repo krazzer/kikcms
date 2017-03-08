@@ -23,6 +23,7 @@ var PagesDataTable = DataTable.extend({
     initPageTreeOrderControl: function () {
         var pageTreeOrderControl        = new PageTreeOrderControl();
         pageTreeOrderControl.$dataTable = this.getDataTable();
+        pageTreeOrderControl.onDrop     = this.onPageDrop.bind(this);
         pageTreeOrderControl.init();
     },
 
@@ -60,5 +61,9 @@ var PagesDataTable = DataTable.extend({
         }
 
         return filters;
+    },
+
+    onPageDrop: function (pageId, targetPageId, position) {
+        //todo: do something with this!
     }
 });
