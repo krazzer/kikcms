@@ -208,7 +208,7 @@ body {
             }
 
             tr td {
-                padding: 8px 15px;
+                padding: $dataTableCellVerticalPadding 15px;
             }
 
             thead {

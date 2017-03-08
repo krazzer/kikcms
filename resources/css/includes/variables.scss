@@ -26,6 +26,9 @@ $defaultBorderRadius: 3px;
 
 $lowerThanDesktop: "(max-width: 1130px)";
 
-/* z-indexes */
+/* Z-indexes */
 $zIndexWindowLevel0: 3;
 $zIndexAboveLevel10Window: 15;
+
+/* Default paddings and margins */
+$dataTableCellVerticalPadding: 8px;

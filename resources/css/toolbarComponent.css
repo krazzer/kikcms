@@ -1,7 +1,8 @@
 /* Toolbar components have a toolbar like the dataTable and the Finder */
 /* Colors */
 /* Miscellaneous */
-/* z-indexes */
+/* Z-indexes */
+/* Default paddings and margins */
 .toolbarComponent .toolbar {
   padding: 0 0 36px 0;
   width: 100%;

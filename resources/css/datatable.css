@@ -1,6 +1,7 @@
 /* Colors */
 /* Miscellaneous */
-/* z-indexes */
+/* Z-indexes */
+/* Default paddings and margins */
 body > *:not(.dataTableWindow) {
   transition: filter, opacity 0.3s; }
 body > #overlay {

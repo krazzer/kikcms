@@ -1,6 +1,7 @@
 /* Colors */
 /* Miscellaneous */
-/* z-indexes */
+/* Z-indexes */
+/* Default paddings and margins */
 body.noSelect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -33,17 +34,14 @@ body.noSelect {
 .datatable .table table tbody tr.pageObject .name.dragged {
     opacity: .2;
 }
-
 .datatable .table table tbody tr.pageObject.dragHover[data-drop="into"] .name {
     border: 3px solid #3875d7;
     padding: 5px 10px;
 }
-
 .datatable .table table tbody tr.pageObject.dragHover[data-drop="before"] .name {
     border-top: 3px solid #3875d7;
     padding-top: 5px;
 }
-
 .datatable .table table tbody tr.pageObject.dragHover[data-drop="after"] .name {
     border-bottom: 3px solid #3875d7;
     padding-bottom: 5px;

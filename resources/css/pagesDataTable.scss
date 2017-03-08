@@ -54,17 +54,17 @@ body.noSelect {
         &.dragHover {
             &[data-drop="into"] .name {
                 border: 3px solid $selectedTextBlue;
-                padding: 5px 10px;
+                padding: $dataTableCellVerticalPadding - 3px 10px;
             }
 
             &[data-drop="before"] .name {
                 border-top: 3px solid $selectedTextBlue;
-                padding-top: 5px;
+                padding-top: $dataTableCellVerticalPadding - 3px;
             }
 
             &[data-drop="after"] .name {
                 border-bottom: 3px solid $selectedTextBlue;
-                padding-bottom: 5px;
+                padding-bottom: $dataTableCellVerticalPadding - 3px;
             }
         }
     }

@@ -64,6 +64,6 @@ var PagesDataTable = DataTable.extend({
     },
 
     onPageDrop: function (pageId, targetPageId, position) {
-        //todo: do something with this!
+        console.log(pageId, targetPageId, position);
     }
 });

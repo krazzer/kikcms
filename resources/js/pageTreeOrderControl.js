@@ -4,6 +4,7 @@ var PageTreeOrderControl = Class.extend({
     isDragging: false,
     hoveringNode: false,
     draggedObject: null,
+    timeDragStarted: 0,
     startX: 0,
     startY: 0,
 
@@ -33,23 +34,23 @@ var PageTreeOrderControl = Class.extend({
         });
 
         $draggableObjects.hover(function () {
-            if (self.isDragging) {
+            if (self.isDraggingAndNotCurrent($(this))) {
                 $(this).parent().parent().attr('data-drop', 'into');
                 self.hoveringNode = true;
             }
         }, function () {
-            if (self.isDragging) {
+            if (self.isDraggingAndNotCurrent($(this))) {
                 $(this).parent().parent().removeAttr('data-drop');
                 self.hoveringNode = false;
             }
         });
 
         $pagesObjects.hover(function () {
-            if (self.isDragging) {
+            if (self.isDraggingAndNotCurrent($(this).find('.name'))) {
                 $(this).addClass(self.dragHoverClass);
             }
         }, function () {
-            if (self.isDragging) {
+            if (self.isDraggingAndNotCurrent($(this).find('.name'))) {
                 $(this).removeClass(self.dragHoverClass);
                 $(this).removeAttr('data-drop');
             }
@@ -91,8 +92,9 @@ var PageTreeOrderControl = Class.extend({
         this.getDragObject().remove();
 
         var $hoveringObject = this.$dataTable.find('.' + this.dragHoverClass);
+        var isNoUserMistake = (new Date().getTime() - this.timeDragStarted) > 250;
 
-        if ($hoveringObject.length && this.onDrop) {
+        if ($hoveringObject.length && this.onDrop && isNoUserMistake) {
             var targetId = $hoveringObject.attr('data-id');
             var position = $hoveringObject.attr('data-drop');
             var id       = this.draggedObject.parent().parent().attr('data-id');
@@ -138,6 +140,25 @@ var PageTreeOrderControl = Class.extend({
         return this.$dataTable.find('.pageObject');
     },
 
+    /**
+     * Check if we are dragging an element and it's not the one given
+     *
+     * @param $element
+     * @returns {boolean}
+     */
+    isDraggingAndNotCurrent: function ($element) {
+        if (!this.isDragging) {
+            return false;
+        }
+
+        return !$element.hasClass('dragged');
+    },
+
+    /**
+     * Handles visually moving around the dragged object
+     *
+     * @param e
+     */
     windowMouseMove: function (e) {
         if (this.isDragging) {
             var $dragObject = this.getDragObject();
@@ -151,7 +172,9 @@ var PageTreeOrderControl = Class.extend({
             var outOfDragThresholdY = e.clientY > this.startY + dragThreshold || e.clientY < this.startY - dragThreshold;
 
             if (outOfDragThresholdX || outOfDragThresholdY) {
-                this.isDragging = true;
+                this.isDragging      = true;
+                this.timeDragStarted = new Date().getTime();
+
                 this.draggedObject.addClass('dragged');
 
                 $('body').addClass('noSelect');
