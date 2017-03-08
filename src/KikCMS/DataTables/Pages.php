@@ -38,6 +38,7 @@ class Pages extends DataTable
 
         $this->view->assets->addCss('cmsassets/css/pagesDataTable.css');
         $this->view->assets->addJs('cmsassets/js/pagesDataTable.js');
+        $this->view->assets->addJs('cmsassets/js/pageTreeOrderControl.js');
     }
 
     /**
