@@ -64,6 +64,12 @@ var PagesDataTable = DataTable.extend({
     },
 
     onPageDrop: function (pageId, targetPageId, position) {
-        console.log(pageId, targetPageId, position);
+        KikCMS.action('/cms/datatable/pages/tree-order', {
+            pageId: pageId,
+            targetPageId: targetPageId,
+            position: position
+        }, function (result) {
+            console.log(result);
+        });
     }
 });

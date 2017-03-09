@@ -44,6 +44,9 @@ class Routing
             "action"     => "resetPassword"
         ]);
 
+        /** Pages DataTable */
+        $router->add("/cms/datatable/pages/tree-order", "PagesDataTable::treeOrder");
+
         /** DataTable / WebForm */
         $router->add("/cms/datatable/:action", [
             "controller" => "data-table",
