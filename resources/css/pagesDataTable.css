@@ -2,14 +2,6 @@
 /* Miscellaneous */
 /* Z-indexes */
 /* Default paddings and margins */
-body.noSelect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
 .datatable .table table tbody tr.pageObject td {
     position: relative;
 }
@@ -59,10 +51,10 @@ body.noSelect {
     text-overflow: ellipsis;
     overflow: hidden;
     cursor: move;
-    display: block;
-    z-index: 3;
-    position: absolute;
-    pointer-events: none;
+}
+
+.datatable .table table tr.dragHover.pageObject[data-drop="before"] td, .datatable .table table tr.dragHover.pageObject[data-drop="after"] + tr td {
+    padding-top: 8px;
 }
 
 /*# sourceMappingURL=pagesDataTable.css.map */

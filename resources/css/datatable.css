@@ -24,6 +24,14 @@ body .datatableThumbHoverContainer {
     border-radius: 3px;
     border: 1px solid #e1e1e1; }
 
+body.noSelect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 :root > body.datatableBlur {
   overflow: hidden; }
   :root > body.datatableBlur > #menu, :root > body.datatableBlur > #main {
@@ -312,6 +320,7 @@ body .datatableThumbHoverContainer {
       .datatable .table table tbody tr {
         cursor: default; }
         .datatable .table table tbody tr td {
+            transition: padding 0.3s;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
           -moz-user-select: none;
@@ -331,7 +340,8 @@ body .datatableThumbHoverContainer {
             border-radius: 3px; }
         .datatable .table table tbody tr:nth-child(odd) {
           background-color: #f9f9f9; }
-        .datatable .table table tbody tr:hover td {
+
+.datatable .table table tbody tr:hover:not(.dragHover) td {
           background-color: #eee; }
         .datatable .table table tbody tr.edited td {
           background-color: #dff0d8; }
@@ -346,14 +356,21 @@ body .datatableThumbHoverContainer {
           background-color: #c8116d; }
           .datatable .table table tbody tr.selected:hover td .highlight {
             background-color: #990d53; }
-        .datatable .table table tbody tr td.edit {
+
+.datatable .table table tbody tr td.edit, .datatable .table table tbody tr td.sort {
           text-align: center;
           width: 60px;
           cursor: pointer; }
-          .datatable .table table tbody tr td.edit .glyphicon {
+
+.datatable .table table tbody tr td.edit .glyphicon, .datatable .table table tbody tr td.sort .glyphicon {
             display: none;
             margin-top: -2px; }
-        .datatable .table table tbody tr:hover td.edit .glyphicon {
+
+.datatable .table table tbody tr td.sort {
+    cursor: move;
+}
+
+.datatable .table table tbody tr:hover td.edit .glyphicon, .datatable .table table tbody tr:hover td.sort .glyphicon {
           display: block; }
   .datatable .table .no-data {
     padding: 8px 0; }
@@ -361,5 +378,48 @@ body .datatableThumbHoverContainer {
   content: "";
   display: table;
   clear: both; }
+
+.draggedObject {
+    display: block;
+    z-index: 3;
+    position: absolute;
+    pointer-events: none;
+    opacity: .95;
+}
+
+.draggedObject.rowClone {
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.draggedObject.rowClone td {
+    padding: 8px 15px;
+}
+
+.draggedObject.rowClone .edit .glyphicon, .draggedObject.rowClone .sort .glyphicon {
+    display: none;
+}
+
+body.isDragging * {
+    cursor: default !important;
+}
+
+body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
+    cursor: move !important;
+}
+
+.datatable .table table tr.dragged {
+    opacity: .3;
+}
+
+.datatable .table table tr.dragHover {
+    cursor: move;
+}
+
+.datatable .table table tr.dragHover[data-drop="before"] td, .datatable .table table tr.dragHover[data-drop="after"] + tr td {
+    padding-top: 44px;
+}
 
 /*# sourceMappingURL=datatable.css.map */

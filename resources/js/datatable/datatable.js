@@ -43,6 +43,17 @@ var DataTable = Class.extend({
         this.initPagination();
         this.initSearch();
         this.initButtons();
+
+        if (typeof SortControl == 'undefined') {
+            return;
+        }
+
+        var sortControl        = new SortControl();
+        sortControl.$dataTable = this.getDataTable();
+        sortControl.onDrop     = function (id, targetId, position) {
+            console.log(id, targetId, position);
+        };
+        sortControl.init();
     },
 
     initButtons: function () {

@@ -61,6 +61,9 @@ abstract class DataTable extends Renderable
      * note that if you don't the editor will be loaded dynamically, but will load a bit slower */
     protected $preLoadWysiwygJs = false;
 
+    /** @var bool */
+    protected $sortable = false;
+
     /** @var string */
     public $indexView = 'datatable/index';
 
@@ -295,6 +298,7 @@ abstract class DataTable extends Renderable
             'fieldFormatting' => $this->fieldFormatting,
             'labels'          => $this->labels,
             'jsClass'         => $this->jsClass,
+            'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
     }
@@ -358,6 +362,7 @@ abstract class DataTable extends Renderable
             'headerData'      => $this->getTableHeaderData(),
             'fieldFormatting' => $this->fieldFormatting,
             'filters'         => $this->filters,
+            'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
     }
@@ -459,6 +464,10 @@ abstract class DataTable extends Renderable
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
+
+        if ($this->sortable) {
+            $this->view->assets->addJs('cmsassets/js/datatable/sortControl.js');
+        }
 
         if ($this->preLoadWysiwygJs) {
             $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');

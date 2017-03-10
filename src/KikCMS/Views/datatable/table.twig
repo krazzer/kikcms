@@ -20,6 +20,9 @@
                     {{ name|capitalize }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
+            {% if sortable %}
+                <td></td>
+            {% endif %}
             <td></td>
         </tr>
         </thead>
@@ -36,6 +39,11 @@
                         {% endif %}
                     </td>
                 {% endfor %}
+                {% if sortable %}
+                    <td class="sort" title="{{ tl('dataTable.sort') }}">
+                        <span class="glyphicon glyphicon-menu-hamburger"></span>
+                    </td>
+                {% endif %}
                 <td class="edit" title="{{ tl('dataTable.edit') }}">
                     <input type="hidden" name="id" value="{{ row.id }}">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>

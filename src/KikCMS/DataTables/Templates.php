@@ -9,6 +9,8 @@ use KikCMS\Models\Template;
 
 class Templates extends DataTable
 {
+    protected $sortable = true;
+
     /**
      * @inheritdoc
      */

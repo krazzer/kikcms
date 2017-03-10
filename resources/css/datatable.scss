@@ -31,6 +31,14 @@ body {
             border: 1px solid $lightGray;
         }
     }
+
+    &.noSelect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 }
 
 :root > body.datatableBlur{
@@ -236,6 +244,7 @@ body {
                     cursor: default;
 
                     td{
+                        transition: padding 0.3s;
                         @include noTextSelect();
 
                         .highlight{
@@ -259,7 +268,7 @@ body {
                         background-color: $superLightGray;
                     }
 
-                    &:hover {
+                    &:hover:not(.dragHover) {
                         td {
                             background-color: #eee;
                         }
@@ -294,20 +303,30 @@ body {
                         }
                     }
 
-                    td.edit {
-                        text-align: center;
-                        width: 60px;
-                        cursor: pointer;
+                    td {
+                        &.edit, &.sort {
+                            text-align: center;
+                            width: 60px;
+                            cursor: pointer;
 
-                        .glyphicon {
-                            display: none;
-                            margin-top: -2px;
+                            .glyphicon {
+                                display: none;
+                                margin-top: -2px;
+                            }
+                        }
+
+                        &.sort {
+                            cursor: move;
                         }
                     }
 
                     &:hover {
-                        td.edit .glyphicon {
-                            display: block;
+                        td {
+                            &.edit, &.sort {
+                                .glyphicon {
+                                    display: block;
+                                }
+                            }
                         }
                     }
                 }
@@ -321,5 +340,58 @@ body {
 
     > .footer{
         @include clearFix();
+    }
+}
+
+.draggedObject {
+    display: block;
+    z-index: $zIndexWindowLevel0;
+    position: absolute;
+    pointer-events: none;
+    opacity: .95;
+
+    &.rowClone {
+        background-color: #fff;
+        -webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+        -moz-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+        box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+
+        td {
+            padding: 8px 15px;
+        }
+
+        .edit, .sort {
+            .glyphicon {
+                display: none;
+            }
+        }
+    }
+}
+
+body.isDragging {
+    * {
+        cursor: default !important;
+    }
+
+    .datatable {
+        tbody, tbody * {
+            cursor: move !important;
+        }
+    }
+}
+
+.datatable .table table tr {
+    &.dragged {
+        opacity: .3;
+    }
+
+    &.dragHover {
+        cursor: move;
+
+        &[data-drop="before"], &[data-drop="after"] + tr {
+            td {
+                padding-top: 44px;
+            }
+        }
     }
 }

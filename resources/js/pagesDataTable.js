@@ -14,17 +14,17 @@ var PagesDataTable = DataTable.extend({
      */
     initTable: function () {
         this.$.initTable.call(this);
-        this.initPageTreeOrderControl();
+        this.initTreeSortControl();
     },
 
     /**
      * Initialize the dragging of pages for ordering
      */
-    initPageTreeOrderControl: function () {
-        var pageTreeOrderControl        = new PageTreeOrderControl();
-        pageTreeOrderControl.$dataTable = this.getDataTable();
-        pageTreeOrderControl.onDrop     = this.onPageDrop.bind(this);
-        pageTreeOrderControl.init();
+    initTreeSortControl: function () {
+        var treeSortControl        = new TreeSortControl();
+        treeSortControl.$dataTable = this.getDataTable();
+        treeSortControl.onDrop     = this.onPageDrop.bind(this);
+        treeSortControl.init();
     },
 
     /**

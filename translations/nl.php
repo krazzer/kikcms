@@ -42,6 +42,7 @@ return [
         'saveAndClose'      => 'Opslaan & sluiten',
         'closeWarning'      => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten dit venster sluiten?',
         'pickFile'          => 'Bestand kiezen',
+        'sort'              => 'Volgorde slepen',
 
         'pages' => [
             'total'         => 'Totaal',

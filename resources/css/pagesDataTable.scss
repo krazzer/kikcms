@@ -15,14 +15,6 @@
     cursor: move;
 }
 
-body.noSelect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
 .datatable .table table tbody tr {
 
     &.pageObject {
@@ -72,9 +64,12 @@ body.noSelect {
 
 .draggedObject {
     @include draggablePageName();
+}
 
-    display: block;
-    z-index: $zIndexWindowLevel0;
-    position: absolute;
-    pointer-events: none;
+.datatable .table table tr.dragHover.pageObject {
+    &[data-drop="before"], &[data-drop="after"] + tr {
+        td {
+            padding-top: 8px;
+        }
+    }
 }
