@@ -20,6 +20,15 @@ abstract class Renderable extends Injectable
     /** @var string */
     protected $indexView = 'index';
 
+    /** @var string provide a prefix to easily identify an instance */
+    protected $instancePrefix;
+
+    /** @var string contains the corresponding js Class for this Renderable */
+    protected $jsClass;
+
+    /** @var string unique identifier for this instance */
+    private $instance;
+
     /**
      * Renderable constructor.
      * @param Filters|null $filters
@@ -80,6 +89,40 @@ abstract class Renderable extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getInstance(): string
+    {
+        if ( ! $this->instance) {
+            $this->instance = uniqid($this->instancePrefix);
+        }
+
+        return $this->instance;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getJsData()
+    {
+        $properties = ['instance' => $this->getInstance()];
+        $properties = array_merge($properties, $this->getJsProperties());
+
+        return [
+            'class'      => $this->jsClass,
+            'properties' => $properties,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getJsProperties(): array
+    {
+        return [];
+    }
+
+    /**
      * @param Filters $filters
      * @return Renderable
      */
@@ -87,5 +130,13 @@ abstract class Renderable extends Injectable
     {
         $this->filters = $filters;
         return $this;
+    }
+
+    /**
+     * @param string $instance
+     */
+    public function setInstance(string $instance)
+    {
+        $this->instance = $instance;
     }
 }

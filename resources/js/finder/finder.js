@@ -1,8 +1,4 @@
-var Finder = function () {
-};
-
-Finder.prototype =
-{
+var Finder = Class.extend({
     instance: null,
     shiftKeyPressed: false,
     pickingMode: false,
@@ -402,4 +398,4 @@ Finder.prototype =
             $toolbar.find('.paste').fadeOut();
         }
     }
-};
+});

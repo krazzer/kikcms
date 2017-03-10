@@ -1,8 +1,4 @@
-var WebForm = function () {
-};
-
-WebForm.prototype =
-{
+var WebForm = Class.extend({
     instance: null,
 
     actionGetFinder: function ($field) {
@@ -243,4 +239,4 @@ WebForm.prototype =
 
         return translation;
     }
-};
+});

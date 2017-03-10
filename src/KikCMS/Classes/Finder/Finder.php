@@ -26,11 +26,17 @@ class Finder extends Renderable
         'media.uploadMaxFileSizeWarning',
     ];
 
-    /** @var bool */
-    private $pickingMode = false;
-
     /** @inheritdoc */
     protected $viewDirectory = 'finder';
+
+    /** @inheritdoc */
+    protected $jsClass = 'Finder';
+
+    /** inheritdoc */
+    protected $instancePrefix = 'Finder';
+
+    /** @var bool */
+    private $pickingMode = false;
 
     /**
      * Adds html/css required for finder
@@ -65,6 +71,7 @@ class Finder extends Renderable
         return $this->renderView('index', [
             'files'       => $files,
             'instance'    => $this->getInstance(),
+            'jsData'      => $this->getJsData(),
             'pickingMode' => $this->pickingMode,
         ]);
     }
@@ -176,13 +183,11 @@ class Finder extends Renderable
     }
 
     /**
-     * Creates an unique id for the finder js class so multiple instances don't get mixed up
-     *
-     * @return string
+     * @inheritdoc
      */
-    private function getInstance()
+    protected function getJsProperties(): array
     {
-        return uniqid('finder');
+        return ['pickingMode' => $this->pickingMode];
     }
 
     /**

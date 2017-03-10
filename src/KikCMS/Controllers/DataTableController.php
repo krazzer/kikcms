@@ -177,7 +177,7 @@ class DataTableController extends BaseController
 
         /** @var DataTable $dataTable */
         $dataTable = new $instanceClass($filters);
-        $dataTable->setInstanceName($instanceName);
+        $dataTable->setInstance($instanceName);
 
         return $dataTable;
     }

@@ -1,6 +1,5 @@
 {# @var self \KikCMS\Classes\DataTable\DataTable #}
-<div class="datatable toolbarComponent" id="{{ instanceName }}">
-
+<div class="datatable toolbarComponent" id="{{ instanceName }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
         <div class="btn btn-default add">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -43,12 +42,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(function () {
-        eval("{{ instanceName }} = new {{ jsClass }}();");
-        eval("{{ instanceName }}.instance = '{{ instanceName }}';");
-        eval("{{ instanceName }}.parentEditId = {{ parentEditId }};");
-        eval("{{ instanceName }}.labels = '{{ labels }}';");
-        eval("{{ instanceName }}.init();");
-    });
-</script>

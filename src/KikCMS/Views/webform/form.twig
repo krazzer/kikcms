@@ -7,7 +7,7 @@
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
-<div class="webForm" data-class="{{ class }}" id="{{ instance }}">
+<div class="webForm" data-class="{{ class }}" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
     {{ form({name: 'form'}) }}
 
     {% if errorContainer.hasFormErrors %}
@@ -44,8 +44,3 @@
 
     {{ endForm() }}
 </div>
-<script>
-    $(function () {
-        eval("var {{ instance }} = new WebForm(); {{ instance }}.instance = '{{ instance }}'; {{ instance }}.init();");
-    });
-</script>

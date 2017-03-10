@@ -1,4 +1,4 @@
-<div class="finder toolbarComponent" id="{{ instance }}">
+<div class="finder toolbarComponent" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
 
     <input type="hidden" class="currentFolderId" value="0">
 
@@ -51,13 +51,4 @@
             {% include '@kikcms/finder/files.twig' %}
         </div>
     </div>
-
-    <script>
-        $(function () {
-            eval("var {{ instance }} = new Finder();");
-            eval("{{ instance }}.instance = '{{ instance }}';");
-            eval("{{ instance }}.pickingMode = {{ pickingMode ? 'true' : 'false' }};");
-            eval("{{ instance }}.init();");
-        });
-    </script>
 </div>

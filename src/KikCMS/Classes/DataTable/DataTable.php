@@ -38,6 +38,9 @@ abstract class DataTable extends Renderable
     /** @var string translation container, with labels for add, edit, delete and deleteOne */
     protected $labels;
 
+    /** @var string */
+    protected $instancePrefix = 'dataTable';
+
     /** @var array */
     protected $searchableFields = [];
 
@@ -72,9 +75,6 @@ abstract class DataTable extends Renderable
 
     /** @var StdClass */
     private $tableData;
-
-    /** @var string */
-    private $cachedInstanceKey;
 
     /** @var int amount of rows shown on one page */
     private $limit = 100;
@@ -203,18 +203,6 @@ abstract class DataTable extends Renderable
     /**
      * @return string
      */
-    public function getInstanceName()
-    {
-        if ( ! $this->cachedInstanceKey) {
-            $this->cachedInstanceKey = uniqid('dataTable');
-        }
-
-        return $this->cachedInstanceKey;
-    }
-
-    /**
-     * @return string
-     */
     public function getParentRelationKey(): string
     {
         return $this->parentRelationKey;
@@ -253,7 +241,7 @@ abstract class DataTable extends Renderable
             return;
         }
 
-        $instance  = $this->getInstanceName();
+        $instance  = $this->getInstance();
         $formClass = $this->getFormClass();
         $editId    = $this->filters->getEditId();
 
@@ -292,12 +280,13 @@ abstract class DataTable extends Renderable
             'tableData'       => $this->getTableData()->items->toArray(),
             'pagination'      => $this->getTableData(),
             'headerData'      => $this->getTableHeaderData(),
-            'instanceName'    => $this->getInstanceName(),
+            'instanceName'    => $this->getInstance(),
             'parentEditId'    => $this->filters->getParentEditId(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
             'labels'          => $this->labels,
             'jsClass'         => $this->jsClass,
+            'jsData'          => $this->getJsData(),
             'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
@@ -310,7 +299,7 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable();
 
-        $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
+        $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
         if ($this->parentRelationKey && $this->filters->getParentEditId() !== null) {
             $this->form->addHiddenField($this->parentRelationKey, $this->filters->getParentEditId());
@@ -331,7 +320,7 @@ abstract class DataTable extends Renderable
         $this->initializeDatatable();
 
         $this->form->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
-        $this->form->addHiddenField(self::INSTANCE, $this->getInstanceName());
+        $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
         if ($this->form->isPosted()) {
             return $this->form->render();
@@ -388,14 +377,6 @@ abstract class DataTable extends Renderable
         $this->fieldFormatting[$column] = $callback;
 
         return $this;
-    }
-
-    /**
-     * @param string $instanceName
-     */
-    public function setInstanceName(string $instanceName)
-    {
-        $this->cachedInstanceKey = $instanceName;
     }
 
     /**
@@ -486,11 +467,22 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @inheritdoc
+     */
+    protected function getJsProperties(): array
+    {
+        return [
+            'parentEditId' => $this->filters->getParentEditId(),
+            'labels'       => $this->labels,
+        ];
+    }
+
+    /**
      * @return string
      */
     private function getNewIdsCacheKey()
     {
-        return $this->getInstanceName() . '-ids';
+        return $this->getInstance() . '-ids';
     }
 
     /**

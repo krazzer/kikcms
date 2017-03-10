@@ -1,14 +1,35 @@
-var KikCmsClass = function () {
-};
-
-KikCmsClass.prototype =
-{
+var KikCmsClass = Class.extend({
     translations: {},
     errorMessages: {},
     isDev: false,
     maxFileUploads: null,
     maxFileSize: null,
     maxFileSizeString: null,
+    renderables: [],
+
+    initRenderables: function () {
+        var self = this;
+
+        $('[data-renderable]').each(function () {
+            var $renderable = $(this);
+
+            if ($renderable.attr('data-rendered') == "true") {
+                return;
+            }
+
+            var renderableData   = $.parseJSON($renderable.attr('data-renderable'));
+            var renderableObject = new window[renderableData.class];
+
+            $.each(renderableData.properties, function (key, value) {
+                renderableObject[key] = value;
+            });
+
+            renderableObject.init();
+
+            $renderable.attr('data-rendered', true);
+            self.renderables.push(renderableObject);
+        });
+    },
 
     action: function (actionUrl, parameters, onSuccess, onError, xhr) {
         var ajaxCompleted = false;
@@ -32,6 +53,8 @@ KikCmsClass.prototype =
                 self.hideLoader();
 
                 onSuccess(result, responseText, response);
+
+                self.initRenderables();
             },
             error: function (result) {
                 // try again on connection failure
@@ -100,6 +123,10 @@ KikCmsClass.prototype =
 
         return translation;
     }
-};
+});
 
 var KikCMS = new KikCmsClass();
+
+$(function () {
+    KikCMS.initRenderables();
+});

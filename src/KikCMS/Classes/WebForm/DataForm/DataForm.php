@@ -70,7 +70,7 @@ abstract class DataForm extends WebForm
     {
         $dataTableElement = new Hidden('dt');
         $dataTableElement->setLabel($label);
-        $dataTableElement->setDefault($dataTable->getInstanceName());
+        $dataTableElement->setDefault($dataTable->getInstance());
 
         $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
 

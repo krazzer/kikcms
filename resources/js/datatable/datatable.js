@@ -44,16 +44,9 @@ var DataTable = Class.extend({
         this.initSearch();
         this.initButtons();
 
-        if (typeof SortControl == 'undefined') {
-            return;
+        if (typeof SortControl !== 'undefined') {
+            this.initSort();
         }
-
-        var sortControl        = new SortControl();
-        sortControl.$dataTable = this.getDataTable();
-        sortControl.onDrop     = function (id, targetId, position) {
-            console.log(id, targetId, position);
-        };
-        sortControl.init();
     },
 
     initButtons: function () {
@@ -146,6 +139,19 @@ var DataTable = Class.extend({
                 self.setPagesContent(result.pagination);
             })
         });
+    },
+
+    initSort: function () {
+        var sortControl = new SortControl();
+
+        sortControl.$dataTable = this.getDataTable();
+
+        sortControl.onDrop = function (id, targetId, position) {
+            //todo: do something fancy with the newly sorted item
+            console.log(id, targetId, position);
+        };
+
+        sortControl.init();
     },
 
     initTable: function () {

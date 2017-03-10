@@ -52,6 +52,18 @@ abstract class WebForm extends Renderable
     /** @var string */
     protected $formTemplate = 'form';
 
+    /** @var bool */
+    protected $initialized = false;
+
+    /** @inheritdoc */
+    protected $instancePrefix = 'webForm';
+
+    /** @inheritdoc */
+    protected $jsClass = 'WebForm';
+
+    /** @inheritdoc */
+    protected $viewDirectory = 'webform';
+
     /** @var Form */
     private $form;
 
@@ -66,12 +78,6 @@ abstract class WebForm extends Renderable
 
     /** @var callable */
     private $validateAction;
-
-    /** @var bool */
-    protected $initialized = false;
-
-    /** @inheritdoc */
-    protected $viewDirectory = 'webform';
 
     public function __construct()
     {
@@ -457,6 +463,7 @@ abstract class WebForm extends Renderable
             'sendButtonLabel'    => $this->getSendLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'instance'           => $this->getInstance(),
+            'jsData'             => $this->getJsData(),
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
             'class'              => static::class,
@@ -677,14 +684,6 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @return string
-     */
-    private function getInstance()
-    {
-        return uniqid('webForm');
-    }
-
-    /**
      * @param string $type
      * @return bool
      */
@@ -742,7 +741,7 @@ abstract class WebForm extends Renderable
             if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
                 /** @var DataTableField $field */
-                $field->getDataTable()->setInstanceName($instance);
+                $field->getDataTable()->setInstance($instance);
                 $this->getField($key)->getElement()->setDefault($instance);
             }
         }
