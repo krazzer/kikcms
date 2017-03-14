@@ -33,10 +33,6 @@
             color: #fff;
         }
 
-        &.page .name {
-            margin-left: 40px;
-        }
-
         .name {
             &.dragged {
                 opacity: .2;
@@ -57,6 +53,14 @@
             &[data-drop="after"] .name {
                 border-bottom: 3px solid $selectedTextBlue;
                 padding-bottom: $dataTableCellVerticalPadding - 3px;
+            }
+        }
+
+        @for $i from 1 through 10 {
+            &.level#{$i} {
+                .name {
+                    margin-left: 40px * ($i);
+                }
             }
         }
     }
