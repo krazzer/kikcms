@@ -4,3 +4,10 @@
     pageObject {{ row.type }} level{{ row.level }}
     {{ row.type == 'page' and row.parent_id is null ? 'detached' : '' }}
 {%- endblock -%}
+
+{%- block tableRowAttr -%}
+    data-level="{{ row.level }}"
+    {% if row.type == 'menu' %}
+        data-max-level="{{ row.menu_max_level }}"
+    {% endif %}
+{%- endblock -%}

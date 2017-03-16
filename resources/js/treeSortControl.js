@@ -31,11 +31,18 @@ var TreeSortControl = SortControl.extend({
     },
 
     getHoverPosition: function (clientY, $hoverObject) {
-        if (this.hoveringNode) {
+        if (this.hoveringNode && this.mayDropInto($hoverObject)) {
             return 'into';
         }
 
         return this.$.getHoverPosition.call(this, clientY, $hoverObject);
+    },
+
+    getParentRow: function () {
+        var $selectedRow = this.getSelectedRow();
+        var level        = $selectedRow.attr('data-level');
+
+        return $selectedRow.prevAll('.level' + (level - 1) + ':first');
     },
 
     getSelectedRow: function () {
@@ -44,5 +51,29 @@ var TreeSortControl = SortControl.extend({
 
     isValidDropPosition: function ($hoverObject, clientY) {
         return !$hoverObject.hasClass('dragged') && clientY;
+    },
+
+    mayDropInto: function ($hoverObject) {
+        var level      = parseInt($hoverObject.attr('data-level'));
+        var $parentRow = this.getParentRow();
+
+        // no use placing a page into it's own parent
+        if ($parentRow && $parentRow.attr('data-id') == $hoverObject.attr('data-id')) {
+            return false;
+        }
+
+        if ($hoverObject.hasClass('detached')) {
+            return false;
+        }
+
+        if (level > 0) {
+            var maxLevel = $hoverObject.prevAll('.level0:first').attr('data-max-level');
+
+            if (level >= maxLevel) {
+                return false;
+            }
+        }
+
+        return true;
     }
 });

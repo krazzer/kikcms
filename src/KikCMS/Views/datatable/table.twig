@@ -29,7 +29,7 @@
 
         <tbody>
         {% for row in tableData %}
-            <tr data-id="{{ row.id }}" class="{% block tableRowClass '' %}">
+            <tr data-id="{{ row.id }}" class="{% block tableRowClass '' %}" {% block tableRowAttr '' %}>
                 {% for key, value in row %}
                     <td>
                         {% if fieldFormatting[key] is defined %}

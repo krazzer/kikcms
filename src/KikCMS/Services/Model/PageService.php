@@ -48,4 +48,16 @@ class PageService extends Injectable
 
         return (int) $this->dbService->getValue($query);
     }
+
+    /**
+     * @param Page $page
+     * @return Page|null
+     */
+    public function getMenuForPage(Page $page)
+    {
+        return Page::findFirst([
+            'conditions' => 'lft < :lft: AND rgt > :rgt:',
+            'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt]
+        ]);
+    }
 }

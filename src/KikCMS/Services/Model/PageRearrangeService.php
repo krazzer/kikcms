@@ -106,10 +106,19 @@ class PageRearrangeService extends Injectable
      */
     private function placeInto(Page $page, Page $targetPage)
     {
+        $menu = $this->pageService->getMenuForPage($targetPage);
+
+        // can't put page if target exceeds or equals menu's max level
+        if ($menu && $targetPage->level >= $menu->menu_max_level) {
+            return;
+        }
+
+        // no use placing a page into it's own parent
         if ($page->parent_id == $targetPage->id) {
             return;
         }
 
+        // can't put page into detached page
         if ( ! $targetPage->parent_id && $targetPage->type != Page::TYPE_MENU) {
             return;
         }
