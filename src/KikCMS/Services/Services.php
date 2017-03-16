@@ -15,6 +15,8 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
+use KikCMS\Services\Model\PageRearrangeService;
+use KikCMS\Services\Model\PageService;
 use KikCMS\Services\Model\TemplateService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
@@ -44,6 +46,8 @@ class Services extends BaseServices
     /** @inheritdoc */
     protected $autoDefineServices = [
         TemplateService::class,
+        PageService::class,
+        PageRearrangeService::class,
     ];
 
     /**

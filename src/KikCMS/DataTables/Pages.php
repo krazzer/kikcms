@@ -65,9 +65,9 @@ class Pages extends DataTable
     {
         $defaultQuery = new Builder();
         $defaultQuery->from(['p' => $this->getModel()]);
-        $defaultQuery->columns(['pl.name', 'IFNULL(p.lft, 999999) AS page_order', 'p.id', 'p.type', 'p.level']);
+        $defaultQuery->columns(['pl.name', 'p.id', 'p.display_order', 'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id']);
         $defaultQuery->leftJoin(PageLanguage::class, 'p.id = pl.page_id', 'pl');
-        $defaultQuery->orderBy('page_order asc');
+        $defaultQuery->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999)) asc');
 
         return $defaultQuery;
     }

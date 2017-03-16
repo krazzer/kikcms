@@ -105,7 +105,7 @@ class DbService extends Injectable
     {
         $result = $this->db->query($query);
 
-        $result->setFetchMode(Db::FETCH_ASSOC);
+        $result->setFetchMode(Db::FETCH_KEY_PAIR);
         return $result->fetchAll();
     }
 
@@ -116,13 +116,13 @@ class DbService extends Injectable
      *
      * @return bool
      */
-    public function update(string $model, array $set, array $where)
+    public function update(string $model, array $set, array $where = [])
     {
         $table       = $this->getTableForModel($model);
         $whereClause = $this->getWhereClauseByArray($where);
 
         if (empty($whereClause)) {
-            return true;
+            $whereClause = null;
         }
 
         return $this->db->update($table, array_keys($set), array_values($set), $whereClause);
@@ -176,6 +176,29 @@ class DbService extends Injectable
         }
 
         return first($result->getFirst()->toArray());
+    }
+
+    /**
+     * Retrieve an array with a single column from the given query
+     *
+     * @param Builder $query
+     * @return string|null
+     */
+    public function getValues(Builder $query)
+    {
+        $columns = (array) $query->getColumns();
+
+        if (count($columns) !== 1) {
+            throw new \InvalidArgumentException('The query must request a single column');
+        }
+
+        $results = $query->getQuery()->execute()->toArray();
+
+        foreach ($results as $i => $row) {
+            $results[$i] = first($row);
+        }
+
+        return $results;
     }
 
     /**

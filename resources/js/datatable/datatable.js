@@ -257,17 +257,7 @@ var DataTable = Class.extend({
     },
 
     action: function (action, parameters, onSuccess, onError) {
-        parameters.dataTableInstance = this.instance;
-
-        if (this.parentEditId != null) {
-            parameters.parentEditId = this.parentEditId;
-        }
-
-        var currentTab = this.getWindow().find('.tabs .tab.active').attr('data-tab');
-
-        if (typeof currentTab !== 'undefined') {
-            parameters.currentTab = currentTab;
-        }
+        parameters = this.addActionParameters(parameters);
 
         KikCMS.action('/cms/datatable/' + action, parameters, onSuccess, onError);
     },
@@ -366,6 +356,22 @@ var DataTable = Class.extend({
             self.setTableContent(result.table);
             self.setPagesContent(result.pagination);
         });
+    },
+
+    addActionParameters: function (parameters) {
+        parameters.dataTableInstance = this.instance;
+
+        if (this.parentEditId != null) {
+            parameters.parentEditId = this.parentEditId;
+        }
+
+        var currentTab = this.getWindow().find('.tabs .tab.active').attr('data-tab');
+
+        if (typeof currentTab !== 'undefined') {
+            parameters.currentTab = currentTab;
+        }
+
+        return parameters;
     },
 
     closeWindow: function () {

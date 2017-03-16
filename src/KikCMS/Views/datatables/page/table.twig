@@ -1,2 +1,6 @@
-{% extends '@kikcms/datatable/table.twig' %}
-{% block tableRowClass 'pageObject ' ~ row.type ~ ' level' ~ (row.level ?: 0) %}
+{%- extends '@kikcms/datatable/table.twig' -%}
+
+{%- block tableRowClass -%}
+    pageObject {{ row.type }} level{{ row.level }}
+    {{ row.type == 'page' and row.parent_id is null ? 'detached' : '' }}
+{%- endblock -%}

@@ -160,7 +160,7 @@ class DataTableController extends BaseController
      * @return DataTable
      * @throws SessionExpiredException
      */
-    private function getDataTable()
+    protected function getDataTable()
     {
         $instanceName = $this->request->getPost(DataTable::INSTANCE);
 

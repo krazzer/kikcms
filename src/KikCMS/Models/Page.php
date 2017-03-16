@@ -15,6 +15,8 @@ class Page extends Model
     const FIELD_TEMPLATE_ID   = 'template_id';
     const FIELD_DISPLAY_ORDER = 'display_order';
     const FIELD_LEVEL         = 'level';
+    const FIELD_LFT           = 'lft';
+    const FIELD_RGT           = 'rgt';
 
     const TYPE_PAGE  = 'page';
     const TYPE_MENU  = 'menu';
