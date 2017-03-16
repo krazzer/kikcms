@@ -41,8 +41,8 @@ var SortControl = Class.extend({
             self.selectedObjectX = self.getObjectToBeDragged().offset().left;
             self.selectedObjectY = self.getObjectToBeDragged().offset().top;
 
-            self.startX = e.clientX;
-            self.startY = e.clientY;
+            self.startX = e.clientX + $window.scrollLeft();
+            self.startY = e.clientY + $window.scrollTop();
         });
 
         $hoverObjects.hover(function () {
@@ -68,7 +68,7 @@ var SortControl = Class.extend({
                 return;
             }
 
-            $hoverObject.attr('data-drop', self.getHoverPosition(e.clientY, $hoverObject));
+            $hoverObject.attr('data-drop', self.getHoverPosition(e.clientY + $window.scrollTop(), $hoverObject));
         });
 
         $window.mousemove(this.windowMouseMove.bind(this));
@@ -101,6 +101,16 @@ var SortControl = Class.extend({
             return;
         }
 
+        var $selectedRow = this.getSelectedRow();
+
+        if (this.isDragging) {
+            $selectedRow.attr('data-prevent-click', 1);
+
+            setTimeout(function () {
+                $selectedRow.removeAttr('data-prevent-click');
+            })
+        }
+
         var $hoverObjects = this.getHoverObjects();
 
         this.isDragging = false;
@@ -113,14 +123,14 @@ var SortControl = Class.extend({
         if ($hoveringObject.length && this.onDrop && isNoUserMistake) {
             var targetId = $hoveringObject.attr('data-id');
             var position = $hoveringObject.attr('data-drop');
-            var id       = this.getSelectedRow().attr('data-id');
+            var id = $selectedRow.attr('data-id');
 
             if (position) {
                 this.onDrop(id, targetId, position);
             }
         }
 
-        this.getSelectedRow().removeClass('dragged');
+        $selectedRow.removeClass('dragged');
         this.draggedObject = null;
 
         $hoverObjects.find('.name').removeClass(this.dragHoverClass);
@@ -227,18 +237,23 @@ var SortControl = Class.extend({
      * @param e
      */
     windowMouseMove: function (e) {
+        var $window = $(window);
+
+        var clientX = e.clientX + $window.scrollLeft();
+        var clientY = e.clientY + $window.scrollTop();
+
         if (this.isDragging) {
             var $dragObject = this.getDragObject();
 
-            var left = this.moveOnlyVertical ? this.selectedObjectX : e.clientX - (this.startX - this.selectedObjectX);
+            var left = this.moveOnlyVertical ? this.selectedObjectX : clientX - (this.startX - this.selectedObjectX);
 
             $dragObject.css('left', left);
-            $dragObject.css('top', e.clientY - (this.startY - this.selectedObjectY));
+            $dragObject.css('top', clientY - (this.startY - this.selectedObjectY));
         } else if (this.draggedObject) {
             var dragThreshold = 5;
 
-            var outOfDragThresholdX = e.clientX > this.startX + dragThreshold || e.clientX < this.startX - dragThreshold;
-            var outOfDragThresholdY = e.clientY > this.startY + dragThreshold || e.clientY < this.startY - dragThreshold;
+            var outOfDragThresholdX = clientX > this.startX + dragThreshold || clientX < this.startX - dragThreshold;
+            var outOfDragThresholdY = clientY > this.startY + dragThreshold || clientY < this.startY - dragThreshold;
 
             if (outOfDragThresholdX || outOfDragThresholdY) {
                 this.isDragging      = true;

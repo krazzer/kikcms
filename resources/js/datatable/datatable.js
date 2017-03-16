@@ -147,7 +147,7 @@ var DataTable = Class.extend({
         sortControl.$dataTable = this.getDataTable();
 
         sortControl.onDrop = function (id, targetId, position) {
-            //todo: do something fancy with the newly sorted item
+            //todo: do something fancy with the newly sorted item (week 11)
             console.log(id, targetId, position);
         };
 
@@ -159,7 +159,13 @@ var DataTable = Class.extend({
         var $rows = this.getDataTable().find('tbody tr');
 
         $rows.find('td:not(.edit)').click(function () {
-            $(this).parent().toggleClass('selected');
+            var $row = $(this).parent();
+
+            if ($row.attr('data-prevent-click')) {
+                return;
+            }
+
+            $row.toggleClass('selected');
             self.updateToolbar();
         });
 
