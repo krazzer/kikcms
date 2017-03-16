@@ -48,6 +48,37 @@ class PageRearrangeService extends Injectable
     }
 
     /**
+     * @param Page $page
+     */
+    public function updateLeftSiblingsOrder(Page $page)
+    {
+        if ( ! $page->display_order) {
+            return;
+        }
+
+        $this->db->update(Page::TABLE, [Page::FIELD_DISPLAY_ORDER], [new RawValue("display_order - 1")], "
+            display_order > " . $page->display_order . "
+            AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
+            ORDER BY display_order ASC 
+        ");
+    }
+
+    /**
+     * Convert parent-child to nested set
+     */
+    public function updateNestedSet()
+    {
+        $relations = $this->getParentChildRelations();
+
+        $converter = new AdjacencyToNestedSet($relations);
+        $converter->traverse();
+
+        $nestedSetStructure = $converter->getResult();
+
+        $this->saveStructure($nestedSetStructure);
+    }
+
+    /**
      * @return array
      */
     private function getParentChildRelations(): array
@@ -159,37 +190,6 @@ class PageRearrangeService extends Injectable
         ]);
 
         $this->db->query($updateQuery);
-    }
-
-    /**
-     * @param Page $page
-     */
-    private function updateLeftSiblingsOrder(Page $page)
-    {
-        if ( ! $page->display_order) {
-            return;
-        }
-
-        $this->db->update(Page::TABLE, [Page::FIELD_DISPLAY_ORDER], [new RawValue("display_order - 1")], "
-            display_order > " . $page->display_order . "
-            AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
-            ORDER BY display_order ASC 
-        ");
-    }
-
-    /**
-     * Convert parent-child to nested set
-     */
-    private function updateNestedSet()
-    {
-        $relations = $this->getParentChildRelations();
-
-        $converter = new AdjacencyToNestedSet($relations);
-        $converter->traverse();
-
-        $nestedSetStructure = $converter->getResult();
-
-        $this->saveStructure($nestedSetStructure);
     }
 
     /**

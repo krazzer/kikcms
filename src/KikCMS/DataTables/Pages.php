@@ -7,8 +7,12 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\Model\PageRearrangeService;
 use Phalcon\Mvc\Model\Query\Builder;
 
+/**
+ * @property PageRearrangeService $pageRearrangeService
+ */
 class Pages extends DataTable
 {
     /** @inheritdoc */
@@ -40,6 +44,22 @@ class Pages extends DataTable
         $this->view->assets->addJs('cmsassets/js/pagesDataTable.js');
         $this->view->assets->addJs('cmsassets/js/datatable/sortControl.js');
         $this->view->assets->addJs('cmsassets/js/treeSortControl.js');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete(array $ids)
+    {
+        $deletedPages = Page::getByIdList($ids);
+
+        parent::delete($ids);
+
+        foreach ($deletedPages as $page) {
+            $this->pageRearrangeService->updateLeftSiblingsOrder($page);
+        }
+
+        $this->pageRearrangeService->updateNestedSet();
     }
 
     /**
