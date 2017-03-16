@@ -1,10 +1,11 @@
 <?php
 
-namespace KikCMS\Services\Model;
+namespace KikCMS\Services\DataTable;
 
 use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Models\Page;
+use KikCMS\Services\Model\PageService;
 use KikCMS\Util\AdjacencyToNestedSet;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;

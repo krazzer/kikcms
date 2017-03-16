@@ -5,11 +5,13 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\DataTableFilters;
+use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
+use KikCMS\Classes\Model\Model;
 
 /**
- * @property DbService dbService
+ * @property DbService $dbService
  */
 class DataTableController extends BaseController
 {
@@ -128,6 +130,30 @@ class DataTableController extends BaseController
             'table'      => $dataTable->renderTable(),
             'pagination' => $dataTable->renderPagination(),
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function rearrangeAction()
+    {
+        $dataTable = $this->getDataTable();
+
+        $id        = $this->request->getPost('id');
+        $targetId  = $this->request->getPost('targetId');
+        $rearrange = $this->request->getPost('position');
+
+        /** @var Model $model */
+        $model = $dataTable->getModel();
+        $model = new $model();
+
+        $source = $model::getById($id);
+        $target = $model::getById($targetId);
+
+        $rearranger = new Rearranger($dataTable);
+        $rearranger->rearrange($source, $target, $rearrange);
+
+        return json_encode(['table' => $dataTable->renderTable()]);
     }
 
     /**

@@ -15,7 +15,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
-use KikCMS\Services\Model\PageRearrangeService;
+use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Model\PageService;
 use KikCMS\Services\Model\TemplateService;
 use Monolog\ErrorHandler;

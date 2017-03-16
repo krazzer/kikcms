@@ -112,20 +112,19 @@ class DbService extends Injectable
     /**
      * @param string $model
      * @param array $set
-     * @param array $where
+     * @param mixed $where
      *
      * @return bool
      */
-    public function update(string $model, array $set, array $where = [])
+    public function update(string $model, array $set, $where)
     {
-        $table       = $this->getTableForModel($model);
-        $whereClause = $this->getWhereClauseByArray($where);
+        $table = $this->getTableForModel($model);
 
-        if (empty($whereClause)) {
-            $whereClause = null;
+        if (is_array($where)) {
+            $where = $this->getWhereClauseByArray($where);
         }
 
-        return $this->db->update($table, array_keys($set), array_values($set), $whereClause);
+        return $this->db->update($table, array_keys($set), array_values($set), $where);
     }
 
     /**

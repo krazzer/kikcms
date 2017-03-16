@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use KikCMS\Config\DbConfig;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -63,18 +64,22 @@ class FilterQueryBuilder
     private function addSortFilter(Builder $query)
     {
         if ( ! $this->filters->getSortColumn()) {
+            if ($this->dataTable->isSortable()) {
+                $query->orderBy($this->dataTable->getOrderField() . ' ' . DbConfig::SQL_SORT_ASCENDING);
+            }
+
             return;
         }
 
         $column    = $this->filters->getSortColumn();
         $direction = $this->filters->getSortDirection();
 
-        if (in_array($direction, ['asc', 'desc'])) {
+        if (in_array($direction, DbConfig::SQL_SORT_DIRECTIONS)) {
             if (array_key_exists($column, $this->dataTable->getOrderableFields())) {
                 $column = $this->dataTable->getOrderableFields()[$column];
             }
 
-            $query->orderBy('' . $column . ' ' . $direction);
+            $query->orderBy($column . ' ' . $direction);
         }
     }
 

@@ -43,10 +43,6 @@ var DataTable = Class.extend({
         this.initPagination();
         this.initSearch();
         this.initButtons();
-
-        if (typeof SortControl !== 'undefined') {
-            this.initSort();
-        }
     },
 
     initButtons: function () {
@@ -142,13 +138,15 @@ var DataTable = Class.extend({
     },
 
     initSort: function () {
+        var self = this;
         var sortControl = new SortControl();
 
         sortControl.$dataTable = this.getDataTable();
 
         sortControl.onDrop = function (id, targetId, position) {
-            //todo: do something fancy with the newly sorted item (week 11)
-            console.log(id, targetId, position);
+            self.action('rearrange', {id: id, targetId: targetId, position: position}, function (result) {
+                self.setTableContent(result.table);
+            })
         };
 
         sortControl.init();
@@ -197,11 +195,19 @@ var DataTable = Class.extend({
                 direction = '';
             }
 
+            if (!direction) {
+                column = '';
+            }
+
             self.actionSort(column, direction);
         });
 
         this.initImageThumbs();
         this.updateToolbar();
+
+        if (typeof SortControl !== 'undefined') {
+            this.initSort();
+        }
     },
 
     initTabs: function () {

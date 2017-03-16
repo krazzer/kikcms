@@ -68,6 +68,9 @@ abstract class DataTable extends Renderable
     protected $sortable = false;
 
     /** @var string */
+    protected $orderField = 'display_order';
+
+    /** @var string */
     public $indexView = 'datatable/index';
 
     /** @var string */
@@ -185,11 +188,11 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return array|null
+     * @return string
      */
-    public function getLabels()
+    public function getLabels(): string
     {
-        return $this->labels;
+        return (string) $this->labels;
     }
 
     /**
@@ -222,6 +225,22 @@ abstract class DataTable extends Renderable
     public function getOrderableFields(): array
     {
         return $this->orderableFields;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderField(): string
+    {
+        return $this->orderField;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortable(): bool
+    {
+        return $this->sortable;
     }
 
     /**
@@ -330,7 +349,7 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Response
+     * @return string
      */
     public function renderPagination()
     {
@@ -340,7 +359,7 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Response
+     * @return string
      */
     public function renderTable()
     {
