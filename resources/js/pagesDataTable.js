@@ -64,13 +64,14 @@ var PagesDataTable = DataTable.extend({
     },
 
     onPageDrop: function (pageId, targetPageId, position) {
-        var self = this;
+        var self       = this;
+        var parameters = this.getFilters();
 
-        var parameters = this.addActionParameters({
-            pageId: pageId,
-            targetPageId: targetPageId,
-            position: position
-        });
+        parameters.pageId       = pageId;
+        parameters.targetPageId = targetPageId;
+        parameters.position     = position;
+
+        parameters = this.addActionParameters(parameters);
 
         KikCMS.action('/cms/datatable/pages/tree-order', parameters, function (result) {
             self.setTableContent(result.table);

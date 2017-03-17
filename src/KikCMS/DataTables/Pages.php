@@ -7,7 +7,7 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Services\Model\PageRearrangeService;
+use KikCMS\Services\DataTable\PageRearrangeService;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -86,7 +86,7 @@ class Pages extends DataTable
         $defaultQuery = new Builder();
         $defaultQuery->from(['p' => $this->getModel()]);
         $defaultQuery->leftJoin(PageLanguage::class, 'p.id = pl.page_id', 'pl');
-        $defaultQuery->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999)) asc');
+        $defaultQuery->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc');
         $defaultQuery->columns([
             'pl.name', 'p.id', 'p.display_order', 'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id',
             'p.menu_max_level'
@@ -109,6 +109,11 @@ class Pages extends DataTable
      */
     protected function formatName($value)
     {
+        // disable dragging / tree structure when sorting or searching
+        if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
+            return $value;
+        }
+
         return '<span class="name">' . $value . '</span>';
     }
 }

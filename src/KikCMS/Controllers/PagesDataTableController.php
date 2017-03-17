@@ -4,7 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Models\Page;
-use KikCMS\Services\Model\PageRearrangeService;
+use KikCMS\Services\DataTable\PageRearrangeService;
 
 /**
  * @property PageRearrangeService $pageRearrangeService
