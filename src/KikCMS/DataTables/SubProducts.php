@@ -10,12 +10,17 @@ class SubProducts extends Products
     /** @inheritdoc */
     protected $parentRelationKey = 'parent_id';
 
-    /** @inheritdoc */
-    protected $labels = 'dataTables.subProducts';
-
     public function getFormClass(): string
     {
         return ProductSubForm::class;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLabels(): string
+    {
+        return 'dataTables.subProducts';
     }
 
     /**

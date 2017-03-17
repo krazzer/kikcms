@@ -119,7 +119,7 @@ class PageForm extends DataForm
             $template = $this->templateService->getTemplateByPageId($editId);
 
             if ($template) {
-                return $template->id;
+                return (int) $template->id;
             }
         }
 

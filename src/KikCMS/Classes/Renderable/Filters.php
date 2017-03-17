@@ -7,17 +7,15 @@ namespace KikCMS\Classes\Renderable;
  */
 class Filters
 {
-    /** @var array */
-    const FILTER_TYPES = [];
-
     /**
      * @param array $filters
      */
     public function setByArray(array $filters)
     {
-        foreach (static::FILTER_TYPES as $filterType) {
-            if (array_key_exists($filterType, $filters)) {
-                $setMethod = 'set' . $filterType;
+        foreach ($filters as $filterType => $value) {
+            $setMethod = 'set' . $filterType;
+
+            if (method_exists($this, $setMethod)) {
                 $this->$setMethod($filters[$filterType]);
             }
         }

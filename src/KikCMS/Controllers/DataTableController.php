@@ -198,12 +198,14 @@ class DataTableController extends BaseController
 
         $instanceClass = $this->session->get(DataTable::SESSION_KEY)[$instanceName]['class'];
 
-        $filters = new DataTableFilters();
+        /** @var DataTable $dataTable */
+        $dataTable = new $instanceClass();
+        $dataTable->setInstance($instanceName);
+
+        $filters = $dataTable->getEmptyFilters();
         $filters->setByArray($this->request->getPost());
 
-        /** @var DataTable $dataTable */
-        $dataTable = new $instanceClass($filters);
-        $dataTable->setInstance($instanceName);
+        $dataTable->setFilters($filters);
 
         return $dataTable;
     }

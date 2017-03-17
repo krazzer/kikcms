@@ -88,6 +88,7 @@ class PageRearrangeService extends Injectable
             SELECT 0, GROUP_CONCAT(p.id ORDER BY p.display_order ASC) 
             FROM cms_page p 
             WHERE p.type = 'menu' 
+            AND p.parent_id IS NULL
             
             UNION
             

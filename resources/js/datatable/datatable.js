@@ -1,4 +1,5 @@
 var DataTable = Class.extend({
+    actionPath: '/cms/datatable/',
     instance: null,
     labels: null,
     currentSearch: null,
@@ -138,7 +139,7 @@ var DataTable = Class.extend({
     },
 
     initSort: function () {
-        var self = this;
+        var self        = this;
         var sortControl = new SortControl();
 
         sortControl.$dataTable = this.getDataTable();
@@ -271,12 +272,18 @@ var DataTable = Class.extend({
     action: function (action, parameters, onSuccess, onError) {
         parameters = this.addActionParameters(parameters);
 
-        KikCMS.action('/cms/datatable/' + action, parameters, onSuccess, onError);
+        KikCMS.action(this.actionPath + action, parameters, onSuccess, onError);
     },
 
-    actionAdd: function () {
+    actionAdd: function (extraParams) {
         var self   = this;
         var params = this.getFilters();
+
+        if (typeof(extraParams) !== 'undefined') {
+            for (var key in extraParams) {
+                params[key] = extraParams[key];
+            }
+        }
 
         this.showWindow();
 

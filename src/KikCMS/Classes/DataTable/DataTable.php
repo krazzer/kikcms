@@ -35,9 +35,6 @@ abstract class DataTable extends Renderable
     /** @var DataTableFilters */
     protected $filters;
 
-    /** @var string translation container, with labels for add, edit, delete and deleteOne */
-    protected $labels;
-
     /** @var string */
     protected $instancePrefix = 'dataTable';
 
@@ -188,11 +185,13 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * Returns translation container, with labels for add, edit, delete and deleteOne
+     *
      * @return string
      */
     public function getLabels(): string
     {
-        return (string) $this->labels;
+        return '';
     }
 
     /**
@@ -300,12 +299,12 @@ abstract class DataTable extends Renderable
             'pagination'      => $this->getTableData(),
             'headerData'      => $this->getTableHeaderData(),
             'instanceName'    => $this->getInstance(),
+            'labels'          => $this->getLabels(),
+            'jsData'          => $this->getJsData(),
             'parentEditId'    => $this->filters->getParentEditId(),
             'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
-            'labels'          => $this->labels,
             'jsClass'         => $this->jsClass,
-            'jsData'          => $this->getJsData(),
             'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
@@ -475,11 +474,11 @@ abstract class DataTable extends Renderable
 
         $translations = DataTable::JS_TRANSLATIONS;
 
-        if ($this->labels) {
-            $translations[] = $this->labels . '.add';
-            $translations[] = $this->labels . '.edit';
-            $translations[] = $this->labels . '.delete';
-            $translations[] = $this->labels . '.deleteOne';
+        if ($this->getLabels()) {
+            $translations[] = $this->getLabels() . '.add';
+            $translations[] = $this->getLabels() . '.edit';
+            $translations[] = $this->getLabels() . '.delete';
+            $translations[] = $this->getLabels() . '.deleteOne';
         }
 
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, $translations);
@@ -492,7 +491,7 @@ abstract class DataTable extends Renderable
     {
         return [
             'parentEditId' => $this->filters->getParentEditId(),
-            'labels'       => $this->labels,
+            'labels'       => $this->getLabels(),
         ];
     }
 

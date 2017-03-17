@@ -116,7 +116,7 @@ class DbService extends Injectable
      *
      * @return bool
      */
-    public function update(string $model, array $set, $where)
+    public function update(string $model, array $set, $where = null)
     {
         $table = $this->getTableForModel($model);
 
@@ -181,9 +181,9 @@ class DbService extends Injectable
      * Retrieve an array with a single column from the given query
      *
      * @param Builder $query
-     * @return string|null
+     * @return array
      */
-    public function getValues(Builder $query)
+    public function getValues(Builder $query): array
     {
         $columns = (array) $query->getColumns();
 

@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\DataTables\Pages;
 use KikCMS\Models\Page;
 use KikCMS\Services\DataTable\PageRearrangeService;
 
@@ -11,6 +12,9 @@ use KikCMS\Services\DataTable\PageRearrangeService;
  */
 class PagesDataTableController extends DataTableController
 {
+    /**
+     * @return string
+     */
     public function treeOrderAction()
     {
         $pageId       = $this->request->getPost('pageId');
@@ -25,5 +29,21 @@ class PagesDataTableController extends DataTableController
         $dataTable = $this->getDataTable();
 
         return json_encode(['table' => $dataTable->renderTable()]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getDataTable()
+    {
+        /** @var Pages $dataTable */
+        $dataTable = parent::getDataTable();
+
+        if ($pageId = $dataTable->getFilters()->getEditId()) {
+            $page = Page::getById($pageId);
+            $dataTable->getFilters()->setPageType($page->type);
+        }
+
+        return $dataTable;
     }
 }

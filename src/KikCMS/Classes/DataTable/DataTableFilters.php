@@ -7,22 +7,6 @@ use KikCMS\Classes\Renderable\Filters;
 
 class DataTableFilters extends Filters
 {
-    const FILTER_SEARCH         = 'search';
-    const FILTER_PAGE           = 'page';
-    const FILTER_SORT_COLUMN    = 'sortColumn';
-    const FILTER_SORT_DIRECTION = 'sortDirection';
-    const FILTER_EDIT_ID        = 'editId';
-    const FILTER_PARENT_EDIT_ID = 'parentEditId';
-
-    const FILTER_TYPES = [
-        self::FILTER_SEARCH,
-        self::FILTER_PAGE,
-        self::FILTER_SORT_COLUMN,
-        self::FILTER_SORT_DIRECTION,
-        self::FILTER_EDIT_ID,
-        self::FILTER_PARENT_EDIT_ID,
-    ];
-
     /** @var int */
     private $page = 1;
 

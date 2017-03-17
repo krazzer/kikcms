@@ -75,6 +75,21 @@ return [
             'alias'   => 'Alias',
         ],
 
+        'aliases' => [
+            'add'  => "Nieuwe alias",
+            'edit' => "Alias '<i>:name</i>' bewerken",
+        ],
+
+        'menus' => [
+            'add'  => "Nieuw menu",
+            'edit' => "Menu '<i>:name</i>' bewerken",
+        ],
+
+        'links'    => [
+            'add'  => "Nieuwe link",
+            'edit' => "Link '<i>:name</i>' bewerken",
+        ],
+
         'subProducts' => [
             'add'       => "Nieuw sub product",
             'edit'      => "Sub product ':title' bewerken",

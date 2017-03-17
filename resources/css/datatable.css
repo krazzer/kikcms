@@ -23,7 +23,6 @@ body .datatableThumbHoverContainer {
     max-height: 96px;
     border-radius: 3px;
     border: 1px solid #e1e1e1; }
-
 body.noSelect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -405,7 +404,6 @@ body.noSelect {
 body.isDragging * {
     cursor: default !important;
 }
-
 body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
     cursor: move !important;
 }
@@ -413,7 +411,6 @@ body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
 .datatable .table table tr.dragged {
     opacity: .3;
 }
-
 .datatable .table table tr.dragHover {
     cursor: move;
 }

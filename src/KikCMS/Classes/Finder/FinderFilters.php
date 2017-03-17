@@ -7,14 +7,6 @@ use KikCMS\Classes\Renderable\Filters;
 
 class FinderFilters extends Filters
 {
-    const FILTER_SEARCH    = 'search';
-    const FILTER_FOLDER_ID = 'folderId';
-
-    const FILTER_TYPES = [
-        self::FILTER_SEARCH,
-        self::FILTER_FOLDER_ID,
-    ];
-
     /** @var int */
     private $folderId = 0;
 

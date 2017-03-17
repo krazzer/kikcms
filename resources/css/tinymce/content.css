@@ -14,4 +14,10 @@
     .mce-content-body table tr:nth-child(even) {
       background: #FAFAFA; }
 
+.mce-content-body table td, .mce-content-body table th {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+
 /*# sourceMappingURL=content.css.map */

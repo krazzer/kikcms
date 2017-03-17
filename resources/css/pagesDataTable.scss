@@ -15,6 +15,13 @@
     cursor: move;
 }
 
+.datatable .toolbar .pageTypes {
+
+    a {
+        cursor: pointer;
+    }
+}
+
 .datatable .table table tbody tr {
 
     &.pageObject {

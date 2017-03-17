@@ -7,10 +7,6 @@ use KikCMS\Classes\Renderable\Filters;
 
 class DataFormFilters extends Filters
 {
-    const FILTER_TYPES = [];
-
-    const FILTER_EDIT_ID = null;
-
     /** @var int|null */
     private $editId;
 

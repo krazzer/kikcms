@@ -45,6 +45,11 @@ class Routing
         ]);
 
         /** Pages DataTable */
+        $router->add("/cms/datatable/pages/:action", [
+            "controller" => "pages-data-table",
+            "action"     => 1
+        ]);
+
         $router->add("/cms/datatable/pages/tree-order", "PagesDataTable::treeOrder");
 
         /** DataTable / WebForm */

@@ -57,7 +57,8 @@ class PageService extends Injectable
     {
         return Page::findFirst([
             'conditions' => 'lft < :lft: AND rgt > :rgt:',
-            'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt]
+            'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt],
+            'order'      => Page::FIELD_LFT . ' asc',
         ]);
     }
 }

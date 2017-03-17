@@ -4,7 +4,7 @@
 /* Default paddings and margins */
 html, body {
   height: 100%;
-  -webkit-font-smoothing: subpixel-antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 body, table {
@@ -74,8 +74,9 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
   opacity: 0.7; }
 
-.easeOutBgColor, tr.easeOutBgColor td {
-  transition: background-color 0.5s; }
+.easeOutBgColor, .datatable .table table tbody tr.easeOutBgColor td {
+    transition: background-color 1s;
+}
 
 .files-container .file .thumb, .webForm .type-file .preview {
   border-radius: 3px;

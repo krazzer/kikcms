@@ -2,7 +2,7 @@
 
 {% block additionalButtons %}
 
-    <div class="dropdown">
+    <div class="pageTypes dropdown">
 
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
@@ -13,15 +13,18 @@
         </button>
 
         <ul class="dropdown-menu">
-            <li><a href="#"><span class="glyphicon glyphicon-link"></span> &nbsp;{{ tl('dataTables.pages.link') }}</a>
+            <li>
+                <a data-type="link">
+                    <span class="glyphicon glyphicon-link"></span> &nbsp;{{ tl('dataTables.pages.link') }}
+                </a>
             </li>
             <li>
-                <a href="#">
+                <a data-type="menu">
                     <span class="glyphicon glyphicon-menu-hamburger"></span>&nbsp;{{ tl('dataTables.pages.menu') }}
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a data-type="alias">
                     <span class="glyphicon glyphicon-share-alt"></span> &nbsp;{{ tl('dataTables.pages.alias') }}
                 </a>
             </li>

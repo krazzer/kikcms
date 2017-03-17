@@ -4,10 +4,13 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\DataTable\PageRearrangeService;
+use KikCMS\Services\DataTable\PagesDataTableFilters;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -23,9 +26,6 @@ class Pages extends DataTable
 
     /** @inheritdoc */
     protected $orderableFields = ['id' => 'p.id'];
-
-    /** @inheritdoc */
-    protected $labels = 'dataTables.pages';
 
     /** @inheritdoc */
     protected $preLoadWysiwygJs = true;
@@ -65,6 +65,44 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
+    public function getEmptyFilters(): Filters
+    {
+        return new PagesDataTableFilters();
+    }
+
+    /**
+     * @return PagesDataTableFilters|Filters
+     */
+    public function getFilters(): Filters
+    {
+        return parent::getFilters();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLabels(): string
+    {
+        switch ($this->getFilters()->getPageType()) {
+            case Page::TYPE_MENU:
+                return 'dataTables.menus';
+            break;
+
+            case Page::TYPE_LINK:
+                return 'dataTables.links';
+            break;
+
+            case Page::TYPE_ALIAS:
+                return 'dataTables.aliases';
+            break;
+        }
+
+        return 'dataTables.pages';
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getModel(): string
     {
         return Page::class;
@@ -75,6 +113,12 @@ class Pages extends DataTable
      */
     public function getFormClass(): string
     {
+        switch ($this->getFilters()->getPageType()) {
+            case Page::TYPE_MENU:
+                return MenuForm::class;
+            break;
+        }
+
         return PageForm::class;
     }
 

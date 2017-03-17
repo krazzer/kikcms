@@ -1,17 +1,21 @@
 var PagesDataTable = DataTable.extend({
+    actionPath: '/cms/datatable/pages/',
     templateId: null,
 
-    /**
-     * Override default init to initialize additional behaviour
-     */
     init: function () {
         this.$.init.call(this);
         this.initTemplateSwitch();
+        this.initPageTypeMenu();
     },
 
-    /**
-     * Override default init to initialize additional behaviour
-     */
+    initPageTypeMenu: function () {
+        var self = this;
+
+        this.getDataTable().find('.pageTypes ul li a').click(function () {
+            self.actionAdd({'pageType': $(this).attr('data-type')});
+        });
+    },
+
     initTable: function () {
         this.$.initTable.call(this);
         this.initTreeSortControl();
@@ -58,6 +62,12 @@ var PagesDataTable = DataTable.extend({
 
         if (this.templateId) {
             filters.templateId = this.templateId;
+        }
+
+        var pageType = this.getWindow().find('input[name=type]').val();
+
+        if (pageType) {
+            filters.pageType = pageType;
         }
 
         return filters;
