@@ -14,5 +14,10 @@
         tr:nth-child(even) {
             background: #FAFAFA
         }
+
+        td, th {
+            @include fontDefault();
+            font-size: 14px;
+        }
     }
 }
