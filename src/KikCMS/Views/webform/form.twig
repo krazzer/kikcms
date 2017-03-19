@@ -13,7 +13,7 @@
     {% if errorContainer.hasFormErrors %}
         {% for error in errorContainer.formErrors %}
             <div class="alert alert-danger">
-                <i class="glyphicon glyphicon-warning-sign"></i> {{ error }}
+                <i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}
             </div>
         {% endfor %}
     {% endif %}
