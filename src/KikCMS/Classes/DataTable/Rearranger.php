@@ -5,7 +5,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Model\Model;
-use KikCMS\Services\Model\PageService;
+use KikCMS\Services\Pages\PageService;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
 

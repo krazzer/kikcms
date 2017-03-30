@@ -41,6 +41,7 @@ return [
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
         'closeWarning'      => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten dit venster sluiten?',
+        'switchWarning'     => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten doorgaan?',
         'pickFile'          => 'Bestand kiezen',
         'sort'              => 'Volgorde slepen',
 
@@ -56,7 +57,7 @@ return [
     ],
 
     'dataTables' => [
-        'products' => [
+        'products'       => [
             'add'       => "Nieuw product",
             'edit'      => "Product '<i>:title</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount producten verwijderen?",
@@ -68,11 +69,10 @@ return [
             'edit'      => "Pagina '<i>:name</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
             'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
-
-            'addItem' => 'Nieuw...',
-            'menu'    => 'Menu',
-            'link'    => 'Link',
-            'alias'   => 'Alias',
+            'addItem'   => 'Nieuw...',
+            'menu'      => 'Menu',
+            'link'      => 'Link',
+            'alias'     => 'Alias',
         ],
 
         'aliases' => [
@@ -85,16 +85,37 @@ return [
             'edit' => "Menu '<i>:name</i>' bewerken",
         ],
 
-        'links'    => [
+        'links' => [
             'add'  => "Nieuwe link",
             'edit' => "Link '<i>:name</i>' bewerken",
         ],
 
         'subProducts' => [
             'add'       => "Nieuw sub product",
-            'edit'      => "Sub product ':title' bewerken",
+            'edit'      => "Sub product '<i>:title</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount sub producten verwijderen?",
             'deleteOne' => "Wilt u zeker weten dit sub product verwijderen?",
+        ],
+
+        'templates' => [
+            'add'       => "Nieuwe template",
+            'edit'      => "Template '<i>:name</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount templates verwijderen?",
+            'deleteOne' => "Wilt u zeker weten deze template verwijderen?",
+        ],
+
+        'fields' => [
+            'add'       => "Nieuw veld",
+            'edit'      => "Veld '<i>:name</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount velden verwijderen?",
+            'deleteOne' => "Wilt u zeker weten dit veld verwijderen?",
+        ],
+
+        'templateFields' => [
+            'add'       => "Nieuw template veld",
+            'edit'      => "Template veld '<i>:name</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount template velden verwijderen?",
+            'deleteOne' => "Wilt u zeker weten dit template veld verwijderen?",
         ],
     ],
 
@@ -219,22 +240,27 @@ return [
     'error'  => [
         '401' => [
             'title'       => 'Geen toegang',
-            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
+            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel 
+                toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
         ],
 
         '404' => [
             'title'       => 'Pagina niet gevonden',
-            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op met de webmaster.",
+            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij 
+                verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op met de 
+                webmaster.",
         ],
 
         '440' => [
             'title'       => 'Sessie verlopen',
-            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al in een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
+            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al in 
+                een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
         ],
 
         '500' => [
             'title'       => 'Interne fout',
-            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij zullen het probleem zo spoedig mogelijk oplossen.",
+            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij 
+                zullen het probleem zo spoedig mogelijk oplossen.",
         ],
 
         'unknown' => [

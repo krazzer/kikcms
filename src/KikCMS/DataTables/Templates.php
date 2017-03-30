@@ -9,6 +9,7 @@ use KikCMS\Models\Template;
 
 class Templates extends DataTable
 {
+    /** @inheritdoc */
     protected $sortable = true;
 
     /**
@@ -17,6 +18,14 @@ class Templates extends DataTable
     public function getFormClass(): string
     {
         return TemplateForm::class;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLabels(): string
+    {
+        return 'dataTables.templates';
     }
 
     /**

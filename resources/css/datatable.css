@@ -24,11 +24,11 @@ body .datatableThumbHoverContainer {
     border-radius: 3px;
     border: 1px solid #e1e1e1; }
 body.noSelect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 :root > body.datatableBlur {
@@ -238,6 +238,30 @@ body.noSelect {
     padding: 30px 100px 30px 50px;
     border-bottom: 1px solid #e1e1e1;
     width: 100%; }
+
+.dataTableWindow > .windowContent > .header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.dataTableWindow > .windowContent > .header .lbl {
+  float: left;
+  width: 50%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.dataTableWindow > .windowContent > .header .filters {
+  text-align: right;
+  float: right;
+}
+
+.dataTableWindow > .windowContent > .header .filters select {
+  width: 200px;
+  text-indent: 5px;
+}
   .dataTableWindow > .windowContent > .tabs {
     border-bottom: 1px solid #e1e1e1;
     white-space: nowrap;
@@ -319,7 +343,7 @@ body.noSelect {
       .datatable .table table tbody tr {
         cursor: default; }
         .datatable .table table tbody tr td {
-            transition: padding 0.3s;
+          transition: padding 0.3s;
           -webkit-touch-callout: none;
           -webkit-user-select: none;
           -moz-user-select: none;
@@ -366,7 +390,7 @@ body.noSelect {
             margin-top: -2px; }
 
 .datatable .table table tbody tr td.sort {
-    cursor: move;
+  cursor: move;
 }
 
 .datatable .table table tbody tr:hover td.edit .glyphicon, .datatable .table table tbody tr:hover td.sort .glyphicon {
@@ -379,44 +403,44 @@ body.noSelect {
   clear: both; }
 
 .draggedObject {
-    display: block;
-    z-index: 3;
-    position: absolute;
-    pointer-events: none;
-    opacity: .95;
+  display: block;
+  z-index: 3;
+  position: absolute;
+  pointer-events: none;
+  opacity: .95;
 }
 
 .draggedObject.rowClone {
     background-color: #fff;
     -webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
-    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .draggedObject.rowClone td {
-    padding: 8px 15px;
+  padding: 8px 15px;
 }
 
 .draggedObject.rowClone .edit .glyphicon, .draggedObject.rowClone .sort .glyphicon {
-    display: none;
+  display: none;
 }
 
 body.isDragging * {
-    cursor: default !important;
+  cursor: default !important;
 }
 body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
-    cursor: move !important;
+  cursor: move !important;
 }
 
 .datatable .table table tr.dragged {
-    opacity: .3;
+  opacity: .3;
 }
 .datatable .table table tr.dragHover {
-    cursor: move;
+  cursor: move;
 }
 
 .datatable .table table tr.dragHover[data-drop="before"] td, .datatable .table table tr.dragHover[data-drop="after"] + tr td {
-    padding-top: 44px;
+  padding-top: 44px;
 }
 
 /*# sourceMappingURL=datatable.css.map */

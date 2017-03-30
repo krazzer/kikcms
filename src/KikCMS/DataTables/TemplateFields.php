@@ -37,6 +37,14 @@ class TemplateFields extends DataTable
     /**
      * @inheritdoc
      */
+    public function getLabels(): string
+    {
+        return 'dataTables.templateFields';
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getModel(): string
     {
         return TemplateField::class;

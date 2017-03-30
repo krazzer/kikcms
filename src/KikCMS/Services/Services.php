@@ -16,8 +16,8 @@ use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
 use KikCMS\Services\DataTable\PageRearrangeService;
-use KikCMS\Services\Model\PageService;
-use KikCMS\Services\Model\TemplateService;
+use KikCMS\Services\Pages\PageService;
+use KikCMS\Services\Pages\TemplateService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
@@ -48,6 +48,7 @@ class Services extends BaseServices
         TemplateService::class,
         PageService::class,
         PageRearrangeService::class,
+        LanguageService::class,
     ];
 
     /**

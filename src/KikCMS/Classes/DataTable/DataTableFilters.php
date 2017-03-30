@@ -25,6 +25,9 @@ class DataTableFilters extends Filters
     /** @var int */
     private $parentEditId = 0;
 
+    /** @var null|string */
+    private $languageCode = null;
+
     /**
      * @return int|null
      */
@@ -130,6 +133,24 @@ class DataTableFilters extends Filters
     public function setParentEditId(int $parentEditId): DataTableFilters
     {
         $this->parentEditId = $parentEditId;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLanguageCode()
+    {
+        return $this->languageCode;
+    }
+
+    /**
+     * @param string $languageCode
+     * @return DataTableFilters
+     */
+    public function setLanguageCode(string $languageCode)
+    {
+        $this->languageCode = $languageCode;
         return $this;
     }
 }

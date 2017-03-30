@@ -10,7 +10,7 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
-use KikCMS\Services\Model\TemplateService;
+use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Validation\Validator\PresenceOf;
 
 /**

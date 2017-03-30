@@ -235,8 +235,9 @@ var DataTable = Class.extend({
     },
 
     initWindow: function () {
-        var self    = this;
-        var $window = this.getWindow();
+        var self        = this;
+        var $window     = this.getWindow();
+        var $langSelect = $window.find('select[name=language]');
 
         this.initWindowSize();
         this.initTabs();
@@ -247,6 +248,10 @@ var DataTable = Class.extend({
 
         $window.find('.save').click(function () {
             self.actionSave(false);
+        });
+
+        this.onChange($langSelect, function () {
+            self.actionReloadWindow();
         });
 
         this.currentFormInput = this.getFormSerialized();
@@ -327,6 +332,16 @@ var DataTable = Class.extend({
         }, function () {
             self.closeWindow();
         });
+    },
+
+    actionReloadWindow: function () {
+        var editId = this.getWindow().find('#editId').val();
+
+        if (editId) {
+            this.actionEdit(editId);
+        } else {
+            this.actionAdd();
+        }
     },
 
     actionPage: function (page) {
@@ -496,6 +511,10 @@ var DataTable = Class.extend({
             filters.sortColumn    = $(this).attr('data-column');
         });
 
+        this.getWindow().find('select[name=language]').each(function () {
+            filters.languageCode = $(this).val();
+        });
+
         return filters;
     },
 
@@ -548,6 +567,31 @@ var DataTable = Class.extend({
     getWysiwygSelector: function () {
         var webFormId = this.getWindow().find('.webForm').attr("id");
         return '#' + webFormId + ' textarea.wysiwyg';
+    },
+
+    /**
+     * Execute given onChange event on given field, but warn the user if the form's input has changed
+     *
+     * @param $field
+     * @param onChange
+     */
+    onChange: function ($field, onChange) {
+        var self = this;
+
+        var currentValue;
+        var formSerialized;
+
+        $field.focus(function () {
+            currentValue   = $field.val();
+            formSerialized = self.getFormSerialized();
+        }).change(function () {
+            if (self.currentFormInput != formSerialized && !confirm(KikCMS.tl('dataTable.switchWarning'))) {
+                $field.val(currentValue);
+                return;
+            }
+
+            onChange();
+        });
     },
 
     updateToolbar: function () {

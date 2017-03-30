@@ -27,6 +27,7 @@ abstract class DataTable extends Renderable
         'dataTable.delete.confirmOne',
         'dataTable.delete.confirm',
         'dataTable.closeWarning',
+        'dataTable.switchWarning',
     ];
 
     /** @var DataForm */
@@ -56,6 +57,9 @@ abstract class DataTable extends Renderable
 
     /** @var string */
     protected $jsClass = 'DataTable';
+
+    /** @var bool */
+    protected $multiLingual = false;
 
     /** @var bool if you're fairly certain the user will use a wysiwyg editor, set this to true to preload the js
      * note that if you don't the editor will be loaded dynamically, but will load a bit slower */
@@ -451,8 +455,10 @@ abstract class DataTable extends Renderable
     public function renderWindow(string $template)
     {
         return $this->renderView($template, [
-            'tabs'       => $this->form->getTabs(),
-            'currentTab' => $this->form->getCurrentTab(),
+            'tabs'            => $this->form->getTabs(),
+            'currentTab'      => $this->form->getCurrentTab(),
+            'multiLingual'    => $this->multiLingual,
+            'currentLanguage' => $this->getFilters()->getLanguageCode(),
         ]);
     }
 

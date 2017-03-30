@@ -118,10 +118,29 @@ body {
     > .windowContent {
 
         > .header {
+            @include clearFix();
             font-size: 24px;
             padding: 30px 100px 30px 50px;
             border-bottom: 1px solid $lightGray;
             width: 100%;
+
+            .lbl {
+                float: left;
+                width: 50%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .filters {
+                text-align: right;
+                float: right;
+
+                select {
+                    width: 200px;
+                    text-indent: 5px;
+                }
+            }
         }
 
         > .tabs {

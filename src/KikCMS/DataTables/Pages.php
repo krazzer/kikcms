@@ -32,6 +32,9 @@ class Pages extends DataTable
     protected $preLoadWysiwygJs = true;
 
     /** @inheritdoc */
+    protected $multiLingual = true;
+
+    /** @inheritdoc */
     public $indexView = 'datatables/page/index';
 
     /** @inheritdoc */

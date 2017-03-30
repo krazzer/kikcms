@@ -21,6 +21,11 @@ class Fields extends DataTable
         return FieldForm::class;
     }
 
+    public function getLabels(): string
+    {
+        return 'dataTables.fields';
+    }
+
     /**
      * @inheritdoc
      */

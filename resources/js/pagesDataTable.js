@@ -1,11 +1,14 @@
 var PagesDataTable = DataTable.extend({
     actionPath: '/cms/datatable/pages/',
-    templateId: null,
 
     init: function () {
         this.$.init.call(this);
-        this.initTemplateSwitch();
         this.initPageTypeMenu();
+    },
+
+    initWindow: function () {
+        this.$.initWindow.call(this);
+        this.onChange(this.getTemplateField(), this.actionReloadWindow.bind(this));
     },
 
     initPageTypeMenu: function () {
@@ -32,43 +35,19 @@ var PagesDataTable = DataTable.extend({
     },
 
     /**
-     * Reload the datatable window if the template changes
-     */
-    initTemplateSwitch: function () {
-        var self = this;
-
-        $('body').on('change', '#template_id', function () {
-            var $templateField = $(this);
-            self.templateId    = $templateField.val();
-
-            var editId = $templateField.closest('form').find('#editId').val();
-
-            if (editId) {
-                self.actionEdit(editId);
-            } else {
-                self.actionAdd();
-            }
-
-            self.templateId = null;
-        });
-    },
-
-    /**
      * Overrides default DataTable getFilters to add the templateId parameters
      * @returns {*}
      */
     getFilters: function () {
         var filters = this.$.getFilters.call(this);
 
-        if (this.templateId) {
-            filters.templateId = this.templateId;
-        }
+        this.getTemplateField().each(function () {
+            filters.templateId = $(this).val();
+        });
 
-        var pageType = this.getWindow().find('input[name=type]').val();
-
-        if (pageType) {
-            filters.pageType = pageType;
-        }
+        this.getWindow().find('input[name=type]').each(function () {
+            filters.pageType = $(this).val();
+        });
 
         return filters;
     },
@@ -86,5 +65,13 @@ var PagesDataTable = DataTable.extend({
         KikCMS.action('/cms/datatable/pages/tree-order', parameters, function (result) {
             self.setTableContent(result.table);
         });
+    },
+
+    /**
+     * Get the field where you can choose a template
+     * @returns {*|{}}
+     */
+    getTemplateField: function () {
+        return this.getWindow().find('#template_id');
     }
 });

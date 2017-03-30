@@ -4,14 +4,15 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Services\LanguageService;
 
 /**
  * @property DbService $dbService
+ * @property LanguageService $languageService
  */
 class DataTableController extends BaseController
 {
@@ -206,6 +207,10 @@ class DataTableController extends BaseController
         $filters->setByArray($this->request->getPost());
 
         $dataTable->setFilters($filters);
+
+        if ( ! $dataTable->getFilters()->getLanguageCode()) {
+            $dataTable->getFilters()->setLanguageCode($this->languageService->getDefaultLanguageCode());
+        }
 
         return $dataTable;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Services\Model;
+namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Models\Field;
