@@ -30,14 +30,18 @@ class Autocomplete extends Field
 
     /**
      * @param string $sourceModel
+     * @param bool $addValidator set to false if the value can be something else than the model
      * @return $this
      */
-    public function setSourceModel(string $sourceModel)
+    public function setSourceModel(string $sourceModel, $addValidator = true)
     {
         $this->sourceModel = $sourceModel;
 
         $this->form->addFieldTransformer(new NameToId($this));
-        $this->getElement()->addValidator(new NameExists([NameExists::OPTION_MODEL => $sourceModel]));
+
+        if ($addValidator) {
+            $this->getElement()->addValidator(new NameExists([NameExists::OPTION_MODEL => $sourceModel]));
+        }
 
         return $this;
     }

@@ -17,6 +17,7 @@ use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldStorage;
+use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * @property DbService $dbService
@@ -197,7 +198,14 @@ abstract class DataForm extends WebForm
             ->addFrom($this->getModel())
             ->andWhere('id = ' . $editId);
 
-        $data = $query->getQuery()->execute()->getFirst()->toArray();
+        /** @var Simple $returnData */
+        $returnData = $query->getQuery()->execute()->getFirst();
+
+        if ( ! $returnData) {
+            return [];
+        }
+
+        $data = $returnData->toArray();
         $data = $data + $this->getDataStoredElseWhere($editId);
         $data = $this->transformDataForDisplay($data);
 
@@ -329,8 +337,11 @@ abstract class DataForm extends WebForm
                 continue;
             }
 
+            $value = $this->transformInputForStorage($input, $key);
+            $value = $this->formatInputValue($value);
+
             //todo: pass languageCode
-            $this->fieldStorage[$key]->store($input[$key], $editId);
+            $this->fieldStorage[$key]->store($value, $editId);
         }
     }
 

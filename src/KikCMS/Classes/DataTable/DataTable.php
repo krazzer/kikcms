@@ -136,12 +136,13 @@ abstract class DataTable extends Renderable
      *
      * @param string $column
      * @param string $value
+     * @param array $rowData
      *
      * @return string
      */
-    public function formatValue(string $column, $value)
+    public function formatValue(string $column, $value, array $rowData = [])
     {
-        return $this->fieldFormatting[$column]($value);
+        return $this->fieldFormatting[$column]($value, $rowData);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace KikCMS\DataTables;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Forms\LinkForm;
 use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
@@ -117,6 +118,9 @@ class Pages extends DataTable
             case Page::TYPE_MENU:
                 return MenuForm::class;
             break;
+            case Page::TYPE_LINK:
+                return LinkForm::class;
+            break;
         }
 
         return PageForm::class;
@@ -149,13 +153,18 @@ class Pages extends DataTable
 
     /**
      * @param $value
+     * @param array $rowData
      * @return string
      */
-    protected function formatName($value)
+    protected function formatName($value, array $rowData)
     {
         // disable dragging / tree structure when sorting or searching
         if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
             return $value;
+        }
+
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
+            $value = '<span class="glyphicon glyphicon-link"></span> ' . $value;
         }
 
         return '<span class="name">' . $value . '</span>';

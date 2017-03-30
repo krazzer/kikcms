@@ -116,23 +116,12 @@ class FieldStorage extends Injectable
      *
      * @param $relationId
      * @param string $languageCode
-     *
      * @return mixed
      */
     public function getValue($relationId, $languageCode = 'nl')
     {
-        $existsQuery = new Builder();
-        $existsQuery->addFrom($this->tableModel);
+        $existsQuery = $this->getRelationQuery($relationId, $languageCode);
         $existsQuery->columns($this->field->getTableField());
-        $existsQuery->where($this->relationKey . ' = ' . $relationId);
-
-        foreach ($this->defaultValues as $field => $value) {
-            $existsQuery->andWhere($field . ' = ' . $this->db->escapeString($value));
-        }
-
-        if ($this->addLanguageCode) {
-            $existsQuery->andWhere($this->languageCodeField . ' = ' . $this->db->escapeString($languageCode));
-        }
 
         return $this->dbService->getValue($existsQuery);
     }
@@ -175,10 +164,48 @@ class FieldStorage extends Injectable
             $where[$this->languageCodeField] = $languageCode;
         }
 
-        if ($this->getValue($relationId, $languageCode) !== null) {
+        if ($this->relationRowExists($relationId, $languageCode)) {
             $this->dbService->update($this->getTableModel(), $set, $where);
         } else {
             $this->dbService->insert($this->getTableModel(), $set + $where);
         }
+    }
+
+    /**
+     * @param $relationId
+     * @param string $languageCode
+     * @return Builder
+     */
+    private function getRelationQuery($relationId, $languageCode = 'nl')
+    {
+        $relationQuery = new Builder();
+        $relationQuery->addFrom($this->tableModel);
+        $relationQuery->where($this->relationKey . ' = ' . $relationId);
+
+        foreach ($this->defaultValues as $field => $value) {
+            $relationQuery->andWhere($field . ' = ' . $this->db->escapeString($value));
+        }
+
+        if ($this->addLanguageCode) {
+            $relationQuery->andWhere($this->languageCodeField . ' = ' . $this->db->escapeString($languageCode));
+        }
+
+        return $relationQuery;
+    }
+
+    /**
+     * @param $relationId
+     * @param string $languageCode
+     * @return bool
+     */
+    private function relationRowExists($relationId, $languageCode = 'nl'): bool
+    {
+        $existsQuery = $this->getRelationQuery($relationId, $languageCode);
+
+        if (count($existsQuery->getQuery()->execute())) {
+            return true;
+        }
+
+        return false;
     }
 }

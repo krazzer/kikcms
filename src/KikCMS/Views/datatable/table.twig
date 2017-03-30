@@ -33,7 +33,7 @@
                 {% for key, value in row %}
                     <td>
                         {% if fieldFormatting[key] is defined %}
-                            {{ self.formatValue(key, value)|raw }}
+                            {{ self.formatValue(key, value, row)|raw }}
                         {% else %}
                             {{ value }}
                         {% endif %}
