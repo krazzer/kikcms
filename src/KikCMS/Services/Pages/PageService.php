@@ -10,31 +10,10 @@ use Phalcon\Mvc\Model\Query\Builder;
 /**
  * Service for handling Page Model objects
  *
- * @property DbService dbService
+ * @property DbService $dbService
  */
 class PageService extends Injectable
 {
-    /**
-     * @param Page $page
-     * @param Page $parentPage
-     *
-     * @return bool
-     */
-    public function isChildOf(Page $page, Page $parentPage): bool
-    {
-        $query = new Builder();
-        $query->from(Page::class);
-        $query->columns(Page::FIELD_ID);
-        $query->where('lft > :lft: AND rgt < :rgt:', [
-            'lft' => $parentPage->lft,
-            'rgt' => $parentPage->rgt,
-        ]);
-
-        $childIds = $this->dbService->getValues($query);
-
-        return in_array($page->id, $childIds);
-    }
-
     /**
      * @param Page $page
      * @return int
@@ -60,5 +39,26 @@ class PageService extends Injectable
             'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt],
             'order'      => Page::FIELD_LFT . ' asc',
         ]);
+    }
+
+    /**
+     * @param Page $page
+     * @param Page $parentPage
+     *
+     * @return bool
+     */
+    public function isChildOf(Page $page, Page $parentPage): bool
+    {
+        $query = new Builder();
+        $query->from(Page::class);
+        $query->columns(Page::FIELD_ID);
+        $query->where('lft > :lft: AND rgt < :rgt:', [
+            'lft' => $parentPage->lft,
+            'rgt' => $parentPage->rgt,
+        ]);
+
+        $childIds = $this->dbService->getValues($query);
+
+        return in_array($page->id, $childIds);
     }
 }

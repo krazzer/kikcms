@@ -16,6 +16,7 @@ use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
 use KikCMS\Services\DataTable\PageRearrangeService;
+use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use Monolog\ErrorHandler;
@@ -47,6 +48,7 @@ class Services extends BaseServices
     protected $autoDefineServices = [
         TemplateService::class,
         PageService::class,
+        PageLanguageService::class,
         PageRearrangeService::class,
         LanguageService::class,
     ];

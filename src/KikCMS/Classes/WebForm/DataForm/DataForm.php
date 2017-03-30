@@ -12,6 +12,7 @@ use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\StatusCodes;
+use KikCMS\Services\LanguageService;
 use Monolog\Logger;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
@@ -21,6 +22,7 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * @property DbService $dbService
+ * @property LanguageService $languageService
  * @property Logger $logger
  */
 abstract class DataForm extends WebForm
@@ -99,16 +101,17 @@ abstract class DataForm extends WebForm
      * Retrieve data from fields that are not stored in the current DataTable's Table
      *
      * @param int $id
+     * @param null $languageCode
      * @return array
      */
-    public function getDataStoredElseWhere(int $id): array
+    public function getDataStoredElseWhere(int $id, $languageCode = null): array
     {
         $data = [];
 
         /** @var Field $field */
         foreach ($this->getFields() as $key => $field) {
             if ($this->isStoredElsewhere($field)) {
-                $data[$key] = $this->fieldStorage[$field->getKey()]->getValue($id);
+                $data[$key] = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
             }
         }
 
@@ -138,11 +141,20 @@ abstract class DataForm extends WebForm
      */
     public function renderWithData()
     {
-        $editData = $this->getEditData();
+        $defaultLangCode = $this->languageService->getDefaultLanguageCode();
+        $editId          = $this->getFilters()->getEditId();
+
+        $editData        = $this->getEditData();
+        $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode);
+        $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
         foreach ($this->fields as $key => &$field) {
             if (array_key_exists($key, $editData)) {
                 $field->getElement()->setDefault($editData[$key]);
+            }
+
+            if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key]) {
+                $field->getElement()->setAttribute('placeholder', $defaultLangCode . ': ' . $defaultLangData[$key]);
             }
         }
 
@@ -183,7 +195,8 @@ abstract class DataForm extends WebForm
      */
     public function getEditData(): array
     {
-        $editId = $this->filters->getEditId();
+        $editId       = $this->getFilters()->getEditId();
+        $languageCode = $this->getFilters()->getLanguageCode();
 
         if ( ! $editId) {
             return [];
@@ -206,7 +219,7 @@ abstract class DataForm extends WebForm
         }
 
         $data = $returnData->toArray();
-        $data = $data + $this->getDataStoredElseWhere($editId);
+        $data         = $data + $this->getDataStoredElseWhere($editId, $languageCode);
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
@@ -340,8 +353,7 @@ abstract class DataForm extends WebForm
             $value = $this->transformInputForStorage($input, $key);
             $value = $this->formatInputValue($value);
 
-            //todo: pass languageCode
-            $this->fieldStorage[$key]->store($value, $editId);
+            $this->fieldStorage[$key]->store($value, $editId, $this->filters->getLanguageCode());
         }
     }
 

@@ -118,7 +118,7 @@ class FieldStorage extends Injectable
      * @param string $languageCode
      * @return mixed
      */
-    public function getValue($relationId, $languageCode = 'nl')
+    public function getValue($relationId, $languageCode = null)
     {
         $existsQuery = $this->getRelationQuery($relationId, $languageCode);
         $existsQuery->columns($this->field->getTableField());
@@ -155,7 +155,7 @@ class FieldStorage extends Injectable
      * @param int $relationId
      * @param string $languageCode
      */
-    public function store($value, $relationId, $languageCode = 'nl')
+    public function store($value, $relationId, $languageCode = null)
     {
         $set   = [$this->field->getTableField() => $value];
         $where = $this->defaultValues + [$this->getRelationKey() => $relationId];
@@ -176,7 +176,7 @@ class FieldStorage extends Injectable
      * @param string $languageCode
      * @return Builder
      */
-    private function getRelationQuery($relationId, $languageCode = 'nl')
+    private function getRelationQuery($relationId, $languageCode = null)
     {
         $relationQuery = new Builder();
         $relationQuery->addFrom($this->tableModel);

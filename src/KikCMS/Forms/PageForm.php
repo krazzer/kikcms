@@ -10,11 +10,13 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
+use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Validation\Validator\PresenceOf;
 
 /**
  * @property TemplateService $templateService
+ * @property PageLanguageService $pageLanguageService
  */
 class PageForm extends DataForm
 {
@@ -47,8 +49,13 @@ class PageForm extends DataForm
     public function getEditData(): array
     {
         $editData = parent::getEditData();
+        $pageId = $this->getFilters()->getEditId();
+
+        $defaultLangPage = $this->pageLanguageService->getByPageId($pageId);
 
         $editData[Page::FIELD_TEMPLATE_ID] = $this->getTemplateId();
+
+        $editData['pageName'] = $editData['name'] ?: $defaultLangPage->name;
 
         return $editData;
     }

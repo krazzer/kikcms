@@ -1,14 +1,5 @@
 {% extends '@kikcms/datatable/window.twig' %}
 
-{% block filters %}
-    {% if multiLingual %}
-        <select name="language" class="form-control">
-            <option value="nl"{{ currentLanguage == 'nl' ? ' selected' }}>Nederlands</option>
-            <option value="en"{{ currentLanguage == 'en' ? ' selected' }}>Engels</option>
-        </select>
-    {% endif %}
-{% endblock %}
-
 {% block headerTitle %}
     {{ tl(labels ~ '.edit', editData) ?: tl('dataTable.edit') }}
 {% endblock %}

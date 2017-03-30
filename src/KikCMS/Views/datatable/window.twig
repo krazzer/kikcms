@@ -12,7 +12,17 @@
 
 <div class="header">
     <div class="lbl">{% block headerTitle '' %}</div>
-    <div class="filters">{% block filters '' %}</div>
+    <div class="filters">
+        {% block filters %}
+            {% if multiLingual %}
+                {# todo: get these from the db #}
+                <select name="language" class="form-control">
+                    <option value="nl"{{ currentLanguage == 'nl' ? ' selected' }}>Nederlands</option>
+                    <option value="en"{{ currentLanguage == 'en' ? ' selected' }}>Engels</option>
+                </select>
+            {% endif %}
+        {% endblock %}
+    </div>
 </div>
 
 {% if tabs %}

@@ -66,7 +66,7 @@ return [
 
         'pages' => [
             'add'       => "Nieuwe pagina",
-            'edit'      => "Pagina '<i>:name</i>' bewerken",
+            'edit'      => "Pagina '<i>:pageName</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
             'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
             'addItem'   => 'Nieuw...',
@@ -240,27 +240,27 @@ return [
     'error'  => [
         '401' => [
             'title'       => 'Geen toegang',
-            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel 
-                toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
+            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
+                "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
         ],
 
         '404' => [
             'title'       => 'Pagina niet gevonden',
-            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij 
-                verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op met de 
-                webmaster.",
+            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij " .
+                "verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op " .
+                "met de webmaster.",
         ],
 
         '440' => [
             'title'       => 'Sessie verlopen',
-            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al in 
-                een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
+            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al " .
+                "in een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
         ],
 
         '500' => [
             'title'       => 'Interne fout',
-            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij 
-                zullen het probleem zo spoedig mogelijk oplossen.",
+            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij " .
+                "zullen het probleem zo spoedig mogelijk oplossen.",
         ],
 
         'unknown' => [

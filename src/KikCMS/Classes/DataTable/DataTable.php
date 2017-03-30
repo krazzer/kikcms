@@ -8,6 +8,7 @@ use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Services\LanguageService;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
@@ -15,6 +16,7 @@ use stdClass;
 
 /**
  * @property DbService $dbService;
+ * @property LanguageService $languageService;
  */
 abstract class DataTable extends Renderable
 {
@@ -178,7 +180,15 @@ abstract class DataTable extends Renderable
      */
     public function getFilters(): Filters
     {
-        return parent::getFilters();
+        /** @var DataTableFilters $filters */
+        $filters = parent::getFilters();
+
+        // make sure language code is default when empty
+        if ( ! $filters->getLanguageCode()) {
+            $filters->setLanguageCode($this->languageService->getDefaultLanguageCode());
+        }
+
+        return $filters;
     }
 
     /**
@@ -264,13 +274,15 @@ abstract class DataTable extends Renderable
             return;
         }
 
-        $instance  = $this->getInstance();
-        $formClass = $this->getFormClass();
-        $editId    = $this->filters->getEditId();
+        $instance     = $this->getInstance();
+        $formClass    = $this->getFormClass();
+        $editId       = $this->filters->getEditId();
+        $languageCode = $this->filters->getLanguageCode();
 
         /** @var DataForm $dataForm */
         $dataForm = new $formClass();
         $dataForm->getFilters()->setEditId($editId);
+        $dataForm->getFilters()->setLanguageCode($languageCode);
         $dataForm->initializeForm();
 
         $this->form = $dataForm;
