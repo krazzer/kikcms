@@ -12,7 +12,6 @@ use KikCMS\Services\LanguageService;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
-use stdClass;
 
 /**
  * @property DbService $dbService;
@@ -79,7 +78,7 @@ abstract class DataTable extends Renderable
     /** @var string */
     public $tableView = 'datatable/table';
 
-    /** @var StdClass */
+    /** @var TableData */
     private $tableData;
 
     /** @var int amount of rows shown on one page */
@@ -276,8 +275,8 @@ abstract class DataTable extends Renderable
 
         $instance     = $this->getInstance();
         $formClass    = $this->getFormClass();
-        $editId       = $this->filters->getEditId();
-        $languageCode = $this->filters->getLanguageCode();
+        $editId = $this->getFilters()->getEditId();
+        $languageCode = $this->getFilters()->getLanguageCode();
 
         /** @var DataForm $dataForm */
         $dataForm = new $formClass();
@@ -312,17 +311,9 @@ abstract class DataTable extends Renderable
         $this->addAssets();
 
         return $this->view->getPartial($this->indexView, [
-            'tableData'       => $this->getTableData()->items->toArray(),
-            'pagination'      => $this->getTableData(),
-            'headerData'      => $this->getTableHeaderData(),
-            'instanceName'    => $this->getInstance(),
-            'labels'          => $this->getLabels(),
+            'tableData'       => $this->getTableData(),
             'jsData'          => $this->getJsData(),
-            'parentEditId'    => $this->filters->getParentEditId(),
-            'isSearchable'    => count($this->searchableFields) > 0,
             'fieldFormatting' => $this->fieldFormatting,
-            'jsClass'         => $this->jsClass,
-            'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
     }
@@ -370,7 +361,7 @@ abstract class DataTable extends Renderable
     public function renderPagination()
     {
         return $this->renderView('pagination', [
-            'pagination' => $this->getTableData(),
+            'tableData' => $this->getTableData(),
         ]);
     }
 
@@ -382,11 +373,8 @@ abstract class DataTable extends Renderable
         $this->initializeDatatable();
 
         return $this->view->getPartial($this->tableView, [
-            'tableData'       => $this->getTableData()->items->toArray(),
-            'headerData'      => $this->getTableHeaderData(),
+            'tableData'       => $this->getTableData(),
             'fieldFormatting' => $this->fieldFormatting,
-            'filters'         => $this->filters,
-            'sortable'        => $this->sortable,
             'self'            => $this,
         ]);
     }
@@ -515,6 +503,17 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * Get a map of fields that are shown in the table header, where the key corresponds to the query result key
+     * e.g. ['name' => 'Name', 'category_name' => 'Category']
+     *
+     * @return array
+     */
+    protected function getTableFieldMap(): array
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     private function getNewIdsCacheKey()
@@ -523,34 +522,29 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return stdClass
+     * @return TableData
      */
-    private function getTableData()
+    private function getTableData(): TableData
     {
         if ($this->tableData) {
             return $this->tableData;
         }
 
-        $paginator = new QueryBuilder(array(
+        $paginate = (new QueryBuilder([
             "builder" => $this->getQuery(),
             "page"    => $this->filters->getPage(),
             "limit"   => $this->limit,
-        ));
+        ]))->getPaginate();
 
-        $this->tableData = $paginator->getPaginate();
+        $this->tableData = (new TableData())
+            ->setPages($paginate->pages)
+            ->setLimit($paginate->limit)
+            ->setCurrent($paginate->current)
+            ->setTotalItems($paginate->total_items)
+            ->setTotalPages($paginate->total_pages)
+            ->setDisplayMap($this->getTableFieldMap())
+            ->setData($paginate->items->toArray());
 
         return $this->tableData;
-    }
-
-    /**
-     * @return array
-     */
-    private function getTableHeaderData(): array
-    {
-        if ( ! $this->getTableData()->items->count()) {
-            return [];
-        }
-
-        return array_keys($this->getTableData()->items->getFirst()->toArray());
     }
 }

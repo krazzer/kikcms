@@ -1,26 +1,26 @@
 {# @var self \KikCMS\Classes\DataTable\DataTable #}
-{# @var filters \KikCMS\Classes\DataTable\Filters #}
+{# @var tableData \KikCMS\Classes\DataTable\TableData #}
 
-{% if(headerData) %}
+{% if(tableData.data) %}
     <table>
         <thead>
         <tr>
-            {% for name in headerData %}
+            {% for key, name in tableData.tableHeadColumns %}
                 {% set sortClass = '' %}
                 {% set sortDirection = '' %}
-                {% if filters.sortColumn == name %}
-                    {% if filters.sortDirection == 'asc' %}
+                {% if self.filters.sortColumn == key %}
+                    {% if self.filters.sortDirection == 'asc' %}
                         {% set sortClass = 'glyphicon glyphicon-sort-by-attributes' %}
-                    {% elseif filters.sortDirection == 'desc' %}
+                    {% elseif self.filters.sortDirection == 'desc' %}
                         {% set sortClass = 'glyphicon glyphicon-sort-by-attributes-alt' %}
                     {% endif %}
-                    {% set sortDirection = filters.sortDirection %}
+                    {% set sortDirection = self.filters.sortDirection %}
                 {% endif %}
-                <td data-column="{{ name }}" data-sort="{{ sortDirection }}">
-                    {{ name|capitalize }}<span class="{{ sortClass }}"></span>
+                <td data-column="{{ key }}" data-sort="{{ sortDirection }}">
+                    {{ name }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
-            {% if sortable %}
+            {% if self.sortable %}
                 <td></td>
             {% endif %}
             <td></td>
@@ -28,9 +28,9 @@
         </thead>
 
         <tbody>
-        {% for row in tableData %}
+        {% for index, row in tableData.data %}
             <tr data-id="{{ row.id }}" class="{% block tableRowClass '' %}" {% block tableRowAttr '' %}>
-                {% for key, value in row %}
+                {% for key, value in tableData.rowDisplayValues(index) %}
                     <td>
                         {% if fieldFormatting[key] is defined %}
                             {{ self.formatValue(key, value, row)|raw }}
@@ -39,7 +39,8 @@
                         {% endif %}
                     </td>
                 {% endfor %}
-                {% if sortable %}
+
+                {% if self.sortable %}
                     <td class="sort" title="{{ tl('dataTable.sort') }}">
                         <span class="glyphicon glyphicon-menu-hamburger"></span>
                     </td>

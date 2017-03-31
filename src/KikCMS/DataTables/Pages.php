@@ -5,6 +5,7 @@ namespace KikCMS\DataTables;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Classes\Translator;
 use KikCMS\Forms\LinkForm;
 use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
@@ -16,6 +17,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property PageRearrangeService $pageRearrangeService
+ * @property Translator $translator
  */
 class Pages extends DataTable
 {
@@ -146,7 +148,7 @@ class Pages extends DataTable
             ->groupBy('p.id')
             ->columns([
                 'pl.name', 'default_language_name' => 'pld.name', 'p.id', 'p.display_order', 'p.level', 'p.lft',
-                'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level'
+                'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active'
             ]);
 
         return $query;
@@ -155,9 +157,25 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
+    protected function getTableFieldMap(): array
+    {
+        return [
+            'name'   => $this->translator->tl('name'),
+            'active' => $this->translator->tl('active'),
+            'id'     => $this->translator->tl('id'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize()
     {
         $this->setFieldFormatting('name', [$this, 'formatName']);
+        $this->setFieldFormatting('type', [$this, 'formatType']);
+        $this->setFieldFormatting('active', function ($value) {
+            return $value ? '✓' : '';
+        });
     }
 
     /**
@@ -177,5 +195,14 @@ class Pages extends DataTable
         }
 
         return '<span class="name">' . $value . '</span>';
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    protected function formatType($value)
+    {
+        return $this->translator->tl('dataTables.pages.' . $value);
     }
 }

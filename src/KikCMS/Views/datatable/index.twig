@@ -1,5 +1,7 @@
 {# @var self \KikCMS\Classes\DataTable\DataTable #}
-<div class="datatable toolbarComponent" id="{{ instanceName }}" data-renderable="{{ jsData|json_encode }}">
+{# @var tableData \KikCMS\Classes\DataTable\TableData #}
+
+<div class="datatable toolbarComponent" id="{{ self.instance }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
         <div class="btn btn-default add">
             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -15,7 +17,7 @@
             <span class="lbl">{{ tl('delete') }}</span>
         </div>
 
-        {% if isSearchable %}
+        {% if self.searchableFields %}
             <div class="search">
                 <span class="glyphicon glyphicon-search"></span>
                 <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}"/>
@@ -24,7 +26,7 @@
         {% endif %}
 
         <div class="pages">
-            {% if pagination.total_pages > 1 %}
+            {% if tableData.totalPages > 1 %}
                 {% include '@kikcms/datatable/pagination.twig' %}
             {% endif %}
         </div>
@@ -36,7 +38,7 @@
 
     <div class="footer">
         <div class="pages">
-            {% if pagination.total_pages > 1 %}
+            {% if tableData.totalPages > 1 %}
                 {% include '@kikcms/datatable/pagination.twig' %}
             {% endif %}
         </div>

@@ -3,6 +3,10 @@
 return [
     'delete' => 'Verwijderen',
     'cancel' => 'Annuleer',
+    'name'   => 'Naam',
+    'id'     => 'Id',
+    'type'   => 'Type',
+    'active' => 'Actief',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
@@ -57,7 +61,7 @@ return [
     ],
 
     'dataTables' => [
-        'products'       => [
+        'products' => [
             'add'       => "Nieuw product",
             'edit'      => "Product '<i>:title</i>' bewerken",
             'delete'    => "Wilt u zeker weten deze :amount producten verwijderen?",
@@ -70,6 +74,7 @@ return [
             'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
             'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
             'addItem'   => 'Nieuw...',
+            'page'      => 'Pagina',
             'menu'      => 'Menu',
             'link'      => 'Link',
             'alias'     => 'Alias',

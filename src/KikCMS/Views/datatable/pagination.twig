@@ -1,11 +1,13 @@
-{% set totalsText = tl('dataTable.pages.total') ~ ': ' ~ pagination.total_items %}
-{% set amountPerPageText = tl('dataTable.pages.amountPerPage') ~ ': ' ~ pagination.limit %}
+{# @var tableData \KikCMS\Classes\DataTable\TableData #}
 
-{% if pagination.total_items > pagination.limit %}
+{% set totalsText = tl('dataTable.pages.total') ~ ': ' ~ tableData.totalItems %}
+{% set amountPerPageText = tl('dataTable.pages.amountPerPage') ~ ': ' ~ tableData.limit %}
+
+{% if tableData.totalItems > tableData.limit %}
     <ul class="pagination" title="{{ totalsText }}, {{ amountPerPageText }}">
-    {% for page in pagination.pages %}
+        {% for page in tableData.pages %}
         {% if page %}
-            <li class="{{ page == pagination.current ? 'active' : '' }}"><a data-page="{{ page }}">{{ page }}</a></li>
+            <li class="{{ page == tableData.current ? 'active' : '' }}"><a data-page="{{ page }}">{{ page }}</a></li>
         {% else %}
             <li class="disabled"><a>...</a></li>
         {% endif %}
