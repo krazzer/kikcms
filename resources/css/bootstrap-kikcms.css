@@ -41,7 +41,8 @@ textarea.form-control {
   .btn-submit.disabled:hover, .btn-primary.disabled:hover {
     background-color: #c8116d;
     border-color: #c8116d; }
-  .btn-submit:active, .btn-submit:focus, .btn-submit:active:focus, .btn-submit:active:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:active:focus, .btn-primary:active:hover {
+
+.btn-submit:active, .btn-submit:focus, .btn-submit:active:focus, .btn-submit:active:hover, .btn-submit.active, .btn-primary:active, .btn-primary:focus, .btn-primary:active:focus, .btn-primary:active:hover, .btn-primary.active {
     color: #ffffff;
     background-color: #990d53;
     border-color: #990d53; }

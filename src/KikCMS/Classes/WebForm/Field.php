@@ -72,6 +72,17 @@ class Field
     }
 
     /**
+     * @param string $value
+     * @return $this|Field
+     */
+    public function setPlaceholder(string $value): Field
+    {
+        $this->setAttribute('placeholder', $value);
+
+        return $this;
+    }
+
+    /**
      * @return Element
      */
     public function getElement(): Element

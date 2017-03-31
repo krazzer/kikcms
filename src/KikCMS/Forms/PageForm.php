@@ -4,6 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Field;
 use KikCMS\Models\Page;
@@ -12,11 +13,15 @@ use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
+use KikCMS\Services\Pages\UrlService;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
+use Phalcon\Validation\Validator\StringLength;
 
 /**
  * @property TemplateService $templateService
  * @property PageLanguageService $pageLanguageService
+ * @property UrlService $urlService
  */
 class PageForm extends DataForm
 {
@@ -36,11 +41,22 @@ class PageForm extends DataForm
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
 
+        $urlValidation = [
+            new PresenceOf(),
+            new Regex(['pattern' => '/^$|^([0-9a-z\-]+)$/', 'message' => $this->translator->tl('webform.messages.slug')]),
+            new StringLength(["max" => 255]),
+        ];
+
         $this->addTab($this->translator->tl('advanced'), [
             $templateField,
+
+            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('url'), $urlValidation)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
+                ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
+
             $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
-                ->setDefault(1),
+                ->setDefault(1)
         ]);
     }
 
@@ -69,6 +85,27 @@ class PageForm extends DataForm
     public function getModel(): string
     {
         return Page::class;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validate(array $input): ErrorContainer
+    {
+        $errorContainer = parent::validate($input);
+
+        if ( ! $url = $input['url']) {
+            return $errorContainer;
+        }
+
+        $parentId     = $this->getParentId();
+        $pageLanguage = $this->getPageLanguage();
+
+        if ($this->urlService->urlExists($url, $parentId, $pageLanguage)) {
+            $errorContainer->addFieldError('url', $this->translator->tl('dataTables.pages.urlExists'));
+        }
+
+        return $errorContainer;
     }
 
     private function addFieldsForCurrentTemplate()
@@ -136,5 +173,36 @@ class PageForm extends DataForm
         $firstTemplate = $this->templateService->getDefaultTemplate();
 
         return (int) $firstTemplate->id;
+    }
+
+    /**
+     * @return null|int
+     */
+    private function getParentId()
+    {
+        $pageId = $this->getFilters()->getEditId();
+
+        if ( ! $pageId) {
+            return null;
+        }
+
+        $page = Page::getById($pageId);
+
+        return (int) $page->parent_id;
+    }
+
+    /**
+     * @return PageLanguage|null
+     */
+    private function getPageLanguage()
+    {
+        $pageId       = $this->getFilters()->getEditId();
+        $languageCode = $this->getFilters()->getLanguageCode();
+
+        if ( ! $pageId) {
+            return null;
+        }
+
+        return $this->pageLanguageService->getByPageId($pageId, $languageCode);
     }
 }

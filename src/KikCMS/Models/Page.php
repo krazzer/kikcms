@@ -30,6 +30,17 @@ class Page extends Model
      */
     public static function getById($id)
     {
-        return parent::getById($id);
+        /** @var Page $page */
+        $page = parent::getById($id);
+
+        return $page;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return (int) $this->id;
     }
 }

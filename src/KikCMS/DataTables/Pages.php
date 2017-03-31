@@ -150,7 +150,7 @@ class Pages extends DataTable
             ->groupBy('p.id')
             ->columns([
                 'pld.name AS default_language_name', 't.name AS template', 'pl.name', 'p.id', 'p.display_order',
-                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active'
+                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url'
             ]);
 
         return $query;
@@ -164,6 +164,7 @@ class Pages extends DataTable
         return [
             'name'     => $this->translator->tl('name'),
             'template' => $this->translator->tl('template'),
+            'url'      => $this->translator->tl('url'),
             'id'       => $this->translator->tl('id'),
         ];
     }

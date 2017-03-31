@@ -34,6 +34,18 @@ var PagesDataTable = DataTable.extend({
         treeSortControl.init();
     },
 
+    actionSave: function (closeWindow) {
+        var pageName = this.getForm().find('input[name=name]').val();
+
+        this.getForm().find('input[name=url]').each(function () {
+            if (!$(this).val()) {
+                $(this).val(KikCMS.toSlug(pageName));
+            }
+        });
+
+        this.$.actionSave.call(this, closeWindow);
+    },
+
     /**
      * Overrides default DataTable getFilters to add the templateId parameters
      * @returns {*}

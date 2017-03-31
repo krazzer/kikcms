@@ -730,11 +730,9 @@ abstract class WebForm extends Renderable
     private function updateFieldsByPostData()
     {
         foreach ($this->fields as $key => $field) {
-            $element = $field->getElement();
-
             // set unposted checkboxes to default 0
             if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
-                $element->setDefault(0);
+                $field->setDefault(0);
             }
 
             // re-use earlier generated dataTable instance
@@ -742,7 +740,7 @@ abstract class WebForm extends Renderable
                 $instance = $this->request->getPost($key);
                 /** @var DataTableField $field */
                 $field->getDataTable()->setInstance($instance);
-                $this->getField($key)->getElement()->setDefault($instance);
+                $field->setDefault($instance);
             }
         }
     }

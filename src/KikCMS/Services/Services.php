@@ -19,6 +19,7 @@ use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
+use KikCMS\Services\Pages\UrlService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
@@ -51,6 +52,7 @@ class Services extends BaseServices
         PageLanguageService::class,
         PageRearrangeService::class,
         LanguageService::class,
+        UrlService::class,
     ];
 
     /**

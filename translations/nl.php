@@ -9,6 +9,7 @@ return [
     'active'   => 'Actief',
     'advanced' => 'Geavanceerd',
     'template' => 'Template',
+    'url' => 'Url',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
@@ -71,16 +72,18 @@ return [
         ],
 
         'pages' => [
-            'add'       => "Nieuwe pagina",
-            'edit'      => "Pagina '<i>:pageName</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount pagina's verwijderen?",
-            'deleteOne' => "Wilt u zeker weten deze pagina verwijderen?",
-            'addItem'   => 'Nieuw...',
-            'page'      => 'Pagina',
-            'menu'      => 'Menu',
-            'link'      => 'Link',
-            'alias'     => 'Alias',
-            'titles'    => [
+            'add'            => "Nieuwe pagina",
+            'edit'           => "Pagina '<i>:pageName</i>' bewerken",
+            'delete'         => "Wilt u zeker weten deze :amount pagina's verwijderen?",
+            'deleteOne'      => "Wilt u zeker weten deze pagina verwijderen?",
+            'addItem'        => 'Nieuw...',
+            'page'           => 'Pagina',
+            'menu'           => 'Menu',
+            'link'           => 'Link',
+            'alias'          => 'Alias',
+            'urlPlaceholder' => 'Laat leeg om een url te genereren a.d.h.v. pagina naam',
+            'urlExists'      => 'De gekozen url is al in gebruik',
+            'titles'         => [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
                 'inactive' => 'Deze pagina is niet zichtbaar',
             ],
@@ -191,12 +194,13 @@ return [
             'Url'               => 'Het veld :label moet een geldige url zijn',
             'CreditCard'        => 'Het veld :label moet een geldig credit card nummer zijn',
             'Date'              => 'Het veld :label moet een geldige datum zijn',
-            'NameExists'        => 'De waarde van het veld :label is niet geldig',
-            'FinderFileType'    => 'Het bestand mag alleen van de volgende types zijn: :types',
+            'NameExists'     => 'De waarde van het veld :label is niet geldig',
+            'FinderFileType' => 'Het bestand mag alleen van de volgende types zijn: :types',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
             'fieldErrors'      => 'Niet alle velden zijn goed ingevuld. Loop het formulier na op fouten of ontbrekende gegevens.',
+            'slug'           => "Het veld :label mag alleen kleine letters, getallen en '-' bevatten",
         ],
 
         'defaultSendLabel' => 'Versturen',

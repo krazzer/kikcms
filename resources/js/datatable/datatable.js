@@ -44,6 +44,7 @@ var DataTable = Class.extend({
         this.initPagination();
         this.initSearch();
         this.initButtons();
+        this.initKeyEvents();
     },
 
     initButtons: function () {
@@ -105,6 +106,43 @@ var DataTable = Class.extend({
             window.open($(this).attr('data-url'));
             e.stopPropagation();
         });
+    },
+
+    initKeyEvents: function () {
+        var self    = this;
+        var iframes = {};
+
+        var keyDownEvent = function (e) {
+            if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
+                if (self.getForm().length) {
+                    self.actionSave(true);
+                    self.getWindow().find('.saveAndClose').addClass('active');
+                    e.preventDefault();
+                }
+            }
+        };
+
+        var onFindingIframe = function () {
+            var id = $(this).attr('id');
+
+            if (iframes[id]) {
+                return;
+            }
+
+            iframes[id] = id;
+
+            var $iframeDocument = $(this.contentWindow.document);
+            $iframeDocument.keydown(keyDownEvent);
+        };
+
+        var checkIframe = function () {
+            $('body').find('iframe').each(onFindingIframe);
+            setTimeout(checkIframe, 1000);
+        };
+
+        checkIframe();
+
+        $(window).keydown(keyDownEvent);
     },
 
     initPagination: function () {
@@ -516,6 +554,10 @@ var DataTable = Class.extend({
         });
 
         return filters;
+    },
+
+    getForm: function () {
+        return this.getWindow().find('form');
     },
 
     getSearchField: function () {

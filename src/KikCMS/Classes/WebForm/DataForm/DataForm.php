@@ -142,6 +142,7 @@ abstract class DataForm extends WebForm
     public function renderWithData()
     {
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();
+        $currentLangCode = $this->getFilters()->getLanguageCode();
         $editId          = $this->getFilters()->getEditId();
 
         $editData        = $this->getEditData();
@@ -153,8 +154,8 @@ abstract class DataForm extends WebForm
                 $field->setDefault($editData[$key]);
             }
 
-            if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key]) {
-                $field->getElement()->setAttribute('placeholder', $defaultLangCode . ': ' . $defaultLangData[$key]);
+            if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key] && $currentLangCode != $defaultLangCode) {
+                $field->setPlaceholder($defaultLangCode . ': ' . $defaultLangData[$key]);
             }
         }
 
@@ -227,44 +228,31 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * Format the forms' input for database insertion
+     *
+     * @param mixed $value
+     * @return mixed|null
+     */
+    private function formatInputValueForStorage($value)
+    {
+        // convert empty string to null
+        if ($value === '') {
+            return null;
+        }
+
+        if (is_array($value) || is_object($value)) {
+            return json_encode($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @return Filters|DataFormFilters
      */
     public function getEmptyFilters(): Filters
     {
         return new DataFormFilters();
-    }
-
-    /**
-     * @param array $input
-     * @return bool
-     */
-    private function saveData(array $input): bool
-    {
-        $storageData = $this->getStorageData($input);
-
-        $this->db->begin();
-
-        try {
-            if (isset($input[DataTable::EDIT_ID])) {
-                $editId = $input[DataTable::EDIT_ID];
-                $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
-            } else {
-                $editId = $this->dbService->insert($this->getModel(), $storageData->getDataStoredInTable());
-            }
-
-            $this->filters->setEditId($editId);
-
-            foreach ($storageData->getDataStoredElseWhere() as $key => $value) {
-                $this->fieldStorage[$key]->store($value, $editId, $this->getFilters()->getLanguageCode());
-            }
-        } catch (Exception $exception) {
-            $this->logger->log(Logger::ERROR, $exception);
-            $this->db->rollback();
-
-            return false;
-        }
-
-        return $this->db->commit();
     }
 
     /**
@@ -309,23 +297,36 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Format the forms' input for database insertion
-     *
-     * @param mixed $value
-     * @return mixed|null
+     * @param array $input
+     * @return bool
      */
-    private function formatInputValueForStorage($value)
+    private function saveData(array $input): bool
     {
-        // convert empty string to null
-        if ($value === '') {
-            return null;
+        $storageData = $this->getStorageData($input);
+
+        $this->db->begin();
+
+        try {
+            if (isset($input[DataTable::EDIT_ID])) {
+                $editId = $input[DataTable::EDIT_ID];
+                $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
+            } else {
+                $editId = $this->dbService->insert($this->getModel(), $storageData->getDataStoredInTable());
+            }
+
+            $this->filters->setEditId($editId);
+
+            foreach ($storageData->getDataStoredElseWhere() as $key => $value) {
+                $this->fieldStorage[$key]->store($value, $editId, $this->getFilters()->getLanguageCode());
+            }
+        } catch (Exception $exception) {
+            $this->logger->log(Logger::ERROR, $exception);
+            $this->db->rollback();
+
+            return false;
         }
 
-        if (is_array($value) || is_object($value)) {
-            return json_encode($value);
-        }
-
-        return $value;
+        return $this->db->commit();
     }
 
     /**

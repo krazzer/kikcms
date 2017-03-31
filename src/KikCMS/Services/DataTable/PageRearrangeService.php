@@ -5,7 +5,9 @@ namespace KikCMS\Services\DataTable;
 use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Models\Page;
+use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\PageService;
+use KikCMS\Services\Pages\UrlService;
 use KikCMS\Util\AdjacencyToNestedSet;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
@@ -15,6 +17,7 @@ use Phalcon\Di\Injectable;
  *
  * @property DbService dbService
  * @property PageService pageService
+ * @property UrlService urlService
  */
 class PageRearrangeService extends Injectable
 {
@@ -45,6 +48,7 @@ class PageRearrangeService extends Injectable
             break;
         }
 
+        $this->checkUrl($page, $targetPage, $rearrange);
         $this->updateNestedSet();
     }
 
@@ -65,7 +69,7 @@ class PageRearrangeService extends Injectable
     }
 
     /**
-     * Convert parent-child to nested set
+     * Convert parent-child to nested set, and save
      */
     public function updateNestedSet()
     {
@@ -77,6 +81,39 @@ class PageRearrangeService extends Injectable
         $nestedSetStructure = $converter->getResult();
 
         $this->saveStructure($nestedSetStructure);
+    }
+
+    /**
+     * Checks if the url of the source page is not conflicting in its new target location
+     * If it does, change it
+     *
+     * @param Page $page
+     * @param Page $targetPage
+     * @param string $rearrange
+     */
+    private function checkUrl(Page $page, Page $targetPage, string $rearrange)
+    {
+        if ($rearrange == self::REARRANGE_INTO) {
+            $parentId = $targetPage->id;
+        } else {
+            $parentId = $targetPage->parent_id;
+        }
+
+        $pageLanguages = PageLanguage::find([
+            'conditions' => 'page_id = :pageId:',
+            'bind'       => ['pageId' => $page->id]
+        ]);
+
+        /** @var PageLanguage $pageLanguage */
+        foreach ($pageLanguages as $pageLanguage) {
+            if ( ! $pageLanguage->url) {
+                continue;
+            }
+
+            if ($this->urlService->urlExists($pageLanguage->url, $parentId, $pageLanguage)) {
+                $this->urlService->deduplicateUrl($pageLanguage);
+            }
+        }
     }
 
     /**
