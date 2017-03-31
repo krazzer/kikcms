@@ -4,9 +4,11 @@
 /* Default paddings and margins */
 .form-group .mce-panel {
   border-color: #e1e1e1 !important;
-  background-color: #f9f9f9; }
+    background-color: #fafafa;
+}
   .form-group .mce-panel .mce-btn {
-    background-color: #f9f9f9; }
+      background-color: #fafafa;
+  }
   .form-group .mce-panel .mce-path {
     display: none; }
   .form-group .mce-panel .mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last {

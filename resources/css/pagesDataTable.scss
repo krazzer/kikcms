@@ -34,17 +34,22 @@
             position: relative;
         }
 
+        &.menu {
+            .name {
+                border-color: $gray;
+                background-color: $gray;
+                color: #fff;
+            }
+        }
+
         .name {
             @include draggablePageName();
-        }
 
-        &.menu .name {
-            border-color: $gray;
-            background-color: $gray;
-            color: #fff;
-        }
+            .glyphicon {
+                width: 18px;
+                top: 2px;
+            }
 
-        .name {
             &.dragged {
                 opacity: .2;
             }

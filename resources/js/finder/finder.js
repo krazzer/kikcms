@@ -382,14 +382,14 @@ var Finder = Class.extend({
             if (this.selectedSingleFolder()) {
                 setTimeout(function () {
                     if (self.getSelectedFileIds().length >= 1) {
-                        $toolbar.find('.delete, .copy, .cut').fadeIn();
+                        $toolbar.find('.delete, .cut').fadeIn();
                     }
                 }, 500);
             } else {
-                $toolbar.find('.delete, .copy, .cut').fadeIn();
+                $toolbar.find('.delete, .cut').fadeIn();
             }
         } else {
-            $toolbar.find('.delete, .copy, .cut').fadeOut();
+            $toolbar.find('.delete, .cut').fadeOut();
         }
 
         if (this.cutFileIds.length > 0) {

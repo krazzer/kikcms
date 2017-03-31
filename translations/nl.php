@@ -80,6 +80,10 @@ return [
             'menu'      => 'Menu',
             'link'      => 'Link',
             'alias'     => 'Alias',
+            'titles'    => [
+                'link'     => 'Deze pagina linkt door naar een andere pagina',
+                'inactive' => 'Deze pagina is niet zichtbaar',
+            ],
         ],
 
         'aliases' => [

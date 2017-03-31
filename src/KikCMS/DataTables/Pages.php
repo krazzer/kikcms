@@ -29,7 +29,7 @@ class Pages extends DataTable
     protected $searchableFields = ['name'];
 
     /** @inheritdoc */
-    protected $orderableFields = ['id' => 'p.id'];
+    protected $orderableFields = ['id' => 'p.id', 'name' => 'pl.name'];
 
     /** @inheritdoc */
     protected $preLoadWysiwygJs = true;
@@ -164,7 +164,6 @@ class Pages extends DataTable
         return [
             'name'     => $this->translator->tl('name'),
             'template' => $this->translator->tl('template'),
-            'active'   => $this->translator->tl('active'),
             'id'       => $this->translator->tl('id'),
         ];
     }
@@ -176,9 +175,6 @@ class Pages extends DataTable
     {
         $this->setFieldFormatting('name', [$this, 'formatName']);
         $this->setFieldFormatting('type', [$this, 'formatType']);
-        $this->setFieldFormatting('active', function ($value) {
-            return $value ? '✓' : '';
-        });
     }
 
     /**
@@ -193,8 +189,15 @@ class Pages extends DataTable
             return $value;
         }
 
+        $linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
+        $inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
+
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
-            $value = '<span class="glyphicon glyphicon-link"></span> ' . $value;
+            $value = '<span class="glyphicon glyphicon-link" title="' . $linkTitle . '"></span> ' . $value;
+        }
+
+        if ( ! $rowData[PageLanguage::FIELD_ACTIVE]) {
+            $value = '<span class="glyphicon glyphicon-eye-close" title="' . $inactiveTitle . '"></span> ' . $value;
         }
 
         return '<span class="name">' . $value . '</span>';

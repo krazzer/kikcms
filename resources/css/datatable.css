@@ -28,7 +28,7 @@ body.noSelect {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none;
+    user-select: none;
 }
 
 :root > body.datatableBlur {
@@ -240,27 +240,27 @@ body.noSelect {
     width: 100%; }
 
 .dataTableWindow > .windowContent > .header:after {
-  content: "";
-  display: table;
-  clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .dataTableWindow > .windowContent > .header .lbl {
-  float: left;
-  width: 50%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+    float: left;
+    width: 50%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .dataTableWindow > .windowContent > .header .filters {
-  text-align: right;
-  float: right;
+    text-align: right;
+    float: right;
 }
 
 .dataTableWindow > .windowContent > .header .filters select {
-  width: 200px;
-  text-indent: 5px;
+    width: 200px;
+    text-indent: 5px;
 }
   .dataTableWindow > .windowContent > .tabs {
     border-bottom: 1px solid #e1e1e1;
@@ -362,7 +362,8 @@ body.noSelect {
             background-position: center center;
             border-radius: 3px; }
         .datatable .table table tbody tr:nth-child(odd) {
-          background-color: #f9f9f9; }
+            background-color: #fafafa;
+        }
 
 .datatable .table table tbody tr:hover:not(.dragHover) td {
           background-color: #eee; }
@@ -390,7 +391,7 @@ body.noSelect {
             margin-top: -2px; }
 
 .datatable .table table tbody tr td.sort {
-  cursor: move;
+    cursor: move;
 }
 
 .datatable .table table tbody tr:hover td.edit .glyphicon, .datatable .table table tbody tr:hover td.sort .glyphicon {
@@ -407,40 +408,40 @@ body.noSelect {
   z-index: 3;
   position: absolute;
   pointer-events: none;
-  opacity: .95;
+    opacity: .95;
 }
 
 .draggedObject.rowClone {
     background-color: #fff;
     -webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
-  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .draggedObject.rowClone td {
-  padding: 8px 15px;
+    padding: 8px 15px;
 }
 
 .draggedObject.rowClone .edit .glyphicon, .draggedObject.rowClone .sort .glyphicon {
-  display: none;
+    display: none;
 }
 
 body.isDragging * {
-  cursor: default !important;
+    cursor: default !important;
 }
 body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
-  cursor: move !important;
+    cursor: move !important;
 }
 
 .datatable .table table tr.dragged {
-  opacity: .3;
+    opacity: .3;
 }
 .datatable .table table tr.dragHover {
-  cursor: move;
+    cursor: move;
 }
 
 .datatable .table table tr.dragHover[data-drop="before"] td, .datatable .table table tr.dragHover[data-drop="after"] + tr td {
-  padding-top: 44px;
+    padding-top: 44px;
 }
 
 /*# sourceMappingURL=datatable.css.map */

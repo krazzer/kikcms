@@ -2,7 +2,8 @@
 
 {%- block tableRowClass -%}
     pageObject {{ row.type }} level{{ row.level }}
-    {{ row.type == 'page' and row.parent_id is null ? 'detached' : '' }}
+    {{ row.type == 'page' and row.parent_id is null ? 'detached' }}
+    {{ not row.active ? 'inactive' }}
 {%- endblock -%}
 
 {%- block tableRowAttr -%}
