@@ -26,18 +26,21 @@ class PageForm extends DataForm
     protected function initialize()
     {
         $this->addTab('Pagina', [
-            $this->addTextField('name', 'Naam', [new PresenceOf()])
+            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('name'), [new PresenceOf()])
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE)
         ]);
 
         $this->addFieldsForCurrentTemplate();
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, 'Template', Template::findAssoc());
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
 
-        $this->addTab('Geavanceerd', [
-            $templateField
+        $this->addTab($this->translator->tl('advanced'), [
+            $templateField,
+            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('active'))
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
+                ->setDefault(1),
         ]);
     }
 

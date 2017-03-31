@@ -149,8 +149,8 @@ abstract class DataForm extends WebForm
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
         foreach ($this->fields as $key => &$field) {
-            if (array_key_exists($key, $editData)) {
-                $field->getElement()->setDefault($editData[$key]);
+            if (array_key_exists($key, $editData) && $editData[$key] !== null) {
+                $field->setDefault($editData[$key]);
             }
 
             if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key]) {
@@ -218,8 +218,7 @@ abstract class DataForm extends WebForm
             return [];
         }
 
-        $data = $returnData->toArray();
-        $data         = $data + $this->getDataStoredElseWhere($editId, $languageCode);
+        $data         = $returnData->toArray() + $this->getDataStoredElseWhere($editId, $languageCode);
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
@@ -241,20 +240,23 @@ abstract class DataForm extends WebForm
      */
     private function saveData(array $input): bool
     {
-        $insertUpdateData = $this->getInsertUpdateData($input);
+        $storageData = $this->getStorageData($input);
 
         $this->db->begin();
 
         try {
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
-                $this->dbService->update($this->getModel(), $insertUpdateData, ['id' => $editId]);
+                $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
             } else {
-                $editId = $this->dbService->insert($this->getModel(), $insertUpdateData);
+                $editId = $this->dbService->insert($this->getModel(), $storageData->getDataStoredInTable());
             }
 
             $this->filters->setEditId($editId);
-            $this->storeFields($input, $editId);
+
+            foreach ($storageData->getDataStoredElseWhere() as $key => $value) {
+                $this->fieldStorage[$key]->store($value, $editId, $this->getFilters()->getLanguageCode());
+            }
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
@@ -276,22 +278,15 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Create an array with data from the form that can be inserted or updated directly
-     *
      * @param array $input
-     * @return array
+     * @return StorageData
      */
-    private function getInsertUpdateData(array $input): array
+    private function getStorageData(array $input): StorageData
     {
-        $insertUpdateData = [];
+        $storageData = new StorageData();
 
         foreach ($this->fields as $key => $field) {
             if (in_array($key, $this->getSystemFields())) {
-                continue;
-            }
-
-            // will be saved in another table, so skip here
-            if ($this->isStoredElsewhere($field)) {
                 continue;
             }
 
@@ -305,12 +300,12 @@ abstract class DataForm extends WebForm
             }
 
             $value = $this->transformInputForStorage($input, $key);
-            $value = $this->formatInputValue($value);
+            $value   = $this->formatInputValueForStorage($value);
 
-            $insertUpdateData[$key] = $value;
+            $storageData->addValue($key, $value, $this->isStoredElsewhere($field));
         }
 
-        return $insertUpdateData;
+        return $storageData;
     }
 
     /**
@@ -319,7 +314,7 @@ abstract class DataForm extends WebForm
      * @param mixed $value
      * @return mixed|null
      */
-    private function formatInputValue($value)
+    private function formatInputValueForStorage($value)
     {
         // convert empty string to null
         if ($value === '') {
@@ -331,30 +326,6 @@ abstract class DataForm extends WebForm
         }
 
         return $value;
-    }
-
-    /**
-     * Store field data that is not stored in de DataTable's main table
-     *
-     * @param array $input
-     * @param $editId
-     */
-    private function storeFields(array $input, $editId)
-    {
-        foreach ($this->fields as $key => $field) {
-            if ( ! $this->isStoredElsewhere($field)) {
-                continue;
-            }
-
-            if ( ! array_key_exists($key, $input)) {
-                continue;
-            }
-
-            $value = $this->transformInputForStorage($input, $key);
-            $value = $this->formatInputValue($value);
-
-            $this->fieldStorage[$key]->store($value, $editId, $this->filters->getLanguageCode());
-        }
     }
 
     /**

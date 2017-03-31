@@ -1,12 +1,14 @@
 <?php
 
 return [
-    'delete' => 'Verwijderen',
-    'cancel' => 'Annuleer',
-    'name'   => 'Naam',
-    'id'     => 'Id',
-    'type'   => 'Type',
-    'active' => 'Actief',
+    'delete'   => 'Verwijderen',
+    'cancel'   => 'Annuleer',
+    'name'     => 'Naam',
+    'id'       => 'Id',
+    'type'     => 'Type',
+    'active'   => 'Actief',
+    'advanced' => 'Geavanceerd',
+    'template' => 'Template',
 
     'cms' => [
         'loading' => 'Bezig met laden...',

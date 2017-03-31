@@ -11,6 +11,7 @@ use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Models\Template;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableFilters;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -144,11 +145,12 @@ class Pages extends DataTable
             ->from(['p' => $this->getModel()])
             ->leftJoin(PageLanguage::class, 'p.id = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
             ->leftJoin(PageLanguage::class, 'p.id = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
+            ->leftJoin(Template::class, 'p.template_id = t.id', 't')
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([
-                'pl.name', 'default_language_name' => 'pld.name', 'p.id', 'p.display_order', 'p.level', 'p.lft',
-                'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active'
+                'pld.name AS default_language_name', 't.name AS template', 'pl.name', 'p.id', 'p.display_order',
+                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active'
             ]);
 
         return $query;
@@ -160,9 +162,10 @@ class Pages extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'name'   => $this->translator->tl('name'),
-            'active' => $this->translator->tl('active'),
-            'id'     => $this->translator->tl('id'),
+            'name'     => $this->translator->tl('name'),
+            'template' => $this->translator->tl('template'),
+            'active'   => $this->translator->tl('active'),
+            'id'       => $this->translator->tl('id'),
         ];
     }
 

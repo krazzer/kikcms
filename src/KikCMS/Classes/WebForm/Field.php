@@ -61,6 +61,17 @@ class Field
     }
 
     /**
+     * @param $value
+     * @return $this|Field
+     */
+    public function setDefault($value): Field
+    {
+        $this->element->setDefault($value);
+
+        return $this;
+    }
+
+    /**
      * @return Element
      */
     public function getElement(): Element
