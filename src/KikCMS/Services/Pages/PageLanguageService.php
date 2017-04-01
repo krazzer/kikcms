@@ -20,20 +20,26 @@ class PageLanguageService extends Injectable
      *
      * @param int $pageId
      * @param string|null $languageCode
-     * @return PageLanguage
+     * @return PageLanguage|null
      */
-    public function getByPageId(int $pageId, $languageCode = null): PageLanguage
+    public function getByPageId(int $pageId, $languageCode = null)
     {
         if ( ! $languageCode) {
             $languageCode = $this->languageService->getDefaultLanguageCode();
         }
 
-        return PageLanguage::findFirst([
+        $pageLanguage = PageLanguage::findFirst([
             'conditions' => 'page_id = :pageId: AND language_code = :langCode:',
             'bind'       => [
                 'pageId'   => $pageId,
                 'langCode' => $languageCode
             ],
         ]);
+
+        if ( ! $pageLanguage) {
+            return null;
+        }
+
+        return $pageLanguage;
     }
 }

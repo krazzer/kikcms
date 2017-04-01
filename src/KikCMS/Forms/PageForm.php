@@ -70,11 +70,12 @@ class PageForm extends DataForm
         $editData = parent::getEditData();
         $pageId = $this->getFilters()->getEditId();
 
-        $defaultLangPage = $this->pageLanguageService->getByPageId($pageId);
+        $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
+        $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
 
         $editData[Page::FIELD_TEMPLATE_ID] = $this->getTemplateId();
 
-        $editData['pageName'] = $editData['name'] ?: $defaultLangPage->name;
+        $editData['pageName'] = $editData['name'] ?: $defaultLangPageName;
 
         return $editData;
     }
