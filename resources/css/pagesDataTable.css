@@ -13,7 +13,6 @@
 .datatable .table table tbody tr.pageObject td {
     position: relative;
 }
-
 .datatable .table table tbody tr.pageObject.menu .name {
     border-color: #aaaaaa;
     background-color: #aaaaaa;

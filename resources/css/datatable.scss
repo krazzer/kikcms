@@ -323,7 +323,7 @@ body {
                     }
 
                     td {
-                        &.edit, &.sort {
+                        &.action {
                             text-align: center;
                             width: 60px;
                             cursor: pointer;
@@ -341,7 +341,7 @@ body {
 
                     &:hover {
                         td {
-                            &.edit, &.sort {
+                            &.action {
                                 .glyphicon {
                                     display: block;
                                 }
@@ -379,7 +379,7 @@ body {
             padding: 8px 15px;
         }
 
-        .edit, .sort {
+        .action {
             .glyphicon {
                 display: none;
             }

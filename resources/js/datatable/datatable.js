@@ -195,7 +195,7 @@ var DataTable = Class.extend({
         var self  = this;
         var $rows = this.getDataTable().find('tbody tr');
 
-        $rows.find('td:not(.edit)').click(function () {
+        $rows.find('td:not(.action)').click(function () {
             var $row = $(this).parent();
 
             if ($row.attr('data-prevent-click')) {

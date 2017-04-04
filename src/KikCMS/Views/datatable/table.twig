@@ -1,5 +1,6 @@
 {# @var self \KikCMS\Classes\DataTable\DataTable #}
 {# @var tableData \KikCMS\Classes\DataTable\TableData #}
+{# @var tableButton \KikCMS\Classes\DataTable\TableButton #}
 
 {% if(tableData.data) %}
     <table>
@@ -20,10 +21,7 @@
                     {{ name }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
-            {% if self.sortable %}
-                <td></td>
-            {% endif %}
-            <td></td>
+            <td colspan="{{ 1 + self.tableButtons|length + (self.sortable ? 1 : 0) }}"></td>
         </tr>
         </thead>
 
@@ -41,11 +39,20 @@
                 {% endfor %}
 
                 {% if self.sortable %}
-                    <td class="sort" title="{{ tl('dataTable.sort') }}">
+                    <td class="action sort" title="{{ tl('dataTable.sort') }}">
                         <span class="glyphicon glyphicon-menu-hamburger"></span>
                     </td>
                 {% endif %}
-                <td class="edit" title="{{ tl('dataTable.edit') }}">
+
+                {% block tableRowButton %}
+                    {% for tableButton in self.tableButtons %}
+                        <td class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
+                            <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
+                        </td>
+                    {% endfor %}
+                {% endblock %}
+
+                <td class="action edit" title="{{ tl('dataTable.edit') }}">
                     <input type="hidden" name="id" value="{{ row.id }}">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                 </td>

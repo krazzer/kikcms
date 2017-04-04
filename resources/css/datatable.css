@@ -381,12 +381,12 @@ body.noSelect {
           .datatable .table table tbody tr.selected:hover td .highlight {
             background-color: #990d53; }
 
-.datatable .table table tbody tr td.edit, .datatable .table table tbody tr td.sort {
+.datatable .table table tbody tr td.action {
           text-align: center;
           width: 60px;
           cursor: pointer; }
 
-.datatable .table table tbody tr td.edit .glyphicon, .datatable .table table tbody tr td.sort .glyphicon {
+.datatable .table table tbody tr td.action .glyphicon {
             display: none;
             margin-top: -2px; }
 
@@ -394,7 +394,7 @@ body.noSelect {
     cursor: move;
 }
 
-.datatable .table table tbody tr:hover td.edit .glyphicon, .datatable .table table tbody tr:hover td.sort .glyphicon {
+.datatable .table table tbody tr:hover td.action .glyphicon {
           display: block; }
   .datatable .table .no-data {
     padding: 8px 0; }
@@ -422,7 +422,7 @@ body.noSelect {
     padding: 8px 15px;
 }
 
-.draggedObject.rowClone .edit .glyphicon, .draggedObject.rowClone .sort .glyphicon {
+.draggedObject.rowClone .action .glyphicon {
     display: none;
 }
 

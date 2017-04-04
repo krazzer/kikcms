@@ -84,6 +84,7 @@ return [
             'alias'          => 'Alias',
             'urlPlaceholder' => 'Laat leeg om een url te genereren a.d.h.v. pagina naam',
             'urlExists'      => 'De gekozen url is al in gebruik',
+            'preview'        => 'Bekijk pagina',
             'titles'         => [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
                 'inactive' => 'Deze pagina is niet zichtbaar',

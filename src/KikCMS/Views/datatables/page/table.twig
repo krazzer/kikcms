@@ -12,3 +12,11 @@
         data-max-level="{{ row.menu_max_level }}"
     {% endif %}
 {%- endblock -%}
+
+{%- block tableRowButton -%}
+    {% if row.type == 'page' %}
+        {{ parent() }}
+    {% else %}
+        <td></td>
+    {% endif %}
+{%- endblock -%}

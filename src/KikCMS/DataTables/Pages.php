@@ -165,7 +165,6 @@ class Pages extends DataTable
             'name'     => $this->translator->tl('name'),
             'template' => $this->translator->tl('template'),
             'url'      => $this->translator->tl('url'),
-            'id'       => $this->translator->tl('id'),
         ];
     }
 
@@ -176,6 +175,8 @@ class Pages extends DataTable
     {
         $this->setFieldFormatting('name', [$this, 'formatName']);
         $this->setFieldFormatting('type', [$this, 'formatType']);
+
+        $this->addTableButton('eye-open', $this->translator->tl('dataTables.pages.preview'), 'preview');
     }
 
     /**

@@ -75,6 +75,9 @@ abstract class DataTable extends Renderable
     /** @var string */
     public $indexView = 'datatable/index';
 
+    /** @var TableButton[] */
+    public $tableButtons = [];
+
     /** @var string */
     public $tableView = 'datatable/table';
 
@@ -490,6 +493,16 @@ abstract class DataTable extends Renderable
         }
 
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, $translations);
+    }
+
+    /**
+     * @param string $icon
+     * @param string $title
+     * @param string $class
+     */
+    protected function addTableButton(string $icon, string $title, string $class)
+    {
+        $this->tableButtons[] = new TableButton($icon, $title, $class);
     }
 
     /**
