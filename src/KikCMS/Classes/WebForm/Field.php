@@ -19,6 +19,7 @@ class Field
     const TYPE_WYSIWYG        = 'wysiwyg';
     const TYPE_HIDDEN         = 'hidden';
     const TYPE_FILE           = 'file';
+    const TYPE_BUTTON = 'button';
     const TYPE_DATE           = 'date';
 
     /** @var WebForm|DataForm */

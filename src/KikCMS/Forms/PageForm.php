@@ -33,7 +33,7 @@ class PageForm extends DataForm
         $this->addTab('Pagina', [
             $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('name'), [new PresenceOf()])
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
-            $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE)
+            $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE),
         ]);
 
         $this->addFieldsForCurrentTemplate();
@@ -111,6 +111,13 @@ class PageForm extends DataForm
 
     private function addFieldsForCurrentTemplate()
     {
+        // todo: this is POC, of course this should be dynamic
+        if ($this->getFilters()->getEditId() == 19) {
+            $buttonField = $this->addButtonField('Producten', 'Producten kunnen worden beheerd in het product beheer gedeelte', 'Ga naar product beheer', 'products');
+            $this->tabs[0]->addField($buttonField);
+            return;
+        }
+
         $templateId = $this->getTemplateId();
         $fields     = $this->templateService->getFieldsByTemplateId($templateId);
 

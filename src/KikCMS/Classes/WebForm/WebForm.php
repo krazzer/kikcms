@@ -10,6 +10,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
+use KikCMS\Classes\WebForm\Fields\Button;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\FileField;
@@ -168,6 +169,31 @@ abstract class WebForm extends Renderable
         $autoComplete->addValidators($validators);
 
         return $this->addField(new Autocomplete($autoComplete));
+    }
+
+
+    /**
+     * Add a button. Can be used if specific functionality is managed somewhere else than in this form.
+     *
+     * @param string $label
+     * @param string $info
+     * @param string $buttonLabel
+     * @param string $route
+     * @return Field|Button
+     */
+    public function addButtonField(string $label, string $info, string $buttonLabel, string $route)
+    {
+        // todo: make a button element?
+        $element = new Hidden('x');
+        $element->setLabel($label);
+
+        $button = (new Button($element))
+            ->setInfo($info)
+            ->setLabel($label)
+            ->setButtonLabel($buttonLabel)
+            ->setRoute($route);
+
+        return $this->addField($button);
     }
 
     /**

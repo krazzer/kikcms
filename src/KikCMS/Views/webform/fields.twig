@@ -31,6 +31,17 @@
     </div>
 {%- endblock -%}
 
+{%- block fieldButton %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\Button #}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ form.label(element.name)|raw }}
+        <div class="field">
+            <div class="info">{{ field.info }}</div>
+            <a class="btn btn-primary" href="{{ field.route }}">{{ field.buttonLabel }}</a>
+        </div>
+    </div>
+{%- endblock -%}
+
 {%- block fieldHidden -%}
     {{ form.render(element.name)|raw }}
 {%- endblock -%}

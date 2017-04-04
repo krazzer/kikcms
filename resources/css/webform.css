@@ -57,4 +57,14 @@
       .webForm .datatable .table tbody tr:last-child td:last-child {
         border-bottom-right-radius: 3px; }
 
+.webForm .type-button .field {
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
+    padding: 12px;
+}
+
+.webForm .type-button .field .info {
+    margin-bottom: 10px;
+}
+
 /*# sourceMappingURL=webform.css.map */

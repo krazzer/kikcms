@@ -92,4 +92,14 @@
             }
         }
     }
+
+    .type-button .field {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
+        padding: 12px;
+
+        .info {
+            margin-bottom: 10px;
+        }
+    }
 }

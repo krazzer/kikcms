@@ -470,6 +470,7 @@ abstract class DataTable extends Renderable
         $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
+        $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->sortable) {
             $this->view->assets->addJs('cmsassets/js/datatable/sortControl.js');
