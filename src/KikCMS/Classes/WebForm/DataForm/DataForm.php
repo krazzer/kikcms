@@ -207,24 +207,33 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        $query = new Builder();
-        $query
-            ->addFrom($this->getModel())
-            ->andWhere('id = ' . $editId);
-
         /** @var Simple $returnData */
-        $returnData = $query->getQuery()->execute()->getFirst();
+        $returnData = $this->getEditDataQuery()->getQuery()->execute()->getFirst();
 
         if ( ! $returnData) {
             return [];
         }
 
-        $data         = $returnData->toArray() + $this->getDataStoredElseWhere($editId, $languageCode);
+        $data = $returnData->toArray() + $this->getDataStoredElseWhere($editId, $languageCode);
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
 
         return $data;
+    }
+
+    /**
+     * @return Builder
+     */
+    protected function getEditDataQuery()
+    {
+        $editId = $this->getFilters()->getEditId();
+
+        $query = (new Builder())
+            ->addFrom($this->getModel())
+            ->andWhere('id = ' . $editId);
+
+        return $query;
     }
 
     /**
@@ -288,7 +297,7 @@ abstract class DataForm extends WebForm
             }
 
             $value = $this->transformInputForStorage($input, $key);
-            $value   = $this->formatInputValueForStorage($value);
+            $value = $this->formatInputValueForStorage($value);
 
             $storageData->addValue($key, $value, $this->isStoredElsewhere($field));
         }

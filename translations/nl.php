@@ -1,15 +1,16 @@
 <?php
 
 return [
-    'delete'   => 'Verwijderen',
-    'cancel'   => 'Annuleer',
-    'name'     => 'Naam',
-    'id'       => 'Id',
-    'type'     => 'Type',
-    'active'   => 'Actief',
-    'advanced' => 'Geavanceerd',
-    'template' => 'Template',
-    'url' => 'Url',
+    'delete'        => 'Verwijderen',
+    'cancel'        => 'Annuleer',
+    'name'          => 'Naam',
+    'id'            => 'Id',
+    'display_order' => 'Volgorde',
+    'type'          => 'Type',
+    'active'        => 'Actief',
+    'advanced'      => 'Geavanceerd',
+    'template'      => 'Template',
+    'url'           => 'Url',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
@@ -127,7 +128,7 @@ return [
 
         'templateFields' => [
             'add'       => "Nieuw template veld",
-            'edit'      => "Template veld '<i>:name</i>' bewerken",
+            'edit'      => "Template veld bewerken",
             'delete'    => "Wilt u zeker weten deze :amount template velden verwijderen?",
             'deleteOne' => "Wilt u zeker weten dit template veld verwijderen?",
         ],
@@ -188,12 +189,12 @@ return [
             'Numericality'      => 'Het veld :label mag alleen numeriek zijn',
             'PresenceOf'        => 'Het veld :label is verplicht',
             'Regex'             => 'Het veld :label heeft niet het verwachte formaat',
-            'TooLong'           => 'Het veld :label mag niet meer dan :max karakters lang zijn',
-            'TooShort'          => 'Veld :label moet tenminste :min karakters lang zijn',
-            'Uniqueness'        => 'Het veld :label bestaat al, moet uniek zijn',
-            'Url'               => 'Het veld :label moet een geldige url zijn',
-            'CreditCard'        => 'Het veld :label moet een geldig credit card nummer zijn',
-            'Date'              => 'Het veld :label moet een geldige datum zijn',
+            'TooLong'        => 'Het veld :label mag niet meer dan :max karakters lang zijn',
+            'TooShort'       => 'Veld :label moet tenminste :min karakters lang zijn',
+            'Uniqueness'     => 'Het veld :label bestaat al, moet uniek zijn',
+            'Url'            => 'Het veld :label moet een geldige url zijn',
+            'CreditCard'     => 'Het veld :label moet een geldig credit card nummer zijn',
+            'Date'           => 'Het veld :label moet een geldige datum zijn',
             'NameExists'     => 'De waarde van het veld :label is niet geldig',
             'FinderFileType' => 'Het bestand mag alleen van de volgende types zijn: :types',
 

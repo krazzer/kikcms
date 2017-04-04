@@ -10,18 +10,20 @@ use KikCMS\Models\TemplateField;
 class TemplateFieldForm extends DataForm
 {
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getModel(): string
     {
         return TemplateField::class;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         $allFields = Field::findAssoc();
 
         $this->addSelectField('field_id', 'Veld', $allFields);
-        $this->addTextField('display_order', 'Volgorde');
     }
 }

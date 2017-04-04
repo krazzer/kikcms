@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 
+use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Config\KikCMSConfig;
@@ -68,7 +69,7 @@ class PageForm extends DataForm
     public function getEditData(): array
     {
         $editData = parent::getEditData();
-        $pageId = $this->getFilters()->getEditId();
+        $pageId   = $this->getFilters()->getEditId();
 
         $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
         $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
@@ -132,23 +133,32 @@ class PageForm extends DataForm
      */
     private function addTemplateField(Field $field)
     {
+        $fieldKey = 'pageContent' . $field->id;
+
         switch ($field->type_id) {
             case KikCMSConfig::CONTENT_TYPE_TEXT:
-                $templateField = $this->addTextField('value', $field->name);
+                $templateField = $this->addTextField($fieldKey, $field->name);
             break;
 
             case KikCMSConfig::CONTENT_TYPE_TEXTAREA:
-                $templateField = $this->addTextAreaField('value', $field->name);
+                $templateField = $this->addTextAreaField($fieldKey, $field->name);
             break;
 
             case KikCMSConfig::CONTENT_TYPE_TINYMCE:
-                $templateField = $this->addWysiwygField('value', $field->name);
+                $templateField = $this->addWysiwygField($fieldKey, $field->name);
+            break;
+
+            case KikCMSConfig::CONTENT_TYPE_IMAGE:
+                $imagesOnly    = new FileType([FileType::OPTION_FILETYPES => ['jpg', 'jpeg', 'png', 'gif']]);
+                $templateField = $this->addFileField($fieldKey, $field->name, [$imagesOnly]);
             break;
         }
 
         if ( ! isset($templateField)) {
             return;
         }
+
+        $templateField->setTableField('value');
 
         $this->tabs[0]->addField($templateField);
 

@@ -37,6 +37,18 @@ class Fields extends DataTable
     /**
      * @inheritdoc
      */
+    protected function getTableFieldMap(): array
+    {
+        return [
+            'id'      => $this->translator->tl('id'),
+            'name'    => $this->translator->tl('name'),
+            'type_id' => $this->translator->tl('type'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize()
     {
         $this->setFieldFormatting('type_id', function ($value) {

@@ -28,6 +28,7 @@ class TemplateService extends Injectable
         $query->from(['f' => Field::class]);
         $query->join(TemplateField::class, 'tf.field_id = f.id', 'tf');
         $query->where('tf.template_id = :templateId:', ['templateId' => $templateId]);
+        $query->orderBy('tf.display_order ASC');
 
         return $query->getQuery()->execute();
     }

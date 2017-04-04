@@ -39,6 +39,17 @@ class Templates extends DataTable
     /**
      * @inheritdoc
      */
+    protected function getTableFieldMap(): array
+    {
+        return [
+            'id'   => $this->translator->tl('id'),
+            'name' => $this->translator->tl('name'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize()
     {
 

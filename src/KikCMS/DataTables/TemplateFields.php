@@ -4,14 +4,23 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Translator;
 use KikCMS\Forms\TemplateFieldForm;
 use KikCMS\Models\Field;
 use KikCMS\Models\TemplateField;
+use KikCMS\Models\Type;
 use Phalcon\Mvc\Model\Query\Builder;
 
+/**
+ * @property Translator $translator
+ */
 class TemplateFields extends DataTable
 {
+    /** @inheritdoc */
     protected $parentRelationKey = TemplateField::FIELD_TEMPLATE_ID;
+
+    /** @inheritdoc */
+    protected $sortable = true;
 
     /**
      * @inheritdoc
@@ -53,11 +62,22 @@ class TemplateFields extends DataTable
     /**
      * @inheritdoc
      */
+    protected function getTableFieldMap(): array
+    {
+        return [
+            'id'      => $this->translator->tl('id'),
+            'name'    => $this->translator->tl('name'),
+            'type_id' => $this->translator->tl('type'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function initialize()
     {
         $this->setFieldFormatting('type_id', function ($value) {
             $typeMap = $this->translator->getContentTypeMap();
-
             return $typeMap[$value];
         });
     }
