@@ -133,6 +133,7 @@ class DeployService extends Injectable
         $requiredDirs = [
             'cache',
             'cache/cache',
+            'cache/metadata',
             'storage',
             'storage/media',
             'storage/thumbs',
