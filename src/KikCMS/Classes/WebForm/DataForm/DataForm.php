@@ -354,7 +354,7 @@ abstract class DataForm extends WebForm
     private function transformDataForDisplay(array $data): array
     {
         foreach ($this->fields as $key => $field) {
-            if ( ! array_key_exists($key, $this->fieldTransformers) || ! $data[$key]) {
+            if ( ! array_key_exists($key, $this->fieldTransformers) || ! isset($data[$key]) || ! $data[$key]) {
                 continue;
             }
 
