@@ -5,11 +5,14 @@ return [
     'cancel'        => 'Annuleer',
     'name'          => 'Naam',
     'id'            => 'Id',
+    'code'          => 'Code',
     'display_order' => 'Volgorde',
     'type'          => 'Type',
     'active'        => 'Actief',
     'advanced'      => 'Geavanceerd',
     'template'      => 'Template',
+    'templates'     => 'Templates',
+    'languages'     => 'Talen',
     'url'           => 'Url',
 
     'cms' => [
@@ -101,6 +104,13 @@ return [
             'edit' => "Menu '<i>:name</i>' bewerken",
         ],
 
+        'language' => [
+            'add'       => "Nieuwe taal",
+            'edit'      => "Taal '<i>:name</i>' bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount talen verwijderen?",
+            'deleteOne' => "Wilt u zeker weten deze taal verwijderen?",
+        ],
+
         'links' => [
             'add'  => "Nieuwe link",
             'edit' => "Link '<i>:name</i>' bewerken",
@@ -183,13 +193,13 @@ return [
             'FileMaxResolution' => 'Het bestand :label mag geen hogere resolutie hebben dan :max',
             'FileMinResolution' => 'Het bestand :label moet tenminste een resolutie van :min hebben',
             'FileSize'          => 'Het bestand :label mag niet groter zijn dan :max',
-            'FileType'          => 'Het bestand :label mag alleen van de types :types zijn',
-            'FileValid'         => 'Het veld :label is niet geldig',
-            'Identical'         => 'Het veld :label heeft niet de verwachte waarde',
-            'InclusionIn'       => 'Het veld :label moet onderdeel zijn van: :domain',
-            'Numericality'      => 'Het veld :label mag alleen numeriek zijn',
-            'PresenceOf'        => 'Het veld :label is verplicht',
-            'Regex'             => 'Het veld :label heeft niet het verwachte formaat',
+            'FileType'       => 'Het bestand :label mag alleen van de types :types zijn',
+            'FileValid'      => 'Het veld :label is niet geldig',
+            'Identical'      => 'Het veld :label heeft niet de verwachte waarde',
+            'InclusionIn'    => 'Het veld :label moet onderdeel zijn van: :domain',
+            'Numericality'   => 'Het veld :label mag alleen numeriek zijn',
+            'PresenceOf'     => 'Het veld :label is verplicht',
+            'Regex'          => 'Het veld :label heeft niet het verwachte formaat',
             'TooLong'        => 'Het veld :label mag niet meer dan :max karakters lang zijn',
             'TooShort'       => 'Veld :label moet tenminste :min karakters lang zijn',
             'Uniqueness'     => 'Het veld :label bestaat al, moet uniek zijn',
@@ -202,7 +212,7 @@ return [
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
             'fieldErrors'      => 'Niet alle velden zijn goed ingevuld. Loop het formulier na op fouten of ontbrekende gegevens.',
-            'slug'           => "Het veld :label mag alleen kleine letters, getallen en '-' bevatten",
+            'slug'             => "Het veld :label mag alleen kleine letters, getallen en '-' bevatten",
         ],
 
         'defaultSendLabel' => 'Versturen',
@@ -241,6 +251,7 @@ return [
         'item' => [
             'media'     => 'Media',
             'templates' => 'Templates',
+            'settings'  => 'Instellingen',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
             'form'      => 'Dataform test',

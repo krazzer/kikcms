@@ -1,8 +1,7 @@
-{# @var datatable \KikCMS\Classes\DataTable\DataTable #}
 {% extends '@kikcms/cms/base.twig' %}
 
-{% block title "Pagina's" %}
+{% block title title %}
 
 {% block cmsContent %}
-    {{ datatable|raw }}
+    {{ object|raw }}
 {% endblock %}

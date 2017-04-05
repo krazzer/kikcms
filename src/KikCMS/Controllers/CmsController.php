@@ -6,8 +6,7 @@ use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Products;
-use KikCMS\DataTables\Templates;
-use KikCMS\Forms\ProductForm;
+use KikCMS\Forms\SettingsForm;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
 use Phalcon\Http\Response;
@@ -28,41 +27,29 @@ class CmsController extends BaseCmsController
 
     public function pagesAction()
     {
-        $datatable = new Pages();
-
-        $this->view->datatable = $datatable->render();
+        $this->view->title  = $this->translator->tl('menu.item.pages');
+        $this->view->object = (new Pages())->render();
         $this->view->pick('cms/default');
     }
 
     public function productsAction()
     {
-        $datatable = new Products();
-
-        $this->view->datatable = $datatable->render();
+        $this->view->title  = $this->translator->tl('menu.item.products');
+        $this->view->object = (new Products())->render();
         $this->view->pick('cms/default');
-    }
-
-    public function formAction()
-    {
-        $dataForm = new ProductForm();
-        $dataForm->addTextField('title', "Naam product");
-        $dataForm->getFilters()->setEditId(23);
-
-        $this->view->form = $dataForm->renderWithData();
-        $this->view->pick('cms/form');
     }
 
     public function mediaAction()
     {
-        $finder = new Finder();
-
-        $this->view->finder = $finder->render();
-        $this->view->pick('cms/media');
+        $this->view->title  = $this->translator->tl('media.title');
+        $this->view->object = (new Finder())->render();
+        $this->view->pick('cms/default');
     }
 
-    public function templatesAction()
+    public function settingsAction()
     {
-        $this->view->datatable = (new Templates())->render();
+        $this->view->title  = $this->translator->tl('menu.item.settings');
+        $this->view->object = (new SettingsForm())->render();
         $this->view->pick('cms/default');
     }
 
