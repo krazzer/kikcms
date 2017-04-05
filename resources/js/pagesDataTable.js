@@ -4,11 +4,6 @@ var PagesDataTable = DataTable.extend({
     init: function () {
         this.$.init.call(this);
         this.initPageTypeMenu();
-
-        $('.action.preview').click(function () {
-            var pageLanguageId = $(this).parent().attr('data-plid');
-            window.open('/cms/preview/' + pageLanguageId);
-        });
     },
 
     initWindow: function () {
@@ -27,6 +22,11 @@ var PagesDataTable = DataTable.extend({
     initTable: function () {
         this.$.initTable.call(this);
         this.initTreeSortControl();
+
+        $('.action.preview').click(function () {
+            var pageLanguageId = $(this).parent().attr('data-plid');
+            window.open('/cms/preview/' + pageLanguageId);
+        });
     },
 
     /**

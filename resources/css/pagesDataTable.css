@@ -10,6 +10,9 @@
     width: 24px;
 }
 
+.datatable .table table tbody tr .defaultLanguagePlaceHolder {
+    color: #bbbbbb;
+}
 .datatable .table table tbody tr.pageObject td {
     position: relative;
 }

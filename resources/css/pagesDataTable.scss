@@ -28,6 +28,10 @@
 
 .datatable .table table tbody tr {
 
+    .defaultLanguagePlaceHolder {
+        color: $lightGrayDarker;
+    }
+
     &.pageObject {
 
         td {

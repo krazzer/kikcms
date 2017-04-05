@@ -26,7 +26,7 @@ class Pages extends DataTable
     protected $jsClass = 'PagesDataTable';
 
     /** @inheritdoc */
-    protected $searchableFields = ['name'];
+    protected $searchableFields = ['pl.name'];
 
     /** @inheritdoc */
     protected $orderableFields = ['id' => 'p.id', 'name' => 'pl.name'];
@@ -187,6 +187,10 @@ class Pages extends DataTable
      */
     protected function formatName($value, array $rowData)
     {
+        if ( ! $value && $rowData['default_language_name']) {
+            $value = '<span class="defaultLanguagePlaceHolder">' . $rowData['default_language_name'] . '</span>';
+        }
+
         // disable dragging / tree structure when sorting or searching
         if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
             return $value;
