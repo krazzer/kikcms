@@ -8,7 +8,7 @@ use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
-use KikCMS\Classes\Finder\FinderFilters;
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
 
@@ -17,7 +17,7 @@ use KikCMS\Models\FinderFile;
  * @property FinderFileService $finderFileService
  * @property Translator $translator
  */
-class FinderController extends BaseController
+class FinderController extends RenderableController
 {
     /**
      * @inheritdoc
@@ -34,7 +34,7 @@ class FinderController extends BaseController
      */
     public function createFolderAction()
     {
-        $finder     = $this->getFinder();
+        $finder     = $this->getRenderable();
         $folderName = $this->request->getPost('folderName');
         $folderId   = $finder->getFilters()->getFolderId();
 
@@ -51,7 +51,7 @@ class FinderController extends BaseController
      */
     public function deleteAction()
     {
-        $finder       = $this->getFinder();
+        $finder       = $this->getRenderable();
         $fileIds      = $this->request->getPost('fileIds');
         $errorMessage = null;
 
@@ -72,7 +72,7 @@ class FinderController extends BaseController
      */
     public function editFileNameAction()
     {
-        $finder   = $this->getFinder();
+        $finder   = $this->getRenderable();
         $fileId   = $this->request->getPost('fileId');
         $fileName = $this->request->getPost('fileName');
 
@@ -106,7 +106,7 @@ class FinderController extends BaseController
      */
     public function openFolderAction()
     {
-        $finder = $this->getFinder();
+        $finder = $this->getRenderable();
 
         return json_encode([
             'files' => $finder->renderFiles(),
@@ -119,7 +119,7 @@ class FinderController extends BaseController
      */
     public function pasteAction()
     {
-        $finder   = $this->getFinder();
+        $finder   = $this->getRenderable();
         $fileIds  = $this->request->getPost('fileIds');
         $folderId = $finder->getFilters()->getFolderId();
 
@@ -136,7 +136,7 @@ class FinderController extends BaseController
      */
     public function searchAction()
     {
-        $finder = $this->getFinder();
+        $finder = $this->getRenderable();
 
         if ($finder->getFilters()->getSearch()) {
             $finder->getFilters()->setFolderId(0);
@@ -174,7 +174,7 @@ class FinderController extends BaseController
      */
     public function uploadAction()
     {
-        $finder        = $this->getFinder();
+        $finder        = $this->getRenderable();
         $uploadedFiles = $this->request->getUploadedFiles();
         $uploadStatus  = $finder->uploadFiles($uploadedFiles);
 
@@ -186,18 +186,11 @@ class FinderController extends BaseController
     }
 
     /**
-     * Construct a Finder instance with filters from the requests
-     *
-     * @return Finder
+     * @inheritdoc
+     * @return Finder|Renderable
      */
-    private function getFinder(): Finder
+    protected function getRenderable(): Renderable
     {
-        $filters = new FinderFilters();
-        $filters->setByArray($this->request->getPost());
-
-        $finder = new Finder();
-        $finder->setFilters($filters);
-
-        return $finder;
+        return parent::getRenderable();
     }
 }

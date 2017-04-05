@@ -7,7 +7,7 @@
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
-<div class="webForm" data-class="{{ class }}" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
+<div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
     {{ form({name: 'form'}) }}
 
     {% if errorContainer.hasFormErrors %}

@@ -170,7 +170,7 @@ class Finder extends Renderable
     /**
      * @return Filters|FinderFilters
      */
-    protected function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters
     {
         return new FinderFilters();
     }

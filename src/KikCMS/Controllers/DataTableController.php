@@ -6,13 +6,13 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\DbService;
-use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Classes\Renderable\Renderable;
 
 /**
  * @property DbService $dbService
  */
-class DataTableController extends BaseController
+class DataTableController extends RenderableController
 {
     const TEMPLATE_ADD  = 'add';
     const TEMPLATE_EDIT = 'edit';
@@ -32,7 +32,7 @@ class DataTableController extends BaseController
      */
     public function addAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         $this->view->form   = $dataTable->renderAddForm();
         $this->view->labels = $dataTable->getLabels();
@@ -47,7 +47,7 @@ class DataTableController extends BaseController
      */
     public function deleteAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         $ids = $this->request->getPost('ids');
 
@@ -64,7 +64,7 @@ class DataTableController extends BaseController
      */
     public function editAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         $this->view->form     = $dataTable->renderEditForm();
         $this->view->labels   = $dataTable->getLabels();
@@ -80,7 +80,7 @@ class DataTableController extends BaseController
      */
     public function saveAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         $editId       = $dataTable->getFilters()->getEditId();
         $parentEditId = $dataTable->getFilters()->getParentEditId();
@@ -123,7 +123,7 @@ class DataTableController extends BaseController
      */
     public function pageAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         return json_encode([
             'table'      => $dataTable->renderTable(),
@@ -136,7 +136,7 @@ class DataTableController extends BaseController
      */
     public function rearrangeAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         $id        = $this->request->getPost('id');
         $targetId  = $this->request->getPost('targetId');
@@ -160,7 +160,7 @@ class DataTableController extends BaseController
      */
     public function searchAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         return json_encode([
             'table'      => $dataTable->renderTable(),
@@ -173,7 +173,7 @@ class DataTableController extends BaseController
      */
     public function sortAction()
     {
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         return json_encode([
             'table'      => $dataTable->renderTable(),
@@ -182,30 +182,11 @@ class DataTableController extends BaseController
     }
 
     /**
-     * @return DataTable
-     * @throws SessionExpiredException
+     * @inheritdoc
+     * @return Renderable|DataTable
      */
-    protected function getDataTable()
+    protected function getRenderable(): Renderable
     {
-        $instanceName = $this->request->getPost(DataTable::INSTANCE);
-
-        if ( ! $this->session->has(DataTable::SESSION_KEY) ||
-            ! array_key_exists($instanceName, $this->session->get(DataTable::SESSION_KEY))
-        ) {
-            throw new SessionExpiredException();
-        }
-
-        $instanceClass = $this->session->get(DataTable::SESSION_KEY)[$instanceName]['class'];
-
-        /** @var DataTable $dataTable */
-        $dataTable = new $instanceClass();
-        $dataTable->setInstance($instanceName);
-
-        $filters = $dataTable->getEmptyFilters();
-        $filters->setByArray($this->request->getPost());
-
-        $dataTable->setFilters($filters);
-
-        return $dataTable;
+        return parent::getRenderable();
     }
 }

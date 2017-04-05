@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\DataTables\Pages;
 use KikCMS\Models\Page;
 use KikCMS\Services\DataTable\PageRearrangeService;
@@ -26,7 +27,7 @@ class PagesDataTableController extends DataTableController
 
         $this->pageRearrangeService->rearrange($page, $targetPage, $rearrange);
 
-        $dataTable = $this->getDataTable();
+        $dataTable = $this->getRenderable();
 
         return json_encode(['table' => $dataTable->renderTable()]);
     }
@@ -34,10 +35,10 @@ class PagesDataTableController extends DataTableController
     /**
      * @inheritdoc
      */
-    protected function getDataTable()
+    protected function getRenderable(): Renderable
     {
         /** @var Pages $dataTable */
-        $dataTable = parent::getDataTable();
+        $dataTable = parent::getRenderable();
 
         if ($pageId = $dataTable->getFilters()->getEditId()) {
             $page = Page::getById($pageId);

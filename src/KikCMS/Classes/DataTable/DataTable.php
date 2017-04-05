@@ -292,16 +292,6 @@ abstract class DataTable extends Renderable
 
         $this->form->setIdentifier('form_' . $instance);
 
-        if ($this->session->has(self::SESSION_KEY)) {
-            $dataTableSessionData = $this->session->get(self::SESSION_KEY);
-        } else {
-            $dataTableSessionData = [];
-        }
-
-        $dataTableSessionData[$instance] = ['class' => static::class];
-
-        $this->session->set(self::SESSION_KEY, $dataTableSessionData);
-
         $this->initialized = true;
     }
 

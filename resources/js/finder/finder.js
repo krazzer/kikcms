@@ -1,5 +1,6 @@
 var Finder = Class.extend({
-    instance: null,
+    renderableInstance: null,
+    renderableClass: null,
     shiftKeyPressed: false,
     pickingMode: false,
     cutFileIds: [],
@@ -8,6 +9,9 @@ var Finder = Class.extend({
         if (typeof parameters.folderId == 'undefined') {
             parameters.folderId = this.getCurrentFolderId();
         }
+
+        parameters.renderableInstance = this.renderableInstance;
+        parameters.renderableClass    = this.renderableClass;
 
         KikCMS.action('/finder/' + action, parameters, onSuccess);
     },
@@ -281,6 +285,8 @@ var Finder = Class.extend({
             },
             addParametersBeforeUpload: function (formData) {
                 formData.append('folderId', self.getCurrentFolderId());
+                formData.append('renderableInstance', self.renderableInstance);
+                formData.append('renderableClass', self.renderableClass);
                 return formData;
             }
         });
@@ -289,7 +295,7 @@ var Finder = Class.extend({
     },
 
     getFinder: function () {
-        return $("#" + this.instance);
+        return $("#" + this.renderableInstance);
     },
 
     getFileContainer: function () {

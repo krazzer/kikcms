@@ -1,5 +1,6 @@
 var WebForm = Class.extend({
-    instance: null,
+    renderableInstance: null,
+    renderableClass: null,
 
     actionGetFinder: function ($field) {
         var self              = this;
@@ -82,7 +83,7 @@ var WebForm = Class.extend({
     },
 
     getWebForm: function () {
-        return $('#' + this.instance);
+        return $('#' + this.renderableInstance);
     },
 
     init: function () {
@@ -93,16 +94,17 @@ var WebForm = Class.extend({
     },
 
     initAutocompleteFields: function () {
+        var self     = this;
         var $webForm = this.getWebForm();
 
         $webForm.find('.autocomplete').each(function () {
-            var $field       = $(this);
-            var fieldKey     = $field.attr('data-field-key');
-            var webFormClass = $webForm.attr('data-class');
+            var $field   = $(this);
+            var fieldKey = $field.attr('data-field-key');
 
             KikCMS.action('/cms/webform/getAutocompleteData', {
                 field: fieldKey,
-                webFormClass: webFormClass
+                renderableInstance: self.renderableInstance,
+                renderableClass: self.renderableClass
             }, function (data) {
                 $field.typeahead({
                     items: 30,

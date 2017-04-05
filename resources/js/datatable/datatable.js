@@ -1,6 +1,7 @@
 var DataTable = Class.extend({
     actionPath: '/cms/datatable/',
-    instance: null,
+    renderableInstance: null,
+    renderableClass: null,
     labels: null,
     currentSearch: null,
     currentFormInput: null,
@@ -32,7 +33,7 @@ var DataTable = Class.extend({
     getThumbHoverContainer: function () {
         var thumbHoverSelector = 'body > .datatableThumbHoverContainer';
 
-        if ($(thumbHoverSelector).length == 0) {
+        if ($(thumbHoverSelector).length === 0) {
             $('body').append('<div class="datatableThumbHoverContainer"></div>');
         }
 
@@ -114,6 +115,10 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
+                if (self.getWindow().hasClass('blur')) {
+                    return false;
+                }
+
                 if (self.getForm().length) {
                     self.actionSave(true);
                     self.getWindow().find('.saveAndClose').addClass('active');
@@ -431,7 +436,8 @@ var DataTable = Class.extend({
     },
 
     addActionParameters: function (parameters) {
-        parameters.dataTableInstance = this.instance;
+        parameters.renderableInstance = this.renderableInstance;
+        parameters.renderableClass    = this.renderableClass;
 
         if (this.parentEditId != null) {
             parameters.parentEditId = this.parentEditId;
@@ -530,7 +536,7 @@ var DataTable = Class.extend({
     },
 
     getDataTable: function () {
-        return $("#" + this.instance);
+        return $("#" + this.renderableInstance);
     },
 
     getFilters: function () {
@@ -576,7 +582,7 @@ var DataTable = Class.extend({
 
     getWindow: function () {
         var self              = this;
-        var windowId          = this.instance + 'Window';
+        var windowId          = this.renderableInstance + 'Window';
         var $bodyNotFading    = $('body > #notFading');
         var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
         var level             = 0;

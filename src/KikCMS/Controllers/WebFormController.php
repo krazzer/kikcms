@@ -3,11 +3,11 @@
 namespace KikCMS\Controllers;
 
 
-use InvalidArgumentException;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\FinderFile;
@@ -16,7 +16,7 @@ use KikCMS\Models\FinderFile;
  * @property DbService dbService
  * @property FinderFileService finderFileService
  */
-class WebFormController extends BaseController
+class WebFormController extends RenderableController
 {
     /**
      * @inheritdoc
@@ -34,7 +34,7 @@ class WebFormController extends BaseController
     public function getAutocompleteDataAction()
     {
         $fieldKey = $this->request->getPost('field');
-        $webForm  = $this->getWebForm();
+        $webForm  = $this->getRenderable();
 
         // initialize, so we know about any autocomplete fields
         $webForm->initializeForm();
@@ -103,20 +103,11 @@ class WebFormController extends BaseController
     }
 
     /**
-     * @return WebForm
-     * @throws InvalidArgumentException
+     * @inheritdoc
+     * @return Renderable|Webform
      */
-    private function getWebForm()
+    protected function getRenderable(): Renderable
     {
-        $class = $this->request->getPost(WebForm::WEB_FORM_CLASS);
-
-        /** @var WebForm $webForm */
-        $webForm = new $class();
-
-        if ( ! $webForm instanceof WebForm) {
-            throw new InvalidArgumentException();
-        }
-
-        return $webForm;
+        return parent::getRenderable();
     }
 }

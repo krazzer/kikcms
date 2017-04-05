@@ -597,7 +597,7 @@ abstract class WebForm extends Renderable
     /**
      * @inheritdoc
      */
-    protected function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters
     {
         return new Filters();
     }

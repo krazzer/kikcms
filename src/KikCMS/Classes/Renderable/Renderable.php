@@ -11,6 +11,9 @@ use Phalcon\Di\Injectable;
  */
 abstract class Renderable extends Injectable
 {
+    const FILTER_INSTANCE = 'renderableInstance';
+    const FILTER_CLASS    = 'renderableClass';
+
     /** @var Filters */
     protected $filters;
 
@@ -45,12 +48,7 @@ abstract class Renderable extends Injectable
     /**
      * @return Filters
      */
-    protected abstract function getEmptyFilters(): Filters;
-
-    /**
-     * This method may contain logic that will influence the output when rendered
-     */
-    protected abstract function initialize();
+    public abstract function getEmptyFilters(): Filters;
 
     /**
      * Renders the object
@@ -58,6 +56,11 @@ abstract class Renderable extends Injectable
      * @return string
      */
     public abstract function render(): string;
+
+    /**
+     * This method may contain logic that will influence the output when rendered
+     */
+    protected abstract function initialize();
 
     /**
      * Renders a specific view for a part of the Renderable object
@@ -105,7 +108,11 @@ abstract class Renderable extends Injectable
      */
     protected function getJsData()
     {
-        $properties = ['instance' => $this->getInstance()];
+        $properties = [
+            self::FILTER_INSTANCE => $this->getInstance(),
+            self::FILTER_CLASS    => static::class
+        ];
+
         $properties = array_merge($properties, $this->getJsProperties());
 
         return [
