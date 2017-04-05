@@ -444,4 +444,8 @@ body.isDragging .datatable tbody, body.isDragging .datatable tbody * {
     padding-top: 44px;
 }
 
+.datatable .table table tr.dragHover[data-drop="after"]:last-child td {
+    padding-bottom: 44px;
+}
+
 /*# sourceMappingURL=datatable.css.map */

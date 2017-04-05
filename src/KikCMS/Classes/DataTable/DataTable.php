@@ -278,13 +278,16 @@ abstract class DataTable extends Renderable
 
         $instance     = $this->getInstance();
         $formClass    = $this->getFormClass();
-        $editId = $this->getFilters()->getEditId();
+
+        $editId       = $this->getFilters()->getEditId();
         $languageCode = $this->getFilters()->getLanguageCode();
+        $parentEditId = $this->getFilters()->getParentEditId();
 
         /** @var DataForm $dataForm */
         $dataForm = new $formClass();
         $dataForm->getFilters()->setEditId($editId);
         $dataForm->getFilters()->setLanguageCode($languageCode);
+        $dataForm->getFilters()->setParentEditId($parentEditId);
         $dataForm->initializeForm();
 
         $this->form = $dataForm;

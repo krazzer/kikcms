@@ -412,5 +412,11 @@ body.isDragging {
                 padding-top: 44px;
             }
         }
+
+        &[data-drop="after"]:last-child {
+            td {
+                padding-bottom: 44px;
+            }
+        }
     }
 }

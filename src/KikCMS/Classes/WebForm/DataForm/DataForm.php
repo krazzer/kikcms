@@ -320,7 +320,14 @@ abstract class DataForm extends WebForm
                 $editId = $input[DataTable::EDIT_ID];
                 $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
             } else {
+                // if a temporary key is inserted, fk checks needs to be disabled for insert
+                if ($this->getFilters()->getParentEditId() === 0) {
+                    $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
+                }
                 $editId = $this->dbService->insert($this->getModel(), $storageData->getDataStoredInTable());
+                if ($this->getFilters()->getParentEditId() === 0) {
+                    $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
+                }
             }
 
             $this->filters->setEditId($editId);
