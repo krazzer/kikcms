@@ -6,11 +6,8 @@ var PagesDataTable = DataTable.extend({
         this.initPageTypeMenu();
 
         $('.action.preview').click(function () {
-            //todo: actually get this from language select
-            var langCode = 'nl';
-            var pageId   = $(this).parent().attr('data-id');
-
-            window.open('/cms/preview/' + langCode + '/' + pageId);
+            var pageLanguageId = $(this).parent().attr('data-plid');
+            window.open('/cms/preview/' + pageLanguageId);
         });
     },
 

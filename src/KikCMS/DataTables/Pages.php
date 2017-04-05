@@ -150,7 +150,8 @@ class Pages extends DataTable
             ->groupBy('p.id')
             ->columns([
                 'pld.name AS default_language_name', 't.name AS template', 'pl.name', 'p.id', 'p.display_order',
-                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url'
+                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url',
+                'pl.id AS plid'
             ]);
 
         return $query;

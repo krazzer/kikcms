@@ -8,6 +8,7 @@
 
 {%- block tableRowAttr -%}
     data-level="{{ row.level }}"
+    data-plid="{{ row.plid }}"
     {% if row.type == 'menu' %}
         data-max-level="{{ row.menu_max_level }}"
     {% endif %}
