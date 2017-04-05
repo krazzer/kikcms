@@ -9,6 +9,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\LanguageService;
+use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
@@ -16,6 +17,7 @@ use Phalcon\Tag;
 /**
  * @property DbService $dbService;
  * @property LanguageService $languageService;
+ * @property Backend $diskCache;
  */
 abstract class DataTable extends Renderable
 {
@@ -429,15 +431,15 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ($this->cache->exists($cacheKey)) {
-            $editKeys = $this->cache->get($cacheKey);
+        if ($this->diskCache->exists($cacheKey)) {
+            $editKeys = $this->diskCache->get($cacheKey);
         } else {
             $editKeys = [];
         }
 
         $editKeys[] = $editId;
 
-        $this->cache->save($cacheKey, $editKeys);
+        $this->diskCache->save($cacheKey, $editKeys);
     }
 
     /**
@@ -447,11 +449,11 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ( ! $this->cache->exists($cacheKey)) {
+        if ( ! $this->diskCache->exists($cacheKey)) {
             return [];
         }
 
-        return $this->cache->get($cacheKey);
+        return $this->diskCache->get($cacheKey);
     }
 
     /**

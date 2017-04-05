@@ -23,14 +23,14 @@ use KikCMS\Services\Pages\UrlService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
+use Phalcon\Cache\Backend\Apc;
 use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
 use Phalcon\DiInterface;
+use Phalcon\Mvc\Model\MetaData\Files;
 use Phalcon\Mvc\View;
 use Phalcon\Db\Adapter\Pdo;
-use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-use Phalcon\Mvc\Model\Metadata\Memory as MetaData;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
@@ -226,7 +226,22 @@ class Services extends BaseServices
      */
     protected function initModelsMetadata()
     {
-        return new MetaData();
+        $metaData = new Files([
+            "lifetime"    => 86400,
+            "metaDataDir" => SITE_PATH . "/cache/metadata/"
+        ]);
+
+        return $metaData;
+    }
+
+    /**
+     * @return Backend
+     */
+    protected function initDiskCache()
+    {
+        return new File(new Json(["lifetime" => 3600 * 24]), [
+            'cacheDir' => SITE_PATH . 'cache/cache/'
+        ]);
     }
 
     /**
@@ -234,9 +249,7 @@ class Services extends BaseServices
      */
     protected function initCache()
     {
-        return new File(new Json(["lifetime" => 3600 * 24]), [
-            'cacheDir' => SITE_PATH . 'cache/cache/'
-        ]);
+        return new Apc(new Json());
     }
 
     /**
