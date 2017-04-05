@@ -14,11 +14,13 @@
     <div class="lbl">{% block headerTitle '' %}</div>
     <div class="filters">
         {% block filters %}
-            {% if multiLingual %}
-                {# todo: get these from the db #}
+            {% if multiLingual and languages|length > 1 %}
                 <select name="language" class="form-control">
-                    <option value="nl"{{ currentLanguage == 'nl' ? ' selected' }}>Nederlands</option>
-                    <option value="en"{{ currentLanguage == 'en' ? ' selected' }}>Engels</option>
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{{ currentLangCode == language.code ? ' selected' }}>
+                            {{ language.name }}
+                        </option>
+                    {% endfor %}
                 </select>
             {% endif %}
         {% endblock %}

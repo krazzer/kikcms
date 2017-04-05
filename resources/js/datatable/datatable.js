@@ -44,6 +44,7 @@ var DataTable = Class.extend({
         this.initTable();
         this.initPagination();
         this.initSearch();
+        this.initLanguageSwitch();
         this.initButtons();
         this.initKeyEvents();
     },
@@ -148,6 +149,14 @@ var DataTable = Class.extend({
         checkIframe();
 
         $(window).keydown(keyDownEvent);
+    },
+
+    initLanguageSwitch: function () {
+        var self = this;
+
+        this.getDataTable().find('.language select').change(function () {
+            self.actionPage(self.getFilters().page);
+        });
     },
 
     initPagination: function () {
@@ -540,6 +549,7 @@ var DataTable = Class.extend({
     },
 
     getFilters: function () {
+        var self    = this;
         var filters = {};
 
         filters.page   = this.getCurrentPage();
@@ -555,8 +565,13 @@ var DataTable = Class.extend({
             filters.sortColumn    = $(this).attr('data-column');
         });
 
+        this.getDataTable().find('.language select').each(function () {
+            filters.languageCode = $(this).val();
+        });
+
         this.getWindow().find('select[name=language]').each(function () {
             filters.languageCode = $(this).val();
+            self.getDataTable().find('.language select').val($(this).val());
         });
 
         return filters;

@@ -1,5 +1,6 @@
 {# @var self \KikCMS\Classes\DataTable\DataTable #}
 {# @var tableData \KikCMS\Classes\DataTable\TableData #}
+{# @var languages \KikCMS\Models\Language[] #}
 
 <div class="datatable toolbarComponent" id="{{ self.instance }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
@@ -22,6 +23,18 @@
                 <span class="glyphicon glyphicon-search"></span>
                 <input type="search" class="form-control" placeholder="{{ tl('dataTable.searchPlaceholder') }}"/>
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            </div>
+        {% endif %}
+
+        {% if self.multiLingual and languages|length > 1 %}
+            <div class="language">
+                <select name="language" class="form-control">
+                    {% for language in languages %}
+                        <option value="{{ language.code }}"{{ currentLangCode == language.code ? ' selected' }}>
+                            {{ language.name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
         {% endif %}
 

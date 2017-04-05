@@ -254,6 +254,14 @@ abstract class DataTable extends Renderable
     /**
      * @return bool
      */
+    public function isMultiLingual(): bool
+    {
+        return $this->multiLingual;
+    }
+
+    /**
+     * @return bool
+     */
     public function isSortable(): bool
     {
         return $this->sortable;
@@ -309,6 +317,8 @@ abstract class DataTable extends Renderable
         return $this->view->getPartial($this->indexView, [
             'tableData'       => $this->getTableData(),
             'jsData'          => $this->getJsData(),
+            'currentLangCode' => $this->getFilters()->getLanguageCode(),
+            'languages'       => $this->languageService->getLanguages(),
             'fieldFormatting' => $this->fieldFormatting,
             'self'            => $this,
         ]);
@@ -453,8 +463,9 @@ abstract class DataTable extends Renderable
         return $this->renderView($template, [
             'tabs'            => $this->form->getTabs(),
             'currentTab'      => $this->form->getCurrentTab(),
-            'multiLingual'    => $this->multiLingual,
-            'currentLanguage' => $this->getFilters()->getLanguageCode(),
+            'multiLingual'    => $this->isMultiLingual(),
+            'currentLangCode' => $this->getFilters()->getLanguageCode(),
+            'languages'       => $this->languageService->getLanguages(),
         ]);
     }
 

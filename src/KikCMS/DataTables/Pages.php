@@ -199,7 +199,7 @@ class Pages extends DataTable
             $value = '<span class="glyphicon glyphicon-link" title="' . $linkTitle . '"></span> ' . $value;
         }
 
-        if ( ! $rowData[PageLanguage::FIELD_ACTIVE]) {
+        if ( ! $rowData[PageLanguage::FIELD_ACTIVE] && $rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE) {
             $value = '<span class="glyphicon glyphicon-eye-close" title="' . $inactiveTitle . '"></span> ' . $value;
         }
 
