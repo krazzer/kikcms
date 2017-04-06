@@ -7,6 +7,7 @@ use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Products;
 use KikCMS\Forms\SettingsForm;
+use KikCMS\Models\Language;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
 use Phalcon\Http\Response;
@@ -51,6 +52,31 @@ class CmsController extends BaseCmsController
         $this->view->title  = $this->translator->tl('menu.item.settings');
         $this->view->object = (new SettingsForm())->render();
         $this->view->pick('cms/default');
+    }
+
+    public function testAction()
+    {
+        $repeat = 1000;
+
+        $s = microtime(true);
+
+        for ($i = 0; $i < $repeat; $i++) {
+            Language::find();
+        }
+
+        echo(microtime(true) - $s);
+
+        echo '<br><br>';
+
+        $s = microtime(true);
+
+        for ($i = 0; $i < $repeat; $i++) {
+            $this->languageService->getLanguages();
+        }
+
+        echo(microtime(true) - $s);
+
+        exit;
     }
 
     public function logoutAction()

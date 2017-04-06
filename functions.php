@@ -50,3 +50,59 @@ function dlog()
 
     error_log(print_r($args, true));
 }
+
+// Make phalcon APC module work with APCu, Remove this when migrating to Redis
+function apc_add($key, $var, $ttl)
+{
+    return apcu_add($key, $var, $ttl);
+}
+
+function apc_cas($key, $old, $new)
+{
+    return apcu_cas($key, $old, $new);
+}
+
+function apc_clear_cache()
+{
+    return apcu_clear_cache();
+}
+
+function apc_dec($key, $step, $success)
+{
+    return apcu_dec($key, $step, $success);
+}
+
+function apc_delete($key)
+{
+    return apcu_delete($key);
+}
+
+function apc_entry($key, $generator, $ttl)
+{
+    return apcu_entry($key, $generator, $ttl);
+}
+
+function apc_exists($keys)
+{
+    return apcu_exists($keys);
+}
+
+function apc_fetch($key)
+{
+    return apcu_fetch($key);
+}
+
+function apc_inc($key, $step, $success)
+{
+    return apcu_inc($key, $step, $success);
+}
+
+function apc_sma_info($lim)
+{
+    return apcu_sma_info($lim);
+}
+
+function apc_store($key, $var, $ttl)
+{
+    return apcu_store($key, $var, $ttl);
+}

@@ -25,6 +25,7 @@ use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
 use Phalcon\Cache\Backend\Apc;
 use Phalcon\Cache\Backend\File;
+use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
 use Phalcon\DiInterface;
@@ -249,7 +250,7 @@ class Services extends BaseServices
      */
     protected function initCache()
     {
-        return new Apc(new Json());
+        return new Apc(new Data());
     }
 
     /**

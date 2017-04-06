@@ -279,31 +279,33 @@ abstract class DataTable extends Renderable
 
     /**
      * Initializes the dataTable
+     * @param bool $initializeForm
      */
-    public function initializeDatatable()
+    public function initializeDatatable($initializeForm = false)
     {
         if ($this->initialized) {
             return;
         }
 
-        $instance     = $this->getInstance();
-        $formClass    = $this->getFormClass();
+        if ($initializeForm) {
+            $instance     = $this->getInstance();
+            $formClass    = $this->getFormClass();
+            $editId       = $this->getFilters()->getEditId();
+            $languageCode = $this->getFilters()->getLanguageCode();
+            $parentEditId = $this->getFilters()->getParentEditId();
 
-        $editId       = $this->getFilters()->getEditId();
-        $languageCode = $this->getFilters()->getLanguageCode();
-        $parentEditId = $this->getFilters()->getParentEditId();
+            /** @var DataForm $dataForm */
+            $dataForm = new $formClass();
+            $dataForm->getFilters()->setEditId($editId);
+            $dataForm->getFilters()->setLanguageCode($languageCode);
+            $dataForm->getFilters()->setParentEditId($parentEditId);
+            $dataForm->initializeForm();
 
-        /** @var DataForm $dataForm */
-        $dataForm = new $formClass();
-        $dataForm->getFilters()->setEditId($editId);
-        $dataForm->getFilters()->setLanguageCode($languageCode);
-        $dataForm->getFilters()->setParentEditId($parentEditId);
-        $dataForm->initializeForm();
+            $this->form = $dataForm;
+            $this->form->setIdentifier('form_' . $instance);
+        }
 
-        $this->form = $dataForm;
         $this->initialize();
-
-        $this->form->setIdentifier('form_' . $instance);
 
         $this->initialized = true;
     }
@@ -331,7 +333,7 @@ abstract class DataTable extends Renderable
      */
     public function renderAddForm()
     {
-        $this->initializeDatatable();
+        $this->initializeDatatable(true);
 
         $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
@@ -351,7 +353,7 @@ abstract class DataTable extends Renderable
      */
     public function renderEditForm()
     {
-        $this->initializeDatatable();
+        $this->initializeDatatable(true);
 
         $this->form->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
         $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
