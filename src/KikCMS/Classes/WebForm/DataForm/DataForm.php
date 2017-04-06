@@ -175,6 +175,7 @@ abstract class DataForm extends WebForm
         }
 
         if ($saveSuccess) {
+            $this->onSave();
             $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
@@ -272,6 +273,13 @@ abstract class DataForm extends WebForm
     private function getSystemFields()
     {
         return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
+    }
+
+    /**
+     * Perform some action on a successful save
+     */
+    protected function onSave()
+    {
     }
 
     /**

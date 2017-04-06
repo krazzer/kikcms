@@ -35,6 +35,10 @@ var WebForm = Class.extend({
             });
 
             $finderPickButton.click(function () {
+                if ($finderPickButton.hasClass('disabled')) {
+                    return;
+                }
+
                 var $file          = $filePicker.find('.file.selected');
                 var selectedFileId = $file.attr('data-id');
 
