@@ -25,8 +25,11 @@ class Field
     /** @var WebForm|DataForm */
     protected $form;
 
-    /** @var Element */
+    /** @var Element|null */
     private $element;
+
+    /** @var string */
+    private $key;
 
     /** @var Tab */
     private $tab;
@@ -37,7 +40,7 @@ class Field
     /**
      * @param Element $element
      */
-    public function __construct(Element $element)
+    public function __construct(Element $element = null)
     {
         $this->element = $element;
     }
@@ -84,9 +87,9 @@ class Field
     }
 
     /**
-     * @return Element
+     * @return Element|null
      */
-    public function getElement(): Element
+    public function getElement()
     {
         return $this->element;
     }
@@ -127,7 +130,22 @@ class Field
      */
     public function getKey()
     {
-        return $this->element->getName();
+        return $this->key;
+    }
+
+    /**
+     * @param string $key
+     * @return $this
+     */
+    public function setKey(string $key)
+    {
+        $this->key = $key;
+
+        if ($this->element) {
+            $this->element->setName($key);
+        }
+
+        return $this;
     }
 
     /**

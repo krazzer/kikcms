@@ -135,20 +135,28 @@ abstract class WebForm extends Renderable
      */
     public function addField(Field $field): Field
     {
+        if ($field->getElement()) {
+            $field->setKey($field->getElement()->getName());
+        }
+
         $key = $field->getKey();
         $field->setTableField($key);
 
         if (array_key_exists($key, $this->keys)) {
             $newKey             = $key . (count($this->keys[$key]) + 1);
             $this->keys[$key][] = $newKey;
-            $field->getElement()->setName($newKey);
+
+            $field->setKey($newKey);
         } else {
             $this->keys[$key] = [$key];
         }
 
         $field->setForm($this);
         $this->fields[$field->getKey()] = $field;
-        $this->form->add($field->getElement());
+
+        if ($field->getElement()) {
+            $this->form->add($field->getElement());
+        }
 
         return $field;
     }
@@ -183,11 +191,8 @@ abstract class WebForm extends Renderable
      */
     public function addButtonField(string $label, string $info, string $buttonLabel, string $route)
     {
-        // todo: make a button element?
-        $element = new Hidden('x');
-        $element->setLabel($label);
-
-        $button = (new Button($element))
+        $button = (new Button())
+            ->setKey('button')
             ->setInfo($info)
             ->setLabel($label)
             ->setButtonLabel($buttonLabel)

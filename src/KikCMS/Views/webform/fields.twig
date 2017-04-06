@@ -34,7 +34,7 @@
 {%- block fieldButton %}
     {# @var field \KikCMS\Classes\WebForm\Fields\Button #}
     <div{{ fieldContainterAttributes|raw }}>
-        {{ form.label(element.name)|raw }}
+        <label>{{ field.label|raw }}</label>
         <div class="field">
             <div class="info">{{ field.info }}</div>
             <a class="btn btn-primary" href="{{ field.route }}">{{ field.buttonLabel }}</a>

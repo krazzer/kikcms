@@ -49,25 +49,27 @@ class ErrorContainer
     }
 
     /**
-     * @param string $field
+     * @param Field $field
      * @return bool
      */
-    public function fieldHasError(string $field): bool
+    public function fieldHasError(Field $field): bool
     {
-        return in_array($field, $this->fieldsWithErrors);
+        return in_array($field->getKey(), $this->fieldsWithErrors);
     }
 
     /**
-     * @param string $field
+     * @param Field $field
      * @return array
      */
-    public function getErrorsForField(string $field): array
+    public function getErrorsForField(Field $field): array
     {
-        if( ! array_key_exists($field, $this->fieldErrors)){
+        $fieldKey = $field->getKey();
+
+        if ( ! array_key_exists($fieldKey, $this->fieldErrors)) {
             return [];
         }
 
-        return $this->fieldErrors[$field];
+        return $this->fieldErrors[$fieldKey];
     }
 
     /**
