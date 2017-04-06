@@ -13,6 +13,8 @@ class Routing
 
         $router->setDefaultModule("kikcms");
 
+        $router->add('{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
+
         $router->add("/deploy", [
             "controller" => "deploy",
             "action"     => "index"
@@ -23,7 +25,7 @@ class Routing
             "action"     => "index"
         ]);
 
-        $router->add("/cms/:action", [
+        $router->add('/cms/{action:[0-9a-z\/\-]+}', [
             "controller" => "cms",
             "action"     => 1
         ]);

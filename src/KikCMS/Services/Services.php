@@ -8,6 +8,7 @@ use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
+use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
@@ -30,7 +31,6 @@ use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\MetaData\Files;
-use Phalcon\Mvc\View;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
@@ -120,19 +120,24 @@ class Services extends BaseServices
 
     protected function initView()
     {
+        $cmsViewDir  = __DIR__ . '/../Views/';
+        $siteViewDir = SITE_PATH . 'app/Views/';
+
         $view = new View();
-        $view->setViewsDir(__DIR__ . "/../Views/");
+        $view->setViewsDir($cmsViewDir);
+        $view->setNamespaces([
+            'kikcms'  => $cmsViewDir,
+            'website' => $siteViewDir
+        ]);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
                 $env   = $di->get('config')->get('application')->get('env');
-                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . '/cache/twig/' : false;
+                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . 'cache/twig/' : false;
 
                 return new Twig($view, $di, [
                     'cache' => $cache,
                     'debug' => true,
-                ], [
-                    'kikcms' => $view->getViewsDir()
-                ]);
+                ], $view->getNamespaces());
             }
         ]);
 

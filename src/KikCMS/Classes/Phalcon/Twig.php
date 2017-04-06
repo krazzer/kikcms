@@ -6,6 +6,7 @@ use Phalcon\Config;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
+use Phalcon\Mvc\ViewBaseInterface;
 use Phalcon\Tag;
 
 /**
@@ -47,6 +48,14 @@ class Twig extends Engine implements EngineInterface
     }
 
     /**
+     * @return View|ViewBaseInterface
+     */
+    public function getView()
+    {
+        return parent::getView();
+    }
+
+    /**
      * @param string $path
      * @param mixed $params
      * @param bool $mustClean
@@ -55,6 +64,11 @@ class Twig extends Engine implements EngineInterface
     {
         if ( ! $params) {
             $params = [];
+        }
+
+        // convert full paths back to the @namespace notation twig understands
+        foreach ($this->getView()->getNamespaces() as $namespace => $namespacePath) {
+            $path = str_replace($namespacePath, '@' . $namespace . '/', $path);
         }
 
         $view    = str_replace($this->getView()->getViewsDir(), '', $path);

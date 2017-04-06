@@ -37,6 +37,10 @@ $loader->registerDirs([
     SITE_PATH . $config->application->formsDir
 ])->register();
 
+$loader->registerNamespaces([
+    "Website" => SITE_PATH . "app/",
+]);
+
 $application = new Application(new Services($config));
 
 $application->registerModules([
