@@ -1,0 +1,23 @@
+{
+  "name": "kikcms",
+  "description": "KikCMS assets",
+  "main": "index.js",
+  "authors": [
+    "Kaz van Wel"
+  ],
+  "license": "ISC",
+  "homepage": "kiksaus.nl",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "bootstrap3-typeahead": "git://github.com/bassjobsen/Bootstrap-3-Typeahead.git#master",
+    "bootstrap-sass": "^3.3.7"
+  }
+}

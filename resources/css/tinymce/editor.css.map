@@ -1,7 +1,12 @@
 {
-"version": 3,
-  "mappings": ";;;;AAGA,sBAAsB;EAClB,YAAY,EAAE,kBAAqB;EACnC,gBAAgB,ECOH,OAAO;EDLpB,+BAAQ;IACJ,gBAAgB,ECIP,OAAO;EDDpB,gCAAS;IACL,OAAO,EAAE,IAAI;EAGjB,4FAAqE;IACjE,MAAM,EAAE,IAAI;EAGhB,oEAAsB;IAClB,aAAa,ECIC,GAAG;IDFjB,gFAAO;MACH,gBAAgB,EAAE,IAAI;;AAM9B,8FAAmB;EEiCnB,WAAW,EAAE,kBAAkB;EAC/B,WAAW,EAAE,GAAG;EFhCZ,WAAW,EAAE,GAAG;;AAIxB,YAAY;EACR,aAAa,ECZK,GAAG;EDarB,gBAAgB,EAAE,IAAI;EAEtB,mBAAM;IACF,yBAAyB,EChBX,GAAG;IDiBjB,0BAA0B,ECjBZ,GAAG;;ADwBzB,cAAc;EACV,yBAAyB,ECzBP,GAAG;ED0BrB,0BAA0B,EC1BR,GAAG",
-"sources": ["editor.scss","../includes/variables.scss","../includes/mixins.scss"],
-"names": [],
-"file": "editor.css"
+  "version": 3,
+  "sources": [
+    "editor.css"
+  ],
+  "names": [],
+  "mappings": "AAIA,uBACE,8BAAiC,CACL,AAC5B,uDADA,wBAA0B,CAEI,AAC9B,iCACE,YAAc,CAAE,AAClB,6FACE,WAAa,CAAE,AACjB,oEACE,iBAAmB,CAAE,AACrB,gFACE,qBAAuB,CAAE,AAE/B,4FACE,4BAAgC,AAChC,gBAAiB,AACjB,eAAiB,CAAE,AAErB,aACE,kBAAmB,AACnB,qBAAuB,CAAE,AAK3B,mCACE,8BAA+B,AAC/B,8BAAgC,CAAE",
+  "file": "editor.css",
+  "sourcesContent": [
+    "/* Colors */\n/* Miscellaneous */\n/* Z-indexes */\n/* Default paddings and margins */\n.form-group .mce-panel {\n  border-color: #e1e1e1 !important;\n  background-color: #fafafa; }\n  .form-group .mce-panel .mce-btn {\n    background-color: #fafafa; }\n  .form-group .mce-panel .mce-path {\n    display: none; }\n  .form-group .mce-panel .mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last {\n    border: none; }\n  .form-group .mce-panel .mce-menubtn, .form-group .mce-panel .mce-btn {\n    border-radius: 3px; }\n    .form-group .mce-panel .mce-menubtn:hover, .form-group .mce-panel .mce-btn:hover {\n      background-color: #fff; }\n\n.mce-container .mce-txt, .mce-container .mce-text, .mce-widget .mce-txt, .mce-widget .mce-text {\n  font-family: 'Lato', sans-serif;\n  font-weight: 300;\n  font-weight: 400; }\n\n.mce-tinymce {\n  border-radius: 3px;\n  background-color: #fff; }\n  .mce-tinymce iframe {\n    border-bottom-left-radius: 3px;\n    border-bottom-right-radius: 3px; }\n\n.mce-edit-area {\n  border-bottom-left-radius: 3px;\n  border-bottom-right-radius: 3px; }\n"
+  ]
 }

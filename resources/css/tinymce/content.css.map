@@ -1,7 +1,12 @@
 {
-"version": 3,
-  "mappings": ";;;;AAGA,iBAAkB;EC2Dd,WAAW,EAAE,kBAAkB;EAC/B,WAAW,EAAE,GAAG;ED1DhB,SAAS,EAAE,IAAI;EACf,OAAO,EAAE,WAAW;EAEpB,uBAAM;IACF,cAAc,EAAE,CAAC;IACjB,eAAe,EAAE,QAAQ;IACzB,MAAM,EAAE,iBAAe;IAEvB,0CAAmB;MACf,UAAU,EAAE,OAAO;IAGvB,sDAAO;MC6CX,WAAW,EAAE,kBAAkB;MAC/B,WAAW,EAAE,GAAG;MD5CR,SAAS,EAAE,IAAI",
-"sources": ["content.scss","../includes/mixins.scss"],
-"names": [],
-"file": "content.css"
+  "version": 3,
+  "sources": [
+    "content.css"
+  ],
+  "names": [],
+  "mappings": "AAIA,kBACE,4BAAgC,AAChC,gBAAiB,AACjB,eAAgB,AAChB,mBAAqB,CAAE,AACvB,wBACE,iBAAkB,AAClB,yBAA0B,AAC1B,qBAA0B,CAAE,AAC5B,yCACE,kBAAoB,CAAE,AACxB,sDACE,4BAAgC,AAChC,gBAAiB,AACjB,cAAgB,CAAE",
+  "file": "content.css",
+  "sourcesContent": [
+    "/* Colors */\n/* Miscellaneous */\n/* Z-indexes */\n/* Default paddings and margins */\n.mce-content-body {\n  font-family: 'Lato', sans-serif;\n  font-weight: 300;\n  font-size: 14px;\n  padding: 0 10px 10px; }\n  .mce-content-body table {\n    border-spacing: 0;\n    border-collapse: separate;\n    border: 1px solid #aaaaaa; }\n    .mce-content-body table tr:nth-child(even) {\n      background: #FAFAFA; }\n    .mce-content-body table td, .mce-content-body table th {\n      font-family: 'Lato', sans-serif;\n      font-weight: 300;\n      font-size: 14px; }\n"
+  ]
 }

@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" sizes="120x120" href="/cmsassets/icons/kikcms-icon-120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/cmsassets/icons/kikcms-icon-152.png">
     {{ stylesheetLink('//fonts.googleapis.com/css?family=Lato:300,700') }}
-    {{ stylesheetLink('cmsassets/css/vendor/bootstrap.min.css') }}
+    {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ stylesheetLink('cmsassets/css/default.css') }}
     {{ javascriptInclude('cmsassets/js/vendor/jquery.min.js') }}
@@ -28,7 +28,9 @@
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 {{ javascriptInclude('cmsassets/js/kikcms.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/bootstrap/dropdown.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
 <script>
     KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
     KikCMS.maxFileUploads    = {{ maxFileUploads }};

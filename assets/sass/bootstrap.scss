@@ -1,0 +1,9 @@
+@import "includes/variables";
+
+$btn-primary-color: #fff;
+$btn-primary-bg: $colorPink;
+$btn-primary-border: $colorPink;
+
+$input-color: #333;
+
+@import "../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";

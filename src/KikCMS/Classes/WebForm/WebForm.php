@@ -110,9 +110,9 @@ abstract class WebForm extends Renderable
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
         }
 
-        if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
-            $this->view->assets->addJs('cmsassets/js/vendor/typeahead.js');
-        }
+//        if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
+//            $this->view->assets->addJs('cmsassets/js/vendor/typeahead.js');
+//        }
 
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
             (new Finder())->addAssets();
@@ -122,10 +122,6 @@ abstract class WebForm extends Renderable
             $langCode = $this->translator->tl('system.langCode');
             $this->view->assets->addJs('cmsassets/js/vendor/moment/moment.js');
             $this->view->assets->addJs('cmsassets/js/vendor/moment/' . $langCode . '.js');
-            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/transition.js');
-            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/collapse.js');
-            $this->view->assets->addJs('cmsassets/js/vendor/bootstrap/bootstrap-datetimepicker.min.js');
-            $this->view->assets->addCss('cmsassets/css/vendor/bootstrap-datetimepicker.min.css');
         }
     }
 
