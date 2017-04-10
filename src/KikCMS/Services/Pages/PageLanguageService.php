@@ -42,4 +42,14 @@ class PageLanguageService extends Injectable
 
         return $pageLanguage;
     }
+
+    /**
+     * Get the default pageLanguage (homepage)
+     *
+     * @return PageLanguage
+     */
+    public function getDefault()
+    {
+        return null;
+    }
 }

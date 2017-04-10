@@ -4,6 +4,9 @@ namespace KikCMS\Models;
 
 use KikCMS\Classes\Model\Model;
 
+/**
+ * @property Page $parent
+ */
 class Page extends Model
 {
     const TABLE = 'cms_page';
@@ -22,6 +25,13 @@ class Page extends Model
     const TYPE_MENU  = 'menu';
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
+
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->belongsTo("parent_id", Page::class, "id", ["alias" => "parent"]);
+    }
 
     /**
      * @inheritdoc

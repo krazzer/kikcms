@@ -16,11 +16,14 @@ class PageLanguage extends Model
     const FIELD_LANGUAGE_CODE   = 'language_code';
     const FIELD_ACTIVE          = 'active';
     const FIELD_NAME            = 'name';
-    const FIELD_URL = 'url';
+    const FIELD_URL             = 'url';
     const FIELD_SEO_TITLE       = 'seo_title';
     const FIELD_SEO_DESCRIPTION = 'seo_description';
     const FIELD_SEO_KEYWORDS    = 'seo_keywords';
 
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         parent::initialize();

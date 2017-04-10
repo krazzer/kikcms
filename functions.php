@@ -106,3 +106,11 @@ function apc_store($key, $var, $ttl)
 {
     return apcu_store($key, $var, $ttl);
 }
+
+class APCIterator extends APCuIterator
+{
+    public function __construct($cache, $search = null, $format = APC_ITER_ALL, $chunk_size = 100, $list = APC_LIST_ACTIVE)
+    {
+        parent::__construct($search, $format, $chunk_size, $list);
+    }
+}

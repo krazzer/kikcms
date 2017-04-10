@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
     {{ assets.outputCss() }}
+    {% block head '' %}
 </head>
 <body>
 {% block body %}{% endblock %}

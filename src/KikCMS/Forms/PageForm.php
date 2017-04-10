@@ -110,6 +110,14 @@ class PageForm extends DataForm
         return $errorContainer;
     }
 
+    /**
+     * @inheritdoc
+     */
+    protected function onSave()
+    {
+        $this->urlService->clearUrlCache();
+    }
+
     private function addFieldsForCurrentTemplate()
     {
         // todo: this is POC, of course this should be dynamic

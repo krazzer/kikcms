@@ -50,6 +50,7 @@ class PageRearrangeService extends Injectable
 
         $this->checkUrl($page, $targetPage, $rearrange);
         $this->updateNestedSet();
+        $this->urlService->clearUrlCache();
     }
 
     /**

@@ -13,7 +13,8 @@ class Routing
 
         $router->setDefaultModule("kikcms");
 
-        $router->add('{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
+        $router->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
+        $router->add('/', "Frontend::page")->setName('page');
 
         $router->add("/deploy", [
             "controller" => "deploy",
@@ -29,6 +30,8 @@ class Routing
             "controller" => "cms",
             "action"     => 1
         ]);
+
+        $router->add("/cms/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
 
         /** Login */
         $router->add("/cms/login", [
