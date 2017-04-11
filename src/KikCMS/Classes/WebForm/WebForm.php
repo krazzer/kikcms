@@ -110,10 +110,6 @@ abstract class WebForm extends Renderable
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
         }
 
-//        if ($this->hasFieldWithType(Field::TYPE_AUTOCOMPLETE)) {
-//            $this->view->assets->addJs('cmsassets/js/vendor/typeahead.js');
-//        }
-
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
             (new Finder())->addAssets();
         }
@@ -174,7 +170,6 @@ abstract class WebForm extends Renderable
 
         return $this->addField(new Autocomplete($autoComplete));
     }
-
 
     /**
      * Add a button. Can be used if specific functionality is managed somewhere else than in this form.

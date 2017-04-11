@@ -4,6 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Phalcon\Validator\FileType;
+use KikCMS\Classes\TemplateFieldsBase;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Config\KikCMSConfig;
@@ -120,13 +121,6 @@ class PageForm extends DataForm
 
     private function addFieldsForCurrentTemplate()
     {
-        // todo: this is POC, of course this should be dynamic
-        if ($this->getFilters()->getEditId() == 19) {
-            $buttonField = $this->addButtonField('Producten', 'Producten kunnen worden beheerd in het product beheer gedeelte', 'Ga naar product beheer', 'products');
-            $this->tabs[0]->addField($buttonField);
-            return;
-        }
-
         $templateId = $this->getTemplateId();
         $fields     = $this->templateService->getFieldsByTemplateId($templateId);
 
@@ -159,6 +153,26 @@ class PageForm extends DataForm
             case KikCMSConfig::CONTENT_TYPE_IMAGE:
                 $imagesOnly    = new FileType([FileType::OPTION_FILETYPES => ['jpg', 'jpeg', 'png', 'gif']]);
                 $templateField = $this->addFileField($fieldKey, $field->name, [$imagesOnly]);
+            break;
+
+            case KikCMSConfig::CONTENT_TYPE_CUSTOM:
+                $className  = 'Website\Classes\TemplateFields';
+                $methodName = 'field' . ucfirst($field->variable);
+
+                if ( ! class_exists($className)) {
+                    return;
+                }
+
+                /** @var TemplateFieldsBase $templateFields */
+                $templateFields = new $className();
+
+                if ( ! method_exists($templateFields, $methodName)) {
+                    return;
+                }
+
+                $templateFields->setWebForm($this);
+
+                $templateField = $templateFields->$methodName();
             break;
         }
 
