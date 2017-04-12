@@ -155,6 +155,30 @@ class DbService extends Injectable
     }
 
     /**
+     * Retrieve a map where the first column is the key, the second is the value
+     *
+     * @param Builder $query
+     * @return array
+     */
+    public function getAssoc(Builder $query): array
+    {
+        $columns = (array) $query->getColumns();
+
+        if (count($columns) !== 2) {
+            throw new \InvalidArgumentException('The query must request two columns');
+        }
+
+        $results = $query->getQuery()->execute()->toArray();
+        $map     = [];
+
+        foreach ($results as $i => $row) {
+            $map[array_values($row)[0]] = array_values($row)[1];
+        }
+
+        return $map;
+    }
+
+    /**
      * Retrieve a single result from the given query
      *
      * @param Builder $query

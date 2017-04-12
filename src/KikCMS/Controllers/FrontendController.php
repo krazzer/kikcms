@@ -3,12 +3,14 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Services\Frontend\MenuBuilder;
+use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 
 /**
  * @property PageService $pageService
+ * @property PageContentService $pageContentService
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
  */
@@ -26,11 +28,13 @@ class FrontendController extends BaseController
         }
 
         $menuBuilder = new MenuBuilder($pageLanguage->language_code);
+        $variables   = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
 
         $this->view->title        = $pageLanguage->name;
         $this->view->languageCode = $pageLanguage->language_code;
         $this->view->menuBuilder  = $menuBuilder;
 
-        $this->view->pick('@website/base');
+        $this->view->setVars($variables);
+        $this->view->pick('@website/templates/' . $pageLanguage->page->template->file);
     }
 }

@@ -17,6 +17,7 @@ use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
 use KikCMS\Services\DataTable\PageRearrangeService;
+use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
@@ -51,6 +52,7 @@ class Services extends BaseServices
         CacheService::class,
         TemplateService::class,
         PageService::class,
+        PageContentService::class,
         PageLanguageService::class,
         PageRearrangeService::class,
         LanguageService::class,

@@ -6,6 +6,7 @@ use KikCMS\Classes\Model\Model;
 
 /**
  * @property Page $parent
+ * @property Template $template
  */
 class Page extends Model
 {
@@ -31,6 +32,7 @@ class Page extends Model
         parent::initialize();
 
         $this->belongsTo("parent_id", Page::class, "id", ["alias" => "parent"]);
+        $this->belongsTo("template_id", Template::class, "id", ["alias" => "template"]);
     }
 
     /**

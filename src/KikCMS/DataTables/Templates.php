@@ -44,6 +44,7 @@ class Templates extends DataTable
         return [
             'id'   => $this->translator->tl('id'),
             'name' => $this->translator->tl('name'),
+            'file' => $this->translator->tl('file'),
         ];
     }
 
