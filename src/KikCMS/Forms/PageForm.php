@@ -13,6 +13,7 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
+use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
@@ -24,6 +25,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property TemplateService $templateService
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
+ * @property CacheService $cacheService
  */
 class PageForm extends DataForm
 {
@@ -116,7 +118,7 @@ class PageForm extends DataForm
      */
     protected function onSave()
     {
-        $this->urlService->clearUrlCache();
+        $this->cacheService->clearPageCache();
     }
 
     private function addFieldsForCurrentTemplate()

@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Services\Frontend\MenuBuilder;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
@@ -19,12 +20,16 @@ class FrontendController extends BaseController
     public function pageAction(string $url = null)
     {
         if ($url) {
-            $page = $this->urlService->getPageLanguageByUrl($url);
+            $pageLanguage = $this->urlService->getPageLanguageByUrl($url);
         } else {
-            $page = $this->pageLanguageService->getDefault();
+            $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        $this->view->title = $page->name;
+        $menuBuilder = new MenuBuilder($pageLanguage->language_code);
+
+        $this->view->title        = $pageLanguage->name;
+        $this->view->languageCode = $pageLanguage->language_code;
+        $this->view->menuBuilder  = $menuBuilder;
 
         $this->view->pick('@website/base');
     }

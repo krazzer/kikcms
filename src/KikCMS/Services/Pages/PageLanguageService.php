@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
+use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\LanguageService;
 use Phalcon\Di\Injectable;
@@ -16,13 +17,23 @@ use Phalcon\Di\Injectable;
 class PageLanguageService extends Injectable
 {
     /**
+     * @param Page $page
+     * @param string|null $languageCode
+     * @return PageLanguage|null
+     */
+    public function getByPage(Page $page, string $languageCode = null)
+    {
+        return $this->getByPageId($page->getId(), $languageCode);
+    }
+
+    /**
      * Get the PageLanguage by given pageId, using the default languageCode
      *
      * @param int $pageId
      * @param string|null $languageCode
      * @return PageLanguage|null
      */
-    public function getByPageId(int $pageId, $languageCode = null)
+    public function getByPageId(int $pageId, string $languageCode = null)
     {
         if ( ! $languageCode) {
             $languageCode = $this->languageService->getDefaultLanguageCode();
@@ -44,12 +55,34 @@ class PageLanguageService extends Injectable
     }
 
     /**
+     * @param array $pageMap
+     * @param string $languageCode
+     * @return PageLanguage[] (PageLanguageMap)
+     */
+    public function getByPageMap(array $pageMap, string $languageCode): array
+    {
+        $pageLanguages = PageLanguage::find([
+            'conditions' => 'page_id IN ({ids:array}) AND language_code = :langCode:',
+            'bind'       => ['ids' => array_keys($pageMap), 'langCode' => $languageCode]
+        ]);
+
+        $pageLanguageMap = [];
+
+        foreach ($pageLanguages as $pageLanguage) {
+            $pageLanguageMap[$pageLanguage->page_id] = $pageLanguage;
+        }
+
+        return $pageLanguageMap;
+    }
+
+    /**
      * Get the default pageLanguage (homepage)
      *
      * @return PageLanguage
      */
     public function getDefault()
     {
+        //todo: actually get this from somewhere #1
         return null;
     }
 }

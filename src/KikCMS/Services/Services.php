@@ -48,6 +48,7 @@ class Services extends BaseServices
 {
     /** @inheritdoc */
     protected $autoDefineServices = [
+        CacheService::class,
         TemplateService::class,
         PageService::class,
         PageLanguageService::class,

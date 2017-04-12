@@ -7,28 +7,16 @@ use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
-use Phalcon\Cache\Backend;
+use KikCMS\Services\CacheService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
- * @property Backend $cache
+ * @property CacheService $cacheService
  */
 class UrlService extends Injectable
 {
-    /**
-     * Remove all cached urls
-     */
-    public function clearUrlCache()
-    {
-        $urlCacheKeys = $this->cache->queryKeys(CacheConfig::PAGE_LANGUAGE_FOR_URL);
-
-        foreach ($urlCacheKeys as $cacheKey) {
-            $this->cache->delete($cacheKey);
-        }
-    }
-
     /**
      * Check if the given url exists as child of the given parent, excluding the given page
      *
@@ -74,7 +62,7 @@ class UrlService extends Injectable
         $pageLanguage->url = $newUrl;
         $pageLanguage->save();
 
-        $this->clearUrlCache();
+        $this->cacheService->clearPageCache();
     }
 
     /**
@@ -85,32 +73,26 @@ class UrlService extends Injectable
     {
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . ':' . $url;
 
-        if ($this->cache->exists($cacheKey)) {
-            return $this->cache->get($cacheKey);
-        }
+        return $this->cacheService->cache($cacheKey, function () use ($url){
+            $pageLanguage = null;
+            $parent       = null;
 
-        $pageLanguage = null;
-        $parent       = null;
+            $slugs = explode('/', $url);
 
-        $slugs = explode('/', $url);
+            foreach ($slugs as $slug) {
+                $pageLanguage = $this->getPageLanguageBySlug($slug, $parent);
 
-        foreach ($slugs as $slug) {
-            $pageLanguage = $this->getPageLanguageBySlug($slug, $parent);
+                if ( ! $pageLanguage) {
+                    return null;
+                }
 
-            if ( ! $pageLanguage) {
-                return null;
+                if (count($slugs) > 1) {
+                    $parent = $pageLanguage->page;
+                }
             }
 
-            if (count($slugs) > 1) {
-                $parent = $pageLanguage->page;
-            }
-        }
-
-        if ($pageLanguage) {
-            $this->cache->save($cacheKey, $pageLanguage, CacheConfig::ONE_DAY);
-        }
-
-        return $pageLanguage;
+            return $pageLanguage;
+        });
     }
 
     /**
@@ -141,22 +123,25 @@ class UrlService extends Injectable
      */
     public function getUrlByPageLanguage(PageLanguage $pageLanguage): string
     {
-        $langCode = $pageLanguage->language_code;
-        $urlParts = [$pageLanguage->url];
+        $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
-        while ($pageLanguage->page->parent && $pageLanguage->page->parent->type != Page::TYPE_MENU) {
-            var_dump($pageLanguage->page->parent->id, $langCode);
-            $pageLanguage = PageLanguage::findFirst([
-                'conditions' => 'page_id = :pageId: AND language_code = :langCode:',
-                'bind'       => [
-                    'pageId'   => $pageLanguage->page->parent->id,
-                    'langCode' => $langCode
-                ]
-            ]);
+        return $this->cacheService->cache($cacheKey, function() use ($pageLanguage){
+            $langCode = $pageLanguage->language_code;
+            $urlParts = [$pageLanguage->url];
 
-            $urlParts[] = $pageLanguage->url;
-        }
+            while ($pageLanguage->page->parent && $pageLanguage->page->parent->type != Page::TYPE_MENU) {
+                $pageLanguage = PageLanguage::findFirst([
+                    'conditions' => 'page_id = :pageId: AND language_code = :langCode:',
+                    'bind'       => [
+                        'pageId'   => $pageLanguage->page->parent->id,
+                        'langCode' => $langCode
+                    ]
+                ]);
 
-        return implode('/', array_reverse($urlParts));
+                $urlParts[] = $pageLanguage->url;
+            }
+
+            return implode('/', array_reverse($urlParts));
+        });
     }
 }

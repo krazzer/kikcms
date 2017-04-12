@@ -39,7 +39,7 @@ class TemplateService extends Injectable
     public function getDefaultTemplate()
     {
         /** @var Template $firstTemplate */
-        $firstTemplate = Template::findFirst();
+        $firstTemplate = Template::findFirst(['order' => 'display_order ASC']);
 
         return $firstTemplate;
     }

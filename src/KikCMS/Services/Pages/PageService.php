@@ -16,6 +16,26 @@ class PageService extends Injectable
 {
     /**
      * @param Page $page
+     * @return Page[] [pageId => Page] (PageMap)
+     */
+    public function getChildren(Page $page): array
+    {
+        $pagesResult = Page::find([
+            'conditions' => 'lft > :lft: AND rgt < :rgt:',
+            'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt]
+        ]);
+
+        $pages = [];
+
+        foreach ($pagesResult as $page){
+            $pages[$page->id] = $page;
+        }
+
+        return $pages;
+    }
+
+    /**
+     * @param Page $page
      * @return int
      */
     public function getHighestDisplayOrderChild(Page $page): int

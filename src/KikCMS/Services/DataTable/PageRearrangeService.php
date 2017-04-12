@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Util\AdjacencyToNestedSet;
@@ -18,6 +19,7 @@ use Phalcon\Di\Injectable;
  * @property DbService dbService
  * @property PageService pageService
  * @property UrlService urlService
+ * @property CacheService cacheService
  */
 class PageRearrangeService extends Injectable
 {
@@ -50,7 +52,7 @@ class PageRearrangeService extends Injectable
 
         $this->checkUrl($page, $targetPage, $rearrange);
         $this->updateNestedSet();
-        $this->urlService->clearUrlCache();
+        $this->cacheService->clearPageCache();
     }
 
     /**
@@ -185,7 +187,7 @@ class PageRearrangeService extends Injectable
         }
 
         // no use placing a page into it's own parent
-        if ($page->parent_id == $targetPage->id) {
+        if ($page->parent_id == $targetPage->getId()) {
             return;
         }
 
