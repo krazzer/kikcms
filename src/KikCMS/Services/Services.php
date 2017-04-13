@@ -56,6 +56,7 @@ class Services extends BaseServices
         PageLanguageService::class,
         PageRearrangeService::class,
         LanguageService::class,
+        TranslationService::class,
         UrlService::class,
     ];
 

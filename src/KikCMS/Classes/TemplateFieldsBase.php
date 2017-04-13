@@ -4,29 +4,28 @@ namespace KikCMS\Classes;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Classes\WebForm\WebForm;
 use Phalcon\Di\Injectable;
 
 class TemplateFieldsBase extends Injectable
 {
     /** @var DataForm */
-    private $webForm;
+    private $form;
 
     /**
-     * @return WebForm
+     * @return DataForm
      */
-    public function getWebForm(): WebForm
+    public function getForm(): DataForm
     {
-        return $this->webForm;
+        return $this->form;
     }
 
     /**
-     * @param WebForm $webForm
+     * @param DataForm $form
      * @return TemplateFieldsBase
      */
-    public function setWebForm(WebForm $webForm): TemplateFieldsBase
+    public function setForm(DataForm $form): TemplateFieldsBase
     {
-        $this->webForm = $webForm;
+        $this->form = $form;
         return $this;
     }
 }

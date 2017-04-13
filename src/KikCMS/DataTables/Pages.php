@@ -166,6 +166,7 @@ class Pages extends DataTable
             'name'     => $this->translator->tl('name'),
             'template' => $this->translator->tl('template'),
             'url'      => $this->translator->tl('url'),
+            'id'       => $this->translator->tl('id'),
         ];
     }
 

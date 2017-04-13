@@ -215,7 +215,7 @@ abstract class DataForm extends WebForm
             return [];
         }
 
-        $data = $returnData->toArray() + $this->getDataStoredElseWhere($editId, $languageCode);
+        $data = $this->getDataStoredElseWhere($editId, $languageCode) + $returnData->toArray();
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;

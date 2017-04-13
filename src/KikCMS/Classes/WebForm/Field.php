@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
 use Phalcon\Forms\Element;
 
 /**
@@ -213,6 +214,20 @@ class Field
         $fieldStorage->setRelationKey($relationKey);
         $fieldStorage->setAddLanguageCode($addLanguageCode);
         $fieldStorage->setDefaultValues($defaultValues);
+
+        $this->form->addFieldStorage($fieldStorage);
+
+        return $this;
+    }
+
+    /**
+     * Shortcut to set the storage in the cms_translation_value table
+     */
+    public function translate()
+    {
+        $fieldStorage = new Translation();
+        $fieldStorage->setField($this);
+        $fieldStorage->setTableModel($this->form->getModel());
 
         $this->form->addFieldStorage($fieldStorage);
 

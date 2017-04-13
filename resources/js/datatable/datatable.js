@@ -289,7 +289,7 @@ var DataTable = Class.extend({
     initWindow: function () {
         var self        = this;
         var $window     = this.getWindow();
-        var $langSelect = $window.find('select[name=language]');
+        var $langSelect = $window.find('.header select[name=language]');
 
         this.initWindowSize();
         this.initTabs();
@@ -549,7 +549,6 @@ var DataTable = Class.extend({
     },
 
     getFilters: function () {
-        var self    = this;
         var filters = {};
 
         filters.page   = this.getCurrentPage();
@@ -565,13 +564,15 @@ var DataTable = Class.extend({
             filters.sortColumn    = $(this).attr('data-column');
         });
 
-        this.getDataTable().find('.language select').each(function () {
+        var $tableLanguageSelect = this.getDataTable().find('.toolbar .language select');
+
+        $tableLanguageSelect.each(function () {
             filters.languageCode = $(this).val();
         });
 
-        this.getWindow().find('select[name=language]').each(function () {
+        this.getWindow().find('.header select[name=language]').each(function () {
             filters.languageCode = $(this).val();
-            self.getDataTable().find('.language select').val($(this).val());
+            $tableLanguageSelect.val($(this).val());
         });
 
         return filters;

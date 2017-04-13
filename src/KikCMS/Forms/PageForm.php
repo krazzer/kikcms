@@ -172,7 +172,7 @@ class PageForm extends DataForm
                     return;
                 }
 
-                $templateFields->setWebForm($this);
+                $templateFields->setForm($this);
 
                 $templateField = $templateFields->$methodName();
             break;

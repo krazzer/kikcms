@@ -82,7 +82,9 @@ class PageLanguageService extends Injectable
      */
     public function getDefault()
     {
-        //todo: actually get this from somewhere #1
-        return null;
+        $defaultLanguageCode = $this->config->application->defaultLanguage;
+        $defaultPageId = $this->config->application->defaultPage;
+
+        return $this->getByPageId($defaultPageId, $defaultLanguageCode);
     }
 }

@@ -111,7 +111,8 @@ var WebForm = Class.extend({
                 renderableClass: self.renderableClass
             }, function (data) {
                 $field.typeahead({
-                    items: 30,
+                    items: 1000,
+                    minLength: 0,
                     source: data
                 });
             });
