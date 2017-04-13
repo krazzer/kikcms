@@ -9,6 +9,7 @@ use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
+use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\DataFormFilters;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Button;
@@ -734,10 +735,6 @@ abstract class WebForm extends Renderable
             $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
         }
 
-        /** @var DataFormFilters $filters */
-        $filters      = $this->getFilters();
-        $languageCode = $filters->getLanguageCode();
-
         /** @var DataTableField $field */
         foreach ($this->getFields() as $key => $field) {
             if ($field->getType() != Field::TYPE_DATA_TABLE) {
@@ -745,7 +742,13 @@ abstract class WebForm extends Renderable
             }
 
             $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
-            $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+
+            if($this instanceof DataForm) {
+                /** @var DataFormFilters $filters */
+                $filters      = $this->getFilters();
+                $languageCode = $filters->getLanguageCode();
+                $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+            }
 
             $renderedDataTable = $field->getDataTable()->render();
 
