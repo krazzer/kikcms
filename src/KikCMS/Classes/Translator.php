@@ -101,9 +101,9 @@ class Translator extends Injectable
 
     /**
      * @param $key
-     * @return string
+     * @return string|null
      */
-    private function getDbTranslation($key): string
+    private function getDbTranslation($key)
     {
         return $this->translationService->getTranslationValue($key, $this->getLanguageCode());
     }

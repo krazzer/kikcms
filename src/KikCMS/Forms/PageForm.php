@@ -186,9 +186,11 @@ class PageForm extends DataForm
 
         $this->tabs[0]->addField($templateField);
 
-        $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, true, [
-            PageContent::FIELD_FIELD_ID => $field->id
-        ]);
+        if( ! array_key_exists($templateField->getKey(), $this->fieldStorage)){
+            $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, true, [
+                PageContent::FIELD_FIELD_ID => $field->id
+            ]);
+        }
     }
 
     /**
