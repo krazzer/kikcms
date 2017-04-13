@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Translator;
 use KikCMS\Services\Frontend\MenuBuilder;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -13,6 +14,7 @@ use KikCMS\Services\Pages\UrlService;
  * @property PageContentService $pageContentService
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
+ * @property Translator $translator
  */
 class FrontendController extends BaseController
 {
@@ -27,14 +29,42 @@ class FrontendController extends BaseController
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        $menuBuilder = new MenuBuilder($pageLanguage->language_code);
-        $variables   = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $languageCode = $pageLanguage->language_code;
+        $menuBuilder  = new MenuBuilder($languageCode);
+        $variables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $templateFile = $pageLanguage->page->template->file;
+
+        $this->translator->setLanguageCode($languageCode);
 
         $this->view->title        = $pageLanguage->name;
-        $this->view->languageCode = $pageLanguage->language_code;
+        $this->view->languageCode = $languageCode;
         $this->view->menuBuilder  = $menuBuilder;
 
         $this->view->setVars($variables);
-        $this->view->pick('@website/templates/' . $pageLanguage->page->template->file);
+        $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);
+        $this->view->pick('@website/templates/' . $templateFile);
+    }
+
+    /**
+     * @param string $templateFile
+     * @return array
+     */
+    private function getWebsiteTemplateVariables(string $templateFile): array
+    {
+        $templateVariablesClass = 'Website\Classes\TemplateVariables';
+
+        if( ! class_exists($templateVariablesClass)){
+            return [];
+        }
+
+        $templateVariables = new $templateVariablesClass();
+
+        $methodName = 'get' . ucfirst($templateFile) . 'Variables';
+
+        if( ! method_exists($templateVariables, $methodName)){
+            return [];
+        }
+
+        return $templateVariables->$methodName();
     }
 }

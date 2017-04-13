@@ -4,16 +4,46 @@ namespace KikCMS\Classes;
 
 
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Services\TranslationService;
+use Phalcon\Di\Injectable;
 
-class Translator
+/**
+ * @property TranslationService $translationService
+ */
+class Translator extends Injectable
 {
+    private $languageCode;
+
     /**
      * @param string $string
      * @param array $replaces
-     *
      * @return string|array
      */
-    public function tl(string $string, $replaces = [])
+    public function tl(string $string = null, $replaces = [])
+    {
+        if( ! $string){
+            return '';
+        }
+
+        $translation = $this->getTranslationValue($string);
+
+        foreach ($replaces as $key => $replace) {
+            if ( ! is_string($replace)) {
+                continue;
+            }
+
+            $translation = str_replace(':' . $key, $replace, $translation);
+        }
+
+        return $translation;
+    }
+
+    /**
+     * @param string $string
+     * @param array $replaces
+     * @return string|array
+     */
+    public function getCmsTranslation(string $string, $replaces = [])
     {
         $translations = include(__DIR__ . '/../../../translations/nl.php');
         $stringParts  = explode('.', $string);
@@ -34,17 +64,7 @@ class Translator
             return $translations;
         }
 
-        $translation = $translations;
-
-        foreach ($replaces as $key => $replace) {
-            if ( ! is_string($replace)) {
-                continue;
-            }
-
-            $translation = str_replace(':' . $key, $replace, $translation);
-        }
-
-        return $translation;
+        return $translations;
     }
 
     /**
@@ -59,5 +79,45 @@ class Translator
         }
 
         return $contentTypeMap;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLanguageCode()
+    {
+        return $this->languageCode;
+    }
+
+    /**
+     * @param mixed $languageCode
+     * @return Translator
+     */
+    public function setLanguageCode($languageCode)
+    {
+        $this->languageCode = $languageCode;
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    private function getDbTranslation($key): string
+    {
+        return $this->translationService->getTranslationValue($key, $this->getLanguageCode());
+    }
+
+    /**
+     * @param string $string
+     * @return string
+     */
+    private function getTranslationValue(string $string)
+    {
+        if(is_numeric($string)){
+            return $this->getDbTranslation($string);
+        }
+
+        return $this->getCmsTranslation($string);
     }
 }

@@ -41,7 +41,15 @@ $loader->registerNamespaces([
     "Website" => SITE_PATH . "app/",
 ]);
 
-$application = new Application(new Services($config));
+$websiteServicesClass = 'Website\Classes\WebsiteServices';
+
+if(class_exists($websiteServicesClass)){
+    $services = new $websiteServicesClass($config);
+} else {
+    $services = new Services($config);
+}
+
+$application = new Application($services);
 
 $application->registerModules([
     "site"   => [

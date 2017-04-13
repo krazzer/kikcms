@@ -4,12 +4,14 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\DbService;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Models\TranslationValue;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
+ * @property CacheService $cacheService
  */
 class TranslationService extends Injectable
 {
@@ -20,8 +22,12 @@ class TranslationService extends Injectable
      */
     public function getTranslationValue(int $translationKeyId, string $languageCode)
     {
-        $query = $this->getTranslationValueQuery($translationKeyId, $languageCode);
-        return $this->dbService->getValue($query);
+        $cacheKey = CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId;
+
+        return $this->cacheService->cache($cacheKey, function() use ($translationKeyId, $languageCode){
+            $query = $this->getTranslationValueQuery($translationKeyId, $languageCode);
+            return $this->dbService->getValue($query);
+        });
     }
 
     /**
@@ -72,5 +78,7 @@ class TranslationService extends Injectable
                 TranslationValue::FIELD_KEY_ID        => $translationKeyId,
             ]);
         }
+
+        $this->cacheService->clear(CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId);
     }
 }

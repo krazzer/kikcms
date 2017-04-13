@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes;
+namespace KikCMS\Classes\Frontend;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;

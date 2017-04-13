@@ -4,7 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Phalcon\Validator\FileType;
-use KikCMS\Classes\TemplateFieldsBase;
+use KikCMS\Classes\Frontend\TemplateFieldsBase;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Config\KikCMSConfig;

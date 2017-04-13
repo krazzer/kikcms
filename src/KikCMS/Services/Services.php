@@ -47,18 +47,33 @@ use Throwable;
 
 class Services extends BaseServices
 {
-    /** @inheritdoc */
-    protected $autoDefineServices = [
-        CacheService::class,
-        TemplateService::class,
-        PageService::class,
-        PageContentService::class,
-        PageLanguageService::class,
-        PageRearrangeService::class,
-        LanguageService::class,
-        TranslationService::class,
-        UrlService::class,
-    ];
+    /**
+     * @inheritdoc
+     */
+    protected function getSimpleServices(): array
+    {
+        $services = [
+            CacheService::class,
+            TemplateService::class,
+            PageService::class,
+            PageContentService::class,
+            PageLanguageService::class,
+            PageRearrangeService::class,
+            LanguageService::class,
+            TranslationService::class,
+            UrlService::class,
+        ];
+
+        return array_merge($services, $this->getWebsiteServices());
+    }
+
+    /**
+     * @return array
+     */
+    protected function getWebsiteServices(): array
+    {
+        return [];
+    }
 
     /**
      * @return FileStorage
