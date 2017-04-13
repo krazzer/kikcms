@@ -747,7 +747,10 @@ abstract class WebForm extends Renderable
                 /** @var DataFormFilters $filters */
                 $filters      = $this->getFilters();
                 $languageCode = $filters->getLanguageCode();
-                $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+
+                if($languageCode){
+                    $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+                }
             }
 
             $renderedDataTable = $field->getDataTable()->render();
