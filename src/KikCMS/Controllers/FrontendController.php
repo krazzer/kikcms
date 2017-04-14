@@ -2,8 +2,9 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\Exceptions\PageNotFoundException;
+use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Translator;
+use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Frontend\MenuBuilder;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -21,7 +22,7 @@ class FrontendController extends BaseController
 {
     /**
      * @param string $url
-     * @throws PageNotFoundException
+     * @throws NotFoundException
      */
     public function pageAction(string $url = null)
     {
@@ -32,23 +33,24 @@ class FrontendController extends BaseController
         }
 
         if( ! $pageLanguage){
-            throw new PageNotFoundException("Page not found");
+            throw new NotFoundException("Page not found");
         }
 
-        $languageCode = $pageLanguage->language_code;
-        $menuBuilder  = new MenuBuilder($languageCode);
-        $variables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
-        $templateFile = $pageLanguage->page->template->file;
+        $this->loadPage($pageLanguage);
+    }
 
-        $this->translator->setLanguageCode($languageCode);
+    /**
+     * @return string
+     */
+    public function pageNotFoundAction()
+    {
+        $pageLanguage = $this->pageLanguageService->getNotFoundPage();
 
-        $this->view->title        = $pageLanguage->name;
-        $this->view->languageCode = $languageCode;
-        $this->view->menuBuilder  = $menuBuilder;
+        if( ! $pageLanguage){
+            return $this->translator->tl('pageNotFound');
+        }
 
-        $this->view->setVars($variables);
-        $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);
-        $this->view->pick('@website/templates/' . $templateFile);
+        return $this->loadPage($pageLanguage);
     }
 
     /**
@@ -72,5 +74,26 @@ class FrontendController extends BaseController
         }
 
         return $templateVariables->$methodName();
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     */
+    private function loadPage(PageLanguage $pageLanguage)
+    {
+        $languageCode = $pageLanguage->language_code;
+        $menuBuilder  = new MenuBuilder($languageCode);
+        $variables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $templateFile = $pageLanguage->page->template->file;
+
+        $this->translator->setLanguageCode($languageCode);
+
+        $this->view->title        = $pageLanguage->name;
+        $this->view->languageCode = $languageCode;
+        $this->view->menuBuilder  = $menuBuilder;
+
+        $this->view->setVars($variables);
+        $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);
+        $this->view->pick('@website/templates/' . $templateFile);
     }
 }

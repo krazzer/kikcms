@@ -87,4 +87,15 @@ class PageLanguageService extends Injectable
 
         return $this->getByPageId($defaultPageId, $defaultLanguageCode);
     }
+
+    /**
+     * @return PageLanguage|null
+     */
+    public function getNotFoundPage()
+    {
+        $defaultLanguageCode = $this->config->application->defaultLanguage;
+        $pageId = $this->config->application->notFoundPage;
+
+        return $this->getByPageId($pageId, $defaultLanguageCode);
+    }
 }

@@ -1,7 +1,7 @@
 var FinderFileUploader = function (options) {
     this.onSuccess  = options.onSuccess;
     this.$container = options.$container;
-    this.action     = options.action ? options.action : '/finder/upload';
+    this.action     = options.action ? options.action : '/cms/finder/upload';
 
     if (options.addParametersBeforeUpload) {
         this.addParametersBeforeUpload = options.addParametersBeforeUpload;

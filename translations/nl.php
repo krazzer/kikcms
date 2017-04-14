@@ -18,6 +18,7 @@ return [
     'template_fields' => 'Template velden',
     'all_fields'      => 'Alle velden',
     'file'            => 'Bestand',
+    'pageNotFound'    => 'De opgevraade pagina kon niet worden gevonden...',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
@@ -152,7 +153,6 @@ return [
     ],
 
     'media' => [
-        'title'                    => 'Media',
         'button'                   => [
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
@@ -163,6 +163,7 @@ return [
             'cutTitle'       => 'Knip de geselecteerde bestanden',
             'pasteTitle'     => 'Plak de geknipte bestanden',
         ],
+        'title'                    => 'Media',
         'searchPlaceholder'        => 'Zoeken naar bestanden',
         'deleteConfirm'            => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
         'deleteConfirmOne'         => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',

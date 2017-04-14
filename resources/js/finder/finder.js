@@ -13,7 +13,7 @@ var Finder = Class.extend({
         parameters.renderableInstance = this.renderableInstance;
         parameters.renderableClass    = this.renderableClass;
 
-        KikCMS.action('/finder/' + action, parameters, onSuccess);
+        KikCMS.action('/cms/finder/' + action, parameters, onSuccess);
     },
 
     actionAddFolder: function () {

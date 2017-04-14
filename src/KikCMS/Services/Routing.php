@@ -16,59 +16,53 @@ class Routing
         $frontend = new Group(["module" => "frontend"]);
         $website  = new Group(["module" => "website"]);
 
-        $backend->add("/deploy", [
-            "controller" => "deploy",
-            "action"     => "index"
-        ]);
+        $backend->setPrefix('/cms');
 
-        $backend->add("/cms", [
+        $backend->add("", [
             "controller" => "cms",
             "action"     => "index"
         ]);
 
-        $backend->add('/cms/{action:[0-9a-z\/\-]+}', [
+        $backend->add('/{action:[0-9a-z\/\-]+}', [
             "controller" => "cms",
             "action"     => 1
         ]);
 
-        $backend->add("/cms/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
+        $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
 
         /** Login */
-        $backend->add("/cms/login", [
+        $backend->add("/login", [
             "controller" => "login",
             "action"     => "index"
         ]);
 
-        $backend->add("/cms/login/:action", [
+        $backend->add("/login/:action", [
             "controller" => "login",
             "action"     => 1
         ]);
 
-        $backend->add("/cms/login/reset-password", [
+        $backend->add("/login/reset-password", [
             "controller" => "login",
             "action"     => "resetPassword"
         ]);
 
-        /** Pages DataTable */
-        $backend->add("/cms/datatable/pages/:action", [
+        $backend->add("/datatable/pages/:action", [
             "controller" => "pages-data-table",
             "action"     => 1
         ]);
 
-        $backend->add("/cms/datatable/pages/tree-order", "PagesDataTable::treeOrder");
+        $backend->add("/datatable/pages/tree-order", "PagesDataTable::treeOrder");
 
-        /** DataTable / WebForm */
-        $backend->add("/cms/datatable/:action", [
+        $backend->add("/datatable/:action", [
             "controller" => "data-table",
             "action"     => 1
         ]);
 
-        $backend->add("/cms/webform/:action", [
+        $backend->add("/webform/:action", [
             "controller" => "web-form",
             "action"     => 1
         ]);
 
-        /** Finder */
         $backend->add("/finder/:action", [
             "controller" => "finder",
             "action"     => 1
@@ -80,19 +74,20 @@ class Routing
         $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
         $frontend->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('finderFile');
 
+        $frontend->add("/deploy", "Deploy::index");
+
         $router->mount($frontend);
 
-        if($website->getRoutes()){
+        if ($website->getRoutes()) {
             $router->mount($website);
         }
 
         $router->mount($backend);
 
-        /** Not Found */
         $router->notFound([
             "module"     => "frontend",
-            "controller" => "frontend-errors",
-            "action"     => "show404",
+            "controller" => "frontend",
+            "action"     => "pageNotFound",
         ]);
 
         $router->removeExtraSlashes(true);

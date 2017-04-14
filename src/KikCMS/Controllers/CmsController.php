@@ -2,7 +2,7 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\Exceptions\ObjectNotFoundException;
+use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
@@ -60,7 +60,7 @@ class CmsController extends BaseCmsController
 
     /**
      * @param int $pageLanguageId
-     * @throws ObjectNotFoundException
+     * @throws NotFoundException
      */
     public function previewAction(int $pageLanguageId)
     {
@@ -68,7 +68,7 @@ class CmsController extends BaseCmsController
         $pageLanguage = PageLanguage::getById($pageLanguageId);
 
         if ( ! $pageLanguage) {
-            throw new ObjectNotFoundException();
+            throw new NotFoundException();
         }
 
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);

@@ -69,6 +69,10 @@ class MenuBuilder extends Injectable
                 continue;
             }
 
+            if( ! array_key_exists($page->getId(), $pageLanguageMap)){
+                continue;
+            }
+
             $pageLanguage = $pageLanguageMap[$page->getId()];
 
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);

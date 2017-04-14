@@ -2,6 +2,8 @@
 
 namespace KikCMS\Modules;
 
+use KikCMS\Plugins\FrontendNotFoundPlugin;
+use Phalcon\Events\Manager;
 use Phalcon\Loader;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
@@ -34,6 +36,11 @@ class Frontend implements ModuleDefinitionInterface
         $di->set("dispatcher", function () {
             $dispatcher = new Dispatcher();
             $dispatcher->setDefaultNamespace("KikCMS\\Controllers");
+
+            $eventsManager = new Manager;
+            $eventsManager->attach('dispatch:beforeException', new FrontendNotFoundPlugin());
+
+            $dispatcher->setEventsManager($eventsManager);
 
             return $dispatcher;
         });

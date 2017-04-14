@@ -17,7 +17,7 @@ use Phalcon\Mvc\User\Plugin;
  *
  * Handles not-found controller/actions
  */
-class NotFoundPlugin extends Plugin
+class BackendNotFoundPlugin extends Plugin
 {
     /**
      * This action is executed before execute any action in the application
