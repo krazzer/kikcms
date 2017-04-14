@@ -155,7 +155,7 @@ class Services extends BaseServices
 
                 return new Twig($view, $di, [
                     'cache' => $cache,
-                    'debug' => true,
+                    'debug' => $env == KikCMSConfig::ENV_DEV,
                 ], $view->getNamespaces());
             }
         ]);

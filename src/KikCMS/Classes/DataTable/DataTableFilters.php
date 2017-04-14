@@ -145,10 +145,10 @@ class DataTableFilters extends Filters
     }
 
     /**
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return DataTableFilters
      */
-    public function setLanguageCode(string $languageCode)
+    public function setLanguageCode(string $languageCode = null)
     {
         $this->languageCode = $languageCode;
         return $this;

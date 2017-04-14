@@ -10,8 +10,8 @@ require(SITE_PATH . 'vendor/autoload.php');
 $config    = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
 $configDev = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.ini');
 
-$configSiteFile    = SITE_PATH . 'app/config/config.ini';
-$configSiteDevFile = SITE_PATH . 'app/config/config.dev.ini';
+$configSiteFile    = SITE_PATH . 'config/config.ini';
+$configSiteDevFile = SITE_PATH . 'config/config.dev.ini';
 
 if (!is_readable($configSiteFile)) {
     throw new Exception('No config file found! Should be present at ' . $configSiteFile);

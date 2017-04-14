@@ -8,6 +8,7 @@ use KikCMS\Classes\Model\Model;
 use KikCMS\Services\Pages\PageService;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Class for rearranging DataTable rows
@@ -46,6 +47,8 @@ class Rearranger extends Injectable
      */
     public function rearrange(Model $source, Model $target, string $rearrange)
     {
+        $this->checkOrderIntegrity($source, $target);
+
         switch ($rearrange) {
             case self::REARRANGE_BEFORE:
                 $this->placeBeforeOrAfter($source, $target, false);
@@ -70,6 +73,41 @@ class Rearranger extends Injectable
 
         $this->dbService->update($model, [$orderField => new RawValue($orderField . " - 1")],
             $orderField . " > " . $item->$orderField . " ORDER BY " . $orderField . " ASC");
+    }
+
+    /**
+     * Check whether the target and source displayOrder values are set, if not do so
+     *
+     * @param Model $source
+     * @param Model $target
+     */
+    private function checkOrderIntegrity(Model $source, Model $target)
+    {
+        $orderField = $this->getOrderField();
+
+        if( ! $source->$orderField){
+            $source->$orderField = $this->getMax() + 1;
+            $source->save();
+        }
+
+        if( ! $target->$orderField){
+            $target->$orderField = $this->getMax() + 1;
+            $target->save();
+        }
+    }
+
+    /**
+     * Get the maximum order value
+     *
+     * @return int
+     */
+    private function getMax(): int
+    {
+        $query = (new Builder())
+            ->from($this->dataTable->getModel())
+            ->columns(["MAX(" . $this->dataTable->getOrderField() . ")"]);
+
+        return (int) $this->dbService->getValue($query);
     }
 
     /**

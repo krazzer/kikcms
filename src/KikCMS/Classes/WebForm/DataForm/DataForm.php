@@ -238,6 +238,16 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @inheritdoc
+     */
+    protected function renderForm(ErrorContainer $errorContainer)
+    {
+        $this->renderDataTableFields();
+
+        return parent::renderForm($errorContainer);
+    }
+
+    /**
      * Format the forms' input for database insertion
      *
      * @param mixed $value
@@ -311,6 +321,35 @@ abstract class DataForm extends WebForm
         }
 
         return $storageData;
+    }
+
+    /**
+     * Pre-renders the DataTable fields, so that any required asset will be correctly added
+     */
+    private function renderDataTableFields()
+    {
+        $parentEditId = 0;
+
+        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
+        if ($this->hasField(DataTable::EDIT_ID)) {
+            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
+        }
+
+        $languageCode = $this->getFilters()->getLanguageCode();
+
+        /** @var DataTableField $field */
+        foreach ($this->getFields() as $key => $field) {
+            if ($field->getType() != Field::TYPE_DATA_TABLE) {
+                continue;
+            }
+
+            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
+            $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+
+            $renderedDataTable = $field->getDataTable()->render();
+
+            $field->setRenderedDataTable($renderedDataTable);
+        }
     }
 
     /**

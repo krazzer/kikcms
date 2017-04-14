@@ -474,24 +474,7 @@ abstract class WebForm extends Renderable
             }
         }
 
-        $this->renderDataTableFields();
-
-        return $this->renderView($this->formTemplate, [
-            'form'               => $this->form,
-            'fields'             => $this->fields,
-            'tabs'               => $this->tabs,
-            'filters'            => $this->filters,
-            'currentTab'         => $this->getCurrentTab(),
-            'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
-            'formId'             => $this->getFormId(),
-            'sendButtonLabel'    => $this->getSendLabel(),
-            'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
-            'instance'           => $this->getInstance(),
-            'jsData'             => $this->getJsData(),
-            'errorContainer'     => $errorContainer,
-            'security'           => $this->security,
-            'class'              => static::class,
-        ]);
+        return $this->renderForm($errorContainer);
     }
 
     /**
@@ -648,6 +631,30 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * @param ErrorContainer $errorContainer
+     * @return string
+     */
+    protected function renderForm(ErrorContainer $errorContainer)
+    {
+        return $this->renderView($this->formTemplate, [
+            'form'               => $this->form,
+            'fields'             => $this->fields,
+            'tabs'               => $this->tabs,
+            'filters'            => $this->filters,
+            'currentTab'         => $this->getCurrentTab(),
+            'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
+            'formId'             => $this->getFormId(),
+            'sendButtonLabel'    => $this->getSendLabel(),
+            'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
+            'instance'           => $this->getInstance(),
+            'jsData'             => $this->getJsData(),
+            'errorContainer'     => $errorContainer,
+            'security'           => $this->security,
+            'class'              => static::class,
+        ]);
+    }
+
+    /**
      * @return ErrorContainer
      */
     private function getErrors(): ErrorContainer
@@ -720,43 +727,6 @@ abstract class WebForm extends Renderable
         }
 
         return false;
-    }
-
-    /**
-     * Pre-renders the DataTable fields, so that any required asset will be correctly added
-     * todo: move this method to DataForm
-     */
-    private function renderDataTableFields()
-    {
-        $parentEditId = 0;
-
-        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
-        if ($this->hasField(DataTable::EDIT_ID)) {
-            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
-        }
-
-        /** @var DataTableField $field */
-        foreach ($this->getFields() as $key => $field) {
-            if ($field->getType() != Field::TYPE_DATA_TABLE) {
-                continue;
-            }
-
-            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
-
-            if($this instanceof DataForm) {
-                /** @var DataFormFilters $filters */
-                $filters      = $this->getFilters();
-                $languageCode = $filters->getLanguageCode();
-
-                if($languageCode){
-                    $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
-                }
-            }
-
-            $renderedDataTable = $field->getDataTable()->render();
-
-            $field->setRenderedDataTable($renderedDataTable);
-        }
     }
 
     /**
