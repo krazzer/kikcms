@@ -40,6 +40,7 @@ class DeployService extends Injectable
         }
 
         $this->checkAndCreateRequiredDirs();
+        $this->removeMetaDataCache();
 
         // Notify Webmaster
         $this->sendMessage($output);
@@ -146,5 +147,13 @@ class DeployService extends Injectable
                 mkdir($dirPath);
             }
         }
+    }
+
+    /**
+     * Remove meta data cache for DB changes
+     */
+    private function removeMetaDataCache()
+    {
+        exec('cd ' . $this->getRootDir() . '/cache/ && rm -rf metadata', $output);
     }
 }

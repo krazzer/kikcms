@@ -21,6 +21,7 @@ class Page extends Model
     const FIELD_LEVEL         = 'level';
     const FIELD_LFT           = 'lft';
     const FIELD_RGT           = 'rgt';
+    const FIELD_LINK          = 'link';
 
     const TYPE_PAGE  = 'page';
     const TYPE_MENU  = 'menu';

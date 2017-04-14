@@ -31,7 +31,6 @@ use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
 use Phalcon\DiInterface;
-use Phalcon\Mvc\Model\MetaData\Files;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
@@ -247,19 +246,6 @@ class Services extends BaseServices
     }
 
     /**
-     * If the configuration specify the use of metadata adapter use it or use memory otherwise
-     */
-    protected function initModelsMetadata()
-    {
-        $metaData = new Files([
-            "lifetime"    => 86400,
-            "metaDataDir" => SITE_PATH . "/cache/metadata/"
-        ]);
-
-        return $metaData;
-    }
-
-    /**
      * @return Backend
      */
     protected function initDiskCache()
@@ -367,7 +353,7 @@ class Services extends BaseServices
             isset($error['type']) ? $error['type'] : null;
 
         // don't show recoverable errors in production
-        if ($errorType && ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+        if ($isProduction && $errorType && ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
             return;
         }
 

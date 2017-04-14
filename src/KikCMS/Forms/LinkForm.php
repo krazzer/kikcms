@@ -14,8 +14,10 @@ class LinkForm extends PageForm
      */
     protected function initialize()
     {
-        $this->addTextField('name', 'Naam', [new PresenceOf()])->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true);
-        $this->addAutoCompleteField('link_to', 'Linkt naar')->setSourceModel(PageLanguage::class)->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true);
+        $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('name'), [new PresenceOf()])
+            ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true);
+
+        $this->addTextField(Page::FIELD_LINK, $this->translator->tl('dataTables.pages.linkToDesc'));
         $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_LINK);
     }
 }
