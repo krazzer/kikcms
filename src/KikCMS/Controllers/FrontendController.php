@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Exceptions\PageNotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Services\Frontend\MenuBuilder;
 use KikCMS\Services\Pages\PageContentService;
@@ -20,6 +21,7 @@ class FrontendController extends BaseController
 {
     /**
      * @param string $url
+     * @throws PageNotFoundException
      */
     public function pageAction(string $url = null)
     {
@@ -27,6 +29,10 @@ class FrontendController extends BaseController
             $pageLanguage = $this->urlService->getPageLanguageByUrl($url);
         } else {
             $pageLanguage = $this->pageLanguageService->getDefault();
+        }
+
+        if( ! $pageLanguage){
+            throw new PageNotFoundException("Page not found");
         }
 
         $languageCode = $pageLanguage->language_code;

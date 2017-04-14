@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use Phalcon\Mvc\Router;
+use Phalcon\Mvc\Router\Group;
 
 class Routing
 {
@@ -11,75 +12,86 @@ class Routing
     {
         $router = new Router(false);
 
-        $router->setDefaultModule("kikcms");
+        $backend  = new Group(["module" => "backend"]);
+        $frontend = new Group(["module" => "frontend"]);
+        $website  = new Group(["module" => "website"]);
 
-        $router->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
-        $router->add('/', "Frontend::page")->setName('page');
-
-        $router->add("/deploy", [
+        $backend->add("/deploy", [
             "controller" => "deploy",
             "action"     => "index"
         ]);
 
-        $router->add("/cms", [
+        $backend->add("/cms", [
             "controller" => "cms",
             "action"     => "index"
         ]);
 
-        $router->add('/cms/{action:[0-9a-z\/\-]+}', [
+        $backend->add('/cms/{action:[0-9a-z\/\-]+}', [
             "controller" => "cms",
             "action"     => 1
         ]);
 
-        $router->add("/cms/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
+        $backend->add("/cms/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
 
         /** Login */
-        $router->add("/cms/login", [
+        $backend->add("/cms/login", [
             "controller" => "login",
             "action"     => "index"
         ]);
 
-        $router->add("/cms/login/:action", [
+        $backend->add("/cms/login/:action", [
             "controller" => "login",
             "action"     => 1
         ]);
 
-        $router->add("/cms/login/reset-password", [
+        $backend->add("/cms/login/reset-password", [
             "controller" => "login",
             "action"     => "resetPassword"
         ]);
 
         /** Pages DataTable */
-        $router->add("/cms/datatable/pages/:action", [
+        $backend->add("/cms/datatable/pages/:action", [
             "controller" => "pages-data-table",
             "action"     => 1
         ]);
 
-        $router->add("/cms/datatable/pages/tree-order", "PagesDataTable::treeOrder");
+        $backend->add("/cms/datatable/pages/tree-order", "PagesDataTable::treeOrder");
 
         /** DataTable / WebForm */
-        $router->add("/cms/datatable/:action", [
+        $backend->add("/cms/datatable/:action", [
             "controller" => "data-table",
             "action"     => 1
         ]);
 
-        $router->add("/cms/webform/:action", [
+        $backend->add("/cms/webform/:action", [
             "controller" => "web-form",
             "action"     => 1
         ]);
 
         /** Finder */
-        $router->add("/finder/:action", [
+        $backend->add("/finder/:action", [
             "controller" => "finder",
             "action"     => 1
         ]);
 
-        $router->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
-        $router->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('finderFile');
+        $frontend->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
+        $frontend->add('/', "Frontend::page")->setName('page');
+
+        $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
+        $frontend->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('finderFile');
+
+        $router->mount($frontend);
+
+        if($website->getRoutes()){
+            $router->mount($website);
+        }
+
+        $router->mount($backend);
 
         /** Not Found */
         $router->notFound([
-            "controller" => "errors",
+            "module"     => "frontend",
+            "controller" => "frontend-errors",
             "action"     => "show404",
         ]);
 

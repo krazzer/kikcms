@@ -13,7 +13,7 @@ $configDev = new ConfigIni(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.
 $configSiteFile    = SITE_PATH . 'config/config.ini';
 $configSiteDevFile = SITE_PATH . 'config/config.dev.ini';
 
-if (!is_readable($configSiteFile)) {
+if ( ! is_readable($configSiteFile)) {
     throw new Exception('No config file found! Should be present at ' . $configSiteFile);
 }
 
@@ -39,11 +39,12 @@ $loader->registerDirs([
 
 $loader->registerNamespaces([
     "Website" => SITE_PATH . "app/",
+    "KikCMS"  => __DIR__ . "/src/KikCMS/",
 ]);
 
 $websiteServicesClass = 'Website\Classes\WebsiteServices';
 
-if(class_exists($websiteServicesClass)){
+if (class_exists($websiteServicesClass)) {
     $services = new $websiteServicesClass($config);
 } else {
     $services = new Services($config);
@@ -52,18 +53,18 @@ if(class_exists($websiteServicesClass)){
 $application = new Application($services);
 
 $application->registerModules([
-    "site"   => [
-        "className" => "Multiple\\Frontend\\Module",
-        "path"      => "../apps/frontend/Module.php",
+    "frontend" => [
+        "className" => "KikCMS\\Modules\\Frontend",
+        "path"      => __DIR__ . "/src/KikCMS/Modules/Frontend.php",
     ],
-    "cms"    => [
-        "className" => "Multiple\\Backend\\Module",
-        "path"      => "../apps/backend/Module.php",
+    "backend"  => [
+        "className" => "KikCMS\\Modules\\Backend",
+        "path"      => __DIR__ . "/src/KikCMS/Modules/Backend.php",
     ],
-    "kikcms" => [
-        "className" => "KikCMS\\Modules\\KikCMS",
-        "path"      => __DIR__ . "/src/KikCMS/Modules/KikCMS.php",
-    ]
+    "website"  => [
+        "className" => "KikCMS\\Modules\\Website",
+        "path"      => __DIR__ . "/src/KikCMS/Modules/Backend.php",
+    ],
 ]);
 
 // make sure the errorHandler is initialized

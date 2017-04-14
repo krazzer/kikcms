@@ -2,15 +2,12 @@
 
 namespace KikCMS\Modules;
 
-use KikCMS\Plugins\NotFoundPlugin;
-use KikCMS\Plugins\SecurityPlugin;
 use Phalcon\Loader;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Events\Manager as EventManager;
 
-class KikCMS implements ModuleDefinitionInterface
+class Website implements ModuleDefinitionInterface
 {
     /**
      * Register a specific autoloader for the module
@@ -21,8 +18,8 @@ class KikCMS implements ModuleDefinitionInterface
         $loader = new Loader();
 
         $loader->registerNamespaces([
-            "KikCMS\\Controllers" => __DIR__ . "../Controllers/",
-            "KikCMS\\Models"      => __DIR__ . "../Models/",
+            "Website\\Controllers" => __DIR__ . "../Controllers/",
+            "Website\\Models"      => __DIR__ . "../Models/",
         ]);
 
         $loader->register();
@@ -36,13 +33,7 @@ class KikCMS implements ModuleDefinitionInterface
     {
         $di->set("dispatcher", function () {
             $dispatcher = new Dispatcher();
-            $dispatcher->setDefaultNamespace("KikCMS\\Controllers");
-
-            $eventsManager = new EventManager;
-            $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
-            $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
-
-            $dispatcher->setEventsManager($eventsManager);
+            $dispatcher->setDefaultNamespace("Website\\Controllers");
 
             return $dispatcher;
         });
