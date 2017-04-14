@@ -44,6 +44,8 @@ class FrontendController extends BaseController
      */
     public function pageNotFoundAction()
     {
+        $this->view->reset();
+
         $pageLanguage = $this->pageLanguageService->getNotFoundPage();
 
         if( ! $pageLanguage){

@@ -9,18 +9,17 @@ class MenuConfig
 {
     const MENU_STRUCTURE = [
         self::MENU_GROUP_CONTENT => [
-            self::MENU_ITEM_PAGES,
-            self::MENU_ITEM_PRODUCTS,
-            self::MENU_ITEM_MEDIA,
-            self::MENU_ITEM_SETTINGS,
+            self::MENU_ITEM_PAGES    => 'pages',
+            self::MENU_ITEM_MEDIA    => 'media',
+            self::MENU_ITEM_SETTINGS => 'settings',
         ],
         self::MENU_GROUP_STATS   => [
-            self::MENU_ITEM_STATS,
-            self::MENU_ITEM_STATS_SOURCES,
+            self::MENU_ITEM_STATS         => 'stats/index',
+            self::MENU_ITEM_STATS_SOURCES => 'stats/sources',
         ],
         self::MENU_GROUP_CMS     => [
-            self::MENU_ITEM_USERS,
-            self::MENU_ITEM_LOGOUT,
+            self::MENU_ITEM_USERS  => 'users',
+            self::MENU_ITEM_LOGOUT => 'logout',
         ],
     ];
 
@@ -33,8 +32,8 @@ class MenuConfig
     const MENU_ITEM_PRODUCTS = 'products';
     const MENU_ITEM_SETTINGS = 'settings';
 
-    const MENU_ITEM_STATS         = 'stats/index';
-    const MENU_ITEM_STATS_SOURCES = 'stats/sources';
+    const MENU_ITEM_STATS         = 'statsIndex';
+    const MENU_ITEM_STATS_SOURCES = 'statsSources';
 
     const MENU_ITEM_USERS  = 'users';
     const MENU_ITEM_LOGOUT = 'logout';

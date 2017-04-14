@@ -6,9 +6,7 @@ use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
-use KikCMS\DataTables\Products;
 use KikCMS\Forms\SettingsForm;
-use KikCMS\Models\Language;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
@@ -37,16 +35,9 @@ class CmsController extends BaseCmsController
         $this->view->pick('cms/default');
     }
 
-    public function productsAction()
-    {
-        $this->view->title  = $this->translator->tl('menu.item.products');
-        $this->view->object = (new Products())->render();
-        $this->view->pick('cms/default');
-    }
-
     public function mediaAction()
     {
-        $this->view->title  = $this->translator->tl('media.title');
+        $this->view->title  = $this->translator->tl('menu.item.media');
         $this->view->object = (new Finder())->render();
         $this->view->pick('cms/default');
     }
@@ -55,6 +46,27 @@ class CmsController extends BaseCmsController
     {
         $this->view->title  = $this->translator->tl('menu.item.settings');
         $this->view->object = (new SettingsForm())->render();
+        $this->view->pick('cms/default');
+    }
+
+    public function statsIndexAction()
+    {
+        $this->view->title  = $this->translator->tl('menu.item.statsIndex');
+        $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
+        $this->view->pick('cms/default');
+    }
+
+    public function statsSourcesAction()
+    {
+        $this->view->title  = $this->translator->tl('menu.item.statsSources');
+        $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
+        $this->view->pick('cms/default');
+    }
+
+    public function usersAction()
+    {
+        $this->view->title  = $this->translator->tl('menu.item.users');
+        $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
         $this->view->pick('cms/default');
     }
 
@@ -74,31 +86,6 @@ class CmsController extends BaseCmsController
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
         $this->response->redirect($url);
-    }
-
-    public function testAction()
-    {
-        $repeat = 1000;
-
-        $s = microtime(true);
-
-        for ($i = 0; $i < $repeat; $i++) {
-            Language::find();
-        }
-
-        echo(microtime(true) - $s);
-
-        echo '<br><br>';
-
-        $s = microtime(true);
-
-        for ($i = 0; $i < $repeat; $i++) {
-            $this->languageService->getLanguages();
-        }
-
-        echo(microtime(true) - $s);
-
-        exit;
     }
 
     public function logoutAction()

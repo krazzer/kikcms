@@ -23,14 +23,16 @@ class Routing
             "action"     => "index"
         ]);
 
-        $backend->add('/{action:[0-9a-z\/\-]+}', [
+        $backend->add('/:action', [
             "controller" => "cms",
             "action"     => 1
         ]);
 
+        $backend->add('/stats/index', "Cms::statsIndex");
+        $backend->add('/stats/sources', "Cms::statsSources");
+
         $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
 
-        /** Login */
         $backend->add("/login", [
             "controller" => "login",
             "action"     => "index"

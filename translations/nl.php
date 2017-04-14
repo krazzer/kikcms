@@ -256,19 +256,14 @@ return [
         ],
 
         'item' => [
-            'media'     => 'Media',
-            'templates' => 'Templates',
-            'settings'  => 'Instellingen',
-            'users'     => 'Gebruikers',
-            'logout'    => 'Uitloggen',
-            'form'      => 'Dataform test',
-            'pages'     => "Pagina's",
-            'products'  => "Producten",
-
-            'stats' => [
-                'index'   => 'Statistieken',
-                'sources' => 'Bronnen',
-            ],
+            'pages'        => "Pagina's",
+            'media'        => 'Media',
+            'templates'    => 'Templates',
+            'settings'     => 'Instellingen',
+            'users'        => 'Gebruikers',
+            'logout'       => 'Uitloggen',
+            'statsIndex'   => 'Statistieken',
+            'statsSources' => 'Bronnen',
         ],
     ],
 

@@ -1,3 +1,7 @@
+{# @var menuStructure \KikCMS\Services\Cms\CmsMenuGroup[] #}
+{# @var menuGroup \KikCMS\Services\Cms\CmsMenuGroup #}
+{# @var menuItem \KikCMS\Services\Cms\CmsMenuItem #}
+
 {% extends '@kikcms/base.twig' %}
 
 {% block cssAssets %}
@@ -8,13 +12,15 @@
     <div id="menu">
         <a class="logo" href="{{ url('cms') }}"></a>
 
-        {% for name, menuGroup in menuStructure %}
+        {% for menuGroup in menuStructure %}
             <div class="menu-group">
-                <div class="title">{{ tl('menu.group.' ~ name) }}</div>
-                {% for menuItem in menuGroup %}
-                    {% set class = menuItem == currentCmsUrl ? ' selected' : '' %}
-                    <a class="menu-item{{ class }}" href="{{ url('cms/' ~ menuItem) }}">
-                        {{ tl('menu.item.' ~ menuItem|replace({'/':'.'})) }}
+                <div class="title">
+                    {{ menuGroup.label }}
+                </div>
+                {% for menuItem in menuGroup.menuItems %}
+                    {% set class = menuItem.id == actionName ? ' selected' : '' %}
+                    <a class="menu-item{{ class }}" href="{{ url(menuItem.route) }}">
+                        {{ menuItem.label }}
                     </a>
                 {% endfor %}
             </div>

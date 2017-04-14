@@ -2,12 +2,13 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Config\MenuConfig;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 
 /**
  * Controller for the CMS that can render the menu
  * @property UserService $userService
+ * @property CmsService $cmsService
  */
 class BaseCmsController extends BaseController
 {
@@ -15,15 +16,13 @@ class BaseCmsController extends BaseController
     {
         parent::initialize();
 
-        $cmsUrl = implode('/', array_merge([$this->dispatcher->getActionName()], $this->dispatcher->getParams()));
-
-        if($this->userService->isLoggedIn()){
-            $menuStructure = MenuConfig::MENU_STRUCTURE;
+        if ($this->userService->isLoggedIn()) {
+            $menuStructure = $this->cmsService->getMenuItemGroups();
         } else {
             $menuStructure = [];
         }
 
         $this->view->setVar("menuStructure", $menuStructure);
-        $this->view->setVar("currentCmsUrl", $cmsUrl);
+        $this->view->setVar("actionName", $this->dispatcher->getActionName());
     }
 }
