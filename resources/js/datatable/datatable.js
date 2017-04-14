@@ -358,6 +358,11 @@ var DataTable = Class.extend({
         params.ids = ids;
 
         this.action('delete', params, function (result) {
+            if(result.error){
+                alert(result.error);
+                return;
+            }
+
             var currentPage = parseInt(params.page);
 
             // if everything of the current page is removed, go back one page

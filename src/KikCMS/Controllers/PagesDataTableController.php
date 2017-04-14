@@ -3,16 +3,32 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Renderable\Renderable;
+use KikCMS\Classes\Translator;
 use KikCMS\DataTables\Pages;
 use KikCMS\Models\Page;
 use KikCMS\Services\DataTable\PageRearrangeService;
 
 /**
  * @property PageRearrangeService $pageRearrangeService
+ * @property Translator $translator
  */
 class PagesDataTableController extends DataTableController
 {
+    /**
+     * @inheritdoc
+     */
+    public function deleteAction()
+    {
+        try {
+            return parent::deleteAction();
+        } catch (DbForeignKeyDeleteException $e) {
+            $fkDeleteErrorMsg = $this->translator->tl('dataTables.pages.deleteErrorFk');
+            return json_encode(['error' => $fkDeleteErrorMsg]);
+        }
+    }
+
     /**
      * @return string
      */

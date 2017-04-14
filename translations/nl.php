@@ -96,6 +96,7 @@ return [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
                 'inactive' => 'Deze pagina is niet zichtbaar',
             ],
+            'deleteErrorFk' => "Alleen pagina's zonder sub-pagina's kunnen worden verwijderd.",
         ],
 
         'aliases' => [

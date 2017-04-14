@@ -99,6 +99,10 @@ class PageForm extends DataForm
     {
         $errorContainer = parent::validate($input);
 
+        if($input['type'] !== Page::TYPE_PAGE){
+            return $errorContainer;
+        }
+
         if ( ! $url = $input['url']) {
             return $errorContainer;
         }
