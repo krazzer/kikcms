@@ -40,12 +40,11 @@ class Translator extends Injectable
 
     /**
      * @param string $string
-     * @param array $replaces
      * @return string|array
      */
-    public function getCmsTranslation(string $string, $replaces = [])
+    public function getCmsTranslation(string $string)
     {
-        $translations = include(__DIR__ . '/../../../translations/nl.php');
+        $translations = include(__DIR__ . '/../../translations/nl.php');
         $stringParts  = explode('.', $string);
 
         if( ! array_key_exists($stringParts[0], $translations)){

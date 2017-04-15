@@ -24,7 +24,10 @@ class KikcmsUser extends Model
      */
     public static function getById($id)
     {
-        return parent::getById($id);
+        /** @var KikcmsUser $kikCmsUser */
+        $kikCmsUser = parent::getById($id);
+
+        return $kikCmsUser;
     }
 
     /**

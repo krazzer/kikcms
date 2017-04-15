@@ -3,14 +3,11 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
-use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
-use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Classes\WebForm\DataForm\DataFormFilters;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Button;
 use KikCMS\Classes\WebForm\Fields\Checkbox;

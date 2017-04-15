@@ -7,7 +7,6 @@ use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
-use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
 use Phalcon\Di\Injectable;
@@ -266,7 +265,7 @@ class FinderFileService extends Injectable
 
     /**
      * @param Resultset $resultSet
-     * @return File[]
+     * @return FinderFile[]
      */
     private function getFiles(Resultset $resultSet)
     {

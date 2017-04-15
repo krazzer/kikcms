@@ -8,7 +8,6 @@ use KikCMS\Classes\Translator;
 use KikCMS\Forms\TemplateFieldForm;
 use KikCMS\Models\Field;
 use KikCMS\Models\TemplateField;
-use KikCMS\Models\Type;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

@@ -39,7 +39,7 @@ $loader->registerDirs([
 
 $loader->registerNamespaces([
     "Website" => SITE_PATH . "app/",
-    "KikCMS"  => __DIR__ . "/src/KikCMS/",
+    "KikCMS"  => __DIR__ . "/src/",
 ]);
 
 $websiteServicesClass = 'Website\Classes\WebsiteServices';
@@ -55,15 +55,15 @@ $application = new Application($services);
 $application->registerModules([
     "frontend" => [
         "className" => "KikCMS\\Modules\\Frontend",
-        "path"      => __DIR__ . "/src/KikCMS/Modules/Frontend.php",
+        "path"      => __DIR__ . "/src/Modules/Frontend.php",
     ],
     "backend"  => [
         "className" => "KikCMS\\Modules\\Backend",
-        "path"      => __DIR__ . "/src/KikCMS/Modules/Backend.php",
+        "path"      => __DIR__ . "/src/Modules/Backend.php",
     ],
     "website"  => [
         "className" => "KikCMS\\Modules\\Website",
-        "path"      => __DIR__ . "/src/KikCMS/Modules/Backend.php",
+        "path"      => __DIR__ . "/src/Modules/Backend.php",
     ],
 ]);
 

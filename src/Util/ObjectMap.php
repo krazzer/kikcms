@@ -2,7 +2,6 @@
 
 namespace KikCMS\Util;
 
-use Identifiable;
 use InvalidArgumentException;
 
 /**

@@ -14,6 +14,9 @@ class FinderFolder extends FinderFile
      */
     public static function getById($id)
     {
-        return parent::getById($id);
+        /** @var FinderFolder $finderFolder */
+        $finderFolder = parent::getById($id);
+
+        return $finderFolder;
     }
 }

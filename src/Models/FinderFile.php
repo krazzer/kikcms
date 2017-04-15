@@ -21,7 +21,10 @@ class FinderFile extends Model
      */
     public static function getById($id)
     {
-        return parent::getById($id);
+        /** @var FinderFile $finderFile */
+        $finderFile = parent::getById($id);
+
+        return $finderFile;
     }
 
     /**
