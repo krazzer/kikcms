@@ -210,7 +210,7 @@ abstract class DataTable extends Renderable
      */
     public function getLabels(): string
     {
-        return '';
+        return 'dataTables.default';
     }
 
     /**

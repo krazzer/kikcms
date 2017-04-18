@@ -73,6 +73,13 @@ return [
     ],
 
     'dataTables' => [
+        'default' => [
+            'add'       => "Nieuw...",
+            'edit'      => "Bewerken",
+            'delete'    => "Wilt u zeker weten deze :amount items verwijderen?",
+            'deleteOne' => "Wilt u zeker weten dit item verwijderen?",
+        ],
+
         'products' => [
             'add'       => "Nieuw product",
             'edit'      => "Product '<i>:title</i>' bewerken",
@@ -223,6 +230,7 @@ return [
         ],
 
         'defaultSendLabel' => 'Versturen',
+        'detachFile'       => 'Bestand loskoppelen',
     ],
 
     'login' => [
