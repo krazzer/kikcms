@@ -3,14 +3,17 @@
 namespace KikCMS\Classes\Finder;
 
 
+use Exception;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
+use KikCMS\Util\StringUtil;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
+use Phalcon\Image\Adapter;
 use Phalcon\Mvc\Model\Resultset;
 
 /**
@@ -86,14 +89,21 @@ class FinderFileService extends Injectable
 
     /**
      * @param FinderFile $finderFile
+     * @param string|null $type
      */
-    public function createThumb(FinderFile $finderFile)
+    public function createThumb(FinderFile $finderFile, string $type = null)
     {
         $filePath  = $this->getFilePath($finderFile);
-        $thumbPath = $this->getThumbPath($finderFile);
+        $thumbPath = $this->getThumbPath($finderFile, $type);
 
         $image = $this->imageHandler->create($filePath);
-        $image->resize(192, 192);
+
+        if ($type == null) {
+            $image->resize(192, 192);
+        } else {
+            $this->resizeByType($image, $type);
+        }
+
         $image->save($thumbPath, 90);
     }
 
@@ -114,12 +124,9 @@ class FinderFileService extends Injectable
 
         if ($filesRemoved) {
             foreach ($finderFiles as $finderFile) {
-                if ($finderFile->isFolder()) {
-                    continue;
+                if ( ! $finderFile->isFolder()) {
+                    $this->unlinkFiles($finderFile);
                 }
-
-                unlink($this->getFilePath($finderFile));
-                unlink($this->getThumbPath($finderFile));
             }
         }
     }
@@ -189,14 +196,21 @@ class FinderFileService extends Injectable
 
     /**
      * @param FinderFile $finderFile
+     * @param string|null $type
      *
      * @return string
      */
-    public function getThumbPath(FinderFile $finderFile)
+    public function getThumbPath(FinderFile $finderFile, string $type = null)
     {
+        $type     = $type ?: 'default';
         $fileName = $finderFile->id . '.' . $finderFile->getExtension();
+        $dirPath  = $this->fileStorage->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
 
-        return $this->fileStorage->getStorageDir() . $this->getThumbDir() . '/' . $fileName;
+        if ( ! file_exists($dirPath)) {
+            mkdir($dirPath);
+        }
+
+        return $dirPath . $fileName;
     }
 
     /**
@@ -358,6 +372,30 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param Adapter $image
+     * @param string $type
+     * @return mixed
+     * @throws Exception
+     */
+    private function resizeByType(Adapter $image, string $type)
+    {
+        $className  = 'Website\Classes\MediaResize';
+        $methodName = 'resize' . StringUtil::dashesToCamelCase($type, true);
+
+        if ( ! class_exists($className)) {
+            throw new Exception('Class ' . $className . ' not found');
+        }
+
+        $resizeClass = new $className();
+
+        if ( ! method_exists($resizeClass, $methodName)) {
+            throw new Exception('Method ' . $className . '::' . $methodName . ' not found');
+        }
+
+        return $resizeClass->$methodName($image);
+    }
+
+    /**
      * @param FinderFile $finderFile
      */
     private function resizeWithinBoundaries(FinderFile $finderFile)
@@ -388,5 +426,25 @@ class FinderFileService extends Injectable
         $image = $this->imageHandler->create($filePath);
         $image->resize($maxWidth, $maxHeight);
         $image->save($filePath, $this->config->media->jpgQuality);
+    }
+
+    /**
+     * Remove all files and thumb files for the given FinderFile
+     *
+     * @param FinderFile $finderFile
+     */
+    private function unlinkFiles(FinderFile $finderFile)
+    {
+        $thumbNailDirs = glob($this->fileStorage->getStorageDir() . $this->getThumbDir() . '/*');
+
+        unlink($this->getFilePath($finderFile));
+
+        foreach ($thumbNailDirs as $thumbNailDir) {
+            $thumbFile = $this->getThumbPath($finderFile, basename($thumbNailDir));
+
+            if (file_exists($thumbFile)) {
+                unlink($thumbFile);
+            }
+        }
     }
 }

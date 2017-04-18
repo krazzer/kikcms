@@ -154,20 +154,21 @@ class FinderController extends RenderableController
 
     /**
      * @param int $fileId
+     * @param string|null $type
      * @return string
      * @throws NotFoundException
      */
-    public function thumbAction(int $fileId)
+    public function thumbAction(int $fileId, string $type = null)
     {
         /** @var FinderFile $finderFile */
         if ( ! $finderFile = FinderFile::getById($fileId)) {
             throw new NotFoundException();
         }
 
-        $thumbPath = $this->finderFileService->getThumbPath($finderFile);
+        $thumbPath = $this->finderFileService->getThumbPath($finderFile, $type);
 
         if ( ! file_exists($thumbPath)) {
-            $this->finderFileService->createThumb($finderFile);
+            $this->finderFileService->createThumb($finderFile, $type);
         }
 
         return $this->outputFile($thumbPath, $finderFile->getMimeType(), $finderFile->getName());

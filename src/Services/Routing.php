@@ -73,8 +73,14 @@ class Routing
         $frontend->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
         $frontend->add('/', "Frontend::page")->setName('page');
 
-        $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
         $frontend->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('finderFile');
+        $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
+        $frontend->add('/finder/thumb/{type:[0-9a-z\/\-]+}/{fileId:[0-9]+}', [
+            "controller" => "finder",
+            "action"     => "thumb",
+            "fileId"     => 2,
+            "type"       => 1,
+        ]);
 
         $frontend->add("/deploy", "Deploy::index");
 

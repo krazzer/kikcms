@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 
+use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Page;
@@ -14,6 +15,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 /**
  * @property DbService $dbService
  * @property CacheService $cacheService
+ * @property PageLanguageService $pageLanguageService
  */
 class UrlService extends Injectable
 {
@@ -73,7 +75,7 @@ class UrlService extends Injectable
     {
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . ':' . $url;
 
-        return $this->cacheService->cache($cacheKey, function () use ($url){
+        return $this->cacheService->cache($cacheKey, function () use ($url) {
             $pageLanguage = null;
             $parent       = null;
 
@@ -125,7 +127,7 @@ class UrlService extends Injectable
     {
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
-        return $this->cacheService->cache($cacheKey, function() use ($pageLanguage){
+        return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
             $langCode = $pageLanguage->language_code;
             $urlParts = [$pageLanguage->url];
 
@@ -143,5 +145,22 @@ class UrlService extends Injectable
 
             return implode('/', array_reverse($urlParts));
         });
+    }
+
+    /**
+     * @param int $pageId
+     * @return string
+     * @throws Exception
+     */
+    public function getUrlByPageId(int $pageId): string
+    {
+        $langCode     = $this->translator->getLanguageCode();
+        $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $langCode);
+
+        if( ! $pageLanguage){
+            throw new Exception("No page found in the current language for page id " . $pageId);
+        }
+
+        return $this->getUrlByPageLanguage($pageLanguage);
     }
 }
