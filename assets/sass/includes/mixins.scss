@@ -42,7 +42,8 @@
     }
 }
 
-@mixin placeholderColor($color) {
+@mixin placeholderColor($color)
+{
     &::-webkit-input-placeholder {
         color: $color;
     }
@@ -59,12 +60,14 @@
     }
 }
 
-@mixin fontDefault(){
+@mixin fontDefault()
+{
     font-family: 'Lato', sans-serif;
     font-weight: 300;
 }
 
-@mixin noTextSelect(){
+@mixin noTextSelect()
+{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -moz-user-select: none;
