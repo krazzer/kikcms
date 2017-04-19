@@ -109,7 +109,7 @@ class Translator extends Injectable
      * @param int|null $groupId
      * @return string
      */
-    public function getKeyTranslation(string $string, int $groupId = null)
+    public function getKeyTranslation(string $string, int $groupId = null): string
     {
         $key = TranslationKey::findFirst([TranslationKey::FIELD_KEY . ' = ' . $this->db->escapeString($string)]);
 
@@ -132,11 +132,11 @@ class Translator extends Injectable
 
     /**
      * @param $key
-     * @return string|null
+     * @return string
      */
-    private function getDbTranslation($key)
+    private function getDbTranslation($key): string
     {
-        return $this->translationService->getTranslationValue($key, $this->getLanguageCode());
+        return (string) $this->translationService->getTranslationValue($key, $this->getLanguageCode());
     }
 
     /**
