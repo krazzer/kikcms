@@ -49,7 +49,7 @@ class Translator extends Injectable
         }
 
         $translation = $this->getTranslationValue($string, $groupId);
-        $translation = $this->replace((string) $translation, $replaces);
+        $translation = $this->replace($translation, $replaces);
 
         return $translation;
     }
@@ -144,7 +144,7 @@ class Translator extends Injectable
      * @param int|null $groupId
      * @return string
      */
-    private function getTranslationValue(string $string, int $groupId = null)
+    private function getTranslationValue(string $string, int $groupId = null): string
     {
         // numeric values given indicate it's a translation managed from a DataTable
         if (is_numeric($string)) {
@@ -165,7 +165,7 @@ class Translator extends Injectable
             return $keyTranslation;
         }
 
-        return $string;
+        return (string) $string;
     }
 
     /**
