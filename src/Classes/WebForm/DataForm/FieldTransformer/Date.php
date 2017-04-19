@@ -41,6 +41,6 @@ class Date extends FieldTransformer
      */
     private function getDisplayFormat(): string
     {
-        return $this->translator->tl('system.phpDateFormat');
+        return $this->translator->tlb('system.phpDateFormat');
     }
 }

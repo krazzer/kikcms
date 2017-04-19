@@ -34,7 +34,7 @@ class LoginController extends BaseController
         $hash   = $this->request->get('hash');
 
         if ( ! $this->security->checkHash($userId, $hash)) {
-            $errorMessage = $this->translator->tl('login.reset.password.hashError');
+            $errorMessage = $this->translator->tlb('login.reset.password.hashError');
             $this->flash->error($errorMessage);
             $this->response->redirect('cms/login');
         }

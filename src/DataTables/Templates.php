@@ -4,9 +4,13 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Translator;
 use KikCMS\Forms\TemplateForm;
 use KikCMS\Models\Template;
 
+/**
+ * @property Translator $translator
+ */
 class Templates extends DataTable
 {
     /** @inheritdoc */
@@ -42,9 +46,9 @@ class Templates extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'   => $this->translator->tl('id'),
-            'name' => $this->translator->tl('name'),
-            'file' => $this->translator->tl('file'),
+            'id'   => $this->translator->tlb('id'),
+            'name' => $this->translator->tlb('name'),
+            'file' => $this->translator->tlb('file'),
         ];
     }
 

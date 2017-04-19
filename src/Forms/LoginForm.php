@@ -33,7 +33,7 @@ class LoginForm extends WebForm
         $user = $this->userService->getByEmail($input['email']);
 
         if( ! $this->userService->isActive($user)){
-            $this->flash->notice($this->translator->tl('login.activate'));
+            $this->flash->notice($this->translator->tlb('login.activate'));
             return $this->response->redirect('cms/login/reset');
         } else {
             return $this->response->redirect('cms');
@@ -51,7 +51,7 @@ class LoginForm extends WebForm
         $password = $input['password'];
 
         if ( ! $this->userService->isValidOrNotActivatedYet($email, $password)) {
-            $errorContainer->addFormError($this->translator->tl('login.failed'), ['email', 'password']);
+            $errorContainer->addFormError($this->translator->tlb('login.failed'), ['email', 'password']);
         }
 
         return $errorContainer;

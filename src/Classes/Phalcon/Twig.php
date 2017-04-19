@@ -170,10 +170,7 @@ class Twig extends Engine implements EngineInterface
                 return $di->get("url")->get($route, $args);
             }, $options),
             new \Twig_SimpleFunction('tl', function ($string, $parameters = []) use ($di) {
-                return $di->getShared("translator")->tl($string, $parameters);
-            }, $options),
-            new \Twig_SimpleFunction('getUrl', function ($pageId) use ($di) {
-                return $di->getShared("urlService")->getUrlByPageId($pageId);
+                return $di->getShared("translator")->tlb($string, $parameters);
             }, $options),
             new \Twig_SimpleFunction('config', function ($string) use ($di) {
                 return $this->getConfig($string, $di);

@@ -33,7 +33,7 @@ class SecurityPlugin extends Plugin
                 $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
             } else {
                 if ($dispatcher->getActionName() != 'index') {
-                    $this->flash->notice($this->translator->tl('login.expired'));
+                    $this->flash->notice($this->translator->tlb('login.expired'));
                 }
                 $this->response->redirect('cms/login');
             }

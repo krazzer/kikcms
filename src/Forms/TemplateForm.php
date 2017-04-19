@@ -25,13 +25,13 @@ class TemplateForm extends DataForm
     public function initialize(int $editId = null)
     {
         $this->addTab('Template', [
-            $this->addTextField('name', $this->translator->tl('name'), [new PresenceOf()]),
-            $this->addTextField('file', $this->translator->tl('file'), [new PresenceOf()]),
-            $this->addDataTableField(new TemplateFields(), $this->translator->tl('template_fields')),
+            $this->addTextField('name', $this->translator->tlb('name'), [new PresenceOf()]),
+            $this->addTextField('file', $this->translator->tlb('file'), [new PresenceOf()]),
+            $this->addDataTableField(new TemplateFields(), $this->translator->tlb('template_fields')),
         ]);
 
         $this->addTab('Alle velden', [
-            $this->addDataTableField(new Fields(), $this->translator->tl('all_fields')),
+            $this->addDataTableField(new Fields(), $this->translator->tlb('all_fields')),
         ]);
     }
 }

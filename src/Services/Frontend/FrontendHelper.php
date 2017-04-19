@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Frontend;
 
 
+use KikCMS\Classes\Translator;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
@@ -17,8 +18,9 @@ use Phalcon\Di\Injectable;
  * @property PageService $pageService
  * @property PageLanguageService $pageLanguageService
  * @property CacheService $cacheService
+ * @property Translator $translator
  */
-class MenuBuilder extends Injectable
+class FrontendHelper extends Injectable
 {
     /** @var string */
     private $languageCode;
@@ -37,7 +39,7 @@ class MenuBuilder extends Injectable
      * @param int $menuId
      * @return string
      */
-    public function buildMenu(int $menuId): string
+    public function menu(int $menuId): string
     {
         $cacheKey = CacheConfig::MENU . ':' . $menuId . $this->languageCode;
 
@@ -49,8 +51,28 @@ class MenuBuilder extends Injectable
             $pageMap         = $this->pageService->getChildren($menu);
             $pageLanguageMap = $this->pageLanguageService->getByPageMap($pageMap, $this->languageCode);
 
-            return $this->buildMenuHtml($menu, $pageMap, $pageLanguageMap);
+            return $this->buildMenu($menu, $pageMap, $pageLanguageMap);
         });
+    }
+
+    /**
+     * @param string $string
+     * @param array $replaces
+     * @param int|null $groupId
+     * @return mixed|string
+     */
+    public function tl(string $string, $replaces = [], int $groupId = null)
+    {
+        return $this->translator->tlf($string, $replaces, $groupId);
+    }
+
+    /**
+     * @param int $pageId
+     * @return string
+     */
+    public function getUrl(int $pageId): string
+    {
+        return $this->urlService->getUrlByPageId($pageId);
     }
 
     /**
@@ -59,7 +81,7 @@ class MenuBuilder extends Injectable
      * @param PageLanguage[] $pageLanguageMap
      * @return string
      */
-    private function buildMenuHtml(Page $parentPage, array $pageMap, array $pageLanguageMap): string
+    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap): string
     {
         $menuOutput = '';
 
@@ -78,7 +100,7 @@ class MenuBuilder extends Injectable
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
             $menuOutput .= '<li><a href="' . $url . '">' . $pageLanguage->name . '</a>';
-            $menuOutput .= $this->buildMenuHtml($page, $pageMap, $pageLanguageMap);
+            $menuOutput .= $this->buildMenu($page, $pageMap, $pageLanguageMap);
             $menuOutput .= '</li>';
         }
 

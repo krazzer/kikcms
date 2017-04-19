@@ -24,7 +24,7 @@ class PagesDataTableController extends DataTableController
         try {
             return parent::deleteAction();
         } catch (DbForeignKeyDeleteException $e) {
-            $fkDeleteErrorMsg = $this->translator->tl('dataTables.pages.deleteErrorFk');
+            $fkDeleteErrorMsg = $this->translator->tlb('dataTables.pages.deleteErrorFk');
             return json_encode(['error' => $fkDeleteErrorMsg]);
         }
     }

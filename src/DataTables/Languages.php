@@ -43,9 +43,9 @@ class Languages extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'   => $this->translator->tl('id'),
-            'code' => $this->translator->tl('code'),
-            'name' => $this->translator->tl('name'),
+            'id'   => $this->translator->tlb('id'),
+            'code' => $this->translator->tlb('code'),
+            'name' => $this->translator->tlb('name'),
         ];
     }
 

@@ -163,10 +163,10 @@ class Pages extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'name'     => $this->translator->tl('name'),
-            'template' => $this->translator->tl('template'),
-            'url'      => $this->translator->tl('url'),
-            'id'       => $this->translator->tl('id'),
+            'name'     => $this->translator->tlb('name'),
+            'template' => $this->translator->tlb('template'),
+            'url'      => $this->translator->tlb('url'),
+            'id'       => $this->translator->tlb('id'),
         ];
     }
 
@@ -178,7 +178,7 @@ class Pages extends DataTable
         $this->setFieldFormatting('name', [$this, 'formatName']);
         $this->setFieldFormatting('type', [$this, 'formatType']);
 
-        $this->addTableButton('eye-open', $this->translator->tl('dataTables.pages.preview'), 'preview');
+        $this->addTableButton('eye-open', $this->translator->tlb('dataTables.pages.preview'), 'preview');
     }
 
     /**
@@ -197,8 +197,8 @@ class Pages extends DataTable
             return $value;
         }
 
-        $linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
-        $inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
+        $linkTitle     = $this->translator->tlb('dataTables.pages.titles.link');
+        $inactiveTitle = $this->translator->tlb('dataTables.pages.titles.inactive');
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
             $value = '<span class="glyphicon glyphicon-link" title="' . $linkTitle . '"></span> ' . $value;
@@ -217,6 +217,6 @@ class Pages extends DataTable
      */
     protected function formatType($value)
     {
-        return $this->translator->tl('dataTables.pages.' . $value);
+        return $this->translator->tlb('dataTables.pages.' . $value);
     }
 }

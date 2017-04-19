@@ -5,7 +5,7 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Services\Frontend\MenuBuilder;
+use KikCMS\Services\Frontend\FrontendHelper;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
@@ -32,7 +32,7 @@ class FrontendController extends BaseController
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        if( ! $pageLanguage){
+        if ( ! $pageLanguage) {
             throw new NotFoundException("Page not found");
         }
 
@@ -48,8 +48,8 @@ class FrontendController extends BaseController
 
         $pageLanguage = $this->pageLanguageService->getNotFoundPage();
 
-        if( ! $pageLanguage){
-            return $this->translator->tl('pageNotFound');
+        if ( ! $pageLanguage) {
+            return $this->translator->tlb('pageNotFound');
         }
 
         return $this->loadPage($pageLanguage);
@@ -63,7 +63,7 @@ class FrontendController extends BaseController
     {
         $templateVariablesClass = 'Website\Classes\TemplateVariables';
 
-        if( ! class_exists($templateVariablesClass)){
+        if ( ! class_exists($templateVariablesClass)) {
             return [];
         }
 
@@ -71,7 +71,7 @@ class FrontendController extends BaseController
 
         $methodName = 'get' . ucfirst($templateFile) . 'Variables';
 
-        if( ! method_exists($templateVariables, $methodName)){
+        if ( ! method_exists($templateVariables, $methodName)) {
             return [];
         }
 
@@ -83,16 +83,16 @@ class FrontendController extends BaseController
      */
     private function loadPage(PageLanguage $pageLanguage)
     {
-        $languageCode = $pageLanguage->language_code;
-        $menuBuilder  = new MenuBuilder($languageCode);
-        $variables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
-        $templateFile = $pageLanguage->page->template->file;
+        $languageCode   = $pageLanguage->language_code;
+        $frontendHelper = new FrontendHelper($languageCode);
+        $variables      = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $templateFile   = $pageLanguage->page->template->file;
 
         $this->translator->setLanguageCode($languageCode);
 
         $this->view->title        = $pageLanguage->name;
         $this->view->languageCode = $languageCode;
-        $this->view->menuBuilder  = $menuBuilder;
+        $this->view->helper       = $frontendHelper;
 
         $this->view->setVars($variables);
         $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);

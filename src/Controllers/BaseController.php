@@ -2,9 +2,13 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Translator;
 use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
 
+/**
+ * @property Translator $translator
+ */
 class BaseController extends Controller
 {
     public function initialize()
@@ -16,7 +20,7 @@ class BaseController extends Controller
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
         $this->view->setVar("jsTranslations", ['error', 'system.langCode', 'pages.warningTemplateChange']);
-        $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
+        $this->view->setVar("langCode", $this->translator->tlb('system.langCode'));
 
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);

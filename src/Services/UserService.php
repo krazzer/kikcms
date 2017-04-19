@@ -4,12 +4,16 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Translator;
 use KikCMS\Models\KikcmsUser;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
-/** @property DbService $dbService */
-/** @property Config $applicationConfig */
+/**
+ * @property DbService $dbService
+ * @property Config $applicationConfig
+ * @property Translator $translator
+ */
 class UserService extends Injectable
 {
     /**
@@ -103,7 +107,7 @@ class UserService extends Injectable
 
         // start a new session so we can still flash
         $this->session->start();
-        $this->flash->notice($this->translator->tl('login.logout'));
+        $this->flash->notice($this->translator->tlb('login.logout'));
         $this->response->redirect('cms/login');
     }
 }

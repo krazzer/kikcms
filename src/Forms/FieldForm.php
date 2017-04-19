@@ -24,7 +24,7 @@ class FieldForm extends DataForm
     public function initialize()
     {
         $this->addTextField('name', 'Naam', [new PresenceOf()]);
-        $this->addTextField('variable', $this->translator->tl('variable'), [new PresenceOf()]);
+        $this->addTextField('variable', $this->translator->tlb('variable'), [new PresenceOf()]);
         $this->addSelectField('type_id', 'Type', $this->translator->getContentTypeMap(), [new PresenceOf()]);
     }
 }

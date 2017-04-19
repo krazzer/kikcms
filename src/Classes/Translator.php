@@ -16,26 +16,40 @@ class Translator extends Injectable
     private $languageCode = 'nl';
 
     /**
+     * Backend translation, just checks the language files for the translation
+     *
      * @param string $string
      * @param array $replaces
-     * @param int|null $groupId
      * @return array|string
      */
-    public function tl(string $string = null, $replaces = [], int $groupId = null)
+    public function tlb(string $string, $replaces = [])
+    {
+        $translation = $this->getCmsTranslation($string);
+
+        if(is_string($translation)){
+            $translation = $this->replace($translation, $replaces);
+        }
+
+        return $translation;
+    }
+
+    /**
+     * Frontend translation
+     *
+     * @param string|null $string
+     * @param array $replaces
+     * @param int|null $groupId
+     *
+     * @return mixed|string
+     */
+    public function tlf(string $string = null, $replaces = [], int $groupId = null)
     {
         if ( ! $string) {
             return '';
         }
 
         $translation = $this->getTranslationValue($string, $groupId);
-
-        foreach ($replaces as $key => $replace) {
-            if ( ! is_string($replace)) {
-                continue;
-            }
-
-            $translation = str_replace(':' . $key, $replace, $translation);
-        }
+        $translation = $this->replace($translation, $replaces);
 
         return $translation;
     }
@@ -76,7 +90,7 @@ class Translator extends Injectable
         $contentTypeMap = [];
 
         foreach (KikCMSConfig::CONTENT_TYPES as $key => $typeId) {
-            $contentTypeMap[$typeId] = $this->tl('contentTypes.' . $key);
+            $contentTypeMap[$typeId] = $this->tlb('contentTypes.' . $key);
         }
 
         return $contentTypeMap;
@@ -88,6 +102,22 @@ class Translator extends Injectable
     public function getLanguageCode()
     {
         return $this->languageCode;
+    }
+
+    /**
+     * @param string $string
+     * @param int|null $groupId
+     * @return string
+     */
+    public function getKeyTranslation(string $string, int $groupId = null)
+    {
+        $key = TranslationKey::findFirst([TranslationKey::FIELD_KEY . ' = ' . $this->db->escapeString($string)]);
+
+        if ( ! $key) {
+            $key = $this->createNewTranslationKey($string, $groupId);
+        }
+
+        return $this->getDbTranslation($key->id);
     }
 
     /**
@@ -122,7 +152,7 @@ class Translator extends Injectable
         }
 
         // see if there is a translation defined in the CMS translation files
-        $cmsTranslation = $this->getCmsTranslation($string);
+        $cmsTranslation = (string) $this->getCmsTranslation($string);
 
         if ($cmsTranslation) {
             return $cmsTranslation;
@@ -136,22 +166,6 @@ class Translator extends Injectable
         }
 
         return $string;
-    }
-
-    /**
-     * @param string $string
-     * @param int|null $groupId
-     * @return string
-     */
-    private function getKeyTranslation(string $string, int $groupId = null)
-    {
-        $key = TranslationKey::findFirst([TranslationKey::FIELD_KEY . ' = ' . $this->db->escapeString($string)]);
-
-        if ( ! $key) {
-            $key = $this->createNewTranslationKey($string, $groupId);
-        }
-
-        return $this->getDbTranslation($key->id);
     }
 
     /**
@@ -174,5 +188,23 @@ class Translator extends Injectable
         $translationKey->save();
 
         return $translationKey;
+    }
+
+    /**
+     * @param string $translation
+     * @param array $replaces
+     * @return mixed|string
+     */
+    private function replace(string $translation, array $replaces)
+    {
+        foreach ($replaces as $key => $replace) {
+            if ( ! is_string($replace)) {
+                continue;
+            }
+
+            $translation = str_replace(':' . $key, $replace, $translation);
+        }
+
+        return $translation;
     }
 }

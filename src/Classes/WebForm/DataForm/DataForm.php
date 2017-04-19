@@ -176,10 +176,10 @@ abstract class DataForm extends WebForm
 
         if ($saveSuccess) {
             $this->onSave();
-            $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+            $this->flash->success($this->translator->tlb('dataForm.saveSuccess'));
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
-            $this->flash->error($this->translator->tl('dataForm.saveFailure'));
+            $this->flash->error($this->translator->tlb('dataForm.saveFailure'));
         }
     }
 

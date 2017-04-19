@@ -335,7 +335,7 @@ class Services extends BaseServices
     protected function initValidation()
     {
         $validation = new Validation();
-        $validation->setDefaultMessages($this->initTranslator()->tl('webform.messages'));
+        $validation->setDefaultMessages($this->initTranslator()->tlb('webform.messages'));
 
         return $validation;
     }

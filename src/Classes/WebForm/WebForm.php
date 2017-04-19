@@ -86,7 +86,7 @@ abstract class WebForm extends Renderable
         $this->form = new Form();
         $this->form->setValidation($this->validation);
 
-        $this->sendLabel = $this->translator->tl('webform.defaultSendLabel');
+        $this->sendLabel = $this->translator->tlb('webform.defaultSendLabel');
     }
 
     /**
@@ -114,7 +114,7 @@ abstract class WebForm extends Renderable
         }
 
         if ($this->hasFieldWithType(Field::TYPE_DATE)) {
-            $langCode = $this->translator->tl('system.langCode');
+            $langCode = $this->translator->tlb('system.langCode');
             $this->view->assets->addJs('cmsassets/js/vendor/moment/moment.js');
             $this->view->assets->addJs('cmsassets/js/vendor/moment/' . $langCode . '.js');
         }
@@ -215,8 +215,8 @@ abstract class WebForm extends Renderable
      */
     public function addDateField(string $key, string $label, array $validators = []): Field
     {
-        $phpDateFormat      = $this->translator->tl('system.phpDateFormat');
-        $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
+        $phpDateFormat      = $this->translator->tlb('system.phpDateFormat');
+        $momentJsDateFormat = $this->translator->tlb('system.momentJsDateFormat');
 
         $validators[] = new \KikCMS\Classes\Phalcon\Validator\Date([
             "format"     => $phpDateFormat,
@@ -659,7 +659,7 @@ abstract class WebForm extends Renderable
         $errorContainer = $this->validate($this->getInput());
 
         if ( ! $this->security->checkToken()) {
-            $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
+            $errorContainer->addFormError($this->translator->tlb('webform.messages.csrf'));
         }
 
         if ($this->form->isValid($this->getInput()) && $errorContainer->isEmpty()) {
@@ -689,7 +689,7 @@ abstract class WebForm extends Renderable
 
         // add a global error message if there are field errors but no form errors
         if ( ! $errorContainer->hasFormErrors() && $errorContainer->hasFieldErrors()) {
-            $errorContainer->addFormError($this->translator->tl('webform.messages.fieldErrors'));
+            $errorContainer->addFormError($this->translator->tlb('webform.messages.fieldErrors'));
         }
 
         return $errorContainer;
