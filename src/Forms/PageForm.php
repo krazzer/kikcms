@@ -4,7 +4,6 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Phalcon\Validator\FileType;
-use KikCMS\Classes\Frontend\TemplateFieldsBase;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Config\KikCMSConfig;
@@ -17,6 +16,7 @@ use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
@@ -26,6 +26,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
  * @property CacheService $cacheService
+ * @property WebsiteService $websiteService
  */
 class PageForm extends DataForm
 {
@@ -162,23 +163,12 @@ class PageForm extends DataForm
             break;
 
             case KikCMSConfig::CONTENT_TYPE_CUSTOM:
-                $className  = 'Website\Classes\TemplateFields';
                 $methodName = 'field' . ucfirst($field->variable);
+                $templateField = $this->websiteService->callMethod('TemplateFields', $methodName, [$this]);
 
-                if ( ! class_exists($className)) {
+                if($templateField){
                     return;
                 }
-
-                /** @var TemplateFieldsBase $templateFields */
-                $templateFields = new $className();
-
-                if ( ! method_exists($templateFields, $methodName)) {
-                    return;
-                }
-
-                $templateFields->setForm($this);
-
-                $templateField = $templateFields->$methodName();
             break;
         }
 

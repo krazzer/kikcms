@@ -10,6 +10,7 @@ use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
+use KikCMS\Services\Website\WebsiteService;
 use KikCMS\Util\StringUtil;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
@@ -21,6 +22,7 @@ use Phalcon\Mvc\Model\Resultset;
  *
  * @property ImageHandler $imageHandler
  * @property DbService $dbService
+ * @property WebsiteService $websiteService
  */
 class FinderFileService extends Injectable
 {
@@ -379,20 +381,9 @@ class FinderFileService extends Injectable
      */
     private function resizeByType(Adapter $image, string $type)
     {
-        $className  = 'Website\Classes\MediaResize';
         $methodName = 'resize' . StringUtil::dashesToCamelCase($type, true);
 
-        if ( ! class_exists($className)) {
-            throw new Exception('Class ' . $className . ' not found');
-        }
-
-        $resizeClass = new $className();
-
-        if ( ! method_exists($resizeClass, $methodName)) {
-            throw new Exception('Method ' . $className . '::' . $methodName . ' not found');
-        }
-
-        return $resizeClass->$methodName($image);
+        return $this->websiteService->callMethod('MediaResize', $methodName, [$image], true);
     }
 
     /**

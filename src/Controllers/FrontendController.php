@@ -5,11 +5,12 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Services\Frontend\FrontendHelper;
+use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\Website\WebsiteService;
 
 /**
  * @property PageService $pageService
@@ -17,6 +18,7 @@ use KikCMS\Services\Pages\UrlService;
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
  * @property Translator $translator
+ * @property WebsiteService $websiteService
  */
 class FrontendController extends BaseController
 {
@@ -61,21 +63,9 @@ class FrontendController extends BaseController
      */
     private function getWebsiteTemplateVariables(string $templateFile): array
     {
-        $templateVariablesClass = 'Website\Classes\TemplateVariables';
-
-        if ( ! class_exists($templateVariablesClass)) {
-            return [];
-        }
-
-        $templateVariables = new $templateVariablesClass();
-
         $methodName = 'get' . ucfirst($templateFile) . 'Variables';
 
-        if ( ! method_exists($templateVariables, $methodName)) {
-            return [];
-        }
-
-        return $templateVariables->$methodName();
+        return $this->websiteService->callMethod('TemplateVariables', $methodName, [], false, []);
     }
 
     /**

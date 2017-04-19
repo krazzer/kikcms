@@ -3,10 +3,11 @@
 namespace KikCMS\Services;
 
 
+use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Router\Group;
 
-class Routing
+class Routing extends Injectable
 {
     public function initialize()
     {
@@ -85,12 +86,13 @@ class Routing
         $frontend->add("/deploy", "Deploy::index");
 
         $router->mount($frontend);
+        $router->mount($backend);
+
+        $this->addWebsiteRoutes($website);
 
         if ($website->getRoutes()) {
             $router->mount($website);
         }
-
-        $router->mount($backend);
 
         $router->notFound([
             "module"     => "frontend",
@@ -101,5 +103,13 @@ class Routing
         $router->removeExtraSlashes(true);
 
         return $router;
+    }
+
+    /**
+     * @param Group $website
+     */
+    private function addWebsiteRoutes(Group $website)
+    {
+        return $this->websiteService->callMethod('Routing', 'addRoutes', ['website' => $website]);
     }
 }

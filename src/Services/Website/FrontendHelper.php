@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Services\Frontend;
+namespace KikCMS\Services\Website;
 
 
 use KikCMS\Classes\Translator;

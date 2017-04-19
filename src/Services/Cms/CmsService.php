@@ -3,15 +3,16 @@
 namespace KikCMS\Services\Cms;
 
 
-use KikCMS\Classes\Frontend\CmsMenuBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
+use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 
 /**
  * Contains some generic CMS functions
  *
  * @property Translator $translator
+ * @property WebsiteService $websiteService
  */
 class CmsService extends Injectable
 {
@@ -20,7 +21,7 @@ class CmsService extends Injectable
      */
     public function getMenuItemGroups(): array
     {
-        $menuItemGroups = [];
+        $groups = [];
 
         foreach (MenuConfig::MENU_STRUCTURE as $groupId => $menuItems) {
             $groupLabel = $this->translator->tlb('menu.group.' . $groupId);
@@ -31,10 +32,10 @@ class CmsService extends Injectable
                 ->setLabel($groupLabel)
                 ->setMenuItems($menuItems);
 
-            $menuItemGroups[$groupId] = $menuGroup;
+            $groups[$groupId] = $menuGroup;
         }
 
-        return $this->loadWebsiteMenu($menuItemGroups);
+        return $this->websiteService->callMethod('CmsMenu', 'getMenuGroups', [$groups], false, $groups);
     }
 
     /**
@@ -53,22 +54,5 @@ class CmsService extends Injectable
         }
 
         return $menuItemObjects;
-    }
-
-    /**
-     * @param CmsMenuGroup[] $menuItemGroups
-     * @return CmsMenuGroup[]
-     */
-    private function loadWebsiteMenu(array $menuItemGroups): array
-    {
-        $cmsMenuClass = 'Website\Classes\CmsMenu';
-
-        if ( ! class_exists($cmsMenuClass)) {
-            return $menuItemGroups;
-        }
-
-        /** @var CmsMenuBase $cmsMenu */
-        $cmsMenu = new $cmsMenuClass();
-        return $cmsMenu->getMenuGroups($menuItemGroups);
     }
 }

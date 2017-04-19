@@ -23,6 +23,7 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\Website\WebsiteService;
 use Monolog\ErrorHandler;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
@@ -63,6 +64,7 @@ class Services extends BaseServices
             LanguageService::class,
             TranslationService::class,
             UrlService::class,
+            WebsiteService::class,
         ];
 
         return array_merge($services, $this->getWebsiteServices());
