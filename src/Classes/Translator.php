@@ -49,7 +49,7 @@ class Translator extends Injectable
         }
 
         $translation = $this->getTranslationValue($string, $groupId);
-        $translation = $this->replace($translation, $replaces);
+        $translation = $this->replace((string) $translation, $replaces);
 
         return $translation;
     }
