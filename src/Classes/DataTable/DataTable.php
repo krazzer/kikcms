@@ -525,28 +525,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * Get a map of fields that are shown in the table header, where the key corresponds to the query result key
-     * e.g. ['name' => 'Name', 'category_name' => 'Category']
-     *
-     * @return array
-     */
-    protected function getTableFieldMap(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return string
-     */
-    private function getNewIdsCacheKey()
-    {
-        return $this->getInstance() . '-ids';
-    }
-
-    /**
      * @return TableData
      */
-    private function getTableData(): TableData
+    protected function getTableData(): TableData
     {
         if ($this->tableData) {
             return $this->tableData;
@@ -568,5 +549,24 @@ abstract class DataTable extends Renderable
             ->setData($paginate->items->toArray());
 
         return $this->tableData;
+    }
+
+    /**
+     * Get a map of fields that are shown in the table header, where the key corresponds to the query result key
+     * e.g. ['name' => 'Name', 'category_name' => 'Category']
+     *
+     * @return array
+     */
+    protected function getTableFieldMap(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return string
+     */
+    private function getNewIdsCacheKey()
+    {
+        return $this->getInstance() . '-ids';
     }
 }

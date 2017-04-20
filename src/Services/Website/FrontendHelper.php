@@ -37,13 +37,14 @@ class FrontendHelper extends Injectable
      * Build a multi-level ul li structured menu
      *
      * @param int $menuId
+     * @param int|null $maxLevel
      * @return string
      */
-    public function menu(int $menuId): string
+    public function menu(int $menuId, int $maxLevel = null): string
     {
         $cacheKey = CacheConfig::MENU . ':' . $menuId . $this->languageCode;
 
-        return $this->cacheService->cache($cacheKey, function() use ($menuId){
+        return $this->cacheService->cache($cacheKey, function() use ($menuId, $maxLevel){
             if ( ! $menu = Page::getById($menuId)){
                 return '';
             }
@@ -51,7 +52,7 @@ class FrontendHelper extends Injectable
             $pageMap         = $this->pageService->getChildren($menu);
             $pageLanguageMap = $this->pageLanguageService->getByPageMap($pageMap, $this->languageCode);
 
-            return $this->buildMenu($menu, $pageMap, $pageLanguageMap);
+            return $this->buildMenu($menu, $pageMap, $pageLanguageMap, $maxLevel);
         });
     }
 
@@ -79,9 +80,10 @@ class FrontendHelper extends Injectable
      * @param Page $parentPage
      * @param Page[] $pageMap
      * @param PageLanguage[] $pageLanguageMap
+     * @param int|null $maxLevel
      * @return string
      */
-    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap): string
+    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap, int $maxLevel = null): string
     {
         $menuOutput = '';
 
@@ -99,8 +101,14 @@ class FrontendHelper extends Injectable
 
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
+            if($maxLevel && (int) $page->level === (int) $parentPage->level + $maxLevel){
+                $subMenuOutput = '';
+            } else {
+                $subMenuOutput = $this->buildMenu($page, $pageMap, $pageLanguageMap, $maxLevel);
+            }
+
             $menuOutput .= '<li><a href="' . $url . '">' . $pageLanguage->name . '</a>';
-            $menuOutput .= $this->buildMenu($page, $pageMap, $pageLanguageMap);
+            $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
         }
 

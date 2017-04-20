@@ -179,10 +179,10 @@ class PageRearrangeService extends Injectable
      */
     private function placeInto(Page $page, Page $targetPage)
     {
-        $menu = $this->pageService->getMenuForPage($targetPage);
+        $menu = $this->pageService->getMaxLevelDeterminer($targetPage);
 
         // can't put page if target exceeds or equals menu's max level
-        if ($menu && $targetPage->level >= $menu->menu_max_level) {
+        if ($menu && $targetPage->level >= ($menu->menu_max_level + $menu->level)) {
             return;
         }
 

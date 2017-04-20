@@ -10,6 +10,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Field;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
+use KikCMS\Models\PageLanguageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\Template;
 use KikCMS\Services\CacheService;
@@ -181,16 +182,22 @@ class PageForm extends DataForm
         $this->tabs[0]->addField($templateField);
 
         if( ! array_key_exists($templateField->getKey(), $this->fieldStorage)){
-            $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, true, [
-                PageContent::FIELD_FIELD_ID => $field->id
-            ]);
+            if($field->multilingual){
+                $templateField->table(PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, true, [
+                    PageLanguageContent::FIELD_FIELD_ID => $field->id
+                ]);
+            } else {
+                $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, false, [
+                    PageContent::FIELD_FIELD_ID => $field->id
+                ]);
+            }
         }
     }
 
     /**
      * @return int
      */
-    private function getTemplateId(): int
+    protected function getTemplateId(): int
     {
         $templateId = $this->request->getPost('templateId');
 

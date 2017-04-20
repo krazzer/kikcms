@@ -27,9 +27,7 @@ class CmsService extends Injectable
             $groupLabel = $this->translator->tlb('menu.group.' . $groupId);
             $menuItems  = $this->getMenuItems($menuItems);
 
-            $menuGroup = (new CmsMenuGroup())
-                ->setId($groupId)
-                ->setLabel($groupLabel)
+            $menuGroup = (new CmsMenuGroup($groupId, $groupLabel))
                 ->setMenuItems($menuItems);
 
             $groups[$groupId] = $menuGroup;

@@ -11,10 +11,20 @@ class CmsMenuGroup
     private $id;
 
     /** @var CmsMenuItem[] */
-    private $menuItems;
+    private $menuItems = [];
 
     /** @var string */
     private $label;
+
+    /**
+     * @param string $id
+     * @param string $label
+     */
+    public function __construct(string $id, string $label)
+    {
+        $this->id    = $id;
+        $this->label = $label;
+    }
 
     /**
      * Add a menu item to the group
@@ -25,6 +35,7 @@ class CmsMenuGroup
     public function add(CmsMenuItem $menuItem)
     {
         $menuItems = $this->getMenuItems();
+
         $menuItems[$menuItem->getId()] = $menuItem;
 
         $this->setMenuItems($menuItems);

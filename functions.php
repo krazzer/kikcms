@@ -1,6 +1,33 @@
 <?php
 
 /**
+ * Add a value to an array after a certain key
+ *
+ * @param array $subject
+ * @param string $keyToAddAfter
+ * @param string $keyToAdd
+ * @param $valueToAdd
+ * @return array
+ */
+function array_add_after_key(array $subject, string $keyToAddAfter, string $keyToAdd, $valueToAdd): array
+{
+    $index = array_search($keyToAddAfter, array_keys($subject));
+
+    if($index === false){
+        $index = count($subject);
+    } else {
+        $index++;
+    }
+
+    $newArrayPart1 = array_slice($subject, 0, $index, true);
+    $newArrayPart2 = array_slice($subject, $index, null, true);
+
+    $newArrayPart1[$keyToAdd] = $valueToAdd;
+
+    return $newArrayPart1 + $newArrayPart2;
+}
+
+/**
  * Return the first key of an array
  *
  * @param array $array

@@ -27,6 +27,7 @@ class TemplateForm extends DataForm
         $this->addTab('Template', [
             $this->addTextField('name', $this->translator->tlb('name'), [new PresenceOf()]),
             $this->addTextField('file', $this->translator->tlb('file'), [new PresenceOf()]),
+            $this->addCheckboxField('hide', $this->translator->tlb('hide')),
             $this->addDataTableField(new TemplateFields(), $this->translator->tlb('template_fields')),
         ]);
 

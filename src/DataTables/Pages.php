@@ -133,6 +133,19 @@ class Pages extends DataTable
     }
 
     /**
+     * @return array
+     */
+    protected function getAllowedTemplateIds(): array
+    {
+        $query = (new Builder())
+            ->columns(['id'])
+            ->from(Template::class)
+            ->where('hide = 0');
+
+        return $this->dbService->getValues($query);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function getDefaultQuery()
@@ -146,6 +159,7 @@ class Pages extends DataTable
             ->leftJoin(PageLanguage::class, 'p.id = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
             ->leftJoin(PageLanguage::class, 'p.id = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
             ->leftJoin(Template::class, 'p.template_id = t.id', 't')
+            ->where('t.id IS NULL OR t.id IN ({templateIds:array})', ['templateIds' => $this->getAllowedTemplateIds()])
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([

@@ -18,7 +18,9 @@ return [
     'template_fields' => 'Template velden',
     'all_fields'      => 'Alle velden',
     'file'            => 'Bestand',
+    'hide'            => 'Verbergen',
     'pageNotFound'    => 'De opgevraade pagina kon niet worden gevonden...',
+    'multilingual'    => 'Meertalig',
 
     'cms' => [
         'loading' => 'Bezig met laden...',
