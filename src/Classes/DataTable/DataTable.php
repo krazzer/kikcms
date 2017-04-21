@@ -104,8 +104,15 @@ abstract class DataTable extends Renderable
      */
     protected function getDefaultQuery()
     {
+        $alias = $this->dbService->getAliasForModel($this->getModel());
+
         $defaultQuery = new Builder();
-        $defaultQuery->from($this->getModel());
+
+        if($alias){
+            $defaultQuery->from([$alias => $this->getModel()]);
+        } else {
+            $defaultQuery->from($this->getModel());
+        }
 
         return $defaultQuery;
     }

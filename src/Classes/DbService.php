@@ -225,6 +225,24 @@ class DbService extends Injectable
     }
 
     /**
+     * Retrieve an assoc array with a single row from the given query
+     *
+     * @param Builder $query
+     * @return array
+     */
+    public function getRow(Builder $query): array
+    {
+        /** @var Model $result */
+        $result = $query->getQuery()->execute()->getFirst();
+
+        if( ! $result){
+            return [];
+        }
+
+        return $result->toArray();
+    }
+
+    /**
      * @param string $model
      * @return string
      */
@@ -248,6 +266,8 @@ class DbService extends Injectable
                 if ( ! empty($condition)) {
                     $whereClauses[] = $column . " IN (" . implode(',', $condition) . ")";
                 }
+            } elseif(is_numeric($condition)) {
+                $whereClauses[] = $column . ' = ' . $condition;
             } else {
                 $whereClauses[] = $column . ' = ' . $this->escape($condition);
             }

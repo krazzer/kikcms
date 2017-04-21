@@ -120,8 +120,8 @@ class FieldStorage extends Injectable
      */
     public function getValue($relationId, $languageCode = null)
     {
-        $existsQuery = $this->getRelationQuery($relationId, $languageCode);
-        $existsQuery->columns($this->field->getTableField());
+        $existsQuery = $this->getRelationQuery($relationId, $languageCode)
+            ->columns($this->field->getTableField());
 
         return $this->dbService->getValue($existsQuery);
     }

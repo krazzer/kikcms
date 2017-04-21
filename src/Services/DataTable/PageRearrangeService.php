@@ -124,6 +124,8 @@ class PageRearrangeService extends Injectable
      */
     private function getParentChildRelations(): array
     {
+        $this->db->query("SET SESSION group_concat_max_len = 99999");
+
         $relations = $this->dbService->queryAssoc("
             SELECT 0, GROUP_CONCAT(p.id ORDER BY p.display_order ASC) 
             FROM cms_page p 

@@ -18,7 +18,6 @@ use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldStorage;
-use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * @property DbService $dbService
@@ -208,14 +207,7 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        /** @var Simple $returnData */
-        $returnData = $this->getEditDataQuery()->getQuery()->execute()->getFirst();
-
-        if ( ! $returnData) {
-            return [];
-        }
-
-        $data = $this->getDataStoredElseWhere($editId, $languageCode) + $returnData->toArray();
+        $data = $this->getDataStoredElseWhere($editId, $languageCode) + $this->getEditDataForModel();
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
@@ -224,9 +216,9 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @return Builder
+     * @return array
      */
-    protected function getEditDataQuery()
+    protected function getEditDataForModel(): array
     {
         $editId = $this->getFilters()->getEditId();
 
@@ -234,7 +226,7 @@ abstract class DataForm extends WebForm
             ->addFrom($this->getModel())
             ->andWhere('id = ' . $editId);
 
-        return $query;
+        return $this->dbService->getRow($query);
     }
 
     /**
@@ -365,7 +357,10 @@ abstract class DataForm extends WebForm
         try {
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
-                $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
+
+                if($storageData->getDataStoredInTable()){
+                    $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
+                }
             } else {
                 // if a temporary key is inserted, fk checks needs to be disabled for insert
                 if ($this->getFilters()->getParentEditId() === 0) {
