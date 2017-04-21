@@ -6,11 +6,13 @@ use KikCMS\Classes\DbService;
 use KikCMS\Models\Page;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Service for handling Page Model objects
  *
  * @property DbService $dbService
+ * @property PageLanguageService $pageLanguageService
  */
 class PageService extends Injectable
 {
@@ -20,18 +22,24 @@ class PageService extends Injectable
      */
     public function getChildren(Page $page): array
     {
-        $pagesResult = Page::find([
-            'conditions' => 'lft > :lft: AND rgt < :rgt:',
-            'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt]
-        ]);
+        $pagesResult = $this->getChildrenQuery($page)->getQuery()->execute();
 
-        $pages = [];
+        return $this->getPageMap($pagesResult);
+    }
 
-        foreach ($pagesResult as $page){
-            $pages[$page->id] = $page;
-        }
-
-        return $pages;
+    /**
+     * @param Page $page
+     * @return Builder
+     */
+    public function getChildrenQuery(Page $page): Builder
+    {
+        return (new Builder())
+            ->from(Page::class)
+            ->where('lft > :lft: AND rgt < :rgt:', [
+                'lft' => $page->lft,
+                'rgt' => $page->rgt
+            ])
+            ->orderBy('lft');
     }
 
     /**
@@ -61,6 +69,55 @@ class PageService extends Injectable
             'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt],
             'order'      => Page::FIELD_LFT . ' desc',
         ]);
+    }
+
+    /**
+     * @param Resultset $resultset
+     * @return Page[] [pageId => Page] (PageMap)
+     */
+    public function getPageMap(Resultset $resultset)
+    {
+        $pages = [];
+
+        foreach ($resultset as $page){
+            $pages[$page->id] = $page;
+        }
+
+        return $pages;
+    }
+
+    /**
+     * Create an array that can be used for a select using the given Page[]
+     *
+     * @param array $pageMap [pageId => Page object]
+     * @param array $pageLangMap
+     * @param int $parentId
+     * @param int $level
+     *
+     * @return array
+     */
+    public function getCategorySelect($parentId = 0, array $pageMap = [], array $pageLangMap = [], $level = 0): array
+    {
+        if ( ! $pageLangMap) {
+            $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap);
+        }
+
+        $selectArray = [];
+
+        foreach ($pageMap as $pageId => $page) {
+            if ($page->parent_id != $parentId) {
+                continue;
+            }
+
+            $prefix = str_repeat('&nbsp;', $level * 5) . ($level % 2 ? 'ο' : '•') . ' ';
+
+            $selectArray[$pageId] = $prefix . $pageLangMap[$pageId]->name;
+
+            $subArray    = $this->getCategorySelect($pageId, $pageMap, $pageLangMap, $level + 1);
+            $selectArray = $selectArray + $subArray;
+        }
+
+        return $selectArray;
     }
 
     /**

@@ -21,6 +21,7 @@ return [
     'hide'            => 'Verbergen',
     'pageNotFound'    => 'De opgevraade pagina kon niet worden gevonden...',
     'multilingual'    => 'Meertalig',
+    'showAll'         => 'Toon alles',
 
     'cms' => [
         'loading' => 'Bezig met laden...',

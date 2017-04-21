@@ -45,6 +45,25 @@
         </div>
     </div>
 
+    {% if self.customFilters %}
+        <form class="filters form-horizontal form-group-sm">
+            {% for filter in self.customFilters %}
+                <div class="filter">
+                    {% if filter.label %}
+                        <label>{{ filter.label }}:</label>
+                    {% endif %}
+
+                    <select class="form-control" name="{{ filter.field }}">
+                        <option value="">{{ tl('showAll') }}</option>
+                        {% for key, value in filter.options %}
+                            <option value="{{ key }}">{{ value|raw }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+        </form>
+    {% endif %}
+
     <div class="table">
         {% include '@kikcms/' ~ self.tableView ~ '.twig' %}
     </div>

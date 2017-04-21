@@ -47,6 +47,7 @@ var DataTable = Class.extend({
         this.initLanguageSwitch();
         this.initButtons();
         this.initKeyEvents();
+        this.initFilters();
     },
 
     initButtons: function () {
@@ -69,6 +70,14 @@ var DataTable = Class.extend({
 
         $addButton.click(function () {
             self.actionAdd();
+        });
+    },
+
+    initFilters: function () {
+        var self = this;
+
+        this.getFilterForm().find('input, select').change(function () {
+            self.actionPage(1);
         });
     },
 
@@ -580,7 +589,13 @@ var DataTable = Class.extend({
             $tableLanguageSelect.val($(this).val());
         });
 
+        filters.customFilterValues = this.getFilterForm().serializeObject();
+
         return filters;
+    },
+
+    getFilterForm: function () {
+        return this.getDataTable().find(' > .filters');
     },
 
     getForm: function () {

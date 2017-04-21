@@ -59,8 +59,12 @@ class PageLanguageService extends Injectable
      * @param string $languageCode
      * @return PageLanguage[] (PageLanguageMap)
      */
-    public function getByPageMap(array $pageMap, string $languageCode): array
+    public function getByPageMap(array $pageMap, string $languageCode = null): array
     {
+        if ( ! $languageCode) {
+            $languageCode = $this->languageService->getDefaultLanguageCode();
+        }
+
         $pageLanguages = PageLanguage::find([
             'conditions' => 'page_id IN ({ids:array}) AND language_code = :langCode:',
             'bind'       => ['ids' => array_keys($pageMap), 'langCode' => $languageCode]

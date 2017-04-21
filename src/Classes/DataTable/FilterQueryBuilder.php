@@ -36,6 +36,7 @@ class FilterQueryBuilder
         $this->addSearchFilter($query);
         $this->addSortFilter($query);
         $this->addSubDataTableFilter($query);
+        $this->addCustomFilters($query);
 
         return $query;
     }
@@ -98,6 +99,22 @@ class FilterQueryBuilder
         if ($parentEditId === 0) {
             $ids = $this->dataTable->getCachedNewIds();
             $query->inWhere($this->dataTable->getAliasedTableKey(), $ids);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     */
+    private function addCustomFilters(Builder $query)
+    {
+        $customFilterValues = $this->filters->getCustomFilterValues();
+
+        foreach ($customFilterValues as $field => $value)
+        {
+            if(array_key_exists($field, $this->dataTable->getCustomFilters()) && $value) {
+                $filter = $this->dataTable->getCustomFilters()[$field];
+                $filter->applyFilter($query, $value);
+            }
         }
     }
 }

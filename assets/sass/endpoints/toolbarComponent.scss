@@ -46,4 +46,34 @@
             display: inline-block;
         }
     }
+
+    .filters{
+        @include clearFix();
+        background-color: $superLightGray;
+        padding: $dataTableCellPadding;
+        border-radius: $defaultBorderRadius;
+        margin-bottom: 18px;
+
+        .filter{
+            float: left;
+            margin-right: 15px;
+
+            label{
+                margin-right: 7px;
+            }
+
+            .form-control{
+                display: inline-block;
+                width: auto;
+            }
+
+            select{
+                max-width: 250px;
+            }
+
+            &:last-child{
+                margin-right: 0;
+            }
+        }
+    }
 }

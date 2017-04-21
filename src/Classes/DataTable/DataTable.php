@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
@@ -38,6 +39,9 @@ abstract class DataTable extends Renderable
 
     /** @var DataTableFilters */
     protected $filters;
+
+    /** @var Filter[] */
+    protected $customFilters = [];
 
     /** @var string */
     protected $instancePrefix = 'dataTable';
@@ -118,6 +122,14 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @param Filter $filter
+     */
+    public function addFilter(Filter $filter)
+    {
+        $this->customFilters[$filter->getField()] = $filter;
+    }
+
+    /**
      * @param array $ids
      */
     public function delete(array $ids)
@@ -163,19 +175,35 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * Get the table's default alias if present
+     *
+     * @return null|string
+     */
+    public function getAlias()
+    {
+        return $this->dbService->getAliasForModel($this->getModel());
+    }
+
+    /**
      * Get the table's key with alias if present, used for queries. i.e. p.id
      *
      * @return string
      */
     public function getAliasedTableKey(): string
     {
-        $alias = $this->dbService->getAliasForModel($this->getModel());
-
-        if ( ! $alias) {
+        if ( ! $alias = $this->getAlias()) {
             return 'id';
         }
 
         return $alias . '.id';
+    }
+
+    /**
+     * @return Filter[]
+     */
+    public function getCustomFilters(): array
+    {
+        return $this->customFilters;
     }
 
     /**
