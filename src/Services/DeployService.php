@@ -155,5 +155,6 @@ class DeployService extends Injectable
     private function removeMetaDataCache()
     {
         exec('cd ' . $this->getRootDir() . '/cache/ && rm -rf metadata', $output);
+        exec('cd ' . $this->getRootDir() . '/cache/twig/ && rm -rf *', $output);
     }
 }
