@@ -173,7 +173,9 @@ class FinderFileService extends Injectable
      */
     public function getFilePath(FinderFile $finderFile)
     {
-        return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $finderFile->id . '.' . $finderFile->getExtension();
+        $fileName = $finderFile->id . '.' . $finderFile->getExtension();
+
+        return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $fileName;
     }
 
     /**
