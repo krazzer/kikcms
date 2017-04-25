@@ -23,6 +23,10 @@ return [
     'multilingual'    => 'Meertalig',
     'showAll'         => 'Toon alles',
 
+    'contactForm' => [
+        'sendSuccess' => 'Bericht verzonden',
+    ],
+
     'cms' => [
         'loading' => 'Bezig met laden...',
     ],

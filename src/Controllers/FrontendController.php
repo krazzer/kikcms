@@ -69,6 +69,15 @@ class FrontendController extends BaseController
     }
 
     /**
+     * @param array $variables
+     * @return array
+     */
+    private function getWebsiteVariables(array $variables): array
+    {
+        return $this->websiteService->callMethod('TemplateVariables', 'getVariables', [$variables], false, $variables);
+    }
+
+    /**
      * @param PageLanguage $pageLanguage
      */
     private function loadPage(PageLanguage $pageLanguage)
@@ -84,7 +93,7 @@ class FrontendController extends BaseController
         $this->view->languageCode = $languageCode;
         $this->view->helper       = $frontendHelper;
 
-        $this->view->setVars($variables);
+        $this->view->setVars($this->getWebsiteVariables($variables));
         $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);
         $this->view->pick('@website/templates/' . $templateFile);
     }

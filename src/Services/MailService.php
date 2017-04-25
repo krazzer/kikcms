@@ -63,7 +63,7 @@ class MailService extends Injectable
             $parameters['body']    = $body;
             $parameters['subject'] = $subject;
 
-            $body = $this->view->getRender('mail', $template, $parameters);
+            $body = $this->view->getPartial($template, $parameters);
         }
 
         $message = $this->createMessage()
@@ -90,6 +90,6 @@ class MailService extends Injectable
         $webmasterEmail = $this->applicationConfig->webmasterEmail;
         $webmasterName  = $this->applicationConfig->webmasterName;
 
-        return $this->sendMail([$webmasterEmail => $webmasterName], $to, $subject, $body, 'default', $parameters);
+        return $this->sendMail([$webmasterEmail => $webmasterName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
     }
 }

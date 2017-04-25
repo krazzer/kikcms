@@ -3,12 +3,17 @@
 {# @var tabs \KikCMS\Classes\WebForm\Tab[] #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 {# @var security \Phalcon\Security #}
+{# @var flash \Phalcon\Flash\Direct #}
 
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
 <div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
     {{ form({name: 'form'}) }}
+
+    {% if flash %}
+        {{ flash.output }}
+    {% endif %}
 
     {% if errorContainer.hasFormErrors %}
         {% for error in errorContainer.formErrors %}
@@ -36,7 +41,7 @@
 
     {% block submitButton %}
         <div class="form-group">
-            {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-primary btn-block', 'name': 'submit'}) }}
+            {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-primary', 'name': 'submit'}) }}
         </div>
     {% endblock %}
 

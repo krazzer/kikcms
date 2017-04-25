@@ -60,18 +60,24 @@ class Translator extends Injectable
      */
     public function getCmsTranslation(string $string)
     {
-        $translations = include(__DIR__ . '/../../translations/nl.php');
+        $translationsFile = __DIR__ . '/../../translations/' . $this->getLanguageCode() . '.php';
+
+        if( ! file_exists($translationsFile)){
+            return '';
+        }
+
+        $translations = include($translationsFile);
         $stringParts  = explode('.', $string);
 
         if ( ! array_key_exists($stringParts[0], $translations)) {
-            return null;
+            return '';
         }
 
         foreach ($stringParts as $part) {
             if (array_key_exists($part, $translations)) {
                 $translations = $translations[$part];
             } else {
-                $translations = null;
+                $translations = '';
             }
         }
 

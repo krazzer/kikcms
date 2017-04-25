@@ -3,11 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}{% endblock %}</title>
+    {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
+    {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ assets.outputCss() }}
     {% block head '' %}
 </head>
 <body>
 {% block body %}{% endblock %}
+{{ javascriptInclude('cmsassets/js/utils.js') }}
+{{ javascriptInclude('cmsassets/js/kikcms.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
+{{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
 {{ assets.outputJs() }}
 </body>
 </html>

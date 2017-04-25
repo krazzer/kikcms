@@ -3,12 +3,14 @@
 namespace KikCMS\Forms;
 
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Email;
 
 /**
  * @property UserService $userService
+ * @property MailService $mailService
  */
 class PasswordResetLinkForm extends WebForm
 {
