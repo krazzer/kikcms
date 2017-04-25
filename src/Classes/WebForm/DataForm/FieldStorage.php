@@ -10,6 +10,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Manages where and how a certain DataForms' field should be stored and retrieved
+ * This class is the default behaviour to store a fields' input in some other table than the one defined in the form
  *
  * @property DbService $dbService
  */
@@ -115,7 +116,7 @@ class FieldStorage extends Injectable
      * Retrieve the value stored by the given relation id
      *
      * @param $relationId
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return mixed
      */
     public function getValue($relationId, $languageCode = null)
@@ -198,7 +199,7 @@ class FieldStorage extends Injectable
      * @param string $languageCode
      * @return bool
      */
-    private function relationRowExists($relationId, $languageCode = 'nl'): bool
+    private function relationRowExists($relationId, $languageCode = null): bool
     {
         $existsQuery = $this->getRelationQuery($relationId, $languageCode);
 

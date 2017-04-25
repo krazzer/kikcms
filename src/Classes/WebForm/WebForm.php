@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
+use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Renderable\Filters;
@@ -15,6 +16,7 @@ use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
+use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Forms\Element\Check;
@@ -279,6 +281,22 @@ abstract class WebForm extends Renderable
         $multiCheckbox->setOptions($options);
 
         return $this->addField(new MultiCheckbox($multiCheckbox));
+    }
+
+    /**
+     * @param string $key
+     * @param SelectDataTable $dataTable
+     * @param string $label
+     * @return Field|SelectDataTableField
+     */
+    public function addDataTableSelectField(string $key, SelectDataTable $dataTable, string $label)
+    {
+        $element = new Hidden($key);
+        $element->setLabel($label);
+
+        $dataTableField = $this->addField(new SelectDataTableField($element, $dataTable));
+
+        return $dataTableField;
     }
 
     /**
@@ -628,11 +646,34 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * Pre-renders the DataTable fields, so that any required asset will be correctly added
+     */
+    protected function renderDataTableFields()
+    {
+        /** @var DataTableField $field */
+        foreach ($this->getFields() as $key => $field) {
+
+            /** @var SelectDataTableField $field */
+            if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
+                // set selected ids filter for SelectDataTable
+                if ($field->getElement()->getValue()) {
+                    $filters = $field->getDataTable()->getFilters();
+                    $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
+                }
+
+                $field->setRenderedDataTable($field->getDataTable()->render());
+            }
+        }
+    }
+
+    /**
      * @param ErrorContainer $errorContainer
      * @return string
      */
     protected function renderForm(ErrorContainer $errorContainer)
     {
+        $this->renderDataTableFields();
+
         return $this->renderView($this->formTemplate, [
             'form'               => $this->form,
             'fields'             => $this->fields,

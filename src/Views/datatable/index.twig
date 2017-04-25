@@ -4,19 +4,24 @@
 
 <div class="datatable toolbarComponent" id="{{ self.instance }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
-        <div class="btn btn-default add">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            <span class="lbl">
+
+        {% block buttonAdd %}
+            <div class="btn btn-default add">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span class="lbl">
                 {{ tl(self.labels ~ '.add') ?: tl('dataTable.add') }}
             </span>
-        </div>
+            </div>
+        {% endblock %}
 
         {% block additionalButtons '' %}
 
-        <div class="btn btn-default delete" style="display: none;">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            <span class="lbl">{{ tl('delete') }}</span>
-        </div>
+        {% block buttonDelete %}
+            <div class="btn btn-default delete" style="display: none;">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                <span class="lbl">{{ tl('delete') }}</span>
+            </div>
+        {% endblock %}
 
         {% if self.searchableFields %}
             <div class="search">
@@ -46,7 +51,7 @@
     </div>
 
     {% if self.customFilters %}
-        <form class="filters form-horizontal form-group-sm">
+        <div class="filters form-horizontal form-group-sm">
             {% for filter in self.customFilters %}
                 <div class="filter">
                     {% if filter.label %}
@@ -61,7 +66,7 @@
                     </select>
                 </div>
             {% endfor %}
-        </form>
+        </div>
     {% endif %}
 
     <div class="table">

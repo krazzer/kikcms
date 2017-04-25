@@ -21,7 +21,16 @@
                     {{ name }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
-            <td colspan="{{ 1 + self.tableButtons|length + (self.sortable ? 1 : 0) }}"></td>
+
+            {% set extraColumns = self.tableButtons|length + (self.sortable ? 1 : 0) %}
+
+            {% block actionEditHeaderColumn %}
+                <td></td>
+            {% endblock %}
+
+            {% if extraColumns %}
+                <td colspan="{{ extraColumns }}"></td>
+            {% endif %}
         </tr>
         </thead>
 
@@ -52,10 +61,12 @@
                     {% endfor %}
                 {% endblock %}
 
-                <td class="action edit" title="{{ tl('dataTable.edit') }}">
-                    <input type="hidden" name="id" value="{{ row.id }}">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </td>
+                {% block actionEditColumn %}
+                    <td class="action edit" title="{{ tl('dataTable.edit') }}">
+                        <input type="hidden" name="id" value="{{ row.id }}">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                    </td>
+                {% endblock %}
             </tr>
         {% endfor %}
         </tbody>

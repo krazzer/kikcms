@@ -112,7 +112,7 @@ abstract class DataTable extends Renderable
 
         $defaultQuery = new Builder();
 
-        if($alias){
+        if ($alias) {
             $defaultQuery->from([$alias => $this->getModel()]);
         } else {
             $defaultQuery->from($this->getModel());

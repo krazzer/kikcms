@@ -41,6 +41,9 @@ abstract class DataForm extends WebForm
     /** @var array local cache for edit data */
     private $cachedEditData = [];
 
+    /** @var DataTable, will be automatically set when this form is initialized by a DataTable */
+    private $dataTable;
+
     /**
      * @return string
      */
@@ -192,6 +195,14 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @return DataTable|null
+     */
+    public function getDataTable()
+    {
+        return $this->dataTable;
+    }
+
+    /**
      * @return array
      */
     public function getEditData(): array
@@ -216,6 +227,16 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @param DataTable $dataTable
+     * @return $this|DataForm
+     */
+    public function setDataTable(DataTable $dataTable): DataForm
+    {
+        $this->dataTable = $dataTable;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     protected function getEditDataForModel(): array
@@ -227,16 +248,6 @@ abstract class DataForm extends WebForm
             ->andWhere('id = ' . $editId);
 
         return $this->dbService->getRow($query);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function renderForm(ErrorContainer $errorContainer)
-    {
-        $this->renderDataTableFields();
-
-        return parent::renderForm($errorContainer);
     }
 
     /**
@@ -268,20 +279,41 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Get an array of formFields that are used by the system and don't contain user input
-     *
-     * @return array
-     */
-    private function getSystemFields()
-    {
-        return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
-    }
-
-    /**
      * Perform some action on a successful save
      */
     protected function onSave()
     {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function renderDataTableFields()
+    {
+        parent::renderDataTableFields();
+
+        $parentEditId = 0;
+
+        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
+        if ($this->hasField(DataTable::EDIT_ID)) {
+            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
+        }
+
+        $languageCode = $this->getFilters()->getLanguageCode();
+
+        /** @var DataTableField $field */
+        foreach ($this->getFields() as $key => $field) {
+            if ($field->getType() != Field::TYPE_DATA_TABLE) {
+                continue;
+            }
+
+            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
+            $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
+
+            $renderedDataTable = $field->getDataTable()->render();
+
+            $field->setRenderedDataTable($renderedDataTable);
+        }
     }
 
     /**
@@ -316,32 +348,13 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Pre-renders the DataTable fields, so that any required asset will be correctly added
+     * Get an array of formFields that are used by the system and don't contain user input
+     *
+     * @return array
      */
-    private function renderDataTableFields()
+    private function getSystemFields()
     {
-        $parentEditId = 0;
-
-        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
-        if ($this->hasField(DataTable::EDIT_ID)) {
-            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
-        }
-
-        $languageCode = $this->getFilters()->getLanguageCode();
-
-        /** @var DataTableField $field */
-        foreach ($this->getFields() as $key => $field) {
-            if ($field->getType() != Field::TYPE_DATA_TABLE) {
-                continue;
-            }
-
-            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
-            $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
-
-            $renderedDataTable = $field->getDataTable()->render();
-
-            $field->setRenderedDataTable($renderedDataTable);
-        }
+        return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
     }
 
     /**

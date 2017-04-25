@@ -7,7 +7,12 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 
-/** @property DbService $dbService */
+/**
+ * DataTable fields aren't actually stored here, they are stored right away, however, when the parent form is not yet
+ * saved, the Sub DataTable's entries are referring to a non-existing parent (0) which are updated here
+ *
+ * @property DbService $dbService
+ */
 class DataTable extends FieldStorage
 {
     /** @var DataTableField */
@@ -16,7 +21,7 @@ class DataTable extends FieldStorage
     /**
      * @inheritdoc
      */
-    public function store($value, $relationId, $languageCode = 'nl')
+    public function store($value, $relationId, $languageCode = null)
     {
         $dataTable    = $this->field->getDataTable();
         $keysToUpdate = $dataTable->getCachedNewIds();
@@ -29,7 +34,11 @@ class DataTable extends FieldStorage
         }
     }
 
-    public function getValue($relationId, $languageCode = 'nl')
+    /**
+     * @inheritdoc
+     */
+    public function getValue($relationId, $languageCode = null)
     {
+        // handled by the DataTable itself
     }
 }

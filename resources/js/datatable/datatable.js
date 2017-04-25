@@ -25,9 +25,12 @@ var DataTable = Class.extend({
         return confirmText;
     },
 
+    getFormGroups: function () {
+        return this.getWindow().find('form :input').not('.datatable :input');
+    },
+
     getFormSerialized: function () {
-        var $formGroups = this.getWindow().find('form .form-group:not(.type-dataTable) input, select, textarea, form > input');
-        return $formGroups.serialize();
+        return this.getFormGroups().serialize();
     },
 
     getThumbHoverContainer: function () {
@@ -225,8 +228,7 @@ var DataTable = Class.extend({
                 return;
             }
 
-            $row.toggleClass('selected');
-            self.updateToolbar();
+            self.onRowClick($row);
         });
 
         $rows.find('td.edit').click(function () {
@@ -235,8 +237,7 @@ var DataTable = Class.extend({
         });
 
         $rows.on('dblclick', function () {
-            var id = $(this).find('input[name=id]').val();
-            self.actionEdit(id);
+            self.onRowDblClick($(this));
         });
 
         var searchValue = this.getSearchField().val();
@@ -425,7 +426,7 @@ var DataTable = Class.extend({
     actionSave: function (closeWindow) {
         var self    = this;
         var $window = this.getWindow();
-        var params  = $window.find('form').serializeObject();
+        var params  = this.getFormGroups().serializeObject();
 
         $.extend(params, this.getFilters());
 
@@ -497,6 +498,16 @@ var DataTable = Class.extend({
         }
 
         this.currentFormInput = null;
+    },
+
+    onRowClick: function ($row) {
+        $row.toggleClass('selected');
+        this.updateToolbar();
+    },
+
+    onRowDblClick: function ($row) {
+        var id = $row.find('input[name=id]').val();
+        this.actionEdit(id);
     },
 
     showWindow: function () {
@@ -589,7 +600,7 @@ var DataTable = Class.extend({
             $tableLanguageSelect.val($(this).val());
         });
 
-        filters.customFilterValues = this.getFilterForm().serializeObject();
+        filters.customFilterValues = this.getFilterForm().find(':input').serializeObject();
 
         return filters;
     },

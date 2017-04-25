@@ -83,6 +83,10 @@
     </div>
 {% endblock %}
 
+{%- block fieldSelectDataTable -%}
+    {{ block('fieldDataTable') }}
+{%- endblock -%}
+
 {%- block fieldWysiwyg %}
     {{ block('fieldDefault') }}
 {% endblock %}
