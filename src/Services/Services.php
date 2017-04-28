@@ -75,7 +75,18 @@ class Services extends BaseServices
      */
     protected function getWebsiteServices(): array
     {
-        return [];
+        /** @var WebsiteService $websiteService */
+        $websiteService = $this->get('websiteService');
+
+        return $websiteService->callMethod('WebsiteServices', 'getServices', [], false, []);
+    }
+
+    /**
+     * @return WebsiteService
+     */
+    protected function initWebsiteService()
+    {
+        return new WebsiteService();
     }
 
     /**
@@ -110,16 +121,6 @@ class Services extends BaseServices
     protected function initImageHandler()
     {
         return new ImageHandler();
-    }
-
-    /**
-     * Register router
-     */
-    protected function initRouter()
-    {
-        $routing = new Routing();
-
-        return $routing->initialize();
     }
 
     /**

@@ -2,12 +2,14 @@
 
 namespace KikCMS\Services\Base;
 
+use ApplicationServices;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Services\Routing;
 use Phalcon\Config;
-use Phalcon\DI\FactoryDefault;
+use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Files;
 
-class BaseServices extends FactoryDefault
+class BaseServices extends ApplicationServices
 {
     /**
      * Contains a list of services that simply return a new instance of themselves
@@ -38,14 +40,6 @@ class BaseServices extends FactoryDefault
         $reflection = new \ReflectionObject($this);
         $methods    = $reflection->getMethods();
 
-        foreach ($this->getSimpleServices() as $service) {
-            $serviceName = lcfirst(last(explode('\\', $service)));
-
-            $this->set($serviceName, function () use ($service) {
-                return new $service();
-            });
-        }
-
         foreach ($methods as $method) {
             if ((strlen($method->name) > 10) && (strpos($method->name, 'initShared') === 0)) {
                 $this->set(lcfirst(substr($method->name, 10)), $method->getClosure($this));
@@ -55,6 +49,22 @@ class BaseServices extends FactoryDefault
             if ((strlen($method->name) > 4) && (strpos($method->name, 'init') === 0)) {
                 $this->set(lcfirst(substr($method->name, 4)), $method->getClosure($this));
             }
+        }
+
+        foreach ($this->getSimpleServices() as $service) {
+            $serviceName = lcfirst(last(explode('\\', $service)));
+
+            $this->set($serviceName, function () use ($service) {
+                return new $service();
+            });
+        }
+
+        // initialize the router if we're not in the Cli
+        if( ! $this instanceof Cli){
+            $this->set('router', function () {
+                $routing = new Routing();
+                return $routing->initialize();
+            });
         }
 
         if($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV){
