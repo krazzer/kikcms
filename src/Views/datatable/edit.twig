@@ -1,5 +1,5 @@
 {% extends '@kikcms/datatable/window.twig' %}
 
 {% block headerTitle %}
-    {{ tl(labels ~ '.edit', editData) ?: tl('dataTable.edit') }}
+    {{ tl('dataTable.edit', {itemSingular: labels[0]})|capitalize }}
 {% endblock %}

@@ -27,9 +27,12 @@ class Templates extends DataTable
     /**
      * @inheritdoc
      */
-    public function getLabels(): string
+    public function getLabels(): array
     {
-        return 'dataTables.templates';
+        return [
+            $this->translator->tlb('dataTables.templates.singular'),
+            $this->translator->tlb('dataTables.templates.plural')
+        ];
     }
 
     /**

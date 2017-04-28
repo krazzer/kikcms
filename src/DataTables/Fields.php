@@ -21,9 +21,15 @@ class Fields extends DataTable
         return FieldForm::class;
     }
 
-    public function getLabels(): string
+    /**
+     * @inheritdoc
+     */
+    public function getLabels(): array
     {
-        return 'dataTables.fields';
+        return [
+            $this->translator->tlb('dataTables.fields.singular'),
+            $this->translator->tlb('dataTables.fields.plural')
+        ];
     }
 
     /**

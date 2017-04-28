@@ -45,9 +45,12 @@ class TemplateFields extends DataTable
     /**
      * @inheritdoc
      */
-    public function getLabels(): string
+    public function getLabels(): array
     {
-        return 'dataTables.templateFields';
+        return [
+            $this->translator->tlb('dataTables.templateFields.singular'),
+            $this->translator->tlb('dataTables.templateFields.plural')
+        ];
     }
 
     /**

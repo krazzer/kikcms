@@ -58,8 +58,8 @@ return [
 
     'dataTable' => [
         'noData'            => 'Er is geen data gevonden om weer te geven...',
-        'add'               => 'Nieuw...',
-        'edit'              => 'Bewerken',
+        'add'               => ':itemSingular toevoegen',
+        'edit'              => ':itemSingular bewerken',
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',
@@ -74,31 +74,25 @@ return [
         ],
 
         'delete' => [
-            'confirmOne' => 'Wilt u zeker weten dit record verwijderen?',
-            'confirm'    => 'Wilt u zeker weten deze :amount records verwijderen?',
+            'confirmOne' => ':itemSingular verwijderen?',
+            'confirm'    => 'Wilt u zeker weten deze :amount :itemPlural verwijderen?',
         ],
     ],
 
     'dataTables' => [
         'default' => [
-            'add'       => "Nieuw...",
-            'edit'      => "Bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount items verwijderen?",
-            'deleteOne' => "Wilt u zeker weten dit item verwijderen?",
+            'singular' => "item",
+            'plural'   => "items",
         ],
 
         'products' => [
-            'add'       => "Nieuw product",
-            'edit'      => "Product '<i>:title</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount producten verwijderen?",
-            'deleteOne' => "Wilt u zeker weten dit product verwijderen?",
+            'singular' => "product",
+            'plural'   => "products",
         ],
 
         'pages' => [
-            'add'            => "Nieuwe pagina",
-            'edit'           => "Pagina '<i>:pageName</i>' bewerken",
-            'delete'         => "Wilt u zeker weten deze :amount pagina's verwijderen?",
-            'deleteOne'      => "Wilt u zeker weten deze pagina verwijderen?",
+            'singular'       => "pagina",
+            'plural'         => "pagina's",
             'addItem'        => 'Nieuw...',
             'page'           => 'Pagina',
             'menu'           => 'Menu',
@@ -116,53 +110,38 @@ return [
         ],
 
         'aliases' => [
-            'add'  => "Nieuwe alias",
-            'edit' => "Alias '<i>:name</i>' bewerken",
+            'singular' => "alias",
+            'plural'   => "aliassen",
         ],
 
         'menus' => [
-            'add'  => "Nieuw menu",
-            'edit' => "Menu '<i>:name</i>' bewerken",
+            'singular' => "menu",
+            'plural'   => "menu's",
         ],
 
         'language' => [
-            'add'       => "Nieuwe taal",
-            'edit'      => "Taal '<i>:name</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount talen verwijderen?",
-            'deleteOne' => "Wilt u zeker weten deze taal verwijderen?",
+            'singular' => "taal",
+            'plural'   => "talen",
         ],
 
         'links' => [
-            'add'  => "Nieuwe link",
-            'edit' => "Link '<i>:name</i>' bewerken",
-        ],
-
-        'subProducts' => [
-            'add'       => "Nieuw sub product",
-            'edit'      => "Sub product '<i>:title</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount sub producten verwijderen?",
-            'deleteOne' => "Wilt u zeker weten dit sub product verwijderen?",
+            'singular' => "link",
+            'plural'   => "links",
         ],
 
         'templates' => [
-            'add'       => "Nieuwe template",
-            'edit'      => "Template '<i>:name</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount templates verwijderen?",
-            'deleteOne' => "Wilt u zeker weten deze template verwijderen?",
+            'singular' => "template",
+            'plural'   => "templates",
         ],
 
         'fields' => [
-            'add'       => "Nieuw veld",
-            'edit'      => "Veld '<i>:name</i>' bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount velden verwijderen?",
-            'deleteOne' => "Wilt u zeker weten dit veld verwijderen?",
+            'singular' => "veld",
+            'plural'   => "velden",
         ],
 
         'templateFields' => [
-            'add'       => "Nieuw template veld",
-            'edit'      => "Template veld bewerken",
-            'delete'    => "Wilt u zeker weten deze :amount template velden verwijderen?",
-            'deleteOne' => "Wilt u zeker weten dit template veld verwijderen?",
+            'singular' => "template veld",
+            'plural'   => "template velden",
         ],
     ],
 
@@ -181,7 +160,8 @@ return [
         'searchPlaceholder'        => 'Zoeken naar bestanden',
         'deleteConfirm'            => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
         'deleteConfirmOne'         => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
-        'deleteErrorLinked'        => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, omdat deze ergens aan gekoppeld is.',
+        'deleteErrorLinked'        => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, ' .
+            'omdat deze ergens aan gekoppeld is.',
         'createFolder'             => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName'        => 'Nieuwe map',
         'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
@@ -197,7 +177,8 @@ return [
     ],
 
     'pages' => [
-        'warningTemplateChange' => 'Als u van template wisselt, gaan niet-opgeslagen wijzigingen verloren, wilt u zeker weten doorgaan?',
+        'warningTemplateChange' => 'Als u van template wisselt, gaan niet-opgeslagen wijzigingen verloren, ' .
+            'wilt u zeker weten doorgaan?',
     ],
 
     'webform' => [

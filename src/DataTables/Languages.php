@@ -24,9 +24,12 @@ class Languages extends DataTable
     /**
      * @inheritdoc
      */
-    public function getLabels(): string
+    public function getLabels(): array
     {
-        return 'dataTables.language';
+        return [
+            $this->translator->tlb('dataTables.language.singular'),
+            $this->translator->tlb('dataTables.language.plural')
+        ];
     }
 
     /**

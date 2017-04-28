@@ -62,7 +62,7 @@
                 {% endblock %}
 
                 {% block actionEditColumn %}
-                    <td class="action edit" title="{{ tl('dataTable.edit') }}">
+                    <td class="action edit" title="{{ tl('dataTable.edit', {itemSingular: self.labels[0]})|capitalize }}">
                         <input type="hidden" name="id" value="{{ row.id }}">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </td>

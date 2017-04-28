@@ -8,18 +8,10 @@ var DataTable = Class.extend({
     parentEditId: null,
 
     getDeleteConfirmMessage: function (amount) {
-        var confirmText = KikCMS.tl('dataTable.delete.confirmOne');
-
-        if (KikCMS.tl(this.labels + '.deleteOne')) {
-            confirmText = KikCMS.tl(this.labels + '.deleteOne')
-        }
+        var confirmText = capitalize(KikCMS.tl('dataTable.delete.confirmOne', {itemSingular: this.labels[0]}));
 
         if (amount > 1) {
-            if (KikCMS.tl(this.labels + '.delete')) {
-                confirmText = KikCMS.tl(this.labels + '.delete', {amount: amount});
-            } else {
-                confirmText = KikCMS.tl('dataTable.delete.confirm', {amount: amount});
-            }
+            confirmText = KikCMS.tl('dataTable.delete.confirm', {amount: amount, itemPlural: this.labels[1]});
         }
 
         return confirmText;

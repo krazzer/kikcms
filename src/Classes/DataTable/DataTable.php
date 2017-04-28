@@ -239,13 +239,16 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * Returns translation container, with labels for add, edit, delete and deleteOne
+     * Returns array with 2 values, singular and plural, e.g. ["item", "items"]
      *
-     * @return string
+     * @return array
      */
-    public function getLabels(): string
+    public function getLabels(): array
     {
-        return 'dataTables.default';
+        return [
+            $this->translator->tlb('dataTables.default.singular'),
+            $this->translator->tlb('dataTables.default.plural')
+        ];
     }
 
     /**
@@ -526,16 +529,7 @@ abstract class DataTable extends Renderable
             $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
         }
 
-        $translations = DataTable::JS_TRANSLATIONS;
-
-        if ($this->getLabels()) {
-            $translations[] = $this->getLabels() . '.add';
-            $translations[] = $this->getLabels() . '.edit';
-            $translations[] = $this->getLabels() . '.delete';
-            $translations[] = $this->getLabels() . '.deleteOne';
-        }
-
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, $translations);
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
     }
 
     /**

@@ -88,23 +88,26 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
-    public function getLabels(): string
+    public function getLabels(): array
     {
+        $translation = 'pages';
+
         switch ($this->getFilters()->getPageType()) {
             case Page::TYPE_MENU:
-                return 'dataTables.menus';
+                $translation = 'menus';
             break;
-
             case Page::TYPE_LINK:
-                return 'dataTables.links';
+                $translation = 'links';
             break;
-
             case Page::TYPE_ALIAS:
-                return 'dataTables.aliases';
+                $translation = 'aliases';
             break;
         }
 
-        return 'dataTables.pages';
+        return [
+            $this->translator->tlb('dataTables.' . $translation . '.singular'),
+            $this->translator->tlb('dataTables.' . $translation . '.plural'),
+        ];
     }
 
     /**

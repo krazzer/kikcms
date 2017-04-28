@@ -9,7 +9,7 @@
             <div class="btn btn-default add">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 <span class="lbl">
-                {{ tl(self.labels ~ '.add') ?: tl('dataTable.add') }}
+                {{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}
             </span>
             </div>
         {% endblock %}
