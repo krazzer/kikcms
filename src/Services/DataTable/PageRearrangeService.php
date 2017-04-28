@@ -113,7 +113,7 @@ class PageRearrangeService extends Injectable
                 continue;
             }
 
-            if ($this->urlService->urlExists($pageLanguage->url, $parentId, $pageLanguage)) {
+            if ($this->urlService->urlExists($pageLanguage->url, $parentId, $pageLanguage->language_code, $pageLanguage)) {
                 $this->urlService->deduplicateUrl($pageLanguage);
             }
         }

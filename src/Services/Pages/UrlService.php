@@ -25,9 +25,10 @@ class UrlService extends Injectable
      * @param string $url
      * @param int $parentId
      * @param PageLanguage $pageLanguage
+     * @param string $languageCode
      * @return bool
      */
-    public function urlExists(string $url, int $parentId = null, PageLanguage $pageLanguage = null): bool
+    public function urlExists(string $url, int $parentId = null, string $languageCode, PageLanguage $pageLanguage = null): bool
     {
         $query = (new Builder())
             ->from(['pl' => PageLanguage::class])
@@ -38,6 +39,13 @@ class UrlService extends Injectable
             $query->andWhere('p.parent_id = :parentId:', ['parentId' => $parentId]);
         } else {
             $query->andWhere('p.parent_id IS NULL');
+        }
+
+        $parentPage = Page::getById($parentId);
+
+        // if the page has a parent page that isn't a menu, we only need to check in the same language
+        if($parentPage && $parentPage->type !== Page::TYPE_MENU){
+            $query->andWhere('pl.language_code = :languageCode:', ['languageCode' => $languageCode]);
         }
 
         if ($pageLanguage) {
@@ -56,7 +64,7 @@ class UrlService extends Injectable
 
         $newUrl = $pageLanguage->url . '-' . $newUrlIndex;
 
-        while ($this->urlExists($newUrl, $pageLanguage->page->parent_id, $pageLanguage)) {
+        while ($this->urlExists($newUrl, $pageLanguage->page->parent_id, $pageLanguage->language_code, $pageLanguage)) {
             $newUrlIndex++;
             $newUrl = $pageLanguage->url . '-' . $newUrlIndex;
         }

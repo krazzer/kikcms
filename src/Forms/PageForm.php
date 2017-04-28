@@ -111,8 +111,9 @@ class PageForm extends DataForm
 
         $parentId     = $this->getParentId();
         $pageLanguage = $this->getPageLanguage();
+        $languageCode = $this->getFilters()->getLanguageCode();
 
-        if ($this->urlService->urlExists($url, $parentId, $pageLanguage)) {
+        if ($this->urlService->urlExists($url, $parentId, $languageCode, $pageLanguage)) {
             $errorContainer->addFieldError('url', $this->translator->tlb('dataTables.pages.urlExists'));
         }
 
