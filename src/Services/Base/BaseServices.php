@@ -2,17 +2,19 @@
 
 namespace KikCMS\Services\Base;
 
-use ApplicationServices;
+use /** @noinspection PhpUndefinedClassInspection */
+    ApplicationServices;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Routing;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Files;
 
+/** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
 {
     /**
-     * Contains a list of services that simply return a new instance of themselves
+     * Contains a list of services that simply return a new instance of themselvesMySQL - testsite@localhost
      *
      * @return array
      */
@@ -26,6 +28,7 @@ class BaseServices extends ApplicationServices
      */
     public function __construct(Config $config)
     {
+        /** @noinspection PhpUndefinedClassInspection */
         parent::__construct();
 
         $this->setShared('config', $config);
