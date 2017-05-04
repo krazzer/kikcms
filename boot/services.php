@@ -31,7 +31,8 @@ $loader = (new \Phalcon\Loader())
         "KikCMS"  => __DIR__ . "/../src/",
     ])
     ->registerDirs([
-        __DIR__ . "/../src/Tasks"
+        __DIR__ . "/../src/Tasks",
+        SITE_PATH . "app/Tasks",
     ])
     ->register();
 

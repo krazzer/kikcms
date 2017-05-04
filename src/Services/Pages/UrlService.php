@@ -33,7 +33,7 @@ class UrlService extends Injectable
             $pageLanguage->url = $this->toSlug($pageLanguage->name);
 
             if ($this->urlExistsForPageLanguage($pageLanguage)) {
-                $this->urlService->deduplicateUrl($pageLanguage);
+                $this->deduplicateUrl($pageLanguage);
             } else {
                 $pageLanguage->save();
             }
@@ -113,6 +113,20 @@ class UrlService extends Injectable
     }
 
     /**
+     * @return int[]
+     */
+    public function getPageIdsWithoutUrl(): array
+    {
+        $query = (new Builder())
+            ->columns([PageLanguage::FIELD_PAGE_ID])
+            ->from(PageLanguage::class)
+            ->groupBy(PageLanguage::FIELD_PAGE_ID)
+            ->where(PageLanguage::FIELD_URL . ' IS NULL');
+
+        return $this->dbService->getValues($query);
+    }
+
+    /**
      * @param PageLanguage $pageLanguage
      * @return string
      */
@@ -173,7 +187,7 @@ class UrlService extends Injectable
             $query->andWhere('p.parent_id IS NULL');
         }
 
-        $parentPage = Page::getById($parentId);
+        $parentPage = $parentId ? Page::getById($parentId) : null;
 
         // if the page has a parent page that isn't a menu, we only need to check in the same language
         if ($parentPage && $parentPage->type !== Page::TYPE_MENU) {
@@ -209,6 +223,8 @@ class UrlService extends Injectable
      */
     private function urlExistsForPageLanguage(PageLanguage $pageLang)
     {
-        return $this->urlExists($pageLang->url, $pageLang->page->parent->id, $pageLang->language_code, $pageLang);
+        $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
+
+        return $this->urlExists($pageLang->url, $parentId, $pageLang->language_code, $pageLang);
     }
 }

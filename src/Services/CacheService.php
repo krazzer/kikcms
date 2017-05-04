@@ -19,6 +19,10 @@ class CacheService extends Injectable
      */
     public function clear(string $prefix)
     {
+        if( ! $this->cache){
+            return;
+        }
+
         $keys = $this->cache->queryKeys($prefix);
 
         foreach ($keys as $cacheKey) {
