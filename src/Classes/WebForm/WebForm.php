@@ -104,7 +104,7 @@ abstract class WebForm extends Renderable
      */
     public function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=1');
+        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=3');
         $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
@@ -157,19 +157,21 @@ abstract class WebForm extends Renderable
     /**
      * @param string $key
      * @param string $label
+     * @param string $route
      * @param array $validators
      * @return Field|Autocomplete
      */
-    public function addAutoCompleteField(string $key, string $label, array $validators = []): Field
+    public function addAutoCompleteField(string $key, string $label, string $route, array $validators = []): Field
     {
-        $autoComplete = new Text($key);
-        $autoComplete->setLabel($label);
-        $autoComplete->setAttribute('class', 'form-control autocomplete');
-        $autoComplete->setAttribute('autocomplete', 'off');
-        $autoComplete->setAttribute('data-field-key', $key);
-        $autoComplete->addValidators($validators);
+        $element = (new Text($key))
+            ->setLabel($label)
+            ->setAttribute('class', 'form-control autocomplete')
+            ->setAttribute('autocomplete', 'off')
+            ->setAttribute('data-field-key', $key)
+            ->setAttribute('data-route', $route)
+            ->addValidators($validators);
 
-        return $this->addField(new Autocomplete($autoComplete));
+        return $this->addField(new Autocomplete($element));
     }
 
     /**

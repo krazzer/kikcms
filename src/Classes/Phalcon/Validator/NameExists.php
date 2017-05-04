@@ -33,7 +33,7 @@ class NameExists extends Validator
         }
 
         $validator->appendMessage(
-            new Message($validator->getDefaultMessage('NameExists'), $field)
+            new Message($validator->getDefaultMessage('Default'), $field)
         );
 
         return false;

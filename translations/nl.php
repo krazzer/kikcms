@@ -208,7 +208,7 @@ return [
             'Url'               => 'Het veld :label moet een geldige url zijn',
             'CreditCard'        => 'Het veld :label moet een geldig credit card nummer zijn',
             'Date'              => 'Het veld :label moet een geldige datum zijn',
-            'NameExists'        => 'De waarde van het veld :label is niet geldig',
+            'Default'           => 'De waarde van het veld :label is niet geldig',
             'FinderFileType'    => 'Het bestand mag alleen van de volgende types zijn: :types',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',

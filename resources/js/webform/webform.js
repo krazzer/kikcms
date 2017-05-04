@@ -104,15 +104,15 @@ var WebForm = Class.extend({
         $webForm.find('.autocomplete').each(function () {
             var $field   = $(this);
             var fieldKey = $field.attr('data-field-key');
+            var route    = $field.attr('data-route');
 
-            KikCMS.action('/cms/webform/getAutocompleteData', {
+            KikCMS.action(route, {
                 field: fieldKey,
                 renderableInstance: self.renderableInstance,
                 renderableClass: self.renderableClass
             }, function (data) {
                 $field.typeahead({
-                    items: 1000,
-                    minLength: 0,
+                    items: 10,
                     source: data
                 });
             });

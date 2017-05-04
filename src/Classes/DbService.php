@@ -172,6 +172,7 @@ class DbService extends Injectable
         $map     = [];
 
         foreach ($results as $i => $row) {
+            $row = (array) $row;
             $map[array_values($row)[0]] = array_values($row)[1];
         }
 
@@ -218,7 +219,7 @@ class DbService extends Injectable
         $results = $query->getQuery()->execute()->toArray();
 
         foreach ($results as $i => $row) {
-            $results[$i] = first($row);
+            $results[$i] = first((array) $row);
         }
 
         return $results;
