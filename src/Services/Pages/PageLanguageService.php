@@ -55,6 +55,28 @@ class PageLanguageService extends Injectable
     }
 
     /**
+     * Get PageLanguages for the given pageId
+     *
+     * @param int $pageId
+     * @return PageLanguage[]
+     */
+    public function getAllByPageId(int $pageId): array
+    {
+        $pageLanguages = [];
+
+        $results = PageLanguage::find([
+            'conditions' => 'page_id = :pageId:',
+            'bind'       => ['pageId'   => $pageId,],
+        ]);
+
+        foreach ($results as $result){
+            $pageLanguages[] = $result;
+        }
+
+        return $pageLanguages;
+    }
+
+    /**
      * @param array $pageMap
      * @param string $languageCode
      * @return PageLanguage[] (PageLanguageMap)

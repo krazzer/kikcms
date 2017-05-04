@@ -20,39 +20,24 @@ use Phalcon\Mvc\Model\Query\Builder;
 class UrlService extends Injectable
 {
     /**
-     * Check if the given url exists as child of the given parent, excluding the given page
+     * Create urls for the given pageId in all languages if they are not present yet
      *
-     * @param string $url
-     * @param int $parentId
-     * @param PageLanguage $pageLanguage
-     * @param string $languageCode
-     * @return bool
+     * @param int $pageId
      */
-    public function urlExists(string $url, int $parentId = null, string $languageCode, PageLanguage $pageLanguage = null): bool
+    public function createUrlsForPageId(int $pageId)
     {
-        $query = (new Builder())
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->where('pl.url = :url:', ['url' => $url]);
+        $pageLanguages = $this->pageLanguageService->getAllByPageId($pageId);
 
-        if ($parentId) {
-            $query->andWhere('p.parent_id = :parentId:', ['parentId' => $parentId]);
-        } else {
-            $query->andWhere('p.parent_id IS NULL');
+        /** @var PageLanguage $pageLanguage */
+        foreach ($pageLanguages as $pageLanguage) {
+            $pageLanguage->url = $this->toSlug($pageLanguage->name);
+
+            if ($this->urlExistsForPageLanguage($pageLanguage)) {
+                $this->urlService->deduplicateUrl($pageLanguage);
+            } else {
+                $pageLanguage->save();
+            }
         }
-
-        $parentPage = Page::getById($parentId);
-
-        // if the page has a parent page that isn't a menu, we only need to check in the same language
-        if($parentPage && $parentPage->type !== Page::TYPE_MENU){
-            $query->andWhere('pl.language_code = :languageCode:', ['languageCode' => $languageCode]);
-        }
-
-        if ($pageLanguage) {
-            $query->andWhere('pl.id != :pageLanguageId:', ['pageLanguageId' => $pageLanguage->id]);
-        }
-
-        return $query->getQuery()->execute()->count();
     }
 
     /**
@@ -137,18 +122,12 @@ class UrlService extends Injectable
 
         return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
             $langCode = $pageLanguage->language_code;
+            $parent   = $pageLanguage->page->parent;
             $urlParts = [$pageLanguage->url];
 
-            while ($pageLanguage->page->parent && $pageLanguage->page->parent->type != Page::TYPE_MENU) {
-                $pageLanguage = PageLanguage::findFirst([
-                    'conditions' => 'page_id = :pageId: AND language_code = :langCode:',
-                    'bind'       => [
-                        'pageId'   => $pageLanguage->page->parent->id,
-                        'langCode' => $langCode
-                    ]
-                ]);
-
-                $urlParts[] = $pageLanguage->url;
+            while ($parent && $parent->type != Page::TYPE_MENU) {
+                $pageLanguage = $this->pageLanguageService->getByPage($parent, $langCode);
+                $urlParts[]   = $pageLanguage->url;
             }
 
             return implode('/', array_reverse($urlParts));
@@ -165,10 +144,71 @@ class UrlService extends Injectable
         $langCode     = $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $langCode);
 
-        if( ! $pageLanguage){
+        if ( ! $pageLanguage) {
             throw new Exception("No page found in the current language for page id " . $pageId);
         }
 
         return $this->getUrlByPageLanguage($pageLanguage);
+    }
+
+    /**
+     * Check if the given url exists as child of the given parent, excluding the given page
+     *
+     * @param string $url
+     * @param int $parentId
+     * @param PageLanguage $pageLanguage
+     * @param string $languageCode
+     * @return bool
+     */
+    public function urlExists(string $url, int $parentId = null, string $languageCode, PageLanguage $pageLanguage = null): bool
+    {
+        $query = (new Builder())
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'p.id = pl.page_id', 'p')
+            ->where('pl.url = :url:', ['url' => $url]);
+
+        if ($parentId) {
+            $query->andWhere('p.parent_id = :parentId:', ['parentId' => $parentId]);
+        } else {
+            $query->andWhere('p.parent_id IS NULL');
+        }
+
+        $parentPage = Page::getById($parentId);
+
+        // if the page has a parent page that isn't a menu, we only need to check in the same language
+        if ($parentPage && $parentPage->type !== Page::TYPE_MENU) {
+            $query->andWhere('pl.language_code = :languageCode:', ['languageCode' => $languageCode]);
+        }
+
+        if ($pageLanguage) {
+            $query->andWhere('pl.id != :pageLanguageId:', ['pageLanguageId' => $pageLanguage->id]);
+        }
+
+        return $query->getQuery()->execute()->count();
+    }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    private function toSlug(string $text): string
+    {
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+
+        return $text;
+    }
+
+    /**
+     * @param PageLanguage $pageLang
+     * @return bool
+     */
+    private function urlExistsForPageLanguage(PageLanguage $pageLang)
+    {
+        return $this->urlExists($pageLang->url, $pageLang->page->parent->id, $pageLang->language_code, $pageLang);
     }
 }
