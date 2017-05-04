@@ -167,10 +167,6 @@ class PageForm extends DataForm
             case KikCMSConfig::CONTENT_TYPE_CUSTOM:
                 $methodName = 'field' . ucfirst($field->variable);
                 $templateField = $this->websiteService->callMethod('TemplateFields', $methodName, [$this]);
-
-                if($templateField){
-                    return;
-                }
             break;
         }
 
