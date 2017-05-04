@@ -32,6 +32,7 @@ use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
+use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
@@ -261,10 +262,14 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Backend
+     * @return Backend|false
      */
     protected function initCache()
     {
+        if($this instanceof Cli){
+            return false;
+        }
+
         return new Apc(new Data());
     }
 

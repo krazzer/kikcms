@@ -14,7 +14,7 @@ use Phalcon\Mvc\Model\MetaData\Files;
 class BaseServices extends ApplicationServices
 {
     /**
-     * Contains a list of services that simply return a new instance of themselvesMySQL - testsite@localhost
+     * Contains a list of services that simply return a new instance of themselves
      *
      * @return array
      */

@@ -45,6 +45,10 @@ class CacheService extends Injectable
      */
     public function cache(string $cacheKey, callable $function, $ttl = CacheConfig::ONE_DAY)
     {
+        if( ! $this->cache){
+            return $function();
+        }
+
         if ($this->cache->exists($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
