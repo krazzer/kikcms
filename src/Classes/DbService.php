@@ -244,6 +244,26 @@ class DbService extends Injectable
     }
 
     /**
+     * Format a value so it can be stored in the Db properly
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function toStorage($value)
+    {
+        // convert empty string to null
+        if ($value === '') {
+            return null;
+        }
+
+        if (is_array($value) || is_object($value)) {
+            return json_encode($value);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param string $model
      * @return string
      */

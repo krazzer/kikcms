@@ -113,7 +113,8 @@ abstract class DataForm extends WebForm
         /** @var Field $field */
         foreach ($this->getFields() as $key => $field) {
             if ($this->isStoredElsewhere($field)) {
-                $data[$key] = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
+                $value = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
+                $data[$key] = $field->getFormFormat($value);
             }
         }
 
@@ -251,26 +252,6 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Format the forms' input for database insertion
-     *
-     * @param mixed $value
-     * @return mixed|null
-     */
-    private function formatInputValueForStorage($value)
-    {
-        // convert empty string to null
-        if ($value === '') {
-            return null;
-        }
-
-        if (is_array($value) || is_object($value)) {
-            return json_encode($value);
-        }
-
-        return $value;
-    }
-
-    /**
      * @return Filters|DataFormFilters
      */
     public function getEmptyFilters(): Filters
@@ -339,7 +320,10 @@ abstract class DataForm extends WebForm
             }
 
             $value = $this->transformInputForStorage($input, $key);
-            $value = $this->formatInputValueForStorage($value);
+
+            if( ! $this->isStoredElsewhere($field)){
+                $value = $this->dbService->toStorage($value);
+            }
 
             $storageData->addValue($key, $value, $this->isStoredElsewhere($field));
         }

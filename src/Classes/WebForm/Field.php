@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\MultiRow;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
 use Phalcon\Forms\Element;
 
@@ -162,6 +163,30 @@ class Field
     }
 
     /**
+     * Override this method to convert the field's value to a format best handled by PHP
+     * e.g. convert a json encoded object to an actual PHP object
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function getInput($value)
+    {
+        return $value;
+    }
+
+    /**
+     * Override this method to convert the field's value to a format that is required in the form
+     * e.g. json encode an array or object
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function getFormFormat($value)
+    {
+        return $value;
+    }
+
+    /**
      * @return Tab|null
      */
     public function getTab()
@@ -198,7 +223,7 @@ class Field
     }
 
     /**
-     * Shortcut to set the storage
+     * Shortcut to set the storage to different table
      *
      * @param string $table
      * @param $relationKey
@@ -209,12 +234,36 @@ class Field
      */
     public function table(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
     {
-        $fieldStorage = $this->getNewFieldStorage();
-        $fieldStorage->setField($this);
-        $fieldStorage->setTableModel($table);
-        $fieldStorage->setRelationKey($relationKey);
-        $fieldStorage->setAddLanguageCode($addLanguageCode);
-        $fieldStorage->setDefaultValues($defaultValues);
+        $fieldStorage = (new FieldStorage())
+            ->setField($this)
+            ->setTableModel($table)
+            ->setRelationKey($relationKey)
+            ->setAddLanguageCode($addLanguageCode)
+            ->setDefaultValues($defaultValues);
+
+        $this->form->addFieldStorage($fieldStorage);
+
+        return $this;
+    }
+
+    /**
+     * Shortcut to set the storage to MultiRow
+     *
+     * @param string $table
+     * @param $relationKey
+     * @param bool $addLanguageCode
+     * @param array $defaultValues
+     *
+     * @return $this|DataForm
+     */
+    public function tableMultiRow(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
+    {
+        $fieldStorage = (new MultiRow())
+            ->setField($this)
+            ->setTableModel($table)
+            ->setRelationKey($relationKey)
+            ->setAddLanguageCode($addLanguageCode)
+            ->setDefaultValues($defaultValues);
 
         $this->form->addFieldStorage($fieldStorage);
 
@@ -233,13 +282,5 @@ class Field
         $this->form->addFieldStorage($fieldStorage);
 
         return $this;
-    }
-
-    /**
-     * @return FieldStorage
-     */
-    protected function getNewFieldStorage(): FieldStorage
-    {
-        return new FieldStorage();
     }
 }

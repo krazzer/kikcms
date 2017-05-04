@@ -446,11 +446,22 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * Get the form's input. The input returned will not be raw, but converted to PHP objects,
+     * e.g. a json encoded object will be converted to an PHP object
+     *
      * @return array
      */
     public function getInput(): array
     {
         $input = $this->request->getPost();
+
+        foreach ($input as $key => $value){
+            if( ! $this->hasField($key)){
+                continue;
+            }
+
+            $input[$key] = $this->getField($key)->getInput($value);
+        }
 
         return $input;
     }

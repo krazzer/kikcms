@@ -44,10 +44,12 @@ class FieldStorage extends Injectable
 
     /**
      * @param boolean $addLanguageCode
+     * @return $this|FieldStorage
      */
     public function setAddLanguageCode(bool $addLanguageCode)
     {
         $this->addLanguageCode = $addLanguageCode;
+        return $this;
     }
 
     /**
@@ -60,7 +62,7 @@ class FieldStorage extends Injectable
 
     /**
      * @param array $defaultValues
-     * @return FieldStorage
+     * @return $this|FieldStorage
      */
     public function setDefaultValues(array $defaultValues): FieldStorage
     {
@@ -78,7 +80,7 @@ class FieldStorage extends Injectable
 
     /**
      * @param string $tableModel
-     * @return FieldStorage
+     * @return $this|FieldStorage
      */
     public function setTableModel(string $tableModel): FieldStorage
     {
@@ -96,7 +98,7 @@ class FieldStorage extends Injectable
 
     /**
      * @param Field $field
-     * @return FieldStorage
+     * @return $this|FieldStorage
      */
     public function setField(Field $field): FieldStorage
     {
@@ -110,6 +112,24 @@ class FieldStorage extends Injectable
     public function getRelationKey(): string
     {
         return $this->relationKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguageCodeField(): string
+    {
+        return $this->languageCodeField;
+    }
+
+    /**
+     * @param string $languageCodeField
+     * @return $this|FieldStorage
+     */
+    public function setLanguageCodeField(string $languageCodeField): FieldStorage
+    {
+        $this->languageCodeField = $languageCodeField;
+        return $this;
     }
 
     /**
@@ -143,7 +163,7 @@ class FieldStorage extends Injectable
 
     /**
      * @param string $relationKey
-     * @return FieldStorage
+     * @return $this|FieldStorage
      */
     public function setRelationKey(string $relationKey): FieldStorage
     {
@@ -158,6 +178,8 @@ class FieldStorage extends Injectable
      */
     public function store($value, $relationId, $languageCode = null)
     {
+        $value = $this->dbService->toStorage($value);
+
         $set   = [$this->field->getTableField() => $value];
         $where = $this->defaultValues + [$this->getRelationKey() => $relationId];
 
