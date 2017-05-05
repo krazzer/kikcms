@@ -20,6 +20,10 @@ textarea.form-control{
     }
 }
 
+.checkbox{
+    margin: 0;
+}
+
 .form-control{
     @include placeholderColor($lightGray);
     border-radius: $defaultBorderRadius;
