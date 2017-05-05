@@ -120,15 +120,21 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (self.getWindow().hasClass('blur')) {
+                if (self.getWindow().hasClass('blur') || ! self.getForm().length) {
                     return false;
                 }
 
-                if (self.getForm().length) {
-                    self.actionSave(true);
-                    self.getWindow().find('.saveAndClose').addClass('active');
-                    e.preventDefault();
+                self.actionSave(true);
+                self.getWindow().find('.saveAndClose').addClass('active');
+                e.preventDefault();
+            }
+
+            if (e.keyCode == keyCode.ESCAPE) {
+                if (self.getWindow().hasClass('blur') || ! self.getForm().length) {
+                    return false;
                 }
+
+                self.attemptToCloseWindow();
             }
         };
 
@@ -468,6 +474,16 @@ var DataTable = Class.extend({
         return parameters;
     },
 
+    attemptToCloseWindow: function () {
+        if (this.currentFormInput != this.getFormSerialized()) {
+            if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
+                return;
+            }
+        }
+
+        this.closeWindow();
+    },
+
     closeWindow: function () {
         var $window = this.getWindow();
         var level   = parseInt($window.attr('data-level'));
@@ -620,7 +636,6 @@ var DataTable = Class.extend({
     },
 
     getWindow: function () {
-        var self              = this;
         var windowId          = this.renderableInstance + 'Window';
         var $bodyNotFading    = $('body > #notFading');
         var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
@@ -636,16 +651,7 @@ var DataTable = Class.extend({
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
             $bodyNotFading.prepend($window);
-
-            $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(function () {
-                if (self.currentFormInput != self.getFormSerialized()) {
-                    if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
-                        return;
-                    }
-                }
-
-                self.closeWindow();
-            });
+            $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(this.attemptToCloseWindow.bind(this));
         }
 
         return $('#' + windowId);

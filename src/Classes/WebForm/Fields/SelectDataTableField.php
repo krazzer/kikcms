@@ -14,7 +14,7 @@ class SelectDataTableField extends DataTableField
      */
     public function getInput($value)
     {
-        return json_decode($value);
+        return (array) json_decode($value);
     }
 
     /**

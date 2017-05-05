@@ -66,6 +66,12 @@
         }
     }
 
+    .type-wysiwyg{
+        .mce-branding-powered-by{
+            display: none;
+        }
+    }
+
     .datatable {
         border: 1px solid $lightGray;
         border-radius: $defaultBorderRadius;

@@ -334,9 +334,12 @@ abstract class DataTable extends Renderable
 
             /** @var DataForm $dataForm */
             $dataForm = new $formClass();
-            $dataForm->getFilters()->setEditId($editId);
-            $dataForm->getFilters()->setLanguageCode($languageCode);
-            $dataForm->getFilters()->setParentEditId($parentEditId);
+
+            $dataForm->getFilters()
+                ->setEditId($editId)
+                ->setLanguageCode($languageCode)
+                ->setParentEditId($parentEditId);
+
             $dataForm->initializeForm();
 
             $this->form = $dataForm;
@@ -516,7 +519,7 @@ abstract class DataTable extends Renderable
      */
     protected function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js');
+        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js?v=5');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
         $this->view->assets->addCss('cmsassets/css/webform.css');
