@@ -57,6 +57,9 @@ abstract class WebForm extends Renderable
     /** @var bool */
     protected $initialized = false;
 
+    /** @var bool */
+    protected $showRequiredMessage = false;
+
     /** @inheritdoc */
     protected $instancePrefix = 'webForm';
 
@@ -475,6 +478,14 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * @return bool
+     */
+    public function getShowRequiredMessage(): bool
+    {
+        return $this->showRequiredMessage;
+    }
+
+    /**
      * Render the form
      *
      * @return Response|string
@@ -702,6 +713,7 @@ abstract class WebForm extends Renderable
             'errorContainer'     => $errorContainer,
             'security'           => $this->security,
             'class'              => static::class,
+            'webForm'            => $this,
         ]);
     }
 

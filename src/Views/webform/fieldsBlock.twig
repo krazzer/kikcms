@@ -1,4 +1,5 @@
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
+{# @var field \KikCMS\Classes\WebForm\Field #}
 
 {% block fields %}
     {% for field in fields %}
@@ -6,7 +7,8 @@
         {% set errorMessages = errorContainer.errorsForField(field) %}
         {% set hasError = errorContainer.fieldHasError(field) %}
         {% set type = field.type ?: 'default' %}
-        {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback' : '') %}
+        {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback') %}
+        {% set classes = classes ~ (field.required ? ' required') %}
         {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
 
         {{ block('field' ~ ucfirst(type)) }}

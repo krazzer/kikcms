@@ -219,6 +219,7 @@ return [
 
         'defaultSendLabel' => 'Versturen',
         'detachFile'       => 'Bestand loskoppelen',
+        'requiredMessage'  => 'Velden met een * zijn verplicht',
     ],
 
     'login' => [

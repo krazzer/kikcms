@@ -500,6 +500,7 @@ var DataTable = Class.extend({
 
         $window.fadeOut();
         $window.find('.windowContent').html('');
+        $('.datatableThumbHoverContainer').remove();
 
         if (typeof(tinymce) !== 'undefined') {
             tinymce.remove(this.getWysiwygSelector());

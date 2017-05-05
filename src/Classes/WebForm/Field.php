@@ -40,6 +40,9 @@ class Field
     /** @var string the table field where the value should be saved */
     private $tableField;
 
+    /** @var bool whether this field is required or not, note that this does nothing with validation */
+    private $required = false;
+
     /**
      * @param Element $element
      */
@@ -52,7 +55,7 @@ class Field
      * Add a class to the element
      *
      * @param string $class
-     * @return $this
+     * @return $this|Field
      */
     public function addElementClass(string $class)
     {
@@ -101,7 +104,7 @@ class Field
      * @param string $attribute
      * @param mixed $value
      *
-     * @return $this
+     * @return $this|Field
      */
     public function setAttribute(string $attribute, $value)
     {
@@ -138,7 +141,7 @@ class Field
 
     /**
      * @param string $key
-     * @return $this
+     * @return $this|Field
      */
     public function setKey(string $key)
     {
@@ -153,7 +156,7 @@ class Field
 
     /**
      * @param Webform $form
-     * @return $this|WebForm
+     * @return $this|Field
      */
     public function setForm(WebForm $form)
     {
@@ -195,6 +198,25 @@ class Field
     }
 
     /**
+     * @return bool
+     */
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    /**
+     * @param bool $required
+     *
+     * @return $this|Field
+     */
+    public function setRequired(bool $required = true): Field
+    {
+        $this->required = $required;
+        return $this;
+    }
+
+    /**
      * @param Tab $tab
      * @return Field
      */
@@ -230,7 +252,7 @@ class Field
      * @param bool $addLanguageCode
      * @param array $defaultValues
      *
-     * @return $this|DataForm
+     * @return $this|Field
      */
     public function table(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
     {
@@ -254,7 +276,7 @@ class Field
      * @param bool $addLanguageCode
      * @param array $defaultValues
      *
-     * @return $this|DataForm
+     * @return $this|Field
      */
     public function tableMultiRow(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
     {
