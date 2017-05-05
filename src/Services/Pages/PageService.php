@@ -96,7 +96,7 @@ class PageService extends Injectable
      *
      * @return array
      */
-    public function getCategorySelect($parentId = 0, array $pageMap = [], array $pageLangMap = [], $level = 0): array
+    public function getSelect($parentId = 0, array $pageMap = [], array $pageLangMap = [], $level = 0): array
     {
         if ( ! $pageLangMap) {
             $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap);
@@ -113,7 +113,7 @@ class PageService extends Injectable
 
             $selectArray[$pageId] = $prefix . $pageLangMap[$pageId]->name;
 
-            $subArray    = $this->getCategorySelect($pageId, $pageMap, $pageLangMap, $level + 1);
+            $subArray    = $this->getSelect($pageId, $pageMap, $pageLangMap, $level + 1);
             $selectArray = $selectArray + $subArray;
         }
 
