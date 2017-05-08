@@ -475,6 +475,11 @@ var DataTable = Class.extend({
     },
 
     attemptToCloseWindow: function () {
+        // window is closing
+        if(this.currentFormInput == null){
+            return;
+        }
+
         if (this.currentFormInput != this.getFormSerialized()) {
             if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
                 return;
