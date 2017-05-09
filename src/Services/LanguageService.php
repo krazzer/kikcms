@@ -42,4 +42,18 @@ class LanguageService extends Injectable
             return $this->dbService->toMap($results, Language::FIELD_CODE);
         });
     }
+
+    /**
+     * @return string
+     */
+    public function getDefaultLanguageName(): string
+    {
+        foreach ($this->getLanguages() as $language){
+            if($language->code == $this->getDefaultLanguageCode()){
+                return $language->name;
+            }
+        }
+
+        return '';
+    }
 }

@@ -180,10 +180,10 @@ class Pages extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'name'     => $this->translator->tl('name'),
-            'template' => $this->translator->tl('template'),
-            'url'      => $this->translator->tl('url'),
-            'id'       => $this->translator->tl('id'),
+            'name'     => $this->translator->tl('fields.name'),
+            'template' => $this->translator->tl('fields.template'),
+            'url'      => $this->translator->tl('fields.url'),
+            'id'       => $this->translator->tl('fields.id'),
         ];
     }
 

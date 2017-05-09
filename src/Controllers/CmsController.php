@@ -9,6 +9,7 @@ use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
@@ -19,6 +20,7 @@ use Phalcon\Http\Response;
  * @property UserService $userService
  * @property UrlService $urlService
  * @property Translator $translator
+ * @property LanguageService $languageService
  */
 class CmsController extends BaseCmsController
 {
@@ -88,6 +90,20 @@ class CmsController extends BaseCmsController
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
         $this->response->redirect($url);
+    }
+
+    public function getTranslationsForKeyAction()
+    {
+        $key          = $this->request->getPost('key');
+        $languages    = $this->languageService->getLanguages();
+        $translations = [];
+
+        foreach ($languages as $language){
+            $this->translator->setLanguageCode($language->code);
+            $translations[(string)$language->code] = $this->translator->tl($key);
+        }
+
+        return json_encode($translations);
     }
 
     public function logoutAction()

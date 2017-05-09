@@ -67,9 +67,9 @@ class TemplateFields extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'      => $this->translator->tl('id'),
-            'name'    => $this->translator->tl('name'),
-            'type_id' => $this->translator->tl('type'),
+            'id'      => $this->translator->tl('fields.id'),
+            'name'    => $this->translator->tl('fields.name'),
+            'type_id' => $this->translator->tl('fields.type'),
         ];
     }
 

@@ -1,30 +1,30 @@
 <?php
 
 return [
-    'delete'          => 'Verwijderen',
-    'cancel'          => 'Annuleer',
-    'name'            => 'Naam',
-    'id'              => 'Id',
-    'code'            => 'Code',
-    'display_order'   => 'Volgorde',
-    'type'            => 'Type',
-    'active'          => 'Actief',
-    'advanced'        => 'Geavanceerd',
-    'template'        => 'Template',
-    'templates'       => 'Templates',
-    'languages'       => 'Talen',
-    'url'             => 'Url',
-    'variable'        => 'Variabele',
-    'template_fields' => 'Template velden',
-    'all_fields'      => 'Alle velden',
-    'file'            => 'Bestand',
-    'hide'            => 'Verbergen',
-    'pageNotFound'    => 'De opgevraade pagina kon niet worden gevonden...',
-    'multilingual'    => 'Meertalig',
-    'showAll'         => 'Toon alles',
+    'fields' => [
+        'active'         => 'Actief',
+        'advanced'       => 'Geavanceerd',
+        'allFields'      => 'Alle velden',
+        'code'           => 'Code',
+        'file'           => 'Bestand',
+        'hide'           => 'Verbergen',
+        'id'             => 'Id',
+        'key'            => 'Key',
+        'languages'      => 'Talen',
+        'multilingual'   => 'Meertalig',
+        'name'           => 'Naam',
+        'template'       => 'Template',
+        'templateFields' => 'Template velden',
+        'templates'      => 'Templates',
+        'translations'   => 'Vertalingen',
+        'type'           => 'Type',
+        'url'            => 'Url',
+        'variable'       => 'Variabele',
+    ],
 
-    'contactForm' => [
-        'sendSuccess' => 'Bericht verzonden',
+    'global' => [
+        'cancel' => 'Annuleer',
+        'delete' => 'Verwijder',
     ],
 
     'cms' => [
@@ -67,6 +67,7 @@ return [
         'switchWarning'     => 'Er zijn nog niet opgeslagen wijzigingen aangebracht, wilt u zeker weten doorgaan?',
         'pickFile'          => 'Bestand kiezen',
         'sort'              => 'Volgorde slepen',
+        'showAll'           => 'Toon alles',
 
         'pages' => [
             'total'         => 'Totaal',
@@ -134,6 +135,11 @@ return [
             'plural'   => "templates",
         ],
 
+        'translation' => [
+            'singular' => "vertaling",
+            'plural'   => "vertalingen",
+        ],
+
         'fields' => [
             'singular' => "veld",
             'plural'   => "velden",
@@ -143,6 +149,10 @@ return [
             'singular' => "template veld",
             'plural'   => "template velden",
         ],
+    ],
+
+    'frontend' => [
+        'pageNotFound' => 'De opgevraade pagina kon niet worden gevonden...',
     ],
 
     'media' => [
@@ -264,7 +274,7 @@ return [
         ],
     ],
 
-    'error'  => [
+    'error' => [
         '401' => [
             'title'       => 'Geen toegang',
             'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
@@ -295,6 +305,7 @@ return [
             'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
         ]
     ],
+
     'system' => [
         'langCode'           => 'nl',
         'phpDateFormat'      => 'd-m-Y',

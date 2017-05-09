@@ -39,17 +39,13 @@ class Translator extends Injectable
             return $this->getDbTranslation($key);
         }
 
-        $userTranslations    = $this->getUserTranslations();
-        $websiteTranslations = $this->getWebsiteTranslations();
-        $cmsTranslations     = $this->getCmsTranslations();
-
-        $translations = $userTranslations + $websiteTranslations + $cmsTranslations;
+        $translations = $this->getTranslations();
 
         if( ! array_key_exists($key, $translations)){
             throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
         }
 
-        return $this->replace($translations[$key], $replaces);
+        return $this->replace((string) $translations[$key], $replaces);
     }
 
     /**
@@ -94,6 +90,18 @@ class Translator extends Injectable
     }
 
     /**
+     * @return array
+     */
+    public function getTranslations(): array
+    {
+        $userTranslations    = $this->getUserTranslations();
+        $websiteTranslations = $this->getWebsiteTranslations();
+        $cmsTranslations     = $this->getCmsTranslations();
+
+        return $userTranslations + $websiteTranslations + $cmsTranslations;
+    }
+
+    /**
      * @param mixed $languageCode
      * @return Translator
      */
@@ -101,6 +109,14 @@ class Translator extends Injectable
     {
         $this->languageCode = $languageCode;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWebsiteTranslations(): array
+    {
+        return $this->getByFile(SITE_PATH . 'resources/translations/' . $this->getLanguageCode() . '.php');
     }
 
     /**
@@ -170,18 +186,10 @@ class Translator extends Injectable
     }
 
     /**
-     * @return array
-     */
-    private function getCmsTranslations(): array
-    {
-        return $this->getTranslations(__DIR__ . '/../../resources/translations/' . $this->getLanguageCode() . '.php');
-    }
-
-    /**
      * @param string $file
      * @return array
      */
-    private function getTranslations(string $file): array
+    private function getByFile(string $file): array
     {
         if ( ! file_exists($file)) {
             return [];
@@ -193,8 +201,8 @@ class Translator extends Injectable
     /**
      * @return array
      */
-    private function getWebsiteTranslations(): array
+    private function getCmsTranslations(): array
     {
-        return $this->getTranslations(SITE_PATH . 'resources/translations/' . $this->getLanguageCode() . '.php');
+        return $this->getByFile(__DIR__ . '/../../resources/translations/' . $this->getLanguageCode() . '.php');
     }
 }

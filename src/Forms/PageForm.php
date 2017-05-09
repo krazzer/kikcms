@@ -37,14 +37,14 @@ class PageForm extends DataForm
     protected function initialize()
     {
         $this->addTab('Pagina', [
-            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('name'), [new PresenceOf()])
+            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('fields.name'), [new PresenceOf()])
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE),
         ]);
 
         $this->addFieldsForCurrentTemplate();
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('template'), Template::findAssoc());
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
 
         $urlValidation = [
@@ -53,14 +53,14 @@ class PageForm extends DataForm
             new StringLength(["max" => 255]),
         ];
 
-        $this->addTab($this->translator->tl('advanced'), [
+        $this->addTab($this->translator->tl('fields.advanced'), [
             $templateField,
 
-            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('url'), $urlValidation)
+            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
                 ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
 
-            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('active'))
+            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
                 ->setDefault(1)
         ]);

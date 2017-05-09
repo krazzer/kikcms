@@ -46,10 +46,10 @@ class Fields extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'       => $this->translator->tl('id'),
-            'variable' => $this->translator->tl('variable'),
-            'name'     => $this->translator->tl('name'),
-            'type_id'  => $this->translator->tl('type'),
+            'id'       => $this->translator->tl('fields.id'),
+            'variable' => $this->translator->tl('fields.variable'),
+            'name'     => $this->translator->tl('fields.name'),
+            'type_id'  => $this->translator->tl('fields.type'),
         ];
     }
 
