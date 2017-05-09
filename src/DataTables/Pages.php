@@ -58,11 +58,15 @@ class Pages extends DataTable
      */
     public function delete(array $ids)
     {
-        $deletedPages = Page::getByIdList($ids);
+        foreach ($ids as $pageId) {
+            $page = Page::getById($pageId);
 
-        parent::delete($ids);
+            if( ! $page){
+                continue;
+            }
 
-        foreach ($deletedPages as $page) {
+            parent::delete([$pageId]);
+
             $this->pageRearrangeService->updateLeftSiblingsOrder($page);
         }
 
