@@ -12,6 +12,7 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Util\AdjacencyToNestedSet;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Service for handling Page Model objects
@@ -34,6 +35,8 @@ class PageRearrangeService extends Injectable
      */
     public function rearrange(Page $page, Page $targetPage, string $rearrange)
     {
+        $this->checkOrderIntegrity();
+
         if ($this->pageService->isChildOf($targetPage, $page)) {
             return;
         }
@@ -84,6 +87,35 @@ class PageRearrangeService extends Injectable
         $nestedSetStructure = $converter->getResult();
 
         $this->saveStructure($nestedSetStructure);
+    }
+
+    /**
+     * Check if there are pages where displayOrder is not set, if so, set them
+     */
+    private function checkOrderIntegrity()
+    {
+        if ( ! $this->hasPagesWithoutDisplayOrder()) {
+            return;
+        }
+
+        $query = (new Builder())
+            ->from([Page::ALIAS => Page::class])
+            ->join(Page::class, 'cp.parent_id = p.id AND cp.' . Page::FIELD_DISPLAY_ORDER . ' IS NULL', 'cp')
+            ->groupBy('p.id');
+
+        $emptyDisplayOrderParentPages = $this->pageService->getPageMap($query->getQuery()->execute());
+
+        foreach ($emptyDisplayOrderParentPages as $parentPage) {
+            $children        = $this->pageService->getChildren($parentPage);
+            $maxDisplayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
+
+            foreach ($children as $page) {
+                $page->display_order = $maxDisplayOrder;
+                $maxDisplayOrder++;
+
+                $page->save();
+            }
+        }
     }
 
     /**
@@ -146,6 +178,19 @@ class PageRearrangeService extends Injectable
         }
 
         return $relations;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasPagesWithoutDisplayOrder(): bool
+    {
+        $query = (new Builder())
+            ->columns(['COUNT(*)'])
+            ->from(Page::class)
+            ->where(Page::FIELD_DISPLAY_ORDER . ' IS NULL AND parent_id IS NOT NULL');
+
+        return (bool) $this->dbService->getValue($query);
     }
 
     /**
@@ -266,5 +311,19 @@ class PageRearrangeService extends Injectable
             AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
             ORDER BY display_order DESC
         ");
+    }
+
+    /**
+     * @param Page $parentPage
+     * @return int
+     */
+    private function getMaxDisplayOrder(Page $parentPage): int
+    {
+        $query = (new Builder())
+            ->from(Page::class)
+            ->columns(["MAX(" . Page::FIELD_DISPLAY_ORDER . ")"])
+            ->where('parent_id = :parentId:', ['parentId' => $parentPage->getId()]);
+
+        return (int) $this->dbService->getValue($query);
     }
 }
