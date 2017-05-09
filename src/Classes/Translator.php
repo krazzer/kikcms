@@ -29,6 +29,11 @@ class Translator extends Injectable
      */
     public function tl($key, array $replaces = []): string
     {
+        // no translation given = empty string
+        if(empty($key)){
+            return '';
+        }
+
         // numeric values given indicate it's a translation managed from a DataTable
         if (is_numeric($key)) {
             return $this->getDbTranslation($key);
