@@ -34,14 +34,14 @@ class PasswordResetLinkForm extends WebForm
 
         if ( ! $user) {
             // pretend we send the mail, so the user won't know whether the given email adres exists or not
-            $this->flash->success($this->translator->tlb('login.reset.flash'));
+            $this->flash->success($this->translator->tl('login.reset.flash'));
             unset($_POST);
             return;
         }
 
-        $subject     = $this->translator->tlb('login.reset.mail.subject');
-        $body        = $this->translator->tlb('login.reset.mail.body');
-        $buttonLabel = $this->translator->tlb('login.reset.mail.buttonLabel');
+        $subject     = $this->translator->tl('login.reset.mail.subject');
+        $body        = $this->translator->tl('login.reset.mail.body');
+        $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
         $hash     = $this->security->hash($user->id);
         $resetUrl = $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash;
@@ -49,10 +49,10 @@ class PasswordResetLinkForm extends WebForm
         $parameters['buttons'] = [['url' => $resetUrl, 'label' => $buttonLabel]];
 
         if ($this->mailService->sendServiceMail($user->email, $subject, $body, $parameters)) {
-            $this->flash->success($this->translator->tlb('login.reset.flash'));
+            $this->flash->success($this->translator->tl('login.reset.flash'));
             unset($_POST);
         } else {
-            $this->flash->error($this->translator->tlb('login.reset.error'));
+            $this->flash->error($this->translator->tl('login.reset.error'));
         }
     }
 }

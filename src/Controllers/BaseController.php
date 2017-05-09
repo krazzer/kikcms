@@ -16,11 +16,12 @@ class BaseController extends Controller
         $maxFileUploads    = ini_get('max_file_uploads');
         $maxFileSize       = ByteUtil::stringToBytes(ini_get('upload_max_filesize'));
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
+        $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
 
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
-        $this->view->setVar("jsTranslations", ['error', 'system.langCode', 'pages.warningTemplateChange']);
-        $this->view->setVar("langCode", $this->translator->tlb('system.langCode'));
+        $this->view->setVar("jsTranslations", array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']));
+        $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
 
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);

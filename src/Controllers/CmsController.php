@@ -32,42 +32,42 @@ class CmsController extends BaseCmsController
 
     public function pagesAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.pages');
+        $this->view->title  = $this->translator->tl('menu.item.pages');
         $this->view->object = (new Pages())->render();
         $this->view->pick('cms/default');
     }
 
     public function mediaAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.media');
+        $this->view->title  = $this->translator->tl('menu.item.media');
         $this->view->object = (new Finder())->render();
         $this->view->pick('cms/default');
     }
 
     public function settingsAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.settings');
+        $this->view->title  = $this->translator->tl('menu.item.settings');
         $this->view->object = (new SettingsForm())->render();
         $this->view->pick('cms/default');
     }
 
     public function statsIndexAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.statsIndex');
+        $this->view->title  = $this->translator->tl('menu.item.statsIndex');
         $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
         $this->view->pick('cms/default');
     }
 
     public function statsSourcesAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.statsSources');
+        $this->view->title  = $this->translator->tl('menu.item.statsSources');
         $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
         $this->view->pick('cms/default');
     }
 
     public function usersAction()
     {
-        $this->view->title  = $this->translator->tlb('menu.item.users');
+        $this->view->title  = $this->translator->tl('menu.item.users');
         $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
         $this->view->pick('cms/default');
     }

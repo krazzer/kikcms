@@ -48,8 +48,8 @@ class TemplateFields extends DataTable
     public function getLabels(): array
     {
         return [
-            $this->translator->tlb('dataTables.templateFields.singular'),
-            $this->translator->tlb('dataTables.templateFields.plural')
+            $this->translator->tl('dataTables.templateFields.singular'),
+            $this->translator->tl('dataTables.templateFields.plural')
         ];
     }
 
@@ -67,9 +67,9 @@ class TemplateFields extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'      => $this->translator->tlb('id'),
-            'name'    => $this->translator->tlb('name'),
-            'type_id' => $this->translator->tlb('type'),
+            'id'      => $this->translator->tl('id'),
+            'name'    => $this->translator->tl('name'),
+            'type_id' => $this->translator->tl('type'),
         ];
     }
 

@@ -24,7 +24,7 @@ class CmsService extends Injectable
         $groups = [];
 
         foreach (MenuConfig::MENU_STRUCTURE as $groupId => $menuItems) {
-            $groupLabel = $this->translator->tlb('menu.group.' . $groupId);
+            $groupLabel = $this->translator->tl('menu.group.' . $groupId);
             $menuItems  = $this->getMenuItems($menuItems);
 
             $menuGroup = (new CmsMenuGroup($groupId, $groupLabel))
@@ -45,7 +45,7 @@ class CmsService extends Injectable
         $menuItemObjects = [];
 
         foreach ($menuItems as $menuItemId => $route) {
-            $label = $this->translator->tlb('menu.item.' . $menuItemId);
+            $label = $this->translator->tl('menu.item.' . $menuItemId);
 
             $menuItemObject = new CmsMenuItem($menuItemId, $label, 'cms/' . $route);
             $menuItemObjects[$menuItemId] = $menuItemObject;

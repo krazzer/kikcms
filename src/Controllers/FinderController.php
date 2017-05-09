@@ -58,7 +58,7 @@ class FinderController extends RenderableController
         try {
             $this->finderFileService->deleteFilesByIds($fileIds);
         } catch (DbForeignKeyDeleteException $e) {
-            $errorMessage = $this->translator->tlb('media.deleteErrorLinked');
+            $errorMessage = $this->translator->tl('media.deleteErrorLinked');
         }
 
         return json_encode([

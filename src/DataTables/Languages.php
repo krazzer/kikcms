@@ -27,8 +27,8 @@ class Languages extends DataTable
     public function getLabels(): array
     {
         return [
-            $this->translator->tlb('dataTables.language.singular'),
-            $this->translator->tlb('dataTables.language.plural')
+            $this->translator->tl('dataTables.language.singular'),
+            $this->translator->tl('dataTables.language.plural')
         ];
     }
 
@@ -46,9 +46,9 @@ class Languages extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'   => $this->translator->tlb('id'),
-            'code' => $this->translator->tlb('code'),
-            'name' => $this->translator->tlb('name'),
+            'id'   => $this->translator->tl('id'),
+            'code' => $this->translator->tl('code'),
+            'name' => $this->translator->tl('name'),
         ];
     }
 

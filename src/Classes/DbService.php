@@ -9,6 +9,7 @@ use Phalcon\Db;
 use Phalcon\Db\ResultInterface;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
 
 class DbService extends Injectable
 {
@@ -241,6 +242,22 @@ class DbService extends Injectable
         }
 
         return $result->toArray();
+    }
+
+    /**
+     * @param Resultset $results
+     * @param string $field
+     * @return array
+     */
+    public function toMap(Resultset $results, string $field): array
+    {
+        $map = [];
+
+        foreach ($results as $result){
+            $map[$result->$field] = $result;
+        }
+
+        return $map;
     }
 
     /**

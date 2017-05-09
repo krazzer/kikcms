@@ -9,8 +9,9 @@ class CacheConfig
 {
     const ONE_DAY = 86400;
 
-    const LANGUAGES   = 'languages';
-    const TRANSLATION = 'translation';
+    const LANGUAGES         = 'languages';
+    const TRANSLATION       = 'translation';
+    const USER_TRANSLATIONS = 'userTranslations';
 
     const PAGE_LANGUAGE_FOR_URL = 'pageLanguageForUrl';
     const URL                   = 'url';

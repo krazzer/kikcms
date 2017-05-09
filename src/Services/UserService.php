@@ -107,7 +107,7 @@ class UserService extends Injectable
 
         // start a new session so we can still flash
         $this->session->start();
-        $this->flash->notice($this->translator->tlb('login.logout'));
+        $this->flash->notice($this->translator->tl('login.logout'));
         $this->response->redirect('cms/login');
     }
 }

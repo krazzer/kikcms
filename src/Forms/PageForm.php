@@ -37,30 +37,30 @@ class PageForm extends DataForm
     protected function initialize()
     {
         $this->addTab('Pagina', [
-            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tlb('name'), [new PresenceOf()])
+            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('name'), [new PresenceOf()])
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE),
         ]);
 
         $this->addFieldsForCurrentTemplate();
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tlb('template'), Template::findAssoc());
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
 
         $urlValidation = [
             new PresenceOf(),
-            new Regex(['pattern' => '/^$|^([0-9a-z\-]+)$/', 'message' => $this->translator->tlb('webform.messages.slug')]),
+            new Regex(['pattern' => '/^$|^([0-9a-z\-]+)$/', 'message' => $this->translator->tl('webform.messages.slug')]),
             new StringLength(["max" => 255]),
         ];
 
-        $this->addTab($this->translator->tlb('advanced'), [
+        $this->addTab($this->translator->tl('advanced'), [
             $templateField,
 
-            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tlb('url'), $urlValidation)
+            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('url'), $urlValidation)
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
-                ->setPlaceholder($this->translator->tlb('dataTables.pages.urlPlaceholder')),
+                ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
 
-            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tlb('active'))
+            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
                 ->setDefault(1)
         ]);
@@ -114,7 +114,7 @@ class PageForm extends DataForm
         $languageCode = $this->getFilters()->getLanguageCode();
 
         if ($this->urlService->urlExists($url, $parentId, $languageCode, $pageLanguage)) {
-            $errorContainer->addFieldError('url', $this->translator->tlb('dataTables.pages.urlExists'));
+            $errorContainer->addFieldError('url', $this->translator->tl('dataTables.pages.urlExists'));
         }
 
         return $errorContainer;

@@ -14,8 +14,8 @@ class SettingsForm extends DataForm
      */
     public function initialize()
     {
-        $this->addDataTableField(new Templates(), $this->translator->tlb("templates"));
-        $this->addDataTableField(new Languages(), $this->translator->tlb("languages"));
+        $this->addDataTableField(new Templates(), $this->translator->tl("templates"));
+        $this->addDataTableField(new Languages(), $this->translator->tl("languages"));
     }
 
     /**

@@ -26,7 +26,7 @@ class PasswordResetForm extends WebForm
             new PresenceOf(),
             new Identical([
                 'value'   => $this->getElement('password')->getValue(),
-                'message' => $this->translator->tlb('webform.messages.passwordMismatch'),
+                'message' => $this->translator->tl('webform.messages.passwordMismatch'),
             ]),
             $passwordStringLength
         ]);
@@ -41,7 +41,7 @@ class PasswordResetForm extends WebForm
     protected function successAction(array $input)
     {
         $userId        = $this->request->get('userId');
-        $succesMessage = $this->translator->tlb('login.reset.password.flash');
+        $succesMessage = $this->translator->tl('login.reset.password.flash');
 
         $user = KikcmsUser::getById($userId);
 

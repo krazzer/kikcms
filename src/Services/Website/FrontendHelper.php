@@ -59,12 +59,11 @@ class FrontendHelper extends Injectable
     /**
      * @param string $string
      * @param array $replaces
-     * @param int|null $groupId
      * @return mixed|string
      */
-    public function tl($string, $replaces = [], int $groupId = null)
+    public function tl($string, $replaces = [])
     {
-        return $this->translator->tlf($string, $replaces, $groupId);
+        return $this->translator->tl($string, $replaces);
     }
 
     /**

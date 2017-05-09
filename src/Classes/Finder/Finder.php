@@ -139,13 +139,13 @@ class Finder extends Renderable
         foreach ($files as $index => $file) {
 
             if ($file->getError()) {
-                $message = $this->translator->tlb('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
                 $uploadStatus->addError($message);
                 continue;
             }
 
             if ( ! $this->mimeTypeAllowed($file)) {
-                $message = $this->translator->tlb('media.upload.error.mime', [
+                $message = $this->translator->tl('media.upload.error.mime', [
                     'extension' => $file->getExtension(),
                     'fileName'  => $file->getName()
                 ]);
@@ -156,7 +156,7 @@ class Finder extends Renderable
             $result = $this->finderFileService->create($file, $this->getFilters()->getFolderId());
 
             if ( ! $result) {
-                $message = $this->translator->tlb('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
                 $uploadStatus->addError($message);
                 continue;
             }

@@ -8,6 +8,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
+use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\LanguageService;
 use Phalcon\Cache\Backend;
@@ -16,9 +17,10 @@ use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
 
 /**
- * @property DbService $dbService;
- * @property LanguageService $languageService;
- * @property Backend $diskCache;
+ * @property DbService $dbService
+ * @property LanguageService $languageService
+ * @property Backend $diskCache
+ * @property Translator $translator
  */
 abstract class DataTable extends Renderable
 {
@@ -246,8 +248,8 @@ abstract class DataTable extends Renderable
     public function getLabels(): array
     {
         return [
-            $this->translator->tlb('dataTables.default.singular'),
-            $this->translator->tlb('dataTables.default.plural')
+            $this->translator->tl('dataTables.default.singular'),
+            $this->translator->tl('dataTables.default.plural')
         ];
     }
 

@@ -27,8 +27,8 @@ class Fields extends DataTable
     public function getLabels(): array
     {
         return [
-            $this->translator->tlb('dataTables.fields.singular'),
-            $this->translator->tlb('dataTables.fields.plural')
+            $this->translator->tl('dataTables.fields.singular'),
+            $this->translator->tl('dataTables.fields.plural')
         ];
     }
 
@@ -46,10 +46,10 @@ class Fields extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            'id'       => $this->translator->tlb('id'),
-            'variable' => $this->translator->tlb('variable'),
-            'name'     => $this->translator->tlb('name'),
-            'type_id'  => $this->translator->tlb('type'),
+            'id'       => $this->translator->tl('id'),
+            'variable' => $this->translator->tl('variable'),
+            'name'     => $this->translator->tl('name'),
+            'type_id'  => $this->translator->tl('type'),
         ];
     }
 

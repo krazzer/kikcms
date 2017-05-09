@@ -23,9 +23,9 @@ class FieldForm extends DataForm
 
     public function initialize()
     {
-        $this->addTextField('name', $this->translator->tlb('name'), [new PresenceOf()]);
-        $this->addTextField('variable', $this->translator->tlb('variable'), [new PresenceOf()]);
-        $this->addSelectField('type_id', $this->translator->tlb('type'), $this->translator->getContentTypeMap(), [new PresenceOf()]);
-        $this->addCheckboxField('multilingual', $this->translator->tlb('multilingual'));
+        $this->addTextField('name', $this->translator->tl('name'), [new PresenceOf()]);
+        $this->addTextField('variable', $this->translator->tl('variable'), [new PresenceOf()]);
+        $this->addSelectField('type_id', $this->translator->tl('type'), $this->translator->getContentTypeMap(), [new PresenceOf()]);
+        $this->addCheckboxField('multilingual', $this->translator->tl('multilingual'));
     }
 }
