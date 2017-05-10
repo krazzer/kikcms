@@ -51,7 +51,7 @@ class FrontendController extends BaseController
         $pageLanguage = $this->pageLanguageService->getNotFoundPage();
 
         if ( ! $pageLanguage) {
-            return $this->translator->tl('frontend.pageNotFound');
+            return $this->translator->tl('error.404.description');
         }
 
         return $this->loadPage($pageLanguage);

@@ -1,32 +1,6 @@
 <?php
 
 return [
-    'fields' => [
-        'active'         => 'Actief',
-        'advanced'       => 'Geavanceerd',
-        'allFields'      => 'Alle velden',
-        'code'           => 'Code',
-        'file'           => 'Bestand',
-        'hide'           => 'Verbergen',
-        'id'             => 'Id',
-        'key'            => 'Key',
-        'languages'      => 'Talen',
-        'multilingual'   => 'Meertalig',
-        'name'           => 'Naam',
-        'template'       => 'Template',
-        'templateFields' => 'Template velden',
-        'templates'      => 'Templates',
-        'translations'   => 'Vertalingen',
-        'type'           => 'Type',
-        'url'            => 'Url',
-        'variable'       => 'Variabele',
-    ],
-
-    'global' => [
-        'cancel' => 'Annuleer',
-        'delete' => 'Verwijder',
-    ],
-
     'cms' => [
         'loading' => 'Bezig met laden...',
     ],
@@ -151,8 +125,85 @@ return [
         ],
     ],
 
-    'frontend' => [
-        'pageNotFound' => 'De opgevraade pagina kon niet worden gevonden...',
+    'error' => [
+        '401' => [
+            'title'       => 'Geen toegang',
+            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
+                "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
+        ],
+
+        '404' => [
+            'title'       => 'Pagina niet gevonden',
+            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij " .
+                "verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op " .
+                "met de webmaster.",
+        ],
+
+        '440' => [
+            'title'       => 'Sessie verlopen',
+            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al " .
+                "in een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
+        ],
+
+        '500' => [
+            'title'       => 'Interne fout',
+            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij " .
+                "zullen het probleem zo spoedig mogelijk oplossen.",
+        ],
+
+        'unknown' => [
+            'title'       => 'Onbekende fout',
+            'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
+        ]
+    ],
+
+    'fields' => [
+        'active'         => 'Actief',
+        'advanced'       => 'Geavanceerd',
+        'allFields'      => 'Alle velden',
+        'code'           => 'Code',
+        'file'           => 'Bestand',
+        'hide'           => 'Verbergen',
+        'id'             => 'Id',
+        'key'            => 'Key',
+        'languages'      => 'Talen',
+        'multilingual'   => 'Meertalig',
+        'name'           => 'Naam',
+        'template'       => 'Template',
+        'templateFields' => 'Template velden',
+        'templates'      => 'Templates',
+        'translations'   => 'Vertalingen',
+        'type'           => 'Type',
+        'url'            => 'Url',
+        'variable'       => 'Variabele',
+    ],
+
+    'global' => [
+        'cancel' => 'Annuleer',
+        'delete' => 'Verwijder',
+    ],
+
+    'login' => [
+        'logout'   => 'U bent succesvol uitgelogd',
+        'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
+        'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
+        'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
+
+        'reset' => [
+            'flash' => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
+            'error' => 'Er is iets mis gegaan bij het versturen van de reset link.',
+
+            'mail' => [
+                'subject'     => 'KikCMS wachtwoord reset',
+                'body'        => 'Klik op onderstaande link om uw wachtwoord (opnieuw) in te stellen.',
+                'buttonLabel' => 'Wachtwoord opnieuw instellen',
+            ],
+
+            'password' => [
+                'flash'     => 'Uw wachtwoord is succesvol bijgewerkt. U kunt nu inloggen.',
+                'hashError' => 'Ongeldige hash',
+            ]
+        ]
     ],
 
     'media' => [
@@ -186,9 +237,34 @@ return [
         ],
     ],
 
+    'menu' => [
+        'group' => [
+            'content' => 'Content',
+            'stats'   => 'Statistieken',
+            'cms'     => 'CMS',
+        ],
+
+        'item' => [
+            'pages'        => "Pagina's",
+            'media'        => 'Media',
+            'templates'    => 'Templates',
+            'settings'     => 'Instellingen',
+            'users'        => 'Gebruikers',
+            'logout'       => 'Uitloggen',
+            'statsIndex'   => 'Statistieken',
+            'statsSources' => 'Bronnen',
+        ],
+    ],
+
     'pages' => [
         'warningTemplateChange' => 'Als u van template wisselt, gaan niet-opgeslagen wijzigingen verloren, ' .
             'wilt u zeker weten doorgaan?',
+    ],
+
+    'system' => [
+        'langCode'           => 'nl',
+        'phpDateFormat'      => 'd-m-Y',
+        'momentJsDateFormat' => 'DD-MM-YYYY',
     ],
 
     'webform' => [
@@ -230,85 +306,5 @@ return [
         'defaultSendLabel' => 'Versturen',
         'detachFile'       => 'Bestand loskoppelen',
         'requiredMessage'  => 'Velden met een * zijn verplicht',
-    ],
-
-    'login' => [
-        'logout'   => 'U bent succesvol uitgelogd',
-        'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
-        'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
-        'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
-
-        'reset' => [
-            'flash' => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
-            'error' => 'Er is iets mis gegaan bij het versturen van de reset link.',
-
-            'mail' => [
-                'subject'     => 'KikCMS wachtwoord reset',
-                'body'        => 'Klik op onderstaande link om uw wachtwoord (opnieuw) in te stellen.',
-                'buttonLabel' => 'Wachtwoord opnieuw instellen',
-            ],
-
-            'password' => [
-                'flash'     => 'Uw wachtwoord is succesvol bijgewerkt. U kunt nu inloggen.',
-                'hashError' => 'Ongeldige hash',
-            ]
-        ]
-    ],
-
-    'menu' => [
-        'group' => [
-            'content' => 'Content',
-            'stats'   => 'Statistieken',
-            'cms'     => 'CMS',
-        ],
-
-        'item' => [
-            'pages'        => "Pagina's",
-            'media'        => 'Media',
-            'templates'    => 'Templates',
-            'settings'     => 'Instellingen',
-            'users'        => 'Gebruikers',
-            'logout'       => 'Uitloggen',
-            'statsIndex'   => 'Statistieken',
-            'statsSources' => 'Bronnen',
-        ],
-    ],
-
-    'error' => [
-        '401' => [
-            'title'       => 'Geen toegang',
-            'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
-                "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
-        ],
-
-        '404' => [
-            'title'       => 'Pagina niet gevonden',
-            'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij " .
-                "verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op " .
-                "met de webmaster.",
-        ],
-
-        '440' => [
-            'title'       => 'Sessie verlopen',
-            'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al " .
-                "in een ander tabblad opnieuw bent ingelogd, dient u deze pagina te vernieuwen.",
-        ],
-
-        '500' => [
-            'title'       => 'Interne fout',
-            'description' => "Er is een interne fout opgetreden, de ontwikkelaars zijn op de hoogte gesteld.\n\nZij " .
-                "zullen het probleem zo spoedig mogelijk oplossen.",
-        ],
-
-        'unknown' => [
-            'title'       => 'Onbekende fout',
-            'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
-        ]
-    ],
-
-    'system' => [
-        'langCode'           => 'nl',
-        'phpDateFormat'      => 'd-m-Y',
-        'momentJsDateFormat' => 'DD-MM-YYYY',
     ],
 ];
