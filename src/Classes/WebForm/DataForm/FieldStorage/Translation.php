@@ -15,9 +15,6 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 class Translation extends FieldStorage
 {
-    /** @var int|null */
-    private $groupId = null;
-
     /**
      * @inheritdoc
      */
@@ -42,33 +39,13 @@ class Translation extends FieldStorage
     }
 
     /**
-     * @return int|null
-     */
-    public function getGroupId()
-    {
-        return $this->groupId;
-    }
-
-    /**
-     * @param int|null $groupId
-     * @return Translation
-     */
-    public function setGroupId($groupId)
-    {
-        $this->groupId = $groupId;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     private function createNewTranslationKeyId()
     {
         $translationKey = new TranslationKey();
 
-        $translationKey->group_id = $this->getGroupId();
-        $translationKey->db       = true;
-
+        $translationKey->db = true;
         $translationKey->save();
 
         return (int) $translationKey->id;
