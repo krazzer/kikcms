@@ -16,6 +16,9 @@ class Templates extends DataTable
     /** @inheritdoc */
     protected $sortable = true;
 
+    /** @inheritdoc */
+    protected $sortableNewFirst = true;
+
     /**
      * @inheritdoc
      */

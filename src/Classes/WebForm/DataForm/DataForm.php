@@ -113,7 +113,7 @@ abstract class DataForm extends WebForm
         /** @var Field $field */
         foreach ($this->getFields() as $key => $field) {
             if ($this->isStoredElsewhere($field)) {
-                $value = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
+                $value      = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
                 $data[$key] = $field->getFormFormat($value);
             }
         }
@@ -321,7 +321,7 @@ abstract class DataForm extends WebForm
 
             $value = $this->transformInputForStorage($input, $key);
 
-            if( ! $this->isStoredElsewhere($field)){
+            if ( ! $this->isStoredElsewhere($field)) {
                 $value = $this->dbService->toStorage($value);
             }
 
@@ -351,11 +351,15 @@ abstract class DataForm extends WebForm
 
         $this->db->begin();
 
+        if ($this->getDataTable() && $this->getDataTable()->isSortable()) {
+            $this->setDisplayOrder($storageData);
+        }
+
         try {
             if (isset($input[DataTable::EDIT_ID])) {
                 $editId = $input[DataTable::EDIT_ID];
 
-                if($storageData->getDataStoredInTable()){
+                if ($storageData->getDataStoredInTable()) {
                     $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
                 }
             } else {
@@ -382,6 +386,23 @@ abstract class DataForm extends WebForm
         }
 
         return $this->db->commit();
+    }
+
+    /**
+     * @param StorageData $storageData
+     */
+    private function setDisplayOrder(StorageData $storageData)
+    {
+        $dataTable  = $this->getDataTable();
+        $rearranger = $this->getDataTable()->getRearranger();
+
+        if ($dataTable->isSortableNewFirst()) {
+            $storageData->addValue($dataTable->getSortableField(), 1);
+            $rearranger->makeRoomForFirst();
+        } else {
+            $newValue = $rearranger->getMax() + 1;
+            $storageData->addValue($dataTable->getSortableField(), $newValue);
+        }
     }
 
     /**

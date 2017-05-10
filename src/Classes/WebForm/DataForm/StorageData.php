@@ -54,7 +54,7 @@ class StorageData
      * @param $value
      * @param bool $isStoredElsewhere
      */
-    public function addValue(string $key, $value, bool $isStoredElsewhere)
+    public function addValue(string $key, $value, bool $isStoredElsewhere = false)
     {
         if ($isStoredElsewhere) {
             $this->dataStoredElseWhere[$key] = $value;

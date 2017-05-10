@@ -77,8 +77,11 @@ abstract class DataTable extends Renderable
     /** @var bool */
     protected $sortable = false;
 
+    /** @var bool if true, newly added items will be added on top */
+    protected $sortableNewFirst = false;
+
     /** @var string */
-    protected $orderField = 'display_order';
+    protected $sortableField = 'display_order';
 
     /** @var string */
     public $indexView = 'datatable/index';
@@ -94,6 +97,9 @@ abstract class DataTable extends Renderable
 
     /** @var int amount of rows shown on one page */
     private $limit = 100;
+
+    /** @var Rearranger */
+    private $rearranger;
 
     /**
      * Tracks whether the function 'initializeDatatable' has been run yet
@@ -288,9 +294,21 @@ abstract class DataTable extends Renderable
     /**
      * @return string
      */
-    public function getOrderField(): string
+    public function getSortableField(): string
     {
-        return $this->orderField;
+        return $this->sortableField;
+    }
+
+    /**
+     * @return Rearranger
+     */
+    public function getRearranger(): Rearranger
+    {
+        if( ! $this->rearranger){
+            $this->rearranger = new Rearranger($this);
+        }
+
+        return $this->rearranger;
     }
 
     /**
@@ -307,6 +325,14 @@ abstract class DataTable extends Renderable
     public function isSortable(): bool
     {
         return $this->sortable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSortableNewFirst(): bool
+    {
+        return $this->sortableNewFirst;
     }
 
     /**
@@ -342,6 +368,7 @@ abstract class DataTable extends Renderable
                 ->setLanguageCode($languageCode)
                 ->setParentEditId($parentEditId);
 
+            $dataForm->setDataTable($this);
             $dataForm->initializeForm();
 
             $this->form = $dataForm;

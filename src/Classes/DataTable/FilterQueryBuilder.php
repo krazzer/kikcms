@@ -66,7 +66,7 @@ class FilterQueryBuilder
     {
         if ( ! $this->filters->getSortColumn()) {
             if ($this->dataTable->isSortable()) {
-                $query->orderBy($this->dataTable->getOrderField() . ' ' . DbConfig::SQL_SORT_ASCENDING);
+                $query->orderBy($this->dataTable->getSortableField() . ' ' . DbConfig::SQL_SORT_ASCENDING);
             }
 
             return;

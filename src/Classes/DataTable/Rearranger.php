@@ -33,11 +33,37 @@ class Rearranger extends Injectable
     }
 
     /**
+     * Get the maximum order value
+     *
+     * @return int
+     */
+    public function getMax(): int
+    {
+        $query = (new Builder())
+            ->from($this->dataTable->getModel())
+            ->columns(["MAX(" . $this->dataTable->getSortableField() . ")"]);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
      * @return string
      */
     public function getOrderField(): string
     {
-        return $this->dataTable->getOrderField();
+        return $this->dataTable->getSortableField();
+    }
+
+    /**
+     * Add 1 to all existing display_order values in the table, so a new record can be added as first
+     */
+    public function makeRoomForFirst()
+    {
+        $model      = $this->dataTable->getModel();
+        $orderField = $this->getOrderField();
+
+        $this->dbService->update($model, [$orderField => new RawValue($orderField . " + 1")],
+            "1 = 1 ORDER BY " . $orderField . " DESC");
     }
 
     /**
@@ -94,20 +120,6 @@ class Rearranger extends Injectable
             $target->$orderField = $this->getMax() + 1;
             $target->save();
         }
-    }
-
-    /**
-     * Get the maximum order value
-     *
-     * @return int
-     */
-    private function getMax(): int
-    {
-        $query = (new Builder())
-            ->from($this->dataTable->getModel())
-            ->columns(["MAX(" . $this->dataTable->getOrderField() . ")"]);
-
-        return (int) $this->dbService->getValue($query);
     }
 
     /**
