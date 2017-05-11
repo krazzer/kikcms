@@ -458,8 +458,8 @@ abstract class WebForm extends Renderable
     {
         $input = $this->request->getPost();
 
-        foreach ($input as $key => $value){
-            if( ! $this->hasField($key)){
+        foreach ($input as $key => $value) {
+            if ( ! $this->hasField($key)) {
                 continue;
             }
 
@@ -490,7 +490,7 @@ abstract class WebForm extends Renderable
      *
      * @return Response|string
      */
-    public function render(): string
+    public function render()
     {
         $errorContainer = new ErrorContainer();
 
@@ -505,7 +505,7 @@ abstract class WebForm extends Renderable
             if ($errorContainer->isEmpty()) {
                 $result = $this->successAction($this->getInput());
 
-                if (is_string($result)) {
+                if (is_string($result) || $result instanceof Response) {
                     return $result;
                 }
             } else {

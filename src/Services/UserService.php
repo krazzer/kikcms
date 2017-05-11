@@ -27,6 +27,18 @@ class UserService extends Injectable
     }
 
     /**
+     * @param KikcmsUser $user
+     * @return string
+     */
+    public function getResetUrl(KikcmsUser $user): string
+    {
+        $time = date('U');
+        $hash = $this->security->hash($user->id . $time);
+
+        return $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash . '&t=' . $time;
+    }
+
+    /**
      * Determine whether a given email and password are allowed to login or must still be activated
      *
      * @param string $email
@@ -38,7 +50,7 @@ class UserService extends Injectable
     {
         $user = $this->getByEmail($email);
 
-        if( ! $user){
+        if ( ! $user) {
             return false;
         }
 

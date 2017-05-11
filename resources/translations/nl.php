@@ -123,6 +123,13 @@ return [
             'singular' => "template veld",
             'plural'   => "template velden",
         ],
+
+        'users' => [
+            'singular' => "gebruiker",
+            'plural'   => "gebruikers",
+
+            'activationLink' => 'Genereer activatie link',
+        ],
     ],
 
     'error' => [
@@ -162,6 +169,7 @@ return [
         'advanced'       => 'Geavanceerd',
         'allFields'      => 'Alle velden',
         'code'           => 'Code',
+        'email'          => 'E-Mail adres',
         'file'           => 'Bestand',
         'hide'           => 'Verbergen',
         'id'             => 'Id',
@@ -190,18 +198,22 @@ return [
         'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
 
         'reset' => [
-            'flash' => 'Er is een e-mail met reset link naar u verzonden, indien uw e-mail adres bekend is bij ons.',
-            'error' => 'Er is iets mis gegaan bij het versturen van de reset link.',
+            'flash'       => 'Er is een e-mail met reset link verzonden. Let op, deze url is slechts 2 uur geldig.',
+            'error'       => 'Er is iets mis gegaan bij het versturen van de reset link.',
+            'buttonLabel' => 'Stuur wachtwoord reset link',
 
             'mail' => [
                 'subject'     => 'KikCMS wachtwoord reset',
-                'body'        => 'Klik op onderstaande link om uw wachtwoord (opnieuw) in te stellen.',
+                'body'        => 'Druk op de onderstaande knop om uw wachtwoord (opnieuw) in te stellen. ' .
+                    'Let op, deze link is slechts 2 uur geldig.',
                 'buttonLabel' => 'Wachtwoord opnieuw instellen',
             ],
 
             'password' => [
-                'flash'     => 'Uw wachtwoord is succesvol bijgewerkt. U kunt nu inloggen.',
-                'hashError' => 'Ongeldige hash',
+                'flash'       => 'Uw wachtwoord is bijgewerkt. U kunt nu inloggen.',
+                'hashError'   => 'Ongeldige url',
+                'formMessage' => 'Voer het door u gewenste wachtwoord in',
+                'expired'     => 'De geldigheid van de link is verlopen.',
             ]
         ]
     ],

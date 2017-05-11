@@ -47,6 +47,6 @@ class PasswordResetForm extends WebForm
 
         $this->userService->storePassword($user, $input['password']);
         $this->flash->success($succesMessage);
-        $this->response->redirect('cms/login');
+        return $this->response->redirect('cms/login');
     }
 }

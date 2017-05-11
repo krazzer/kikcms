@@ -9,6 +9,7 @@ use KikCMS\Forms\PasswordResetLinkForm;
 use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
+use Phalcon\Http\Response;
 
 /**
  * @property Translator $translator
@@ -32,14 +33,29 @@ class LoginController extends BaseController
     {
         $userId = $this->request->get('userId');
         $hash   = $this->request->get('hash');
+        $time   = $this->request->get('t');
 
-        if ( ! $this->security->checkHash($userId, $hash)) {
+        if ( ! $this->security->checkHash($userId . $time, $hash)) {
             $errorMessage = $this->translator->tl('login.reset.password.hashError');
             $this->flash->error($errorMessage);
-            $this->response->redirect('cms/login');
+            return $this->response->redirect('cms/login');
         }
 
-        $this->view->form = (new PasswordResetForm())->render();
-        $this->view->pick('login/reset');
+        if ( ! $time || $time + 7200 < date('U')) {
+            $errorMessage = $this->translator->tl('login.reset.password.expired');
+            $this->flash->error($errorMessage);
+            return $this->response->redirect('cms/login/reset');
+        }
+
+        $passwordForm = (new PasswordResetForm())->render();
+
+        if ($passwordForm instanceof Response) {
+            return $passwordForm;
+        }
+
+        $this->flash->notice($this->translator->tl('login.reset.password.formMessage'));
+
+        $this->view->form = $passwordForm;
+        return $this->view->pick('login/reset');
     }
 }

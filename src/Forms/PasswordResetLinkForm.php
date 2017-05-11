@@ -19,9 +19,13 @@ class PasswordResetLinkForm extends WebForm
      */
     protected function initialize()
     {
-        $this->addTextField('email', 'E-mail adres', [new PresenceOf(), new Email()]);
+        $emailField = $this->addTextField('email', 'E-mail adres', [new PresenceOf(), new Email()]);
 
-        $this->setSendLabel('Stuur wachtwoord reset link');
+        if($email = $this->request->get('email')){
+            $emailField->setDefault($email);
+        }
+
+        $this->setSendLabel($this->translator->tl('login.reset.buttonLabel'));
         $this->setPlaceHolderAsLabel(true);
     }
 
@@ -43,8 +47,7 @@ class PasswordResetLinkForm extends WebForm
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
-        $hash     = $this->security->hash($user->id);
-        $resetUrl = $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash;
+        $resetUrl = $this->userService->getResetUrl($user);
 
         $parameters['buttons'] = [['url' => $resetUrl, 'label' => $buttonLabel]];
 

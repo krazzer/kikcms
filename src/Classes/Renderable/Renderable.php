@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Renderable;
 
 
 use Phalcon\Di\Injectable;
+use Phalcon\Http\Response;
 
 /**
  * A renderable object
@@ -53,9 +54,9 @@ abstract class Renderable extends Injectable
     /**
      * Renders the object
      *
-     * @return string
+     * @return Response|string
      */
-    public abstract function render(): string;
+    public abstract function render();
 
     /**
      * This method may contain logic that will influence the output when rendered

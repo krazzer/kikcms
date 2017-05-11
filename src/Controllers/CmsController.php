@@ -7,6 +7,7 @@ use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
+use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\LanguageService;
@@ -70,7 +71,7 @@ class CmsController extends BaseCmsController
     public function usersAction()
     {
         $this->view->title  = $this->translator->tl('menu.item.users');
-        $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
+        $this->view->object = (new Users())->render();
         $this->view->pick('cms/default');
     }
 
