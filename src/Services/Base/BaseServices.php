@@ -8,6 +8,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Routing;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
+use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
 
 /** @noinspection PhpUndefinedClassInspection */
@@ -25,8 +26,9 @@ class BaseServices extends ApplicationServices
 
     /**
      * @param Config $config
+     * @param Loader $loader
      */
-    public function __construct(Config $config)
+    public function __construct(Config $config, Loader $loader)
     {
         /** @noinspection PhpUndefinedClassInspection */
         parent::__construct();
@@ -34,6 +36,7 @@ class BaseServices extends ApplicationServices
         $this->setShared('config', $config);
         $this->setShared('applicationConfig', $config->get('application'));
         $this->setShared('databaseConfig', $config->get('database'));
+        $this->setShared('loader', $loader);
 
         $this->bindServices();
     }

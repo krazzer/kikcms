@@ -8,6 +8,10 @@ class KikCMSConfig
     const ENV_DEV  = 'dev';
     const ENV_PROD = 'prod';
 
+    const NAMESPACE_KIKCMS     = 'KikCMS';
+    const NAMESPACE_WEBSITE    = 'Website';
+    const NAMESPACE_DATATABLES = 'DataTables';
+
     const PACKAGE_NAME = 'kiksaus/kikcms';
 
     const CONTENT_TYPES = [

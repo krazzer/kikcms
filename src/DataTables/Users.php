@@ -5,7 +5,7 @@ namespace KikCMS\DataTables;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Forms\UserForm;
-use KikCMS\Models\KikcmsUser;
+use KikCMS\Models\User;
 
 class Users extends DataTable
 {
@@ -15,9 +15,9 @@ class Users extends DataTable
     public function getDefaultQuery()
     {
         return parent::getDefaultQuery()->columns([
-            KikcmsUser::FIELD_ID,
-            KikcmsUser::FIELD_EMAIL,
-            KikcmsUser::FIELD_ACTIVE
+            User::FIELD_ID,
+            User::FIELD_EMAIL,
+            User::FIELD_ACTIVE
         ]);
     }
 
@@ -26,7 +26,7 @@ class Users extends DataTable
      */
     public function getModel(): string
     {
-        return KikcmsUser::class;
+        return User::class;
     }
 
     /**
@@ -54,9 +54,9 @@ class Users extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            KikcmsUser::FIELD_ID     => $this->translator->tl('fields.id'),
-            KikcmsUser::FIELD_EMAIL  => $this->translator->tl('fields.email'),
-            KikcmsUser::FIELD_ACTIVE => $this->translator->tl('fields.active'),
+            User::FIELD_ID     => $this->translator->tl('fields.id'),
+            User::FIELD_EMAIL  => $this->translator->tl('fields.email'),
+            User::FIELD_ACTIVE => $this->translator->tl('fields.active'),
         ];
     }
 
@@ -65,7 +65,7 @@ class Users extends DataTable
      */
     protected function initialize()
     {
-        $this->setFieldFormatting(KikcmsUser::FIELD_ACTIVE, function($value){
+        $this->setFieldFormatting(User::FIELD_ACTIVE, function($value){
             return $value == 1 ?
                 '<span style="color: green;" class="glyphicon glyphicon-ok"></span>' :
                 '<span style="color: #A00000;" class="glyphicon glyphicon-remove"></span>';

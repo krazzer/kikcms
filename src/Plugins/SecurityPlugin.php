@@ -2,6 +2,7 @@
 
 namespace KikCMS\Plugins;
 
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\UserService;
@@ -12,6 +13,7 @@ use Phalcon\Mvc\Dispatcher;
 /**
  * @property UserService $userService
  * @property Translator $translator
+ * @property AccessControl $acl
  */
 class SecurityPlugin extends Plugin
 {

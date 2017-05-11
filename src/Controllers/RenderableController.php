@@ -13,7 +13,7 @@ class RenderableController extends BaseController
     protected function getRenderable(): Renderable
     {
         $instance = $this->request->getPost(Renderable::FILTER_INSTANCE);
-        $class    = $this->request->getPost(Renderable::FILTER_CLASS);
+        $class    = $this->getClass();
 
         /** @var Renderable $renderable */
         $renderable = new $class();
@@ -25,5 +25,13 @@ class RenderableController extends BaseController
         $renderable->setFilters($filters);
 
         return $renderable;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getClass(): string
+    {
+        return $this->request->getPost(Renderable::FILTER_CLASS);
     }
 }

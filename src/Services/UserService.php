@@ -5,7 +5,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Translator;
-use KikCMS\Models\KikcmsUser;
+use KikCMS\Models\User;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
@@ -19,18 +19,18 @@ class UserService extends Injectable
     /**
      * @param $email
      *
-     * @return KikcmsUser
+     * @return User
      */
     public function getByEmail($email)
     {
-        return KikcmsUser::findFirst('email = ' . $this->dbService->escape($email));
+        return User::findFirst('email = ' . $this->dbService->escape($email));
     }
 
     /**
-     * @param KikcmsUser $user
+     * @param User $user
      * @return string
      */
-    public function getResetUrl(KikcmsUser $user): string
+    public function getResetUrl(User $user): string
     {
         $time = date('U');
         $hash = $this->security->hash($user->id . $time);
@@ -75,10 +75,10 @@ class UserService extends Injectable
     }
 
     /**
-     * @param KikcmsUser $user
+     * @param User $user
      * @param string $password
      */
-    public function storePassword(KikcmsUser $user, string $password)
+    public function storePassword(User $user, string $password)
     {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -87,10 +87,10 @@ class UserService extends Injectable
     }
 
     /**
-     * @param KikcmsUser $user
+     * @param User $user
      * @return bool
      */
-    public function isActive(KikcmsUser $user)
+    public function isActive(User $user)
     {
         return $user->active == 1 && $user->password;
     }
@@ -108,10 +108,16 @@ class UserService extends Injectable
      */
     private function setLoggedIn(int $id)
     {
+        $user = User::getById($id);
+
         $this->session->set('loggedIn', true);
         $this->session->set('userId', $id);
+        $this->session->set('role', $user->role);
     }
 
+    /**
+     * Log the user out and redirect him to the login page
+     */
     public function logout()
     {
         // remove current session data

@@ -5,6 +5,7 @@ namespace KikCMS\Plugins;
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Config\StatusCodes;
 use Phalcon\Events\Event;
 use Phalcon\Dispatcher;
@@ -61,6 +62,16 @@ class BackendNotFoundPlugin extends Plugin
             $dispatcher->forward([
                 'controller' => 'errors',
                 'action'     => 'show404'
+            ]);
+
+            return false;
+        }
+
+        if ($exception instanceof UnauthorizedException) {
+            $this->response->setStatusCode(401);
+            $dispatcher->forward([
+                'controller' => 'errors',
+                'action'     => 'show401'
             ]);
 
             return false;

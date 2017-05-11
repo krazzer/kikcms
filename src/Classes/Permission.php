@@ -3,28 +3,36 @@
 namespace KikCMS\Classes;
 
 
+use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Services\UserService;
 use Phalcon\Acl;
-use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
 use Phalcon\Di\Injectable;
 
+/**
+ * @property UserService $userService
+ */
 class Permission extends Injectable
 {
     const DEVELOPER = 'developer';
     const ADMIN     = 'admin';
     const USER      = 'user';
     const CLIENT    = 'client';
+    const VISITOR   = 'visitor';
+
+    const ACCESS_DATATABLES = 'AccessDataTables';
 
     const ROLES = [
         self::DEVELOPER,
         self::ADMIN,
         self::USER,
         self::CLIENT,
+        self::VISITOR,
     ];
 
     /**
-     * @return Memory
+     * @return AccessControl
      */
     public function getAcl()
     {
@@ -32,7 +40,7 @@ class Permission extends Injectable
             return $this->persistent->acl;
         }
 
-        $acl = new Memory();
+        $acl = new AccessControl($this->getCurrentRole());
 
         $acl->setDefaultAction(Acl::DENY);
 
@@ -41,10 +49,13 @@ class Permission extends Injectable
         $acl->addRole(new Role(self::USER));
         $acl->addRole(new Role(self::CLIENT));
 
-        $acl->addResource(new Resource('SomeResource'), '*');
-        $acl->allow(self::DEVELOPER, 'SomeResource', '*');
+        $acl->addResource(new Resource(self::ACCESS_DATATABLES), '*');
 
-        $this->addDataTableAccess($acl);
+        //allow datatable access for anyone except visitors
+        $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::USER, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, '*');
 
         $this->persistent->acl = $acl;
 
@@ -52,10 +63,18 @@ class Permission extends Injectable
     }
 
     /**
-     * @param Memory $acl
+     * Get the role of the current logged in user, if not logged in, the role is visitor
+     *
+     * @return string
      */
-    private function addDataTableAccess(Memory $acl)
+    public function getCurrentRole(): string
     {
+        $role = $this->session->get('role');
 
+        if ( ! $role) {
+            return Permission::VISITOR;
+        }
+
+        return $role;
     }
 }

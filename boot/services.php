@@ -42,4 +42,4 @@ if($cli){
     class ApplicationServices extends FactoryDefault{}
 }
 
-return new Services($config);
+return new Services($config, $loader);

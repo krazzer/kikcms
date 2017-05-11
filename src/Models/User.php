@@ -4,12 +4,12 @@ namespace KikCMS\Models;
 
 use KikCMS\Classes\Model\Model;
 
-class KikcmsUser extends Model
+class User extends Model
 {
     /** @var int */
     public $id;
 
-    const TABLE = 'kikcms_user';
+    const TABLE = 'cms_user';
     const ALIAS = 'ku';
 
     const FIELD_ID         = 'id';
@@ -20,11 +20,11 @@ class KikcmsUser extends Model
 
     /**
      * @inheritdoc
-     * @return KikcmsUser
+     * @return User
      */
     public static function getById($id)
     {
-        /** @var KikcmsUser $kikCmsUser */
+        /** @var User $kikCmsUser */
         $kikCmsUser = parent::getById($id);
 
         return $kikCmsUser;
@@ -32,11 +32,11 @@ class KikcmsUser extends Model
 
     /**
      * @inheritdoc
-     * @return KikcmsUser
+     * @return User
      */
     public static function findFirst($parameters = null)
     {
-        /** @var KikcmsUser $user */
+        /** @var User $user */
         $user = parent::findFirst($parameters);
 
         return $user;

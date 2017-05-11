@@ -4,7 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Models\KikcmsUser;
+use KikCMS\Models\User;
 use Phalcon\Validation\Validator\Email;
 
 class UserForm extends DataForm
@@ -14,7 +14,7 @@ class UserForm extends DataForm
      */
     public function getModel(): string
     {
-        return KikcmsUser::class;
+        return User::class;
     }
 
     /**
@@ -22,7 +22,7 @@ class UserForm extends DataForm
      */
     protected function initialize()
     {
-        $this->addTextField(KikcmsUser::FIELD_EMAIL, $this->translator->tl('fields.email'), [new Email()]);
-        $this->addCheckboxField(KikcmsUser::FIELD_ACTIVE, $this->translator->tl('fields.active'));
+        $this->addTextField(User::FIELD_EMAIL, $this->translator->tl('fields.email'), [new Email()]);
+        $this->addCheckboxField(User::FIELD_ACTIVE, $this->translator->tl('fields.active'));
     }
 }
