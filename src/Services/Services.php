@@ -6,6 +6,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\ImageHandler\ImageHandler;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
@@ -25,6 +26,7 @@ use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\WebsiteService;
 use Monolog\ErrorHandler;
+use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
 use Phalcon\Cache\Backend\Apc;
@@ -83,96 +85,26 @@ class Services extends BaseServices
     }
 
     /**
-     * @return WebsiteService
+     * @return Memory
      */
-    protected function initWebsiteService()
+    protected function initAcl()
     {
-        return new WebsiteService();
+        return (new Permission())->getAcl();
     }
 
     /**
-     * @return FileStorage
+     * @return Backend|false
      */
-    protected function initFileStorage()
+    protected function initCache()
     {
-        $fileStorage = new FileStorageFile();
-        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+        if($this instanceof Cli){
+            return false;
+        }
 
-        return $fileStorage;
+        return new Apc(new Data());
     }
 
     /**
-     * @return FinderFileService
-     */
-    protected function initFinderFileService()
-    {
-        /** @var FileStorage $fileStorage */
-        $fileStorage = $this->get('fileStorage');
-
-        $finderFileService = new FinderFileService($fileStorage);
-        $finderFileService->setMediaDir('media');
-        $finderFileService->setThumbDir('thumbs');
-
-        return $finderFileService;
-    }
-
-    /**
-     * @return ImageHandler
-     */
-    protected function initImageHandler()
-    {
-        return new ImageHandler();
-    }
-
-    /**
-     * The URL component is used to generate all kind of urls in the application
-     */
-    protected function initUrl()
-    {
-        $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
-            "https://" : "http://";
-
-        $domainName = $_SERVER['HTTP_HOST'];
-
-        $baseUrl = $protocol . $domainName . $this->getApplicationConfig()->baseUri;
-
-        $url = new Url();
-        $url->setBaseUri($baseUrl);
-
-        return $url;
-    }
-
-    protected function initView()
-    {
-        $cmsViewDir  = __DIR__ . '/../Views/';
-        $siteViewDir = SITE_PATH . 'app/Views/';
-
-        $view = new View();
-        $view->setViewsDir($cmsViewDir);
-        $view->setNamespaces([
-            'kikcms'  => $cmsViewDir,
-            'website' => $siteViewDir
-        ]);
-        $view->registerEngines([
-            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                $env   = $di->get('config')->get('application')->get('env');
-                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . 'cache/twig/' : false;
-
-                return new Twig($view, $di, [
-                    'cache' => $cache,
-                    'debug' => $env == KikCMSConfig::ENV_DEV,
-                ], $view->getNamespaces());
-            }
-        ]);
-
-        $view->assets = new Manager();
-
-        return $view;
-    }
-
-    /**
-     * Database connection is created based in the parameters defined in the configuration file
-     *
      * @return Db
      */
     protected function initDb()
@@ -204,6 +136,16 @@ class Services extends BaseServices
     }
 
     /**
+     * @return Backend
+     */
+    protected function initDiskCache()
+    {
+        return new File(new Json(["lifetime" => 3600 * 24]), [
+            'cacheDir' => SITE_PATH . 'cache/cache/'
+        ]);
+    }
+
+    /**
      * @return ErrorHandler
      */
     protected function initErrorHandler()
@@ -224,6 +166,53 @@ class Services extends BaseServices
         $errorHandler->registerFatalHandler();
 
         return $errorHandler;
+    }
+
+    /**
+     * @return FileStorage
+     */
+    protected function initFileStorage()
+    {
+        $fileStorage = new FileStorageFile();
+        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+
+        return $fileStorage;
+    }
+
+    /**
+     * @return FinderFileService
+     */
+    protected function initFinderFileService()
+    {
+        /** @var FileStorage $fileStorage */
+        $fileStorage = $this->get('fileStorage');
+
+        $finderFileService = new FinderFileService($fileStorage);
+        $finderFileService->setMediaDir('media');
+        $finderFileService->setThumbDir('thumbs');
+
+        return $finderFileService;
+    }
+
+    /**
+     * Register the flash service with custom CSS classes
+     */
+    protected function initFlash()
+    {
+        return new FlashSession([
+            'error'   => 'alert alert-danger',
+            'success' => 'alert alert-success',
+            'notice'  => 'alert alert-info',
+            'warning' => 'alert alert-warning'
+        ]);
+    }
+
+    /**
+     * @return ImageHandler
+     */
+    protected function initImageHandler()
+    {
+        return new ImageHandler();
     }
 
     /**
@@ -252,54 +241,6 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Backend
-     */
-    protected function initDiskCache()
-    {
-        return new File(new Json(["lifetime" => 3600 * 24]), [
-            'cacheDir' => SITE_PATH . 'cache/cache/'
-        ]);
-    }
-
-    /**
-     * @return Backend|false
-     */
-    protected function initCache()
-    {
-        if($this instanceof Cli){
-            return false;
-        }
-
-        return new Apc(new Data());
-    }
-
-    /**
-     * Start the session the first time some component request the session service
-     */
-    protected function initSession()
-    {
-        $session = new SessionAdapter();
-        $session->start();
-
-        return $session;
-    }
-
-    /**
-     * Register the flash service with custom CSS classes
-     */
-    protected function initFlash()
-    {
-        return new FlashSession([
-            'error'   => 'alert alert-danger',
-            'success' => 'alert alert-success',
-            'notice'  => 'alert alert-info',
-            'warning' => 'alert alert-warning'
-        ]);
-    }
-
-    /**
-     * Register Mailer
-     *
      * @return MailService
      */
     protected function initMailService()
@@ -322,11 +263,40 @@ class Services extends BaseServices
     }
 
     /**
+     * Start the session the first time some component request the session service
+     */
+    protected function initSession()
+    {
+        $session = new SessionAdapter();
+        $session->start();
+
+        return $session;
+    }
+
+    /**
      * @return Translator
      */
     protected function initTranslator()
     {
         return new Translator();
+    }
+
+    /**
+     * The URL component is used to generate all kind of urls in the application
+     */
+    protected function initUrl()
+    {
+        $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
+            "https://" : "http://";
+
+        $domainName = $_SERVER['HTTP_HOST'];
+
+        $baseUrl = $protocol . $domainName . $this->getApplicationConfig()->baseUri;
+
+        $url = new Url();
+        $url->setBaseUri($baseUrl);
+
+        return $url;
     }
 
     /**
@@ -355,6 +325,45 @@ class Services extends BaseServices
         $validation->setDefaultMessages($defaultMessages);
 
         return $validation;
+    }
+
+    /**
+     * @return View
+     */
+    protected function initView()
+    {
+        $cmsViewDir  = __DIR__ . '/../Views/';
+        $siteViewDir = SITE_PATH . 'app/Views/';
+
+        $view = new View();
+        $view->setViewsDir($cmsViewDir);
+        $view->setNamespaces([
+            'kikcms'  => $cmsViewDir,
+            'website' => $siteViewDir
+        ]);
+        $view->registerEngines([
+            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
+                $env   = $di->get('config')->get('application')->get('env');
+                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . 'cache/twig/' : false;
+
+                return new Twig($view, $di, [
+                    'cache' => $cache,
+                    'debug' => $env == KikCMSConfig::ENV_DEV,
+                ], $view->getNamespaces());
+            }
+        ]);
+
+        $view->assets = new Manager();
+
+        return $view;
+    }
+
+    /**
+     * @return WebsiteService
+     */
+    protected function initWebsiteService()
+    {
+        return new WebsiteService();
     }
 
     /**
