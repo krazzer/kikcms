@@ -80,7 +80,7 @@ class BaseServices extends ApplicationServices
         $this->set('modelsMetadata', function (){
             return new Files([
                 "lifetime"    => 86400,
-                "metaDataDir" => SITE_PATH . "/cache/metadata/"
+                "metaDataDir" => SITE_PATH . "cache/metadata/"
             ]);
         });
     }
