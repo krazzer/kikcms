@@ -9,6 +9,7 @@ use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\TranslationService;
+use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -16,6 +17,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property TranslationService $translationService
  * @property DbService $dbService
  * @property CacheService $cacheService
+ * @property Backend $cache
  */
 class Translator extends Injectable
 {
@@ -34,18 +36,36 @@ class Translator extends Injectable
             return '';
         }
 
-        // numeric values given indicate it's a translation managed from a DataTable
-        if (is_numeric($key)) {
-            return $this->getDbTranslation($key);
+        // cache translation without using the cacheService shortcut for performance
+        $cacheKey = CacheConfig::TRANSLATION . ':' . $this->getLanguageCode() . ':' . $key;
+
+        if( ! $translation = $this->cache->get($cacheKey)) {
+            // numeric values given indicate it's a translation managed from a DataTable
+            if (is_numeric($key)) {
+                return $this->getDbTranslation($key);
+            }
+
+            $translations = $this->getTranslations();
+
+            if( ! array_key_exists($key, $translations)){
+                throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
+            }
+
+            $translation = $translations[$key];
+
+            $this->cache->save($cacheKey, $translation, CacheConfig::ONE_DAY);
         }
 
-        $translations = $this->getTranslations();
+        // replace string, not in a separate function for performance
+        foreach ($replaces as $key => $replace) {
+            if ( ! is_string($replace)) {
+                continue;
+            }
 
-        if( ! array_key_exists($key, $translations)){
-            throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
+            $translation = str_replace(':' . $key, $replace, $translation);
         }
 
-        return $this->replace((string) $translations[$key], $replaces);
+        return $translation;
     }
 
     /**
@@ -145,24 +165,6 @@ class Translator extends Injectable
             }
         }
         return $result;
-    }
-
-    /**
-     * @param string $translation
-     * @param array $replaces
-     * @return mixed|string
-     */
-    private function replace(string $translation, array $replaces)
-    {
-        foreach ($replaces as $key => $replace) {
-            if ( ! is_string($replace)) {
-                continue;
-            }
-
-            $translation = str_replace(':' . $key, $replace, $translation);
-        }
-
-        return $translation;
     }
 
     /**
