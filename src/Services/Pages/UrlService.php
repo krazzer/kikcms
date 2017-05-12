@@ -141,6 +141,7 @@ class UrlService extends Injectable
 
             while ($parent && $parent->type != Page::TYPE_MENU) {
                 $pageLanguage = $this->pageLanguageService->getByPage($parent, $langCode);
+                $parent       = $pageLanguage->page->parent;
                 $urlParts[]   = $pageLanguage->url;
             }
 

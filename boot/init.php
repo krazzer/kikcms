@@ -12,15 +12,15 @@ $application = new Application($services);
 $application->registerModules([
     "frontend" => [
         "className" => "KikCMS\\Modules\\Frontend",
-        "path"      => __DIR__ . "/../src/Modules/Frontend.php",
     ],
     "backend"  => [
         "className" => "KikCMS\\Modules\\Backend",
-        "path"      => __DIR__ . "/../src/Modules/Backend.php",
     ],
-    "website"  => [
-        "className" => "KikCMS\\Modules\\Website",
-        "path"      => __DIR__ . "/../src/Modules/Backend.php",
+    "websiteFrontend"  => [
+        "className" => "KikCMS\\Modules\\websiteFrontend",
+    ],
+    "websiteBackend"  => [
+        "className" => "KikCMS\\Modules\\WebsiteBackend",
     ],
 ]);
 

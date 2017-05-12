@@ -4,41 +4,35 @@ namespace KikCMS\Modules;
 
 use KikCMS\Plugins\BackendNotFoundPlugin;
 use KikCMS\Plugins\SecurityPlugin;
-use Phalcon\Loader;
 use Phalcon\DiInterface;
+use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Events\Manager as EventManager;
 
 class Backend implements ModuleDefinitionInterface
 {
+    protected $defaultNamespace = "KikCMS\\Controllers";
+
     /**
-     * Register a specific autoloader for the module
-     * @param DiInterface $di
+     * @inheritdoc
      */
     public function registerAutoloaders(DiInterface $di = null)
     {
-        $loader = new Loader();
-
-        $loader->registerNamespaces([
-            "KikCMS\\Controllers" => __DIR__ . "../Controllers/",
-            "KikCMS\\Models"      => __DIR__ . "../Models/",
-        ]);
-
-        $loader->register();
+        // nothing else needed
     }
 
     /**
-     * Register specific services for the module
-     * @param DiInterface $di
+     * @inheritdoc
      */
     public function registerServices(DiInterface $di)
     {
-        $di->set("dispatcher", function () {
-            $dispatcher = new Dispatcher();
-            $dispatcher->setDefaultNamespace("KikCMS\\Controllers");
+        $defaultNameSpace = $this->defaultNamespace;
 
-            $eventsManager = new EventManager;
+        $di->set("dispatcher", function () use ($defaultNameSpace){
+            $dispatcher = new Dispatcher();
+            $dispatcher->setDefaultNamespace($defaultNameSpace);
+
+            $eventsManager = new Manager;
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
             $eventsManager->attach('dispatch:beforeException', new BackendNotFoundPlugin);
 

@@ -15,9 +15,12 @@ class Routing extends Injectable
 
         $backend  = new Group(["module" => "backend"]);
         $frontend = new Group(["module" => "frontend"]);
-        $website  = new Group(["module" => "website"]);
+
+        $websiteBackend  = new Group(["module" => "websiteBackend"]);
+        $websiteFrontend = new Group(["module" => "websiteFrontend"]);
 
         $backend->setPrefix('/cms');
+        $websiteBackend->setPrefix('/cms');
 
         $backend->add("", [
             "controller" => "cms",
@@ -88,10 +91,15 @@ class Routing extends Injectable
         $router->mount($frontend);
         $router->mount($backend);
 
-        $this->addWebsiteRoutes($website);
+        $this->addWebsiteBackendRoutes($websiteBackend);
+        $this->addWebsiteFrontendRoutes($websiteFrontend);
 
-        if ($website->getRoutes()) {
-            $router->mount($website);
+        if ($websiteBackend->getRoutes()) {
+            $router->mount($websiteBackend);
+        }
+
+        if ($websiteFrontend->getRoutes()) {
+            $router->mount($websiteFrontend);
         }
 
         $router->notFound([
@@ -106,10 +114,18 @@ class Routing extends Injectable
     }
 
     /**
-     * @param Group $website
+     * @param Group $backend
      */
-    private function addWebsiteRoutes(Group $website)
+    private function addWebsiteBackendRoutes(Group $backend)
     {
-        return $this->websiteService->callMethod('Routing', 'addRoutes', ['website' => $website]);
+        return $this->websiteService->callMethod('Routing', 'addBackendRoutes', ['backend' => $backend]);
+    }
+
+    /**
+     * @param Group $frontend
+     */
+    private function addWebsiteFrontendRoutes(Group $frontend)
+    {
+        return $this->websiteService->callMethod('Routing', 'addFrontendRoutes', ['frontend' => $frontend]);
     }
 }

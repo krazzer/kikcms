@@ -4,38 +4,32 @@ namespace KikCMS\Modules;
 
 use KikCMS\Plugins\FrontendNotFoundPlugin;
 use Phalcon\Events\Manager;
-use Phalcon\Loader;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 class Frontend implements ModuleDefinitionInterface
 {
+    protected $defaultNamespace = "KikCMS\\Controllers";
+
     /**
-     * Register a specific autoloader for the module
-     * @param DiInterface $di
+     * @inheritdoc
      */
     public function registerAutoloaders(DiInterface $di = null)
     {
-        $loader = new Loader();
-
-        $loader->registerNamespaces([
-            "KikCMS\\Controllers" => __DIR__ . "../Controllers/",
-            "KikCMS\\Models"      => __DIR__ . "../Models/",
-        ]);
-
-        $loader->register();
+        // nothing else needed
     }
 
     /**
-     * Register specific services for the module
-     * @param DiInterface $di
+     * @inheritdoc
      */
     public function registerServices(DiInterface $di)
     {
-        $di->set("dispatcher", function () {
+        $defaultNameSpace = $this->defaultNamespace;
+
+        $di->set("dispatcher", function () use ($defaultNameSpace) {
             $dispatcher = new Dispatcher();
-            $dispatcher->setDefaultNamespace("KikCMS\\Controllers");
+            $dispatcher->setDefaultNamespace($defaultNameSpace);
 
             $eventsManager = new Manager;
             $eventsManager->attach('dispatch:beforeException', new FrontendNotFoundPlugin());
