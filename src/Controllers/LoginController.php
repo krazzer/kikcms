@@ -28,6 +28,8 @@ class LoginController extends BaseController
         }
 
         $this->view->form = $loginForm;
+
+        return null;
     }
 
     public function resetAction()
