@@ -23,6 +23,6 @@ class UserForm extends DataForm
     protected function initialize()
     {
         $this->addTextField(User::FIELD_EMAIL, $this->translator->tl('fields.email'), [new Email()]);
-        $this->addCheckboxField(User::FIELD_ACTIVE, $this->translator->tl('fields.active'));
+        $this->addCheckboxField(User::FIELD_BLOCKED, $this->translator->tl('fields.blocked'));
     }
 }

@@ -168,6 +168,7 @@ return [
         'active'         => 'Actief',
         'advanced'       => 'Geavanceerd',
         'allFields'      => 'Alle velden',
+        'blocked'        => 'Geblokkeerd',
         'code'           => 'Code',
         'email'          => 'E-Mail adres',
         'file'           => 'Bestand',
@@ -194,6 +195,7 @@ return [
     'login' => [
         'logout'   => 'U bent succesvol uitgelogd',
         'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
+        'blocked'  => 'U kunt niet inloggen omdat uw account is geblokkeerd.',
         'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
         'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
 

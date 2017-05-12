@@ -15,7 +15,7 @@ class User extends Model
     const FIELD_ID         = 'id';
     const FIELD_EMAIL      = 'email';
     const FIELD_PASSWORD   = 'password';
-    const FIELD_ACTIVE     = 'active';
+    const FIELD_BLOCKED    = 'blocked';
     const FIELD_CREATED_AT = 'created_at';
 
     /**

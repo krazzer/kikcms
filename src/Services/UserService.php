@@ -61,13 +61,10 @@ class UserService extends Injectable
 
         if (password_verify($password, $user->password)) {
             if ( ! password_needs_rehash($user->password, PASSWORD_DEFAULT)) {
-                $this->setLoggedIn($user->id);
                 return true;
             }
 
             $this->storePassword($user, $password);
-            $this->setLoggedIn($user->id);
-
             return true;
         }
 
@@ -106,7 +103,7 @@ class UserService extends Injectable
     /**
      * @param $id
      */
-    private function setLoggedIn(int $id)
+    public function setLoggedIn(int $id)
     {
         $user = User::getById($id);
 

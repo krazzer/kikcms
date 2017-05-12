@@ -17,7 +17,7 @@ class Users extends DataTable
         return parent::getDefaultQuery()->columns([
             User::FIELD_ID,
             User::FIELD_EMAIL,
-            User::FIELD_ACTIVE
+            User::FIELD_BLOCKED
         ]);
     }
 
@@ -54,9 +54,9 @@ class Users extends DataTable
     protected function getTableFieldMap(): array
     {
         return [
-            User::FIELD_ID     => $this->translator->tl('fields.id'),
-            User::FIELD_EMAIL  => $this->translator->tl('fields.email'),
-            User::FIELD_ACTIVE => $this->translator->tl('fields.active'),
+            User::FIELD_ID      => $this->translator->tl('fields.id'),
+            User::FIELD_EMAIL   => $this->translator->tl('fields.email'),
+            User::FIELD_BLOCKED => $this->translator->tl('fields.blocked'),
         ];
     }
 
@@ -65,10 +65,8 @@ class Users extends DataTable
      */
     protected function initialize()
     {
-        $this->setFieldFormatting(User::FIELD_ACTIVE, function($value){
-            return $value == 1 ?
-                '<span style="color: green;" class="glyphicon glyphicon-ok"></span>' :
-                '<span style="color: #A00000;" class="glyphicon glyphicon-remove"></span>';
+        $this->setFieldFormatting(User::FIELD_BLOCKED, function($value){
+            return $value == 1 ? '<span style="color: #A00000;" class="glyphicon glyphicon-ban-circle"></span>' : '';
         });
 
         $this->addTableButton('glyphicon glyphicon-link', $this->translator->tl('dataTables.users.activationLink'), 'link');

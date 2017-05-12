@@ -21,7 +21,13 @@ class LoginController extends BaseController
 {
     public function indexAction()
     {
-        $this->view->form = (new LoginForm())->render();
+        $loginForm = (new LoginForm())->render();
+
+        if ($loginForm instanceof Response) {
+            return $loginForm;
+        }
+
+        $this->view->form = $loginForm;
     }
 
     public function resetAction()
