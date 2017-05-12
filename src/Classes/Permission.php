@@ -4,6 +4,8 @@ namespace KikCMS\Classes;
 
 
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\DataTables\Languages;
+use KikCMS\DataTables\Templates;
 use KikCMS\Services\UserService;
 use Phalcon\Acl;
 use Phalcon\Acl\Resource;
@@ -49,13 +51,7 @@ class Permission extends Injectable
         $acl->addRole(new Role(self::USER));
         $acl->addRole(new Role(self::CLIENT));
 
-        $acl->addResource(new Resource(self::ACCESS_DATATABLES), '*');
-
-        //allow datatable access for anyone except visitors
-        $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, '*');
-        $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, '*');
-        $acl->allow(self::USER, self::ACCESS_DATATABLES, '*');
-        $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, '*');
+        $this->addDataTablePermissions($acl);
 
         $this->persistent->acl = $acl;
 
@@ -76,5 +72,25 @@ class Permission extends Injectable
         }
 
         return $role;
+    }
+
+    /**
+     * @param AccessControl $acl
+     */
+    private function addDataTablePermissions(AccessControl $acl)
+    {
+        $acl->addResource(new Resource(self::ACCESS_DATATABLES), '*');
+
+        $acl->addResource(Languages::class, '*');
+        $acl->addResource(Templates::class, '*');
+
+        //allow datatable access for anyone except visitors
+        $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::USER, self::ACCESS_DATATABLES, '*');
+        $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, '*');
+
+        $acl->allow(self::DEVELOPER, Templates::class, '*');
+        $acl->allow(self::DEVELOPER, Languages::class, '*');
     }
 }
