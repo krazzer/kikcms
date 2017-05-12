@@ -391,8 +391,10 @@ abstract class DataTable extends Renderable
         return $this->view->getPartial($this->indexView, [
             'tableData'       => $this->getTableData(),
             'jsData'          => $this->getJsData(),
+            'editLabel'       => $this->getEditLabel(),
             'currentLangCode' => $this->getFilters()->getLanguageCode(),
             'languages'       => $this->languageService->getLanguages(),
+            'sortLabel'       => $this->translator->tl('dataTable.sort'),
             'fieldFormatting' => $this->fieldFormatting,
             'self'            => $this,
         ]);
@@ -454,6 +456,8 @@ abstract class DataTable extends Renderable
 
         return $this->view->getPartial($this->tableView, [
             'tableData'       => $this->getTableData(),
+            'editLabel'       => $this->getEditLabel(),
+            'sortLabel'       => $this->translator->tl('dataTable.sort'),
             'fieldFormatting' => $this->fieldFormatting,
             'self'            => $this,
         ]);
@@ -621,6 +625,14 @@ abstract class DataTable extends Renderable
     protected function getTableFieldMap(): array
     {
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    private function getEditLabel(): string
+    {
+        return ucfirst($this->translator->tl('dataTable.edit', ['itemSingular' => $this->getLabels()[0]]));
     }
 
     /**

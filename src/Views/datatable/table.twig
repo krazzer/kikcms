@@ -48,7 +48,7 @@
                 {% endfor %}
 
                 {% if self.sortable %}
-                    <td class="action sort" title="{{ tl('dataTable.sort') }}">
+                    <td class="action sort" title="{{ sortLabel }}">
                         <span class="glyphicon glyphicon-menu-hamburger"></span>
                     </td>
                 {% endif %}
@@ -62,7 +62,7 @@
                 {% endblock %}
 
                 {% block actionEditColumn %}
-                    <td class="action edit" title="{{ tl('dataTable.edit', {itemSingular: self.labels[0]})|capitalize }}">
+                    <td class="action edit" title="{{ editLabel }}">
                         <input type="hidden" name="id" value="{{ row.id }}">
                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                     </td>
