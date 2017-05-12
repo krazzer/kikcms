@@ -65,4 +65,18 @@ textarea.form-control{
     &.required label:after{
         content: ' *';
     }
+
+    &.type-checkbox{
+
+        .checkbox{
+            margin: 10px 0;
+        }
+    }
+
+    &.type-checkbox ~ &.type-checkbox{
+
+        .checkbox{
+            margin: 0 0 10px 0;
+        }
+    }
 }

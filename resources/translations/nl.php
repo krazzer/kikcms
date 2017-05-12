@@ -3,6 +3,13 @@
 return [
     'cms' => [
         'loading' => 'Bezig met laden...',
+        'roles'   => [
+            'developer' => 'Developer',
+            'admin'     => 'Administrator',
+            'user'      => 'Gebruiker',
+            'client'    => 'Klant',
+            'visitor'   => 'Bezoeker',
+        ],
     ],
 
     'contentTypes' => [
@@ -178,6 +185,7 @@ return [
         'languages'      => 'Talen',
         'multilingual'   => 'Meertalig',
         'name'           => 'Naam',
+        'role'           => 'Rol',
         'template'       => 'Template',
         'templateFields' => 'Template velden',
         'templates'      => 'Templates',

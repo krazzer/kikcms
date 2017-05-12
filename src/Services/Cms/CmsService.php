@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Cms;
 
 
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
 use KikCMS\Services\Website\WebsiteService;
@@ -34,6 +35,27 @@ class CmsService extends Injectable
         }
 
         return $this->websiteService->callMethod('CmsMenu', 'getMenuGroups', [$groups], false, $groups);
+    }
+
+    /**
+     * Get roles mapped. [roleKey => translatedRoleName]
+     *
+     * @param bool $removeVisitorRole
+     * @return array
+     */
+    public function getRoleMap($removeVisitorRole = true): array
+    {
+        $roleMap = [];
+
+        foreach (Permission::ROLES as $roleKey){
+            $roleMap[$roleKey] = $this->translator->tl('cms.roles.' . $roleKey);
+        }
+
+        if($removeVisitorRole){
+            unset($roleMap[Permission::VISITOR]);
+        }
+
+        return $roleMap;
     }
 
     /**
