@@ -43,6 +43,12 @@ class Pages extends DataTable
     /** @inheritdoc */
     public $tableView = 'datatables/page/table';
 
+    /** @var string */
+    private $linkTitle;
+
+    /** @var string */
+    private $inactiveTitle;
+
     protected function addAssets()
     {
         parent::addAssets();
@@ -61,7 +67,7 @@ class Pages extends DataTable
         foreach ($ids as $pageId) {
             $page = Page::getById($pageId);
 
-            if( ! $page){
+            if ( ! $page) {
                 continue;
             }
 
@@ -196,8 +202,10 @@ class Pages extends DataTable
      */
     protected function initialize()
     {
+        $this->linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
+        $this->inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
+
         $this->setFieldFormatting('name', [$this, 'formatName']);
-        $this->setFieldFormatting('type', [$this, 'formatType']);
 
         $this->addTableButton('eye-open', $this->translator->tl('dataTables.pages.preview'), 'preview');
     }
@@ -218,26 +226,14 @@ class Pages extends DataTable
             return $value;
         }
 
-        $linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
-        $inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
-
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
-            $value = '<span class="glyphicon glyphicon-link" title="' . $linkTitle . '"></span> ' . $value;
+            $value = '<span class="glyphicon glyphicon-link" title="' . $this->linkTitle . '"></span> ' . $value;
         }
 
         if ( ! $rowData[PageLanguage::FIELD_ACTIVE] && $rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE) {
-            $value = '<span class="glyphicon glyphicon-eye-close" title="' . $inactiveTitle . '"></span> ' . $value;
+            $value = '<span class="glyphicon glyphicon-eye-close" title="' . $this->inactiveTitle . '"></span> ' . $value;
         }
 
         return '<span class="name">' . $value . '</span>';
-    }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    protected function formatType($value)
-    {
-        return $this->translator->tl('dataTables.pages.' . $value);
     }
 }
