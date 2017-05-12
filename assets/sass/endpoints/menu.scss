@@ -1,13 +1,16 @@
 @import '../includes/variables';
 @import '../includes/mixins';
 
+$menuBackGroundColor: $superLightGray;
+
 #menu{
     padding: 50px;
     width: 258px;
     height: 100%;
     overflow: auto;
     position: fixed;
-    background-color: #fff;
+    z-index: 1;
+    background-color: $menuBackGroundColor;
 
     .logo{
         background: url('/cmsassets/images/kikcms.png') no-repeat;
@@ -37,8 +40,8 @@
         color: #000;
         border-radius: $defaultBorderRadius;
         line-height: 14px;
-        border-top: 1px solid #ffffff;
-        border-bottom: 1px solid #ffffff;
+        border-top: 1px solid $menuBackGroundColor;
+        border-bottom: 1px solid $menuBackGroundColor;
 
         &.selected{
             background-color: $colorPink;
