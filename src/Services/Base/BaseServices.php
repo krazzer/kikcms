@@ -77,7 +77,7 @@ class BaseServices extends ApplicationServices
             return;
         }
 
-        $this->set('modelsMetaData', function (){
+        $this->set('modelsMetadata', function (){
             return new Files([
                 "lifetime"    => 86400,
                 "metaDataDir" => SITE_PATH . "/cache/metadata/"
