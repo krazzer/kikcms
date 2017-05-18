@@ -107,7 +107,7 @@ abstract class WebForm extends Renderable
      */
     public function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=3');
+        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=1.020');
         $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {

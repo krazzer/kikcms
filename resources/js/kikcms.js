@@ -1,4 +1,5 @@
 var KikCmsClass = Class.extend({
+    baseUri: null,
     translations: {},
     errorMessages: {},
     isDev: false,
@@ -7,8 +8,10 @@ var KikCmsClass = Class.extend({
     maxFileSizeString: null,
     renderables: [],
 
-    initRenderables: function () {
+    initRenderables: function (parentClass) {
         var self = this;
+
+        parentClass = typeof parentClass !== 'undefined' ? parentClass : null;
 
         $('[data-renderable]').each(function () {
             var $renderable = $(this);
@@ -24,6 +27,10 @@ var KikCmsClass = Class.extend({
                 renderableObject[key] = value;
             });
 
+            if(parentClass){
+                renderableObject.parent = parentClass;
+            }
+
             renderableObject.init();
 
             $renderable.attr('data-rendered', true);
@@ -31,10 +38,12 @@ var KikCmsClass = Class.extend({
         });
     },
 
-    action: function (actionUrl, parameters, onSuccess, onError, xhr) {
+    action: function (actionUrl, parameters, onSuccess, onError, xhr, parentClass) {
         var ajaxCompleted = false;
         var self          = this;
         var retries       = 0;
+
+        parentClass = typeof parentClass !== 'undefined' ? parentClass : null;
 
         setTimeout(function () {
             if (ajaxCompleted == false) {
@@ -46,7 +55,6 @@ var KikCmsClass = Class.extend({
             url: actionUrl,
             type: 'post',
             dataType: 'json',
-            xhr: xhr,
             data: parameters,
             success: function (result, responseText, response) {
                 ajaxCompleted = true;
@@ -54,7 +62,7 @@ var KikCmsClass = Class.extend({
 
                 onSuccess(result, responseText, response);
 
-                self.initRenderables();
+                self.initRenderables(parentClass);
             },
             error: function (result) {
                 // try again on connection failure
@@ -69,10 +77,12 @@ var KikCmsClass = Class.extend({
             }
         };
 
-        if (typeof xhr !== 'undefined') {
+        if (typeof xhr !== 'undefined' && xhr) {
             ajaxRequestSettings.cache       = false;
             ajaxRequestSettings.contentType = false;
             ajaxRequestSettings.processData = false;
+
+            ajaxRequestSettings.xhr = xhr;
         }
 
         var xmlHttpRequest = function () {

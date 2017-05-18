@@ -5,9 +5,11 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Translator;
 use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\Url;
 
 /**
  * @property Translator $translator
+ * @property Url $url
  */
 class BaseController extends Controller
 {
@@ -22,6 +24,7 @@ class BaseController extends Controller
         $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
         $this->view->setVar("jsTranslations", array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']));
         $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
+        $this->view->setVar("baseUri", $this->url->getBaseUri());
 
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);

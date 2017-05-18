@@ -151,19 +151,38 @@ class UrlService extends Injectable
 
     /**
      * @param int $pageId
+     * @param string $languageCode
+     *
      * @return string
      * @throws Exception
      */
-    public function getUrlByPageId(int $pageId): string
+    public function getUrlByPageId(int $pageId, string $languageCode): string
     {
-        $langCode     = $this->translator->getLanguageCode();
-        $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $langCode);
+        $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
         if ( ! $pageLanguage) {
             throw new Exception("No page found in the current language for page id " . $pageId);
         }
 
         return $this->getUrlByPageLanguage($pageLanguage);
+    }
+
+    /**
+     * Get an array with all pages' id, title, url, type for a certain language
+     *
+     * @param string $languageCode
+     * @return array
+     */
+    public function getUrlData(string $languageCode): array
+    {
+        $pageUrlDataQuery = (new Builder())
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'p.id = pl.page_id', 'p')
+            ->where('pl.language_code = :langCode:', ['langCode' => $languageCode])
+            ->columns(['p.id', 'p.parent_id', 'pl.name', 'pl.url', 'p.type'])
+            ->orderBy('p.lft');
+
+        return $pageUrlDataQuery->getQuery()->execute()->toArray();
     }
 
     /**

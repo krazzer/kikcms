@@ -36,6 +36,7 @@ class Routing extends Injectable
         $backend->add('/stats/sources', "Cms::statsSources");
 
         $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
+        $backend->add("/getTinyMceLinks/{languageCode:[a-z]+}", "Cms::getTinyMceLinks");
 
         $backend->add("/login", [
             "controller" => "login",

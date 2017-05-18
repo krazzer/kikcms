@@ -44,8 +44,8 @@ class FrontendHelper extends Injectable
     {
         $cacheKey = CacheConfig::MENU . ':' . $menuId . $this->languageCode;
 
-        return $this->cacheService->cache($cacheKey, function() use ($menuId, $maxLevel){
-            if ( ! $menu = Page::getById($menuId)){
+        return $this->cacheService->cache($cacheKey, function () use ($menuId, $maxLevel) {
+            if ( ! $menu = Page::getById($menuId)) {
                 return '';
             }
 
@@ -72,7 +72,9 @@ class FrontendHelper extends Injectable
      */
     public function getUrl(int $pageId): string
     {
-        return $this->urlService->getUrlByPageId($pageId);
+        $langCode = $this->translator->getLanguageCode();
+
+        return $this->urlService->getUrlByPageId($pageId, $langCode);
     }
 
     /**
@@ -92,7 +94,7 @@ class FrontendHelper extends Injectable
                 continue;
             }
 
-            if( ! array_key_exists($page->getId(), $pageLanguageMap)){
+            if ( ! array_key_exists($page->getId(), $pageLanguageMap)) {
                 continue;
             }
 
@@ -100,7 +102,7 @@ class FrontendHelper extends Injectable
 
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
-            if($maxLevel && (int) $page->level === (int) $parentPage->level + $maxLevel){
+            if ($maxLevel && (int) $page->level === (int) $parentPage->level + $maxLevel) {
                 $subMenuOutput = '';
             } else {
                 $subMenuOutput = $this->buildMenu($page, $pageMap, $pageLanguageMap, $maxLevel);

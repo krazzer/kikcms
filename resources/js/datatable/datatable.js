@@ -128,7 +128,9 @@ var DataTable = Class.extend({
                 self.getWindow().find('.saveAndClose').addClass('active');
                 e.preventDefault();
             }
+        };
 
+        var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
                 if (self.getWindow().hasClass('blur') || ! self.getForm().length) {
                     return true;
@@ -159,6 +161,7 @@ var DataTable = Class.extend({
         checkIframe();
 
         $(window).keydown(keyDownEvent);
+        $(window).keypress(keyPressEvent);
     },
 
     initLanguageSwitch: function () {
@@ -337,7 +340,7 @@ var DataTable = Class.extend({
     action: function (action, parameters, onSuccess, onError) {
         parameters = this.addActionParameters(parameters);
 
-        KikCMS.action(this.actionPath + action, parameters, onSuccess, onError);
+        KikCMS.action(this.actionPath + action, parameters, onSuccess, onError, null, this);
     },
 
     actionAdd: function (extraParams) {
@@ -603,16 +606,11 @@ var DataTable = Class.extend({
             filters.sortColumn    = $(this).attr('data-column');
         });
 
-        var $tableLanguageSelect = this.getDataTable().find('.toolbar .language select');
+        var languageCode = this.getLanguageCode();
 
-        $tableLanguageSelect.each(function () {
-            filters.languageCode = $(this).val();
-        });
-
-        this.getWindow().find('.header select[name=language]').each(function () {
-            filters.languageCode = $(this).val();
-            $tableLanguageSelect.val($(this).val());
-        });
+        if(languageCode){
+            filters.languageCode = languageCode;
+        }
 
         filters.customFilterValues = this.getFilterForm().find(':input').serializeObject();
 
@@ -625,6 +623,23 @@ var DataTable = Class.extend({
 
     getForm: function () {
         return this.getWindow().find('form');
+    },
+
+    getLanguageCode: function () {
+        var languageCode = null;
+
+        var $tableLanguageSelect = this.getDataTable().find('.toolbar .language select');
+
+        $tableLanguageSelect.each(function () {
+            languageCode = $(this).val();
+        });
+
+        this.getWindow().find('.header select[name=language]').each(function () {
+            languageCode = $(this).val();
+            $tableLanguageSelect.val($(this).val());
+        });
+
+        return languageCode;
     },
 
     getSearchField: function () {

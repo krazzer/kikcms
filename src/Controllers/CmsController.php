@@ -10,6 +10,7 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
@@ -22,6 +23,7 @@ use Phalcon\Http\Response;
  * @property UrlService $urlService
  * @property Translator $translator
  * @property LanguageService $languageService
+ * @property TinyMceService $tinyMceService
  */
 class CmsController extends BaseCmsController
 {
@@ -91,6 +93,13 @@ class CmsController extends BaseCmsController
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
         $this->response->redirect($url);
+    }
+
+    public function getTinyMceLinksAction($languageCode = null)
+    {
+        $languageCode = $languageCode ? $languageCode : $this->languageService->getDefaultLanguageCode();
+
+        echo json_encode($this->tinyMceService->getLinkList($languageCode));
     }
 
     public function getTranslationsForKeyAction()

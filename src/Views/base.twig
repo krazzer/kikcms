@@ -37,6 +37,7 @@
     KikCMS.maxFileUploads    = {{ maxFileUploads }};
     KikCMS.maxFileSize       = {{ maxFileSize }};
     KikCMS.maxFileSizeString = '{{ maxFileSizeString }}';
+    KikCMS.baseUri           = '{{ baseUri }}';
 
     {% for key in jsTranslations %}
     KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};

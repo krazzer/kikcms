@@ -1,6 +1,7 @@
 var WebForm = Class.extend({
     renderableInstance: null,
     renderableClass: null,
+    parent: null,
 
     actionGetFinder: function ($field) {
         var self              = this;
@@ -180,6 +181,9 @@ var WebForm = Class.extend({
             language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
             language: KikCMS.tl('system.langCode'),
             theme: 'modern',
+            relative_urls : false,
+            remove_script_host : true,
+            document_base_url : KikCMS.baseUri,
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
                 'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
@@ -188,7 +192,8 @@ var WebForm = Class.extend({
             toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
             ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
             image_advtab: true,
-            content_css: ['/cmsassets/css/tinymce/content.css']
+            content_css: ['/cmsassets/css/tinymce/content.css'],
+            link_list: this.getLinkListUrl()
         });
     },
 
@@ -226,6 +231,22 @@ var WebForm = Class.extend({
         } else {
             this.initTinyMCE();
         }
+    },
+
+    getLinkListUrl: function () {
+        var linkListUrl = '/cms/getTinyMceLinks/';
+
+        if( ! this.parent) {
+            return linkListUrl;
+        }
+
+        var languageCode = this.parent.getLanguageCode();
+
+        if( ! languageCode) {
+            return linkListUrl;
+        }
+
+        return linkListUrl + this.parent.getLanguageCode() + '/';
     },
 
     getWysiwygSelector: function () {
