@@ -283,6 +283,10 @@ return [
             'wilt u zeker weten doorgaan?',
     ],
 
+    'permissions' => [
+        'editMenus' => "U kunt geen menu's bewerken",
+    ],
+
     'system' => [
         'langCode'           => 'nl',
         'phpDateFormat'      => 'd-m-Y',

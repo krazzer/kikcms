@@ -4,6 +4,8 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
 use KikCMS\Forms\LinkForm;
@@ -19,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 /**
  * @property PageRearrangeService $pageRearrangeService
  * @property Translator $translator
+ * @property AccessControl $acl
  */
 class Pages extends DataTable
 {
@@ -69,6 +72,10 @@ class Pages extends DataTable
 
             if ( ! $page) {
                 continue;
+            }
+
+            if( ! $this->acl->allowed(Permission::EDIT_MENUS) && $page->type == Page::TYPE_MENU){
+                return;
             }
 
             parent::delete([$pageId]);

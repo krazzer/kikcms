@@ -24,6 +24,7 @@ class Permission extends Injectable
     const VISITOR   = 'visitor';
 
     const ACCESS_DATATABLES = 'AccessDataTables';
+    const EDIT_MENUS = 'editMenus';
 
     const ROLES = [
         self::DEVELOPER,
@@ -52,6 +53,7 @@ class Permission extends Injectable
         $acl->addRole(new Role(self::CLIENT));
 
         $this->addDataTablePermissions($acl);
+        $this->addMenuPermissions($acl);
 
         $this->persistent->acl = $acl;
 
@@ -84,7 +86,6 @@ class Permission extends Injectable
         $acl->addResource(Languages::class, '*');
         $acl->addResource(Templates::class, '*');
 
-        //allow datatable access for anyone except visitors
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, '*');
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, '*');
         $acl->allow(self::USER, self::ACCESS_DATATABLES, '*');
@@ -92,5 +93,15 @@ class Permission extends Injectable
 
         $acl->allow(self::DEVELOPER, Templates::class, '*');
         $acl->allow(self::DEVELOPER, Languages::class, '*');
+    }
+
+    /**
+     * @param AccessControl $acl
+     */
+    private function addMenuPermissions(AccessControl $acl)
+    {
+        $acl->addResource(new Resource(self::EDIT_MENUS), '*');
+
+        $acl->allow(self::DEVELOPER, self::EDIT_MENUS, '*');
     }
 }

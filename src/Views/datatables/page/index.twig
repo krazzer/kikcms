@@ -18,11 +18,13 @@
                     <span class="glyphicon glyphicon-link"></span>{{ tl('dataTables.pages.link') }}
                 </a>
             </li>
-            <li>
-                <a data-type="menu">
-                    <span class="glyphicon glyphicon-menu-hamburger"></span>{{ tl('dataTables.pages.menu') }}
-                </a>
-            </li>
+            {% if allowed('editMenus') %}
+                <li>
+                    <a data-type="menu">
+                        <span class="glyphicon glyphicon-menu-hamburger"></span>{{ tl('dataTables.pages.menu') }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
 
     </div>

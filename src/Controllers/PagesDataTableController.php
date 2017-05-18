@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\DataTables\Pages;
@@ -41,11 +42,11 @@ class PagesDataTableController extends DataTableController
         $page       = Page::getById($pageId);
         $targetPage = Page::getById($targetPageId);
 
-        $this->pageRearrangeService->rearrange($page, $targetPage, $rearrange);
+        if($this->acl->allowed(Permission::EDIT_MENUS) || $page->type != Page::TYPE_MENU){
+            $this->pageRearrangeService->rearrange($page, $targetPage, $rearrange);
+        }
 
-        $dataTable = $this->getRenderable();
-
-        return json_encode(['table' => $dataTable->renderTable()]);
+        return json_encode(['table' => $this->getRenderable()->renderTable()]);
     }
 
     /**

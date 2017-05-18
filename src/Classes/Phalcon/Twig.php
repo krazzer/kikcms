@@ -94,6 +94,9 @@ class Twig extends Engine implements EngineInterface
         $options = ['is_safe' => ['html']];
 
         $functions = [
+            new \Twig_SimpleFunction('allowed', function ($resourceName, $access = '*', array $parameters = null) use ($di) {
+                return $di->get("acl")->allowed($resourceName, $access, $parameters);
+            }, $options),
             new \Twig_SimpleFunction('content', function () use ($view) {
                 return $view->getContent();
             }, $options),

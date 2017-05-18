@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
@@ -100,6 +101,10 @@ class PageForm extends DataForm
     public function validate(array $input): ErrorContainer
     {
         $errorContainer = parent::validate($input);
+
+        if($input['type'] == Page::TYPE_MENU && ! $this->acl->allowed(Permission::EDIT_MENUS)){
+            $errorContainer->addFormError($this->translator->tl('permissions.editMenus'));
+        }
 
         if($input['type'] !== Page::TYPE_PAGE){
             return $errorContainer;
