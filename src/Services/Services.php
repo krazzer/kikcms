@@ -95,6 +95,23 @@ class Services extends BaseServices
     }
 
     /**
+     * @return \Google_Service_AnalyticsReporting
+     */
+    protected function initAnalytics()
+    {
+        $keyFileLocation = SITE_PATH . 'config/service-account-credentials.json';
+
+        // Create and configure a new client object.
+        $client = new \Google_Client();
+        $client->setApplicationName("Analytics");
+        $client->setAuthConfig($keyFileLocation);
+        $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
+        $analytics = new \Google_Service_AnalyticsReporting($client);
+
+        return $analytics;
+    }
+
+    /**
      * @return Backend|false
      */
     protected function initCache()
