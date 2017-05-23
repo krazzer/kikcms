@@ -259,6 +259,12 @@ return [
         ],
     ],
 
+    'mailForm' => [
+        'sendSuccess' => 'Het formulier is succesvol verzonden',
+        'sendFail'    => 'Er is iets mis gegaan bij het verzenden van het formulier',
+        'subject'     => 'Contactformulier',
+    ],
+
     'menu' => [
         'group' => [
             'content' => 'Content',

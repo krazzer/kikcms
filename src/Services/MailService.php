@@ -87,9 +87,9 @@ class MailService extends Injectable
      */
     public function sendServiceMail($to, string $subject, string $body, array $parameters = []): int
     {
-        $webmasterEmail = $this->applicationConfig->webmasterEmail;
-        $webmasterName  = $this->applicationConfig->webmasterName;
+        $developerEmail = $this->applicationConfig->developerEmail;
+        $developerName  = $this->applicationConfig->developerName;
 
-        return $this->sendMail([$webmasterEmail => $webmasterName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
+        return $this->sendMail([$developerEmail => $developerName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
     }
 }

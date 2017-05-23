@@ -244,10 +244,10 @@ class Services extends BaseServices
         $logger = new Logger('logger');
 
         if ($isProduction) {
-            $webmasterEmail = $this->getApplicationConfig()->webmasterEmail;
+            $developerEmail = $this->getApplicationConfig()->developerEmail;
             $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
-            $handler = new NativeMailerHandler($webmasterEmail, 'Error', $errorFromMail, Logger::NOTICE);
+            $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);
             $handler->setContentType('text/html');
             $handler->setFormatter(new HtmlFormatter());
 

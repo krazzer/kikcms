@@ -4,7 +4,13 @@ namespace KikCMS\Services\Website;
 
 
 use Exception;
+use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Services\Pages\PageContentService;
+use Phalcon\Http\Response;
 
+/**
+ * @property PageContentService
+ */
 class WebsiteService
 {
     /**
@@ -19,7 +25,7 @@ class WebsiteService
      * @return mixed
      * @throws Exception
      */
-    public function callMethod($className, $methodName, array $arguments = [], $exceptionOnFail = false, $returnOnFail = false)
+    public function callMethod(string $className, $methodName, array $arguments = [], $exceptionOnFail = false, $returnOnFail = false)
     {
         $className  = 'Website\\Classes\\' . $className;
 
@@ -42,5 +48,63 @@ class WebsiteService
         }
 
         return call_user_func_array(array($object, $methodName), $arguments);
+    }
+
+    /**
+     * Look inside the page's variables for form tags that need to be replaced.
+     * This could mean a form is found that is send and needs to redirect. The redirect response will be returned if so.
+     *
+     * @param $variables
+     * @return array|Response
+     */
+    public function getForms(array $variables)
+    {
+        foreach ($variables as $index => $variable){
+            if( ! is_string($variable)){
+                continue;
+            }
+
+            if( ! preg_match_all('/\{{ form\.([a-zA-Z0-9]+) }}/i', $variable, $matches)){
+                continue;
+            }
+
+            $formClass = 'Website\\Forms\\' . $matches[1][0];
+
+            if( ! class_exists($formClass)){
+                continue;
+            }
+
+            /** @var WebForm $formObject */
+            $formObject = new $formClass();
+            $renderedForm = $formObject->render();
+
+            if($renderedForm instanceof Response){
+                return $renderedForm;
+            }
+
+            $variables[$index] = str_replace($matches[0][0], $renderedForm, $variable);
+        }
+
+        return $variables;
+    }
+
+    /**
+     * @param string $templateFile
+     * @return array
+     */
+    public function getWebsiteTemplateVariables(string $templateFile): array
+    {
+        $methodName = 'get' . ucfirst($templateFile) . 'Variables';
+
+        return $this->callMethod('TemplateVariables', $methodName, [], false, []);
+    }
+
+    /**
+     * @param array $variables
+     * @return array
+     */
+    public function getWebsiteVariables(array $variables): array
+    {
+        return $this->callMethod('TemplateVariables', 'getVariables', [$variables], false, $variables);
     }
 }

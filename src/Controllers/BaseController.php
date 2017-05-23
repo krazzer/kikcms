@@ -21,7 +21,7 @@ class BaseController extends Controller
         $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
 
         $this->view->setVar("flash", $this->flash);
-        $this->view->setVar("webmasterEmail", $this->applicationConfig->webmasterEmail);
+        $this->view->setVar("developerEmail", $this->applicationConfig->developerEmail);
         $this->view->setVar("jsTranslations", array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']));
         $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
         $this->view->setVar("baseUri", $this->url->getBaseUri());

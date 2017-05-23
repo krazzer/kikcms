@@ -11,6 +11,7 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\WebsiteService;
+use Phalcon\Http\Response;
 
 /**
  * @property PageService $pageService
@@ -58,43 +59,36 @@ class FrontendController extends BaseController
     }
 
     /**
-     * @param string $templateFile
-     * @return array
-     */
-    private function getWebsiteTemplateVariables(string $templateFile): array
-    {
-        $methodName = 'get' . ucfirst($templateFile) . 'Variables';
-
-        return $this->websiteService->callMethod('TemplateVariables', $methodName, [], false, []);
-    }
-
-    /**
-     * @param array $variables
-     * @return array
-     */
-    private function getWebsiteVariables(array $variables): array
-    {
-        return $this->websiteService->callMethod('TemplateVariables', 'getVariables', [$variables], false, $variables);
-    }
-
-    /**
      * @param PageLanguage $pageLanguage
+     * @return null|Response
      */
     private function loadPage(PageLanguage $pageLanguage)
     {
         $languageCode   = $pageLanguage->language_code;
         $frontendHelper = new FrontendHelper($languageCode);
-        $variables      = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
         $templateFile   = $pageLanguage->page->template->file;
 
+        $variables         = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $websiteVariables  = $this->websiteService->getWebsiteVariables($variables);
+        $templateVariables = $this->websiteService->getWebsiteTemplateVariables($templateFile);
+
         $this->translator->setLanguageCode($languageCode);
+
+        $variables = array_merge($websiteVariables, $templateVariables);
+        $variables = $this->websiteService->getForms($variables);
+
+        // in case a form has been send, it might want to redirect
+        if($variables instanceof Response){
+            return $variables;
+        }
 
         $this->view->title        = $pageLanguage->name;
         $this->view->languageCode = $languageCode;
         $this->view->helper       = $frontendHelper;
 
-        $this->view->setVars($this->getWebsiteVariables($variables));
-        $this->view->setVars($this->getWebsiteTemplateVariables($templateFile), true);
+        $this->view->setVars($variables);
         $this->view->pick('@website/templates/' . $templateFile);
+
+        return null;
     }
 }

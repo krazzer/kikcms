@@ -8,6 +8,7 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\LanguageService;
 use KikCMS\Services\TranslationService;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
@@ -18,6 +19,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property CacheService $cacheService
  * @property Backend $cache
+ * @property LanguageService $languageService
  */
 class Translator extends Injectable
 {
@@ -137,6 +139,25 @@ class Translator extends Injectable
     public function getWebsiteTranslations(): array
     {
         return $this->getByFile(SITE_PATH . 'resources/translations/' . $this->getLanguageCode() . '.php');
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public function translateDefaultLanguage(string $string): string
+    {
+        $currentLanguageCode = $this->getLanguageCode();
+
+        $this->setLanguageCode($this->languageService->getDefaultLanguageCode());
+
+        $translation = $this->tl($string);
+
+        $this->setLanguageCode($currentLanguageCode);
+
+        return $translation;
+
     }
 
     /**

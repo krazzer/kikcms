@@ -57,8 +57,8 @@ class DeployService extends Injectable
         $serverName  = $_SERVER['SERVER_NAME'];
         $serverEmail = $_SERVER['SERVER_ADMIN'];
 
-        $webmasterEmail = $this->applicationConfig->webmasterEmail;
-        $webmasterName  = $this->applicationConfig->webmasterName;
+        $developerEmail = $this->applicationConfig->developerEmail;
+        $developerName  = $this->applicationConfig->developerName;
 
         $subject = 'Deploy op ' . $hostName;
         $body    = 'Deploy uitgevoerd op ' . $hostName . " gaf de volgende output:\n\n" . $this->flattenOutput($output);
@@ -66,7 +66,7 @@ class DeployService extends Injectable
         $message = $this->mailService->createMessage()
             ->setSubject($subject)
             ->setFrom([$serverEmail => $serverName])
-            ->setTo([$webmasterEmail => $webmasterName])
+            ->setTo([$developerEmail => $developerName])
             ->setBody($body);
 
         $this->mailService->send($message);
