@@ -9,6 +9,7 @@ use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\LanguageService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -16,6 +17,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property CacheService $cacheService
  * @property PageLanguageService $pageLanguageService
+ * @property LanguageService $languageService
  */
 class UrlService extends Injectable
 {
@@ -175,10 +177,15 @@ class UrlService extends Injectable
      */
     public function getUrlData(string $languageCode): array
     {
+        $defaultLangCode = $this->languageService->getDefaultLanguageCode();
+
         $pageUrlDataQuery = (new Builder())
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->where('pl.language_code = :langCode:', ['langCode' => $languageCode])
+            ->where('pl.language_code = IF(p.type = "menu", :defaultLangCode:, :langCode:)', [
+                'langCode'        => $languageCode,
+                'defaultLangCode' => $defaultLangCode,
+            ])
             ->columns(['p.id', 'p.parent_id', 'pl.name', 'pl.url', 'p.type'])
             ->orderBy('p.lft');
 

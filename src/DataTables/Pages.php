@@ -228,6 +228,10 @@ class Pages extends DataTable
             $value = '<span class="defaultLanguagePlaceHolder">' . $rowData['default_language_name'] . '</span>';
         }
 
+        if($rowData[Page::FIELD_TYPE] == Page::TYPE_MENU){
+            $value = $rowData['default_language_name'];
+        }
+
         // disable dragging / tree structure when sorting or searching
         if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
             return $value;
