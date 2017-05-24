@@ -21,10 +21,16 @@ $colorErrorText: #a94442;
 
 $selectedTextBlue: #3875d7;
 
+/* Font sizes */
+$fontSizeSmall: 12px;
+$fontSizeDefault: 14px;
+$fontSizeLarge: 20px;
+
 /* Miscellaneous */
 $defaultBorderRadius: 3px;
 
 $lowerThanDesktop: "(max-width: 1130px)";
+$heightBelowHd: "(max-height: 900px)";
 
 /* Z-indexes */
 $zIndexWindowLevel0: 3;

@@ -60,8 +60,8 @@ body {
 .dataTableWindow {
     width: 1050px;
     position: fixed;
-    top: 40px;
-    bottom: 40px;
+    top: 20px;
+    bottom: 20px;
     background-color: rgba(255, 255, 255, 0.97);
     z-index: $zIndexWindowLevel0;
     left: 50%;
@@ -73,8 +73,6 @@ body {
 
     @media #{$lowerThanDesktop}{
         width: auto;
-        top: 40px;
-        bottom: 40px;
         left: 40px;
         right: 40px;
         margin-left: 0;
@@ -91,15 +89,15 @@ body {
     @for $i from 1 through 10 {
         &.level#{$i} {
             z-index: $zIndexWindowLevel0 + $i;
-            top: 50px + ($i * 10);
-            bottom: 50px + ($i * 10);
+            top: 20px + ($i * 10);
+            bottom: 20px + ($i * 10);
             width: 900px + ($i * 20);
             margin-left: -450px - ($i * 10);
 
             @media #{$lowerThanDesktop}{
                 width: auto;
-                top: 50px;
-                bottom: 50px;
+                top: 20px;
+                bottom: 20px;
                 left: 50px;
                 right: 50px;
                 margin-left: 0;
@@ -110,7 +108,7 @@ body {
     > .closeButton {
         @include close(30);
         right: 50px;
-        top: 32px;
+        top: 23px;
         position: absolute;
         cursor: pointer;
     }
@@ -119,8 +117,9 @@ body {
 
         > .header {
             @include clearFix();
-            font-size: 24px;
-            padding: 30px 100px 30px 50px;
+            font-size: $fontSizeLarge;
+            line-height: 36px;
+            padding: 20px 100px 20px 50px;
             border-bottom: 1px solid $lightGray;
             width: 100%;
 
@@ -191,6 +190,45 @@ body {
             button {
                 margin-left: 5px;
                 padding: 10px 35px;
+            }
+        }
+    }
+
+    @media #{$heightBelowHd} {
+        top: 10px;
+        bottom: 10px;
+
+        > .closeButton {
+            @include close(20);
+            top: 11px;
+        }
+
+        > .windowContent {
+
+            > .header {
+                padding: 10px 90px 10px 50px;
+                font-size: $fontSizeDefault;
+                line-height: 22px;
+
+                select[name=language]{
+                    height: 22px;
+                    font-size: $fontSizeSmall;
+                }
+            }
+
+            > .content{
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            > .tabs .tab{
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            > .footer button{
+                padding-top: 3px;
+                padding-bottom: 3px;
             }
         }
     }

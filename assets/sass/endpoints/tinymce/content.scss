@@ -3,7 +3,7 @@
 
 .mce-content-body {
     @include fontDefault();
-    font-size: 14px;
+    font-size: $fontSizeDefault;
     padding: 0 10px 10px;
 
     table {
@@ -17,7 +17,7 @@
 
         td, th {
             @include fontDefault();
-            font-size: 14px;
+            font-size: $fontSizeDefault;
         }
     }
 }
