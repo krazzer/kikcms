@@ -1,0 +1,1 @@
+{"version":3,"sources":["filePicker.scss"],"names":[],"mappings":"AAGA,YACI,YAAa,CAChB","file":"filePicker.css","sourcesContent":["@import \"../includes/variables\";\n@import \"../includes/mixins\";\n\n.filePicker{\n    padding: 15px;\n}"]}

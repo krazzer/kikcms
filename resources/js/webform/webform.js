@@ -171,6 +171,8 @@ var WebForm = Class.extend({
     },
 
     initTinyMCE: function () {
+        var self = this;
+
         tinymce.init({
             selector: this.getWysiwygSelector(),
             setup: function (editor) {
@@ -181,19 +183,22 @@ var WebForm = Class.extend({
             language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
             language: KikCMS.tl('system.langCode'),
             theme: 'modern',
-            relative_urls : false,
-            remove_script_host : true,
-            document_base_url : KikCMS.baseUri,
+            relative_urls: false,
+            remove_script_host: true,
+            document_base_url: KikCMS.baseUri,
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
                 'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
-                'textcolor colorpicker textpattern imagetools codesample toc'
+                'textcolor colorpicker textpattern codesample toc'
             ],
             toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
             ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce/content.css'],
-            link_list: this.getLinkListUrl()
+            link_list: this.getLinkListUrl(),
+            file_picker_callback: function (callback) {
+                self.getFilePicker(callback);
+            }
         });
     },
 
@@ -233,16 +238,60 @@ var WebForm = Class.extend({
         }
     },
 
+    getFilePicker: function (callback) {
+        var callBackAction = function ($file) {
+            var fileId = $file.attr('data-id');
+            callback('/finder/file/' + fileId, {text: $file.find('.name span').text()});
+            window.close();
+        };
+
+        var window = tinymce.activeEditor.windowManager.open({
+            title: 'Image Picker',
+            url: '/cms/filePicker',
+            width: 952,
+            height: 768,
+            buttons: [{
+                text: 'Insert',
+                onclick: function () {
+                    var $filePicker = $(window.$el).find('iframe')[0].contentWindow.$('.filePicker');
+
+                    var $file = $filePicker.find('.file.selected');
+
+                    if (!$file.length) {
+                        return false;
+                    }
+
+                    callBackAction($file);
+                }
+            }, {
+                text: 'Close',
+                onclick: 'close'
+            }]
+        });
+
+        window.on('open', function () {
+            var $iframe = $(window.$el).find('iframe');
+
+            $iframe.on('load', function () {
+                var $filePicker = this.contentWindow.$('.filePicker');
+
+                $filePicker.on("pick", '.file', function () {
+                    callBackAction($(this));
+                });
+            });
+        });
+    },
+
     getLinkListUrl: function () {
         var linkListUrl = '/cms/getTinyMceLinks/';
 
-        if( ! this.parent) {
+        if (!this.parent) {
             return linkListUrl;
         }
 
         var languageCode = this.parent.getLanguageCode();
 
-        if( ! languageCode) {
+        if (!languageCode) {
             return linkListUrl;
         }
 

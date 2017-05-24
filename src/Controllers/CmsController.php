@@ -15,7 +15,6 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
-use Phalcon\Http\Response;
 
 /**
  * @property Config $config
@@ -28,9 +27,16 @@ use Phalcon\Http\Response;
  */
 class CmsController extends BaseCmsController
 {
-    /**
-     * @return Response
-     */
+    public function filePickerAction()
+    {
+        $finder = new Finder();
+        $finder->setPickingMode(true);
+
+        $this->view->title  = $this->translator->tl('menu.item.media');
+        $this->view->finder = $finder->render();
+        $this->view->pick('cms/filePicker');
+    }
+
     public function indexAction()
     {
         return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_PAGES);

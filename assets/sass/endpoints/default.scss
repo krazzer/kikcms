@@ -52,6 +52,7 @@ h1, h2, h3, h4, h5, h6 {
     z-index: $zIndexAboveLevel10Window;
     transition: opacity 0.3s;
     opacity: 0;
+    pointer-events: none;
 
     &.show{
         opacity: 1;

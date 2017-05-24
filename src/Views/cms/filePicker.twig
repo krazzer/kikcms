@@ -1,0 +1,13 @@
+{% extends '@kikcms/base.twig' %}
+
+{% block title title %}
+
+{% block cssAssets %}
+    {{ stylesheetLink('cmsassets/css/filePicker.css') }}
+{% endblock %}
+
+{% block content %}
+    <div class="filePicker">
+        {{ finder|raw }}
+    </div>
+{% endblock %}
