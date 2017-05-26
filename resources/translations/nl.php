@@ -293,10 +293,25 @@ return [
         'editMenus' => "U kunt geen menu's bewerken",
     ],
 
+    'statistics' => [
+        'fetchingNewData' => 'Nieuwe gegevens ophalen...',
+        'fetchingFailed'  => 'Ophalen van data mislukt',
+        'fetchNewData'    => 'Data vernieuwen',
+        'visitors'        => 'Bezoekers',
+        'uniqueVisitors'  => 'Unieke bezoekers',
+        'fromDate'        => 'Vanaf datum',
+        'untilDate'       => 'T/m datum',
+        'intervalDay'     => 'Per day',
+        'intervalMaand'   => 'Per maand',
+    ],
+
     'system' => [
         'langCode'           => 'nl',
+        'locale'             => 'nl_NL',
         'phpDateFormat'      => 'd-m-Y',
         'momentJsDateFormat' => 'DD-MM-YYYY',
+        'dateDisplayFormat'  => '%e %b %Y',
+        'monthDisplayFormat' => '%b %Y',
     ],
 
     'webform' => [

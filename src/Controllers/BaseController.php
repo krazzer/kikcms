@@ -15,16 +15,21 @@ class BaseController extends Controller
 {
     public function initialize()
     {
+        setlocale(LC_ALL, $this->translator->tl('system.locale'));
+
         $maxFileUploads    = ini_get('max_file_uploads');
         $maxFileSize       = ByteUtil::stringToBytes(ini_get('upload_max_filesize'));
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
         $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
+        $jsTranslations    = array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']);
 
         $this->view->setVar("flash", $this->flash);
-        $this->view->setVar("developerEmail", $this->applicationConfig->developerEmail);
-        $this->view->setVar("jsTranslations", array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']));
-        $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
         $this->view->setVar("baseUri", $this->url->getBaseUri());
+        $this->view->setVar("developerEmail", $this->applicationConfig->developerEmail);
+        $this->view->setVar("jsTranslations", $jsTranslations);
+
+        $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
+        $this->view->setVar("phpDateFormat", $this->translator->tl('system.phpDateFormat'));
 
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);

@@ -2,19 +2,25 @@
 
 namespace KikCMS\Controllers;
 
+use DateTime;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\MenuConfig;
+use KikCMS\Config\StatisticsConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
+use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Config;
+use Phalcon\Http\Response;
 
 /**
  * @property Config $config
@@ -23,10 +29,14 @@ use Phalcon\Config;
  * @property Translator $translator
  * @property LanguageService $languageService
  * @property TinyMceService $tinyMceService
- * @property \Google_Service_AnalyticsReporting $analytics
+ * @property AnalyticsService $analyticsService
+ * @property DateTimeService $dateTimeService
  */
 class CmsController extends BaseCmsController
 {
+    /**
+     * Renders a file picker used for TinyMCE
+     */
     public function filePickerAction()
     {
         $finder = new Finder();
@@ -37,11 +47,36 @@ class CmsController extends BaseCmsController
         $this->view->pick('cms/filePicker');
     }
 
+    /**
+     * Get data for the visitors graph, based on the user's input
+     *
+     * @return string
+     */
+    public function getVisitorsAction()
+    {
+        $interval = $this->request->getPost('interval', null, StatisticsConfig::VISITS_MONTHLY);
+        $start    = $this->dateTimeService->getFromDatePickerValue($this->request->getPost('start'));
+        $end      = $this->dateTimeService->getFromDatePickerValue($this->request->getPost('end'));
+        $data     = $this->analyticsService->getVisitorsChartData($interval, $start, $end);
+
+        $data['requireUpdate'] = $this->analyticsService->needsUpdate();
+
+        return json_encode($data);
+    }
+
+    /**
+     * First page to show when the user logs in, to avoid POST reset, redirect.
+     *
+     * @return Response
+     */
     public function indexAction()
     {
         return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_PAGES);
     }
 
+    /**
+     * Manages pages
+     */
     public function pagesAction()
     {
         $this->view->title  = $this->translator->tl('menu.item.pages');
@@ -49,6 +84,9 @@ class CmsController extends BaseCmsController
         $this->view->pick('cms/default');
     }
 
+    /**
+     * Manage images and other files
+     */
     public function mediaAction()
     {
         $this->view->title  = $this->translator->tl('menu.item.media');
@@ -56,6 +94,9 @@ class CmsController extends BaseCmsController
         $this->view->pick('cms/default');
     }
 
+    /**
+     * Manage Website/CMS settings
+     */
     public function settingsAction()
     {
         $this->view->title  = $this->translator->tl('menu.item.settings');
@@ -63,70 +104,41 @@ class CmsController extends BaseCmsController
         $this->view->pick('cms/default');
     }
 
+    /**
+     * Show the website's visitors
+     */
     public function statsIndexAction()
     {
-        $analytics = $this->analytics;
-        $viewId = (string) $this->config->analytics->viewId;
+        $this->view->title = $this->translator->tl('menu.item.statsIndex');
 
-        // Create the DateRange object.
-        $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
-        $dateRange->setStartDate("7daysAgo");
-        $dateRange->setEndDate("today");
+        $startDate = $this->dateTimeService->getOneYearAgoFirstDayOfMonth();
+        $maxDate   = $this->analyticsService->getMaxDate() ?: new DateTime();
+        $minDate   = $this->analyticsService->getMinDate() ?: new DateTime();
 
-        // Create the Metrics object.
-        $sessions = new \Google_Service_AnalyticsReporting_Metric();
-        $sessions->setExpression("ga:sessions");
-        $sessions->setAlias("sessions");
-
-        // Create the ReportRequest object.
-        $request = new \Google_Service_AnalyticsReporting_ReportRequest();
-        $request->setViewId($viewId);
-        $request->setDateRanges($dateRange);
-        $request->setMetrics(array($sessions));
-
-        $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
-        $body->setReportRequests( array( $request) );
-        $reports = $analytics->reports->batchGet( $body );
-
-        ob_start();
-        for ( $reportIndex = 0; $reportIndex < count( $reports ); $reportIndex++ ) {
-            $report = $reports[ $reportIndex ];
-            $header = $report->getColumnHeader();
-            $dimensionHeaders = $header->getDimensions();
-            $metricHeaders = $header->getMetricHeader()->getMetricHeaderEntries();
-            $rows = $report->getData()->getRows();
-
-            for ( $rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
-                $row = $rows[ $rowIndex ];
-                $dimensions = $row->getDimensions();
-                $metrics = $row->getMetrics();
-                for ($i = 0; $i < count($dimensionHeaders) && $i < count($dimensions); $i++) {
-                    print($dimensionHeaders[$i] . ": " . $dimensions[$i] . "\n");
-                }
-
-                for ($j = 0; $j < count($metrics); $j++) {
-                    $values = $metrics[$j]->getValues();
-                    for ($k = 0; $k < count($values); $k++) {
-                        $entry = $metricHeaders[$k];
-                        print($entry->getName() . ": " . $values[$k] . "\n");
-                    }
-                }
-            }
+        if ($startDate < $minDate) {
+            $startDate = null;
         }
-        $output = ob_get_clean();
 
-        $this->view->title  = $this->translator->tl('menu.item.statsIndex');
-        $this->view->object = $output;
-        $this->view->pick('cms/default');
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, [
+            'statistics.fetchingNewData',
+            'statistics.fetchingFailed',
+            'statistics.fetchNewData',
+            'statistics.visitors',
+        ]);
+
+        $this->view->settings = [
+            'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
+            'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,
+            'maxDate'    => $maxDate->format(KikCMSConfig::DATE_FORMAT),
+            'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
+        ];
+
+        $this->view->pick('cms/statistics');
     }
 
-    public function statsSourcesAction()
-    {
-        $this->view->title  = $this->translator->tl('menu.item.statsSources');
-        $this->view->object = '<img src="https://cdn.meme.am/cache/instances/folder524/30938524.jpg" />';
-        $this->view->pick('cms/default');
-    }
-
+    /**
+     * Manage users
+     */
     public function usersAction()
     {
         $this->view->title  = $this->translator->tl('menu.item.users');
@@ -152,29 +164,49 @@ class CmsController extends BaseCmsController
         $this->response->redirect($url);
     }
 
+    /**
+     * @param null $languageCode
+     * @return string
+     */
     public function getTinyMceLinksAction($languageCode = null)
     {
         $languageCode = $languageCode ? $languageCode : $this->languageService->getDefaultLanguageCode();
 
-        echo json_encode($this->tinyMceService->getLinkList($languageCode));
+        return json_encode($this->tinyMceService->getLinkList($languageCode));
     }
 
+    /**
+     * Get all translations for the given key in json format
+     *
+     * @return string
+     */
     public function getTranslationsForKeyAction()
     {
         $key          = $this->request->getPost('key');
         $languages    = $this->languageService->getLanguages();
         $translations = [];
 
-        foreach ($languages as $language){
+        foreach ($languages as $language) {
             $this->translator->setLanguageCode($language->code);
-            $translations[(string)$language->code] = $this->translator->tl($key);
+            $translations[(string) $language->code] = $this->translator->tl($key);
         }
 
         return json_encode($translations);
     }
 
+    /**
+     * Logout the CMS user
+     */
     public function logoutAction()
     {
         $this->userService->logout();
+    }
+
+    /**
+     * Update statistics data from google analytics
+     */
+    public function updateStatisticsAction()
+    {
+        return json_encode($this->analyticsService->importIntoDb());
     }
 }

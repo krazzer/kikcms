@@ -1,0 +1,72 @@
+@import "../includes/variables";
+@import "../includes/mixins";
+
+@-webkit-keyframes glowingPink {
+    from {
+        background-color: $colorPink;
+        -webkit-box-shadow: 0 0 9px transparent;
+    }
+    50% {
+        background-color: lighten($colorPink, 20%);
+        border-color: lighten($colorPink, 20%);
+        -webkit-box-shadow: 0 0 18px lighten($colorPink, 20%);
+    }
+    to {
+        background-color: $colorPink;
+        -webkit-box-shadow: 0 0 9px transparent;
+    }
+}
+
+.controls{
+    @include clearFix();
+    height: 50px;
+
+    .interval{
+        float: left;
+    }
+
+    .dateRange{
+        position: relative;
+        float: left;
+
+        input{
+            margin-left: 5px;
+            float: left;
+            width: 200px;
+        }
+    }
+
+    .refresh{
+        float: right;
+        margin-left: 5px;
+        position: relative;
+        display: none;
+
+        svg{
+            display: none;
+        }
+
+        &.loading{
+            padding-left: 35px;
+
+            svg{
+                display: block;
+                width: 20px;
+                height: 20px;
+                position: absolute;
+                left: 10px;
+            }
+        }
+
+        &.glow{
+            -webkit-animation-name: glowingPink;
+            -webkit-animation-duration: 2s;
+            -webkit-animation-iteration-count: infinite;
+        }
+    }
+}
+
+#visitors{
+    width: 100%;
+    height: 600px;
+}

@@ -55,9 +55,7 @@ gulp.task('vendorsScripts', function () {
 gulp.task('vendorsStyles', function () {
     return gulp.src([
         'sass/bootstrap.scss',
-        'bower_components/eonasdan-bootstrap-datetimepicker/src/sass/_bootstrap-datetimepicker.scss'
     ])
-
         .pipe(sass())
         .pipe(cssnano({
             zindex: false,

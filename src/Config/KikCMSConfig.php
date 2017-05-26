@@ -8,6 +8,8 @@ class KikCMSConfig
     const ENV_DEV  = 'dev';
     const ENV_PROD = 'prod';
 
+    const DATE_FORMAT = 'Y-m-d';
+
     const NAMESPACE_KIKCMS     = 'KikCMS';
     const NAMESPACE_WEBSITE    = 'Website';
     const NAMESPACE_DATATABLES = 'DataTables';

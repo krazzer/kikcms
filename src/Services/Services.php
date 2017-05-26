@@ -14,6 +14,7 @@ use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\Storage\File as FileStorageFile;
 
@@ -25,6 +26,7 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\Util\DateTimeService;
 use KikCMS\Services\Website\WebsiteService;
 use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
@@ -58,8 +60,10 @@ class Services extends BaseServices
     protected function getSimpleServices(): array
     {
         $services = [
+            AnalyticsService::class,
             CacheService::class,
             CmsService::class,
+            DateTimeService::class,
             TemplateService::class,
             PageService::class,
             PageContentService::class,
@@ -116,7 +120,7 @@ class Services extends BaseServices
      */
     protected function initCache()
     {
-        if($this instanceof Cli){
+        if ($this instanceof Cli) {
             return false;
         }
 
@@ -337,7 +341,7 @@ class Services extends BaseServices
 
         $defaultMessages = [];
 
-        foreach($webFormMessagesKeys as $key){
+        foreach ($webFormMessagesKeys as $key) {
             $defaultMessages[last(explode('.', $key))] = $this->initTranslator()->tl($key);
         }
 
@@ -351,14 +355,16 @@ class Services extends BaseServices
      */
     protected function initView()
     {
-        $cmsViewDir  = __DIR__ . '/../Views/';
-        $siteViewDir = SITE_PATH . 'app/Views/';
+        $cmsViewDir     = __DIR__ . '/../Views/';
+        $siteViewDir    = SITE_PATH . 'app/Views/';
+        $cmsResourceDir = __DIR__ . '/../../resources/';
 
         $view = new View();
         $view->setViewsDir($cmsViewDir);
         $view->setNamespaces([
-            'kikcms'  => $cmsViewDir,
-            'website' => $siteViewDir
+            'kikcms'       => $cmsViewDir,
+            'website'      => $siteViewDir,
+            'cmsResources' => $cmsResourceDir,
         ]);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
