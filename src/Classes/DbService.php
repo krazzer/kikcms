@@ -169,6 +169,8 @@ class DbService extends Injectable
 
         $insertDataChunks = array_chunk($insertData, 1000);
 
+        $this->db->begin();
+
         foreach ($insertDataChunks as $dataChunk)
         {
             $insertValues = [];
@@ -186,6 +188,8 @@ class DbService extends Injectable
                 VALUES " . implode(',', $insertValues) . "
             ");
         }
+
+        return $this->db->commit();
     }
 
     /**
