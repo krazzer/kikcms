@@ -8,6 +8,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Config\DbConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
+use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -29,22 +30,18 @@ class AnalyticsService extends Injectable
         try {
             $results = $this->getVisitDataFromGoogle();
 
-            $insertValues = [];
+            $this->importVisitorData();
 
-            foreach ($results as $resultRow) {
-                $date   = $resultRow['ga:year'] . '-' . $resultRow['ga:month'] . '-' . $resultRow['ga:day'];
-                $visits = (int) $resultRow['visits'];
-                $unique = (int) $visits * ($resultRow['unique'] / 100);
+            $results = array_map(function ($row){
+                return [
+                    GaDayVisit::FIELD_DATE => $row['ga:year'] . '-' . $row['ga:month'] . '-' . $row['ga:day'],
+                    GaDayVisit::FIELD_VISITS => (int) $row['visits'],
+                    GaDayVisit::FIELD_UNIQUE_VISITS => (int) $row['visits'] * ($row['unique'] / 100),
+                ];
+            }, $results);
 
-                $insertValues[] = "('" . $date . "', " . $visits . ", " . $unique . ")";
-            }
-
-            $this->db->query("DELETE FROM " . GaDayVisit::TABLE);
-
-            $this->db->query("
-                INSERT INTO ga_day_visit (`date`, visits, unique_visits) 
-                VALUES " . implode(',', $insertValues) . "
-            ");
+            $this->dbService->truncate(GaDayVisit::class);
+            $this->dbService->insertBulk(GaDayVisit::class, $results);
         } catch (\Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
@@ -59,16 +56,8 @@ class AnalyticsService extends Injectable
      */
     public function getMaxDate()
     {
-        $query   = (new Builder())->from(GaDayVisit::class)->columns(['MAX(date)']);
-        $maxDate = $this->dbService->getValue($query);
-
-        $date = DateTime::createFromFormat(DbConfig::SQL_DATE_FORMAT, $maxDate);
-
-        if ( ! $date) {
-            return null;
-        }
-
-        return $date;
+        $query = (new Builder())->from(GaDayVisit::class)->columns(['MAX(date)']);
+        return $this->dbService->getDate($query);
     }
 
     /**
@@ -76,16 +65,8 @@ class AnalyticsService extends Injectable
      */
     public function getMinDate()
     {
-        $query   = (new Builder())->from(GaDayVisit::class)->columns(['MIN(date)']);
-        $minDate = $this->dbService->getValue($query);
-
-        $date = DateTime::createFromFormat(DbConfig::SQL_DATE_FORMAT, $minDate);
-
-        if ( ! $date) {
-            return null;
-        }
-
-        return $date;
+        $query = (new Builder())->from(GaDayVisit::class)->columns(['MIN(date)']);
+        return $this->dbService->getDate($query);
     }
 
     /**
@@ -193,25 +174,58 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @param string $type
+     * @return DateTime|null
+     */
+    private function getTypeLastUpdate(string $type)
+    {
+        $query = (new Builder())
+            ->from(GaVisitData::class)
+            ->where('type = :type:', ['type' => $type])
+            ->columns(['MAX(' . GaVisitData::FIELD_DATE . ')']);
+
+        return $this->dbService->getDate($query);
+    }
+
+    /**
      * @return array
      */
     private function getVisitDataFromGoogle(): array
     {
+        return $this->getVisitorDataFromGoogle(null, null, ["ga:percentNewSessions" => "unique"]);
+    }
+
+    /**
+     * @param string $dimensionName
+     * @param DateTime|null $fromDate
+     * @param array $addMetrics
+     *
+     * @return array
+     */
+    private function getVisitorDataFromGoogle(string $dimensionName = null, DateTime $fromDate = null, array $addMetrics = []): array
+    {
+        $fromDate = $fromDate ?: new DateTime('2005-01-01');
+
         $viewId = (string) $this->config->analytics->viewId;
 
         $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
-        $dateRange->setStartDate("2005-01-01");
+        $dateRange->setStartDate($fromDate->format('Y-m-d'));
         $dateRange->setEndDate("today");
 
         $sessions = new \Google_Service_AnalyticsReporting_Metric();
         $sessions->setExpression("ga:visits");
         $sessions->setAlias("visits");
 
-        $sessionsUnique = new \Google_Service_AnalyticsReporting_Metric();
-        $sessionsUnique->setExpression("ga:percentNewSessions");
-        $sessionsUnique->setAlias("unique");
+        $metrics = [$sessions];
 
-        //Create the Dimensions object.
+        foreach ($addMetrics as $metricName => $alias){
+            $metric = new \Google_Service_AnalyticsReporting_Metric();
+            $metric->setExpression($metricName);
+            $metric->setAlias($alias);
+
+            $metrics[] = $metric;
+        }
+
         $year = new \Google_Service_AnalyticsReporting_Dimension();
         $year->setName("ga:year");
 
@@ -221,18 +235,39 @@ class AnalyticsService extends Injectable
         $day = new \Google_Service_AnalyticsReporting_Dimension();
         $day->setName("ga:day");
 
+        $dimensions = [$year, $month, $day];
+
+        if($dimensionName) {
+            $dimension = new \Google_Service_AnalyticsReporting_Dimension();
+            $dimension->setName($dimensionName);
+
+            $dimensions[] = $dimension;
+        }
+
         // Create the ReportRequest object.
         $request = new \Google_Service_AnalyticsReporting_ReportRequest();
         $request->setViewId($viewId);
         $request->setDateRanges($dateRange);
-        $request->setMetrics([$sessions, $sessionsUnique]);
-        $request->setDimensions([$year, $month, $day]);
+        $request->setMetrics($metrics);
+        $request->setDimensions($dimensions);
+        $request->setPageSize(999999);
+
+        return $this->requestToArray($request);
+    }
+
+    /**
+     * Request the data from the given google request and convert it to an array
+     *
+     * @param \Google_Service_AnalyticsReporting_ReportRequest $request
+     * @return array
+     */
+    private function requestToArray(\Google_Service_AnalyticsReporting_ReportRequest $request): array
+    {
+        $results = [];
 
         $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
         $body->setReportRequests(array($request));
         $reports = $this->analytics->reports->batchGet($body);
-
-        $results = [];
 
         for ($reportIndex = 0; $reportIndex < count($reports); $reportIndex++) {
             $report = $reports[$reportIndex];
@@ -271,5 +306,48 @@ class AnalyticsService extends Injectable
         }
 
         return $results;
+    }
+
+    /**
+     * Import various info about visitors
+     */
+    private function importVisitorData()
+    {
+        $types = [
+            'source'     => 'ga:source',
+            'os'         => 'ga:operatingSystem',
+            'page'       => 'ga:pagePath',
+            'browser'    => 'ga:browser',
+            'location'   => 'ga:city',
+            'resolution' => 'ga:screenResolution',
+        ];
+
+        foreach ($types as $type => $dimension) {
+            $fromDate   = $this->getTypeLastUpdate($type);
+            $results    = $this->getVisitorDataFromGoogle($dimension, $fromDate);
+            $insertData = [];
+
+            foreach ($results as $resultRow) {
+                $date = $resultRow['ga:year'] . '-' . $resultRow['ga:month'] . '-' . $resultRow['ga:day'];
+
+                $insertRow = [
+                    GaVisitData::FIELD_DATE   => $date,
+                    GaVisitData::FIELD_TYPE   => $type,
+                    GaVisitData::FIELD_VALUE  => $resultRow[$dimension],
+                    GaVisitData::FIELD_VISITS => $resultRow['visits'],
+                ];
+
+                $insertData[] = $insertRow;
+            }
+
+            if($fromDate){
+                $this->dbService->delete(GaVisitData::class, [
+                    GaVisitData::FIELD_DATE => $fromDate->format(DbConfig::SQL_DATE_FORMAT),
+                    GaVisitData::FIELD_TYPE => $type,
+                ]);
+            }
+
+            $this->dbService->insertBulk(GaVisitData::class, $insertData);
+        }
     }
 }

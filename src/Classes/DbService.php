@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes;
 
+use DateTime;
 use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Config\DbConfig;
@@ -112,6 +113,15 @@ class DbService extends Injectable
 
     /**
      * @param string $model
+     * @return bool
+     */
+    public function truncate(string $model)
+    {
+        return $this->db->delete($this->getTableForModel($model));
+    }
+
+    /**
+     * @param string $model
      * @param array $set
      * @param mixed $where
      *
@@ -141,6 +151,41 @@ class DbService extends Injectable
         $this->db->insert($table, array_values($insert), array_keys($insert));
 
         return $this->db->lastInsertId();
+    }
+
+    /**
+     * @param string $model
+     * @param array $insertData
+     *
+     * @return bool
+     */
+    public function insertBulk(string $model, array $insertData)
+    {
+        if(empty($insertData)){
+            return true;
+        }
+
+        $keys = array_keys($insertData[0]);
+
+        $insertDataChunks = array_chunk($insertData, 1000);
+
+        foreach ($insertDataChunks as $dataChunk)
+        {
+            $insertValues = [];
+
+            foreach ($dataChunk as $row) {
+                $row = array_map(function ($value){
+                    return $this->escape($value);
+                }, $row);
+
+                $insertValues[] = '(' . implode(',', $row) . ')';
+            }
+
+            $this->db->query("
+                INSERT INTO " . $this->getTableForModel($model) . " (" . implode(',', $keys) . ") 
+                VALUES " . implode(',', $insertValues) . "
+            ");
+        }
     }
 
     /**
@@ -178,6 +223,23 @@ class DbService extends Injectable
         }
 
         return $map;
+    }
+
+    /**
+     * Retrieve DateTime value from the given query
+     *
+     * @param Builder $query
+     * @return DateTime|null
+     */
+    public function getDate(Builder $query)
+    {
+        $value = $this->getValue($query);
+
+        if( ! $value){
+            return null;
+        }
+
+        return new DateTime($value);
     }
 
     /**
