@@ -64,16 +64,21 @@ class Services extends BaseServices
             CacheService::class,
             CmsService::class,
             DateTimeService::class,
-            TemplateService::class,
-            PageService::class,
+            DbService::class,
+            DeployService::class,
+            ImageHandler::class,
             PageContentService::class,
             PageLanguageService::class,
             PageRearrangeService::class,
+            PageService::class,
             LanguageService::class,
+            Security::class,
+            TemplateService::class,
             TinyMceService::class,
             TranslationService::class,
+            Translator::class,
             UrlService::class,
-            WebsiteService::class,
+            UserService::class,
         ];
 
         return array_merge($services, $this->getWebsiteServices());
@@ -140,22 +145,6 @@ class Services extends BaseServices
         $databaseAdapter = new $dbClass($config);
 
         return $databaseAdapter;
-    }
-
-    /**
-     * @return DbService
-     */
-    protected function initDbService(): DbService
-    {
-        return new DbService();
-    }
-
-    /**
-     * @return DeployService
-     */
-    protected function initDeployService(): DeployService
-    {
-        return new DeployService();
     }
 
     /**
@@ -231,14 +220,6 @@ class Services extends BaseServices
     }
 
     /**
-     * @return ImageHandler
-     */
-    protected function initImageHandler()
-    {
-        return new ImageHandler();
-    }
-
-    /**
      * @return Logger
      */
     protected function initLogger()
@@ -278,14 +259,6 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Security
-     */
-    protected function initSecurity()
-    {
-        return new Security();
-    }
-
-    /**
      * Start the session the first time some component request the session service
      */
     protected function initSession()
@@ -294,14 +267,6 @@ class Services extends BaseServices
         $session->start();
 
         return $session;
-    }
-
-    /**
-     * @return Translator
-     */
-    protected function initTranslator()
-    {
-        return new Translator();
     }
 
     /**
@@ -323,26 +288,18 @@ class Services extends BaseServices
     }
 
     /**
-     * @return UserService
-     */
-    protected function initUserService()
-    {
-        return new UserService();
-    }
-
-    /**
      * @return Validation
      */
     protected function initValidation()
     {
         $validation = new Validation();
 
-        $webFormMessagesKeys = $this->initTranslator()->getCmsTranslationGroupKeys('webform.messages');
+        $webFormMessagesKeys = $this->get('translator')->getCmsTranslationGroupKeys('webform.messages');
 
         $defaultMessages = [];
 
         foreach ($webFormMessagesKeys as $key) {
-            $defaultMessages[last(explode('.', $key))] = $this->initTranslator()->tl($key);
+            $defaultMessages[last(explode('.', $key))] = $this->get('translator')->tl($key);
         }
 
         $validation->setDefaultMessages($defaultMessages);
