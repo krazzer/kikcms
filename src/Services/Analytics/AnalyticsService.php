@@ -100,8 +100,34 @@ class AnalyticsService extends Injectable
         $totalVisits = $this->getTotalVisits($start, $end);
         $visitorData = [];
 
-        foreach (StatisticsConfig::TYPES as $type) {
-            $visitorData[$type] = $this->getVisitorDataByType($type, $start, $end, $totalVisits);
+        $query = (new Builder)
+            ->from(GaVisitData::class)
+            ->columns([
+                GaVisitData::FIELD_TYPE,
+                GaVisitData::FIELD_VALUE,
+                'SUM(' . GaVisitData::FIELD_VISITS . ') AS visits',
+                'ROUND((SUM(' . GaVisitData::FIELD_VISITS . ') / ' . $totalVisits . ') * 100, 1) AS percentage'
+            ])
+            ->groupBy(GaVisitData::FIELD_VALUE)
+            ->orderBy('visits DESC')
+            ->limit(count(StatisticsConfig::TYPES) * 50);
+
+        $this->addDateWhere($query, $start, $end);
+
+        $results = $query->getQuery()->execute()->toArray();
+
+        foreach ($results as $result){
+            $type = $result[GaVisitData::FIELD_TYPE];
+
+            if( ! array_key_exists($type, $visitorData)){
+                $visitorData[$type] = [];
+            }
+
+            if(count($visitorData[$type]) >= 25){
+                continue;
+            }
+
+            $visitorData[$type][] = $result;
         }
 
         return $visitorData;
@@ -331,32 +357,6 @@ class AnalyticsService extends Injectable
     private function getVisitDataFromGoogle(): array
     {
         return $this->getVisitorDataFromGoogle(null, null, ["ga:percentNewSessions" => "unique"]);
-    }
-
-    /**
-     * @param string $type
-     * @param DateTime|null $start
-     * @param DateTime|null $end
-     * @param int $totalVisits
-     * @return array
-     */
-    private function getVisitorDataByType(string $type, DateTime $start = null, DateTime $end = null, int $totalVisits): array
-    {
-        $query = (new Builder)
-            ->from(GaVisitData::class)
-            ->columns([
-                GaVisitData::FIELD_VALUE,
-                'SUM(' . GaVisitData::FIELD_VISITS . ') AS visits',
-                'ROUND((SUM(' . GaVisitData::FIELD_VISITS . ') / ' . $totalVisits . ') * 100, 1) AS percentage'
-            ])
-            ->where(GaVisitData::FIELD_TYPE . ' = :type:', ['type' => $type])
-            ->groupBy(GaVisitData::FIELD_VALUE)
-            ->orderBy('visits DESC')
-            ->limit(25);
-
-        $this->addDateWhere($query, $start, $end);
-
-        return $query->getQuery()->execute()->toArray();
     }
 
     /**
