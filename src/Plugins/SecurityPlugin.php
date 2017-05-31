@@ -26,8 +26,10 @@ class SecurityPlugin extends Plugin
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        $controller         = $dispatcher->getControllerName();
-        $isLoggedIn         = $this->userService->isLoggedIn();
+        $controller = $dispatcher->getControllerName();
+
+        //todo #3: this needs to be properly secured
+        $isLoggedIn         = $controller == 'statistics' ? true : $this->userService->isLoggedIn();
         $allowedControllers = ['login', 'deploy', 'errors'];
 
         if ( ! $isLoggedIn && ! in_array($controller, $allowedControllers)) {

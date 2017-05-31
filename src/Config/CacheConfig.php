@@ -17,5 +17,6 @@ class CacheConfig
     const URL                   = 'url';
     const MENU                  = 'menu';
 
-    const STATS_REQUIRE_UPDATE = 'statsRequireUpdate';
+    const STATS_REQUIRE_UPDATE     = 'statsRequireUpdate';
+    const STATS_UPDATE_IN_PROGRESS = 'statsUpdateInProgress';
 }

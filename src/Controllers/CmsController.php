@@ -208,12 +208,4 @@ class CmsController extends BaseCmsController
     {
         $this->userService->logout();
     }
-
-    /**
-     * Update statistics data from google analytics
-     */
-    public function updateStatisticsAction()
-    {
-        return json_encode($this->analyticsService->importIntoDb());
-    }
 }

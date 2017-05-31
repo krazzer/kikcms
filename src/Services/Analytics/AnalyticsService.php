@@ -19,6 +19,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property \Google_Service_AnalyticsReporting $analytics
  * @property DbService $dbService
  * @property Backend $cache
+ * @property Backend $diskCache
  */
 class AnalyticsService extends Injectable
 {
@@ -28,6 +29,12 @@ class AnalyticsService extends Injectable
      */
     public function importIntoDb(): bool
     {
+        if($this->isUpdating()){
+            return true;
+        }
+
+        $this->diskCache->save(CacheConfig::STATS_UPDATE_IN_PROGRESS, true);
+
         $this->db->begin();
 
         try {
@@ -48,8 +55,11 @@ class AnalyticsService extends Injectable
         } catch (\Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
+            $this->diskCache->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
             return false;
         }
+
+        $this->diskCache->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
 
         return $this->db->commit();
     }
@@ -176,6 +186,14 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @return bool
+     */
+    public function isUpdating(): bool
+    {
+        return $this->diskCache->exists(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+    }
+
+    /**
      * Checks if the db is up to date
      *
      * @return bool
@@ -186,25 +204,27 @@ class AnalyticsService extends Injectable
             return false;
         }
 
-        return $this->cacheService->cache(CacheConfig::STATS_REQUIRE_UPDATE, function (){
-            $maxDate = $this->getMaxDate();
+        $maxDate = $this->getMaxDate();
 
+        if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+            return true;
+        }
+
+        $typeMaxDates = $this->getMaxDatePerVisitDataType();
+
+        if( ! $typeMaxDates){
+            return true;
+        }
+
+        foreach ($typeMaxDates as $type => $maxDate){
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
                 return true;
             }
+        }
 
-            $typeMaxDates = $this->getMaxDatePerVisitDataType();
+        $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
 
-            foreach ($typeMaxDates as $type => $maxDate){
-                if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
-                    return true;
-                }
-            }
-
-            $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
-
-            return false;
-        });
+        return false;
     }
 
     /**

@@ -301,7 +301,7 @@ return [
         'uniqueVisitors'  => 'Unieke bezoekers',
         'fromDate'        => 'Vanaf datum',
         'untilDate'       => 'T/m datum',
-        'intervalDay'     => 'Per day',
+        'intervalDay'     => 'Per dag',
         'intervalMaand'   => 'Per maand',
 
         'overview' => [

@@ -17,7 +17,7 @@ var Statistics = Class.extend({
     STR_VISITORS: KikCMS.translations['statistics.visitors'],
 
     URL_GET_VISITORS: '/cms/getVisitors',
-    URL_UPDATE_STATISTICS: '/cms/updateStatistics',
+    URL_UPDATE_STATISTICS: '/cms/stats/update',
 
     $controls: null,
     $buttonRefresh: null,
