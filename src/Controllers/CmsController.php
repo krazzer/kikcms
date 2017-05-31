@@ -61,7 +61,7 @@ class CmsController extends BaseCmsController
         $visitorsData   = $this->analyticsService->getVisitorsChartData($interval, $start, $end);
         $visitorData    = $this->analyticsService->getVisitorData($start, $end);
         $overviewData   = $this->analyticsService->getOverviewData($start, $end);
-        $requiresUpdate = $this->analyticsService->needsUpdate();
+        $requiresUpdate = $this->analyticsService->requiresUpdate();
 
         return json_encode([
             'visitorsData'   => $visitorsData,

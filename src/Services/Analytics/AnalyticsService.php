@@ -151,15 +151,23 @@ class AnalyticsService extends Injectable
      *
      * @return bool
      */
-    public function needsUpdate(): bool
+    public function requiresUpdate(): bool
     {
         $maxDate = $this->getMaxDate();
 
-        if ( ! $maxDate) {
+        if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
             return true;
         }
 
-        return $maxDate->format('dmY') !== (new DateTime())->format('dmY');
+        $typeMaxDates = $this->getMaxDatePerVisitDataType();
+
+        foreach ($typeMaxDates as $type => $maxDate){
+            if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -236,6 +244,20 @@ class AnalyticsService extends Injectable
         $this->addDateWhere($query, $start, $end);
 
         return (int) $this->dbService->getValue($query);
+    }
+
+    /**
+     * @return array [string visitDataType => DateTime maxDate]
+     */
+    private function getMaxDatePerVisitDataType(): array
+    {
+        $query = (new Builder())->from(GaVisitData::class)
+            ->columns([GaVisitData::FIELD_TYPE, 'MAX(' . GaVisitData::FIELD_DATE . ')'])
+            ->groupBy(GaVisitData::FIELD_TYPE);
+
+        return array_map(function($date){
+            return new DateTime($date);
+        }, $this->dbService->getAssoc($query));
     }
 
     /**
