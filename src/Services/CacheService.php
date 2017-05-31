@@ -59,7 +59,7 @@ class CacheService extends Injectable
 
         $result = $function();
 
-        if($result){
+        if($result !== null){
             $this->cache->save($cacheKey, $result, $ttl);
         }
 

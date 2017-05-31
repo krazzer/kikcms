@@ -5,17 +5,20 @@ namespace KikCMS\Services\Analytics;
 
 use DateTime;
 use KikCMS\Classes\DbService;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\DbConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
+use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property \Google_Service_AnalyticsReporting $analytics
  * @property DbService $dbService
+ * @property Backend $cache
  */
 class AnalyticsService extends Injectable
 {
@@ -179,21 +182,29 @@ class AnalyticsService extends Injectable
      */
     public function requiresUpdate(): bool
     {
-        $maxDate = $this->getMaxDate();
-
-        if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
-            return true;
+        if($this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE) === false){
+            return false;
         }
 
-        $typeMaxDates = $this->getMaxDatePerVisitDataType();
+        return $this->cacheService->cache(CacheConfig::STATS_REQUIRE_UPDATE, function (){
+            $maxDate = $this->getMaxDate();
 
-        foreach ($typeMaxDates as $type => $maxDate){
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
                 return true;
             }
-        }
 
-        return false;
+            $typeMaxDates = $this->getMaxDatePerVisitDataType();
+
+            foreach ($typeMaxDates as $type => $maxDate){
+                if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+                    return true;
+                }
+            }
+
+            $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
+
+            return false;
+        });
     }
 
     /**

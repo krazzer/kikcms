@@ -16,4 +16,6 @@ class CacheConfig
     const PAGE_LANGUAGE_FOR_URL = 'pageLanguageForUrl';
     const URL                   = 'url';
     const MENU                  = 'menu';
+
+    const STATS_REQUIRE_UPDATE = 'statsRequireUpdate';
 }
