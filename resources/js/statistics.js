@@ -30,6 +30,8 @@ var Statistics = Class.extend({
     $rangeInputs: null,
     $visitors: null,
 
+    $tableOverviewBody: null,
+
     settings: null,
 
     /**
@@ -60,15 +62,17 @@ var Statistics = Class.extend({
      * Initialize elements used
      */
     initElements: function () {
-        this.$visitors         = $('#visitors');
-        this.$controls         = $('.controls');
+        this.$visitors = $('#visitors');
+        this.$controls = $('.controls');
 
-        this.$settingsInput    = this.$controls.find('input[name=settings]');
-        this.$buttonRefresh    = this.$controls.find('.refresh');
-        this.$rangeInputs      = this.$controls.find('.dateRange input[type=date]');
-        this.$intervalButtons  = this.$controls.find('.interval button');
-        this.$fieldStart       = this.$controls.find('.start');
-        this.$fieldEnd         = this.$controls.find('.end');
+        this.$settingsInput   = this.$controls.find('input[name=settings]');
+        this.$buttonRefresh   = this.$controls.find('.refresh');
+        this.$rangeInputs     = this.$controls.find('.dateRange input[type=date]');
+        this.$intervalButtons = this.$controls.find('.interval button');
+        this.$fieldStart      = this.$controls.find('.start');
+        this.$fieldEnd        = this.$controls.find('.end');
+
+        this.$tableOverviewBody = $('#tab-overview').find('table tbody');
 
         this.$buttonRefreshLbl = this.$buttonRefresh.find('.lbl');
     },
@@ -168,6 +172,41 @@ var Statistics = Class.extend({
     },
 
     /**
+     * @param overviewData
+     */
+    populateOverviewTable: function (overviewData) {
+        var tableBodyHtml = '';
+
+        $.each(overviewData, function (key, value) {
+            tableBodyHtml += '<tr><td>' + key + ':</td><td>' + value + '</td></tr>';
+        });
+
+        this.$tableOverviewBody.html(tableBodyHtml);
+    },
+
+    /**
+     * @param type
+     * @param visitorData
+     */
+    populateVisitorDataTable: function (type, visitorData) {
+        var tableBodyHtml = '';
+
+        $.each(visitorData, function (key, value) {
+            tableBodyHtml +=
+                '<tr>' +
+                    '<td><span>' + value.value + '</span></td>' +
+                    '<td>' + value.visits + '</td>' +
+                    '<td>' +
+                        '<span class="percentage" style="width: ' + (value.percentage * 5) + 'px;"></span>' +
+                        value.percentage + '%' +
+                    '</td>' +
+                '</tr>';
+        });
+
+        $('#tab-' + type).find('table tbody').html(tableBodyHtml);
+    },
+
+    /**
      * Renders the chart
      */
     renderChart: function () {
@@ -183,9 +222,9 @@ var Statistics = Class.extend({
     /**
      * Actually render the chart with the given data
      *
-     * @param chartData
+     * @param jsonData
      */
-    renderChartWithData: function (chartData) {
+    renderChartWithData: function (jsonData) {
         var options = {
             title: this.STR_VISITORS,
             legend: {position: 'bottom'},
@@ -193,12 +232,15 @@ var Statistics = Class.extend({
             chartArea: {'width': '80%'}
         };
 
-        var data  = new google.visualization.DataTable(chartData);
+        var data  = new google.visualization.DataTable(jsonData.visitorsData);
         var chart = new google.visualization.AreaChart(this.$visitors[0]);
+
+        this.populateOverviewTable(jsonData.overviewData);
+        $.each(jsonData.visitorData, this.populateVisitorDataTable.bind(this));
 
         chart.draw(data, options);
 
-        if (chartData.requireUpdate) {
+        if (jsonData.requiresUpdate) {
             this.updateAnalyticsData();
         } else {
             this.$buttonRefresh.fadeOut();

@@ -32,10 +32,10 @@ class AnalyticsService extends Injectable
 
             $this->importVisitorData();
 
-            $results = array_map(function ($row){
+            $results = array_map(function ($row) {
                 return [
-                    GaDayVisit::FIELD_DATE => $row['ga:year'] . '-' . $row['ga:month'] . '-' . $row['ga:day'],
-                    GaDayVisit::FIELD_VISITS => (int) $row['visits'],
+                    GaDayVisit::FIELD_DATE          => $row['ga:year'] . '-' . $row['ga:month'] . '-' . $row['ga:day'],
+                    GaDayVisit::FIELD_VISITS        => (int) $row['visits'],
                     GaDayVisit::FIELD_UNIQUE_VISITS => (int) $row['visits'] * ($row['unique'] / 100),
                 ];
             }, $results);
@@ -67,6 +67,44 @@ class AnalyticsService extends Injectable
     {
         $query = (new Builder())->from(GaDayVisit::class)->columns(['MIN(date)']);
         return $this->dbService->getDate($query);
+    }
+
+    /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     * @return array
+     */
+    public function getOverviewData(DateTime $start = null, DateTime $end = null): array
+    {
+        $totalVisits       = $this->getTotalVisits($start, $end);
+        $totalUniqueVisits = $this->getTotalUniqueVisits($start, $end);
+        $dailyAverage      = $this->getDailyAverage($start, $end);
+        $monthlyAverage    = $this->getMonthlyAverage($start, $end);
+
+        return [
+            $this->translator->tl('statistics.overview.totalVisits')       => $totalVisits,
+            $this->translator->tl('statistics.overview.totalUniqueVisits') => $totalUniqueVisits,
+            $this->translator->tl('statistics.overview.dailyAverage')      => $dailyAverage,
+            $this->translator->tl('statistics.overview.monthlyAverage')    => $monthlyAverage,
+        ];
+    }
+
+    /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     *
+     * @return array
+     */
+    public function getVisitorData(DateTime $start = null, DateTime $end = null): array
+    {
+        $totalVisits = $this->getTotalVisits($start, $end);
+        $visitorData = [];
+
+        foreach (StatisticsConfig::TYPES as $type) {
+            $visitorData[$type] = $this->getVisitorDataByType($type, $start, $end, $totalVisits);
+        }
+
+        return $visitorData;
     }
 
     /**
@@ -125,6 +163,26 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @param Builder $query
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     */
+    private function addDateWhere(Builder $query, DateTime $start = null, DateTime $end = null)
+    {
+        if ($start) {
+            $query->andWhere(GaDayVisit::FIELD_DATE . ' >= :dateStart:', [
+                'dateStart' => $start->format(DbConfig::SQL_DATE_FORMAT)
+            ]);
+        }
+
+        if ($end) {
+            $query->andWhere(GaDayVisit::FIELD_DATE . ' <= :dateEnd:', [
+                'dateEnd' => $end->format(DbConfig::SQL_DATE_FORMAT)
+            ]);
+        }
+    }
+
+    /**
      * @param DateTime|null $start
      * @param DateTime|null $end
      *
@@ -137,17 +195,7 @@ class AnalyticsService extends Injectable
             ->columns(['date', 'SUM(visits) AS visits', 'SUM(unique_visits) AS unique_visits'])
             ->groupBy('date');
 
-        if ($start) {
-            $query->andWhere('date >= :dateStart:', [
-                'dateStart' => $start->format(DbConfig::SQL_DATE_FORMAT)
-            ]);
-        }
-
-        if ($end) {
-            $query->andWhere('date <= :dateEnd:', [
-                'dateEnd' => $end->format(DbConfig::SQL_DATE_FORMAT)
-            ]);
-        }
+        $this->addDateWhere($query, $start, $end);
 
         return $query;
     }
@@ -174,6 +222,74 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     *
+     * @return int
+     */
+    private function getDailyAverage(DateTime $start = null, DateTime $end = null): int
+    {
+        $query = (new Builder())
+            ->from(GaDayVisit::class)
+            ->columns(['AVG(' . GaDayVisit::FIELD_VISITS . ')']);
+
+        $this->addDateWhere($query, $start, $end);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     *
+     * @return int
+     */
+    private function getMonthlyAverage(DateTime $start = null, DateTime $end = null): int
+    {
+        $query = (new Builder())
+            ->from(GaDayVisit::class)
+            ->columns(['ROUND(AVG(' . GaDayVisit::FIELD_VISITS . ') * 365.25 / 12)']);
+
+        $this->addDateWhere($query, $start, $end);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     *
+     * @return int
+     */
+    private function getTotalVisits(DateTime $start = null, DateTime $end = null): int
+    {
+        $query = (new Builder())
+            ->from(GaDayVisit::class)
+            ->columns(['SUM(' . GaDayVisit::FIELD_VISITS . ')']);
+
+        $this->addDateWhere($query, $start, $end);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     *
+     * @return int
+     */
+    private function getTotalUniqueVisits(DateTime $start = null, DateTime $end = null): int
+    {
+        $query = (new Builder())
+            ->from(GaDayVisit::class)
+            ->columns(['SUM(' . GaDayVisit::FIELD_UNIQUE_VISITS . ')']);
+
+        $this->addDateWhere($query, $start, $end);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
      * @param string $type
      * @return DateTime|null
      */
@@ -193,6 +309,32 @@ class AnalyticsService extends Injectable
     private function getVisitDataFromGoogle(): array
     {
         return $this->getVisitorDataFromGoogle(null, null, ["ga:percentNewSessions" => "unique"]);
+    }
+
+    /**
+     * @param string $type
+     * @param DateTime|null $start
+     * @param DateTime|null $end
+     * @param int $totalVisits
+     * @return array
+     */
+    private function getVisitorDataByType(string $type, DateTime $start = null, DateTime $end = null, int $totalVisits): array
+    {
+        $query = (new Builder)
+            ->from(GaVisitData::class)
+            ->columns([
+                GaVisitData::FIELD_VALUE,
+                'SUM(' . GaVisitData::FIELD_VISITS . ') AS visits',
+                'ROUND((SUM(' . GaVisitData::FIELD_VISITS . ') / ' . $totalVisits . ') * 100, 1) AS percentage'
+            ])
+            ->where(GaVisitData::FIELD_TYPE . ' = :type:', ['type' => $type])
+            ->groupBy(GaVisitData::FIELD_VALUE)
+            ->orderBy('visits DESC')
+            ->limit(25);
+
+        $this->addDateWhere($query, $start, $end);
+
+        return $query->getQuery()->execute()->toArray();
     }
 
     /**
@@ -218,7 +360,7 @@ class AnalyticsService extends Injectable
 
         $metrics = [$sessions];
 
-        foreach ($addMetrics as $metricName => $alias){
+        foreach ($addMetrics as $metricName => $alias) {
             $metric = new \Google_Service_AnalyticsReporting_Metric();
             $metric->setExpression($metricName);
             $metric->setAlias($alias);
@@ -237,7 +379,7 @@ class AnalyticsService extends Injectable
 
         $dimensions = [$year, $month, $day];
 
-        if($dimensionName) {
+        if ($dimensionName) {
             $dimension = new \Google_Service_AnalyticsReporting_Dimension();
             $dimension->setName($dimensionName);
 
@@ -313,16 +455,7 @@ class AnalyticsService extends Injectable
      */
     private function importVisitorData()
     {
-        $types = [
-            'source'     => 'ga:source',
-            'os'         => 'ga:operatingSystem',
-            'page'       => 'ga:pagePath',
-            'browser'    => 'ga:browser',
-            'location'   => 'ga:city',
-            'resolution' => 'ga:screenResolution',
-        ];
-
-        foreach ($types as $type => $dimension) {
+        foreach (StatisticsConfig::GA_TYPES as $type => $dimension) {
             $fromDate   = $this->getTypeLastUpdate($type);
             $results    = $this->getVisitorDataFromGoogle($dimension, $fromDate);
             $insertData = [];
@@ -340,7 +473,7 @@ class AnalyticsService extends Injectable
                 $insertData[] = $insertRow;
             }
 
-            if($fromDate){
+            if ($fromDate) {
                 $this->dbService->delete(GaVisitData::class, [
                     GaVisitData::FIELD_DATE => $fromDate->format(DbConfig::SQL_DATE_FORMAT),
                     GaVisitData::FIELD_TYPE => $type,

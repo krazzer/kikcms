@@ -80,3 +80,10 @@ textarea.form-control{
         }
     }
 }
+
+.tab-content{
+
+    .table-striped tr:first-child td{
+        border-top: none;
+    }
+}

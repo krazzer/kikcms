@@ -17,8 +17,12 @@
         <input type="hidden" name="settings" value="{{ settings|json_encode }}">
 
         <div class="btn-group interval" role="group">
-            <button type="button" class="btn btn-default" data-interval="daily">{{ tl('statistics.intervalDay') }}</button>
-            <button type="button" class="btn btn-primary" data-interval="monthly">{{ tl('statistics.intervalMaand') }}</button>
+            <button type="button" class="btn btn-default" data-interval="daily">
+                {{ tl('statistics.intervalDay') }}
+            </button>
+            <button type="button" class="btn btn-primary" data-interval="monthly">
+                {{ tl('statistics.intervalMaand') }}
+            </button>
         </div>
 
         <div class="dateRange">
@@ -34,4 +38,96 @@
     </div>
 
     <div id="visitors"></div>
+
+    <div id="visitorData" class="">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-overview" data-toggle="tab">{{ tl('statistics.tab.overview') }}</a></li>
+            <li><a href="#tab-source" data-toggle="tab">{{ tl('statistics.tab.source') }}</a></li>
+            <li><a href="#tab-page" data-toggle="tab">{{ tl('statistics.tab.page') }}</a></li>
+            <li><a href="#tab-location" data-toggle="tab">{{ tl('statistics.tab.location') }}</a></li>
+            <li><a href="#tab-browser" data-toggle="tab">{{ tl('statistics.tab.browser') }}</a></li>
+            <li><a href="#tab-resolution" data-toggle="tab">{{ tl('statistics.tab.resolution') }}</a></li>
+            <li><a href="#tab-os" data-toggle="tab">{{ tl('statistics.tab.os') }}</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab-overview">
+                <table class="table table-striped">
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-source">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.source') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-page">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.page') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-location">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.location') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-browser">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.browser') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-resolution">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.resolution') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-os">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.os') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

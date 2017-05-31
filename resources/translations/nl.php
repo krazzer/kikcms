@@ -303,6 +303,25 @@ return [
         'untilDate'       => 'T/m datum',
         'intervalDay'     => 'Per day',
         'intervalMaand'   => 'Per maand',
+
+        'overview' => [
+            'totalVisits'       => 'Aantal bezoeken',
+            'totalUniqueVisits' => 'Aantal unieke bezoeken',
+            'dailyAverage'      => 'Gemiddeld bezoek per dag',
+            'monthlyAverage'    => 'Gemiddeld bezoek per maand',
+        ],
+
+        'tab' => [
+            'overview'   => 'Overzicht',
+            'source'     => 'Bron',
+            'page'       => "Pagina",
+            'location'   => 'Locatie',
+            'browser'    => 'Browser',
+            'resolution' => 'Resolutie',
+            'os'         => 'Besturingssysteem',
+            'hits'       => 'Hits',
+            'percentage' => 'Percentage',
+        ],
     ],
 
     'system' => [

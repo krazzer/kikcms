@@ -57,11 +57,18 @@ class CmsController extends BaseCmsController
         $interval = $this->request->getPost('interval', null, StatisticsConfig::VISITS_MONTHLY);
         $start    = $this->dateTimeService->getFromDatePickerValue($this->request->getPost('start'));
         $end      = $this->dateTimeService->getFromDatePickerValue($this->request->getPost('end'));
-        $data     = $this->analyticsService->getVisitorsChartData($interval, $start, $end);
 
-        $data['requireUpdate'] = $this->analyticsService->needsUpdate();
+        $visitorsData   = $this->analyticsService->getVisitorsChartData($interval, $start, $end);
+        $visitorData    = $this->analyticsService->getVisitorData($start, $end);
+        $overviewData   = $this->analyticsService->getOverviewData($start, $end);
+        $requiresUpdate = $this->analyticsService->needsUpdate();
 
-        return json_encode($data);
+        return json_encode([
+            'visitorsData'   => $visitorsData,
+            'visitorData'    => $visitorData,
+            'overviewData'   => $overviewData,
+            'requiresUpdate' => $requiresUpdate,
+        ]);
     }
 
     /**
