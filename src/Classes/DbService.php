@@ -247,6 +247,15 @@ class DbService extends Injectable
     }
 
     /**
+     * @param Builder $query
+     * @return array
+     */
+    public function getRows(Builder $query): array
+    {
+        return $query->getQuery()->execute()->toArray();
+    }
+
+    /**
      * Retrieve a single result from the given query
      *
      * @param Builder $query

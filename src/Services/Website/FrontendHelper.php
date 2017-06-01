@@ -57,16 +57,6 @@ class FrontendHelper extends Injectable
     }
 
     /**
-     * @param string $string
-     * @param array $replaces
-     * @return mixed|string
-     */
-    public function tl($string, $replaces = [])
-    {
-        return $this->translator->tl($string, $replaces);
-    }
-
-    /**
      * @param int $pageId
      * @return string
      */
