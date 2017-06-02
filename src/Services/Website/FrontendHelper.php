@@ -4,7 +4,6 @@ namespace KikCMS\Services\Website;
 
 
 use KikCMS\Classes\Translator;
-use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
@@ -25,12 +24,20 @@ class FrontendHelper extends Injectable
     /** @var string */
     private $languageCode;
 
+    /** @var PageLanguage */
+    private $currentPageLanguage;
+
+    /** @var PageLanguage[] mapped by pageId */
+    private $currentPathCached;
+
     /**
      * @param string $languageCode
+     * @param PageLanguage $pageLanguage
      */
-    public function __construct(string $languageCode)
+    public function initialize(string $languageCode, PageLanguage $pageLanguage)
     {
-        $this->languageCode = $languageCode;
+        $this->languageCode        = $languageCode;
+        $this->currentPageLanguage = $pageLanguage;
     }
 
     /**
@@ -38,22 +45,50 @@ class FrontendHelper extends Injectable
      *
      * @param int $menuId
      * @param int|null $maxLevel
+     * @param string|null $template
+     * @param array $fields
      * @return string
      */
-    public function menu(int $menuId, int $maxLevel = null): string
+    public function menu(int $menuId, int $maxLevel = null, string $template = null, array $fields = []): string
     {
-        $cacheKey = CacheConfig::MENU . ':' . $menuId . $this->languageCode;
+        if ( ! $menu = Page::getById($menuId)) {
+            return '';
+        }
 
-        return $this->cacheService->cache($cacheKey, function () use ($menuId, $maxLevel) {
-            if ( ! $menu = Page::getById($menuId)) {
-                return '';
-            }
+        $pageMap         = $this->pageService->getChildren($menu, $maxLevel);
+        $pageLanguageMap = $this->pageLanguageService->getByPageMap($pageMap, $this->languageCode);
 
-            $pageMap         = $this->pageService->getChildren($menu);
-            $pageLanguageMap = $this->pageLanguageService->getByPageMap($pageMap, $this->languageCode);
+        if ($fields) {
+            $pageFieldTable = $this->pageLanguageService->getPageFieldTable($pageMap, $this->languageCode, $fields);
+        } else {
+            $pageFieldTable = [];
+        }
 
-            return $this->buildMenu($menu, $pageMap, $pageLanguageMap, $maxLevel);
-        });
+        return $this->buildMenu($menu, $pageMap, $pageLanguageMap, $maxLevel, (int) $menu->level, $template, $pageFieldTable);
+    }
+
+    /**
+     * @return PageLanguage
+     */
+    public function getCurrentPageLanguage(): PageLanguage
+    {
+        return $this->currentPageLanguage;
+    }
+
+    /**
+     * Get a map with PageLanguages walking downwards the page hierarchy
+     *
+     * @return PageLanguage[]
+     */
+    public function getPath(): array
+    {
+        if ($this->currentPathCached) {
+            return $this->currentPathCached;
+        }
+
+        $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage);
+
+        return $this->currentPathCached;
     }
 
     /**
@@ -68,13 +103,25 @@ class FrontendHelper extends Injectable
     }
 
     /**
+     * @param int $pageId
+     * @return bool
+     */
+    public function inPath(int $pageId): bool
+    {
+        return array_key_exists($pageId, $this->getPath());
+    }
+
+    /**
      * @param Page $parentPage
      * @param Page[] $pageMap
      * @param PageLanguage[] $pageLanguageMap
      * @param int|null $maxLevel
+     * @param int $initialLevel
+     * @param string|null $template
+     * @param array $pageFieldTable
      * @return string
      */
-    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap, int $maxLevel = null): string
+    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap, int $maxLevel = null, int $initialLevel, string $template = null, array $pageFieldTable): string
     {
         $menuOutput = '';
 
@@ -90,15 +137,22 @@ class FrontendHelper extends Injectable
 
             $pageLanguage = $pageLanguageMap[$page->getId()];
 
-            $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
-
-            if ($maxLevel && (int) $page->level === (int) $parentPage->level + $maxLevel) {
+            if ($maxLevel !== null && (int) $page->level >= (int) $initialLevel + $maxLevel) {
                 $subMenuOutput = '';
             } else {
-                $subMenuOutput = $this->buildMenu($page, $pageMap, $pageLanguageMap, $maxLevel);
+                $subMenuOutput = $this->buildMenu($page, $pageMap, $pageLanguageMap, $maxLevel, $initialLevel, $template, $pageFieldTable);
             }
 
-            $menuOutput .= '<li><a href="' . $url . '">' . $pageLanguage->name . '</a>';
+            $class = $this->inPath($page->getId()) ? 'selected' : '';
+
+            if(array_key_exists($page->getId(), $pageFieldTable)){
+                $params = $pageFieldTable[$page->getId()];
+            } else {
+                $params = [];
+            }
+
+            $menuOutput .= '<li class="' . $class . '">';
+            $menuOutput .= $this->getMenuItemOutput($pageLanguage, $template, $params);
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
         }
@@ -108,5 +162,29 @@ class FrontendHelper extends Injectable
         }
 
         return '<ul>' . $menuOutput . '</ul>';
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @param string|null $template
+     * @param array $params
+     * @return string
+     */
+    private function getMenuItemOutput(PageLanguage $pageLanguage, string $template = null, array $params = []): string
+    {
+        if ($template) {
+            return $this->view->getPartial('@kikcms/frontend/menu', array_merge($params, [
+                'menuBlock'           => 'menu' . ucfirst($template),
+                'id'                  => $pageLanguage->getPageId(),
+                'name'                => $pageLanguage->name,
+                'pageLanguage'        => $pageLanguage,
+                'currentPageLanguage' => $this->getCurrentPageLanguage(),
+                'url'                 => $this->getUrl($pageLanguage->getPageId()),
+            ]));
+        }
+
+        $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
+
+        return '<a href="' . $url . '">' . $pageLanguage->name . '</a>';
     }
 }

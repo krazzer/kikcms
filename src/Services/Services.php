@@ -27,6 +27,7 @@ use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Util\DateTimeService;
+use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\WebsiteService;
 use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
@@ -67,6 +68,7 @@ class Services extends BaseServices
             DbService::class,
             DeployService::class,
             ImageHandler::class,
+            FrontendHelper::class,
             PageContentService::class,
             PageLanguageService::class,
             PageRearrangeService::class,
@@ -125,7 +127,7 @@ class Services extends BaseServices
      */
     protected function initCache()
     {
-        if ($this instanceof Cli) {
+        if ($this instanceof Cli || isset($_GET['nocache'])) {
             return false;
         }
 

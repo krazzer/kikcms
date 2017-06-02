@@ -20,6 +20,7 @@ use Phalcon\Http\Response;
  * @property UrlService $urlService
  * @property Translator $translator
  * @property WebsiteService $websiteService
+ * @property FrontendHelper $frontendHelper
  */
 class FrontendController extends BaseController
 {
@@ -64,27 +65,29 @@ class FrontendController extends BaseController
      */
     private function loadPage(PageLanguage $pageLanguage)
     {
-        $languageCode   = $pageLanguage->language_code;
-        $frontendHelper = new FrontendHelper($languageCode);
-        $templateFile   = $pageLanguage->page->template->file;
+        $languageCode = $pageLanguage->language_code;
+        $templateFile = $pageLanguage->page->template->file;
+
+        $this->frontendHelper->initialize($languageCode, $pageLanguage);
+        $this->translator->setLanguageCode($languageCode);
 
         $variables         = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
         $websiteVariables  = $this->websiteService->getWebsiteVariables($variables);
         $templateVariables = $this->websiteService->getWebsiteTemplateVariables($templateFile);
 
-        $this->translator->setLanguageCode($languageCode);
-
         $variables = array_merge($websiteVariables, $templateVariables);
         $variables = $this->websiteService->getForms($variables);
 
         // in case a form has been send, it might want to redirect
-        if($variables instanceof Response){
+        if ($variables instanceof Response) {
             return $variables;
         }
 
-        $this->view->title        = $pageLanguage->name;
         $this->view->languageCode = $languageCode;
-        $this->view->helper       = $frontendHelper;
+        $this->view->pageLanguage = $pageLanguage;
+
+        $this->view->title  = $pageLanguage->name;
+        $this->view->helper = $this->frontendHelper;
 
         $this->view->setVars($variables);
         $this->view->pick('@website/templates/' . $templateFile);

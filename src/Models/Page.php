@@ -28,6 +28,17 @@ class Page extends Model
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
 
+    /**
+     * @return bool
+     */
+    public function hasChildren(): bool
+    {
+        return $this->rgt - $this->lft > 1;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         parent::initialize();

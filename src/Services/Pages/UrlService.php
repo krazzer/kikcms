@@ -147,7 +147,7 @@ class UrlService extends Injectable
                 $urlParts[]   = $pageLanguage->url;
             }
 
-            return implode('/', array_reverse($urlParts));
+            return '/' . implode('/', array_reverse($urlParts));
         });
     }
 

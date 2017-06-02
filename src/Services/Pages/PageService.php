@@ -18,28 +18,36 @@ class PageService extends Injectable
 {
     /**
      * @param Page $page
-     * @return Page[] [pageId => Page] (PageMap)
+     * @param int|null $maxLevel
+     * @return array|Page[] [pageId => Page] (PageMap)
      */
-    public function getChildren(Page $page): array
+    public function getChildren(Page $page, int $maxLevel = null): array
     {
-        $pagesResult = $this->getChildrenQuery($page)->getQuery()->execute();
+        $pagesResult = $this->getChildrenQuery($page, $maxLevel)->getQuery()->execute();
 
         return $this->getPageMap($pagesResult);
     }
 
     /**
      * @param Page $page
+     * @param int|null $maxLevel
      * @return Builder
      */
-    public function getChildrenQuery(Page $page): Builder
+    public function getChildrenQuery(Page $page, int $maxLevel = null): Builder
     {
-        return (new Builder())
+        $query = (new Builder())
             ->from(Page::class)
             ->where('lft > :lft: AND rgt < :rgt:', [
                 'lft' => $page->lft,
                 'rgt' => $page->rgt
             ])
             ->orderBy('lft');
+
+        if($maxLevel){
+            $query->andWhere('level <= ' . (int) ($page->level + $maxLevel));
+        }
+
+        return $query;
     }
 
     /**

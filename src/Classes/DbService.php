@@ -161,7 +161,7 @@ class DbService extends Injectable
      */
     public function insertBulk(string $model, array $insertData)
     {
-        if(empty($insertData)){
+        if (empty($insertData)) {
             return true;
         }
 
@@ -171,12 +171,11 @@ class DbService extends Injectable
 
         $this->db->begin();
 
-        foreach ($insertDataChunks as $dataChunk)
-        {
+        foreach ($insertDataChunks as $dataChunk) {
             $insertValues = [];
 
             foreach ($dataChunk as $row) {
-                $row = array_map(function ($value){
+                $row = array_map(function ($value) {
                     return $this->escape($value);
                 }, $row);
 
@@ -222,7 +221,7 @@ class DbService extends Injectable
         $map     = [];
 
         foreach ($results as $i => $row) {
-            $row = (array) $row;
+            $row                        = (array) $row;
             $map[array_values($row)[0]] = array_values($row)[1];
         }
 
@@ -239,7 +238,7 @@ class DbService extends Injectable
     {
         $value = $this->getValue($query);
 
-        if( ! $value){
+        if ( ! $value) {
             return null;
         }
 
@@ -312,11 +311,49 @@ class DbService extends Injectable
         /** @var Model $result */
         $result = $query->getQuery()->execute()->getFirst();
 
-        if( ! $result){
+        if ( ! $result) {
             return [];
         }
 
         return $result->toArray();
+    }
+
+    /**
+     * Build up a table from the results of the query, like:
+     *
+     * $result = [
+     *      21 => [
+     *          'group_id' => 21,
+     *          'name'     => 'Justin',
+     *          'email'    => 'justin@justin.com',
+     *      ],
+     *      26 => [
+     *          'group_id' => 26,
+     *          'name'     => 'Pete',
+     *          'email'    => 'pete@pete.com',
+     *      ]
+     * ]
+     *
+     * @param Builder $query
+     * @return array
+     */
+    public function getTable(Builder $query)
+    {
+        $rows  = $this->getRows($query);
+        $table = [];
+
+        foreach ($rows as $row) {
+            $firstKey  = array_values($row)[0];
+            $secondKey = array_values($row)[1];
+
+            if ( ! array_key_exists($firstKey, $table)) {
+                $table[$firstKey] = [];
+            }
+
+            $table[$firstKey][$secondKey] = $row;
+        }
+
+        return $table;
     }
 
     /**
@@ -328,7 +365,7 @@ class DbService extends Injectable
     {
         $map = [];
 
-        foreach ($results as $result){
+        foreach ($results as $result) {
             $map[$result->$field] = $result;
         }
 
@@ -379,7 +416,7 @@ class DbService extends Injectable
                 if ( ! empty($condition)) {
                     $whereClauses[] = $column . " IN (" . implode(',', $condition) . ")";
                 }
-            } elseif(is_numeric($condition)) {
+            } elseif (is_numeric($condition)) {
                 $whereClauses[] = $column . ' = ' . $condition;
             } else {
                 $whereClauses[] = $column . ' = ' . $this->escape($condition);

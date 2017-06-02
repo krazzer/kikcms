@@ -30,4 +30,12 @@ class PageLanguage extends Model
 
         $this->belongsTo("page_id", Page::class, "id", ["alias" => "page"]);
     }
+
+    /**
+     * @return int
+     */
+    public function getPageId(): int
+    {
+        return (int) $this->page_id;
+    }
 }
