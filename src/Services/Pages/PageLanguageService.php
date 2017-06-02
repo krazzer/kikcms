@@ -175,7 +175,7 @@ class PageLanguageService extends Injectable
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->where('p.lft <= :lft: AND p.rgt >= :rgt:', [
+            ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu"', [
                 'lft' => $pageLanguage->page->lft,
                 'rgt' => $pageLanguage->page->rgt,
             ])->orderBy('lft ASC');

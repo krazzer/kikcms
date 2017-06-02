@@ -41,6 +41,16 @@ class FrontendHelper extends Injectable
     }
 
     /**
+     * @param string $type
+     * @param int $imageId
+     * @return string
+     */
+    public function bgThumb(string $type, int $imageId)
+    {
+        return "background-image: url('/finder/thumb/" . $type . "/" . $imageId . "')";
+    }
+
+    /**
      * Build a multi-level ul li structured menu
      *
      * @param int $menuId
@@ -145,7 +155,7 @@ class FrontendHelper extends Injectable
 
             $class = $this->inPath($page->getId()) ? 'selected' : '';
 
-            if(array_key_exists($page->getId(), $pageFieldTable)){
+            if (array_key_exists($page->getId(), $pageFieldTable)) {
                 $params = $pageFieldTable[$page->getId()];
             } else {
                 $params = [];
@@ -174,12 +184,11 @@ class FrontendHelper extends Injectable
     {
         if ($template) {
             return $this->view->getPartial('@kikcms/frontend/menu', array_merge($params, [
-                'menuBlock'           => 'menu' . ucfirst($template),
-                'id'                  => $pageLanguage->getPageId(),
-                'name'                => $pageLanguage->name,
-                'pageLanguage'        => $pageLanguage,
-                'currentPageLanguage' => $this->getCurrentPageLanguage(),
-                'url'                 => $this->getUrl($pageLanguage->getPageId()),
+                'menuBlock'    => 'menu' . ucfirst($template),
+                'id'           => $pageLanguage->getPageId(),
+                'name'         => $pageLanguage->name,
+                'pageLanguage' => $pageLanguage,
+                'url'          => $this->getUrl($pageLanguage->getPageId()),
             ]));
         }
 

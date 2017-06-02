@@ -331,6 +331,7 @@ return [
         'momentJsDateFormat' => 'DD-MM-YYYY',
         'dateDisplayFormat'  => '%e %b %Y',
         'monthDisplayFormat' => '%b %Y',
+        'decimalNotation'    => 'comma',
     ],
 
     'webform' => [

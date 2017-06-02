@@ -38,4 +38,20 @@ class PageLanguage extends Model
     {
         return (int) $this->page_id;
     }
+
+    /**
+     * @return string
+     */
+    public function getLanguageCode(): string
+    {
+        return (string) $this->language_code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return (string) $this->name;
+    }
 }

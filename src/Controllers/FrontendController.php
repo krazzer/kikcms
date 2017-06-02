@@ -85,6 +85,7 @@ class FrontendController extends BaseController
 
         $this->view->languageCode = $languageCode;
         $this->view->pageLanguage = $pageLanguage;
+        $this->view->pageId       = $pageLanguage->getPageId();
 
         $this->view->title  = $pageLanguage->name;
         $this->view->helper = $this->frontendHelper;

@@ -246,15 +246,6 @@ class DbService extends Injectable
     }
 
     /**
-     * @param Builder $query
-     * @return array
-     */
-    public function getRows(Builder $query): array
-    {
-        return $query->getQuery()->execute()->toArray();
-    }
-
-    /**
      * Retrieve a single result from the given query
      *
      * @param Builder $query
@@ -319,7 +310,7 @@ class DbService extends Injectable
     }
 
     /**
-     * Build up a table from the results of the query, like:
+     * Build up a rows with the first value as key from the results of the query, like:
      *
      * $result = [
      *      21 => [
@@ -331,6 +322,55 @@ class DbService extends Injectable
      *          'group_id' => 26,
      *          'name'     => 'Pete',
      *          'email'    => 'pete@pete.com',
+     *      ]
+     * ]
+     *
+     * @param Builder $query
+     * @return array
+     */
+    public function getKeyedRows(Builder $query): array
+    {
+        $rows      = $this->getRows($query);
+        $keyedRows = [];
+
+        foreach ($rows as $row) {
+            $row      = (array) $row;
+            $firstKey = array_values((array) $row)[0];
+
+            $keyedRows[$firstKey] = $row;
+        }
+
+        return $keyedRows;
+    }
+
+    /**
+     * @param Builder $query
+     * @return array
+     */
+    public function getRows(Builder $query): array
+    {
+        return $query->getQuery()->execute()->toArray();
+    }
+
+    /**
+     * Build up a table from the results of the query, like:
+     *
+     * $result = [
+     *      1 => [
+     *          15 => [
+     *              'group_id' => 1,
+     *              'age'      => 15,
+     *              'name'     => 'Justin',
+     *              'email'    => 'justin@justin.com',
+     *          ],
+     *      ],
+     *      2 => [
+     *          16 => [
+     *              'group_id' => 2,
+     *              'age'      => 16,
+     *              'name'     => 'Pete',
+     *              'email'    => 'pete@pete.com',
+     *          ]
      *      ]
      * ]
      *

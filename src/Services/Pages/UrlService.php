@@ -137,6 +137,10 @@ class UrlService extends Injectable
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
+            if($pageLanguage->page->type == Page::TYPE_LINK){
+                return $this->getUrlForLinkedPage($pageLanguage);
+            }
+
             $langCode = $pageLanguage->language_code;
             $parent   = $pageLanguage->page->parent;
             $urlParts = [$pageLanguage->url];
@@ -253,5 +257,26 @@ class UrlService extends Injectable
         $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
 
         return $this->urlExists($pageLang->url, $parentId, $pageLang->language_code, $pageLang);
+    }
+
+    /**
+     * @param $pageLanguage
+     * @return string
+     */
+    private function getUrlForLinkedPage(PageLanguage $pageLanguage): string
+    {
+        $link = $pageLanguage->page->link;
+
+        if(empty($link)){
+            return '';
+        }
+
+        if( ! is_numeric($link)) {
+            return $link;
+        }
+
+        $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
+
+        return $this->getUrlByPageLanguage($pageLanguageLink);
     }
 }

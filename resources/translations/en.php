@@ -70,6 +70,7 @@ return [
         'langCode'           => 'en',
         'phpDateFormat'      => 'Y-m-d',
         'momentJsDateFormat' => 'YYYY-MM-DD',
+        'decimalNotation'    => 'point',
     ],
 
     'webform' => [
