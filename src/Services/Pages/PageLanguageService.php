@@ -136,6 +136,10 @@ class PageLanguageService extends Injectable
      */
     public function getPageFieldTable(array $pageMap, string $langCode, $fields = []): array
     {
+        if( ! $pageMap){
+            return [];
+        }
+
         $query = (new Builder)
             ->from(['p' => Page::class])
             ->leftJoin(PageContent::class, 'pc.page_id = p.id', 'pc')
