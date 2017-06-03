@@ -100,11 +100,10 @@ class WebsiteService
     }
 
     /**
-     * @param array $variables
      * @return array
      */
-    public function getWebsiteVariables(array $variables): array
+    public function getWebsiteVariables(): array
     {
-        return $this->callMethod('TemplateVariables', 'getVariables', [$variables], false, $variables);
+        return $this->callMethod('TemplateVariables', 'getVariables', [], false, []);
     }
 }

@@ -15,11 +15,16 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 class Translation extends FieldStorage
 {
+    /** @var string|null if the datable itself is not multilingual, this can be set to force a field to translate for a certain language */
+    private $languageCode = null;
+
     /**
      * @inheritdoc
      */
     public function store($value, $relationId, $languageCode = null)
     {
+        $languageCode = $this->languageCode ?: $languageCode;
+
         $translationKeyId = $this->getTranslationKeyId($relationId);
 
         $this->translationService->saveValue($value, $translationKeyId, $languageCode);
@@ -33,9 +38,19 @@ class Translation extends FieldStorage
      */
     public function getValue($relationId, $languageCode = null)
     {
+        $languageCode = $this->languageCode ?: $languageCode;
+
         $translationKeyId = $this->getTranslationKeyId($relationId);
 
         return $this->translationService->getTranslationValue($translationKeyId, $languageCode);
+    }
+
+    /**
+     * @param null|string $languageCode
+     */
+    public function setLanguageCode($languageCode)
+    {
+        $this->languageCode = $languageCode;
     }
 
     /**

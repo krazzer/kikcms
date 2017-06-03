@@ -71,11 +71,11 @@ class FrontendController extends BaseController
         $this->frontendHelper->initialize($languageCode, $pageLanguage);
         $this->translator->setLanguageCode($languageCode);
 
-        $variables         = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
-        $websiteVariables  = $this->websiteService->getWebsiteVariables($variables);
+        $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $websiteVariables  = $this->websiteService->getWebsiteVariables();
         $templateVariables = $this->websiteService->getWebsiteTemplateVariables($templateFile);
 
-        $variables = array_merge($websiteVariables, $templateVariables);
+        $variables = array_merge($fieldVariables, $websiteVariables, $templateVariables);
         $variables = $this->websiteService->getForms($variables);
 
         // in case a form has been send, it might want to redirect
@@ -89,7 +89,7 @@ class FrontendController extends BaseController
 
         $this->view->title  = $pageLanguage->name;
         $this->view->helper = $this->frontendHelper;
-
+        dlog(array_keys($variables));
         $this->view->setVars($variables);
         $this->view->pick('@website/templates/' . $templateFile);
 

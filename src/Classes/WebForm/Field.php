@@ -294,12 +294,18 @@ class Field
 
     /**
      * Shortcut to set the storage in the cms_translation_value table
+     * @param null $languageCode
+     * @return $this
      */
-    public function translate()
+    public function translate($languageCode = null)
     {
         $fieldStorage = new Translation();
         $fieldStorage->setField($this);
         $fieldStorage->setTableModel($this->form->getModel());
+
+        if($languageCode){
+            $fieldStorage->setLanguageCode($languageCode);
+        }
 
         $this->form->addFieldStorage($fieldStorage);
 

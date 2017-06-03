@@ -175,7 +175,7 @@ class PageForm extends DataForm
             break;
         }
 
-        if ( ! isset($templateField)) {
+        if ( ! isset($templateField) || ! $templateField) {
             return;
         }
 
