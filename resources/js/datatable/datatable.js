@@ -7,6 +7,8 @@ var DataTable = Class.extend({
     currentFormInput: null,
     parentEditId: null,
 
+    $table: null,
+
     getDeleteConfirmMessage: function (amount) {
         var confirmText = capitalize(KikCMS.tl('dataTable.delete.confirmOne', {itemSingular: this.labels[0]}));
 
@@ -120,7 +122,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (self.getWindow().hasClass('blur') || ! self.getForm().length) {
+                if (self.getWindow().hasClass('blur') || !self.getForm().length) {
                     return true;
                 }
 
@@ -132,7 +134,7 @@ var DataTable = Class.extend({
 
         var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
-                if (self.getWindow().hasClass('blur') || ! self.getForm().length) {
+                if (self.getWindow().hasClass('blur') || !self.getForm().length) {
                     return true;
                 }
 
@@ -219,8 +221,10 @@ var DataTable = Class.extend({
     },
 
     initTable: function () {
+        this.$table = this.getDataTable().find('table');
+
         var self  = this;
-        var $rows = this.getDataTable().find('tbody tr');
+        var $rows = this.$table.find('tbody tr');
 
         $rows.find('td:not(.action)').click(function () {
             var $row = $(this).parent();
@@ -268,10 +272,38 @@ var DataTable = Class.extend({
 
         this.initImageThumbs();
         this.updateToolbar();
+        this.initTableCheckBoxes();
 
         if (typeof SortControl !== 'undefined') {
             this.initSort();
         }
+    },
+
+    initTableCheckBoxes: function () {
+        var self = this;
+
+        this.$table.find('input[type=checkbox]').click(function (e) {
+            e.stopPropagation();
+        }).dblclick(function (e) {
+            e.stopPropagation();
+        }).change(function () {
+            var $checkbox = $(this);
+            var checked   = $checkbox.is(":checked");
+            var editId    = $checkbox.parent().parent().attr('data-id');
+            var column    = $checkbox.attr('data-col');
+
+            $checkbox.attr('readonly', 'readonly');
+
+            self.action('checkCheckbox', {
+                editId: editId,
+                column: column,
+                checked: checked ? 1 : 0
+            }, function () {
+                $checkbox.removeAttr('readonly')
+            }, function () {
+                $checkbox.removeAttr('readonly');
+            })
+        });
     },
 
     initTabs: function () {
@@ -369,7 +401,7 @@ var DataTable = Class.extend({
         params.ids = ids;
 
         this.action('delete', params, function (result) {
-            if(result.error){
+            if (result.error) {
                 alert(result.error);
                 return;
             }
@@ -479,7 +511,7 @@ var DataTable = Class.extend({
 
     attemptToCloseWindow: function () {
         // window is closing
-        if(this.currentFormInput == null){
+        if (this.currentFormInput == null) {
             return;
         }
 
@@ -608,7 +640,7 @@ var DataTable = Class.extend({
 
         var languageCode = this.getLanguageCode();
 
-        if(languageCode){
+        if (languageCode) {
             filters.languageCode = languageCode;
         }
 

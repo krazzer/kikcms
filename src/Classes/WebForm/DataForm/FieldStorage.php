@@ -175,6 +175,7 @@ class FieldStorage extends Injectable
      * @param mixed $value
      * @param int $relationId
      * @param string $languageCode
+     * @return bool|mixed
      */
     public function store($value, $relationId, $languageCode = null)
     {
@@ -188,10 +189,10 @@ class FieldStorage extends Injectable
         }
 
         if ($this->relationRowExists($relationId, $languageCode)) {
-            $this->dbService->update($this->getTableModel(), $set, $where);
-        } else {
-            $this->dbService->insert($this->getTableModel(), $set + $where);
+            return $this->dbService->update($this->getTableModel(), $set, $where);
         }
+
+        return $this->dbService->insert($this->getTableModel(), $set + $where);
     }
 
     /**

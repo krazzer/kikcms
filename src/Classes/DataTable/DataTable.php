@@ -138,11 +138,51 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @param $id
+     * @param $column
+     * @param $checked
+     * @return bool
+     */
+    public function checkCheckbox($id, $column, $checked): bool
+    {
+        $this->renderEditForm();
+
+        $form  = $this->getForm();
+        $field = $form->getField($column);
+
+        if ($form->isStoredElsewhere($field)){
+            return $form->fieldStorage[$column]->store($checked, $id, $this->getFilters()->getLanguageCode());
+        }
+
+        return $this->dbService->update($this->getModel(), [$column => $checked], ['id' => $id]);
+    }
+
+    /**
      * @param array $ids
      */
     public function delete(array $ids)
     {
         $this->dbService->delete($this->getModel(), ['id' => $ids]);
+    }
+
+    /**
+     * @param $value
+     * @param $rowData
+     * @param $column
+     * @return string
+     */
+    protected function formatCheckbox($value, $rowData, $column)
+    {
+        $attributes = [
+            'type'     => 'checkbox',
+            'data-col' => $column,
+        ];
+
+        if ($rowData[$column] && $value) {
+            $attributes['checked'] = 'checked';
+        }
+
+        return Tag::tagHtml('input', $attributes);
     }
 
     /**
@@ -179,7 +219,7 @@ abstract class DataTable extends Renderable
      */
     public function formatValue(string $column, $value, array $rowData = [])
     {
-        return $this->fieldFormatting[$column]($value, $rowData);
+        return $this->fieldFormatting[$column]($value, $rowData, $column);
     }
 
     /**
@@ -304,7 +344,7 @@ abstract class DataTable extends Renderable
      */
     public function getRearranger(): Rearranger
     {
-        if( ! $this->rearranger){
+        if ( ! $this->rearranger) {
             $this->rearranger = new Rearranger($this);
         }
 

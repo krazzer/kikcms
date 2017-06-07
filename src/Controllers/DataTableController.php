@@ -66,6 +66,20 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
+    public function checkCheckboxAction()
+    {
+        $id      = $this->request->getPost('editId');
+        $column  = $this->request->getPost('column');
+        $checked = $this->request->getPost('checked');
+
+        $success = $this->getRenderable()->checkCheckbox($id, $column, $checked);
+
+        return json_encode($success);
+    }
+
+    /**
+     * @return string
+     */
     public function editAction()
     {
         $dataTable = $this->getRenderable();
@@ -191,7 +205,7 @@ class DataTableController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
-        if( ! $this->acl->allowed(Permission::ACCESS_DATATABLES)){
+        if ( ! $this->acl->allowed(Permission::ACCESS_DATATABLES)) {
             throw new UnauthorizedException();
         }
 

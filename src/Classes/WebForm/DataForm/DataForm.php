@@ -26,14 +26,14 @@ use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldSto
  */
 abstract class DataForm extends WebForm
 {
+    /** @var FieldStorage[] */
+    public $fieldStorage = [];
+
     /** @var DataFormFilters */
     protected $filters;
 
     /** @var string */
     protected $formTemplate = 'dataForm';
-
-    /** @var FieldStorage[] */
-    protected $fieldStorage = [];
 
     /** @var FieldTransformer[] */
     protected $fieldTransformers = [];
