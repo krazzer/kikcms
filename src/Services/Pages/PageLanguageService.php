@@ -88,7 +88,7 @@ class PageLanguageService extends Injectable
             $languageCode = $this->languageService->getDefaultLanguageCode();
         }
 
-        if ( ! $pageMap) {
+        if ($pageMap->isEmpty()) {
             return new PageLanguageMap();
         }
 
