@@ -28,10 +28,10 @@ class UrlService extends Injectable
      */
     public function createUrlsForPageId(int $pageId)
     {
-        $pageLanguages = $this->pageLanguageService->getAllByPageId($pageId);
+        $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
 
         /** @var PageLanguage $pageLanguage */
-        foreach ($pageLanguages as $pageLanguage) {
+        foreach ($pageLanguageMap as $pageLanguage) {
             $pageLanguage->url = $this->toSlug($pageLanguage->name);
 
             if ($this->urlExistsForPageLanguage($pageLanguage)) {

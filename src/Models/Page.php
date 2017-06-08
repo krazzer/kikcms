@@ -67,4 +67,20 @@ class Page extends Model
     {
         return (int) $this->id;
     }
+
+    /**
+     * @return int
+     */
+    public function getLevel(): int
+    {
+        return (int) $this->level;
+    }
+
+    /**
+     * @return int
+     */
+    public function getParentId(): int
+    {
+        return (int) $this->parent_id;
+    }
 }

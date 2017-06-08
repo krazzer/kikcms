@@ -4,6 +4,8 @@ namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Models\Page;
+use KikCMS\ObjectLists\PageLanguageMap;
+use KikCMS\ObjectLists\PageMap;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
@@ -19,9 +21,9 @@ class PageService extends Injectable
     /**
      * @param Page $page
      * @param int|null $maxLevel
-     * @return array|Page[] [pageId => Page] (PageMap)
+     * @return PageMap
      */
-    public function getChildren(Page $page, int $maxLevel = null): array
+    public function getChildren(Page $page, int $maxLevel = null): PageMap
     {
         $pagesResult = $this->getChildrenQuery($page, $maxLevel)->getQuery()->execute();
 
@@ -81,30 +83,40 @@ class PageService extends Injectable
 
     /**
      * @param Resultset $resultset
-     * @return Page[] [pageId => Page] (PageMap)
+     * @return PageMap
      */
-    public function getPageMap(Resultset $resultset)
+    public function getPageMap(Resultset $resultset): PageMap
     {
-        $pages = [];
+        $pageMap = new PageMap();
 
         foreach ($resultset as $page){
-            $pages[$page->id] = $page;
+            $pageMap->add($page, $page->id);
         }
 
-        return $pages;
+        return $pageMap;
+    }
+
+    /**
+     * @param Builder $query
+     * @return PageMap
+     */
+    public function getPageMapByQuery(Builder $query)
+    {
+        $results = $query->getQuery()->execute();
+
+        return $this->getPageMap($results);
     }
 
     /**
      * Create an array that can be used for a select using the given Page[]
      *
-     * @param array $pageMap [pageId => Page object]
-     * @param array $pageLangMap
      * @param int $parentId
+     * @param PageMap $pageMap
+     * @param PageLanguageMap $pageLangMap
      * @param int $level
-     *
      * @return array
      */
-    public function getSelect($parentId = 0, array $pageMap = [], array $pageLangMap = [], $level = 0): array
+    public function getSelect($parentId = 0, PageMap $pageMap, PageLanguageMap $pageLangMap, $level = 0): array
     {
         if ( ! $pageLangMap) {
             $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap);
@@ -119,7 +131,7 @@ class PageService extends Injectable
 
             $prefix = str_repeat('&nbsp;', $level * 5) . ($level % 2 ? 'ο' : '•') . ' ';
 
-            $selectArray[$pageId] = $prefix . $pageLangMap[$pageId]->name;
+            $selectArray[$pageId] = $prefix . $pageLangMap->get($pageId)->getName();
 
             $subArray    = $this->getSelect($pageId, $pageMap, $pageLangMap, $level + 1);
             $selectArray = $selectArray + $subArray;

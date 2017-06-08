@@ -21,6 +21,7 @@ use KikCMS\Classes\Storage\File as FileStorageFile;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\TinyMceService;
+use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
@@ -68,6 +69,7 @@ class Services extends BaseServices
             DbService::class,
             DeployService::class,
             ImageHandler::class,
+            FullPageService::class,
             FrontendHelper::class,
             PageContentService::class,
             PageLanguageService::class,

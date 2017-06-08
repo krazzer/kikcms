@@ -8,6 +8,8 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Models\PageLanguageContent;
+use KikCMS\ObjectLists\PageLanguageMap;
+use KikCMS\ObjectLists\PageMap;
 use KikCMS\Services\LanguageService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -63,42 +65,36 @@ class PageLanguageService extends Injectable
      * Get PageLanguages for the given pageId
      *
      * @param int $pageId
-     * @return PageLanguage[]
+     * @return PageLanguageMap
      */
-    public function getAllByPageId(int $pageId): array
+    public function getAllByPageId(int $pageId): PageLanguageMap
     {
-        $pageLanguages = [];
-
         $results = PageLanguage::find([
             'conditions' => 'page_id = :pageId:',
-            'bind'       => ['pageId' => $pageId,],
+            'bind'       => ['pageId' => $pageId],
         ]);
 
-        foreach ($results as $result) {
-            $pageLanguages[] = $result;
-        }
-
-        return $pageLanguages;
+        return $this->toMap($results);
     }
 
     /**
-     * @param array $pageMap
+     * @param PageMap $pageMap
      * @param string $languageCode
-     * @return PageLanguage[] (PageLanguageMap)
+     * @return PageLanguageMap
      */
-    public function getByPageMap(array $pageMap, string $languageCode = null): array
+    public function getByPageMap(PageMap $pageMap, string $languageCode = null): PageLanguageMap
     {
         if ( ! $languageCode) {
             $languageCode = $this->languageService->getDefaultLanguageCode();
         }
 
         if ( ! $pageMap) {
-            return [];
+            return new PageLanguageMap();
         }
 
         $pageLanguages = PageLanguage::find([
             'conditions' => 'page_id IN ({ids:array}) AND language_code = :langCode:',
-            'bind'       => ['ids' => array_keys($pageMap), 'langCode' => $languageCode]
+            'bind'       => ['ids' => $pageMap->keys(), 'langCode' => $languageCode]
         ]);
 
         return $this->toMap($pageLanguages);
@@ -129,14 +125,13 @@ class PageLanguageService extends Injectable
     }
 
     /**
-     * @param Page[] $pageMap
+     * @param PageMap $pageMap
      * @param string $langCode
-     * @param array $fields
      * @return array
      */
-    public function getPageFieldTable(array $pageMap, string $langCode, $fields = []): array
+    public function getPageFieldTable(PageMap $pageMap, string $langCode): array
     {
-        if( ! $pageMap){
+        if($pageMap->isEmpty()){
             return [];
         }
 
@@ -145,16 +140,12 @@ class PageLanguageService extends Injectable
             ->leftJoin(PageContent::class, 'pc.page_id = p.id', 'pc')
             ->leftJoin(PageLanguageContent::class, 'plc.page_id = p.id AND plc.language_code = "' . $langCode . '"', 'plc')
             ->join(Field::class, 'pc.field_id = f.id OR plc.field_id = f.id', 'f')
-            ->where('p.id IN ({ids:array})', ['ids' => array_keys($pageMap)])
+            ->where('p.id IN ({ids:array})', ['ids' => $pageMap->keys()])
             ->columns([
                 'IFNULL(plc.page_id, pc.page_id) as pageId',
                 'IFNULL(plc.value, pc.value) as value',
                 Field::FIELD_VARIABLE,
             ]);
-
-        if ($fields) {
-            $query->andWhere('f.variable IN ({fields:array})', ['fields' => $fields]);
-        }
 
         $rows  = $this->dbService->getRows($query);
         $table = [];
@@ -176,9 +167,9 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
-     * @return PageLanguage[]
+     * @return PageLanguageMap
      */
-    public function getPath(PageLanguage $pageLanguage): array
+    public function getPath(PageLanguage $pageLanguage): PageLanguageMap
     {
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
@@ -193,18 +184,18 @@ class PageLanguageService extends Injectable
 
     /**
      * @param Resultset|null $results
-     * @return array
+     * @return PageLanguageMap
      */
-    private function toMap(Resultset $results = null): array
+    private function toMap(Resultset $results = null): PageLanguageMap
     {
+        $pageLanguageMap = new PageLanguageMap();
+
         if ( ! $results) {
-            return [];
+            return $pageLanguageMap;
         }
 
-        $pageLanguageMap = [];
-
         foreach ($results as $pageLanguage) {
-            $pageLanguageMap[$pageLanguage->page_id] = $pageLanguage;
+            $pageLanguageMap->add($pageLanguage, $pageLanguage->page_id);
         }
 
         return $pageLanguageMap;

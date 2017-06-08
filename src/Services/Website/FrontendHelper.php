@@ -3,10 +3,13 @@
 namespace KikCMS\Services\Website;
 
 
+use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Translator;
-use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\ObjectLists\FullPageMap;
+use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
@@ -18,6 +21,7 @@ use Phalcon\Di\Injectable;
  * @property PageLanguageService $pageLanguageService
  * @property CacheService $cacheService
  * @property Translator $translator
+ * @property FullPageService $fullPageService
  */
 class FrontendHelper extends Injectable
 {
@@ -27,7 +31,7 @@ class FrontendHelper extends Injectable
     /** @var PageLanguage */
     private $currentPageLanguage;
 
-    /** @var PageLanguage[] mapped by pageId */
+    /** @var PageLanguageMap */
     private $currentPathCached;
 
     /**
@@ -56,25 +60,13 @@ class FrontendHelper extends Injectable
      * @param int $menuId
      * @param int|null $maxLevel
      * @param string|null $template
-     * @param array $fields
      * @return string
      */
-    public function menu(int $menuId, int $maxLevel = null, string $template = null, array $fields = []): string
+    public function menu(int $menuId, int $maxLevel = null, string $template = null): string
     {
-        if ( ! $menu = Page::getById($menuId)) {
-            return '';
-        }
+        $fullPageMap = $this->fullPageService->getByMenuId($menuId, $this->languageCode, $maxLevel);
 
-        $pageMap         = $this->pageService->getChildren($menu, $maxLevel);
-        $pageLanguageMap = $this->pageLanguageService->getByPageMap($pageMap, $this->languageCode);
-
-        if ($fields) {
-            $pageFieldTable = $this->pageLanguageService->getPageFieldTable($pageMap, $this->languageCode, $fields);
-        } else {
-            $pageFieldTable = [];
-        }
-
-        return $this->buildMenu($menu, $pageMap, $pageLanguageMap, $maxLevel, (int) $menu->level, $template, $pageFieldTable);
+        return $this->buildMenu($menuId, $maxLevel, $template, $fullPageMap);
     }
 
     /**
@@ -88,9 +80,9 @@ class FrontendHelper extends Injectable
     /**
      * Get a map with PageLanguages walking downwards the page hierarchy
      *
-     * @return PageLanguage[]
+     * @return PageLanguageMap
      */
-    public function getPath(): array
+    public function getPath(): PageLanguageMap
     {
         if ($this->currentPathCached) {
             return $this->currentPathCached;
@@ -118,51 +110,40 @@ class FrontendHelper extends Injectable
      */
     public function inPath(int $pageId): bool
     {
-        return array_key_exists($pageId, $this->getPath());
+        return $this->getPath()->has($pageId);
     }
 
     /**
-     * @param Page $parentPage
-     * @param Page[] $pageMap
-     * @param PageLanguage[] $pageLanguageMap
+     * @param int $parentId
      * @param int|null $maxLevel
-     * @param int $initialLevel
      * @param string|null $template
-     * @param array $pageFieldTable
+     * @param FullPageMap $fullPageMap
+     * @param int|null $initialLevel
+     *
      * @return string
      */
-    private function buildMenu(Page $parentPage, array $pageMap, array $pageLanguageMap, int $maxLevel = null, int $initialLevel, string $template = null, array $pageFieldTable): string
+    private function buildMenu(int $parentId, int $maxLevel = null, string $template = null, FullPageMap $fullPageMap, int $initialLevel = null): string
     {
+        $initialLevel = $initialLevel ?: $fullPageMap->getFirst()->getLevel() - 1;
+
         $menuOutput = '';
 
-        /** @var Page $page */
-        foreach ($pageMap as $page) {
-            if ($page->parent_id != $parentPage->getId()) {
+        /** @var FullPage $fullPage */
+        foreach ($fullPageMap as $fullPage) {
+            if ($fullPage->getParentId() != $parentId) {
                 continue;
             }
 
-            if ( ! array_key_exists($page->getId(), $pageLanguageMap)) {
-                continue;
-            }
-
-            $pageLanguage = $pageLanguageMap[$page->getId()];
-
-            if ($maxLevel !== null && (int) $page->level >= (int) $initialLevel + $maxLevel) {
+            if ($maxLevel !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $maxLevel) {
                 $subMenuOutput = '';
             } else {
-                $subMenuOutput = $this->buildMenu($page, $pageMap, $pageLanguageMap, $maxLevel, $initialLevel, $template, $pageFieldTable);
+                $subMenuOutput = $this->buildMenu($fullPage->getId(), $maxLevel, $template, $fullPageMap, $initialLevel);
             }
 
-            $class = $this->inPath($page->getId()) ? 'selected' : '';
-
-            if (array_key_exists($page->getId(), $pageFieldTable)) {
-                $params = $pageFieldTable[$page->getId()];
-            } else {
-                $params = [];
-            }
+            $class = $this->inPath($fullPage->getId()) ? 'selected' : '';
 
             $menuOutput .= '<li class="' . $class . '">';
-            $menuOutput .= $this->getMenuItemOutput($pageLanguage, $template, $params);
+            $menuOutput .= $this->getMenuItemOutput($fullPage, $template);
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
         }
@@ -175,25 +156,21 @@ class FrontendHelper extends Injectable
     }
 
     /**
-     * @param PageLanguage $pageLanguage
+     * @param FullPage $fullPage
      * @param string|null $template
-     * @param array $params
+     *
      * @return string
      */
-    private function getMenuItemOutput(PageLanguage $pageLanguage, string $template = null, array $params = []): string
+    private function getMenuItemOutput(FullPage $fullPage, string $template = null): string
     {
         if ($template) {
-            return $this->view->getPartial('@kikcms/frontend/menu', array_merge($params, [
-                'menuBlock'    => 'menu' . ucfirst($template),
-                'id'           => $pageLanguage->getPageId(),
-                'name'         => $pageLanguage->name,
-                'pageLanguage' => $pageLanguage,
-                'url'          => $this->getUrl($pageLanguage->getPageId()),
-            ]));
+            dlog($fullPage->getContent());
+            return $this->view->getPartial('@kikcms/frontend/menu', [
+                'menuBlock' => 'menu' . ucfirst($template),
+                'page'      => $fullPage,
+            ]);
         }
 
-        $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
-
-        return '<a href="' . $url . '">' . $pageLanguage->name . '</a>';
+        return '<a href="' . $fullPage->getUrl() . '">' . $fullPage->getName() . '</a>';
     }
 }
