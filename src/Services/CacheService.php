@@ -37,6 +37,7 @@ class CacheService extends Injectable
     {
         $this->clear(CacheConfig::URL);
         $this->clear(CacheConfig::MENU);
+        $this->clear(CacheConfig::MENU_FULL_PAGE_MAP);
         $this->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
     }
 
@@ -64,5 +65,13 @@ class CacheService extends Injectable
         }
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    public function createKey(): string
+    {
+        return implode(':', func_get_args());
     }
 }

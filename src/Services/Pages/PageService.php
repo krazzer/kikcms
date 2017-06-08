@@ -21,11 +21,12 @@ class PageService extends Injectable
     /**
      * @param Page $page
      * @param int|null $maxLevel
+     * @param int|null $restrictTemplateId
      * @return PageMap
      */
-    public function getChildren(Page $page, int $maxLevel = null): PageMap
+    public function getChildren(Page $page, int $maxLevel = null, int $restrictTemplateId = null): PageMap
     {
-        $pagesResult = $this->getChildrenQuery($page, $maxLevel)->getQuery()->execute();
+        $pagesResult = $this->getChildrenQuery($page, $maxLevel, $restrictTemplateId)->getQuery()->execute();
 
         return $this->getPageMap($pagesResult);
     }
@@ -33,9 +34,10 @@ class PageService extends Injectable
     /**
      * @param Page $page
      * @param int|null $maxLevel
+     * @param int|null $restrictTemplateId
      * @return Builder
      */
-    public function getChildrenQuery(Page $page, int $maxLevel = null): Builder
+    public function getChildrenQuery(Page $page, int $maxLevel = null, int $restrictTemplateId = null): Builder
     {
         $query = (new Builder())
             ->from(Page::class)
@@ -44,6 +46,10 @@ class PageService extends Injectable
                 'rgt' => $page->rgt
             ])
             ->orderBy('lft');
+
+        if($restrictTemplateId){
+            $query->andWhere(Page::FIELD_TEMPLATE_ID . ' = :templateId:', ['templateId' => $restrictTemplateId]);
+        }
 
         if($maxLevel){
             $query->andWhere('level <= ' . (int) ($page->level + $maxLevel));

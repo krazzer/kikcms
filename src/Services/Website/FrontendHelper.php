@@ -5,6 +5,7 @@ namespace KikCMS\Services\Website;
 
 use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Models\PageLanguage;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageLanguageMap;
@@ -13,6 +14,7 @@ use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
+use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 
 /**
@@ -20,6 +22,7 @@ use Phalcon\Di\Injectable;
  * @property PageService $pageService
  * @property PageLanguageService $pageLanguageService
  * @property CacheService $cacheService
+ * @property Backend $cache
  * @property Translator $translator
  * @property FullPageService $fullPageService
  */
@@ -60,13 +63,26 @@ class FrontendHelper extends Injectable
      * @param int $menuId
      * @param int|null $maxLevel
      * @param string|null $template
+     * @param int|null $restrictTemplateId
+     * @param bool $cache
      * @return string
      */
-    public function menu(int $menuId, int $maxLevel = null, string $template = null): string
+    public function menu(int $menuId, int $maxLevel = null, string $template = null, int $restrictTemplateId = null, $cache = true): string
     {
-        $fullPageMap = $this->fullPageService->getByMenuId($menuId, $this->languageCode, $maxLevel);
+        $cacheKey = $this->cacheService->createKey(CacheConfig::MENU, $menuId, $this->languageCode, $maxLevel, $template, $restrictTemplateId);
 
-        return $this->buildMenu($menuId, $maxLevel, $template, $fullPageMap);
+        if($cache && $menu = $this->cache->get($cacheKey)){
+            return $this->setActive($menu);
+        }
+
+        $fullPageMap = $this->fullPageService->getByMenuId($menuId, $this->languageCode, $maxLevel, $restrictTemplateId);
+        $menu = $this->buildMenu($menuId, $maxLevel, $template, $fullPageMap);
+
+        if($cache){
+            $this->cache->save($cacheKey, $menu, CacheConfig::ONE_DAY);
+        }
+
+        return $this->setActive($menu);
     }
 
     /**
@@ -133,7 +149,7 @@ class FrontendHelper extends Injectable
         $menuOutput = '';
 
         /** @var FullPage $fullPage */
-        foreach ($fullPageMap as $fullPage) {
+        foreach ($fullPageMap as $pageId => $fullPage) {
             if ($fullPage->getParentId() != $parentId) {
                 continue;
             }
@@ -141,12 +157,10 @@ class FrontendHelper extends Injectable
             if ($maxLevel !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $maxLevel) {
                 $subMenuOutput = '';
             } else {
-                $subMenuOutput = $this->buildMenu($fullPage->getId(), $maxLevel, $template, $fullPageMap, $initialLevel);
+                $subMenuOutput = $this->buildMenu($pageId, $maxLevel, $template, clone $fullPageMap, $initialLevel);
             }
 
-            $class = $this->inPath($fullPage->getId()) ? 'selected' : '';
-
-            $menuOutput .= '<li class="' . $class . '">';
+            $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '">';
             $menuOutput .= $this->getMenuItemOutput($fullPage, $template);
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
@@ -168,7 +182,6 @@ class FrontendHelper extends Injectable
     private function getMenuItemOutput(FullPage $fullPage, string $template = null): string
     {
         if ($template) {
-            dlog($fullPage->getContent());
             return $this->view->getPartial('@kikcms/frontend/menu', [
                 'menuBlock' => 'menu' . ucfirst($template),
                 'page'      => $fullPage,
@@ -176,5 +189,22 @@ class FrontendHelper extends Injectable
         }
 
         return '<a href="' . $fullPage->getUrl() . '">' . $fullPage->getName() . '</a>';
+    }
+
+    /**
+     * Replaces placeholder li class if they are currently visited
+     *
+     * @param string $menu
+     * @return string
+     */
+    private function setActive(string $menu): string
+    {
+        $path = $this->getPath();
+
+        foreach ($path as $pageId => $pageLanguage){
+            $menu = str_replace('class="s' . $pageId . '"', 'class="selected"', $menu);
+        }
+
+        return $menu;
     }
 }

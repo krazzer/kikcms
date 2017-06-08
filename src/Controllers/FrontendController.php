@@ -89,7 +89,7 @@ class FrontendController extends BaseController
 
         $this->view->title  = $pageLanguage->name;
         $this->view->helper = $this->frontendHelper;
-        dlog(array_keys($variables));
+
         $this->view->setVars($variables);
         $this->view->pick('@website/templates/' . $templateFile);
 
