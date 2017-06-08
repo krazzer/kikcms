@@ -10,16 +10,16 @@ class FullPageMap extends ObjectMap
 {
     /**
      * @param int|string $key
-     * @return FullPage
+     * @return FullPage|false
      */
-    public function get($key): FullPage
+    public function get($key)
     {
         return parent::get($key);
     }
     /**
-     * @return FullPage
+     * @return FullPage|false
      */
-    public function getFirst(): FullPage
+    public function getFirst()
     {
         return parent::getFirst();
     }

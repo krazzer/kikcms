@@ -124,6 +124,10 @@ class FrontendHelper extends Injectable
      */
     private function buildMenu(int $parentId, int $maxLevel = null, string $template = null, FullPageMap $fullPageMap, int $initialLevel = null): string
     {
+        if($fullPageMap->isEmpty()){
+            return '';
+        }
+
         $initialLevel = $initialLevel ?: $fullPageMap->getFirst()->getLevel() - 1;
 
         $menuOutput = '';

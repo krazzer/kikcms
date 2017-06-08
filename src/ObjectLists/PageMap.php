@@ -10,9 +10,9 @@ class PageMap extends ObjectMap
 {
     /**
      * @param int|string $key
-     * @return Page
+     * @return Page|false
      */
-    public function get($key): Page
+    public function get($key)
     {
         return parent::get($key);
     }

@@ -10,17 +10,17 @@ class PageLanguageMap extends ObjectMap
 {
     /**
      * @param int|string $key
-     * @return PageLanguage
+     * @return PageLanguage|false
      */
-    public function get($key): PageLanguage
+    public function get($key)
     {
         return parent::get($key);
     }
 
     /**
-     * @return PageLanguage
+     * @return PageLanguage|false
      */
-    public function getFirst(): PageLanguage
+    public function getFirst()
     {
         return parent::getFirst();
     }
