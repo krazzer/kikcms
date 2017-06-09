@@ -3,18 +3,16 @@
 namespace KikCMS\Classes\Finder;
 
 
-use Exception;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Storage\FileStorage;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
 use KikCMS\Services\Website\WebsiteService;
-use KikCMS\Util\StringUtil;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
-use Phalcon\Image\Adapter;
 use Phalcon\Mvc\Model\Resultset;
 
 /**
@@ -23,6 +21,7 @@ use Phalcon\Mvc\Model\Resultset;
  * @property ImageHandler $imageHandler
  * @property DbService $dbService
  * @property WebsiteService $websiteService
+ * @property MediaResizeBase $mediaResize
  */
 class FinderFileService extends Injectable
 {
@@ -103,7 +102,7 @@ class FinderFileService extends Injectable
         if ($type == null) {
             $image->resize(192, 192);
         } else {
-            $this->resizeByType($image, $type);
+            $this->mediaResize->resizeByType($type);
         }
 
         $image->save($thumbPath, 90);
@@ -373,19 +372,6 @@ class FinderFileService extends Injectable
         }
 
         return $fileIds;
-    }
-
-    /**
-     * @param Adapter $image
-     * @param string $type
-     * @return mixed
-     * @throws Exception
-     */
-    private function resizeByType(Adapter $image, string $type)
-    {
-        $methodName = 'resize' . StringUtil::dashesToCamelCase($type, true);
-
-        return $this->websiteService->callMethod('MediaResize', $methodName, [$image], true);
     }
 
     /**

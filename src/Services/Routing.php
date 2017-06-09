@@ -3,10 +3,16 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteRoutingBase;
+use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Router\Group;
 
+/**
+ * @property WebsiteService $websiteService
+ * @property WebsiteRoutingBase $websiteRouting
+ */
 class Routing extends Injectable
 {
     public function initialize()
@@ -93,8 +99,8 @@ class Routing extends Injectable
         $router->mount($frontend);
         $router->mount($backend);
 
-        $this->addWebsiteBackendRoutes($websiteBackend);
-        $this->addWebsiteFrontendRoutes($websiteFrontend);
+        $this->websiteRouting->addBackendRoutes($websiteBackend);
+        $this->websiteRouting->addFrontendRoutes($websiteFrontend);
 
         if ($websiteBackend->getRoutes()) {
             $router->mount($websiteBackend);
@@ -113,21 +119,5 @@ class Routing extends Injectable
         $router->removeExtraSlashes(true);
 
         return $router;
-    }
-
-    /**
-     * @param Group $backend
-     */
-    private function addWebsiteBackendRoutes(Group $backend)
-    {
-        return $this->websiteService->callMethod('Routing', 'addBackendRoutes', ['backend' => $backend]);
-    }
-
-    /**
-     * @param Group $frontend
-     */
-    private function addWebsiteFrontendRoutes(Group $frontend)
-    {
-        return $this->websiteService->callMethod('Routing', 'addFrontendRoutes', ['frontend' => $frontend]);
     }
 }

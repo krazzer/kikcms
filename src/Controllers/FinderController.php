@@ -8,6 +8,7 @@ use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
@@ -16,6 +17,7 @@ use KikCMS\Models\FinderFile;
  * @property DbService $dbService
  * @property FinderFileService $finderFileService
  * @property Translator $translator
+ * @property MediaResizeBase $mediaResize
  */
 class FinderController extends RenderableController
 {
@@ -161,7 +163,7 @@ class FinderController extends RenderableController
     public function thumbAction(int $fileId, string $type = null)
     {
         /** @var FinderFile $finderFile */
-        if ( ! $finderFile = FinderFile::getById($fileId)) {
+        if (( ! $finderFile = FinderFile::getById($fileId)) || ! $this->mediaResize->typeExists($type)) {
             throw new NotFoundException();
         }
 

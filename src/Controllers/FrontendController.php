@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Website\FrontendHelper;
@@ -21,6 +22,7 @@ use Phalcon\Http\Response;
  * @property Translator $translator
  * @property WebsiteService $websiteService
  * @property FrontendHelper $frontendHelper
+ * @property TemplateVariablesBase $templateVariables
  */
 class FrontendController extends BaseController
 {
@@ -72,8 +74,8 @@ class FrontendController extends BaseController
         $this->translator->setLanguageCode($languageCode);
 
         $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
-        $websiteVariables  = $this->websiteService->getWebsiteVariables();
-        $templateVariables = $this->websiteService->getWebsiteTemplateVariables($templateFile);
+        $websiteVariables  = $this->templateVariables->getGlobalVariables();
+        $templateVariables = $this->templateVariables->getTemplateVariables($templateFile);
 
         $variables = array_merge($fieldVariables, $websiteVariables, $templateVariables);
         $variables = $this->websiteService->getForms($variables);

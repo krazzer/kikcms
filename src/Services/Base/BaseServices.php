@@ -25,6 +25,16 @@ class BaseServices extends ApplicationServices
     }
 
     /**
+     * Contains a list of services that can be overridden by the Website's variant
+     *
+     * @return array
+     */
+    protected function getExtendableServices(): array
+    {
+        return [];
+    }
+
+    /**
      * @param Config $config
      * @param Loader $loader
      */
@@ -57,27 +67,22 @@ class BaseServices extends ApplicationServices
             }
         }
 
-        foreach ($this->getSimpleServices() as $service) {
-            $serviceName = lcfirst(last(explode('\\', $service)));
-
-            $this->set($serviceName, function () use ($service) {
-                return new $service();
-            });
-        }
+        $this->bindExtendableServices();
+        $this->bindSimpleServices();
 
         // initialize the router if we're not in the Cli
-        if( ! $this instanceof Cli){
+        if ( ! $this instanceof Cli) {
             $this->set('router', function () {
                 $routing = new Routing();
                 return $routing->initialize();
             });
         }
 
-        if($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV){
+        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
             return;
         }
 
-        $this->set('modelsMetadata', function (){
+        $this->set('modelsMetadata', function () {
             return new Files([
                 "lifetime"    => 86400,
                 "metaDataDir" => SITE_PATH . "cache/metadata/"
@@ -99,5 +104,33 @@ class BaseServices extends ApplicationServices
     protected function getApplicationConfig()
     {
         return $this->get('config')->get('application');
+    }
+
+    private function bindExtendableServices()
+    {
+        foreach ($this->getExtendableServices() as $service) {
+            $serviceName        = lcfirst(last(explode('\\', $service)));
+            $serviceWebsiteName = substr($serviceName, 0, -4);
+            $classNameWebsite   = 'Website\\Classes\\' . ucfirst($serviceWebsiteName);
+
+            $this->set($serviceWebsiteName, function () use ($service, $classNameWebsite) {
+                if (class_exists($classNameWebsite)) {
+                    return new $classNameWebsite();
+                } else {
+                    return new $service();
+                }
+            });
+        }
+    }
+
+    private function bindSimpleServices()
+    {
+        foreach ($this->getSimpleServices() as $service) {
+            $serviceName = lcfirst(last(explode('\\', $service)));
+
+            $this->set($serviceName, function () use ($service) {
+                return new $service();
+            });
+        }
     }
 }

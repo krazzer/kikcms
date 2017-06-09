@@ -3,53 +3,11 @@
 namespace KikCMS\Services\Website;
 
 
-use Exception;
 use KikCMS\Classes\WebForm\WebForm;
-use KikCMS\Services\Pages\PageContentService;
 use Phalcon\Http\Response;
 
-/**
- * @property PageContentService
- */
 class WebsiteService
 {
-    /**
-     * Calls a method from the website, which may not exist
-     *
-     * @param $className
-     * @param $methodName
-     * @param array $arguments
-     * @param bool $exceptionOnFail
-     * @param bool $returnOnFail
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public function callMethod(string $className, $methodName, array $arguments = [], $exceptionOnFail = false, $returnOnFail = false)
-    {
-        $className  = 'Website\\Classes\\' . $className;
-
-        if ( ! class_exists($className)) {
-            if($exceptionOnFail){
-                throw new Exception('Class ' . $className . ' not found');
-            } else {
-                return $returnOnFail;
-            }
-        }
-
-        $object = new $className();
-
-        if ( ! method_exists($object, $methodName)) {
-            if($exceptionOnFail) {
-                throw new Exception('Method ' . $className . '::' . $methodName . ' not found');
-            } else {
-                return $returnOnFail;
-            }
-        }
-
-        return call_user_func_array(array($object, $methodName), $arguments);
-    }
-
     /**
      * Look inside the page's variables for form tags that need to be replaced.
      * This could mean a form is found that is send and needs to redirect. The redirect response will be returned if so.
@@ -86,24 +44,5 @@ class WebsiteService
         }
 
         return $variables;
-    }
-
-    /**
-     * @param string $templateFile
-     * @return array
-     */
-    public function getWebsiteTemplateVariables(string $templateFile): array
-    {
-        $methodName = 'get' . ucfirst($templateFile) . 'Variables';
-
-        return $this->callMethod('TemplateVariables', $methodName, [], false, []);
-    }
-
-    /**
-     * @return array
-     */
-    public function getWebsiteVariables(): array
-    {
-        return $this->callMethod('TemplateVariables', 'getVariables', [], false, []);
     }
 }

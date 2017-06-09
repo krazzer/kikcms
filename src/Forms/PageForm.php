@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 
+use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
@@ -29,6 +30,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property UrlService $urlService
  * @property CacheService $cacheService
  * @property WebsiteService $websiteService
+ * @property TemplateFieldsBase $templateFields
  */
 class PageForm extends DataForm
 {
@@ -176,8 +178,7 @@ class PageForm extends DataForm
             break;
 
             case KikCMSConfig::CONTENT_TYPE_CUSTOM:
-                $methodName = 'field' . ucfirst($field->variable);
-                $templateField = $this->websiteService->callMethod('TemplateFields', $methodName, [$this]);
+                $templateField = $this->templateFields->getFormField($field->variable, $this);
             break;
         }
 
