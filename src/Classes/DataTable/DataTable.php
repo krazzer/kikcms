@@ -175,6 +175,7 @@ abstract class DataTable extends Renderable
     {
         $attributes = [
             'type'     => 'checkbox',
+            'class'    => 'table-checkbox',
             'data-col' => $column,
         ];
 
@@ -592,7 +593,7 @@ abstract class DataTable extends Renderable
      */
     protected function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js?v=1.016');
+        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js?v=1.017');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
         $this->view->assets->addCss('cmsassets/css/webform.css');

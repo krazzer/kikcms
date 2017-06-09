@@ -282,7 +282,7 @@ var DataTable = Class.extend({
     initTableCheckBoxes: function () {
         var self = this;
 
-        this.$table.find('input[type=checkbox]').click(function (e) {
+        this.$table.find('input.table-checkbox[type=checkbox]').click(function (e) {
             e.stopPropagation();
         }).dblclick(function (e) {
             e.stopPropagation();

@@ -344,6 +344,25 @@ class DbService extends Injectable
     }
 
     /**
+     * @param $query
+     *
+     * @return Model|null
+     */
+    public function getObject(Builder $query)
+    {
+        return $query->getQuery()->execute()->getFirst();
+    }
+
+    /**
+     * @param Builder $query
+     * @return Resultset
+     */
+    public function getObjects(Builder $query)
+    {
+        return $query->getQuery()->execute();
+    }
+
+    /**
      * @param Builder $query
      * @return array
      */

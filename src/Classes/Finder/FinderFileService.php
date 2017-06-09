@@ -102,7 +102,7 @@ class FinderFileService extends Injectable
         if ($type == null) {
             $image->resize(192, 192);
         } else {
-            $this->mediaResize->resizeByType($type);
+            $this->mediaResize->resizeByType($image, $type);
         }
 
         $image->save($thumbPath, 90);

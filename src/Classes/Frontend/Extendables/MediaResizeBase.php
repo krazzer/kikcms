@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
 use KikCMS\Util\StringUtil;
+use Phalcon\Image\Adapter;
 
 /**
  * Contains methods to resize thumbnails in predefined formats
@@ -24,7 +25,7 @@ class MediaResizeBase extends WebsiteExtendable
         return $this->typeMethodExists($type);
     }
 
-    public function resizeByType(string $type)
+    public function resizeByType(Adapter $image, string $type)
     {
         if( ! $this->typeMethodExists($type)){
             $this->throwMethodDoesNotExistException($this->getMethod($type));
@@ -32,7 +33,7 @@ class MediaResizeBase extends WebsiteExtendable
 
         $method = $this->getMethod($type);
 
-        return $this->$method();
+        return $this->$method($image);
     }
 
     /**
