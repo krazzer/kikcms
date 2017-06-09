@@ -11,6 +11,7 @@ use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Config\DbConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use Monolog\Logger;
@@ -37,6 +38,18 @@ abstract class DataForm extends WebForm
 
     /** @var FieldTransformer[] */
     protected $fieldTransformers = [];
+
+    /** @var string */
+    protected $createdAtField = 'created_at';
+
+    /** @var string */
+    protected $updatedAtField = 'updated_at';
+
+    /** @var bool */
+    protected $saveCreatedAt = false;
+
+    /** @var bool */
+    protected $saveUpdatedAt = false;
 
     /** @var array local cache for edit data */
     private $cachedEditData = [];
@@ -326,6 +339,14 @@ abstract class DataForm extends WebForm
             }
 
             $storageData->addValue($key, $value, $this->isStoredElsewhere($field));
+        }
+
+        if($this->saveCreatedAt && ! $this->getFilters()->getEditId()){
+            $storageData->addValue($this->createdAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
+        }
+
+        if($this->saveUpdatedAt && $this->getFilters()->getEditId()){
+            $storageData->addValue($this->updatedAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
         }
 
         return $storageData;

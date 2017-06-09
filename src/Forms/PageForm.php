@@ -32,6 +32,12 @@ use Phalcon\Validation\Validator\StringLength;
  */
 class PageForm extends DataForm
 {
+    /** @inheritdoc */
+    protected $saveCreatedAt = true;
+
+    /** @inheritdoc */
+    protected $saveUpdatedAt = true;
+
     /**
      * @inheritdoc
      */
