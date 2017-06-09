@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
+use KikCMS\Util\StringUtil;
 
 /**
  * Contains methods to resize thumbnails in predefined formats
@@ -49,6 +50,6 @@ class MediaResizeBase extends WebsiteExtendable
      */
     private function getMethod($type): string
     {
-        return 'resize' . ucfirst($type);
+       return 'resize' . StringUtil::dashesToCamelCase($type, true);
     }
 }
