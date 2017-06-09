@@ -73,11 +73,16 @@ class UrlService extends Injectable
         return $this->cacheService->cache($cacheKey, function () use ($url) {
             $pageLanguage = null;
             $parent       = null;
+            $langCode     = null;
 
             $slugs = explode('/', $url);
 
             foreach ($slugs as $slug) {
-                $pageLanguage = $this->getPageLanguageBySlug($slug, $parent);
+                $pageLanguage = $this->getPageLanguageBySlug($slug, $parent, $langCode);
+
+                if ( ! $langCode){
+                    $langCode = $pageLanguage->getLanguageCode();
+                }
 
                 if ( ! $pageLanguage) {
                     return null;
@@ -95,9 +100,10 @@ class UrlService extends Injectable
     /**
      * @param string $slug
      * @param Page|null $parent
+     * @param null $langCode
      * @return PageLanguage|null
      */
-    public function getPageLanguageBySlug(string $slug, Page $parent = null)
+    public function getPageLanguageBySlug(string $slug, Page $parent = null, $langCode = null)
     {
         $query = (new Builder())
             ->from(['pl' => PageLanguage::class])
@@ -109,6 +115,10 @@ class UrlService extends Injectable
             $query->andWhere('p.parent_id IS NULL OR pa.type = :type:', ['type' => Page::TYPE_MENU]);
         } else {
             $query->andWhere('pa.id = ' . $parent->getId());
+        }
+
+        if($langCode){
+            $query->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :langCode:', ['langCode' => $langCode]);
         }
 
         return $query->getQuery()->execute()->getFirst();
