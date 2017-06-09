@@ -37,7 +37,7 @@ class CacheService extends Injectable
     {
         $this->clear(CacheConfig::URL);
         $this->clear(CacheConfig::MENU);
-        $this->clear(CacheConfig::MENU_FULL_PAGE_MAP);
+        $this->clear(CacheConfig::MENU_PAGES);
         $this->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
     }
 
