@@ -103,7 +103,7 @@ class PageRearrangeService extends Injectable
             ->join(Page::class, 'cp.parent_id = p.id AND cp.' . Page::FIELD_DISPLAY_ORDER . ' IS NULL', 'cp')
             ->groupBy('p.id');
 
-        $pageMap = $this->pageService->getPageMap($query->getQuery()->execute());
+        $pageMap = $this->pageService->getPageMapByQuery($query);
 
         foreach ($pageMap as $parentPage) {
             $children        = $this->pageService->getChildren($parentPage);

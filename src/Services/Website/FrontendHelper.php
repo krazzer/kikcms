@@ -4,10 +4,9 @@ namespace KikCMS\Services\Website;
 
 
 use KikCMS\Classes\Frontend\FullPage;
+use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Classes\Translator;
-use KikCMS\Config\CacheConfig;
 use KikCMS\Models\PageLanguage;
-use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\FullPageService;
@@ -25,6 +24,7 @@ use Phalcon\Di\Injectable;
  * @property Backend $cache
  * @property Translator $translator
  * @property FullPageService $fullPageService
+ * @property MenuService $menuService
  */
 class FrontendHelper extends Injectable
 {
@@ -63,26 +63,41 @@ class FrontendHelper extends Injectable
      * @param int $menuId
      * @param int|null $maxLevel
      * @param string|null $template
-     * @param int|null $restrictTemplateId
+     * @param int|null $templateId
      * @param bool $cache
      * @return string
      */
-    public function menu(int $menuId, int $maxLevel = null, string $template = null, int $restrictTemplateId = null, $cache = true): string
+    public function menu(int $menuId, int $maxLevel = null, string $template = null, int $templateId = null, $cache = true): string
     {
-        $cacheKey = $this->cacheService->createKey(CacheConfig::MENU, $menuId, $this->languageCode, $maxLevel, $template, $restrictTemplateId);
+        $menu = (new Menu())
+            ->setMenuId($menuId)
+            ->setMaxLevel($maxLevel)
+            ->setTemplate($template)
+            ->setRestrictTemplateId($templateId)
+            ->setLanguageCode($this->languageCode)
+            ->setCache($cache);
 
-        if($cache && $menu = $this->cache->get($cacheKey)){
-            return $this->setActive($menu);
+        return $this->getMenuOutput($menu);
+    }
+
+    /**
+     * @param Menu $menu
+     * @return string
+     */
+    public function getMenuOutput(Menu $menu): string
+    {
+        $getMenu = function () use ($menu) {
+            $this->menuService->addFullPageMap($menu);
+            return $this->buildMenu($menu->getMenuId(), $menu);
+        };
+
+        if ( ! $menu->isCache()) {
+            return $this->setActive($getMenu());
         }
 
-        $fullPageMap = $this->fullPageService->getByMenuId($menuId, $this->languageCode, $maxLevel, $restrictTemplateId);
-        $menu = $this->buildMenu($menuId, $maxLevel, $template, $fullPageMap);
+        $cacheKey = $this->menuService->getCacheKey($menu);
 
-        if($cache){
-            $this->cache->save($cacheKey, $menu, CacheConfig::ONE_DAY);
-        }
-
-        return $this->setActive($menu);
+        return $this->setActive($this->cacheService->cache($cacheKey, $getMenu));
     }
 
     /**
@@ -131,20 +146,13 @@ class FrontendHelper extends Injectable
 
     /**
      * @param int $parentId
-     * @param int|null $maxLevel
-     * @param string|null $template
-     * @param FullPageMap $fullPageMap
-     * @param int|null $initialLevel
-     *
+     * @param Menu $menu
      * @return string
      */
-    private function buildMenu(int $parentId, int $maxLevel = null, string $template = null, FullPageMap $fullPageMap, int $initialLevel = null): string
+    private function buildMenu(int $parentId, Menu $menu): string
     {
-        if($fullPageMap->isEmpty()){
-            return '';
-        }
-
-        $initialLevel = $initialLevel ?: $fullPageMap->getFirst()->getLevel() - 1;
+        $fullPageMap  = clone $menu->getFullPageMap();
+        $initialLevel = $fullPageMap->isEmpty() ? 0 : $menu->getFullPageMap()->getFirst()->getLevel() - 1;
 
         $menuOutput = '';
 
@@ -154,14 +162,14 @@ class FrontendHelper extends Injectable
                 continue;
             }
 
-            if ($maxLevel !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $maxLevel) {
+            if ($menu->getMaxLevel() !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $menu->getMaxLevel()) {
                 $subMenuOutput = '';
             } else {
-                $subMenuOutput = $this->buildMenu($pageId, $maxLevel, $template, clone $fullPageMap, $initialLevel);
+                $subMenuOutput = $this->buildMenu($pageId, $menu);
             }
 
             $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '">';
-            $menuOutput .= $this->getMenuItemOutput($fullPage, $template);
+            $menuOutput .= $this->getMenuItemOutput($fullPage, $menu->getTemplate());
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
         }
@@ -201,7 +209,7 @@ class FrontendHelper extends Injectable
     {
         $path = $this->getPath();
 
-        foreach ($path as $pageId => $pageLanguage){
+        foreach ($path as $pageId => $pageLanguage) {
             $menu = str_replace('class="s' . $pageId . '"', 'class="selected"', $menu);
         }
 

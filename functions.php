@@ -13,7 +13,7 @@ function array_add_after_key(array $subject, string $keyToAddAfter, string $keyT
 {
     $index = array_search($keyToAddAfter, array_keys($subject));
 
-    if($index === false){
+    if ($index === false) {
         $index = count($subject);
     } else {
         $index++;
@@ -76,6 +76,11 @@ function dlog()
     }
 
     error_log(print_r($args, true));
+}
+
+function dlogtime(float $microseconds, $name = null)
+{
+    dlog(($name ? $name . ': ' : '') . ((microtime(true) - $microseconds) * 1000));
 }
 
 // Make phalcon APC module work with APCu, Remove this when migrating to Redis

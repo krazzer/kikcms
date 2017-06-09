@@ -3,43 +3,26 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Frontend\FullPage;
-use KikCMS\Config\CacheConfig;
-use KikCMS\Models\Page;
+use KikCMS\Classes\Frontend\Menu;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageMap;
-use KikCMS\Services\CacheService;
 use Phalcon\Di\Injectable;
 
 /**
  * @property PageService $pageService
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
- * @property CacheService $cacheService
  */
 class FullPageService extends Injectable
 {
     /**
-     * @param int $menuId
-     * @param string $langCode
-     * @param int|null $maxLevel
-     * @param int|null $restrictTemplateId
+     * @param Menu $menu
      * @return FullPageMap
      */
-    public function getByMenuId(int $menuId, string $langCode, int $maxLevel = null, int $restrictTemplateId = null): FullPageMap
+    public function getMapByMenu(Menu $menu): FullPageMap
     {
-        $cacheKey = $this->cacheService->createKey(CacheConfig::MENU_FULL_PAGE_MAP, $langCode, $menuId, $maxLevel, $restrictTemplateId);
-
-        return $this->cacheService->cache($cacheKey, function () use ($langCode, $menuId, $maxLevel, $restrictTemplateId){
-            $fullPageMap = new FullPageMap();
-
-            if ( ! $menu = Page::getById($menuId)) {
-                return $fullPageMap;
-            }
-
-            $pageMap = $this->pageService->getChildren($menu, $maxLevel, $restrictTemplateId);
-
-            return $this->getByPageMap($pageMap, $langCode);
-        });
+        $pageMap = $this->pageService->getChildrenByMenu($menu);
+        return $this->getByPageMap($pageMap, $menu->getLanguageCode());
     }
 
     /**

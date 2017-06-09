@@ -29,6 +29,7 @@ use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Util\DateTimeService;
 use KikCMS\Services\Website\FrontendHelper;
+use KikCMS\Services\Website\MenuService;
 use KikCMS\Services\Website\WebsiteService;
 use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
@@ -76,6 +77,7 @@ class Services extends BaseServices
             PageRearrangeService::class,
             PageService::class,
             LanguageService::class,
+            MenuService::class,
             Security::class,
             TemplateService::class,
             TinyMceService::class,

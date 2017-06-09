@@ -3,12 +3,12 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Models\Page;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\ObjectLists\PageMap;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Service for handling Page Model objects
@@ -20,24 +20,18 @@ class PageService extends Injectable
 {
     /**
      * @param Page $page
-     * @param int|null $maxLevel
-     * @param int|null $restrictTemplateId
      * @return PageMap
      */
-    public function getChildren(Page $page, int $maxLevel = null, int $restrictTemplateId = null): PageMap
+    public function getChildren(Page $page): PageMap
     {
-        $pagesResult = $this->getChildrenQuery($page, $maxLevel, $restrictTemplateId)->getQuery()->execute();
-
-        return $this->getPageMap($pagesResult);
+        return $this->getPageMapByQuery($this->getChildrenQuery($page));
     }
 
     /**
      * @param Page $page
-     * @param int|null $maxLevel
-     * @param int|null $restrictTemplateId
      * @return Builder
      */
-    public function getChildrenQuery(Page $page, int $maxLevel = null, int $restrictTemplateId = null): Builder
+    public function getChildrenQuery(Page $page): Builder
     {
         $query = (new Builder())
             ->from(Page::class)
@@ -46,14 +40,6 @@ class PageService extends Injectable
                 'rgt' => $page->rgt
             ])
             ->orderBy('lft');
-
-        if($restrictTemplateId){
-            $query->andWhere(Page::FIELD_TEMPLATE_ID . ' = :templateId:', ['templateId' => $restrictTemplateId]);
-        }
-
-        if($maxLevel){
-            $query->andWhere('level <= ' . (int) ($page->level + $maxLevel));
-        }
 
         return $query;
     }
@@ -88,29 +74,20 @@ class PageService extends Injectable
     }
 
     /**
-     * @param Resultset $resultset
-     * @return PageMap
-     */
-    public function getPageMap(Resultset $resultset): PageMap
-    {
-        $pageMap = new PageMap();
-
-        foreach ($resultset as $page){
-            $pageMap->add($page, $page->id);
-        }
-
-        return $pageMap;
-    }
-
-    /**
      * @param Builder $query
      * @return PageMap
      */
     public function getPageMapByQuery(Builder $query)
     {
         $results = $query->getQuery()->execute();
+        $pageMap = new PageMap();
 
-        return $this->getPageMap($results);
+        /** @var Page $page */
+        foreach ($results as $page) {
+            $pageMap->add($page, $page->getId());
+        }
+
+        return $pageMap;
     }
 
     /**
@@ -165,5 +142,28 @@ class PageService extends Injectable
         $childIds = $this->dbService->getValues($query);
 
         return in_array($page->id, $childIds);
+    }
+
+    /**
+     * @param Menu $menu
+     * @return PageMap
+     */
+    public function getChildrenByMenu(Menu $menu): PageMap
+    {
+        if ( ! $menuPage = Page::getById($menu->getMenuId())) {
+            return new PageMap();
+        }
+
+        $query = $this->getChildrenQuery($menuPage);
+
+        if ($menu->getRestrictTemplateId()) {
+            $query->andWhere(Page::FIELD_TEMPLATE_ID . ' = :templateId:', ['templateId' => $menu->getRestrictTemplateId()]);
+        }
+
+        if ($menu->getMaxLevel()) {
+            $query->andWhere('level <= ' . (int) ($menuPage->level + $menu->getMaxLevel()));
+        }
+
+        return $this->getPageMapByQuery($query);
     }
 }
