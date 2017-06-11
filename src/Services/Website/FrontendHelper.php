@@ -109,6 +109,14 @@ class FrontendHelper extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getLanguageCode(): string
+    {
+        return $this->languageCode;
+    }
+
+    /**
      * Get a map with PageLanguages walking downwards the page hierarchy
      *
      * @return PageLanguageMap
