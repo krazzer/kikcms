@@ -55,11 +55,12 @@ class PageForm extends DataForm
 
         $this->addFieldsForCurrentTemplate();
 
-        $urlValidation = [
-            new PresenceOf(),
-            new Regex(['pattern' => '/^$|^([0-9a-z\-]+)$/', 'message' => $this->translator->tl('webform.messages.slug')]),
-            new StringLength(["max" => 255]),
-        ];
+        $urlPatternValidation = new Regex([
+            'pattern' => '/^$|^([0-9a-z\-]+)$/',
+            'message' => $this->translator->tl('webform.messages.slug')
+        ]);
+
+        $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255]),];
 
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
@@ -76,8 +77,12 @@ class PageForm extends DataForm
                 ->setDefault(1)
         ];
 
-        if($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)){
-            $keyField = $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), $urlValidation);
+        if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)) {
+            $keyField = $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), [
+                $urlPatternValidation,
+                new StringLength(["max" => 32])
+            ]);
+
             $tabAdvancedFields = array_add_after_key($tabAdvancedFields, 0, 'key', $keyField);
         }
 
@@ -119,11 +124,11 @@ class PageForm extends DataForm
     {
         $errorContainer = parent::validate($input);
 
-        if($input['type'] == Page::TYPE_MENU && ! $this->acl->allowed(Permission::PAGE_MENU)){
+        if ($input['type'] == Page::TYPE_MENU && ! $this->acl->allowed(Permission::PAGE_MENU)) {
             $errorContainer->addFormError($this->translator->tl('permissions.editMenus'));
         }
 
-        if($input['type'] !== Page::TYPE_PAGE){
+        if ($input['type'] !== Page::TYPE_PAGE) {
             return $errorContainer;
         }
 
@@ -199,8 +204,8 @@ class PageForm extends DataForm
 
         $this->tabs[0]->addField($templateField);
 
-        if( ! array_key_exists($templateField->getKey(), $this->fieldStorage)){
-            if($field->multilingual){
+        if ( ! array_key_exists($templateField->getKey(), $this->fieldStorage)) {
+            if ($field->multilingual) {
                 $templateField->table(PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, true, [
                     PageLanguageContent::FIELD_FIELD_ID => $field->id
                 ]);

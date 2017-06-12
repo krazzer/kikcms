@@ -15,7 +15,7 @@
 {%- endblock -%}
 
 {%- block tableRowButton -%}
-    {% if row.type == 'page' %}
+    {% if row.type != 'menu' %}
         {{ parent() }}
     {% else %}
         <td></td>

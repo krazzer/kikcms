@@ -4,6 +4,7 @@ namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Field;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
@@ -127,20 +128,17 @@ class PageLanguageService extends Injectable
     public function getDefault()
     {
         $defaultLanguageCode = $this->config->application->defaultLanguage;
-        $defaultPageId       = $this->config->application->defaultPage;
-
-        return $this->getByPageId($defaultPageId, $defaultLanguageCode);
+        return $this->getByPageKey(KikCMSConfig::KEY_PAGE_DEFAULT, $defaultLanguageCode);
     }
 
     /**
+     * @param string|null $languageCode
      * @return PageLanguage|null
      */
-    public function getNotFoundPage()
+    public function getNotFoundPage(string $languageCode = null)
     {
-        $defaultLanguageCode = $this->config->application->defaultLanguage;
-        $pageId              = $this->config->application->notFoundPage;
-
-        return $this->getByPageId($pageId, $defaultLanguageCode);
+        $languageCode = $languageCode ?: $this->config->application->defaultLanguage;
+        return $this->getByPageKey(KikCMSConfig::KEY_PAGE_NOT_FOUND, $languageCode);
     }
 
     /**

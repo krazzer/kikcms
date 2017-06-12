@@ -53,4 +53,7 @@ class KikCMSConfig
     const CONTENT_TYPE_RADIO        = 15;
     const CONTENT_TYPE_COLOR        = 16;
     const CONTENT_TYPE_CUSTOM       = 17;
+
+    const KEY_PAGE_DEFAULT   = 'default';
+    const KEY_PAGE_NOT_FOUND = 'page-not-found';
 }

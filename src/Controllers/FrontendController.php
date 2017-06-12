@@ -55,7 +55,7 @@ class FrontendController extends BaseController
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
         if( ! $pageLanguage){
-            throw new NotFoundException();
+            throw new NotFoundException($languageCode);
         }
 
         $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
@@ -71,20 +71,21 @@ class FrontendController extends BaseController
         $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
 
         if( ! $pageLanguage){
-            throw new NotFoundException();
+            throw new NotFoundException($languageCode);
         }
 
         $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
     }
 
     /**
+     * @param null $languageCode
      * @return string
      */
-    public function pageNotFoundAction()
+    public function pageNotFoundAction($languageCode = null)
     {
         $this->view->reset();
 
-        $pageLanguage = $this->pageLanguageService->getNotFoundPage();
+        $pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode);
 
         if ( ! $pageLanguage) {
             return $this->translator->tl('error.404.description');
