@@ -306,6 +306,6 @@ class UrlService extends Injectable
 
         $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
 
-        return $this->getUrlByPageLanguage($pageLanguageLink);
+        return $this->getUrlByPageLanguage($pageLanguageLink, false);
     }
 }
