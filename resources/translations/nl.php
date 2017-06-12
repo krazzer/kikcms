@@ -86,6 +86,7 @@ return [
             'titles'         => [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
                 'inactive' => 'Deze pagina is niet zichtbaar',
+                'locked'   => 'Deze pagina is noodzakelijk voor het correct werken van de website, en kan daarom niet worden verwijderd',
             ],
             'deleteErrorFk'  => "Alleen pagina's zonder sub-pagina's kunnen worden verwijderd.",
             'linkToDesc'     => 'Linkt naar (Pagina ID of URL)',

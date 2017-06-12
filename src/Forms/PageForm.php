@@ -5,6 +5,7 @@ namespace KikCMS\Forms;
 
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
@@ -31,6 +32,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property CacheService $cacheService
  * @property WebsiteService $websiteService
  * @property TemplateFieldsBase $templateFields
+ * @property AccessControl $acl
  */
 class PageForm extends DataForm
 {
@@ -53,16 +55,16 @@ class PageForm extends DataForm
 
         $this->addFieldsForCurrentTemplate();
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
-        $templateField->getElement()->setDefault($this->getTemplateId());
-
         $urlValidation = [
             new PresenceOf(),
             new Regex(['pattern' => '/^$|^([0-9a-z\-]+)$/', 'message' => $this->translator->tl('webform.messages.slug')]),
             new StringLength(["max" => 255]),
         ];
 
-        $this->addTab($this->translator->tl('fields.advanced'), [
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
+        $templateField->getElement()->setDefault($this->getTemplateId());
+
+        $tabAdvancedFields = [
             $templateField,
 
             $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
@@ -72,7 +74,14 @@ class PageForm extends DataForm
             $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
                 ->setDefault(1)
-        ]);
+        ];
+
+        if($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)){
+            $keyField = $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), $urlValidation);
+            $tabAdvancedFields = array_add_after_key($tabAdvancedFields, 0, 'key', $keyField);
+        }
+
+        $this->addTab($this->translator->tl('fields.advanced'), $tabAdvancedFields);
     }
 
     /**
@@ -110,7 +119,7 @@ class PageForm extends DataForm
     {
         $errorContainer = parent::validate($input);
 
-        if($input['type'] == Page::TYPE_MENU && ! $this->acl->allowed(Permission::EDIT_MENUS)){
+        if($input['type'] == Page::TYPE_MENU && ! $this->acl->allowed(Permission::PAGE_MENU)){
             $errorContainer->addFormError($this->translator->tl('permissions.editMenus'));
         }
 

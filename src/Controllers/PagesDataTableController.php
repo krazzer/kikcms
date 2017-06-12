@@ -42,7 +42,7 @@ class PagesDataTableController extends DataTableController
         $page       = Page::getById($pageId);
         $targetPage = Page::getById($targetPageId);
 
-        if($this->acl->allowed(Permission::EDIT_MENUS) || $page->type != Page::TYPE_MENU){
+        if($this->acl->allowed(Permission::PAGE_MENU) || $page->type != Page::TYPE_MENU){
             $this->pageRearrangeService->rearrange($page, $targetPage, $rearrange);
         }
 

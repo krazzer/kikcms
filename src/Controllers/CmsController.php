@@ -166,7 +166,7 @@ class CmsController extends BaseCmsController
             throw new NotFoundException();
         }
 
-        $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
+        $url = $this->urlService->getUrlByPageLanguage($pageLanguage, false);
 
         $this->response->redirect($url);
     }

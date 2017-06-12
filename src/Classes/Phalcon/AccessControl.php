@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\Phalcon;
 
 
+use KikCMS\Classes\Permission;
 use Phalcon\Acl\Adapter\Memory;
 
 class AccessControl extends Memory
@@ -27,8 +28,16 @@ class AccessControl extends Memory
      *
      * @return bool
      */
-    public function allowed($resourceName, $access = '*', array $parameters = null): bool
+    public function allowed($resourceName, $access = Permission::ACCESS_TYPE_ANY, array $parameters = null): bool
     {
         return parent::isAllowed($this->currentRole, $resourceName, $access, $parameters);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDeleteMenu(): bool
+    {
+        return $this->allowed(Permission::PAGE_MENU, Permission::ACCESS_TYPE_DELETE);
     }
 }

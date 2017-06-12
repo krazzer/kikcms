@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Model\Model;
 use KikCMS\Models\Field;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
@@ -59,6 +60,24 @@ class PageLanguageService extends Injectable
         }
 
         return $pageLanguage;
+    }
+
+    /**
+     * @param string $pageKey
+     * @param string $languageCode
+     * @return Model|PageLanguage|null
+     */
+    public function getByPageKey(string $pageKey, string $languageCode)
+    {
+        $query = (new Builder())
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'pl.page_id = p.id', 'p')
+            ->where('p.key = :pageKey: AND pl.language_code = :langCode:', [
+                'pageKey'  => $pageKey,
+                'langCode' => $languageCode
+            ]);
+
+        return $this->dbService->getObject($query);
     }
 
     /**
@@ -131,7 +150,7 @@ class PageLanguageService extends Injectable
      */
     public function getPageFieldTable(PageMap $pageMap, string $langCode): array
     {
-        if($pageMap->isEmpty()){
+        if ($pageMap->isEmpty()) {
             return [];
         }
 

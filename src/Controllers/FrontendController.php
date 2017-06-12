@@ -39,10 +39,42 @@ class FrontendController extends BaseController
         }
 
         if ( ! $pageLanguage) {
-            throw new NotFoundException("Page not found");
+            throw new NotFoundException();
         }
 
         $this->loadPage($pageLanguage);
+    }
+
+    /**
+     * @param string $languageCode
+     * @param int $pageId
+     * @throws NotFoundException
+     */
+    public function pageByIdAction(string $languageCode, int $pageId)
+    {
+        $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
+
+        if( ! $pageLanguage){
+            throw new NotFoundException();
+        }
+
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
+    }
+
+    /**
+     * @param string $languageCode
+     * @param string $pageKey
+     * @throws NotFoundException
+     */
+    public function pageByKeyAction(string $languageCode, string $pageKey)
+    {
+        $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
+
+        if( ! $pageLanguage){
+            throw new NotFoundException();
+        }
+
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
     }
 
     /**

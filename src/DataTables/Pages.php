@@ -4,7 +4,6 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
@@ -52,6 +51,9 @@ class Pages extends DataTable
     /** @var string */
     private $inactiveTitle;
 
+    /** @var string */
+    private $lockedTitle;
+
     protected function addAssets()
     {
         parent::addAssets();
@@ -74,8 +76,12 @@ class Pages extends DataTable
                 continue;
             }
 
-            if( ! $this->acl->allowed(Permission::EDIT_MENUS) && $page->type == Page::TYPE_MENU){
-                return;
+            if ( $page->key){
+                continue;
+            }
+
+            if ( ! $this->acl->canDeleteMenu() && $page->type == Page::TYPE_MENU) {
+                continue;
             }
 
             parent::delete([$pageId]);
@@ -185,7 +191,7 @@ class Pages extends DataTable
             ->columns([
                 'pld.name AS default_language_name', 't.name AS template', 'pl.name', 'p.id', 'p.display_order',
                 'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url',
-                'pl.id AS plid'
+                'pl.id AS plid', 'p.key'
             ]);
 
         return $query;
@@ -211,6 +217,7 @@ class Pages extends DataTable
     {
         $this->linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
         $this->inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
+        $this->lockedTitle   = $this->translator->tl('dataTables.pages.titles.locked');
 
         $this->setFieldFormatting('name', [$this, 'formatName']);
 
@@ -228,13 +235,17 @@ class Pages extends DataTable
             $value = '<span class="defaultLanguagePlaceHolder">' . $rowData['default_language_name'] . '</span>';
         }
 
-        if($rowData[Page::FIELD_TYPE] == Page::TYPE_MENU){
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_MENU) {
             $value = $rowData['default_language_name'];
         }
 
         // disable dragging / tree structure when sorting or searching
         if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
             return $value;
+        }
+
+        if ($rowData[Page::FIELD_KEY]) {
+            $value = '<span class="glyphicon glyphicon-lock" title="' . $this->lockedTitle . '"></span> ' . $value;
         }
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {

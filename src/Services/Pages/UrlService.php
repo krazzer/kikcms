@@ -80,12 +80,12 @@ class UrlService extends Injectable
             foreach ($slugs as $slug) {
                 $pageLanguage = $this->getPageLanguageBySlug($slug, $parent, $langCode);
 
-                if ( ! $langCode){
-                    $langCode = $pageLanguage->getLanguageCode();
-                }
-
                 if ( ! $pageLanguage) {
                     return null;
+                }
+
+                if ( ! $langCode){
+                    $langCode = $pageLanguage->getLanguageCode();
                 }
 
                 if (count($slugs) > 1) {
@@ -140,13 +140,14 @@ class UrlService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
+     * @param bool $addLeadingSlash
      * @return string
      */
-    public function getUrlByPageLanguage(PageLanguage $pageLanguage): string
+    public function getUrlByPageLanguage(PageLanguage $pageLanguage, bool $addLeadingSlash = true): string
     {
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
-        return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
+        $url = $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
             if($pageLanguage->page->type == Page::TYPE_LINK){
                 return $this->getUrlForLinkedPage($pageLanguage);
             }
@@ -161,8 +162,10 @@ class UrlService extends Injectable
                 $urlParts[]   = $pageLanguage->url;
             }
 
-            return '/' . implode('/', array_reverse($urlParts));
+            return implode('/', array_reverse($urlParts));
         });
+
+        return ($addLeadingSlash ? '/' : '') . $url;
     }
 
     /**
@@ -177,7 +180,23 @@ class UrlService extends Injectable
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
         if ( ! $pageLanguage) {
-            throw new Exception("No page found in the current language for page id " . $pageId);
+            return '/page/' . $languageCode . '/' . $pageId;
+        }
+
+        return $this->getUrlByPageLanguage($pageLanguage);
+    }
+
+    /**
+     * @param string $pageKey
+     * @param string $languageCode
+     * @return string
+     */
+    public function getUrlByPageKey(string $pageKey, string $languageCode): string
+    {
+        $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
+
+        if ( ! $pageLanguage) {
+            return '/page/' . $languageCode . '/' . $pageKey;
         }
 
         return $this->getUrlByPageLanguage($pageLanguage);

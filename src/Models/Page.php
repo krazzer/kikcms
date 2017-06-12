@@ -18,6 +18,7 @@ class Page extends Model
     const FIELD_PARENT_ID     = 'parent_id';
     const FIELD_TEMPLATE_ID   = 'template_id';
     const FIELD_DISPLAY_ORDER = 'display_order';
+    const FIELD_KEY           = 'key';
     const FIELD_LEVEL         = 'level';
     const FIELD_LFT           = 'lft';
     const FIELD_RGT           = 'rgt';
