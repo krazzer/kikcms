@@ -142,9 +142,13 @@ class FrontendHelper extends Injectable
 
         if(is_numeric($pageId)){
             return $this->urlService->getUrlByPageId($pageId, $langCode);
-        } else {
-            return $this->urlService->getUrlByPageKey($pageId, $langCode);
         }
+
+        if(strstr($pageId, '/')){
+            return $pageId;
+        }
+
+        return $this->urlService->getUrlByPageKey($pageId, $langCode);
     }
 
     /**
