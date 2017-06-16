@@ -14,8 +14,6 @@ class KikCMSConfig
     const NAMESPACE_WEBSITE    = 'Website';
     const NAMESPACE_DATATABLES = 'DataTables';
 
-    const PACKAGE_NAME = 'kiksaus/kikcms';
-
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,
         'textarea'     => self::CONTENT_TYPE_TEXTAREA,

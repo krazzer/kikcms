@@ -24,7 +24,7 @@ class DeployService extends Injectable
 
         $composerDir = $this->getRootDir() . '/../../bin/';
 
-        $composerCommand = 'php ' . $composerDir . 'composer update ' . KikCMSConfig::PACKAGE_NAME;
+        $composerCommand = 'php ' . $composerDir . 'composer install';
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command
