@@ -24,7 +24,7 @@ class DeployService extends Injectable
 
         $composerDir = $this->getRootDir() . '/../../bin/';
 
-        $composerCommand = 'php ' . $composerDir . 'composer install';
+        $composerCommand = 'php ' . $composerDir . 'composer install && php ' . $composerDir . 'composer update kiksaus/*';
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command
