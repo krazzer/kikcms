@@ -35,7 +35,6 @@ class DeployService extends Injectable
 
         if ( ! $assetSymlinkExists) {
             $this->createAssetSymlink();
-
             $output[] = 'Symlink for assets created.';
         }
 
