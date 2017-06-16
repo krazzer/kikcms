@@ -7,7 +7,7 @@ use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
-use KikCMS\Classes\Storage\FileStorage;
+use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
 use KikCMS\Services\Website\WebsiteService;

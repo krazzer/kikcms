@@ -16,13 +16,13 @@ use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
-use KikCMS\Classes\Storage\FileStorage;
+use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Base\BaseServices;
-use KikCMS\Classes\Storage\File as FileStorageFile;
+use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
