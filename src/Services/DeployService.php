@@ -22,13 +22,11 @@ class DeployService extends Injectable
             return;
         }
 
-        $composerDir = $this->getRootDir() . '/../../bin/';
-
-        $composerCommand = 'php ' . $composerDir . 'composer install && php ' . $composerDir . 'composer update kiksaus/*';
+        $composerCommand = $this->getComposerCommand();
         $deployCommands  = 'git fetch origin && git reset --hard origin/master && ' . $composerCommand . ' 2>&1';
 
         // Execute deployment command
-        putenv('COMPOSER_HOME=' . $composerDir);
+        putenv('COMPOSER_HOME=' . $this->getComposerDir());
         exec('cd ' . $this->getRootDir() . ' && ' . $deployCommands, $output);
 
         $assetSymlinkExists = $this->checkAssetSymlink();
@@ -146,6 +144,50 @@ class DeployService extends Injectable
                 mkdir($dirPath);
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function getComposerCommand(): string
+    {
+        $lockFileIsUpdated = $this->lockFileIsUpdated();
+        $composerDir       = $this->getComposerDir();
+
+        if ($lockFileIsUpdated) {
+            return 'php ' . $composerDir . 'composer install && php ' . $composerDir . 'composer update kiksaus/*';
+        } else {
+            return 'php ' . $composerDir . 'composer update kiksaus/*';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function getComposerDir(): string
+    {
+        return $this->getRootDir() . '/../../bin/';
+    }
+
+    /**
+     * @return array
+     */
+    private function getTwoLatestCommits(): array
+    {
+        exec('git log -n 2 --pretty=format:"%H"', $output);
+        return $output;
+    }
+
+    /**
+     * @return bool
+     */
+    private function lockFileIsUpdated(): bool
+    {
+        list($lastCommitHash, $secondLastCommitHash) = $this->getTwoLatestCommits();
+
+        exec('git diff --name-only ' . $lastCommitHash . ':composer.lock ' . $secondLastCommitHash . ':composer.lock', $output);
+
+        return !empty($output);
     }
 
     /**
