@@ -175,6 +175,7 @@ class DeployService extends Injectable
     private function getTwoLatestCommits(): array
     {
         exec('git log -n 2 --pretty=format:"%H"', $output);
+
         return $output;
     }
 
