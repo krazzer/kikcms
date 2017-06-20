@@ -30,9 +30,9 @@ class FrontendNotFoundPlugin extends Plugin
             $this->response->setStatusCode(404);
 
             $dispatcher->forward([
-                'controller'   => 'frontend',
-                'action'       => 'pageNotFound',
-                'languageCode' => $exception->getLanguageCode(),
+                'controller' => 'frontend',
+                'action'     => 'pageNotFound',
+                "params"     => ['languageCode' => $exception->getLanguageCode()]
             ]);
 
             return false;
