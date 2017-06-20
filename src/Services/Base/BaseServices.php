@@ -4,12 +4,14 @@ namespace KikCMS\Services\Base;
 
 use /** @noinspection PhpUndefinedClassInspection */
     ApplicationServices;
+use KikCMS\Classes\CmsPlugin;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Routing;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
+use Website\Classes\CmsPlugins;
 
 /** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
@@ -69,6 +71,7 @@ class BaseServices extends ApplicationServices
 
         $this->bindExtendableServices();
         $this->bindSimpleServices();
+        $this->bindPluginServices();
 
         // initialize the router if we're not in the Cli
         if ( ! $this instanceof Cli) {
@@ -106,6 +109,9 @@ class BaseServices extends ApplicationServices
         return $this->get('config')->get('application');
     }
 
+    /**
+     * Binds services that are extendable by the website
+     */
     private function bindExtendableServices()
     {
         foreach ($this->getExtendableServices() as $service) {
@@ -123,10 +129,46 @@ class BaseServices extends ApplicationServices
         }
     }
 
+    /**
+     * Bind services required by a plugin
+     */
+    private function bindPluginServices()
+    {
+        /** @var CmsPlugins $plugins */
+        $plugins     = $this->get('cmsPlugins');
+        $pluginsList = $plugins->getPlugins();
+
+        foreach ($pluginsList as $plugin) {
+            /** @var CmsPlugin $plugin */
+            $plugin = new $plugin();
+            $plugin->addServices();
+            $this->addPluginSimpleServices($plugin);
+        }
+    }
+
+    /**
+     * Bind simple services that only require a new instance
+     */
     private function bindSimpleServices()
     {
         foreach ($this->getSimpleServices() as $service) {
             $serviceName = lcfirst(last(explode('\\', $service)));
+
+            $this->set($serviceName, function () use ($service) {
+                return new $service();
+            });
+        }
+    }
+
+    /**
+     * @param CmsPlugin $plugin
+     */
+    private function addPluginSimpleServices(CmsPlugin $plugin)
+    {
+        $services = $plugin->getSimpleServices();
+
+        foreach ($services as $service) {
+            $serviceName = $plugin->getName() . last(explode('\\', $service));
 
             $this->set($serviceName, function () use ($service) {
                 return new $service();

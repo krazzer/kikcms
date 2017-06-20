@@ -6,6 +6,7 @@ use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Frontend\Extendables\CmsMenuBase;
+use KikCMS\Classes\Frontend\Extendables\CmsPluginsBase;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteRoutingBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
@@ -103,6 +104,7 @@ class Services extends BaseServices
     {
         return [
             CmsMenuBase::class,
+            CmsPluginsBase::class,
             MediaResizeBase::class,
             TemplateFieldsBase::class,
             TemplateVariablesBase::class,

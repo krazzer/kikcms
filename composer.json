@@ -7,8 +7,8 @@
     "google/apiclient": "^2.0"
   },
   "autoload": {
-    "psr-0": {
-      "KikCMS": "src"
+    "psr-4": {
+      "KikCMS\\": "src"
     }
   }
 }
