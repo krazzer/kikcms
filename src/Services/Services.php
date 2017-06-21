@@ -345,13 +345,17 @@ class Services extends BaseServices
         $siteViewDir    = SITE_PATH . 'app/Views/';
         $cmsResourceDir = __DIR__ . '/../../resources/';
 
-        $view = new View();
-        $view->setViewsDir($cmsViewDir);
-        $view->setNamespaces([
+        $namespaces = [
             'kikcms'       => $cmsViewDir,
             'website'      => $siteViewDir,
             'cmsResources' => $cmsResourceDir,
-        ]);
+        ];
+
+        $namespaces = array_merge($namespaces, $this->getPluginTwigNamespaces());
+
+        $view = new View();
+        $view->setViewsDir($cmsViewDir);
+        $view->setNamespaces($namespaces);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
                 $env   = $di->get('config')->get('application')->get('env');
@@ -416,5 +420,23 @@ class Services extends BaseServices
         $ajaxHeader = 'HTTP_X_REQUESTED_WITH';
 
         return ! empty($_SERVER[$ajaxHeader]) && strtolower($_SERVER[$ajaxHeader]) == 'xmlhttprequest';
+    }
+
+    /**
+     * @return array
+     */
+    private function getPluginTwigNamespaces(): array
+    {
+        $namespaces = [];
+
+        $pluginsList = $this->getPluginList();
+
+        foreach ($pluginsList as $plugin) {
+            $name = 'cms' . ucfirst($plugin->getName());
+
+            $namespaces[$name] = $plugin->getSourceDirectory() . '/Views/';
+        }
+
+        return $namespaces;
     }
 }

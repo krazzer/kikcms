@@ -2,8 +2,19 @@
 
 namespace KikCMS\Classes;
 
+use ReflectionClass;
+
 abstract class CmsPlugin
 {
+    /**
+     * @return string
+     */
+    public function getSourceDirectory(): string
+    {
+        $class_info = new ReflectionClass($this);
+        return dirname($class_info->getFileName());
+    }
+
     /**
      * @return string
      */
