@@ -18,7 +18,7 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function typeExists(string $type = null): bool
     {
-        if( ! $type){
+        if ( ! $type) {
             return true;
         }
 
@@ -27,13 +27,31 @@ class MediaResizeBase extends WebsiteExtendable
 
     public function resizeByType(Adapter $image, string $type)
     {
-        if( ! $this->typeMethodExists($type)){
+        if ( ! $this->typeMethodExists($type)) {
             $this->throwMethodDoesNotExistException($this->getMethod($type));
         }
 
         $method = $this->getMethod($type);
+        $this->$method($image);
+    }
 
-        return $this->$method($image);
+    /**
+     * @param Adapter $image
+     * @param $width
+     * @param $height
+     */
+    protected function resize(Adapter $image, $width, $height)
+    {
+        if($image->getWidth() < $width && $image->getHeight() < $height){
+            return;
+        }
+
+        $image->resize($width, $height);
+
+        // resize again if the width or height is still out of bounds
+        if($image->getWidth() > $width || $image->getHeight() > $height){
+            $image->resize($width, $height);
+        }
     }
 
     /**
@@ -51,6 +69,6 @@ class MediaResizeBase extends WebsiteExtendable
      */
     private function getMethod($type): string
     {
-       return 'resize' . StringUtil::dashesToCamelCase($type, true);
+        return 'resize' . StringUtil::dashesToCamelCase($type, true);
     }
 }
