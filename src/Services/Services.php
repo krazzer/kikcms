@@ -433,8 +433,11 @@ class Services extends BaseServices
 
         foreach ($pluginsList as $plugin) {
             $name = 'cms' . ucfirst($plugin->getName());
+            $viewsDirectory = $plugin->getSourceDirectory() . '/Views/';
 
-            $namespaces[$name] = $plugin->getSourceDirectory() . '/Views/';
+            if(file_exists($viewsDirectory)){
+                $namespaces[$name] = $viewsDirectory;
+            }
         }
 
         return $namespaces;
