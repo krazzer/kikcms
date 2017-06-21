@@ -2,10 +2,35 @@
 
 namespace KikCMS\Classes;
 
+use Phalcon\Mvc\Router\Group;
 use ReflectionClass;
 
 abstract class CmsPlugin
 {
+    /**
+     * @param Group $backend
+     */
+    public function addBackendRoutes(Group $backend)
+    {
+
+    }
+
+    /**
+     * @param Group $frontend
+     */
+    public function addFrontendRoutes(Group $frontend)
+    {
+
+    }
+
+    /**
+     * @return string
+     */
+    public function getControllersNamespace(): string
+    {
+        return ucfirst($this->getName()) . "Plugin\\Controllers";
+    }
+
     /**
      * @return string
      */

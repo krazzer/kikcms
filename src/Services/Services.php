@@ -21,6 +21,7 @@ use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
@@ -429,7 +430,8 @@ class Services extends BaseServices
     {
         $namespaces = [];
 
-        $pluginsList = $this->getPluginList();
+        /** @var CmsPluginList $pluginsList */
+        $pluginsList = $this->get('cmsPlugins')->getPluginList();
 
         foreach ($pluginsList as $plugin) {
             $name = 'cms' . ucfirst($plugin->getName());

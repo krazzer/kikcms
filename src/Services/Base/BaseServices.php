@@ -6,13 +6,11 @@ use /** @noinspection PhpUndefinedClassInspection */
     ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Config\KikCMSConfig;
-use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Routing;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
-use Website\Classes\CmsPlugins;
 
 /** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
@@ -111,25 +109,6 @@ class BaseServices extends ApplicationServices
     }
 
     /**
-     * @return CmsPluginList
-     */
-    protected function getPluginList(): CmsPluginList
-    {
-        $pluginsList = new CmsPluginList();
-
-        /** @var CmsPlugins $cmsPlugins */
-        $cmsPlugins = $this->get('cmsPlugins');
-
-        $plugins = $cmsPlugins->getPlugins();
-
-        foreach ($plugins as $plugin) {
-            $pluginsList->add(new $plugin());
-        }
-
-        return $pluginsList;
-    }
-
-    /**
      * Binds services that are extendable by the website
      */
     private function bindExtendableServices()
@@ -154,7 +133,7 @@ class BaseServices extends ApplicationServices
      */
     private function bindPluginServices()
     {
-        $pluginsList = $this->getPluginList();
+        $pluginsList = $this->get('cmsPlugins')->getPluginList();
 
         /** @var CmsPlugin $plugin */
         foreach ($pluginsList as $plugin) {

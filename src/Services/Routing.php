@@ -3,24 +3,30 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteRoutingBase;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Router\Group;
+use Website\Classes\CmsPlugins;
 
 /**
  * @property WebsiteService $websiteService
  * @property WebsiteRoutingBase $websiteRouting
+ * @property CmsPlugins $cmsPlugins
  */
 class Routing extends Injectable
 {
+    const MODULE_BACKEND  = 'backend';
+    const MODULE_FRONTEND = 'frontend';
+
     public function initialize()
     {
         $router = new Router(false);
 
-        $backend  = new Group(["module" => "backend"]);
-        $frontend = new Group(["module" => "frontend"]);
+        $backend  = new Group(["module" => self::MODULE_BACKEND]);
+        $frontend = new Group(["module" => self::MODULE_FRONTEND]);
 
         $websiteBackend  = new Group(["module" => "websiteBackend"]);
         $websiteFrontend = new Group(["module" => "websiteFrontend"]);
@@ -101,6 +107,8 @@ class Routing extends Injectable
         $router->mount($frontend);
         $router->mount($backend);
 
+        $this->addPluginRoutes($router);
+
         $this->websiteRouting->addBackendRoutes($websiteBackend);
         $this->websiteRouting->addFrontendRoutes($websiteFrontend);
 
@@ -121,5 +129,43 @@ class Routing extends Injectable
         $router->removeExtraSlashes(true);
 
         return $router;
+    }
+
+    /**
+     * @param Router $router
+     */
+    private function addPluginRoutes(Router $router)
+    {
+        $plugins = $this->cmsPlugins->getPluginList();
+
+        /** @var CmsPlugin $plugin */
+        foreach ($plugins as $plugin) {
+            $pluginBackend  = $this->createPluginGroup(self::MODULE_BACKEND, $plugin);
+            $pluginFrontend = $this->createPluginGroup(self::MODULE_FRONTEND, $plugin);
+
+            $plugin->addBackendRoutes($pluginBackend);
+            $plugin->addFrontendRoutes($pluginFrontend);
+
+            if ($pluginBackend->getRoutes()) {
+                $router->mount($pluginBackend);
+            }
+
+            if ($pluginFrontend->getRoutes()) {
+                $router->mount($pluginFrontend);
+            }
+        }
+    }
+
+    /**
+     * @param string $module
+     * @param CmsPlugin $plugin
+     * @return Group
+     */
+    private function createPluginGroup(string $module, CmsPlugin $plugin): Group
+    {
+        return new Group([
+            "module"    => $module,
+            'namespace' => $plugin->getControllersNamespace(),
+        ]);
     }
 }
