@@ -8,7 +8,7 @@
     {{ assets.outputCss() }}
     {% block head '' %}
 </head>
-<body>
+<body data-language-code="{{ languageCode }}">
 {% block body %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 {{ javascriptInclude('cmsassets/js/kikcms.js') }}

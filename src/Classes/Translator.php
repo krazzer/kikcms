@@ -13,6 +13,7 @@ use KikCMS\Services\TranslationService;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
+use Website\Classes\CmsPlugins;
 
 /**
  * @property TranslationService $translationService
@@ -20,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property CacheService $cacheService
  * @property Backend $cache
  * @property LanguageService $languageService
+ * @property CmsPlugins $cmsPlugins
  */
 class Translator extends Injectable
 {
@@ -34,14 +36,14 @@ class Translator extends Injectable
     public function tl($key, array $replaces = []): string
     {
         // no translation given = empty string
-        if(empty($key)){
+        if (empty($key)) {
             return '';
         }
 
         // cache translation without using the cacheService shortcut for performance
         $cacheKey = CacheConfig::TRANSLATION . ':' . $this->getLanguageCode() . ':' . $key;
 
-        if( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
+        if ( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
             // numeric values given indicate it's a translation managed from a DataTable
             if (is_numeric($key)) {
                 return $this->getDbTranslation($key);
@@ -49,13 +51,13 @@ class Translator extends Injectable
 
             $translations = $this->getTranslations();
 
-            if( ! array_key_exists($key, $translations)){
+            if ( ! array_key_exists($key, $translations)) {
                 throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
             }
 
             $translation = $translations[$key];
 
-            if($this->cache){
+            if ($this->cache) {
                 $this->cache->save($cacheKey, $translation, CacheConfig::ONE_DAY);
             }
         }
@@ -82,8 +84,8 @@ class Translator extends Injectable
 
         $group = [];
 
-        foreach ($translations as $key => $value){
-            if(substr($key, 0, strlen($string) + 1) === $string . '.'){
+        foreach ($translations as $key => $value) {
+            if (substr($key, 0, strlen($string) + 1) === $string . '.') {
                 $group[] = $key;
             }
         }
@@ -120,9 +122,10 @@ class Translator extends Injectable
     {
         $userTranslations    = $this->getUserTranslations();
         $websiteTranslations = $this->getWebsiteTranslations();
+        $pluginTranslations  = $this->getPluginTranslations();
         $cmsTranslations     = $this->getCmsTranslations();
 
-        return $userTranslations + $websiteTranslations + $cmsTranslations;
+        return $userTranslations + $websiteTranslations + $pluginTranslations + $cmsTranslations;
     }
 
     /**
@@ -159,7 +162,6 @@ class Translator extends Injectable
         $this->setLanguageCode($currentLanguageCode);
 
         return $translation;
-
     }
 
     /**
@@ -229,5 +231,26 @@ class Translator extends Injectable
     private function getCmsTranslations(): array
     {
         return $this->getByFile(__DIR__ . '/../../resources/translations/' . $this->getLanguageCode() . '.php');
+    }
+
+    /**
+     * @return array
+     */
+    private function getPluginTranslations(): array
+    {
+        $translations = [];
+
+        $pluginsList = $this->cmsPlugins->getPluginList();
+
+        /** @var CmsPlugin $plugin */
+        foreach ($pluginsList as $plugin){
+            $translationsFile = $plugin->getTranslationsDirectory() . $this->getLanguageCode() . '.php';
+
+            if(file_exists($translationsFile)){
+                $translations += $this->getByFile($translationsFile);
+            }
+        }
+
+        return $translations;
     }
 }

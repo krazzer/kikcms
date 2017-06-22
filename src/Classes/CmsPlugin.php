@@ -43,6 +43,14 @@ abstract class CmsPlugin
     /**
      * @return string
      */
+    public function getTranslationsDirectory(): string
+    {
+        return dirname($this->getSourceDirectory()) . '/resources/translations/';
+    }
+
+    /**
+     * @return string
+     */
     public abstract function getName(): string;
 
     /**

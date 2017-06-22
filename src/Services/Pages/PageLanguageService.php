@@ -121,7 +121,7 @@ class PageLanguageService extends Injectable
     }
 
     /**
-     * Get the default pageLanguage (homepage)
+     * Get the default pageLanguage (homepage), in the default language
      *
      * @return PageLanguage
      */
