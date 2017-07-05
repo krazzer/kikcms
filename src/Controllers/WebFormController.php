@@ -40,7 +40,7 @@ class WebFormController extends RenderableController
         $webForm->initializeForm();
 
         /** @var Autocomplete $field */
-        $field = $webForm->getField($fieldKey);
+        $field = $webForm->getFieldMap()->get($fieldKey);
 
         /** @var Model $model */
         $model = $field->getSourceModel();

@@ -109,6 +109,7 @@ class PageRearrangeService extends Injectable
             $children        = $this->pageService->getChildren($parentPage);
             $maxDisplayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
 
+            /** @var Page $page */
             foreach ($children as $page) {
                 $page->display_order = $maxDisplayOrder;
                 $maxDisplayOrder++;

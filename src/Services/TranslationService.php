@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
+use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -80,5 +81,20 @@ class TranslationService extends Injectable
         }
 
         $this->cacheService->clear(CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId);
+    }
+
+    /**
+     * Creates a new TranslationKey and returns it's id
+     *
+     * @return int
+     */
+    public function createNewTranslationKeyId(): int
+    {
+        $translationKey = new TranslationKey();
+
+        $translationKey->db = true;
+        $translationKey->save();
+
+        return (int) $translationKey->id;
     }
 }

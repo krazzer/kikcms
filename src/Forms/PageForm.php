@@ -204,7 +204,7 @@ class PageForm extends DataForm
 
         $this->tabs[0]->addField($templateField);
 
-        if ( ! array_key_exists($templateField->getKey(), $this->fieldStorage)) {
+        if ( ! $templateField->getStorage()) {
             if ($field->multilingual) {
                 $templateField->table(PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, true, [
                     PageLanguageContent::FIELD_FIELD_ID => $field->id

@@ -42,7 +42,7 @@ abstract class MailForm extends WebForm
     {
         $contents = '';
 
-        foreach ($this->getFields() as $key => $field)
+        foreach ($this->getFieldMap() as $key => $field)
         {
             if($key == WebForm::WEB_FORM_ID){
                 continue;

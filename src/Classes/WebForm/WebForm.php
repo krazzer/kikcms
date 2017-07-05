@@ -19,6 +19,7 @@ use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
+use KikCMS\ObjectLists\FieldMap;
 use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Date;
 use Phalcon\Forms\Element\Hidden;
@@ -42,8 +43,8 @@ abstract class WebForm extends Renderable
     const WEB_FORM_ID    = 'webFormId';
     const WEB_FORM_CLASS = 'webFormClass';
 
-    /** @var Field[] */
-    protected $fields = [];
+    /** @var FieldMap */
+    protected $fieldMap;
 
     /** @var Tab[] */
     protected $tabs = [];
@@ -90,6 +91,8 @@ abstract class WebForm extends Renderable
 
         $this->form = new Form();
         $this->form->setValidation($this->validation);
+
+        $this->fieldMap = new FieldMap();
 
         $this->sendLabel = $this->translator->tl('webform.defaultSendLabel');
     }
@@ -148,7 +151,7 @@ abstract class WebForm extends Renderable
         }
 
         $field->setForm($this);
-        $this->fields[$field->getKey()] = $field;
+        $this->fieldMap->add($field, $field->getKey());
 
         if ($field->getElement()) {
             $this->form->add($field->getElement());
@@ -402,15 +405,6 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param string $fieldKey
-     * @return bool
-     */
-    public function hasField(string $fieldKey): bool
-    {
-        return $this->form->has($fieldKey);
-    }
-
-    /**
      * @return mixed
      */
     public function getCurrentTab()
@@ -420,9 +414,9 @@ abstract class WebForm extends Renderable
 
     /**
      * @param string $fieldKey
-     * @return ElementInterface
+     * @return ElementInterface|null
      */
-    public function getElement(string $fieldKey): ElementInterface
+    public function getElement(string $fieldKey)
     {
         if ( ! $this->form->has($fieldKey)) {
             return null;
@@ -432,20 +426,11 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param string $fieldKey
-     * @return Field
+     * @return FieldMap
      */
-    public function getField(string $fieldKey): Field
+    public function getFieldMap(): FieldMap
     {
-        return $this->fields[$fieldKey];
-    }
-
-    /**
-     * @return Field[]
-     */
-    public function getFields(): array
-    {
-        return $this->fields;
+        return $this->fieldMap;
     }
 
     /**
@@ -459,11 +444,11 @@ abstract class WebForm extends Renderable
         $input = $this->request->getPost();
 
         foreach ($input as $key => $value) {
-            if ( ! $this->hasField($key)) {
+            if ( ! $this->fieldMap->has($key)) {
                 continue;
             }
 
-            $input[$key] = $this->getField($key)->getInput($value);
+            $input[$key] = $this->fieldMap->get($key)->getInput($value);
         }
 
         return $input;
@@ -627,7 +612,7 @@ abstract class WebForm extends Renderable
      */
     protected function initializeFields()
     {
-        foreach ($this->fields as $field) {
+        foreach ($this->fieldMap as $field) {
             if ($this->isPlaceHolderAsLabel()) {
                 $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
             }
@@ -675,7 +660,7 @@ abstract class WebForm extends Renderable
     protected function renderDataTableFields()
     {
         /** @var DataTableField $field */
-        foreach ($this->getFields() as $key => $field) {
+        foreach ($this->getFieldMap() as $key => $field) {
 
             /** @var SelectDataTableField $field */
             if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
@@ -700,9 +685,10 @@ abstract class WebForm extends Renderable
 
         return $this->renderView($this->formTemplate, [
             'form'               => $this->form,
-            'fields'             => $this->fields,
+            'fields'             => $this->fieldMap,
             'tabs'               => $this->tabs,
             'filters'            => $this->filters,
+            'security'           => $this->security,
             'currentTab'         => $this->getCurrentTab(),
             'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
             'formId'             => $this->getFormId(),
@@ -710,9 +696,8 @@ abstract class WebForm extends Renderable
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'instance'           => $this->getInstance(),
             'jsData'             => $this->getJsData(),
-            'errorContainer'     => $errorContainer,
-            'security'           => $this->security,
             'class'              => static::class,
+            'errorContainer'     => $errorContainer,
             'webForm'            => $this,
         ]);
     }
@@ -768,7 +753,7 @@ abstract class WebForm extends Renderable
     {
         $fieldsWithoutTab = [];
 
-        foreach ($this->fields as $field) {
+        foreach ($this->fieldMap as $field) {
             if ( ! $field->getTab()) {
                 $fieldsWithoutTab[] = $field;
             }
@@ -783,7 +768,7 @@ abstract class WebForm extends Renderable
      */
     private function hasFieldWithType(string $type): bool
     {
-        foreach ($this->fields as $field) {
+        foreach ($this->fieldMap as $field) {
             if ($field->getType() == $type) {
                 return true;
             }
@@ -797,7 +782,7 @@ abstract class WebForm extends Renderable
      */
     private function updateFieldsByPostData()
     {
-        foreach ($this->fields as $key => $field) {
+        foreach ($this->fieldMap as $key => $field) {
             // set unposted checkboxes to default 0
             if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
                 $field->setDefault(0);

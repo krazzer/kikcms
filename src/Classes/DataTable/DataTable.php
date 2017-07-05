@@ -10,6 +10,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorageService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
@@ -21,6 +22,7 @@ use Phalcon\Tag;
  * @property LanguageService $languageService
  * @property Backend $diskCache
  * @property Translator $translator
+ * @property FieldStorageService $fieldStorageService
  */
 abstract class DataTable extends Renderable
 {
@@ -147,11 +149,12 @@ abstract class DataTable extends Renderable
     {
         $this->renderEditForm();
 
-        $form  = $this->getForm();
-        $field = $form->getField($column);
+        $form     = $this->getForm();
+        $field    = $form->getFieldMap()->get($column);
+        $langCode = $this->getFilters()->getLanguageCode();
 
-        if ($form->isStoredElsewhere($field)){
-            return $form->fieldStorage[$column]->store($checked, $id, $this->getFilters()->getLanguageCode());
+        if ($field->getStorage()) {
+            return $this->fieldStorageService->store($field, $checked, $id, $langCode);
         }
 
         return $this->dbService->update($this->getModel(), [$column => $checked], ['id' => $id]);

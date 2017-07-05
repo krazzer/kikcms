@@ -2,10 +2,12 @@
 
 namespace KikCMS\Classes\WebForm\DataForm;
 
-use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Renderable\Filters;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer\Date;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
@@ -18,17 +20,17 @@ use Monolog\Logger;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
-use \KikCMS\Classes\WebForm\DataForm\FieldStorage\DataTable as DataTableFieldStorage;
 
 /**
  * @property DbService $dbService
  * @property LanguageService $languageService
  * @property Logger $logger
+ * @property StorageService $storageService
  */
 abstract class DataForm extends WebForm
 {
-    /** @var FieldStorage[] */
-    public $fieldStorage = [];
+    /** @var array */
+    protected $events = [];
 
     /** @var DataFormFilters */
     protected $filters;
@@ -63,14 +65,6 @@ abstract class DataForm extends WebForm
     public abstract function getModel(): string;
 
     /**
-     * @param FieldStorage $fieldStorage
-     */
-    public function addFieldStorage(FieldStorage $fieldStorage)
-    {
-        $this->fieldStorage[$fieldStorage->getField()->getKey()] = $fieldStorage;
-    }
-
-    /**
      * @param FieldTransformer $fieldTransformer
      */
     public function addFieldTransformer(FieldTransformer $fieldTransformer)
@@ -92,10 +86,10 @@ abstract class DataForm extends WebForm
 
         $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
 
-        $dataTableFieldStorage = new DataTableFieldStorage();
-        $dataTableFieldStorage->setField($dataTableField);
+        $storage = (new OneToMany())
+            ->setTableModel($dataTable->getModel());
 
-        $this->addFieldStorage($dataTableFieldStorage);
+        $dataTableField->store($storage);
 
         return $dataTableField;
     }
@@ -116,19 +110,21 @@ abstract class DataForm extends WebForm
      * Retrieve data from fields that are not stored in the current DataTable's Table
      *
      * @param int $id
-     * @param null $languageCode
+     * @param null|string $langCode
      * @return array
      */
-    public function getDataStoredElseWhere(int $id, $languageCode = null): array
+    public function getDataStoredElseWhere(int $id, string $langCode = null): array
     {
         $data = [];
 
         /** @var Field $field */
-        foreach ($this->getFields() as $key => $field) {
-            if ($this->isStoredElsewhere($field)) {
-                $value      = $this->fieldStorage[$field->getKey()]->getValue($id, $languageCode);
-                $data[$key] = $field->getFormFormat($value);
+        foreach ($this->getFieldMap() as $key => $field) {
+            if ( ! $field->getStorage()) {
+                continue;
             }
+
+            $value = $this->storageService->retrieve($field, $id, $langCode);
+            $data[$key] = $field->getFormFormat($value);
         }
 
         return $data;
@@ -140,16 +136,6 @@ abstract class DataForm extends WebForm
     public function getFilters(): Filters
     {
         return parent::getFilters();
-    }
-
-    /**
-     * @param $field
-     *
-     * @return bool
-     */
-    public function isStoredElsewhere(Field $field): bool
-    {
-        return array_key_exists($field->getKey(), $this->fieldStorage);
     }
 
     /**
@@ -165,7 +151,8 @@ abstract class DataForm extends WebForm
         $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
-        foreach ($this->fields as $key => &$field) {
+        /** @var Field $field */
+        foreach ($this->fieldMap as $key => $field) {
             if (array_key_exists($key, $editData) && $editData[$key] !== null) {
                 $field->setDefault($editData[$key]);
             }
@@ -186,7 +173,7 @@ abstract class DataForm extends WebForm
     {
         $saveSuccess = $this->saveData($input);
 
-        if ($saveSuccess && ! array_key_exists(DataTable::EDIT_ID, $input)) {
+        if ($saveSuccess && ! $this->fieldMap->has(DataTable::EDIT_ID)) {
             $this->addHiddenField(DataTable::EDIT_ID, $this->filters->getEditId());
         }
 
@@ -221,8 +208,8 @@ abstract class DataForm extends WebForm
      */
     public function getEditData(): array
     {
-        $editId       = $this->getFilters()->getEditId();
-        $languageCode = $this->getFilters()->getLanguageCode();
+        $editId   = $this->getFilters()->getEditId();
+        $langCode = $this->getFilters()->getLanguageCode();
 
         if ( ! $editId) {
             return [];
@@ -232,7 +219,7 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        $data = $this->getDataStoredElseWhere($editId, $languageCode) + $this->getEditDataForModel();
+        $data = $this->getDataStoredElseWhere($editId, $langCode) + $this->getEditDataForModel();
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
@@ -273,7 +260,21 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @param string $event
+     * @param callable $callable
+     */
+    protected function addEventListener(string $event, callable $callable)
+    {
+        if( ! array_key_exists($event, $this->events)){
+            $this->events[$event] = [];
+        }
+
+        $this->events[$event][] = $callable;
+    }
+
+    /**
      * Perform some action on a successful save
+     * todo: use event listener, fix usages
      */
     protected function onSave()
     {
@@ -289,14 +290,14 @@ abstract class DataForm extends WebForm
         $parentEditId = 0;
 
         // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
-        if ($this->hasField(DataTable::EDIT_ID)) {
-            $parentEditId = $this->getField(DataTable::EDIT_ID)->getElement()->getValue();
+        if ($this->fieldMap->has(DataTable::EDIT_ID)) {
+            $parentEditId = $this->fieldMap->get(DataTable::EDIT_ID)->getElement()->getValue();
         }
 
         $languageCode = $this->getFilters()->getLanguageCode();
 
         /** @var DataTableField $field */
-        foreach ($this->getFields() as $key => $field) {
+        foreach ($this->getFieldMap() as $key => $field) {
             if ($field->getType() != Field::TYPE_DATA_TABLE) {
                 continue;
             }
@@ -311,6 +312,24 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @param StorageData $storageData
+     */
+    private function addAutoGeneratedInput(StorageData $storageData)
+    {
+        if ($this->saveCreatedAt && ! $this->getFilters()->getEditId()) {
+            $storageData->addValue($this->createdAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
+        }
+
+        if ($this->saveUpdatedAt && $this->getFilters()->getEditId()) {
+            $storageData->addValue($this->updatedAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
+        }
+
+        if ($this->getDataTable() && $this->getDataTable()->isSortable()) {
+            $this->setDisplayOrder($storageData);
+        }
+    }
+
+    /**
      * @param array $input
      * @return StorageData
      */
@@ -318,7 +337,7 @@ abstract class DataForm extends WebForm
     {
         $storageData = new StorageData();
 
-        foreach ($this->fields as $key => $field) {
+        foreach ($this->fieldMap as $key => $field) {
             if (in_array($key, $this->getSystemFields())) {
                 continue;
             }
@@ -334,20 +353,20 @@ abstract class DataForm extends WebForm
 
             $value = $this->transformInputForStorage($input, $key);
 
-            if ( ! $this->isStoredElsewhere($field)) {
-                $value = $this->dbService->toStorage($value);
-            }
-
-            $storageData->addValue($key, $value, $this->isStoredElsewhere($field));
+            $storageData->addValue($key, $value);
         }
 
-        if($this->saveCreatedAt && ! $this->getFilters()->getEditId()){
-            $storageData->addValue($this->createdAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
+        if (array_key_exists(DataTable::EDIT_ID, $input)) {
+            $storageData->setEditId($input[DataTable::EDIT_ID]);
         }
 
-        if($this->saveUpdatedAt && $this->getFilters()->getEditId()){
-            $storageData->addValue($this->updatedAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
-        }
+        $storageData->setLanguageCode($this->getFilters()->getLanguageCode());
+        $storageData->setParentEditId($this->getFilters()->getParentEditId());
+        $storageData->setTable($this->getModel());
+        $storageData->setFieldMap($this->fieldMap);
+        $storageData->setEvents($this->events);
+
+        $this->addAutoGeneratedInput($storageData);
 
         return $storageData;
     }
@@ -370,43 +389,15 @@ abstract class DataForm extends WebForm
     {
         $storageData = $this->getStorageData($input);
 
-        $this->db->begin();
+        $this->storageService->setStorageData($storageData);
 
-        if ($this->getDataTable() && $this->getDataTable()->isSortable()) {
-            $this->setDisplayOrder($storageData);
+        $success = $this->storageService->store();
+
+        if($success){
+            $this->getFilters()->setEditId($storageData->getEditId());
         }
 
-        try {
-            if (isset($input[DataTable::EDIT_ID])) {
-                $editId = $input[DataTable::EDIT_ID];
-
-                if ($storageData->getDataStoredInTable()) {
-                    $this->dbService->update($this->getModel(), $storageData->getDataStoredInTable(), ['id' => $editId]);
-                }
-            } else {
-                // if a temporary key is inserted, fk checks needs to be disabled for insert
-                if ($this->getFilters()->getParentEditId() === 0) {
-                    $this->db->query('SET FOREIGN_KEY_CHECKS = 0');
-                }
-                $editId = $this->dbService->insert($this->getModel(), $storageData->getDataStoredInTable());
-                if ($this->getFilters()->getParentEditId() === 0) {
-                    $this->db->query('SET FOREIGN_KEY_CHECKS = 1');
-                }
-            }
-
-            $this->filters->setEditId($editId);
-
-            foreach ($storageData->getDataStoredElseWhere() as $key => $value) {
-                $this->fieldStorage[$key]->store($value, $editId, $this->getFilters()->getLanguageCode());
-            }
-        } catch (Exception $exception) {
-            $this->logger->log(Logger::ERROR, $exception);
-            $this->db->rollback();
-
-            return false;
-        }
-
-        return $this->db->commit();
+        return $success;
     }
 
     /**
@@ -434,7 +425,7 @@ abstract class DataForm extends WebForm
      */
     private function transformDataForDisplay(array $data): array
     {
-        foreach ($this->fields as $key => $field) {
+        foreach ($this->fieldMap as $key => $field) {
             if ( ! array_key_exists($key, $this->fieldTransformers) || ! isset($data[$key]) || ! $data[$key]) {
                 continue;
             }

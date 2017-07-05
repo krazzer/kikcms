@@ -28,7 +28,7 @@
         <div class="tab-contents">
             {% for index, tab in tabs %}
                 <div class="tab-{{ index }} tab-content{{ index == currentTab ? ' active' }}">
-                    {% set fields = tab.fields %}
+                    {% set fields = tab.fieldMap %}
                     {{ block('fields') }}
                 </div>
             {% endfor %}

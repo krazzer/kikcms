@@ -246,6 +246,19 @@ class DbService extends Injectable
     }
 
     /**
+     * @param Builder $query
+     * @return bool
+     */
+    public function getExists(Builder $query): bool
+    {
+        if (count($query->getQuery()->execute())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Retrieve a single result from the given query
      *
      * @param Builder $query
@@ -372,6 +385,14 @@ class DbService extends Injectable
     }
 
     /**
+     * @param bool $set
+     */
+    public function setForeignKeyChecks(bool $set)
+    {
+        $this->db->query('SET FOREIGN_KEY_CHECKS = ' . (string) ($set ? 1 : 0));
+    }
+
+    /**
      * Build up a table from the results of the query, like:
      *
      * $result = [
@@ -449,6 +470,21 @@ class DbService extends Injectable
         }
 
         return $value;
+    }
+
+    /**
+     * Formats each value of the array using toStorage method
+     *
+     * @param array $valueMap
+     * @return array
+     */
+    public function toStorageArray(array $valueMap): array
+    {
+        foreach ($valueMap as $key => $value){
+            $valueMap[$key] = $this->toStorage($value);
+        }
+
+        return $valueMap;
     }
 
     /**

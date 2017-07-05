@@ -20,6 +20,8 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorageService;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Analytics\AnalyticsService;
@@ -78,6 +80,7 @@ class Services extends BaseServices
             DbService::class,
             DeployService::class,
             ImageHandler::class,
+            FieldStorageService::class,
             FullPageService::class,
             FrontendHelper::class,
             PageContentService::class,
@@ -87,6 +90,7 @@ class Services extends BaseServices
             LanguageService::class,
             MenuService::class,
             Security::class,
+            StorageService::class,
             TemplateService::class,
             TinyMceService::class,
             TranslationService::class,

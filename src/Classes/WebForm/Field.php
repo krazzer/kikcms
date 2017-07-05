@@ -4,8 +4,10 @@ namespace KikCMS\Classes\WebForm;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\MultiRow;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorage;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\ManyToMany;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOne;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
 use Phalcon\Forms\Element;
 
@@ -42,6 +44,9 @@ class Field
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private $required = false;
+
+    /** @var FieldStorage|null contains how this field should be stored */
+    private $storage;
 
     /**
      * @param Element $element
@@ -245,70 +250,98 @@ class Field
     }
 
     /**
-     * Shortcut to set the storage to different table
+     * @return FieldStorage|null
+     */
+    public function getStorage()
+    {
+        return $this->storage;
+    }
+
+    /**
+     * Shortcut to set the storage to None
+     */
+    public function dontStore()
+    {
+        $this->store(new None());
+    }
+
+    /**
+     * Shortcut to set the storage to OneToOne
      *
      * @param string $table
-     * @param $relationKey
+     * @param $relatedField
      * @param bool $addLanguageCode
      * @param array $defaultValues
      *
      * @return $this|Field
      */
-    public function table(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
+    public function table(string $table, $relatedField, $addLanguageCode = false, $defaultValues = [])
     {
-        $fieldStorage = (new FieldStorage())
+        $fieldStorage = (new OneToOne())
             ->setField($this)
             ->setTableModel($table)
-            ->setRelationKey($relationKey)
+            ->setRelatedField($relatedField)
             ->setAddLanguageCode($addLanguageCode)
             ->setDefaultValues($defaultValues);
 
-        $this->form->addFieldStorage($fieldStorage);
+        $this->store($fieldStorage);
 
         return $this;
     }
 
     /**
-     * Shortcut to set the storage to MultiRow
+     * Shortcut to set the storage to ManyToMany
      *
      * @param string $table
-     * @param $relationKey
+     * @param string $relatedField
      * @param bool $addLanguageCode
      * @param array $defaultValues
-     *
      * @return $this|Field
      */
-    public function tableMultiRow(string $table, $relationKey, $addLanguageCode = false, $defaultValues = [])
+    public function tableMultiRow(string $table, string $relatedField, $addLanguageCode = false, $defaultValues = [])
     {
-        $fieldStorage = (new MultiRow())
+        $fieldStorage = (new ManyToMany())
             ->setField($this)
             ->setTableModel($table)
-            ->setRelationKey($relationKey)
+            ->setRelatedField($relatedField)
             ->setAddLanguageCode($addLanguageCode)
             ->setDefaultValues($defaultValues);
 
-        $this->form->addFieldStorage($fieldStorage);
+        $this->store($fieldStorage);
 
         return $this;
     }
 
     /**
      * Shortcut to set the storage in the cms_translation_value table
-     * @param null $languageCode
+     *
+     * @param null $langCode
      * @return $this
      */
-    public function translate($languageCode = null)
+    public function translate($langCode = null)
     {
-        $fieldStorage = new Translation();
-        $fieldStorage->setField($this);
-        $fieldStorage->setTableModel($this->form->getModel());
+        $fieldStorage = (new Translation())
+            ->setField($this)
+            ->setTableModel($this->form->getModel());
 
-        if($languageCode){
-            $fieldStorage->setLanguageCode($languageCode);
+        if($langCode){
+            $fieldStorage->setLanguageCode($langCode);
         }
 
-        $this->form->addFieldStorage($fieldStorage);
+        $this->store($fieldStorage);
 
+        return $this;
+    }
+
+    /**
+     * Shortcut for setting to storage
+     *
+     * @param FieldStorage $fieldStorage
+     * @return Field|$this
+     */
+    public function store(FieldStorage $fieldStorage): Field
+    {
+        $this->storage = $fieldStorage;
         return $this;
     }
 }

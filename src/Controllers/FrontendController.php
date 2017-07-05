@@ -110,6 +110,11 @@ class FrontendController extends BaseController
         $websiteVariables  = $this->templateVariables->getGlobalVariables();
         $templateVariables = $this->templateVariables->getTemplateVariables($templateFile);
 
+        // in case a form has been send, it might want to redirect
+        if ($templateVariables instanceof Response) {
+            return $templateVariables;
+        }
+
         $variables = array_merge($fieldVariables, $websiteVariables, $templateVariables);
         $variables = $this->websiteService->getForms($variables);
 
