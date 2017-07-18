@@ -5,6 +5,7 @@ namespace KikCMS\Services\Base;
 use /** @noinspection PhpUndefinedClassInspection */
     ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
+use KikCMS\Classes\Frontend\Extendables\WebsiteServicesBase;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Routing;
 use Phalcon\Config;
@@ -80,16 +81,22 @@ class BaseServices extends ApplicationServices
             });
         }
 
-        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
-            return;
+        if ($this->getApplicationConfig()->env !== KikCMSConfig::ENV_DEV) {
+            $this->set('modelsMetadata', function () {
+                return new Files([
+                    "lifetime"    => 86400,
+                    "metaDataDir" => SITE_PATH . "cache/metadata/"
+                ]);
+            });
         }
 
-        $this->set('modelsMetadata', function () {
-            return new Files([
-                "lifetime"    => 86400,
-                "metaDataDir" => SITE_PATH . "cache/metadata/"
-            ]);
-        });
+        /** @var WebsiteServicesBase $websiteServices */
+        $websiteServices = $this->get('websiteServices');
+        $overloadedServices = $websiteServices->getOverloadedServices();
+
+        foreach ($overloadedServices as $name => $callable){
+            $this->set($name, $callable);
+        }
     }
 
     /**

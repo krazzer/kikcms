@@ -9,7 +9,18 @@ use KikCMS\Classes\Frontend\WebsiteExtendable;
  */
 class WebsiteServicesBase extends WebsiteExtendable
 {
+    /**
+     * @return array
+     */
     public function getServices(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getOverloadedServices(): array
     {
         return [];
     }

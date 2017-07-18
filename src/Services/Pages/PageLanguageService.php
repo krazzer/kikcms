@@ -188,6 +188,13 @@ class PageLanguageService extends Injectable
      */
     public function getPath(PageLanguage $pageLanguage): PageLanguageMap
     {
+        $lft = $pageLanguage->page->lft;
+        $rgt = $pageLanguage->page->rgt;
+
+        if( ! $lft || ! $rgt){
+            return (new PageLanguageMap())->add($pageLanguage, $pageLanguage->page_id);
+        }
+
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
