@@ -187,19 +187,13 @@ class Twig extends Engine implements EngineInterface
             $functions = array_merge($functions, $userFunctions);
         }
 
-        $this->twig->addFilter(new \Twig_SimpleFilter('price', function($price) use ($di){
-            $decimalNotation = $di->getShared("translator")->tl('system.decimalNotation');
-
-            if($decimalNotation == 'point'){
-                return number_format($price, 2, '.', ',');
-            } else {
-                return number_format($price, 2, ',', '.');
-            }
-        }));
-
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
+
+        $this->twig->addFilter(new \Twig_SimpleFilter('price', function($price) use ($di){
+            return $di->getShared("numberService")->getPriceFormat($price);
+        }));
     }
 
     /**
