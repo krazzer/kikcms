@@ -16,4 +16,12 @@ class PageMap extends ObjectMap
     {
         return parent::get($key);
     }
+
+    /**
+     * @return Page|false
+     */
+    public function current()
+    {
+        return parent::current();
+    }
 }

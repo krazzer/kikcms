@@ -16,4 +16,12 @@ class CmsPluginList extends ObjectList
     {
         return parent::get($key);
     }
+
+    /**
+     * @return CmsPlugin|false
+     */
+    public function current()
+    {
+        return parent::current();
+    }
 }

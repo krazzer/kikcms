@@ -172,7 +172,6 @@ class FrontendHelper extends Injectable
 
         $menuOutput = '';
 
-        /** @var FullPage $fullPage */
         foreach ($fullPageMap as $pageId => $fullPage) {
             if ($fullPage->getParentId() != $parentId) {
                 continue;

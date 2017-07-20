@@ -23,4 +23,12 @@ class FullPageMap extends ObjectMap
     {
         return parent::getFirst();
     }
+
+    /**
+     * @return FullPage|false
+     */
+    public function current()
+    {
+        return parent::current();
+    }
 }

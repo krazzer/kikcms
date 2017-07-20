@@ -24,4 +24,12 @@ class PageLanguageMap extends ObjectMap
     {
         return parent::getFirst();
     }
+
+    /**
+     * @return PageLanguage|false
+     */
+    public function current()
+    {
+        return parent::current();
+    }
 }
