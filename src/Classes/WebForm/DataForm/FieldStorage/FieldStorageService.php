@@ -33,7 +33,7 @@ class FieldStorageService extends Injectable
 
         $query = (new Builder())
             ->from($field->getStorage()->getTableModel())
-            ->columns($field->getTableField())
+            ->columns($field->getColumn())
             ->where('id = :id:', ['id' => $relationId]);
 
         if ($translationKeyId = $this->dbService->getValue($query)) {
@@ -87,7 +87,7 @@ class FieldStorageService extends Injectable
         $storage = $field->getStorage();
         $value   = $this->dbService->toStorage($value);
 
-        $set   = [$field->getTableField() => $value];
+        $set   = [$field->getColumn() => $value];
         $where = $storage->getDefaultValues() + [$storage->getRelatedField() => $editId];
 
         if ($storage->isAddLanguageCode()) {
@@ -201,7 +201,7 @@ class FieldStorageService extends Injectable
      */
     public function retrieveOneToOne(Field $field, $id, string $langCode = null)
     {
-        $query = $this->getRelationQuery($field, $id, $langCode)->columns($field->getTableField());
+        $query = $this->getRelationQuery($field, $id, $langCode)->columns($field->getColumn());
         return $this->dbService->getValue($query);
     }
 

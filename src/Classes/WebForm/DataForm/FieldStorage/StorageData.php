@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 
+use KikCMS\Classes\WebForm\Field;
 use KikCMS\ObjectLists\FieldMap;
 
 /**
@@ -19,8 +20,11 @@ class StorageData
     /** @var FieldMap */
     private $fieldMap;
 
-    /** @var array */
-    private $input = [];
+    /** @var array [formFieldKey => value] */
+    private $formInput = [];
+
+    /** @var array additional input to be stored in the main table, added on top of form input [tableColumn => value] */
+    private $additionalInput = [];
 
     /** @var string|null */
     private $languageCode = null;
@@ -88,37 +92,45 @@ class StorageData
     /**
      * Returns an array with only the fields that are to be saved in the main table
      *
-     * @return array
+     * @return array [tableColumn => value]
      */
     public function getMainInput(): array
     {
-        $input = $this->input;
+        $mainInput = [];
 
-        //todo: this is wrong, fields like translations should be able to be inserted even though they are marked as stored elsewhere
+        /** @var Field $field */
         foreach ($this->fieldMap as $key => $field){
             if($field->getStorage()){
-                unset($input[$key]);
+                continue;
             }
+
+            if( ! array_key_exists($key, $this->formInput)){
+                continue;
+            }
+
+            $mainInput[$field->getColumn()] = $this->formInput[$key];
         }
 
-        return $input;
+        $mainInput += $this->additionalInput;
+
+        return $mainInput;
     }
 
     /**
      * @return array
      */
-    public function getInput(): array
+    public function getFormInput(): array
     {
-        return $this->input;
+        return $this->formInput;
     }
 
     /**
-     * @param array $input
+     * @param array $formInput
      * @return StorageData|$this
      */
-    public function setInput(array $input): StorageData
+    public function setFormInput(array $formInput): StorageData
     {
-        $this->input = $input;
+        $this->formInput = $formInput;
         return $this;
     }
 
@@ -127,9 +139,20 @@ class StorageData
      * @param $value
      * @return StorageData|$this
      */
-    public function addValue(string $key, $value): StorageData
+    public function addFormInputValue(string $key, $value): StorageData
     {
-        $this->input[$key] = $value;
+        $this->formInput[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @param string $column
+     * @param $value
+     * @return StorageData|$this
+     */
+    public function addAdditionalInputValue(string $column, $value): StorageData
+    {
+        $this->additionalInput[$column] = $value;
         return $this;
     }
 
@@ -178,36 +201,38 @@ class StorageData
     }
 
     /**
-     * @param string $field
+     * @param string $key
      * @return bool
      */
-    public function hasValue(string $field): bool
+    public function formInputValueExists(string $key): bool
     {
-        return array_key_exists($field, $this->input);
+        return array_key_exists($key, $this->formInput);
     }
 
     /**
-     * @param string $field
+     * @param string $key
      * @return mixed
      */
-    public function getValue(string $field)
+    public function getFormInputValue(string $key)
     {
-        if( ! array_key_exists($field, $this->input)){
+        if( ! array_key_exists($key, $this->formInput)){
             return null;
         }
 
-        return $this->input[$field];
+        return $this->formInput[$key];
     }
 
     /**
-     * @param string $field
-     * @param $value
-     * @return StorageData|$this
+     * @param string $column
+     * @return mixed
      */
-    public function setValue(string $field, $value): StorageData
+    public function getAdditionalInputValue(string $column)
     {
-        $this->input[$field] = $value;
-        return $this;
+        if( ! array_key_exists($column, $this->additionalInput)){
+            return null;
+        }
+
+        return $this->additionalInput[$column];
     }
 
     /**
@@ -225,6 +250,24 @@ class StorageData
     public function setEvents(array $events): StorageData
     {
         $this->events = $events;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalInput(): array
+    {
+        return $this->additionalInput;
+    }
+
+    /**
+     * @param array $additionalInput
+     * @return StorageData
+     */
+    public function setAdditionalInput(array $additionalInput): StorageData
+    {
+        $this->additionalInput = $additionalInput;
         return $this;
     }
 }

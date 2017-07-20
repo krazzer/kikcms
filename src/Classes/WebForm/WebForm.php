@@ -141,7 +141,7 @@ abstract class WebForm extends Renderable
         }
 
         $key = $field->getKey();
-        $field->setTableField($key);
+        $field->setColumn($key);
 
         if (array_key_exists($key, $this->keys)) {
             $newKey             = $key . (count($this->keys[$key]) + 1);

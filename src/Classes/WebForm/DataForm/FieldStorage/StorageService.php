@@ -205,7 +205,7 @@ class StorageService extends Injectable
 
             $relatedField = $storage->getRelatedField();
 
-            if( ! $value = $this->storageData->getValue($key)){
+            if( ! $value = $this->storageData->getFormInputValue($key)){
                 continue;
             }
 
@@ -213,7 +213,7 @@ class StorageService extends Injectable
                 $fields[$relatedField] = (new StorageValues())->setFieldStorage($storage);
             }
 
-            $fields[$relatedField]->add($field->getTableField(), $value);
+            $fields[$relatedField]->add($field->getColumn(), $value);
         }
 
         return $fields;
@@ -243,7 +243,7 @@ class StorageService extends Injectable
                 $this->dbService->update($tableModel, $valueMap, ['id' => $relatedFieldValue]);
             } else {
                 $id = $this->dbService->insert($tableModel, $valueMap);
-                $this->storageData->addValue($relatedField, $id);
+                $this->storageData->addAdditionalInputValue($relatedField, $id);
             }
         }
 
@@ -264,7 +264,7 @@ class StorageService extends Injectable
         $mainInput = $this->dbService->toStorageArray($mainInput);
 
         if ($editId) {
-            if ($this->storageData->getInput()) {
+            if ($this->storageData->getFormInput()) {
                 $this->dbService->update($table, $mainInput, ['id' => $editId]);
             }
         } else {
@@ -288,7 +288,7 @@ class StorageService extends Injectable
 
         /** @var Field $field */
         foreach ($this->storageData->getFieldMap() as $key => $field) {
-            $value = $this->storageData->getValue($key);
+            $value = $this->storageData->getFormInputValue($key);
 
             switch (true) {
                 case $field->getStorage() instanceof OneToOne:
@@ -321,12 +321,12 @@ class StorageService extends Injectable
                 continue;
             }
 
-            $value    = $this->storageData->getValue($key);
+            $value    = $this->storageData->getFormInputValue($key);
             $keyId    = $this->fieldStorageService->getTranslationKeyId($field, $this->storageData->getEditId());
             $langCode = $storage->getLanguageCode() ?: $this->storageData->getLanguageCode();
 
             $this->translationService->saveValue($value, $keyId, $langCode);
-            $this->storageData->setValue($key, $keyId);
+            $this->storageData->addAdditionalInputValue($field->getColumn(), $keyId);
         }
     }
 }

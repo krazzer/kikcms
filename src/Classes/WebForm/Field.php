@@ -39,8 +39,8 @@ class Field
     /** @var Tab */
     private $tab;
 
-    /** @var string the table field where the value should be saved */
-    private $tableField;
+    /** @var string the table column where the value should be saved */
+    private $column;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private $required = false;
@@ -234,18 +234,18 @@ class Field
     /**
      * @return string
      */
-    public function getTableField(): string
+    public function getColumn(): string
     {
-        return $this->tableField;
+        return $this->column;
     }
 
     /**
-     * @param string $tableField
+     * @param string $column
      * @return Field
      */
-    public function setTableField(string $tableField): Field
+    public function setColumn(string $column): Field
     {
-        $this->tableField = $tableField;
+        $this->column = $column;
         return $this;
     }
 

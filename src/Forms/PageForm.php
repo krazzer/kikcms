@@ -200,7 +200,7 @@ class PageForm extends DataForm
             return;
         }
 
-        $templateField->setTableField('value');
+        $templateField->setColumn('value');
 
         $this->tabs[0]->addField($templateField);
 
