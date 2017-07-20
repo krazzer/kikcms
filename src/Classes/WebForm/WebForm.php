@@ -3,12 +3,14 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
+use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
 use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\Fields\Button;
 use KikCMS\Classes\WebForm\Fields\Checkbox;
@@ -240,6 +242,28 @@ abstract class WebForm extends Renderable
         $date->addValidators($validators);
 
         return $this->addField(new Fields\Date($date));
+    }
+
+    /**
+     * @param DataTable $dataTable
+     * @param string $label
+     *
+     * @return Field|DataTableField
+     */
+    public function addDataTableField(DataTable $dataTable, string $label)
+    {
+        $dataTableElement = new Hidden('dt');
+        $dataTableElement->setLabel($label);
+        $dataTableElement->setDefault($dataTable->getInstance());
+
+        $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
+
+        $storage = (new OneToMany())
+            ->setTableModel($dataTable->getModel());
+
+        $dataTableField->store($storage);
+
+        return $dataTableField;
     }
 
     /**
@@ -659,6 +683,16 @@ abstract class WebForm extends Renderable
      */
     protected function renderDataTableFields()
     {
+        /** @var DataTableField $field */
+        foreach ($this->getFieldMap() as $key => $field) {
+            if ($field->getType() != Field::TYPE_DATA_TABLE) {
+                continue;
+            }
+
+            $renderedDataTable = $field->getDataTable()->render();
+            $field->setRenderedDataTable($renderedDataTable);
+        }
+
         /** @var DataTableField $field */
         foreach ($this->getFieldMap() as $key => $field) {
 

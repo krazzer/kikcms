@@ -5,7 +5,6 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Renderable\Filters;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer\Date;
@@ -17,7 +16,6 @@ use KikCMS\Config\DbConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use Monolog\Logger;
-use Phalcon\Forms\Element\Hidden;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -70,28 +68,6 @@ abstract class DataForm extends WebForm
     public function addFieldTransformer(FieldTransformer $fieldTransformer)
     {
         $this->fieldTransformers[$fieldTransformer->getField()->getKey()] = $fieldTransformer;
-    }
-
-    /**
-     * @param DataTable $dataTable
-     * @param string $label
-     *
-     * @return Field|DataTableField
-     */
-    public function addDataTableField(DataTable $dataTable, string $label)
-    {
-        $dataTableElement = new Hidden('dt');
-        $dataTableElement->setLabel($label);
-        $dataTableElement->setDefault($dataTable->getInstance());
-
-        $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
-
-        $storage = (new OneToMany())
-            ->setTableModel($dataTable->getModel());
-
-        $dataTableField->store($storage);
-
-        return $dataTableField;
     }
 
     /**
@@ -282,6 +258,7 @@ abstract class DataForm extends WebForm
 
     /**
      * @inheritdoc
+     * todo: #4 combine with webform, neatify code
      */
     protected function renderDataTableFields()
     {

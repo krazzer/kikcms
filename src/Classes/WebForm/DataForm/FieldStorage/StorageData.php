@@ -94,6 +94,7 @@ class StorageData
     {
         $input = $this->input;
 
+        //todo: this is wrong, fields like translations should be able to be inserted even though they are marked as stored elsewhere
         foreach ($this->fieldMap as $key => $field){
             if($field->getStorage()){
                 unset($input[$key]);

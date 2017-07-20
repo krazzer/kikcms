@@ -25,8 +25,12 @@ class FieldStorageService extends Injectable
      * @param int $relationId
      * @return int
      */
-    public function getTranslationKeyId(Field $field, int $relationId): int
+    public function getTranslationKeyId(Field $field, int $relationId = null): int
     {
+        if( ! $relationId){
+            return $this->translationService->createNewTranslationKeyId();
+        }
+
         $query = (new Builder())
             ->from($field->getStorage()->getTableModel())
             ->columns($field->getTableField())
@@ -131,6 +135,10 @@ class FieldStorageService extends Injectable
      */
     public function storeManyToMany(Field $field, $value, $editId, string $langCode = null): bool
     {
+        if( ! $value){
+            $value = [];
+        }
+
         if ( ! is_array($value)) {
             throw new InvalidArgumentException(static::class . ' can only store array values');
         }
@@ -198,6 +206,7 @@ class FieldStorageService extends Injectable
     }
 
     /**
+     * todo: implement this
      * @param Field $field
      * @param $id
      * @param string|null $langCode
