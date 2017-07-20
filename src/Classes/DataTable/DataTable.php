@@ -26,7 +26,6 @@ use Phalcon\Tag;
  */
 abstract class DataTable extends Renderable
 {
-    const EDIT_ID     = 'editId';
     const INSTANCE    = 'dataTableInstance';
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
@@ -471,7 +470,7 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable(true);
 
-        $this->form->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
+        $this->form->addHiddenField(DataForm::EDIT_ID, $this->filters->getEditId());
         $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
         if ($this->form->isPosted()) {

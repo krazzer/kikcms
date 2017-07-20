@@ -27,6 +27,8 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 abstract class DataForm extends WebForm
 {
+    const EDIT_ID = 'editId';
+
     /** @var array */
     protected $events = [];
 
@@ -99,7 +101,7 @@ abstract class DataForm extends WebForm
                 continue;
             }
 
-            $value = $this->storageService->retrieve($field, $id, $langCode);
+            $value      = $this->storageService->retrieve($field, $id, $langCode);
             $data[$key] = $field->getFormFormat($value);
         }
 
@@ -149,8 +151,8 @@ abstract class DataForm extends WebForm
     {
         $saveSuccess = $this->saveData($input);
 
-        if ($saveSuccess && ! $this->fieldMap->has(DataTable::EDIT_ID)) {
-            $this->addHiddenField(DataTable::EDIT_ID, $this->filters->getEditId());
+        if ($saveSuccess && ! $this->fieldMap->has(self::EDIT_ID)) {
+            $this->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
         }
 
         if ($saveSuccess) {
@@ -241,7 +243,7 @@ abstract class DataForm extends WebForm
      */
     protected function addEventListener(string $event, callable $callable)
     {
-        if( ! array_key_exists($event, $this->events)){
+        if ( ! array_key_exists($event, $this->events)) {
             $this->events[$event] = [];
         }
 
@@ -267,8 +269,8 @@ abstract class DataForm extends WebForm
         $parentEditId = 0;
 
         // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
-        if ($this->fieldMap->has(DataTable::EDIT_ID)) {
-            $parentEditId = $this->fieldMap->get(DataTable::EDIT_ID)->getElement()->getValue();
+        if ($this->fieldMap->has(self::EDIT_ID)) {
+            $parentEditId = $this->fieldMap->get(self::EDIT_ID)->getElement()->getValue();
         }
 
         $languageCode = $this->getFilters()->getLanguageCode();
@@ -334,8 +336,8 @@ abstract class DataForm extends WebForm
             $storageData->addFormInputValue($key, $value);
         }
 
-        if (array_key_exists(DataTable::EDIT_ID, $input)) {
-            $storageData->setEditId($input[DataTable::EDIT_ID]);
+        if (array_key_exists(self::EDIT_ID, $input)) {
+            $storageData->setEditId($input[self::EDIT_ID]);
         }
 
         $storageData->setLanguageCode($this->getFilters()->getLanguageCode());
@@ -356,7 +358,7 @@ abstract class DataForm extends WebForm
      */
     private function getSystemFields()
     {
-        return [WebForm::WEB_FORM_ID, DataTable::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
+        return [self::WEB_FORM_ID, self::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
     }
 
     /**
@@ -371,7 +373,7 @@ abstract class DataForm extends WebForm
 
         $success = $this->storageService->store();
 
-        if($success){
+        if ($success) {
             $this->getFilters()->setEditId($storageData->getEditId());
         }
 
