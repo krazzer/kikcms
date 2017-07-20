@@ -638,10 +638,15 @@ var DataTable = Class.extend({
             filters.sortColumn    = $(this).attr('data-column');
         });
 
-        var languageCode = this.getLanguageCode();
+        var languageCode       = this.getLanguageCode();
+        var windowLanguageCode = this.getWindowLanguageCode();
 
         if (languageCode) {
             filters.languageCode = languageCode;
+        }
+
+        if (windowLanguageCode) {
+            filters.windowLanguageCode = windowLanguageCode;
         }
 
         filters.customFilterValues = this.getFilterForm().find(':input').serializeObject();
@@ -658,20 +663,11 @@ var DataTable = Class.extend({
     },
 
     getLanguageCode: function () {
-        var languageCode = null;
+        return this.getDataTable().find('.toolbar .language select').val();
+    },
 
-        var $tableLanguageSelect = this.getDataTable().find('.toolbar .language select');
-
-        $tableLanguageSelect.each(function () {
-            languageCode = $(this).val();
-        });
-
-        this.getWindow().find('.header select[name=language]').each(function () {
-            languageCode = $(this).val();
-            $tableLanguageSelect.val($(this).val());
-        });
-
-        return languageCode;
+    getWindowLanguageCode: function () {
+        return this.getWindow().find('.header select[name=language]').val();
     },
 
     getSearchField: function () {

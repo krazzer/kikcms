@@ -400,7 +400,7 @@ abstract class DataTable extends Renderable
             $instance     = $this->getInstance();
             $formClass    = $this->getFormClass();
             $editId       = $this->getFilters()->getEditId();
-            $languageCode = $this->getFilters()->getLanguageCode();
+            $languageCode = $this->getFilters()->getWindowLanguageCode();
             $parentEditId = $this->getFilters()->getParentEditId();
 
             /** @var DataForm $dataForm */
@@ -585,7 +585,7 @@ abstract class DataTable extends Renderable
             'tabs'            => $this->form->getTabs(),
             'currentTab'      => $this->form->getCurrentTab(),
             'multiLingual'    => $this->isMultiLingual(),
-            'currentLangCode' => $this->getFilters()->getLanguageCode(),
+            'currentLangCode' => $this->getFilters()->getWindowLanguageCode(),
             'languages'       => $this->languageService->getLanguages(),
         ]);
     }
@@ -595,7 +595,7 @@ abstract class DataTable extends Renderable
      */
     protected function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js?v=1.017');
+        $this->view->assets->addJs('cmsassets/js/datatable/datatable.js?v=1.018');
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/datatable.css');
         $this->view->assets->addCss('cmsassets/css/webform.css');

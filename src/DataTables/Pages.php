@@ -72,11 +72,7 @@ class Pages extends DataTable
         foreach ($ids as $pageId) {
             $page = Page::getById($pageId);
 
-            if ( ! $page) {
-                continue;
-            }
-
-            if ( $page->key){
+            if ( ! $page || $page->key) {
                 continue;
             }
 

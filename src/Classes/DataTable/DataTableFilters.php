@@ -28,6 +28,9 @@ class DataTableFilters extends Filters
     /** @var null|string */
     private $languageCode = null;
 
+    /** @var null|string */
+    private $windowLanguageCode = null;
+
     /** @var array */
     private $customFilterValues = [];
 
@@ -172,6 +175,24 @@ class DataTableFilters extends Filters
     public function setCustomFilterValues(array $customFilterValues): DataTableFilters
     {
         $this->customFilterValues = $customFilterValues;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWindowLanguageCode()
+    {
+        return $this->windowLanguageCode ?: $this->getLanguageCode();
+    }
+
+    /**
+     * @param null|string $windowLanguageCode
+     * @return DataTableFilters
+     */
+    public function setWindowLanguageCode($windowLanguageCode)
+    {
+        $this->windowLanguageCode = $windowLanguageCode;
         return $this;
     }
 }

@@ -289,13 +289,13 @@ var WebForm = Class.extend({
             return linkListUrl;
         }
 
-        var languageCode = this.parent.getLanguageCode();
+        var languageCode = this.parent.getWindowLanguageCode();
 
         if (!languageCode) {
             return linkListUrl;
         }
 
-        return linkListUrl + this.parent.getLanguageCode() + '/';
+        return linkListUrl + this.parent.getWindowLanguageCode() + '/';
     },
 
     getWysiwygSelector: function () {
