@@ -5,13 +5,10 @@ namespace KikCMS\Services;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
-use KikCMS\Classes\Frontend\Extendables\CmsMenuBase;
-use KikCMS\Classes\Frontend\Extendables\CmsPluginsBase;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
-use KikCMS\Classes\Frontend\Extendables\WebsiteRoutingBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
-use KikCMS\Classes\Frontend\Extendables\WebsiteServicesBase;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Security;
@@ -110,13 +107,10 @@ class Services extends BaseServices
     protected function getExtendableServices(): array
     {
         return [
-            CmsMenuBase::class,
-            CmsPluginsBase::class,
             MediaResizeBase::class,
             TemplateFieldsBase::class,
             TemplateVariablesBase::class,
-            WebsiteRoutingBase::class,
-            WebsiteServicesBase::class,
+            WebsiteSettingsBase::class,
         ];
     }
 
@@ -126,7 +120,7 @@ class Services extends BaseServices
     protected function getWebsiteServices(): array
     {
         /** @var WebsiteService $websiteService */
-        $websiteServices = $this->get('websiteServices');
+        $websiteServices = $this->get('websiteSettings');
 
         return $websiteServices->getServices();
     }
@@ -437,7 +431,7 @@ class Services extends BaseServices
         $namespaces = [];
 
         /** @var CmsPluginList $pluginsList */
-        $pluginsList = $this->get('cmsPlugins')->getPluginList();
+        $pluginsList = $this->get('websiteSettings')->getPluginList();
 
         foreach ($pluginsList as $plugin) {
             $name = 'cms' . ucfirst($plugin->getName());

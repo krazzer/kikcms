@@ -4,17 +4,13 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\CmsPlugin;
-use KikCMS\Classes\Frontend\Extendables\WebsiteRoutingBase;
-use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Router\Group;
-use Website\Classes\CmsPlugins;
+use Website\Classes\WebsiteSettings;
 
 /**
- * @property WebsiteService $websiteService
- * @property WebsiteRoutingBase $websiteRouting
- * @property CmsPlugins $cmsPlugins
+ * @property WebsiteSettings $websiteSettings
  */
 class Routing extends Injectable
 {
@@ -109,8 +105,8 @@ class Routing extends Injectable
 
         $this->addPluginRoutes($router);
 
-        $this->websiteRouting->addBackendRoutes($websiteBackend);
-        $this->websiteRouting->addFrontendRoutes($websiteFrontend);
+        $this->websiteSettings->addBackendRoutes($websiteBackend);
+        $this->websiteSettings->addFrontendRoutes($websiteFrontend);
 
         if ($websiteBackend->getRoutes()) {
             $router->mount($websiteBackend);
@@ -136,7 +132,7 @@ class Routing extends Injectable
      */
     private function addPluginRoutes(Router $router)
     {
-        $plugins = $this->cmsPlugins->getPluginList();
+        $plugins = $this->websiteSettings->getPluginList();
 
         /** @var CmsPlugin $plugin */
         foreach ($plugins as $plugin) {

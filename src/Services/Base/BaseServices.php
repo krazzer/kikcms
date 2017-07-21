@@ -5,7 +5,6 @@ namespace KikCMS\Services\Base;
 use /** @noinspection PhpUndefinedClassInspection */
     ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
-use KikCMS\Classes\Frontend\Extendables\WebsiteServicesBase;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Routing;
@@ -13,6 +12,7 @@ use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
+use Website\Classes\WebsiteSettings;
 
 /** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
@@ -91,8 +91,8 @@ class BaseServices extends ApplicationServices
             });
         }
 
-        /** @var WebsiteServicesBase $websiteServices */
-        $websiteServices = $this->get('websiteServices');
+        /** @var WebsiteSettings $websiteSettings */
+        $websiteServices = $this->get('websiteSettings');
         $overloadedServices = $websiteServices->getOverloadedServices();
 
         foreach ($overloadedServices as $name => $callable){
@@ -142,7 +142,7 @@ class BaseServices extends ApplicationServices
     private function bindPluginServices()
     {
         /** @var CmsPluginList $pluginsList */
-        $pluginsList = $this->get('cmsPlugins')->getPluginList();
+        $pluginsList = $this->get('websiteSettings')->getPluginList();
 
         foreach ($pluginsList as $plugin) {
             $plugin->addServices();

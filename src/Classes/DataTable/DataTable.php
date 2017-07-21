@@ -311,9 +311,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getParentRelationKey(): string
+    public function getParentRelationKey()
     {
         return $this->parentRelationKey;
     }

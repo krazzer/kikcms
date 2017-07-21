@@ -3,19 +3,19 @@
 namespace KikCMS\Services\Cms;
 
 
-use KikCMS\Classes\Frontend\Extendables\CmsMenuBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
+use Website\Classes\WebsiteSettings;
 
 /**
  * Contains some generic CMS functions
  *
  * @property Translator $translator
  * @property WebsiteService $websiteService
- * @property CmsMenuBase $cmsMenu
+ * @property WebsiteSettings $websiteSettings
  */
 class CmsService extends Injectable
 {
@@ -36,7 +36,7 @@ class CmsService extends Injectable
             $groups[$groupId] = $menuGroup;
         }
 
-        return $this->cmsMenu->getMenuGroups($groups);
+        return $this->websiteSettings->getMenuGroups($groups);
     }
 
     /**

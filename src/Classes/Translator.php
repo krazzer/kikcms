@@ -13,7 +13,7 @@ use KikCMS\Services\TranslationService;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Website\Classes\CmsPlugins;
+use Website\Classes\WebsiteSettings;
 
 /**
  * @property TranslationService $translationService
@@ -21,7 +21,7 @@ use Website\Classes\CmsPlugins;
  * @property CacheService $cacheService
  * @property Backend $cache
  * @property LanguageService $languageService
- * @property CmsPlugins $cmsPlugins
+ * @property WebsiteSettings $websiteSettings
  */
 class Translator extends Injectable
 {
@@ -240,7 +240,7 @@ class Translator extends Injectable
     {
         $translations = [];
 
-        $pluginsList = $this->cmsPlugins->getPluginList();
+        $pluginsList = $this->websiteSettings->getPluginList();
 
         /** @var CmsPlugin $plugin */
         foreach ($pluginsList as $plugin){
