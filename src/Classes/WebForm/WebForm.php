@@ -686,32 +686,27 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * @param DataTableField $field
+     */
+    protected function renderDataTableField(DataTableField $field)
+    {
+        $renderedDataTable = $field->getDataTable()->render();
+        $field->setRenderedDataTable($renderedDataTable);
+    }
+
+    /**
      * Pre-renders the DataTable fields, so that any required asset will be correctly added
      */
     protected function renderDataTableFields()
     {
-        /** @var DataTableField $field */
+        /** @var DataTableField|SelectDataTableField $field */
         foreach ($this->getFieldMap() as $key => $field) {
-            if ($field->getType() != Field::TYPE_DATA_TABLE) {
-                continue;
+            if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
+                $this->renderSelectDataTableField($field);
             }
 
-            $renderedDataTable = $field->getDataTable()->render();
-            $field->setRenderedDataTable($renderedDataTable);
-        }
-
-        /** @var DataTableField $field */
-        foreach ($this->getFieldMap() as $key => $field) {
-
-            /** @var SelectDataTableField $field */
-            if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
-                // set selected ids filter for SelectDataTable
-                if ($field->getElement()->getValue()) {
-                    $filters = $field->getDataTable()->getFilters();
-                    $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
-                }
-
-                $field->setRenderedDataTable($field->getDataTable()->render());
+            if ($field->getType() == Field::TYPE_DATA_TABLE) {
+                $this->renderDataTableField($field);
             }
         }
     }
@@ -741,6 +736,20 @@ abstract class WebForm extends Renderable
             'errorContainer'     => $errorContainer,
             'webForm'            => $this,
         ]);
+    }
+
+    /**
+     * @param SelectDataTableField $field
+     */
+    protected function renderSelectDataTableField(SelectDataTableField $field)
+    {
+        // set selected ids filter for SelectDataTable
+        if ($field->getElement()->getValue()) {
+            $filters = $field->getDataTable()->getFilters();
+            $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
+        }
+
+        $field->setRenderedDataTable($field->getDataTable()->render());
     }
 
     /**

@@ -251,42 +251,23 @@ abstract class DataForm extends WebForm
 
     /**
      * Perform some action on a successful save
-     * todo: use event listener, fix usages
      */
     protected function onSave()
     {
     }
 
     /**
-     * @inheritdoc
-     * todo: #4 combine with webform, neatify code
+     * @param DataTableField $field
      */
-    protected function renderDataTableFields()
+    protected function renderDataTableField(DataTableField $field)
     {
-        parent::renderDataTableFields();
+        $editId   = $this->getFilters()->getEditId() ?: 0;
+        $langCode = $this->getFilters()->getLanguageCode();
 
-        $parentEditId = 0;
+        $field->getDataTable()->getFilters()->setParentEditId($editId);
+        $field->getDataTable()->getFilters()->setLanguageCode($langCode);
 
-        // if a new id is saved, the field with key editId is set, so we pass it to the subDataTable
-        if ($this->fieldMap->has(self::EDIT_ID)) {
-            $parentEditId = $this->fieldMap->get(self::EDIT_ID)->getElement()->getValue();
-        }
-
-        $languageCode = $this->getFilters()->getLanguageCode();
-
-        /** @var DataTableField $field */
-        foreach ($this->getFieldMap() as $key => $field) {
-            if ($field->getType() != Field::TYPE_DATA_TABLE) {
-                continue;
-            }
-
-            $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
-            $field->getDataTable()->getFilters()->setLanguageCode($languageCode);
-
-            $renderedDataTable = $field->getDataTable()->render();
-
-            $field->setRenderedDataTable($renderedDataTable);
-        }
+        $field->setRenderedDataTable($field->getDataTable()->render());
     }
 
     /**
