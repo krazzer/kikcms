@@ -23,6 +23,14 @@ class BaseCmsController extends BaseController
         }
 
         $this->view->setVar("menuStructure", $menuStructure);
-        $this->view->setVar("actionName", $this->dispatcher->getActionName());
+        $this->highlightMenuItem($this->dispatcher->getActionName());
+    }
+
+    /**
+     * @param string $menuItem
+     */
+    protected function highlightMenuItem(string $menuItem)
+    {
+        $this->view->setVar("actionName", $menuItem);
     }
 }

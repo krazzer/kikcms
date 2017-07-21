@@ -44,9 +44,9 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
-        $backend->add('/stats/index', "Cms::statsIndex");
-        $backend->add('/stats/sources', "Cms::statsSources");
+        $backend->add('/stats/index', "Statistics::statsIndex");
         $backend->add('/stats/update', "Statistics::update");
+        $backend->add('/stats/getVisitors', "Statistics::getVisitors");
 
         $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
         $backend->add("/getTinyMceLinks/{languageCode:[a-z]+}", "Cms::getTinyMceLinks");

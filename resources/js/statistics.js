@@ -16,7 +16,7 @@ var Statistics = Class.extend({
     STR_FETCH_NEW_DATA: KikCMS.translations['statistics.fetchNewData'],
     STR_VISITORS: KikCMS.translations['statistics.visitors'],
 
-    URL_GET_VISITORS: '/cms/getVisitors',
+    URL_GET_VISITORS: '/cms/stats/getVisitors',
     URL_UPDATE_STATISTICS: '/cms/stats/update',
 
     $controls: null,
@@ -117,10 +117,10 @@ var Statistics = Class.extend({
     /**
      * Action after new data from google is fetched
      *
-     * @param success bool
+     * @param response
      */
-    onDataUpdate: function (success) {
-        if (!success) {
+    onDataUpdate: function (response) {
+        if (!response.success) {
             this.$buttonRefresh.removeClass(this.CLASS_LOADING);
             this.$buttonRefreshLbl.text(this.STR_FETCHING_FAILED);
             return;
@@ -133,6 +133,10 @@ var Statistics = Class.extend({
         this.$buttonRefresh.addClass(this.CLASS_GLOW);
 
         this.$buttonRefreshLbl.text(this.STR_FETCH_NEW_DATA);
+
+        this.$rangeInputs.each(function() {
+            $(this).data("DateTimePicker").maxDate(moment(response.maxDate));
+        });
     },
 
     /**
@@ -168,7 +172,7 @@ var Statistics = Class.extend({
 
         this.renderChart();
 
-        this.$buttonRefresh.fadeOut(this.onButtonRefreshFadeOut);
+        this.$buttonRefresh.fadeOut(this.onButtonRefreshFadeOut.bind(this));
     },
 
     /**
@@ -194,12 +198,12 @@ var Statistics = Class.extend({
         $.each(visitorData, function (key, value) {
             tableBodyHtml +=
                 '<tr>' +
-                    '<td><span>' + value.value + '</span></td>' +
-                    '<td>' + value.visits + '</td>' +
-                    '<td>' +
-                        '<span class="percentage" style="width: ' + (value.percentage * 5) + 'px;"></span>' +
-                        value.percentage + '%' +
-                    '</td>' +
+                '<td><span>' + value.value + '</span></td>' +
+                '<td>' + value.visits + '</td>' +
+                '<td>' +
+                '<span class="percentage" style="width: ' + (value.percentage * 5) + 'px;"></span>' +
+                value.percentage + '%' +
+                '</td>' +
                 '</tr>';
         });
 
