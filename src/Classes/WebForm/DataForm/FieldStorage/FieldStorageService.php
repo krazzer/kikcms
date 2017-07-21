@@ -20,6 +20,9 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 class FieldStorageService extends Injectable
 {
+    /** @var array */
+    private $oneToOneRefCache = [];
+
     /**
      * @param Field $field
      * @param int $relationId
@@ -27,7 +30,7 @@ class FieldStorageService extends Injectable
      */
     public function getTranslationKeyId(Field $field, int $relationId = null): int
     {
-        if( ! $relationId){
+        if ( ! $relationId) {
             return $this->translationService->createNewTranslationKeyId();
         }
 
@@ -117,7 +120,7 @@ class FieldStorageService extends Injectable
         foreach ($keysToUpdate as $newId) {
             $success = $this->dbService->update($model, [$relatedField => $editId], ['id' => $newId, $relatedField => 0]);
 
-            if( ! $success){
+            if ( ! $success) {
                 return false;
             }
         }
@@ -135,7 +138,7 @@ class FieldStorageService extends Injectable
      */
     public function storeManyToMany(Field $field, $value, $editId, string $langCode = null): bool
     {
-        if( ! $value){
+        if ( ! $value) {
             $value = [];
         }
 
@@ -206,16 +209,27 @@ class FieldStorageService extends Injectable
     }
 
     /**
-     * todo: implement this
      * @param Field $field
-     * @param $id
-     * @param string|null $langCode
+     * @param array $tableData
      *
      * @return mixed
      */
-    public function retrieveOneToOneRef(Field $field, $id, string $langCode = null)
+    public function retrieveOneToOneRef(Field $field, array $tableData)
     {
-        return '';
+        $storage = $field->getStorage();
+
+        if ( ! isset($tableData[$storage->getRelatedField()])) {
+            return null;
+        }
+
+        $referenceId = $tableData[$storage->getRelatedField()];
+        $cacheKey    = $storage->getTableModel() . $referenceId;
+
+        if ( ! array_key_exists($cacheKey, $this->oneToOneRefCache)) {
+            $this->oneToOneRefCache[$cacheKey] = $this->getReferencedTableData($storage, $referenceId);
+        }
+
+        return $this->oneToOneRefCache[$cacheKey][$field->getColumn()];
     }
 
     /**
@@ -227,10 +241,25 @@ class FieldStorageService extends Injectable
      */
     public function retrieveTranslation(Field $field, $id, string $langCode = null)
     {
-        $langCode = $field->getStorage()->getLanguageCode() ?: $langCode;
+        $langCode         = $field->getStorage()->getLanguageCode() ?: $langCode;
         $translationKeyId = $this->getTranslationKeyId($field, $id);
 
         return $this->translationService->getTranslationValue($translationKeyId, $langCode);
+    }
+
+    /**
+     * @param FieldStorage $storage
+     * @param int $referenceId
+     *
+     * @return array
+     */
+    private function getReferencedTableData(FieldStorage $storage, int $referenceId): array
+    {
+        $query = (new Builder())
+            ->from($storage->getTableModel())
+            ->where('id = :id:', ['id' => $referenceId]);
+
+        return $this->dbService->getRow($query);
     }
 
     /**

@@ -89,20 +89,18 @@ abstract class DataForm extends WebForm
      *
      * @param int $id
      * @param null|string $langCode
+     * @param array $tableData
      * @return array
      */
-    public function getDataStoredElseWhere(int $id, string $langCode = null): array
+    public function getDataStoredElseWhere(int $id, string $langCode = null, array $tableData): array
     {
         $data = [];
 
-        /** @var Field $field */
         foreach ($this->getFieldMap() as $key => $field) {
-            if ( ! $field->getStorage()) {
-                continue;
+            if ($field->getStorage()) {
+                $value      = $this->storageService->retrieve($field, $id, $langCode, $tableData);
+                $data[$key] = $field->getFormFormat($value);
             }
-
-            $value      = $this->storageService->retrieve($field, $id, $langCode);
-            $data[$key] = $field->getFormFormat($value);
         }
 
         return $data;
@@ -126,7 +124,7 @@ abstract class DataForm extends WebForm
         $editId          = $this->getFilters()->getEditId();
 
         $editData        = $this->getEditData();
-        $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode);
+        $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode, $editData);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
         /** @var Field $field */
@@ -197,7 +195,8 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        $data = $this->getDataStoredElseWhere($editId, $langCode) + $this->getEditDataForModel();
+        $data = $this->getEditDataForModel();
+        $data = $this->getDataStoredElseWhere($editId, $langCode, $data) + $data;
         $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;

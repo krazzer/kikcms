@@ -72,10 +72,11 @@ class StorageService extends Injectable
      * @param Field $field
      * @param $id
      * @param string|null $langCode
+     * @param array $tableData
      * @return mixed
      * @throws Exception
      */
-    public function retrieve(Field $field, $id, string $langCode = null)
+    public function retrieve(Field $field, $id, string $langCode = null, array $tableData)
     {
         switch (true) {
             case $field->getStorage() instanceof OneToOne:
@@ -83,7 +84,7 @@ class StorageService extends Injectable
             break;
 
             case $field->getStorage() instanceof OneToOneRef:
-                return $this->fieldStorageService->retrieveOneToOneRef($field, $id, $langCode);
+                return $this->fieldStorageService->retrieveOneToOneRef($field, $tableData);
             break;
 
             case $field->getStorage() instanceof ManyToMany:
@@ -94,7 +95,7 @@ class StorageService extends Injectable
                 return $this->fieldStorageService->retrieveTranslation($field, $id, $langCode);
             break;
 
-            case $field->getStorage() instanceof OneToMany:
+            case $field->getStorage() instanceof OneToMany || $field->getStorage() instanceof None:
                 return null;
             break;
 

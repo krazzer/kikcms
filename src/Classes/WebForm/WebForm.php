@@ -87,9 +87,12 @@ abstract class WebForm extends Renderable
     /** @var callable */
     private $validateAction;
 
-    public function __construct()
+    /**
+     * @inheritdoc
+     */
+    public function __construct(Filters $filters = null)
     {
-        parent::__construct();
+        parent::__construct($filters);
 
         $this->form = new Form();
         $this->form->setValidation($this->validation);
@@ -612,15 +615,19 @@ abstract class WebForm extends Renderable
 
     /**
      * Override to build up the form
+     *
+     * @return WebForm|$this
      */
     public function initializeForm()
     {
         if ($this->initialized) {
-            return;
+            return $this;
         }
 
         $this->initialize();
         $this->initialized = true;
+
+        return $this;
     }
 
     /**
