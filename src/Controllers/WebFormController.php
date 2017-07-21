@@ -3,18 +3,14 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\DbService;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
-use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\Renderable\Renderable;
-use KikCMS\Classes\WebForm\Fields\Autocomplete;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\FinderFile;
 
 /**
- * @property DbService dbService
- * @property FinderFileService finderFileService
+ * @property FinderFileService $finderFileService
  */
 class WebFormController extends RenderableController
 {
@@ -26,26 +22,6 @@ class WebFormController extends RenderableController
         parent::initialize();
 
         $this->view->disable();
-    }
-
-    /**
-     * @return string
-     */
-    public function getAutocompleteDataAction()
-    {
-        $fieldKey = $this->request->getPost('field');
-        $webForm  = $this->getRenderable();
-
-        // initialize, so we know about any autocomplete fields
-        $webForm->initializeForm();
-
-        /** @var Autocomplete $field */
-        $field = $webForm->getFieldMap()->get($fieldKey);
-
-        /** @var Model $model */
-        $model = $field->getSourceModel();
-
-        return json_encode($model::getNameList());
     }
 
     /**
