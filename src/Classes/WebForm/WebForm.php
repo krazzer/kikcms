@@ -17,6 +17,7 @@ use KikCMS\Classes\WebForm\Fields\Checkbox;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
+use KikCMS\Classes\WebForm\Fields\Textarea as TextareaField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\Wysiwyg;
@@ -387,16 +388,16 @@ abstract class WebForm extends Renderable
      * @param string $key
      * @param string $label
      * @param array $validators
-     * @return Field
+     * @return Field|TextareaField
      */
     public function addTextAreaField(string $key, string $label, array $validators = []): Field
     {
-        $name = new TextArea($key);
-        $name->setLabel($label);
-        $name->setAttribute('class', 'form-control');
-        $name->addValidators($validators);
+        $element = (new TextArea($key))
+            ->setLabel($label)
+            ->setAttribute('class', 'form-control')
+            ->addValidators($validators);
 
-        return $this->addField(new Field($name));
+        return $this->addField(new TextareaField($element));
     }
 
     /**
@@ -407,14 +408,14 @@ abstract class WebForm extends Renderable
      */
     public function addWysiwygField(string $key, string $label, array $validators = []): Field
     {
-        $name = new TextArea($key);
-        $name->setLabel($label);
-        $name->setAttribute('style', 'height: 350px');
-        $name->setAttribute('class', 'form-control wysiwyg');
-        $name->setAttribute('id', $key . '_' . uniqid());
-        $name->addValidators($validators);
+        $element = (new TextArea($key))
+            ->setLabel($label)
+            ->setAttribute('style', 'height: 350px')
+            ->setAttribute('class', 'form-control wysiwyg')
+            ->setAttribute('id', $key . '_' . uniqid())
+            ->addValidators($validators);
 
-        return $this->addField(new Wysiwyg($name));
+        return $this->addField(new Wysiwyg($element));
     }
 
     /**

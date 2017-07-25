@@ -1,10 +1,6 @@
 {# @var element Phalcon\Forms\Element #}
 {# @var form \Phalcon\Forms\Form #}
 
-{%- block fieldDate %}
-    {{ block('fieldDefault') }}
-{% endblock %}
-
 {%- block errorWarnings -%}
     {% if errorMessages %}
         {% for errorMessage in errorMessages %}
@@ -70,10 +66,6 @@
     </div>
 {% endblock %}
 
-{%- block fieldAutocomplete %}
-    {{ block('fieldDefault') }}
-{% endblock %}
-
 {%- block fieldDataTable %}
     {# @var field \KikCMS\Classes\WebForm\Fields\DataTableField #}
     <div{{ fieldContainterAttributes|raw }}>
@@ -81,14 +73,6 @@
         {{ field.renderedDataTable|raw }}
         {{ form.render(element.name)|raw }}
     </div>
-{% endblock %}
-
-{%- block fieldSelectDataTable -%}
-    {{ block('fieldDataTable') }}
-{%- endblock -%}
-
-{%- block fieldWysiwyg %}
-    {{ block('fieldDefault') }}
 {% endblock %}
 
 {%- block fieldFile %}
@@ -137,3 +121,7 @@
         {{ block('errorWarnings') }}
     </div>
 {% endblock %}
+
+{%- block fieldSelectDataTable -%}
+    {{ block('fieldDataTable') }}
+{%- endblock -%}

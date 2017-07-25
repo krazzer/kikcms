@@ -385,6 +385,20 @@ class DbService extends Injectable
     }
 
     /**
+     * @param string $model
+     * @param int $id
+     * @return array
+     */
+    public function getTableRowById(string $model, int $id): array
+    {
+        $query = (new Builder)
+            ->from($model)
+            ->where('id = :id:', ['id' => $id]);
+
+        return $this->getRow($query);
+    }
+
+    /**
      * @param bool $set
      */
     public function setForeignKeyChecks(bool $set)

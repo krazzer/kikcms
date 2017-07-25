@@ -26,6 +26,9 @@ class FieldStorage
     /** @var string|null */
     private $relatedField;
 
+    /** @var string */
+    private $relatedByField = 'id';
+
     /**
      * @return boolean
      */
@@ -149,6 +152,24 @@ class FieldStorage
     public function setRelatedField(string $relatedField): FieldStorage
     {
         $this->relatedField = $relatedField;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelatedByField(): string
+    {
+        return $this->relatedByField;
+    }
+
+    /**
+     * @param string $relatedByField
+     * @return $this|FieldStorage
+     */
+    public function setRelatedByField(string $relatedByField): FieldStorage
+    {
+        $this->relatedByField = $relatedByField;
         return $this;
     }
 }

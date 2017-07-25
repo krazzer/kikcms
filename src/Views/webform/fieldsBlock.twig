@@ -11,6 +11,6 @@
         {% set classes = classes ~ (field.required ? ' required') %}
         {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
 
-        {{ block('field' ~ ucfirst(type)) }}
+        {{ block('field' ~ ucfirst(type)) ?? block('fieldDefault') }}
     {% endfor %}
 {% endblock %}

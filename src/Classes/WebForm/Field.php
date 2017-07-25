@@ -26,6 +26,7 @@ class Field
     const TYPE_FILE              = 'file';
     const TYPE_BUTTON            = 'button';
     const TYPE_DATE              = 'date';
+    const TYPE_TEXTAREA          = 'textarea';
 
     /** @var WebForm|DataForm */
     protected $form;
@@ -324,7 +325,7 @@ class Field
             ->setField($this)
             ->setTableModel($this->form->getModel());
 
-        if($langCode){
+        if ($langCode) {
             $fieldStorage->setLanguageCode($langCode);
         }
 

@@ -50,17 +50,18 @@ class FieldStorageService extends Injectable
      * @param Field $field
      * @param $value
      * @param $editId
+     * @param array $editData
      * @param string|null $langCode
      * @return bool
      * @throws Exception
      */
-    public function store(Field $field, $value, $editId, string $langCode = null): bool
+    public function store(Field $field, $value, $editId, array $editData, string $langCode = null): bool
     {
         $storage = $field->getStorage();
 
         switch (true) {
             case $storage instanceof OneToOne:
-                return $this->storeOneToOne($field, $value, $editId, $langCode);
+                return $this->storeOneToOne($field, $value, $editData, $langCode);
             break;
 
             case $storage instanceof OneToMany:
@@ -80,15 +81,15 @@ class FieldStorageService extends Injectable
     /**
      * @param Field $field
      * @param $value
-     * @param $editId
+     * @param array $editData
      * @param string|null $langCode
-     *
      * @return bool|mixed
      */
-    public function storeOneToOne(Field $field, $value, $editId, string $langCode = null)
+    public function storeOneToOne(Field $field, $value, array $editData, string $langCode = null)
     {
         $storage = $field->getStorage();
         $value   = $this->dbService->toStorage($value);
+        $editId  = $editData[$storage->getRelatedByField()];
 
         $set   = [$field->getColumn() => $value];
         $where = $storage->getDefaultValues() + [$storage->getRelatedField() => $editId];
@@ -197,13 +198,14 @@ class FieldStorageService extends Injectable
 
     /**
      * @param Field $field
-     * @param $id
+     * @param array $tableData
      * @param string|null $langCode
-     *
      * @return mixed
      */
-    public function retrieveOneToOne(Field $field, $id, string $langCode = null)
+    public function retrieveOneToOne(Field $field, array $tableData, string $langCode = null)
     {
+        $id = $tableData[$field->getStorage()->getRelatedByField()];
+
         $query = $this->getRelationQuery($field, $id, $langCode)->columns($field->getColumn());
         return $this->dbService->getValue($query);
     }

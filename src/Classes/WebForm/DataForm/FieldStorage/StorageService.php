@@ -80,7 +80,7 @@ class StorageService extends Injectable
     {
         switch (true) {
             case $field->getStorage() instanceof OneToOne:
-                return $this->fieldStorageService->retrieveOneToOne($field, $id, $langCode);
+                return $this->fieldStorageService->retrieveOneToOne($field, $tableData, $langCode);
             break;
 
             case $field->getStorage() instanceof OneToOneRef:
@@ -130,13 +130,13 @@ class StorageService extends Injectable
      */
     private function executeEvents(string $eventType)
     {
-        if( ! array_key_exists($eventType, $this->storageData->getEvents())){
+        if ( ! array_key_exists($eventType, $this->storageData->getEvents())) {
             return;
         }
 
         $events = $this->storageData->getEvents()[$eventType];
 
-        foreach ($events as $event){
+        foreach ($events as $event) {
             $event($this->storageData);
         }
     }
@@ -206,7 +206,7 @@ class StorageService extends Injectable
 
             $relatedField = $storage->getRelatedField();
 
-            if( ! $value = $this->storageData->getFormInputValue($key)){
+            if ( ! $value = $this->storageData->getFormInputValue($key)) {
                 continue;
             }
 
@@ -215,6 +215,10 @@ class StorageService extends Injectable
             }
 
             $fields[$relatedField]->add($field->getColumn(), $value);
+
+            foreach ($storage->getDefaultValues() as $defaultKey => $value) {
+                $fields[$relatedField]->add($defaultKey, $value);
+            }
         }
 
         return $fields;
@@ -286,6 +290,9 @@ class StorageService extends Injectable
     {
         $editId   = $this->storageData->getEditId();
         $langCode = $this->storageData->getLanguageCode();
+        $model    = $this->storageData->getTable();
+
+        $editData = $this->dbService->getTableRowById($model, $editId);
 
         /** @var Field $field */
         foreach ($this->storageData->getFieldMap() as $key => $field) {
@@ -293,7 +300,7 @@ class StorageService extends Injectable
 
             switch (true) {
                 case $field->getStorage() instanceof OneToOne:
-                    $this->fieldStorageService->storeOneToOne($field, $value, $editId, $langCode);
+                    $this->fieldStorageService->storeOneToOne($field, $value, $editData, $langCode);
                 break;
 
                 case $field->getStorage() instanceof OneToMany:

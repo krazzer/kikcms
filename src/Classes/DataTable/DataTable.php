@@ -151,9 +151,10 @@ abstract class DataTable extends Renderable
         $form     = $this->getForm();
         $field    = $form->getFieldMap()->get($column);
         $langCode = $this->getFilters()->getLanguageCode();
+        $editData = $this->dbService->getTableRowById($this->getModel(), $id);
 
         if ($field->getStorage()) {
-            return $this->fieldStorageService->store($field, $checked, $id, $langCode);
+            return $this->fieldStorageService->store($field, $checked, $id, $editData, $langCode);
         }
 
         return $this->dbService->update($this->getModel(), [$column => $checked], ['id' => $id]);
