@@ -49,11 +49,15 @@ class FrontendHelper extends Injectable
 
     /**
      * @param string $type
-     * @param int $imageId
+     * @param int|null $imageId
      * @return string
      */
-    public function bgThumb(string $type, int $imageId)
+    public function bgThumb(string $type, int $imageId = null)
     {
+        if( ! $imageId){
+            return '';
+        }
+
         return "background-image: url('/finder/thumb/" . $type . "/" . $imageId . "')";
     }
 
