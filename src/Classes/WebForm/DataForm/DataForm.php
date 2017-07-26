@@ -35,9 +35,6 @@ abstract class DataForm extends WebForm
     /** @var DataFormFilters */
     protected $filters;
 
-    /** @var string */
-    protected $formTemplate = 'dataForm';
-
     /** @var FieldTransformer[] */
     protected $fieldTransformers = [];
 
@@ -52,6 +49,9 @@ abstract class DataForm extends WebForm
 
     /** @var bool */
     protected $saveUpdatedAt = false;
+
+    /** @var bool */
+    protected $displaySendButton = false;
 
     /** @var array local cache for edit data */
     private $cachedEditData = [];

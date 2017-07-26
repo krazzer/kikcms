@@ -64,6 +64,9 @@ abstract class WebForm extends Renderable
     /** @var bool */
     protected $showRequiredMessage = false;
 
+    /** @var bool */
+    protected $displaySendButton = true;
+
     /** @inheritdoc */
     protected $instancePrefix = 'webForm';
 
@@ -725,6 +728,7 @@ abstract class WebForm extends Renderable
             'fields'             => $this->fieldMap,
             'tabs'               => $this->tabs,
             'filters'            => $this->filters,
+            'displaySendButton'  => $this->displaySendButton,
             'security'           => $this->security,
             'currentTab'         => $this->getCurrentTab(),
             'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),

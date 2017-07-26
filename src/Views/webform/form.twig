@@ -40,11 +40,11 @@
         {{ block('fields') }}
     {% endif %}
 
-    {% block submitButton %}
+    {% if(displaySendButton) %}
         <div class="form-group">
             {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-primary', 'name': 'submit'}) }}
         </div>
-    {% endblock %}
+    {% endif %}
 
     <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 

@@ -4,7 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\DataTables\Languages;
 use KikCMS\DataTables\Templates;
 use KikCMS\DataTables\Translations;
@@ -12,8 +12,10 @@ use KikCMS\DataTables\Translations;
 /**
  * @property AccessControl $acl
  */
-class SettingsForm extends DataForm
+class SettingsForm extends WebForm
 {
+    protected $displaySendButton = false;
+
     /**
      * @inheritdoc
      */
@@ -28,13 +30,5 @@ class SettingsForm extends DataForm
         }
 
         $this->addDataTableField(new Translations(), $this->translator->tl("fields.translations"));
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getModel(): string
-    {
-        return '';
     }
 }
