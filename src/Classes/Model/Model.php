@@ -62,6 +62,10 @@ class Model extends PhalconModel
      */
     public static function getById($id)
     {
+        if( ! $id){
+            return null;
+        }
+
         return self::findFirst('id = ' . $id);
     }
 
