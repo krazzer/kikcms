@@ -96,6 +96,7 @@ var WebForm = Class.extend({
         this.initDateFields();
         this.initFileFields();
         this.initWysiwyg();
+        this.initPopovers();
     },
 
     initAutocompleteFields: function () {
@@ -166,6 +167,18 @@ var WebForm = Class.extend({
                 }
 
                 self.actionGetFinder($field);
+            });
+        });
+    },
+
+    initPopovers: function () {
+        this.getWebForm().find('[data-toggle="popover"]').each(function () {
+            var content = $(this).attr('data-content');
+
+            $(this).popover({
+                placement: 'auto bottom',
+                html: true,
+                content: content
             });
         });
     },

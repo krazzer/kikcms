@@ -49,6 +49,9 @@ class Field
     /** @var FieldStorage|null contains how this field should be stored */
     private $storage;
 
+    /** @var string|null */
+    private $helpText;
+
     /**
      * @param Element $element
      */
@@ -168,6 +171,24 @@ class Field
     {
         $this->form = $form;
 
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getHelpText()
+    {
+        return $this->helpText;
+    }
+
+    /**
+     * @param null|string $helpText
+     * @return $this|Field
+     */
+    public function setHelpText($helpText)
+    {
+        $this->helpText = $helpText;
         return $this;
     }
 

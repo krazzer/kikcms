@@ -43,6 +43,8 @@ gulp.task('vendorsScripts', function () {
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js',
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js',
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js',
+        'bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js',
+        'bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js',
         'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
         'bower_components/bootstrap3-typeahead/bootstrap3-typeahead.min.js'
     ])
