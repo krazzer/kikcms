@@ -50,15 +50,11 @@ class Page extends Model
 
     /**
      * @inheritdoc
-     *
      * @return Page
      */
     public static function getById($id)
     {
-        /** @var Page $page */
-        $page = parent::getById($id);
-
-        return $page;
+        return parent::getById($id);
     }
 
     /**

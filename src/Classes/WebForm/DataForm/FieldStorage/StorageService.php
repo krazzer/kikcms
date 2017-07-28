@@ -177,7 +177,7 @@ class StorageService extends Injectable
      * @param FieldStorage $fieldStorage
      * @return null|string
      */
-    private function getRelatedFieldValue(FieldStorage $fieldStorage)
+    private function getRelatedFieldValue(FieldStorage $fieldStorage): ?string
     {
         $query = (new Builder())
             ->from($this->storageData->getTable())

@@ -201,7 +201,7 @@ class Twig extends Engine implements EngineInterface
      * @param DiInterface $di
      * @return null|string
      */
-    private function getConfig(string $string, DiInterface $di)
+    private function getConfig(string $string, DiInterface $di): ?string
     {
         $string = explode('.', $string);
 

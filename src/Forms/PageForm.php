@@ -246,7 +246,7 @@ class PageForm extends DataForm
     /**
      * @return null|int
      */
-    private function getParentId()
+    private function getParentId(): ?int
     {
         $pageId = $this->getFilters()->getEditId();
 
@@ -260,9 +260,9 @@ class PageForm extends DataForm
     }
 
     /**
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    private function getPageLanguage()
+    private function getPageLanguage(): ?PageLanguage
     {
         $pageId       = $this->getFilters()->getEditId();
         $languageCode = $this->getFilters()->getLanguageCode();

@@ -19,9 +19,9 @@ class NotFoundException extends \Exception
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): ?string
     {
         return $this->languageCode;
     }

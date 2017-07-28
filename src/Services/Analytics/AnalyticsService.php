@@ -65,18 +65,18 @@ class AnalyticsService extends Injectable
     }
 
     /**
-     * @return DateTime|null
+     * @return null|DateTime
      */
-    public function getMaxDate()
+    public function getMaxDate(): ?DateTime
     {
         $query = (new Builder())->from(GaDayVisit::class)->columns(['MAX(date)']);
         return $this->dbService->getDate($query);
     }
 
     /**
-     * @return DateTime|null
+     * @return null|DateTime
      */
-    public function getMinDate()
+    public function getMinDate(): ?DateTime
     {
         $query = (new Builder())->from(GaDayVisit::class)->columns(['MIN(date)']);
         return $this->dbService->getDate($query);
@@ -87,7 +87,7 @@ class AnalyticsService extends Injectable
      * @param DateTime|null $end
      * @return array
      */
-    public function getOverviewData(DateTime $start = null, DateTime $end = null): array
+    public function getOverviewData(?DateTime $start, ?DateTime $end): array
     {
         $totalVisits       = $this->getTotalVisits($start, $end);
         $totalUniqueVisits = $this->getTotalUniqueVisits($start, $end);
@@ -370,9 +370,9 @@ class AnalyticsService extends Injectable
 
     /**
      * @param string $type
-     * @return DateTime|null
+     * @return null|DateTime
      */
-    private function getTypeLastUpdate(string $type)
+    private function getTypeLastUpdate(string $type): ?DateTime
     {
         $query = (new Builder())
             ->from(GaVisitData::class)

@@ -193,9 +193,9 @@ class DbService extends Injectable
 
     /**
      * @param string $model
-     * @return string|null
+     * @return null|string
      */
-    public function getAliasForModel(string $model)
+    public function getAliasForModel(string $model): ?string
     {
         /** @var Model $model */
         $model = new $model();
@@ -262,9 +262,9 @@ class DbService extends Injectable
      * Retrieve a single result from the given query
      *
      * @param Builder $query
-     * @return string|null
+     * @return null|string
      */
-    public function getValue(Builder $query)
+    public function getValue(Builder $query): ?string
     {
         $columns = (array) $query->getColumns();
 
@@ -359,9 +359,9 @@ class DbService extends Injectable
     /**
      * @param $query
      *
-     * @return Model|null
+     * @return null|Model|mixed
      */
-    public function getObject(Builder $query)
+    public function getObject(Builder $query): ?Model
     {
         return $query->getQuery()->execute()->getFirst();
     }

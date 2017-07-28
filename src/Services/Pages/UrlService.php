@@ -64,9 +64,9 @@ class UrlService extends Injectable
 
     /**
      * @param string $url
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    public function getPageLanguageByUrl(string $url)
+    public function getPageLanguageByUrl(string $url): ?PageLanguage
     {
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . ':' . $url;
 
@@ -101,9 +101,9 @@ class UrlService extends Injectable
      * @param string $slug
      * @param Page|null $parent
      * @param null $langCode
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    public function getPageLanguageBySlug(string $slug, Page $parent = null, $langCode = null)
+    public function getPageLanguageBySlug(string $slug, Page $parent = null, $langCode = null): ?PageLanguage
     {
         $query = (new Builder())
             ->from(['pl' => PageLanguage::class])
@@ -121,7 +121,7 @@ class UrlService extends Injectable
             $query->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :langCode:', ['langCode' => $langCode]);
         }
 
-        return $query->getQuery()->execute()->getFirst();
+        return $this->dbService->getObject($query);
     }
 
     /**
@@ -281,7 +281,7 @@ class UrlService extends Injectable
      * @param PageLanguage $pageLang
      * @return bool
      */
-    private function urlExistsForPageLanguage(PageLanguage $pageLang)
+    private function urlExistsForPageLanguage(PageLanguage $pageLang): bool
     {
         $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
 

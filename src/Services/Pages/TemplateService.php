@@ -34,9 +34,9 @@ class TemplateService extends Injectable
     }
 
     /**
-     * @return Template|null
+     * @return null|Template
      */
-    public function getDefaultTemplate()
+    public function getDefaultTemplate(): ?Template
     {
         /** @var Template $firstTemplate */
         $firstTemplate = Template::findFirst(['order' => 'display_order ASC']);
@@ -46,9 +46,9 @@ class TemplateService extends Injectable
 
     /**
      * @param int $editId
-     * @return Template|null
+     * @return null|Template
      */
-    public function getTemplateByPageId(int $editId)
+    public function getTemplateByPageId(int $editId): ?Template
     {
         $query = new Builder();
         $query->from(['t' => Template::class]);

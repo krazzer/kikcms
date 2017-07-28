@@ -172,9 +172,9 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @return DataTable|null
+     * @return null|DataTable
      */
-    public function getDataTable()
+    public function getDataTable(): ?DataTable
     {
         return $this->dataTable;
     }

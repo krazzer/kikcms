@@ -102,17 +102,17 @@ class FieldStorage
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
-    public function getRelatedField()
+    public function getRelatedField(): ?string
     {
         return $this->relatedField;
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): ?string
     {
         return $this->languageCode;
     }

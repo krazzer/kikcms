@@ -35,9 +35,9 @@ class DataTableFilters extends Filters
     private $customFilterValues = [];
 
     /**
-     * @return int|null
+     * @return null|int
      */
-    public function getEditId()
+    public function getEditId(): ?int
     {
         return $this->editId;
     }
@@ -145,16 +145,16 @@ class DataTableFilters extends Filters
     /**
      * @return null|string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): ?string
     {
         return $this->languageCode;
     }
 
     /**
-     * @param string|null $languageCode
+     * @param null|string $languageCode
      * @return DataTableFilters
      */
-    public function setLanguageCode(string $languageCode = null)
+    public function setLanguageCode(?string $languageCode): DataTableFilters
     {
         $this->languageCode = $languageCode;
         return $this;
@@ -181,7 +181,7 @@ class DataTableFilters extends Filters
     /**
      * @return null|string
      */
-    public function getWindowLanguageCode()
+    public function getWindowLanguageCode(): ?string
     {
         return $this->windowLanguageCode ?: $this->getLanguageCode();
     }
@@ -190,7 +190,7 @@ class DataTableFilters extends Filters
      * @param null|string $windowLanguageCode
      * @return DataTableFilters
      */
-    public function setWindowLanguageCode($windowLanguageCode)
+    public function setWindowLanguageCode($windowLanguageCode): DataTableFilters
     {
         $this->windowLanguageCode = $windowLanguageCode;
         return $this;

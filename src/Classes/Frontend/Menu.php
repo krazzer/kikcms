@@ -103,7 +103,7 @@ class Menu
     /**
      * @return null|string
      */
-    public function getTemplate()
+    public function getTemplate(): ?string
     {
         return $this->template;
     }
@@ -121,7 +121,7 @@ class Menu
     /**
      * @return int|null
      */
-    public function getRestrictTemplateId()
+    public function getRestrictTemplateId(): ?int
     {
         return $this->restrictTemplateId;
     }

@@ -445,9 +445,9 @@ abstract class WebForm extends Renderable
 
     /**
      * @param string $fieldKey
-     * @return ElementInterface|null
+     * @return null|ElementInterface
      */
-    public function getElement(string $fieldKey)
+    public function getElement(string $fieldKey): ?ElementInterface
     {
         if ( ! $this->form->has($fieldKey)) {
             return null;

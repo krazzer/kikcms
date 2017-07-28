@@ -62,9 +62,9 @@ class PageService extends Injectable
      * Walks upwards in the page tree until it finds a page that has maxLevel set
      *
      * @param Page $page
-     * @return Page|null
+     * @return null|Page
      */
-    public function getMaxLevelDeterminer(Page $page)
+    public function getMaxLevelDeterminer(Page $page): ?Page
     {
         return Page::findFirst([
             'conditions' => 'lft < :lft: AND rgt > :rgt: AND menu_max_level IS NOT NULL',

@@ -221,7 +221,7 @@ abstract class DataTable extends Renderable
      *
      * @return string
      */
-    public function formatValue(string $column, $value, array $rowData = [])
+    public function formatValue(string $column, $value, array $rowData = []): string
     {
         return $this->fieldFormatting[$column]($value, $rowData, $column);
     }
@@ -231,7 +231,7 @@ abstract class DataTable extends Renderable
      *
      * @return null|string
      */
-    public function getAlias()
+    public function getAlias(): ?string
     {
         return $this->dbService->getAliasForModel($this->getModel());
     }
@@ -312,9 +312,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
-    public function getParentRelationKey()
+    public function getParentRelationKey(): ?string
     {
         return $this->parentRelationKey;
     }

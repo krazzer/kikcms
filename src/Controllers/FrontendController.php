@@ -98,7 +98,7 @@ class FrontendController extends BaseController
      * @param PageLanguage $pageLanguage
      * @return null|Response
      */
-    private function loadPage(PageLanguage $pageLanguage)
+    private function loadPage(PageLanguage $pageLanguage): ?Response
     {
         $languageCode = $pageLanguage->language_code;
         $templateFile = $pageLanguage->page->template->file;

@@ -58,7 +58,7 @@ class Model extends PhalconModel
     /**
      * @param $id
      *
-     * @return Model|null
+     * @return null|Model|mixed
      */
     public static function getById($id)
     {
@@ -89,9 +89,9 @@ class Model extends PhalconModel
     /**
      * @param string $name
      *
-     * @return Model|null
+     * @return null|Model
      */
-    public static function getByName(string $name)
+    public static function getByName(string $name): ?Model
     {
         return self::findFirst([
             "conditions" => "name = ?1",

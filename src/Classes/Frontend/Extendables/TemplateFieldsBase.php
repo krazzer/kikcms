@@ -17,7 +17,7 @@ class TemplateFieldsBase extends WebsiteExtendable
      * @param DataForm $form
      * @return null|Field
      */
-    public function getFormField(string $variable, DataForm $form)
+    public function getFormField(string $variable, DataForm $form): ?Field
     {
         $methodName = 'field' . ucfirst($variable);
 

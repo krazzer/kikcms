@@ -96,9 +96,9 @@ class FullPage extends Identifiable
     }
 
     /**
-     * @return int|null
+     * @return null|int
      */
-    public function getParentId()
+    public function getParentId(): ?int
     {
         return $this->getPage()->getParentId();
     }

@@ -241,7 +241,7 @@ class FieldStorageService extends Injectable
      *
      * @return null|string
      */
-    public function retrieveTranslation(Field $field, $id, string $langCode = null)
+    public function retrieveTranslation(Field $field, $id, string $langCode = null): ?string
     {
         $langCode         = $field->getStorage()->getLanguageCode() ?: $langCode;
         $translationKeyId = $this->getTranslationKeyId($field, $id);

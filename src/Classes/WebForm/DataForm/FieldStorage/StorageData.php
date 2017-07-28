@@ -36,9 +36,9 @@ class StorageData
     private $events;
 
     /**
-     * @return int|null
+     * @return null|int
      */
-    public function getEditId()
+    public function getEditId(): ?int
     {
         return $this->editId;
     }
@@ -56,7 +56,7 @@ class StorageData
     /**
      * @return null|string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): ?string
     {
         return $this->languageCode;
     }
@@ -74,7 +74,7 @@ class StorageData
     /**
      * @return int|null
      */
-    public function getParentEditId()
+    public function getParentEditId(): ?int
     {
         return $this->parentEditId;
     }

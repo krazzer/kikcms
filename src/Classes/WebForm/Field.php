@@ -102,9 +102,9 @@ class Field
     }
 
     /**
-     * @return Element|null
+     * @return null|Element
      */
-    public function getElement()
+    public function getElement(): ?Element
     {
         return $this->element;
     }
@@ -177,7 +177,7 @@ class Field
     /**
      * @return null|string
      */
-    public function getHelpText()
+    public function getHelpText(): ?string
     {
         return $this->helpText;
     }
@@ -217,9 +217,9 @@ class Field
     }
 
     /**
-     * @return Tab|null
+     * @return null|Tab
      */
-    public function getTab()
+    public function getTab(): ?Tab
     {
         return $this->tab;
     }
@@ -272,9 +272,9 @@ class Field
     }
 
     /**
-     * @return FieldStorage|null
+     * @return null|FieldStorage
      */
-    public function getStorage()
+    public function getStorage(): ?FieldStorage
     {
         return $this->storage;
     }

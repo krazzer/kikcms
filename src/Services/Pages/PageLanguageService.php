@@ -28,9 +28,9 @@ class PageLanguageService extends Injectable
     /**
      * @param Page $page
      * @param string|null $languageCode
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    public function getByPage(Page $page, string $languageCode = null)
+    public function getByPage(Page $page, string $languageCode = null): ?PageLanguage
     {
         return $this->getByPageId($page->getId(), $languageCode);
     }
@@ -40,9 +40,9 @@ class PageLanguageService extends Injectable
      *
      * @param int $pageId
      * @param string|null $languageCode
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    public function getByPageId(int $pageId, string $languageCode = null)
+    public function getByPageId(int $pageId, string $languageCode = null): ?PageLanguage
     {
         if ( ! $languageCode) {
             $languageCode = $this->languageService->getDefaultLanguageCode();
@@ -66,9 +66,9 @@ class PageLanguageService extends Injectable
     /**
      * @param string $pageKey
      * @param string $languageCode
-     * @return Model|PageLanguage|null
+     * @return null|Model|PageLanguage
      */
-    public function getByPageKey(string $pageKey, string $languageCode)
+    public function getByPageKey(string $pageKey, string $languageCode): ?PageLanguage
     {
         $query = (new Builder())
             ->from(['pl' => PageLanguage::class])
@@ -133,9 +133,9 @@ class PageLanguageService extends Injectable
 
     /**
      * @param string|null $languageCode
-     * @return PageLanguage|null
+     * @return null|PageLanguage
      */
-    public function getNotFoundPage(string $languageCode = null)
+    public function getNotFoundPage(string $languageCode = null): ?PageLanguage
     {
         $languageCode = $languageCode ?: $this->config->application->defaultLanguage;
         return $this->getByPageKey(KikCMSConfig::KEY_PAGE_NOT_FOUND, $languageCode);

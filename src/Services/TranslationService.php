@@ -19,9 +19,9 @@ class TranslationService extends Injectable
     /**
      * @param int $translationKeyId
      * @param string $languageCode
-     * @return string|null
+     * @return null|string
      */
-    public function getTranslationValue(int $translationKeyId, string $languageCode)
+    public function getTranslationValue(int $translationKeyId, string $languageCode): ?string
     {
         $cacheKey = CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId;
 
