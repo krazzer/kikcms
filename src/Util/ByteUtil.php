@@ -15,6 +15,7 @@ class ByteUtil
     {
         $val  = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
+        $val  = (int) str_replace($last, '', $val);
 
         switch ($last) {
             case 'g':
