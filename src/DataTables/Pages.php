@@ -181,7 +181,6 @@ class Pages extends DataTable
             ->leftJoin(PageLanguage::class, 'p.id = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
             ->leftJoin(PageLanguage::class, 'p.id = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
             ->leftJoin(Template::class, 'p.template_id = t.id', 't')
-            ->where('t.id IS NULL OR t.id IN ({templateIds:array})', ['templateIds' => $this->getAllowedTemplateIds()])
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([
@@ -189,6 +188,12 @@ class Pages extends DataTable
                 'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url',
                 'pl.id AS plid', 'p.key'
             ]);
+
+        if($this->getAllowedTemplateIds()){
+            $query->where('t.id IS NULL OR t.id IN ({templateIds:array})', [
+                'templateIds' => $this->getAllowedTemplateIds()
+            ]);
+        }
 
         return $query;
     }
@@ -240,7 +245,7 @@ class Pages extends DataTable
             return $value;
         }
 
-        if ($rowData[Page::FIELD_KEY]) {
+        if ($rowData[Page::FIELD_KEY] && $rowData[Page::FIELD_TYPE] != Page::TYPE_MENU) {
             $value = '<span class="glyphicon glyphicon-lock" title="' . $this->lockedTitle . '"></span> ' . $value;
         }
 

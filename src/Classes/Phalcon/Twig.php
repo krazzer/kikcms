@@ -192,7 +192,7 @@ class Twig extends Engine implements EngineInterface
         }
 
         $this->twig->addFilter(new \Twig_SimpleFilter('price', function($price) use ($di){
-            return $di->getShared("numberService")->getPriceFormat($price);
+            return $di->getShared("numberService")->getPriceFormat((float)$price);
         }));
     }
 

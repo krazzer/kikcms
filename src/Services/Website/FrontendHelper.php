@@ -64,15 +64,25 @@ class FrontendHelper extends Injectable
     /**
      * Build a multi-level ul li structured menu
      *
-     * @param int $menuId
+     * @param int|string $menuId can be either the id or the key of the menu
      * @param int|null $maxLevel
      * @param string|null $template
      * @param int|null $templateId
      * @param bool $cache
      * @return string
      */
-    public function menu(int $menuId, int $maxLevel = null, string $template = null, int $templateId = null, $cache = true): string
+    public function menu($menuId, int $maxLevel = null, string $template = null, int $templateId = null, $cache = true): string
     {
+        if( ! is_numeric($menuId)){
+            $page = $this->pageService->getByKey($menuId);
+
+            if( ! $page){
+                return '';
+            }
+
+            $menuId = $page->getId();
+        }
+
         $menu = (new Menu())
             ->setMenuId($menuId)
             ->setMaxLevel($maxLevel)

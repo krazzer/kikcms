@@ -60,7 +60,7 @@ class PageForm extends DataForm
             'message' => $this->translator->tl('webform.messages.slug')
         ]);
 
-        $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255]),];
+        $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
         $templateField->getElement()->setDefault($this->getTemplateId());
@@ -238,7 +238,9 @@ class PageForm extends DataForm
             }
         }
 
-        $firstTemplate = $this->templateService->getDefaultTemplate();
+        if( ! $firstTemplate = $this->templateService->getDefaultTemplate()){
+            return 0;
+        }
 
         return (int) $firstTemplate->id;
     }

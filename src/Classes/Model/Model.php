@@ -70,6 +70,22 @@ class Model extends PhalconModel
     }
 
     /**
+     * @inheritdoc
+     *
+     * @return null|Model|mixed
+     */
+    public static function findFirst($parameters = null)
+    {
+        $object = parent::findFirst($parameters);
+
+        if( ! $object){
+            return null;
+        }
+
+        return $object;
+    }
+
+    /**
      * @param int[] $ids
      *
      * @return Resultset|array

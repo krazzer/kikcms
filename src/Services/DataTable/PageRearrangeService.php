@@ -98,12 +98,7 @@ class PageRearrangeService extends Injectable
             return;
         }
 
-        $query = (new Builder())
-            ->from([Page::ALIAS => Page::class])
-            ->join(Page::class, 'cp.parent_id = p.id AND cp.' . Page::FIELD_DISPLAY_ORDER . ' IS NULL', 'cp')
-            ->groupBy('p.id');
-
-        $pageMap = $this->pageService->getPageMapByQuery($query);
+        $pageMap = $this->pageService->getDisplayOrderMissing();
 
         foreach ($pageMap as $parentPage) {
             $children        = $this->pageService->getChildren($parentPage);
@@ -136,16 +131,11 @@ class PageRearrangeService extends Injectable
         }
 
         $pageLanguages = PageLanguage::find([
-            'conditions' => 'page_id = :pageId:',
+            'conditions' => 'page_id = :pageId: AND url IS NOT NULL',
             'bind'       => ['pageId' => $page->id]
         ]);
 
-        /** @var PageLanguage $pageLanguage */
         foreach ($pageLanguages as $pageLanguage) {
-            if ( ! $pageLanguage->url) {
-                continue;
-            }
-
             if ($this->urlService->urlExists($pageLanguage->url, $parentId, $pageLanguage->language_code, $pageLanguage)) {
                 $this->urlService->deduplicateUrl($pageLanguage);
             }
@@ -186,12 +176,12 @@ class PageRearrangeService extends Injectable
      */
     private function hasPagesWithoutDisplayOrder(): bool
     {
-        $query = (new Builder())
-            ->columns(['COUNT(*)'])
+        $query = (new Builder)
             ->from(Page::class)
-            ->where(Page::FIELD_DISPLAY_ORDER . ' IS NULL AND parent_id IS NOT NULL');
+            ->where(Page::FIELD_DISPLAY_ORDER . ' IS NULL')
+            ->andWhere(Page::FIELD_PARENT_ID . ' IS NOT NULL');
 
-        return (bool) $this->dbService->getValue($query);
+        return $this->dbService->getExists($query);
     }
 
     /**
@@ -261,6 +251,10 @@ class PageRearrangeService extends Injectable
 
         foreach ($nestedSetStructure as $pageId => $structure) {
             $insertValues[] = '(' . implode(',', array_merge([$pageId], $structure)) . ')';
+        }
+
+        if( ! $insertValues){
+            return;
         }
 
         $updateQuery = "

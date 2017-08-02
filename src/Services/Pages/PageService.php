@@ -19,12 +19,25 @@ use Phalcon\Mvc\Model\Query\Builder;
 class PageService extends Injectable
 {
     /**
+     * @param string $key
+     * @return Page|null
+     */
+    public function getByKey(string $key): ?Page
+    {
+        $query = (new Builder)
+            ->from(Page::class)
+            ->where(Page::FIELD_KEY . ' = :key:', ['key' => $key]);
+
+        return $this->dbService->getObject($query);
+    }
+
+    /**
      * @param Page $page
      * @return PageMap
      */
     public function getChildren(Page $page): PageMap
     {
-        return $this->getPageMapByQuery($this->getChildrenQuery($page));
+        return $this->dbService->getObjectMap($this->getChildrenQuery($page), PageMap::class);
     }
 
     /**
@@ -50,10 +63,10 @@ class PageService extends Injectable
      */
     public function getHighestDisplayOrderChild(Page $page): int
     {
-        $query = new Builder();
-        $query->from(Page::class);
-        $query->columns('MAX(' . Page::FIELD_DISPLAY_ORDER . ')');
-        $query->where('parent_id = :parentId:', ['parentId' => $page->id]);
+        $query = (new Builder)
+            ->from(Page::class)
+            ->columns('MAX(' . Page::FIELD_DISPLAY_ORDER . ')')
+            ->where('parent_id = :parentId:', ['parentId' => $page->id]);
 
         return (int) $this->dbService->getValue($query);
     }
@@ -71,23 +84,6 @@ class PageService extends Injectable
             'bind'       => ['lft' => $page->lft, 'rgt' => $page->rgt],
             'order'      => Page::FIELD_LFT . ' desc',
         ]);
-    }
-
-    /**
-     * @param Builder $query
-     * @return PageMap
-     */
-    public function getPageMapByQuery(Builder $query)
-    {
-        $results = $query->getQuery()->execute();
-        $pageMap = new PageMap();
-
-        /** @var Page $page */
-        foreach ($results as $page) {
-            $pageMap->add($page, $page->getId());
-        }
-
-        return $pageMap;
     }
 
     /**
@@ -131,13 +127,13 @@ class PageService extends Injectable
      */
     public function isChildOf(Page $page, Page $parentPage): bool
     {
-        $query = new Builder();
-        $query->from(Page::class);
-        $query->columns(Page::FIELD_ID);
-        $query->where('lft > :lft: AND rgt < :rgt:', [
-            'lft' => $parentPage->lft,
-            'rgt' => $parentPage->rgt,
-        ]);
+        $query = (new Builder)
+            ->from(Page::class)
+            ->columns(Page::FIELD_ID)
+            ->where('lft > :lft: AND rgt < :rgt:', [
+                'lft' => $parentPage->lft,
+                'rgt' => $parentPage->rgt,
+            ]);
 
         $childIds = $this->dbService->getValues($query);
 
@@ -164,6 +160,19 @@ class PageService extends Injectable
             $query->andWhere('level <= ' . (int) ($menuPage->level + $menu->getMaxLevel()));
         }
 
-        return $this->getPageMapByQuery($query);
+        return $this->dbService->getObjectMap($query, PageMap::class);
+    }
+
+    /**
+     * @return PageMap
+     */
+    public function getDisplayOrderMissing(): PageMap
+    {
+        $query = (new Builder)
+            ->from(['p' => Page::class])
+            ->join(Page::class, 'cp.parent_id = p.id AND cp.display_order IS NULL', 'cp')
+            ->groupBy('p.id');
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
     }
 }

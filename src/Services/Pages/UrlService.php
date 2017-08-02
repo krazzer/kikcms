@@ -129,11 +129,13 @@ class UrlService extends Injectable
      */
     public function getPageIdsWithoutUrl(): array
     {
-        $query = (new Builder())
+        $query = (new Builder)
             ->columns([PageLanguage::FIELD_PAGE_ID])
-            ->from(PageLanguage::class)
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'pl.page_id = p.id', 'p')
             ->groupBy(PageLanguage::FIELD_PAGE_ID)
-            ->where(PageLanguage::FIELD_URL . ' IS NULL');
+            ->where(PageLanguage::FIELD_URL . ' IS NULL')
+            ->inWhere(Page::FIELD_TYPE, [Page::TYPE_PAGE, Page::TYPE_ALIAS]);
 
         return $this->dbService->getValues($query);
     }

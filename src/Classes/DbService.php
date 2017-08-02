@@ -6,6 +6,8 @@ use DateTime;
 use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Config\DbConfig;
+use KikCMS\Util\ObjectList;
+use KikCMS\Util\ObjectMap;
 use Phalcon\Db;
 use Phalcon\Db\ResultInterface;
 use Phalcon\Di\Injectable;
@@ -363,7 +365,11 @@ class DbService extends Injectable
      */
     public function getObject(Builder $query): ?Model
     {
-        return $query->getQuery()->execute()->getFirst();
+        if( ! $object = $query->getQuery()->execute()->getFirst()){
+            return null;
+        }
+
+        return $object;
     }
 
     /**
@@ -373,6 +379,45 @@ class DbService extends Injectable
     public function getObjects(Builder $query)
     {
         return $query->getQuery()->execute();
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $class
+     * @return ObjectList|mixed
+     */
+    public function getObjectList(Builder $query, string $class): ObjectList
+    {
+        /** @var ObjectList $objectList */
+        $objectList = new $class();
+
+        $results = $query->getQuery()->execute();
+
+        foreach ($results as $result){
+            $objectList->add($result);
+        }
+
+        return $objectList;
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $class
+     * @param string $mapBy
+     * @return ObjectMap|mixed
+     */
+    public function getObjectMap(Builder $query, string $class, string $mapBy = 'id'): ObjectMap
+    {
+        /** @var ObjectMap $objectMap */
+        $objectMap = new $class();
+
+        $results = $query->getQuery()->execute();
+
+        foreach ($results as $result){
+            $objectMap->add($result, $result->$mapBy);
+        }
+
+        return $objectMap;
     }
 
     /**
