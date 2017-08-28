@@ -30,26 +30,28 @@ class Translator extends Injectable
     /**
      * @param string|int|null $key
      * @param array $replaces
-     *
+     * @param string|null $langCode if null, this->getLanguageCode() will be used
      * @return string
      */
-    public function tl($key, array $replaces = []): string
+    public function tl($key, array $replaces = [], $langCode = null): string
     {
+        $langCode = $langCode ?: $this->getLanguageCode();
+
         // no translation given = empty string
         if (empty($key)) {
             return '';
         }
 
         // cache translation without using the cacheService shortcut for performance
-        $cacheKey = CacheConfig::TRANSLATION . ':' . $this->getLanguageCode() . ':' . $key;
+        $cacheKey = CacheConfig::TRANSLATION . ':' . $langCode . ':' . $key;
 
         if ( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
             // numeric values given indicate it's a translation managed from a DataTable
             if (is_numeric($key)) {
-                return $this->getDbTranslation($key);
+                return $this->getDbTranslation($key, $langCode);
             }
 
-            $translations = $this->getTranslations();
+            $translations = $this->getTranslations($langCode);
 
             if ( ! array_key_exists($key, $translations)) {
                 throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
@@ -116,14 +118,17 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string|null $langCode
      * @return array
      */
-    public function getTranslations(): array
+    public function getTranslations(string $langCode = null): array
     {
-        $userTranslations    = $this->getUserTranslations();
-        $websiteTranslations = $this->getWebsiteTranslations();
-        $pluginTranslations  = $this->getPluginTranslations();
-        $cmsTranslations     = $this->getCmsTranslations();
+        $langCode = $langCode ?: $this->getLanguageCode();
+
+        $userTranslations    = $this->getUserTranslations($langCode);
+        $websiteTranslations = $this->getWebsiteTranslations($langCode);
+        $pluginTranslations  = $this->getPluginTranslations($langCode);
+        $cmsTranslations     = $this->getCmsTranslations($langCode);
 
         return $userTranslations + $websiteTranslations + $pluginTranslations + $cmsTranslations;
     }
@@ -139,38 +144,36 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string|null $langCode
      * @return array
      */
-    public function getWebsiteTranslations(): array
+    public function getWebsiteTranslations(string $langCode = null): array
     {
-        return $this->getByFile(SITE_PATH . 'resources/translations/' . $this->getLanguageCode() . '.php');
+        $langCode = $langCode ?: $this->getLanguageCode();
+
+        return $this->getByFile(SITE_PATH . 'resources/translations/' . $langCode . '.php');
     }
 
     /**
      * @param string $string
-     *
+     * @param array $replaces
      * @return string
      */
-    public function translateDefaultLanguage(string $string): string
+    public function translateDefaultLanguage(string $string, array $replaces = []): string
     {
-        $currentLanguageCode = $this->getLanguageCode();
-
-        $this->setLanguageCode($this->languageService->getDefaultLanguageCode());
-
-        $translation = $this->tl($string);
-
-        $this->setLanguageCode($currentLanguageCode);
-
-        return $translation;
+        return $this->tl($string, $replaces, $this->languageService->getDefaultLanguageCode());
     }
 
     /**
-     * @param $id
+     * @param int $id
+     * @param string|null $langCode
      * @return string
      */
-    private function getDbTranslation(int $id): string
+    private function getDbTranslation(int $id, string $langCode = null): string
     {
-        return (string) $this->translationService->getTranslationValue($id, $this->getLanguageCode());
+        $langCode = $langCode ?: $this->getLanguageCode();
+
+        return (string) $this->translationService->getTranslationValue($id, $langCode);
     }
 
     /**
@@ -193,19 +196,21 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string|null $langCode
      * @return array [translationKey => value]
      */
-    private function getUserTranslations(): array
+    private function getUserTranslations(string $langCode = null): array
     {
-        $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $this->getLanguageCode();
+        $langCode = $langCode ?: $this->getLanguageCode();
+        $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
 
-        return $this->cacheService->cache($cacheKey, function () {
+        return $this->cacheService->cache($cacheKey, function () use ($langCode){
             $query = (new Builder())
                 ->columns(['tk.key', 'tv.value'])
                 ->from(['tv' => TranslationValue::class])
                 ->join(TranslationKey::class, 'tk.id = tv.key_id', 'tk')
                 ->where('tk.key IS NOT NULL AND tv.language_code = :languageCode:', [
-                    'languageCode' => $this->getLanguageCode()
+                    'languageCode' => $langCode
                 ]);
 
             return $this->dbService->getAssoc($query);
@@ -226,25 +231,31 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string|null $langCode
      * @return array
      */
-    private function getCmsTranslations(): array
+    private function getCmsTranslations(string $langCode = null): array
     {
-        return $this->getByFile(__DIR__ . '/../../resources/translations/' . $this->getLanguageCode() . '.php');
+        $langCode = $langCode ?: $this->getLanguageCode();
+
+        return $this->getByFile(__DIR__ . '/../../resources/translations/' . $langCode . '.php');
     }
 
     /**
+     * @param string|null $langCode
      * @return array
      */
-    private function getPluginTranslations(): array
+    private function getPluginTranslations(string $langCode = null): array
     {
+        $langCode = $langCode ?: $this->getLanguageCode();
+
         $translations = [];
 
         $pluginsList = $this->websiteSettings->getPluginList();
 
         /** @var CmsPlugin $plugin */
         foreach ($pluginsList as $plugin){
-            $translationsFile = $plugin->getTranslationsDirectory() . $this->getLanguageCode() . '.php';
+            $translationsFile = $plugin->getTranslationsDirectory() . $langCode . '.php';
 
             if(file_exists($translationsFile)){
                 $translations += $this->getByFile($translationsFile);
