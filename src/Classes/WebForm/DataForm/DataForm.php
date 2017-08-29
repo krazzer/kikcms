@@ -134,7 +134,9 @@ abstract class DataForm extends WebForm
             }
 
             if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key] && $currentLangCode != $defaultLangCode) {
-                $field->setPlaceholder($defaultLangData[$key]);
+                if(is_string($defaultLangData[$key])) {
+                    $field->setPlaceholder($defaultLangData[$key]);
+                }
             }
         }
 
