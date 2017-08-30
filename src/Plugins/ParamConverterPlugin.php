@@ -12,6 +12,12 @@ use Phalcon\Mvc\User\Plugin;
 use ReflectionClass;
 use ReflectionMethod;
 
+/**
+ * Converts Controller method parameters to automatically get the Object by it's id
+ *
+ * E.g: If the param 'Product $product' is present in the Controller method, and the route contains productId, it will
+ * provide the method with the Product object for that id.
+ */
 class ParamConverterPlugin extends Plugin
 {
     /**
