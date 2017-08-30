@@ -4,6 +4,7 @@ namespace KikCMS\Plugins;
 
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
@@ -26,6 +27,13 @@ class FrontendNotFoundPlugin extends Plugin
      */
     public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
     {
+        //todo: this is a temp fix because forwarding from an exception doesn't work until Phalcon 3.2, fix after update
+        if ($exception instanceof ObjectNotFoundException) {
+            http_response_code(404);
+            echo 'Object not found';
+            exit;
+        }
+
         if ($exception instanceof NotFoundException) {
             $this->response->setStatusCode(404);
 

@@ -78,10 +78,10 @@ class FrontendController extends BaseController
     }
 
     /**
-     * @param null $languageCode
+     * @param null|string $languageCode
      * @return string
      */
-    public function pageNotFoundAction($languageCode = null)
+    public function pageNotFoundAction(string $languageCode = null)
     {
         $this->view->reset();
 

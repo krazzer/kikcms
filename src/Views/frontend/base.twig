@@ -16,5 +16,10 @@
 {{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
 {{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
 {{ assets.outputJs() }}
+<script>
+    {% for key in jsTranslations %}
+        KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
+    {% endfor %}
+</script>
 </body>
 </html>

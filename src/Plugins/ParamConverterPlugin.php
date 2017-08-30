@@ -4,6 +4,7 @@ namespace KikCMS\Plugins;
 
 
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Model\Model;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
@@ -23,7 +24,16 @@ class ParamConverterPlugin extends Plugin
     public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
     {
         $actionName = $dispatcher->getActionName() . 'Action';
-        $method     = new ReflectionMethod($dispatcher->getControllerClass(), $actionName);
+
+        if ( ! class_exists($dispatcher->getControllerClass())) {
+            return;
+        }
+
+        if( ! method_exists($dispatcher->getControllerClass(), $actionName)){
+            return;
+        }
+
+        $method = new ReflectionMethod($dispatcher->getControllerClass(), $actionName);
 
         $parameters    = $method->getParameters();
         $paramValueMap = $dispatcher->getParams();
@@ -73,7 +83,7 @@ class ParamConverterPlugin extends Plugin
     /**
      * @param ReflectionClass $class
      * @param Dispatcher $dispatcher
-     * @throws NotFoundException
+     * @throws ObjectNotFoundException
      */
     private function replaceParameter(ReflectionClass $class, Dispatcher $dispatcher)
     {
@@ -85,7 +95,7 @@ class ParamConverterPlugin extends Plugin
         $object = $class->newInstance()::getById($paramValueMap[$idParamName]);
 
         if ( ! $object) {
-            throw new NotFoundException();
+            throw new ObjectNotFoundException();
         }
 
         $newParameters = $this->replaceKeyAndValue($paramValueMap, $idParamName, $obParamName, $object);
