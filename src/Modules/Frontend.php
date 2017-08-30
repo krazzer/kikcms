@@ -3,6 +3,7 @@
 namespace KikCMS\Modules;
 
 use KikCMS\Plugins\FrontendNotFoundPlugin;
+use KikCMS\Plugins\ParamConverterPlugin;
 use Phalcon\Events\Manager;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
@@ -33,6 +34,7 @@ class Frontend implements ModuleDefinitionInterface
 
             $eventsManager = new Manager;
             $eventsManager->attach('dispatch:beforeException', new FrontendNotFoundPlugin());
+            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin());
 
             $dispatcher->setEventsManager($eventsManager);
 

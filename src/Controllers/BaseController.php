@@ -13,6 +13,9 @@ use Phalcon\Mvc\Url;
  */
 class BaseController extends Controller
 {
+    /**
+     * Initialize the controller
+     */
     public function initialize()
     {
         setlocale(LC_ALL, $this->translator->tl('system.locale'));

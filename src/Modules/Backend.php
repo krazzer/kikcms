@@ -3,6 +3,7 @@
 namespace KikCMS\Modules;
 
 use KikCMS\Plugins\BackendNotFoundPlugin;
+use KikCMS\Plugins\ParamConverterPlugin;
 use KikCMS\Plugins\SecurityPlugin;
 use Phalcon\DiInterface;
 use Phalcon\Events\Manager;
@@ -35,6 +36,7 @@ class Backend implements ModuleDefinitionInterface
             $eventsManager = new Manager;
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
             $eventsManager->attach('dispatch:beforeException', new BackendNotFoundPlugin);
+            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin());
 
             $dispatcher->setEventsManager($eventsManager);
 
