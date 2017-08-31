@@ -139,6 +139,11 @@ class Services extends BaseServices
     protected function initAnalytics()
     {
         $keyFileLocation = SITE_PATH . 'config/service-account-credentials.json';
+        $keyFileEnvLocation = SITE_PATH . 'env/service-account-credentials.json';
+
+        if(is_readable($keyFileEnvLocation)){
+            $keyFileLocation = $keyFileEnvLocation;
+        }
 
         // Create and configure a new client object.
         $client = new \Google_Client();
