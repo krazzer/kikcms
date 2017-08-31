@@ -5,25 +5,24 @@ use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\FactoryDefault\Cli;
 
-$config    = new Ini(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini');
-$configDev = new Ini(SITE_PATH . 'vendor/kiksaus/kikcms/config/config.dev.ini');
-
-$configSiteFile    = SITE_PATH . 'config/config.ini';
-$configSiteDevFile = SITE_PATH . 'config/config.dev.ini';
+$configFile     = SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini';
+$configSiteFile = SITE_PATH . 'config/config.ini';
+$configEnvFile  = SITE_PATH . 'env/config.ini';
 
 if ( ! is_readable($configSiteFile)) {
-    throw new Exception('No config file found! Should be present at ' . $configSiteFile);
+    throw new Exception('No site config file found! Should be present at ' . $configSiteFile);
 }
 
-$siteConfig = new Ini($configSiteFile);
-$config->merge($siteConfig);
-
-if (is_readable($configSiteDevFile)) {
-    $config->merge($configDev);
-
-    $configSiteDev = new Ini($configSiteDevFile);
-    $config->merge($configSiteDev);
+if ( ! is_readable($configEnvFile)) {
+    throw new Exception('No env config file found! Should be present at ' . $configEnvFile);
 }
+
+$config     = new Ini($configFile);
+$configSite = new Ini($configSiteFile);
+$configEnv  = new Ini($configEnvFile);
+
+$config->merge($configSite);
+$config->merge($configEnv);
 
 $loader = (new \Phalcon\Loader())
     ->registerNamespaces([
@@ -36,8 +35,8 @@ $loader = (new \Phalcon\Loader())
     ])
     ->register();
 
-if($cli){
-    class ApplicationServices extends Cli {}
+if ($cli) {
+    class ApplicationServices extends Cli{}
 } else {
     class ApplicationServices extends FactoryDefault{}
 }
