@@ -54,6 +54,29 @@ class BaseServices extends ApplicationServices
         $this->bindServices();
     }
 
+    /**
+     * @param string|null $group
+     * @param string|null $item
+     * @return mixed
+     */
+    public function getConfig(string $group = null, string $item = null)
+    {
+        $config = $this->get('config');
+
+        if( ! $group){
+            return $config;
+        }
+
+        if( ! $item){
+            return $config->get($group);
+        }
+
+        return $config->get($group)->get($item);
+    }
+
+    /**
+     * Binds all services
+     */
     protected function bindServices()
     {
         $reflection = new \ReflectionObject($this);
@@ -145,7 +168,7 @@ class BaseServices extends ApplicationServices
         $pluginsList = $this->get('websiteSettings')->getPluginList();
 
         foreach ($pluginsList as $plugin) {
-            $plugin->addServices();
+            $plugin->addServices($this);
             $this->addPluginSimpleServices($plugin);
         }
     }

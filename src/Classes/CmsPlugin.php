@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes;
 
+use KikCMS\Services\Base\BaseServices;
 use Phalcon\Mvc\Router\Group;
 use ReflectionClass;
 
@@ -10,18 +11,30 @@ abstract class CmsPlugin
     /**
      * @param Group $backend
      */
-    public function addBackendRoutes(Group $backend)
-    {
-
-    }
+    public abstract function addBackendRoutes(Group $backend);
 
     /**
      * @param Group $frontend
      */
-    public function addFrontendRoutes(Group $frontend)
-    {
+    public abstract function addFrontendRoutes(Group $frontend);
 
-    }
+    /**
+     * @return string
+     */
+    public abstract function getName(): string;
+
+    /**
+     * Adds services
+     * @param BaseServices $services
+     */
+    public abstract function addServices(BaseServices $services);
+
+    /**
+     * Simple services are classes that are simply instantiated without any additional parameters
+     *
+     * @return array
+     */
+    public abstract function getSimpleServices(): array;
 
     /**
      * @return string
@@ -46,26 +59,5 @@ abstract class CmsPlugin
     public function getTranslationsDirectory(): string
     {
         return dirname($this->getSourceDirectory()) . '/resources/translations/';
-    }
-
-    /**
-     * @return string
-     */
-    public abstract function getName(): string;
-
-    /**
-     * @return array
-     */
-    public function getSimpleServices(): array
-    {
-        return [];
-    }
-
-    /**
-     * Adds services
-     */
-    public function addServices()
-    {
-
     }
 }

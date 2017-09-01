@@ -66,6 +66,10 @@ return [
         'delete' => 'Delete',
     ],
 
+    'pages' => [
+        'warningTemplateChange' => 'If you switch template, unsaved changes will not be saved, do you want to continue?',
+    ],
+
     'system' => [
         'langCode'           => 'en',
         'phpDateFormat'      => 'Y-m-d',

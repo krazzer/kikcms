@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
+use Phalcon\Http\Response;
 
 /**
  * Contains methods to set the view's variables
@@ -22,9 +23,9 @@ class TemplateVariablesBase extends WebsiteExtendable
 
     /**
      * @param string $templateFile
-     * @return array
+     * @return array|Response
      */
-    public function getTemplateVariables(string $templateFile): array
+    public function getTemplateVariables(string $templateFile)
     {
         $methodName = 'get' . ucfirst($templateFile) . 'Variables';
 

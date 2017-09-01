@@ -25,7 +25,12 @@ use Website\Classes\WebsiteSettings;
  */
 class Translator extends Injectable
 {
-    private $languageCode = 'nl';
+    private $languageCode = null;
+
+    public function __construct()
+    {
+        $this->languageCode = $this->languageService->getDefaultLanguageCode();
+    }
 
     /**
      * @param string|int|null $key
