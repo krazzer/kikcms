@@ -107,14 +107,6 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->render();
-    }
-
-    /**
      * Adds required assets
      */
     public function addAssets()

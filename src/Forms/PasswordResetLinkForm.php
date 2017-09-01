@@ -39,7 +39,7 @@ class PasswordResetLinkForm extends WebForm
         if ( ! $user) {
             // pretend we send the mail, so the user won't know whether the given email adres exists or not
             $this->flash->success($this->translator->tl('login.reset.flash'));
-            unset($_POST);
+            $_POST = [];
             return;
         }
 
@@ -53,7 +53,7 @@ class PasswordResetLinkForm extends WebForm
 
         if ($this->mailService->sendServiceMail($user->email, $subject, $body, $parameters)) {
             $this->flash->success($this->translator->tl('login.reset.flash'));
-            unset($_POST);
+            $_POST = [];
         } else {
             $this->flash->error($this->translator->tl('login.reset.error'));
         }
