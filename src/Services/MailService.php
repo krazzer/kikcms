@@ -76,7 +76,28 @@ class MailService extends Injectable
     }
 
     /**
-     * Send a service type mail
+     * Send a mail from the company's name to a user
+     *
+     * @param $to
+     * @param string $subject
+     * @param string $body
+     * @return int
+     */
+    public function sendMailUser($to, string $subject, string $body): int
+    {
+        $companyName  = $this->config->company->name;
+        $companyEmail = $this->config->company->email;
+
+        $parameters = [
+            'logo'    => $this->config->company->logoMail,
+            'address' => $companyName . ', ' . $this->config->company->address,
+        ];
+
+        return $this->sendMail([$companyEmail => $companyName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
+    }
+
+    /**
+     * Send a service type mail, an email send from the CMS to someone using the CMS
      *
      * @param $to
      * @param string $subject
@@ -89,6 +110,11 @@ class MailService extends Injectable
     {
         $developerEmail = $this->applicationConfig->developerEmail;
         $developerName  = $this->applicationConfig->developerName;
+
+        $parameters = array_merge([
+            'logo'    => 'cmsassets/images/kikcms.png',
+            'address' => 'Kiksaus, Heinenwaard 4, 1824 DZ Alkmaar',
+        ], $parameters);
 
         return $this->sendMail([$developerEmail => $developerName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
     }
