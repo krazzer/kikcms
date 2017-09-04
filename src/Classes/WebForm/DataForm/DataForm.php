@@ -144,36 +144,6 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @param array $input
-     * @return void
-     */
-    public function successAction(array $input)
-    {
-        $saveSuccess = $this->saveData($input);
-
-        if ($saveSuccess && ! $this->fieldMap->has(self::EDIT_ID)) {
-            $this->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
-        }
-
-        if ($saveSuccess) {
-            $this->onSave();
-            $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
-        } else {
-            $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
-            $this->flash->error($this->translator->tl('dataForm.saveFailure'));
-        }
-    }
-
-    /**
-     * @param array $input
-     * @return ErrorContainer
-     */
-    public function validate(array $input): ErrorContainer
-    {
-        return new ErrorContainer();
-    }
-
-    /**
      * @return null|DataTable
      */
     public function getDataTable(): ?DataTable
@@ -204,6 +174,41 @@ abstract class DataForm extends WebForm
         $this->cachedEditData[$editId] = $data;
 
         return $data;
+    }
+
+    /**
+     * What happens after successfully saving the Form's data
+     */
+    public function saveSuccessAction()
+    {
+        $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+    }
+
+    /**
+     * @param array $input
+     * @return Response|string
+     */
+    public function successAction(array $input)
+    {
+        $saveSuccess = $this->saveData($input);
+
+        if ($saveSuccess) {
+            return $this->saveSuccessAction();
+        } else {
+            $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
+            $this->flash->error($this->translator->tl('dataForm.saveFailure'));
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $input
+     * @return ErrorContainer
+     */
+    public function validate(array $input): ErrorContainer
+    {
+        return new ErrorContainer();
     }
 
     /**
@@ -357,6 +362,12 @@ abstract class DataForm extends WebForm
 
         if ($success) {
             $this->getFilters()->setEditId($storageData->getEditId());
+
+            if( ! $this->fieldMap->has(self::EDIT_ID)){
+                $this->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
+            }
+
+            $this->onSave();
         }
 
         return $success;

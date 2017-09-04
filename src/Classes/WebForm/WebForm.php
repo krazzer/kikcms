@@ -669,7 +669,7 @@ abstract class WebForm extends Renderable
      * By default it returns a string but you can also redirect to a thank you page for instance
      *
      * @param array $input
-     * @return bool|Response|string
+     * @return null|Response|string
      */
     protected function successAction(array $input)
     {
