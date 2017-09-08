@@ -5,7 +5,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element;
+use Phalcon\Forms\ElementInterface;
 
 class DataTableField extends Field
 {
@@ -16,10 +16,10 @@ class DataTableField extends Field
     private $renderedDataTable;
 
     /**
-     * @param Element $element
+     * @param ElementInterface $element
      * @param DataTable $dataTable
      */
-    public function __construct(Element $element, DataTable $dataTable)
+    public function __construct(ElementInterface $element, DataTable $dataTable)
     {
         parent::__construct($element);
 

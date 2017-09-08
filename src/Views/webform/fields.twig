@@ -57,6 +57,16 @@
     </div>
 {%- endblock -%}
 
+{%- block fieldHtml -%}
+    {# @var field \KikCMS\Classes\WebForm\Fields\Html #}
+    <div{{ fieldContainterAttributes|raw }}>
+        <label>{{ field.label|raw }}</label>
+        <div class="field">
+            {{ field.content|raw }}
+        </div>
+    </div>
+{%- endblock -%}
+
 {%- block fieldMultiCheckbox %}
     <div{{ fieldContainterAttributes|raw }}>
         {{ form.label(element.name)|raw }}

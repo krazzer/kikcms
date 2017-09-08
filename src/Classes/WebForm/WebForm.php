@@ -17,6 +17,7 @@ use KikCMS\Classes\WebForm\Fields\Checkbox;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
+use KikCMS\Classes\WebForm\Fields\Html;
 use KikCMS\Classes\WebForm\Fields\Textarea as TextareaField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
@@ -251,9 +252,9 @@ abstract class WebForm extends Renderable
      */
     public function addDataTableField(DataTable $dataTable, string $label)
     {
-        $dataTableElement = new Hidden('dt');
-        $dataTableElement->setLabel($label);
-        $dataTableElement->setDefault($dataTable->getInstance());
+        $dataTableElement = (new Hidden('dt'))
+            ->setLabel($label)
+            ->setDefault($dataTable->getInstance());
 
         $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
 
@@ -273,12 +274,29 @@ abstract class WebForm extends Renderable
      */
     public function addFileField(string $key, string $label, array $validators = []): Field
     {
-        $file = new Hidden($key);
-        $file->setLabel($label);
-        $file->addValidators($validators);
-        $file->setAttribute('class', 'fileId');
+        $file = (new Hidden($key))
+            ->setLabel($label)
+            ->addValidators($validators)
+            ->setAttribute('class', 'fileId');
 
         return $this->addField(new FileField($file));
+    }
+
+    /**
+     * Add HTML to a form
+     *
+     * @param string $label
+     * @param string $content
+     * @return Field|Html
+     */
+    public function addHtml(string $label, string $content)
+    {
+        $html = (new Html)
+            ->setKey('html')
+            ->setLabel($label)
+            ->setContent($content);
+
+        return $this->addField($html);
     }
 
     /**
@@ -289,10 +307,10 @@ abstract class WebForm extends Renderable
      */
     public function addPasswordField(string $key, string $label, array $validators = []): Field
     {
-        $password = new Password($key);
-        $password->setLabel($label);
-        $password->setAttribute('class', 'form-control');
-        $password->addValidators($validators);
+        $password = (new Password($key))
+            ->setLabel($label)
+            ->setAttribute('class', 'form-control')
+            ->addValidators($validators);
 
         return $this->addField(new Field($password));
     }

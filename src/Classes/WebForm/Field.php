@@ -23,6 +23,7 @@ class Field
     const TYPE_MULTI_CHECKBOX    = 'multiCheckbox';
     const TYPE_WYSIWYG           = 'wysiwyg';
     const TYPE_HIDDEN            = 'hidden';
+    const TYPE_HTML              = 'html';
     const TYPE_FILE              = 'file';
     const TYPE_BUTTON            = 'button';
     const TYPE_DATE              = 'date';
