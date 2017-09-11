@@ -13,13 +13,16 @@ use Phalcon\Validation\Validator\Email;
  */
 class LoginForm extends WebForm
 {
+    const FIELD_USERNAME = 'username';
+    const FIELD_PASSWORD = 'password';
+
     /**
      * @inheritdoc
      */
     protected function initialize()
     {
-        $this->addTextField('email', 'E-mail adres', [new PresenceOf(), new Email()]);
-        $this->addPasswordField('password', 'Wachtwoord', [new PresenceOf()]);
+        $this->addTextField(self::FIELD_USERNAME, 'E-mail adres', [new PresenceOf(), new Email()]);
+        $this->addPasswordField(self::FIELD_PASSWORD, 'Wachtwoord', [new PresenceOf()]);
 
         $this->setPlaceHolderAsLabel(true);
         $this->setSendLabel('Inloggen');
@@ -30,7 +33,7 @@ class LoginForm extends WebForm
      */
     protected function successAction(array $input)
     {
-        $user = $this->userService->getByEmail($input['email']);
+        $user = $this->userService->getByEmail($input[self::FIELD_USERNAME]);
 
         if( ! $user->password){
             $this->flash->notice($this->translator->tl('login.activate'));
@@ -49,11 +52,11 @@ class LoginForm extends WebForm
     {
         $errorContainer = new ErrorContainer();
 
-        $email    = $input['email'];
-        $password = $input['password'];
+        $email    = $input[self::FIELD_USERNAME];
+        $password = $input[self::FIELD_PASSWORD];
 
         if ( ! $this->userService->isValidOrNotActivatedYet($email, $password)) {
-            $errorContainer->addFormError($this->translator->tl('login.failed'), ['email', 'password']);
+            $errorContainer->addFormError($this->translator->tl('login.failed'), [self::FIELD_USERNAME, self::FIELD_PASSWORD]);
             return $errorContainer;
         }
 

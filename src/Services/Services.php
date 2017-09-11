@@ -10,6 +10,7 @@ use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
+use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
@@ -55,7 +56,6 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
 
-use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 
@@ -263,13 +263,13 @@ class Services extends BaseServices
 
         $logger = new Logger('logger');
 
-        if ($isProduction) {
+        if ( ! $isProduction) {
             $developerEmail = $this->getApplicationConfig()->developerEmail;
             $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
             $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);
             $handler->setContentType('text/html');
-            $handler->setFormatter(new HtmlFormatter());
+            $handler->setFormatter(new PhalconHtmlFormatter());
 
             $logger->pushHandler($handler);
         }
