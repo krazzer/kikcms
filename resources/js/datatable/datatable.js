@@ -226,6 +226,10 @@ var DataTable = Class.extend({
         var self  = this;
         var $rows = this.$table.find('tbody tr');
 
+        $rows.find('td a').click(function (e) {
+            e.stopPropagation();
+        });
+
         $rows.find('td:not(.action)').click(function () {
             var $row = $(this).parent();
 

@@ -330,13 +330,14 @@ return [
     ],
 
     'system' => [
-        'langCode'           => 'nl',
-        'locale'             => 'nl_NL',
-        'phpDateFormat'      => 'd-m-Y',
-        'momentJsDateFormat' => 'DD-MM-YYYY',
-        'dateDisplayFormat'  => '%e %b %Y',
-        'monthDisplayFormat' => '%b %Y',
-        'decimalNotation'    => 'comma',
+        'langCode'              => 'nl',
+        'locale'                => 'nl_NL',
+        'phpDateFormat'         => 'd-m-Y',
+        'momentJsDateFormat'    => 'DD-MM-YYYY',
+        'dateDisplayFormat'     => '%e %b %Y',
+        'dateTimeDisplayFormat' => '%e %b %Y, om %H:%M',
+        'monthDisplayFormat'    => '%b %Y',
+        'decimalNotation'       => 'comma',
     ],
 
     'webform' => [

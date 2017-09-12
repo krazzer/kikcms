@@ -263,7 +263,7 @@ class Services extends BaseServices
 
         $logger = new Logger('logger');
 
-        if ( ! $isProduction) {
+        if ($isProduction) {
             $developerEmail = $this->getApplicationConfig()->developerEmail;
             $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
