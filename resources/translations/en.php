@@ -61,6 +61,10 @@ return [
         ]
     ],
 
+    'fields' => [
+        'price' => 'Prijs',
+    ],
+
     'global' => [
         'cancel' => 'Cancel',
         'delete' => 'Delete',
@@ -71,10 +75,12 @@ return [
     ],
 
     'system' => [
-        'langCode'           => 'en',
-        'phpDateFormat'      => 'Y-m-d',
-        'momentJsDateFormat' => 'YYYY-MM-DD',
-        'decimalNotation'    => 'point',
+        'langCode'              => 'en',
+        'phpDateFormat'         => 'Y-m-d',
+        'dateDisplayFormat'     => '%b %e %Y',
+        'dateTimeDisplayFormat' => '%b %e %Y, at %H:%M',
+        'momentJsDateFormat'    => 'YYYY-MM-DD',
+        'decimalNotation'       => 'point',
     ],
 
     'webform' => [

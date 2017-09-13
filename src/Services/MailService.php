@@ -55,7 +55,7 @@ class MailService extends Injectable
      * @param null $template
      * @param array $parameters
      *
-     * @return int
+     * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = []): int
     {
@@ -81,7 +81,8 @@ class MailService extends Injectable
      * @param $to
      * @param string $subject
      * @param string $body
-     * @return int
+     *
+     * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendMailUser($to, string $subject, string $body): int
     {
@@ -104,7 +105,7 @@ class MailService extends Injectable
      * @param string $body
      * @param array $parameters
      *
-     * @return int
+     * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendServiceMail($to, string $subject, string $body, array $parameters = []): int
     {

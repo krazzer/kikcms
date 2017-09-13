@@ -19,7 +19,6 @@ var KikCmsClass = Class.extend({
             if ($renderable.attr('data-rendered') == "true") {
                 return;
             }
-
             var renderableData   = $.parseJSON($renderable.attr('data-renderable'));
             var renderableObject = new window[renderableData.class];
 

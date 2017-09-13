@@ -24,7 +24,7 @@ class Textarea extends Field
     public function rows(int $rows)
     {
         $style = $this->getElement()->getAttribute('style');
-        $this->getElement()->setAttribute('style', $style . 'height: ' . $rows * 24 . 'px;');
+        $this->getElement()->setAttribute('style', $style . 'height: ' . (($rows * 19) + 16) . 'px;');
 
         return $this;
     }
