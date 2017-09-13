@@ -275,30 +275,33 @@
                                         {% endif %}
 
                                         {% block mailBody '' %}
-                                        <br><br>
-                                        <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                                            <tbody>
-                                            <tr>
-                                                <td align="left">
-                                                    <table border="0" cellpadding="0" cellspacing="0">
-                                                        <tbody>
-                                                        <tr>
-                                                            {% for button in buttons %}
-                                                                {% block button %}
-                                                                    <td>
-                                                                        <a href="{{ button.url }}" target="_blank">
-                                                                            {{ button.label }}
-                                                                        </a>
-                                                                    </td>
-                                                                {% endblock %}
-                                                            {% endfor %}
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+
+                                        {% if buttons %}
+                                            <br><br>
+                                            <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+                                                <tbody>
+                                                <tr>
+                                                    <td align="left">
+                                                        <table border="0" cellpadding="0" cellspacing="0">
+                                                            <tbody>
+                                                            <tr>
+                                                                {% for button in buttons %}
+                                                                    {% block button %}
+                                                                        <td>
+                                                                            <a href="{{ button.url }}" target="_blank">
+                                                                                {{ button.label }}
+                                                                            </a>
+                                                                        </td>
+                                                                    {% endblock %}
+                                                                {% endfor %}
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        {% endif %}
                                     </td>
                                 </tr>
                             </table>
