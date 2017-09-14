@@ -21,10 +21,26 @@ class TemplateFieldsBase extends WebsiteExtendable
     {
         $methodName = 'field' . ucfirst($variable);
 
-        if( ! method_exists($this, $methodName)){
+        if ( ! method_exists($this, $methodName)) {
             return null;
         }
 
         return $this->$methodName($form);
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplates(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return [];
     }
 }

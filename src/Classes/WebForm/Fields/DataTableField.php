@@ -4,8 +4,9 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\ElementInterface;
+use Phalcon\Forms\Element\Hidden;
 
 class DataTableField extends Field
 {
@@ -16,14 +17,21 @@ class DataTableField extends Field
     private $renderedDataTable;
 
     /**
-     * @param ElementInterface $element
      * @param DataTable $dataTable
+     * @param string $label
      */
-    public function __construct(ElementInterface $element, DataTable $dataTable)
+    public function __construct(DataTable $dataTable, string $label)
     {
-        parent::__construct($element);
+        $element = (new Hidden('dt'))
+            ->setLabel($label)
+            ->setDefault($dataTable->getInstance());
+
+        $storage = (new OneToMany)
+            ->setTableModel($dataTable->getModel());
 
         $this->dataTable = $dataTable;
+        $this->storage   = $storage;
+        $this->element   = $element;
     }
 
     /**

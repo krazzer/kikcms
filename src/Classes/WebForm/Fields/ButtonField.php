@@ -5,7 +5,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 
-class Button extends Field
+class ButtonField extends Field
 {
     /** @var string */
     private $info;
@@ -18,6 +18,23 @@ class Button extends Field
 
     /** @var string */
     private $label;
+
+    /**
+     * @param string $label
+     * @param string $info
+     * @param string $buttonLabel
+     * @param string $route
+     */
+    public function __construct(string $label, string $info, string $buttonLabel, string $route)
+    {
+        $this->key = 'button';
+
+        $this->info  = $info;
+        $this->label = $label;
+        $this->route = $route;
+
+        $this->buttonLabel = $buttonLabel;
+    }
 
     /**
      * @inheritdoc
@@ -37,7 +54,7 @@ class Button extends Field
 
     /**
      * @param string $info
-     * @return $this|Button
+     * @return $this|ButtonField
      */
     public function setInfo(string $info)
     {
@@ -55,7 +72,7 @@ class Button extends Field
 
     /**
      * @param string $buttonLabel
-     * @return $this|Button
+     * @return $this|ButtonField
      */
     public function setButtonLabel(string $buttonLabel)
     {
@@ -73,7 +90,7 @@ class Button extends Field
 
     /**
      * @param string $route
-     * @return $this|Button
+     * @return $this|ButtonField
      */
     public function setRoute(string $route)
     {
@@ -91,9 +108,9 @@ class Button extends Field
 
     /**
      * @param string $label
-     * @return Button
+     * @return ButtonField
      */
-    public function setLabel(string $label): Button
+    public function setLabel(string $label): ButtonField
     {
         $this->label = $label;
         return $this;

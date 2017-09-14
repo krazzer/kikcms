@@ -5,13 +5,25 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 
-class Html extends Field
+class HtmlField extends Field
 {
     /** @var string */
     private $content;
 
     /** @var string */
     private $label;
+
+    /**
+     * @param string $label
+     * @param string $content
+     */
+    public function __construct(string $label, string $content)
+    {
+        $this->setKey('html');
+
+        $this->label   = $label;
+        $this->content = $content;
+    }
 
     /**
      * @return string
@@ -23,9 +35,9 @@ class Html extends Field
 
     /**
      * @param string $content
-     * @return Html
+     * @return HtmlField
      */
-    public function setContent(string $content): Html
+    public function setContent(string $content): HtmlField
     {
         $this->content = $content;
         return $this;
@@ -41,9 +53,9 @@ class Html extends Field
 
     /**
      * @param string $label
-     * @return Html
+     * @return HtmlField
      */
-    public function setLabel(string $label): Html
+    public function setLabel(string $label): HtmlField
     {
         $this->label = $label;
         return $this;

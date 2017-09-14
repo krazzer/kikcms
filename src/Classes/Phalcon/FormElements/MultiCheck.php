@@ -28,10 +28,12 @@ class MultiCheck extends Element
 
     /**
      * @param array $options
+     * @return $this|Element
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): Element
     {
         $this->options = $options;
+        return $this;
     }
 
     /**

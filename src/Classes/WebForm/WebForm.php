@@ -3,34 +3,15 @@
 namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
-use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Classes\Phalcon\FormElements\MultiCheck;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
-use KikCMS\Classes\WebForm\Fields\Autocomplete;
-use KikCMS\Classes\WebForm\Fields\Button;
-use KikCMS\Classes\WebForm\Fields\Checkbox;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
-use KikCMS\Classes\WebForm\Fields\FileField;
-use KikCMS\Classes\WebForm\Fields\Hidden as HiddenField;
-use KikCMS\Classes\WebForm\Fields\Html;
-use KikCMS\Classes\WebForm\Fields\Textarea as TextareaField;
-use KikCMS\Classes\WebForm\Fields\MultiCheckbox;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
-use KikCMS\Classes\WebForm\Fields\Wysiwyg;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
-use Phalcon\Forms\Element\Check;
-use Phalcon\Forms\Element\Date;
-use Phalcon\Forms\Element\Hidden;
-use Phalcon\Forms\Element\Password;
-use Phalcon\Forms\Element\Select;
-use Phalcon\Forms\Element\Text;
-use Phalcon\Forms\Element\TextArea;
+use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Forms\ElementInterface;
 use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
@@ -41,9 +22,12 @@ use Phalcon\Validation;
  * @property View $view
  * @property Validation $validation
  * @property Translator $translator
+ * @property DateTimeService $dateTimeService
  */
 abstract class WebForm extends Renderable
 {
+    use FieldShortcuts;
+
     const WEB_FORM_ID    = 'webFormId';
     const WEB_FORM_CLASS = 'webFormClass';
 
@@ -159,227 +143,19 @@ abstract class WebForm extends Renderable
             $this->form->add($field->getElement());
         }
 
+        if ($this->isPlaceHolderAsLabel()) {
+            $field->setAttribute('placeholder', $field->getElement()->getLabel());
+
+            $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
+        }
+
+        if($field->getType() == Field::TYPE_DATE){
+            $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
+            $field->setAttribute('data-format', $momentJsDateFormat);
+            $field->getElement()->addValidator($this->dateTimeService->getValidator());
+        }
+
         return $field;
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param string $route
-     * @param array $validators
-     * @return Field|Autocomplete
-     */
-    public function addAutoCompleteField(string $key, string $label, string $route, array $validators = []): Field
-    {
-        $element = (new Text($key))
-            ->setLabel($label)
-            ->setAttribute('class', 'form-control autocomplete')
-            ->setAttribute('autocomplete', 'off')
-            ->setAttribute('data-field-key', $key)
-            ->setAttribute('data-route', $route)
-            ->addValidators($validators);
-
-        return $this->addField(new Autocomplete($element));
-    }
-
-    /**
-     * Add a button. Can be used if specific functionality is managed somewhere else than in this form.
-     *
-     * @param string $label
-     * @param string $info
-     * @param string $buttonLabel
-     * @param string $route
-     * @return Field|Button
-     */
-    public function addButtonField(string $label, string $info, string $buttonLabel, string $route)
-    {
-        $button = (new Button())
-            ->setKey('button')
-            ->setInfo($info)
-            ->setLabel($label)
-            ->setButtonLabel($buttonLabel)
-            ->setRoute($route);
-
-        return $this->addField($button);
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field|Checkbox
-     */
-    public function addCheckboxField(string $key, string $label, array $validators = []): Field
-    {
-        $checkbox = new Check($key);
-        $checkbox->setLabel($label);
-        $checkbox->setAttribute('type', 'checkbox');
-        $checkbox->addValidators($validators);
-
-        return $this->addField(new Checkbox($checkbox));
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Fields\Date|Field
-     */
-    public function addDateField(string $key, string $label, array $validators = []): Field
-    {
-        $phpDateFormat      = $this->translator->tl('system.phpDateFormat');
-        $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
-
-        $validators[] = new \KikCMS\Classes\Phalcon\Validator\Date([
-            "format"     => $phpDateFormat,
-            "allowEmpty" => true,
-        ]);
-
-        $date = new Date($key);
-        $date->setLabel($label);
-        $date->setAttribute('class', 'form-control');
-        $date->setAttribute('data-format', $momentJsDateFormat);
-        $date->addValidators($validators);
-
-        return $this->addField(new Fields\Date($date));
-    }
-
-    /**
-     * @param DataTable $dataTable
-     * @param string $label
-     *
-     * @return Field|DataTableField
-     */
-    public function addDataTableField(DataTable $dataTable, string $label)
-    {
-        $dataTableElement = (new Hidden('dt'))
-            ->setLabel($label)
-            ->setDefault($dataTable->getInstance());
-
-        $dataTableField = $this->addField(new DataTableField($dataTableElement, $dataTable));
-
-        $storage = (new OneToMany())
-            ->setTableModel($dataTable->getModel());
-
-        $dataTableField->store($storage);
-
-        return $dataTableField;
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field|FileField
-     */
-    public function addFileField(string $key, string $label, array $validators = []): Field
-    {
-        $file = (new Hidden($key))
-            ->setLabel($label)
-            ->addValidators($validators)
-            ->setAttribute('class', 'fileId');
-
-        return $this->addField(new FileField($file));
-    }
-
-    /**
-     * Add HTML to a form
-     *
-     * @param string $label
-     * @param string $content
-     * @return Field|Html
-     */
-    public function addHtml(string $label, string $content)
-    {
-        $html = (new Html)
-            ->setKey('html')
-            ->setLabel($label)
-            ->setContent($content);
-
-        return $this->addField($html);
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field
-     */
-    public function addPasswordField(string $key, string $label, array $validators = []): Field
-    {
-        $password = (new Password($key))
-            ->setLabel($label)
-            ->setAttribute('class', 'form-control')
-            ->addValidators($validators);
-
-        return $this->addField(new Field($password));
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $options
-     *
-     * @return Field|MultiCheckbox
-     */
-    public function addMultiCheckboxField(string $key, string $label, array $options): Field
-    {
-        $multiCheckbox = new MultiCheck($key);
-        $multiCheckbox->setAttribute('type', 'multiCheckbox');
-        $multiCheckbox->setLabel($label);
-        $multiCheckbox->setOptions($options);
-
-        return $this->addField(new MultiCheckbox($multiCheckbox));
-    }
-
-    /**
-     * @param string $key
-     * @param SelectDataTable $dataTable
-     * @param string $label
-     * @return Field|SelectDataTableField
-     */
-    public function addDataTableSelectField(string $key, SelectDataTable $dataTable, string $label)
-    {
-        $element = new Hidden($key);
-        $element->setLabel($label);
-
-        $dataTableField = $this->addField(new SelectDataTableField($element, $dataTable));
-
-        return $dataTableField;
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $options
-     * @param array $validators
-     * @return Field
-     */
-    public function addSelectField(string $key, string $label, array $options, array $validators = []): Field
-    {
-        $select = new Select($key);
-        $select->setLabel($label);
-        $select->addValidators($validators);
-        $select->setOptions($options);
-        $select->setAttribute('class', 'form-control');
-
-        return $this->addField(new Field($select));
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field
-     */
-    public function addTextField(string $key, string $label, array $validators = []): Field
-    {
-        $name = new Text($key);
-        $name->setLabel($label);
-        $name->setAttribute('class', 'form-control');
-        $name->addValidators($validators);
-
-        return $this->addField(new Field($name));
     }
 
     /**
@@ -395,54 +171,6 @@ abstract class WebForm extends Renderable
         }
 
         $this->tabs[] = $tab;
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field|TextareaField
-     */
-    public function addTextAreaField(string $key, string $label, array $validators = []): Field
-    {
-        $element = (new TextArea($key))
-            ->setLabel($label)
-            ->setAttribute('class', 'form-control')
-            ->addValidators($validators);
-
-        return $this->addField(new TextareaField($element));
-    }
-
-    /**
-     * @param string $key
-     * @param string $label
-     * @param array $validators
-     * @return Field|Wysiwyg
-     */
-    public function addWysiwygField(string $key, string $label, array $validators = []): Field
-    {
-        $element = (new TextArea($key))
-            ->setLabel($label)
-            ->setAttribute('style', 'height: 350px')
-            ->setAttribute('class', 'form-control wysiwyg')
-            ->setAttribute('id', $key . '_' . uniqid())
-            ->addValidators($validators);
-
-        return $this->addField(new Wysiwyg($element));
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $defaultValue
-     * @return Field
-     */
-    public function addHiddenField(string $key, $defaultValue = null): Field
-    {
-        $hidden = new Hidden($key);
-        $hidden->setDefault($defaultValue);
-        $hidden->setAttribute('type', 'hidden');
-
-        return $this->addField(new HiddenField($hidden));
     }
 
     /**
@@ -521,8 +249,9 @@ abstract class WebForm extends Renderable
         $errorContainer = new ErrorContainer();
 
         $this->initializeForm();
-        $this->initializeFields();
         $this->addAssets();
+
+        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
 
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
@@ -639,6 +368,7 @@ abstract class WebForm extends Renderable
         }
 
         $this->initialize();
+
         $this->initialized = true;
 
         return $this;
@@ -650,20 +380,6 @@ abstract class WebForm extends Renderable
     public function getEmptyFilters(): Filters
     {
         return new Filters();
-    }
-
-    /**
-     * Initialize fields
-     */
-    protected function initializeFields()
-    {
-        foreach ($this->fieldMap as $field) {
-            if ($this->isPlaceHolderAsLabel()) {
-                $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
-            }
-        }
-
-        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
     }
 
     /**
@@ -760,6 +476,7 @@ abstract class WebForm extends Renderable
     {
         // set selected ids filter for SelectDataTable
         if ($field->getElement()->getValue()) {
+            dlog($field->getElement()->getValue());
             $filters = $field->getDataTable()->getFilters();
             $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
         }

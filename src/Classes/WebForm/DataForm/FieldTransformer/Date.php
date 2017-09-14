@@ -6,6 +6,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use DateTime;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
+use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Config\DbConfig;
 
 /**
@@ -13,7 +14,7 @@ use KikCMS\Config\DbConfig;
  */
 class Date extends FieldTransformer
 {
-    /** @var \KikCMS\Classes\WebForm\Fields\Date */
+    /** @var DateField */
     protected $field;
 
     /**
