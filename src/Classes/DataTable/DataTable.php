@@ -407,13 +407,12 @@ abstract class DataTable extends Renderable
             /** @var DataForm $dataForm */
             $dataForm = new $formClass();
 
-            $dataForm->getFilters()
+            $dataForm
+                ->setDataTable($this)
+                ->getFilters()
                 ->setEditId($editId)
                 ->setLanguageCode($languageCode)
                 ->setParentEditId($parentEditId);
-
-            $dataForm->setDataTable($this);
-            $dataForm->initializeForm();
 
             $this->form = $dataForm;
             $this->form->setIdentifier('form_' . $instance);
@@ -471,14 +470,9 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable(true);
 
-        $this->form->addHiddenField(DataForm::EDIT_ID, $this->filters->getEditId());
         $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
-        if ($this->form->isPosted()) {
-            return $this->form->render();
-        }
-
-        return $this->form->renderWithData();
+        return $this->form->render();
     }
 
     /**

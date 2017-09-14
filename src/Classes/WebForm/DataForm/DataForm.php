@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\WebForm\DataForm;
 
+use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Renderable\Filters;
@@ -115,17 +116,24 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @return Response|string
+     * @inheritdoc
      */
-    public function renderWithData()
+    public function render()
     {
+        if ( ! $editId = $this->getFilters()->getEditId()) {
+            return parent::render();
+        }
+
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();
         $currentLangCode = $this->getFilters()->getLanguageCode();
-        $editId          = $this->getFilters()->getEditId();
+
+        $this->initializeForm();
 
         $editData        = $this->getEditData();
         $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode, $editData);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
+
+        $this->addHiddenField(DataForm::EDIT_ID, $editId);
 
         /** @var Field $field */
         foreach ($this->fieldMap as $key => $field) {
@@ -134,13 +142,13 @@ abstract class DataForm extends WebForm
             }
 
             if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key] && $currentLangCode != $defaultLangCode) {
-                if(is_string($defaultLangData[$key])) {
+                if (is_string($defaultLangData[$key])) {
                     $field->setPlaceholder($defaultLangData[$key]);
                 }
             }
         }
 
-        return $this->render();
+        return parent::render();
     }
 
     /**
@@ -153,9 +161,14 @@ abstract class DataForm extends WebForm
 
     /**
      * @return array
+     * @throws Exception
      */
     public function getEditData(): array
     {
+        if( ! $this->initialized){
+            throw new Exception('DataForm::getEditData cannot be called if the form is not initialized');
+        }
+
         $editId   = $this->getFilters()->getEditId();
         $langCode = $this->getFilters()->getLanguageCode();
 
@@ -169,7 +182,7 @@ abstract class DataForm extends WebForm
 
         $data = $this->getEditDataForModel();
         $data = $this->getDataStoredElseWhere($editId, $langCode, $data) + $data;
-        $data = $this->transformDataForDisplay($data);
+        $data = $this->transformDataForDisplay((array) $data);
 
         $this->cachedEditData[$editId] = $data;
 
@@ -363,7 +376,7 @@ abstract class DataForm extends WebForm
         if ($success) {
             $this->getFilters()->setEditId($storageData->getEditId());
 
-            if( ! $this->fieldMap->has(self::EDIT_ID)){
+            if ( ! $this->fieldMap->has(self::EDIT_ID)) {
                 $this->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
             }
 
