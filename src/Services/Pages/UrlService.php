@@ -84,7 +84,7 @@ class UrlService extends Injectable
                     return null;
                 }
 
-                if ( ! $langCode){
+                if ( ! $langCode) {
                     $langCode = $pageLanguage->getLanguageCode();
                 }
 
@@ -117,7 +117,7 @@ class UrlService extends Injectable
             $query->andWhere('pa.id = ' . $parent->getId());
         }
 
-        if($langCode){
+        if ($langCode) {
             $query->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :langCode:', ['langCode' => $langCode]);
         }
 
@@ -150,7 +150,7 @@ class UrlService extends Injectable
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         $url = $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
-            if($pageLanguage->page->type == Page::TYPE_LINK){
+            if ($pageLanguage->page->type == Page::TYPE_LINK) {
                 return $this->getUrlForLinkedPage($pageLanguage);
             }
 
@@ -160,8 +160,13 @@ class UrlService extends Injectable
 
             while ($parent && $parent->type != Page::TYPE_MENU) {
                 $pageLanguage = $this->pageLanguageService->getByPage($parent, $langCode);
-                $parent       = $pageLanguage->page->parent;
-                $urlParts[]   = $pageLanguage->url;
+
+                if ( ! $pageLanguage) {
+                    break;
+                }
+
+                $parent     = $pageLanguage->page->parent;
+                $urlParts[] = $pageLanguage->url;
             }
 
             return implode('/', array_reverse($urlParts));
@@ -298,11 +303,11 @@ class UrlService extends Injectable
     {
         $link = $pageLanguage->page->link;
 
-        if(empty($link)){
+        if (empty($link)) {
             return '';
         }
 
-        if( ! is_numeric($link)) {
+        if ( ! is_numeric($link)) {
             return $link;
         }
 

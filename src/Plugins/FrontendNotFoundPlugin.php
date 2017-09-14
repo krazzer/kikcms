@@ -38,6 +38,7 @@ class FrontendNotFoundPlugin extends Plugin
             $this->response->setStatusCode(404);
 
             $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
                 'controller' => 'frontend',
                 'action'     => 'pageNotFound',
                 "params"     => ['languageCode' => $exception->getLanguageCode()]

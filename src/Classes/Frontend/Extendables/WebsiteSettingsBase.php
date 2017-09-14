@@ -60,9 +60,9 @@ class WebsiteSettingsBase extends WebsiteExtendable
     }
 
     /**
-     * @param Group $backend
+     * @param Group $frontend
      */
-    public function addFrontendRoutes(Group $backend)
+    public function addFrontendRoutes(Group $frontend)
     {
 
     }
