@@ -21,7 +21,7 @@ class NameToId extends FieldTransformer
     public function toStorage($value)
     {
         /** @var Model $sourceModel */
-        $sourceModel = $this->field->getSourceModel();
+        $sourceModel = $this->field->getForm()->getModel();
 
         $model = $sourceModel::getByName($value);
 
@@ -34,7 +34,7 @@ class NameToId extends FieldTransformer
     public function toDisplay($value)
     {
         /** @var Model $sourceModel */
-        $sourceModel = $this->field->getSourceModel();
+        $sourceModel = $this->field->getForm()->getModel();
 
         $model = $sourceModel::getById($value);
 

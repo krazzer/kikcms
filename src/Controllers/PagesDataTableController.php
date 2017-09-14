@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Renderable\Renderable;
@@ -51,6 +52,8 @@ class PagesDataTableController extends DataTableController
 
     /**
      * @inheritdoc
+     *
+     * @return Renderable|DataTable
      */
     protected function getRenderable(): Renderable
     {

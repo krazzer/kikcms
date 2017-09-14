@@ -111,6 +111,14 @@ class Field
     }
 
     /**
+     * @return WebForm|DataForm
+     */
+    public function getForm(): WebForm
+    {
+        return $this->form;
+    }
+
+    /**
      * @param string $attribute
      * @param mixed $value
      *
