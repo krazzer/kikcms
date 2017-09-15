@@ -303,7 +303,7 @@ abstract class DataForm extends WebForm
             $storageData->addAdditionalInputValue($this->updatedAtField, (new \DateTime())->format(DbConfig::SQL_DATETIME_FORMAT));
         }
 
-        if ($this->getDataTable() && $this->getDataTable()->isSortable()) {
+        if ($this->getDataTable() && $this->getDataTable()->isSortable() && ! $this->getFilters()->getEditId()) {
             $this->setDisplayOrder($storageData);
         }
     }

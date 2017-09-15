@@ -68,10 +68,11 @@
 {%- endblock -%}
 
 {%- block fieldMultiCheckbox %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\MultiCheckboxField #}
     <div{{ fieldContainterAttributes|raw }}>
         {{ form.label(element.name)|raw }}
-        {% for key, label  in element.options %}
-            {% set checked = element.isset(key) ? ' checked="checked"' : '' %}
+        {% for key, label  in field.options %}
+            {% set checked = field.isset(key) ? ' checked="checked"' : '' %}
             <div class="checkbox">
                 <label>
                     <input type="checkbox" name="{{ element.name }}[]" value="{{ key }}"{{ checked }}>{{ label }}
