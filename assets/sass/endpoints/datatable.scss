@@ -22,6 +22,7 @@ body {
 
     .datatableThumbHoverContainer {
         position: absolute;
+        background-color: #fff;
         z-index: $zIndexAboveLevel10Window;
 
         img {
