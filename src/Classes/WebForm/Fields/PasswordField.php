@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Password;
 
 class PasswordField extends Field
 {
@@ -15,7 +15,7 @@ class PasswordField extends Field
      */
     public function __construct(string $key, string $label, array $validators)
     {
-        $element = (new Text($key))
+        $element = (new Password($key))
             ->setLabel($label)
             ->setAttribute('class', 'form-control')
             ->addValidators($validators);

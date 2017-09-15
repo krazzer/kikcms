@@ -20,6 +20,6 @@ class TextField extends Field
             ->setAttribute('class', 'form-control')
             ->addValidators($validators);
 
-        $this->setElement($element);
+        $this->element = $element;
     }
 }

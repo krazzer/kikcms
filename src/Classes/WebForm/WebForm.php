@@ -139,20 +139,14 @@ abstract class WebForm extends Renderable
         $field->setForm($this);
         $this->fieldMap->add($field, $field->getKey());
 
-        if ($field->getElement()) {
-            $this->form->add($field->getElement());
-        }
-
-        if ($this->isPlaceHolderAsLabel()) {
-            $field->setAttribute('placeholder', $field->getElement()->getLabel());
-
-            $field->getElement()->setAttribute('placeholder', $field->getElement()->getLabel());
-        }
-
-        if($field->getType() == Field::TYPE_DATE){
+        if ($field->getType() == Field::TYPE_DATE) {
             $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
             $field->setAttribute('data-format', $momentJsDateFormat);
             $field->getElement()->addValidator($this->dateTimeService->getValidator());
+        }
+
+        if ($field->getElement()) {
+            $this->form->add($field->getElement());
         }
 
         return $field;
@@ -369,6 +363,12 @@ abstract class WebForm extends Renderable
 
         $this->initialize();
 
+        if ($this->isPlaceHolderAsLabel()) {
+            foreach ($this->fieldMap as $field) {
+                $field->setAttribute('placeholder', $field->getElement()->getLabel());
+            }
+        }
+
         $this->initialized = true;
 
         return $this;
@@ -476,7 +476,6 @@ abstract class WebForm extends Renderable
     {
         // set selected ids filter for SelectDataTable
         if ($field->getElement()->getValue()) {
-            dlog($field->getElement()->getValue());
             $filters = $field->getDataTable()->getFilters();
             $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
         }
