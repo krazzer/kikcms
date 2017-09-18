@@ -11,7 +11,7 @@ use KikCMS\ObjectLists\FieldMap;
 use Phalcon\Di\Injectable;
 
 /**
- * Service for handling the Field Model objects
+ * Service for handling Templates & Fields defined in TemplateFields
  *
  * @property DbService $dbService
  * @property TemplateFieldsBase $templateFields
