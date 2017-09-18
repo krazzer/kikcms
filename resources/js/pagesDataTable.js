@@ -52,14 +52,14 @@ var PagesDataTable = DataTable.extend({
     },
 
     /**
-     * Overrides default DataTable getFilters to add the templateId parameters
+     * Overrides default DataTable getFilters to add the template parameters
      * @returns {*}
      */
     getFilters: function () {
         var filters = this.$.getFilters.call(this);
 
         this.getTemplateField().each(function () {
-            filters.templateId = $(this).val();
+            filters.template = $(this).val();
         });
 
         this.getWindow().find('input[name=type]').each(function () {
@@ -89,6 +89,6 @@ var PagesDataTable = DataTable.extend({
      * @returns {*|{}}
      */
     getTemplateField: function () {
-        return this.getWindow().find('#template_id');
+        return this.getWindow().find('#template');
     }
 });

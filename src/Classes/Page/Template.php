@@ -14,6 +14,9 @@ class Template
     /** @var array */
     private $fields = [];
 
+    /** @var bool */
+    private $hidden = false;
+
     /**
      * @param string $key
      * @param string $name
@@ -77,6 +80,24 @@ class Template
     public function setFields(array $fields): Template
     {
         $this->fields = $fields;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     * @return Template
+     */
+    public function setHidden(bool $hidden = true): Template
+    {
+        $this->hidden = $hidden;
         return $this;
     }
 }

@@ -116,16 +116,20 @@ abstract class WebForm extends Renderable
 
     /**
      * @param Field $field
+     * @param Tab|null $tab
      * @return Field
      */
-    public function addField(Field $field): Field
+    public function addField(Field $field, Tab $tab = null): Field
     {
         if ($field->getElement()) {
             $field->setKey($field->getElement()->getName());
         }
 
         $key = $field->getKey();
-        $field->setColumn($key);
+
+        if( ! $field->getColumn()){
+            $field->setColumn($key);
+        }
 
         if (array_key_exists($key, $this->keys)) {
             $newKey             = $key . (count($this->keys[$key]) + 1);
@@ -147,6 +151,10 @@ abstract class WebForm extends Renderable
 
         if ($field->getElement()) {
             $this->form->add($field->getElement());
+        }
+
+        if($tab){
+            $tab->addField($field);
         }
 
         return $field;

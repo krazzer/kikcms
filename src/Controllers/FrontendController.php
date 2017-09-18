@@ -101,7 +101,7 @@ class FrontendController extends BaseController
     private function loadPage(PageLanguage $pageLanguage): ?Response
     {
         $languageCode = $pageLanguage->language_code;
-        $templateFile = $pageLanguage->page->template->file;
+        $templateFile = $pageLanguage->page->template;
 
         $this->frontendHelper->initialize($languageCode, $pageLanguage);
         $this->translator->setLanguageCode($languageCode);

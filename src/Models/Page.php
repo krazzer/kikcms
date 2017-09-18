@@ -6,7 +6,6 @@ use KikCMS\Classes\Model\Model;
 
 /**
  * @property Page $parent
- * @property Template $template
  */
 class Page extends Model
 {
@@ -16,7 +15,7 @@ class Page extends Model
     const FIELD_ID            = 'id';
     const FIELD_TYPE          = 'type';
     const FIELD_PARENT_ID     = 'parent_id';
-    const FIELD_TEMPLATE_ID   = 'template_id';
+    const FIELD_TEMPLATE      = 'template';
     const FIELD_DISPLAY_ORDER = 'display_order';
     const FIELD_KEY           = 'key';
     const FIELD_LEVEL         = 'level';
@@ -45,7 +44,6 @@ class Page extends Model
         parent::initialize();
 
         $this->belongsTo("parent_id", Page::class, "id", ["alias" => "parent"]);
-        $this->belongsTo("template_id", Template::class, "id", ["alias" => "template"]);
     }
 
     /**
@@ -79,5 +77,13 @@ class Page extends Model
     public function getParentId(): int
     {
         return (int) $this->parent_id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return (string) $this->template;
     }
 }

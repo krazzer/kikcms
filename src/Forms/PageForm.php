@@ -4,18 +4,14 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
-use KikCMS\Config\KikCMSConfig;
-use KikCMS\Models\Field;
+use KikCMS\Classes\WebForm\Field;
 use KikCMS\Models\Page;
-use KikCMS\Models\PageContent;
-use KikCMS\Models\PageLanguageContent;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Models\Template;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
@@ -62,8 +58,8 @@ class PageForm extends DataForm
 
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE_ID, $this->translator->tl('fields.template'), Template::findAssoc());
-        $templateField->getElement()->setDefault($this->getTemplateId());
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
+        $templateField->getElement()->setDefault($this->getTemplate()->getKey());
 
         $tabAdvancedFields = [
             $templateField,
@@ -90,7 +86,7 @@ class PageForm extends DataForm
     }
 
     /**
-     * Overwrite to make sure the template_id is set when changed
+     * Overwrite to make sure the template is set when changed
      *
      * @inheritdoc
      */
@@ -102,7 +98,7 @@ class PageForm extends DataForm
         $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
         $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
 
-        $editData[Page::FIELD_TEMPLATE_ID] = $this->getTemplateId();
+        $editData[Page::FIELD_TEMPLATE] = $this->getTemplate()->getKey();
 
         $editData['pageName'] = $editData['name'] ?: $defaultLangPageName;
 
@@ -155,94 +151,43 @@ class PageForm extends DataForm
         $this->cacheService->clearPageCache();
     }
 
+    /**
+     * Adds fields for current template
+     */
     private function addFieldsForCurrentTemplate()
     {
-        $templateId = $this->getTemplateId();
-        $fields     = $this->templateService->getFieldsByTemplateId($templateId);
+        $fields = $this->templateService->getFieldsByTemplate($this->getTemplate());
 
         /** @var Field $field */
         foreach ($fields as $field) {
-            $this->addTemplateField($field);
+            $this->addField($field, $this->tabs[0]);
         }
     }
 
     /**
-     * @param Field $field
+     * @return Template|null
      */
-    private function addTemplateField(Field $field)
+    protected function getTemplate(): ?Template
     {
-        $fieldKey = 'pageContent' . $field->id;
+        $templateKey = $this->request->getPost('template');
 
-        switch ($field->type_id) {
-            case KikCMSConfig::CONTENT_TYPE_TEXT:
-                $templateField = $this->addTextField($fieldKey, $field->name);
-            break;
-
-            case KikCMSConfig::CONTENT_TYPE_TEXTAREA:
-                $templateField = $this->addTextAreaField($fieldKey, $field->name);
-            break;
-
-            case KikCMSConfig::CONTENT_TYPE_TINYMCE:
-                $templateField = $this->addWysiwygField($fieldKey, $field->name);
-            break;
-
-            case KikCMSConfig::CONTENT_TYPE_IMAGE:
-                $imagesOnly    = new FileType([FileType::OPTION_FILETYPES => ['jpg', 'jpeg', 'png', 'gif']]);
-                $templateField = $this->addFileField($fieldKey, $field->name, [$imagesOnly]);
-            break;
-
-            case KikCMSConfig::CONTENT_TYPE_CUSTOM:
-                $templateField = $this->templateFields->getFormField($field->variable, $this);
-            break;
-        }
-
-        if ( ! isset($templateField) || ! $templateField) {
-            return;
-        }
-
-        $templateField->setColumn('value');
-
-        $this->tabs[0]->addField($templateField);
-
-        if ( ! $templateField->getStorage()) {
-            if ($field->multilingual) {
-                $templateField->table(PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, true, [
-                    PageLanguageContent::FIELD_FIELD_ID => $field->id
-                ]);
-            } else {
-                $templateField->table(PageContent::class, PageContent::FIELD_PAGE_ID, false, [
-                    PageContent::FIELD_FIELD_ID => $field->id
-                ]);
-            }
-        }
-    }
-
-    /**
-     * @return int
-     */
-    protected function getTemplateId(): int
-    {
-        $templateId = $this->request->getPost('templateId');
-
-        if ($templateId) {
-            return $templateId;
+        if ($templateKey) {
+            return $this->templateService->getByKey($templateKey);
         }
 
         $editId = $this->getFilters()->getEditId();
 
         if ($editId) {
-            $template = $this->templateService->getTemplateByPageId($editId);
-
-            if ($template) {
-                return (int) $template->id;
+            if ($template = $this->templateService->getTemplateByPageId($editId)) {
+                return $template;
             }
         }
 
-        if( ! $firstTemplate = $this->templateService->getDefaultTemplate()){
-            return 0;
+        if ($firstTemplate = $this->templateService->getDefaultTemplate()) {
+            return $firstTemplate;
         }
 
-        return (int) $firstTemplate->id;
+        return null;
     }
 
     /**

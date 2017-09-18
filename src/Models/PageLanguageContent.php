@@ -11,6 +11,6 @@ class PageLanguageContent extends Model
 
     const FIELD_PAGE_ID       = 'page_id';
     const FIELD_LANGUAGE_CODE = 'language_code';
-    const FIELD_FIELD_ID      = 'field_id';
+    const FIELD_FIELD         = 'field';
     const FIELD_VALUE         = 'value';
 }

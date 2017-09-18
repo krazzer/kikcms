@@ -12,15 +12,16 @@ use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Models\Template;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableFilters;
+use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property PageRearrangeService $pageRearrangeService
  * @property Translator $translator
  * @property AccessControl $acl
+ * @property TemplateService $templateService
  */
 class Pages extends DataTable
 {
@@ -157,14 +158,9 @@ class Pages extends DataTable
     /**
      * @return array
      */
-    protected function getAllowedTemplateIds(): array
+    protected function getAllowedTemplateKeys(): array
     {
-        $query = (new Builder())
-            ->columns(['id'])
-            ->from(Template::class)
-            ->where('hide = 0');
-
-        return $this->dbService->getValues($query);
+        return $this->templateService->getAllowedKeys();
     }
 
     /**
@@ -175,27 +171,25 @@ class Pages extends DataTable
         $langCode        = $this->getFilters()->getLanguageCode();
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();
 
-        $query = new Builder();
-        $query
+        $query = (new Builder)
             ->from(['p' => $this->getModel()])
             ->leftJoin(PageLanguage::class, 'p.id = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
             ->leftJoin(PageLanguage::class, 'p.id = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
-            ->leftJoin(Template::class, 'p.template_id = t.id', 't')
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([
-                'pld.name AS default_language_name', 't.name AS template', 'pl.name', 'p.id', 'p.display_order',
+                'pld.name AS default_language_name', 'p.template', 'pl.name', 'p.id', 'p.display_order',
                 'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.url',
                 'pl.id AS plid', 'p.key'
             ]);
 
-        if($this->getAllowedTemplateIds()){
-            $query->where('t.id IS NULL OR t.id IN ({templateIds:array})', [
-                'templateIds' => $this->getAllowedTemplateIds()
-            ]);
+        if ( ! $this->getAllowedTemplateKeys()) {
+            return $query;
         }
 
-        return $query;
+        return $query->where('p.template IS NULL OR p.template IN ({templateKeys:array})', [
+            'templateKeys' => $this->getAllowedTemplateKeys()
+        ]);
     }
 
     /**

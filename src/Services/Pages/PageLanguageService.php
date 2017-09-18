@@ -5,7 +5,6 @@ namespace KikCMS\Services\Pages;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Config\KikCMSConfig;
-use KikCMS\Models\Field;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguage;
@@ -156,12 +155,11 @@ class PageLanguageService extends Injectable
             ->from(['p' => Page::class])
             ->leftJoin(PageContent::class, 'pc.page_id = p.id', 'pc')
             ->leftJoin(PageLanguageContent::class, 'plc.page_id = p.id AND plc.language_code = "' . $langCode . '"', 'plc')
-            ->join(Field::class, 'pc.field_id = f.id OR plc.field_id = f.id', 'f')
             ->where('p.id IN ({ids:array})', ['ids' => $pageMap->keys()])
             ->columns([
                 'IFNULL(plc.page_id, pc.page_id) as pageId',
                 'IFNULL(plc.value, pc.value) as value',
-                Field::FIELD_VARIABLE,
+                'IFNULL(plc.field, pc.field) as field',
             ]);
 
         $rows  = $this->dbService->getRows($query);
@@ -170,7 +168,7 @@ class PageLanguageService extends Injectable
         foreach ($rows as $row) {
             $pageId   = $row['pageId'];
             $value    = $row['value'];
-            $variable = $row[Field::FIELD_VARIABLE];
+            $variable = $row['field'];
 
             if ( ! array_key_exists($pageId, $table)) {
                 $table[$pageId] = [];

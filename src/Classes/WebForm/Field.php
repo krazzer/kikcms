@@ -258,9 +258,9 @@ class Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getColumn(): string
+    public function getColumn(): ?string
     {
         return $this->column;
     }
@@ -379,18 +379,22 @@ class Field
      */
     public function storePage($multiLingual = true): Field
     {
+        $key = $this->getElement()->getName();
+
         if ($multiLingual) {
             $this->storage = (new OneToOne())
                 ->setTableModel(PageLanguageContent::class)
                 ->setRelatedField(PageLanguageContent::FIELD_PAGE_ID)
-                ->setDefaultValues([PageLanguageContent::FIELD_FIELD_ID => $this->getKey()])
+                ->setDefaultValues([PageLanguageContent::FIELD_FIELD => $key])
                 ->setAddLanguageCode(true);
         } else {
             $this->storage = (new OneToOne())
                 ->setTableModel(PageContent::class)
                 ->setRelatedField(PageContent::FIELD_PAGE_ID)
-                ->setDefaultValues([PageContent::FIELD_FIELD_ID => $this->getKey()]);
+                ->setDefaultValues([PageContent::FIELD_FIELD => $key]);
         }
+
+        $this->setColumn(PageContent::FIELD_VALUE);
 
         return $this;
     }

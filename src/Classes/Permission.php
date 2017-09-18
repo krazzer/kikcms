@@ -5,7 +5,6 @@ namespace KikCMS\Classes;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\DataTables\Languages;
-use KikCMS\DataTables\Templates;
 use KikCMS\Services\UserService;
 use Phalcon\Acl;
 use Phalcon\Acl\Resource;
@@ -91,14 +90,12 @@ class Permission extends Injectable
         $acl->addResource(new Resource(self::ACCESS_DATATABLES), self::ACCESS_TYPE_ANY);
 
         $acl->addResource(Languages::class, self::ACCESS_TYPE_ANY);
-        $acl->addResource(Templates::class, self::ACCESS_TYPE_ANY);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
         $acl->allow(self::USER, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
         $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
 
-        $acl->allow(self::DEVELOPER, Templates::class, self::ACCESS_TYPE_ANY);
         $acl->allow(self::DEVELOPER, Languages::class, self::ACCESS_TYPE_ANY);
     }
 

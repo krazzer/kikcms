@@ -152,8 +152,8 @@ class PageService extends Injectable
 
         $query = $this->getChildrenQuery($menuPage);
 
-        if ($menu->getRestrictTemplateId()) {
-            $query->andWhere(Page::FIELD_TEMPLATE_ID . ' = :templateId:', ['templateId' => $menu->getRestrictTemplateId()]);
+        if ($menu->getRestrictTemplate()) {
+            $query->andWhere(Page::FIELD_TEMPLATE . ' = :templateId:', ['templateId' => $menu->getRestrictTemplate()]);
         }
 
         if ($menu->getMaxLevel()) {

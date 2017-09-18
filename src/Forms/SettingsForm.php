@@ -6,7 +6,6 @@ namespace KikCMS\Forms;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\DataTables\Languages;
-use KikCMS\DataTables\Templates;
 use KikCMS\DataTables\Translations;
 
 /**
@@ -21,11 +20,7 @@ class SettingsForm extends WebForm
      */
     public function initialize()
     {
-        if($this->acl->allowed(Templates::class)){
-            $this->addDataTableField(new Templates(), $this->translator->tl("fields.templates"));
-        }
-
-        if($this->acl->allowed(Templates::class)) {
+        if($this->acl->allowed(Languages::class)) {
             $this->addDataTableField(new Languages(), $this->translator->tl("fields.languages"));
         }
 
