@@ -1,7 +1,11 @@
+{# helper \KikCMS\Services\Website\FrontendHelper #}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
+    {% if helper and helper.aliasUrl %}
+        <link rel="canonical" href="{{ helper.aliasUrl }}">
+    {% endif %}
     <title>{% block title %}{% endblock %}</title>
     {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}

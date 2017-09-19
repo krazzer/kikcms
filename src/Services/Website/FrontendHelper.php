@@ -34,17 +34,37 @@ class FrontendHelper extends Injectable
     /** @var PageLanguage */
     private $currentPageLanguage;
 
+    /** @var PageLanguage is the same as currentPageLanguage if the page is not an alias */
+    private $currentPageLanguageAlias;
+
     /** @var PageLanguageMap */
     private $currentPathCached;
+
+    /** @var string|null */
+    private $aliasUrl;
+
+    /**
+     * @return null|string
+     */
+    public function getAliasUrl()
+    {
+        return $this->aliasUrl;
+    }
 
     /**
      * @param string $languageCode
      * @param PageLanguage $pageLanguage
+     * @param PageLanguage $pageLanguageAlias
      */
-    public function initialize(string $languageCode, PageLanguage $pageLanguage)
+    public function initialize(string $languageCode, PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias)
     {
-        $this->languageCode        = $languageCode;
-        $this->currentPageLanguage = $pageLanguage;
+        $this->languageCode             = $languageCode;
+        $this->currentPageLanguage      = $pageLanguage;
+        $this->currentPageLanguageAlias = $pageLanguageAlias;
+
+        if($pageLanguage->getPageId() !== $pageLanguageAlias->getPageId()){
+            $this->aliasUrl = $this->urlService->getUrlByPageLanguage($pageLanguage);
+        }
     }
 
     /**
@@ -54,7 +74,7 @@ class FrontendHelper extends Injectable
      */
     public function bgThumb(string $type, int $imageId = null)
     {
-        if( ! $imageId){
+        if ( ! $imageId) {
             return '';
         }
 
@@ -73,10 +93,10 @@ class FrontendHelper extends Injectable
      */
     public function menu($menuId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
     {
-        if( ! is_numeric($menuId)){
+        if ( ! is_numeric($menuId)) {
             $page = $this->pageService->getByKey($menuId);
 
-            if( ! $page){
+            if ( ! $page) {
                 return '';
             }
 
@@ -141,7 +161,7 @@ class FrontendHelper extends Injectable
             return $this->currentPathCached;
         }
 
-        $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage);
+        $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage, $this->currentPageLanguageAlias);
 
         return $this->currentPathCached;
     }
@@ -154,11 +174,11 @@ class FrontendHelper extends Injectable
     {
         $langCode = $this->translator->getLanguageCode();
 
-        if(is_numeric($pageId)){
+        if (is_numeric($pageId)) {
             return $this->urlService->getUrlByPageId($pageId, $langCode);
         }
 
-        if(strstr($pageId, '/')){
+        if (strstr($pageId, '/')) {
             return $pageId;
         }
 

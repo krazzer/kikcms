@@ -100,10 +100,16 @@ class FrontendController extends BaseController
      */
     private function loadPage(PageLanguage $pageLanguage): ?Response
     {
+        $pageLanguageAlias = $pageLanguage;
+
+        if($aliasId = $pageLanguage->page->getAliasId()){
+            $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
+        }
+
         $languageCode = $pageLanguage->language_code;
         $templateFile = $pageLanguage->page->template;
 
-        $this->frontendHelper->initialize($languageCode, $pageLanguage);
+        $this->frontendHelper->initialize($languageCode, $pageLanguage, $pageLanguageAlias);
         $this->translator->setLanguageCode($languageCode);
 
         $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);

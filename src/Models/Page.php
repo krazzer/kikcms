@@ -86,4 +86,16 @@ class Page extends Model
     {
         return (string) $this->template;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getAliasId(): ?int
+    {
+        if( ! $this->alias){
+            return null;
+        }
+
+        return (int) $this->alias;
+    }
 }

@@ -28,6 +28,14 @@ class PageLanguageMap extends ObjectMap
     /**
      * @return PageLanguage|false
      */
+    public function getLast()
+    {
+        return parent::getLast();
+    }
+
+    /**
+     * @return PageLanguage|false
+     */
     public function current()
     {
         return parent::current();

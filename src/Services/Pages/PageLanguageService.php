@@ -182,26 +182,34 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
+     * @param PageLanguage $pageLanguageAlias
      * @return PageLanguageMap
      */
-    public function getPath(PageLanguage $pageLanguage): PageLanguageMap
+    public function getPath(PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias): PageLanguageMap
     {
-        $lft = $pageLanguage->page->lft;
-        $rgt = $pageLanguage->page->rgt;
+        $lft = $pageLanguageAlias->page->lft;
+        $rgt = $pageLanguageAlias->page->rgt;
 
         if( ! $lft || ! $rgt){
-            return (new PageLanguageMap())->add($pageLanguage, $pageLanguage->page_id);
+            $pageLanguageMap = (new PageLanguageMap())->add($pageLanguageAlias, $pageLanguageAlias->page_id);
+        } else {
+            $query = (new Builder)
+                ->from(['pl' => PageLanguage::class])
+                ->join(Page::class, 'p.id = pl.page_id', 'p')
+                ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu"', [
+                    'lft' => $pageLanguageAlias->page->lft,
+                    'rgt' => $pageLanguageAlias->page->rgt,
+                ])->orderBy('lft ASC');
+
+            /** @var PageLanguageMap $pageLanguageMap */
+            $pageLanguageMap = $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
         }
 
-        $query = (new Builder)
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu"', [
-                'lft' => $pageLanguage->page->lft,
-                'rgt' => $pageLanguage->page->rgt,
-            ])->orderBy('lft ASC');
+        if($pageLanguageAlias->getPageId() !== $pageLanguage->getPageId()){
+            $pageLanguageMap->getLast()->setAliasName($pageLanguage->getName());
+        }
 
-        return $this->toMap($query->getQuery()->execute());
+        return $pageLanguageMap;
     }
 
     /**

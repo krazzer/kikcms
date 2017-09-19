@@ -173,8 +173,9 @@ class Pages extends DataTable
 
         $query = (new Builder)
             ->from(['p' => $this->getModel()])
-            ->leftJoin(PageLanguage::class, 'p.id = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
-            ->leftJoin(PageLanguage::class, 'p.id = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
+            ->leftJoin(PageLanguage::class, 'IF(p.type = "alias", p.alias, p.id) = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
+            ->leftJoin(PageLanguage::class, 'IF(p.type = "alias", p.alias, p.id) = pld.page_id AND pld.language_code = "' . $defaultLangCode . '"', 'pld')
+            ->leftJoin(Page::class, 'p.alias = pali.id', 'pali')
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([
@@ -187,7 +188,7 @@ class Pages extends DataTable
             return $query;
         }
 
-        return $query->where('p.template IS NULL OR p.template IN ({templateKeys:array})', [
+        return $query->where('IFNULL(pali.template, p.template) IS NULL OR IFNULL(pali.template, p.template) IN ({templateKeys:array})', [
             'templateKeys' => $this->getAllowedTemplateKeys()
         ]);
     }
@@ -245,6 +246,10 @@ class Pages extends DataTable
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
             $value = '<span class="glyphicon glyphicon-link" title="' . $this->linkTitle . '"></span> ' . $value;
+        }
+
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_ALIAS) {
+            $value = '<span class="glyphicon glyphicon-share-alt" title="' . $this->linkTitle . '"></span> ' . $value;
         }
 
         if ( ! $rowData[PageLanguage::FIELD_ACTIVE] && $rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE) {

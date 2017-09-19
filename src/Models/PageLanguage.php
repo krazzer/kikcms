@@ -21,6 +21,9 @@ class PageLanguage extends Model
     const FIELD_SEO_DESCRIPTION = 'seo_description';
     const FIELD_SEO_KEYWORDS    = 'seo_keywords';
 
+    /** @var string|null */
+    private $aliasName;
+
     /**
      * @inheritdoc
      */
@@ -52,6 +55,18 @@ class PageLanguage extends Model
      */
     public function getName(): string
     {
+        if($this->aliasName && empty($this->name)){
+            return $this->aliasName;
+        }
+
         return (string) $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setAliasName(string $name)
+    {
+        $this->aliasName = $name;
     }
 }
