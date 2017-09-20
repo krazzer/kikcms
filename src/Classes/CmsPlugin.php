@@ -49,8 +49,7 @@ abstract class CmsPlugin
      */
     public function getSourceDirectory(): string
     {
-        $class_info = new ReflectionClass($this);
-        return dirname($class_info->getFileName());
+        return dirname((new ReflectionClass($this))->getFileName());
     }
 
     /**
