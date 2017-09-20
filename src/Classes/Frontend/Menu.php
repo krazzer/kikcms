@@ -83,18 +83,18 @@ class Menu
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMaxLevel(): int
+    public function getMaxLevel(): ?int
     {
         return $this->maxLevel;
     }
 
     /**
-     * @param int $maxLevel
+     * @param int|null $maxLevel
      * @return Menu
      */
-    public function setMaxLevel(int $maxLevel): Menu
+    public function setMaxLevel(?int $maxLevel): Menu
     {
         $this->maxLevel = $maxLevel;
         return $this;
