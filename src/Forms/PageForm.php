@@ -93,7 +93,10 @@ class PageForm extends DataForm
     public function getEditData(): array
     {
         $editData = parent::getEditData();
-        $pageId   = $this->getFilters()->getEditId();
+
+        if ( ! $pageId = $this->getFilters()->getEditId()) {
+            return $editData;
+        }
 
         $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
         $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
