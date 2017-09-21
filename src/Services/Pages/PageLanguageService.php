@@ -14,7 +14,6 @@ use KikCMS\ObjectLists\PageMap;
 use KikCMS\Services\LanguageService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Service for handling Page Model objects
@@ -24,6 +23,25 @@ use Phalcon\Mvc\Model\Resultset;
  */
 class PageLanguageService extends Injectable
 {
+    /**
+     * Create PageLanguages for the alias
+     *
+     * @param Page $alias
+     */
+    public function createForAlias(Page $alias)
+    {
+        $pageLanguageMap = $this->getAllByPageId($alias->getAliasId());
+
+        foreach ($pageLanguageMap as $pageLanguage) {
+            $aliasPageLanguage = new PageLanguage();
+
+            $aliasPageLanguage->language_code = $pageLanguage->getLanguageCode();
+            $aliasPageLanguage->page_id       = $alias->getId();
+
+            $aliasPageLanguage->save();
+        }
+    }
+
     /**
      * @param Page $page
      * @param string|null $languageCode
@@ -43,23 +61,15 @@ class PageLanguageService extends Injectable
      */
     public function getByPageId(int $pageId, string $languageCode = null): ?PageLanguage
     {
-        if ( ! $languageCode) {
-            $languageCode = $this->languageService->getDefaultLanguageCode();
-        }
+        $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
 
-        $pageLanguage = PageLanguage::findFirst([
-            'conditions' => 'page_id = :pageId: AND language_code = :langCode:',
-            'bind'       => [
-                'pageId'   => $pageId,
-                'langCode' => $languageCode
-            ],
-        ]);
+        $query = (new Builder)
+            ->from(PageLanguage::class)
+            ->where('page_id = :pageId: AND language_code = :langCode:', [
+                'pageId' => $pageId, 'langCode' => $languageCode
+            ]);
 
-        if ( ! $pageLanguage) {
-            return null;
-        }
-
-        return $pageLanguage;
+        return $this->dbService->getObject($query);
     }
 
     /**
@@ -69,7 +79,7 @@ class PageLanguageService extends Injectable
      */
     public function getByPageKey(string $pageKey, string $languageCode): ?PageLanguage
     {
-        $query = (new Builder())
+        $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'pl.page_id = p.id', 'p')
             ->where('p.key = :pageKey: AND pl.language_code = :langCode:', [
@@ -88,12 +98,11 @@ class PageLanguageService extends Injectable
      */
     public function getAllByPageId(int $pageId): PageLanguageMap
     {
-        $results = PageLanguage::find([
-            'conditions' => 'page_id = :pageId:',
-            'bind'       => ['pageId' => $pageId],
-        ]);
+        $query = (new Builder)
+            ->from(PageLanguage::class)
+            ->where('page_id = :pageId:', ['pageId' => $pageId]);
 
-        return $this->toMap($results);
+        return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
     }
 
     /**
@@ -103,20 +112,15 @@ class PageLanguageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $languageCode = null): PageLanguageMap
     {
-        if ( ! $languageCode) {
-            $languageCode = $this->languageService->getDefaultLanguageCode();
-        }
+        $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
 
-        if ($pageMap->isEmpty()) {
-            return new PageLanguageMap();
-        }
+        $query = (new Builder)
+            ->from(PageLanguage::class)
+            ->where('page_id IN ({ids:array}) AND language_code = :langCode:', [
+                'ids' => $pageMap->keys(), 'langCode' => $languageCode
+            ]);
 
-        $pageLanguages = PageLanguage::find([
-            'conditions' => 'page_id IN ({ids:array}) AND language_code = :langCode:',
-            'bind'       => ['ids' => $pageMap->keys(), 'langCode' => $languageCode]
-        ]);
-
-        return $this->toMap($pageLanguages);
+        return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
     }
 
     /**
@@ -190,7 +194,7 @@ class PageLanguageService extends Injectable
         $lft = $pageLanguageAlias->page->lft;
         $rgt = $pageLanguageAlias->page->rgt;
 
-        if( ! $lft || ! $rgt){
+        if ( ! $lft || ! $rgt) {
             $pageLanguageMap = (new PageLanguageMap())->add($pageLanguageAlias, $pageLanguageAlias->page_id);
         } else {
             $query = (new Builder)
@@ -205,27 +209,8 @@ class PageLanguageService extends Injectable
             $pageLanguageMap = $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
         }
 
-        if($pageLanguageAlias->getPageId() !== $pageLanguage->getPageId()){
+        if ($pageLanguageAlias->getPageId() !== $pageLanguage->getPageId()) {
             $pageLanguageMap->getLast()->setAliasName($pageLanguage->getName());
-        }
-
-        return $pageLanguageMap;
-    }
-
-    /**
-     * @param Resultset|null $results
-     * @return PageLanguageMap
-     */
-    private function toMap(Resultset $results = null): PageLanguageMap
-    {
-        $pageLanguageMap = new PageLanguageMap();
-
-        if ( ! $results) {
-            return $pageLanguageMap;
-        }
-
-        foreach ($results as $pageLanguage) {
-            $pageLanguageMap->add($pageLanguage, $pageLanguage->page_id);
         }
 
         return $pageLanguageMap;

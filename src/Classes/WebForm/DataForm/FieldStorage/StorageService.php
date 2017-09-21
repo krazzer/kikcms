@@ -5,8 +5,10 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
@@ -30,6 +32,26 @@ class StorageService extends Injectable
     public function getStorageData(): StorageData
     {
         return $this->storageData;
+    }
+
+    /**
+     * @param DataTableField $field
+     * @param array $editData
+     * @param int $editId
+     * @return int
+     * @throws ParentRelationKeyReferenceMissingException
+     */
+    public function getRelatedValueForField(DataTableField $field, array $editData, int $editId): int
+    {
+        if( ! $referencedColumn = $field->getDataTable()->getParentRelationKeyReference()) {
+            return $editId;
+        }
+
+        if( ! array_key_exists($referencedColumn, $editData)){
+            throw new ParentRelationKeyReferenceMissingException($referencedColumn, get_class($field->getForm()));
+        }
+
+        return $editData[$referencedColumn];
     }
 
     /**
@@ -304,7 +326,7 @@ class StorageService extends Injectable
                 break;
 
                 case $field->getStorage() instanceof OneToMany:
-                    $this->fieldStorageService->storeOneToMany($field, $editId);
+                    $this->fieldStorageService->storeOneToMany($field, $editId, $editData);
                 break;
 
                 case $field->getStorage() instanceof ManyToMany:

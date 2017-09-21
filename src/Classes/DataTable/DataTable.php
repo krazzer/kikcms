@@ -62,6 +62,9 @@ abstract class DataTable extends Renderable
     /** @var string when using a DataTable in a DataTable, this key will be the reference to the parent table */
     protected $parentRelationKey;
 
+    /** @var string|null column that is referenced in the parent table, if left null, it will use 'id' by default */
+    protected $parentRelationReferenceKey;
+
     /** @var string */
     protected $viewDirectory = 'datatable';
 
@@ -166,6 +169,14 @@ abstract class DataTable extends Renderable
     public function delete(array $ids)
     {
         $this->dbService->delete($this->getModel(), ['id' => $ids]);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParentRelationKeyReference(): ?string
+    {
+        return $this->parentRelationReferenceKey;
     }
 
     /**

@@ -30,9 +30,8 @@ class UrlService extends Injectable
     {
         $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
 
-        /** @var PageLanguage $pageLanguage */
         foreach ($pageLanguageMap as $pageLanguage) {
-            $pageLanguage->url = $this->toSlug($pageLanguage->name);
+            $pageLanguage->url = $this->toSlug($this->getName($pageLanguage));
 
             if ($this->urlExistsForPageLanguage($pageLanguage)) {
                 $this->deduplicateUrl($pageLanguage);
@@ -314,5 +313,20 @@ class UrlService extends Injectable
         $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
 
         return $this->getUrlByPageLanguage($pageLanguageLink, false);
+    }
+
+    /**
+     * Get the name for given pageLanguage, if the parent page is an alias, get the alias' name
+     *
+     * @param PageLanguage $pageLanguage
+     * @return string
+     */
+    private function getName(PageLanguage $pageLanguage): string
+    {
+        if($aliasId = $pageLanguage->page->getAliasId()){
+            $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
+        }
+
+        return $pageLanguage->name;
     }
 }

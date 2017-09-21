@@ -15,6 +15,7 @@ class Page extends Model
     const FIELD_ID            = 'id';
     const FIELD_TYPE          = 'type';
     const FIELD_PARENT_ID     = 'parent_id';
+    const FIELD_ALIAS         = 'alias';
     const FIELD_TEMPLATE      = 'template';
     const FIELD_DISPLAY_ORDER = 'display_order';
     const FIELD_KEY           = 'key';
@@ -92,7 +93,7 @@ class Page extends Model
      */
     public function getAliasId(): ?int
     {
-        if( ! $this->alias){
+        if ( ! $this->alias) {
             return null;
         }
 

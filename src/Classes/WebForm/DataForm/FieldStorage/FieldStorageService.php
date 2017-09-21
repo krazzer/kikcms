@@ -17,6 +17,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  *
  * @property DbService $dbService
  * @property TranslationService $translationService
+ * @property StorageService $storageService
  */
 class FieldStorageService extends Injectable
 {
@@ -65,7 +66,7 @@ class FieldStorageService extends Injectable
             break;
 
             case $storage instanceof OneToMany:
-                return $this->storeOneToMany($field, $editId);
+                return $this->storeOneToMany($field, $editId, $editData);
             break;
 
             case $storage instanceof ManyToMany:
@@ -108,9 +109,10 @@ class FieldStorageService extends Injectable
     /**
      * @param Field|DataTableField $field
      * @param $editId
+     * @param array $editData
      * @return bool
      */
-    public function storeOneToMany(Field $field, $editId): bool
+    public function storeOneToMany(Field $field, $editId, array $editData): bool
     {
         $dataTable = $field->getDataTable();
 
@@ -118,8 +120,10 @@ class FieldStorageService extends Injectable
         $relatedField = $dataTable->getParentRelationKey();
         $model        = $dataTable->getModel();
 
+        $relatedValue = $this->storageService->getRelatedValueForField($field, $editData, $editId);
+
         foreach ($keysToUpdate as $newId) {
-            $success = $this->dbService->update($model, [$relatedField => $editId], ['id' => $newId, $relatedField => 0]);
+            $success = $this->dbService->update($model, [$relatedField => $relatedValue], ['id' => $newId, $relatedField => 0]);
 
             if ( ! $success) {
                 return false;

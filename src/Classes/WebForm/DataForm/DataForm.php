@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
@@ -165,7 +166,7 @@ abstract class DataForm extends WebForm
      */
     public function getEditData(): array
     {
-        if( ! $this->initialized){
+        if ( ! $this->initialized) {
             throw new Exception('DataForm::getEditData cannot be called if the form is not initialized');
         }
 
@@ -278,16 +279,29 @@ abstract class DataForm extends WebForm
 
     /**
      * @param DataTableField $field
+     * @throws ParentRelationKeyReferenceMissingException
      */
     protected function renderDataTableField(DataTableField $field)
     {
-        $editId   = $this->getFilters()->getEditId() ?: 0;
-        $langCode = $this->getFilters()->getLanguageCode();
+        $langCode     = $this->getFilters()->getLanguageCode();
+        $parentEditId = $this->getParentEditIdForField($field);
 
-        $field->getDataTable()->getFilters()->setParentEditId($editId);
+        $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
         $field->getDataTable()->getFilters()->setLanguageCode($langCode);
 
         $field->setRenderedDataTable($field->getDataTable()->render());
+    }
+
+    /**
+     * Pre-fetch editData, so for loops through all fields do not conflict
+     *
+     * @inheritdoc
+     */
+    protected function renderDataTableFields()
+    {
+        $this->getEditData();
+
+        parent::renderDataTableFields();
     }
 
     /**
@@ -306,6 +320,19 @@ abstract class DataForm extends WebForm
         if ($this->getDataTable() && $this->getDataTable()->isSortable() && ! $this->getFilters()->getEditId()) {
             $this->setDisplayOrder($storageData);
         }
+    }
+
+    /**
+     * @param DataTableField $field
+     * @return int
+     */
+    private function getParentEditIdForField(DataTableField $field): int
+    {
+        if( ! $editId = $this->getFilters()->getEditId()){
+            return 0;
+        }
+
+        return $this->storageService->getRelatedValueForField($field, $this->getEditData(), $editId);
     }
 
     /**
