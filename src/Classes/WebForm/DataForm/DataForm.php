@@ -363,8 +363,11 @@ abstract class DataForm extends WebForm
             $storageData->addFormInputValue($key, $value);
         }
 
+        // check if the form was saved before, or that the editId was already set
         if (array_key_exists(self::EDIT_ID, $input)) {
             $storageData->setEditId($input[self::EDIT_ID]);
+        } elseif($editId = $this->getFilters()->getEditId()){
+            $storageData->setEditId($editId);
         }
 
         $storageData->setLanguageCode($this->getFilters()->getLanguageCode());
@@ -404,7 +407,7 @@ abstract class DataForm extends WebForm
             $this->getFilters()->setEditId($storageData->getEditId());
 
             if ( ! $this->fieldMap->has(self::EDIT_ID)) {
-                $this->addHiddenField(self::EDIT_ID, $this->filters->getEditId());
+                $this->addHiddenField(self::EDIT_ID, $this->getFilters()->getEditId());
             }
 
             $this->onSave();
