@@ -200,9 +200,10 @@ class PageLanguageService extends Injectable
             $query = (new Builder)
                 ->from(['pl' => PageLanguage::class])
                 ->join(Page::class, 'p.id = pl.page_id', 'p')
-                ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu"', [
-                    'lft' => $pageLanguageAlias->page->lft,
-                    'rgt' => $pageLanguageAlias->page->rgt,
+                ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu" AND pl.language_code = :langCode:', [
+                    'lft'      => $pageLanguageAlias->page->lft,
+                    'rgt'      => $pageLanguageAlias->page->rgt,
+                    'langCode' => $pageLanguage->getLanguageCode(),
                 ])->orderBy('lft ASC');
 
             /** @var PageLanguageMap $pageLanguageMap */
