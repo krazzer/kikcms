@@ -54,7 +54,7 @@ class FrontendController extends BaseController
     {
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
-        if( ! $pageLanguage){
+        if ( ! $pageLanguage) {
             throw new NotFoundException($languageCode);
         }
 
@@ -70,7 +70,7 @@ class FrontendController extends BaseController
     {
         $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
 
-        if( ! $pageLanguage){
+        if ( ! $pageLanguage) {
             throw new NotFoundException($languageCode);
         }
 
@@ -102,7 +102,7 @@ class FrontendController extends BaseController
     {
         $pageLanguageAlias = $pageLanguage;
 
-        if($aliasId = $pageLanguage->page->getAliasId()){
+        if ($aliasId = $pageLanguage->page->getAliasId()) {
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
         }
 
@@ -133,8 +133,9 @@ class FrontendController extends BaseController
         $this->view->pageLanguage = $pageLanguage;
         $this->view->pageId       = $pageLanguage->getPageId();
 
-        $this->view->title  = $pageLanguage->name;
-        $this->view->helper = $this->frontendHelper;
+        $this->view->title   = $pageLanguage->name;
+        $this->view->pageKey = $pageLanguage->page->key;
+        $this->view->helper  = $this->frontendHelper;
 
         $this->view->setVars($variables);
         $this->view->pick('@website/templates/' . $templateFile);

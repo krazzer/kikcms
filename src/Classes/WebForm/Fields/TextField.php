@@ -13,7 +13,7 @@ class TextField extends Field
      * @param string $label
      * @param array $validators
      */
-    public function __construct(string $key, string $label, array $validators)
+    public function __construct(string $key, string $label, array $validators = [])
     {
         $element = (new Text($key))
             ->setLabel($label)
