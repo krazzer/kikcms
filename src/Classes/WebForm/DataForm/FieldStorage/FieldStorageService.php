@@ -24,6 +24,9 @@ class FieldStorageService extends Injectable
     /** @var array */
     private $oneToOneRefCache = [];
 
+    /** @var array */
+    private $translationKeyCache = [];
+
     /**
      * @param Field $field
      * @param int $relationId
@@ -31,8 +34,17 @@ class FieldStorageService extends Injectable
      */
     public function getTranslationKeyId(Field $field, int $relationId = null): int
     {
+        dlog($this->translationKeyCache);
         if ( ! $relationId) {
-            return $this->translationService->createNewTranslationKeyId();
+            if(array_key_exists($field->getColumn(), $this->translationKeyCache)){
+                return $this->translationKeyCache[$field->getColumn()];
+            }
+
+            $translationKeyId = $this->translationService->createNewTranslationKeyId();
+
+            $this->translationKeyCache[$field->getKey()] = $translationKeyId;
+
+            return $translationKeyId;
         }
 
         $query = (new Builder())
