@@ -107,14 +107,17 @@ class FilterQueryBuilder
      */
     private function addCustomFilters(Builder $query)
     {
-        $customFilterValues = $this->filters->getCustomFilterValues();
+        $filterValues = $this->filters->getCustomFilterValues();
 
-        foreach ($customFilterValues as $field => $value)
+        foreach ($this->dataTable->getCustomFilters() as $field => $filter)
         {
-            if(array_key_exists($field, $this->dataTable->getCustomFilters()) && $value) {
-                $filter = $this->dataTable->getCustomFilters()[$field];
-                $filter->applyFilter($query, $value);
+            $value = array_key_exists($field, $filterValues) ? $filterValues[$field] : $filter->getDefault();
+
+            if($value === null || $value === ''){
+                continue;
             }
+
+            $filter->applyFilter($query, $value);
         }
     }
 }

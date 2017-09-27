@@ -19,7 +19,7 @@ class NumberService extends Injectable
      * @param float $amount
      * @return string
      */
-    public function getPriceFormat(float $amount)
+    public function getPriceFormat(float $amount): string
     {
         $decimalNotation = $this->translator->tl('system.decimalNotation');
 

@@ -19,6 +19,9 @@ abstract class Filter
     /** @var string */
     protected $label;
 
+    /** @var mixed */
+    protected $default;
+
     /**
      * @param Builder $builder
      * @param $value
@@ -84,6 +87,24 @@ abstract class Filter
     public function setLabel(string $label): Filter
     {
         $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    /**
+     * @param mixed $default
+     * @return Filter
+     */
+    public function setDefault($default): Filter
+    {
+        $this->default = $default;
         return $this;
     }
 }
