@@ -2,18 +2,22 @@
 
 namespace KikCMS\Controllers;
 
+use DateTime;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
+use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Http\Response;
 
 /**
@@ -22,6 +26,8 @@ use Phalcon\Http\Response;
  * @property Translator $translator
  * @property LanguageService $languageService
  * @property TinyMceService $tinyMceService
+ * @property DateTimeService $dateTimeService
+ * @property AnalyticsService $analyticsService
  */
 class CmsController extends BaseCmsController
 {
@@ -86,6 +92,38 @@ class CmsController extends BaseCmsController
         $this->view->title  = $this->translator->tl('menu.item.users');
         $this->view->object = (new Users())->render();
         $this->view->pick('cms/default');
+    }
+
+    /**
+     * Show the website's visitors
+     */
+    public function statsAction()
+    {
+        $this->view->title = $this->translator->tl('menu.item.stats');
+
+        $startDate = $this->dateTimeService->getOneYearAgoFirstDayOfMonth();
+        $maxDate   = $this->analyticsService->getMaxDate() ?: new DateTime();
+        $minDate   = $this->analyticsService->getMinDate() ?: new DateTime();
+
+        if ($startDate < $minDate) {
+            $startDate = null;
+        }
+
+        $this->view->jsTranslations = array_merge($this->view->jsTranslations, [
+            'statistics.fetchingNewData',
+            'statistics.fetchingFailed',
+            'statistics.fetchNewData',
+            'statistics.visitors',
+        ]);
+
+        $this->view->settings = [
+            'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
+            'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,
+            'maxDate'    => $maxDate->format(KikCMSConfig::DATE_FORMAT),
+            'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
+        ];
+
+        $this->view->pick('cms/statistics');
     }
 
     /**

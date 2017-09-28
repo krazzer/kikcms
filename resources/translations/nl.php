@@ -278,14 +278,13 @@ return [
         ],
 
         'item' => [
-            'pages'        => "Pagina's",
-            'media'        => 'Media',
-            'templates'    => 'Templates',
-            'settings'     => 'Instellingen',
-            'users'        => 'Gebruikers',
-            'logout'       => 'Uitloggen',
-            'statsIndex'   => 'Statistieken',
-            'statsSources' => 'Bronnen',
+            'pages'     => "Pagina's",
+            'media'     => 'Media',
+            'templates' => 'Templates',
+            'settings'  => 'Instellingen',
+            'users'     => 'Gebruikers',
+            'logout'    => 'Uitloggen',
+            'stats'     => 'Statistieken',
         ],
     ],
 

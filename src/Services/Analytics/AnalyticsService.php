@@ -445,7 +445,7 @@ class AnalyticsService extends Injectable
         $request->setDateRanges($dateRange);
         $request->setMetrics($metrics);
         $request->setDimensions($dimensions);
-        $request->setPageSize(999999);
+        $request->setPageSize(100000);
 
         return $this->requestToArray($request);
     }

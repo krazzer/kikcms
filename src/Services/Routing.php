@@ -40,7 +40,7 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
-        $backend->add('/stats/index', "Statistics::statsIndex");
+        $backend->add('/stats/index', "Cms::stats");
         $backend->add('/stats/update', "Statistics::update");
         $backend->add('/stats/getVisitors', "Statistics::getVisitors");
 

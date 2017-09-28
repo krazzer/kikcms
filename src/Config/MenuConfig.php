@@ -31,7 +31,7 @@ class MenuConfig
     const MENU_ITEM_PRODUCTS = 'products';
     const MENU_ITEM_SETTINGS = 'settings';
 
-    const MENU_ITEM_STATS = 'statsIndex';
+    const MENU_ITEM_STATS = 'stats';
 
     const MENU_ITEM_USERS  = 'users';
     const MENU_ITEM_LOGOUT = 'logout';

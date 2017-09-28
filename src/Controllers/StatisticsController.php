@@ -3,50 +3,18 @@
 namespace KikCMS\Controllers;
 
 
-use DateTime;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Util\DateTimeService;
+use Phalcon\Mvc\Controller;
 
 /**
  * @property DateTimeService $dateTimeService
  * @property AnalyticsService $analyticsService
  */
-class StatisticsController extends BaseCmsController
+class StatisticsController extends Controller
 {
-    /**
-     * Show the website's visitors
-     */
-    public function statsIndexAction()
-    {
-        $this->view->title = $this->translator->tl('menu.item.statsIndex');
-
-        $startDate = $this->dateTimeService->getOneYearAgoFirstDayOfMonth();
-        $maxDate   = $this->analyticsService->getMaxDate() ?: new DateTime();
-        $minDate   = $this->analyticsService->getMinDate() ?: new DateTime();
-
-        if ($startDate < $minDate) {
-            $startDate = null;
-        }
-
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, [
-            'statistics.fetchingNewData',
-            'statistics.fetchingFailed',
-            'statistics.fetchNewData',
-            'statistics.visitors',
-        ]);
-
-        $this->view->settings = [
-            'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
-            'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,
-            'maxDate'    => $maxDate->format(KikCMSConfig::DATE_FORMAT),
-            'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
-        ];
-
-        $this->view->pick('cms/statistics');
-    }
-
     /**
      * Get data for the visitors graph, based on the user's input
      *
@@ -76,6 +44,8 @@ class StatisticsController extends BaseCmsController
      */
     public function updateAction()
     {
+        ini_set('memory_limit', '1G');
+
         if($this->analyticsService->isUpdating()){
             while ($this->analyticsService->isUpdating()){
                 sleep(1);
