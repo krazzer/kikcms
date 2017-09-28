@@ -6,6 +6,7 @@ namespace KikCMS\Services\Pages;
 use Exception;
 use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
@@ -149,6 +150,12 @@ class UrlService extends Injectable
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         $url = $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
+            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_DEFAULT){
+                if($pageLanguage->getLanguageCode() == $this->languageService->getDefaultLanguageCode()){
+                    return '';
+                }
+            }
+
             if ($pageLanguage->page->type == Page::TYPE_LINK) {
                 return $this->getUrlForLinkedPage($pageLanguage);
             }
