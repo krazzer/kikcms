@@ -44,8 +44,6 @@ class StatisticsController extends Controller
      */
     public function updateAction()
     {
-        ini_set('memory_limit', '1G');
-
         if($this->analyticsService->isUpdating()){
             while ($this->analyticsService->isUpdating()){
                 sleep(1);
