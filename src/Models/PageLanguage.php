@@ -12,6 +12,7 @@ class PageLanguage extends Model
     const TABLE = 'cms_page_language';
     const ALIAS = 'pl';
 
+    const FIELD_ID              = 'id';
     const FIELD_PAGE_ID         = 'page_id';
     const FIELD_LANGUAGE_CODE   = 'language_code';
     const FIELD_ACTIVE          = 'active';
@@ -55,7 +56,7 @@ class PageLanguage extends Model
      */
     public function getName(): string
     {
-        if($this->aliasName && empty($this->name)){
+        if ($this->aliasName && empty($this->name)) {
             return $this->aliasName;
         }
 

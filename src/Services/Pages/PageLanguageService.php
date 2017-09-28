@@ -102,7 +102,7 @@ class PageLanguageService extends Injectable
             ->from(PageLanguage::class)
             ->where('page_id = :pageId:', ['pageId' => $pageId]);
 
-        return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
+        return $this->dbService->getObjectMap($query, PageLanguageMap::class);
     }
 
     /**

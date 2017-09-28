@@ -34,12 +34,16 @@ class PhalconHtmlFormatter extends HtmlFormatter
             unset($data->applicationConfig);
         }
 
-        foreach ($data as $property => &$value){
+        foreach ($data as $property => $value){
             if( ! is_object($value) && ! is_array($value)){
                 continue;
             }
 
-            $value = $this->removeConfig($value);
+            if(is_object($data)){
+                $data->$property = $this->removeConfig($value);
+            } else {
+                $data[$property] = $this->removeConfig($value);
+            }
         }
 
         return $data;
