@@ -17,7 +17,7 @@ $application->registerModules([
         "className" => "KikCMS\\Modules\\Backend",
     ],
     "websiteFrontend"  => [
-        "className" => "KikCMS\\Modules\\websiteFrontend",
+        "className" => "KikCMS\\Modules\\WebsiteFrontend",
     ],
     "websiteBackend"  => [
         "className" => "KikCMS\\Modules\\WebsiteBackend",
