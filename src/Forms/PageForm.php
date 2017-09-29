@@ -70,7 +70,13 @@ class PageForm extends DataForm
 
             $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
-                ->setDefault(1)
+                ->setDefault(1),
+
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO Keywords')->rows(2)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO Description')->rows(6)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
         ];
 
         if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)) {
