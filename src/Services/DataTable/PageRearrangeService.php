@@ -79,6 +79,8 @@ class PageRearrangeService extends Injectable
      */
     public function updateNestedSet()
     {
+        $this->checkOrderIntegrity();
+
         $relations = $this->getParentChildRelations();
 
         $converter = new AdjacencyToNestedSet($relations);

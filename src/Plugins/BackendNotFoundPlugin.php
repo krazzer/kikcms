@@ -49,6 +49,7 @@ class BackendNotFoundPlugin extends Plugin
                 case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
                 case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
                     $dispatcher->forward([
+                        'namespace'  => "KikCMS\\Controllers",
                         'controller' => 'errors',
                         'action'     => 'show404'
                     ]);
@@ -60,6 +61,7 @@ class BackendNotFoundPlugin extends Plugin
 
         if ($exception instanceof NotFoundException) {
             $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
                 'controller' => 'errors',
                 'action'     => 'show404'
             ]);
@@ -70,6 +72,7 @@ class BackendNotFoundPlugin extends Plugin
         if ($exception instanceof UnauthorizedException) {
             $this->response->setStatusCode(401);
             $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
                 'controller' => 'errors',
                 'action'     => 'show401'
             ]);

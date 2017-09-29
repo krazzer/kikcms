@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\Phalcon;
 
+use DateTime;
 use Phalcon\Config;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
@@ -193,6 +194,11 @@ class Twig extends Engine implements EngineInterface
 
         $this->twig->addFilter(new \Twig_SimpleFilter('price', function($price) use ($di){
             return $di->getShared("numberService")->getPriceFormat((float)$price);
+        }));
+
+        $this->twig->addFilter(new \Twig_SimpleFilter('date', function(DateTime $dateTime, string $format = null) use ($di){
+            $format = $format ?: $di->getShared('translator')->tl('system.dateDisplayFormat');
+            return strftime($format, $dateTime->getTimestamp());
         }));
     }
 
