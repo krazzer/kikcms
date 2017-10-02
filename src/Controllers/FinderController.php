@@ -112,6 +112,8 @@ class FinderController extends RenderableController
      */
     public function openFolderAction()
     {
+        $this->session->finderFolderId = (int) $this->request->getPost('folderId');
+
         $finder = $this->getRenderable();
 
         return json_encode([

@@ -56,7 +56,14 @@ class Finder extends Renderable
      */
     public function getFilters(): Filters
     {
-        return parent::getFilters();
+        /** @var FinderFilters $filters */
+        $filters = parent::getFilters();
+
+        if ( ! $filters->getFolderId() && $this->session->finderFolderId) {
+            $filters->setFolderId($this->session->finderFolderId);
+        }
+
+        return $filters;
     }
 
     /**
@@ -72,6 +79,7 @@ class Finder extends Renderable
             'files'       => $files,
             'instance'    => $this->getInstance(),
             'jsData'      => $this->getJsData(),
+            'path'        => $this->renderPath(),
             'pickingMode' => $this->pickingMode,
         ]);
     }
