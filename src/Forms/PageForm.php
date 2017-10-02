@@ -70,13 +70,7 @@ class PageForm extends DataForm
 
             $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
-                ->setDefault(1),
-
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO Keywords')->rows(2)
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
-
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO Description')->rows(6)
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+                ->setDefault(1)
         ];
 
         if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)) {
@@ -88,6 +82,15 @@ class PageForm extends DataForm
             $tabAdvancedFields = array_add_after_key($tabAdvancedFields, 0, 'key', $keyField);
         }
 
+        $tabSeoFields = [
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO Keywords')->rows(4)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO Description')->rows(12)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+        ];
+
+        $this->addTab('SEO', $tabSeoFields);
         $this->addTab($this->translator->tl('fields.advanced'), $tabAdvancedFields);
     }
 
