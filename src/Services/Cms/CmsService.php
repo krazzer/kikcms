@@ -36,6 +36,10 @@ class CmsService extends Injectable
             $groups[$groupId] = $menuGroup;
         }
 
+        if( ! $this->config->analytics){
+            unset($groups[MenuConfig::MENU_GROUP_STATS]);
+        }
+
         return $this->websiteSettings->getMenuGroups($groups);
     }
 

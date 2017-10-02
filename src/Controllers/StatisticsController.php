@@ -52,9 +52,11 @@ class StatisticsController extends Controller
             return true;
         }
 
+        $maxDate = $this->analyticsService->getMaxDate();
+
         return json_encode([
             'success' => $this->analyticsService->importIntoDb(),
-            'maxDate' => $this->analyticsService->getMaxDate()->format(KikCMSConfig::DATE_FORMAT),
+            'maxDate' => $maxDate ? $maxDate->format(KikCMSConfig::DATE_FORMAT) : null,
         ]);
     }
 }
