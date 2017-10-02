@@ -6,6 +6,7 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\Permission;
@@ -55,7 +56,11 @@ class DataTableController extends RenderableController
 
         $ids = $this->request->getPost('ids');
 
-        $dataTable->delete($ids);
+        try {
+            $dataTable->delete($ids);
+        } catch (DbForeignKeyDeleteException $e) {
+            return json_encode(['error' => $this->translator->tl('dataTable.deleteErrorLinked')]);
+        }
 
         return json_encode([
             'table'      => $dataTable->renderTable(),

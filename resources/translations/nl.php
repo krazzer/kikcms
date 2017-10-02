@@ -59,6 +59,8 @@ return [
             'confirmOne' => ':itemSingular verwijderen?',
             'confirm'    => 'Wilt u zeker weten deze :amount :itemPlural verwijderen?',
         ],
+
+        'deleteErrorLinked' => 'Dit item kan niet worden verwijderd, omdat het gekoppeld is elders in het systeem',
     ],
 
     'dataTables' => [
