@@ -119,7 +119,7 @@ class BaseServices extends ApplicationServices
         $overloadedServices = $websiteServices->getOverloadedServices();
 
         foreach ($overloadedServices as $name => $callable){
-            $this->set($name, $callable);
+            $this->set($name, $callable($this));
         }
     }
 

@@ -19,9 +19,18 @@ interface FileStorage
     public function setStorageDir($storageDir);
 
     /**
+     * @param string $fileName
+     * @param string $dir
+     * @param string $contents
+     * @return
+     */
+    public function store(string $fileName, string $contents, string $dir = '');
+
+    /**
      * @param RequestFile $file
      * @param string $dir
-     * @param string|null $fileName
+     * @param null $fileName
+     * @return mixed
      */
-    public function store(RequestFile $file, string $dir = '', $fileName = null);
+    public function storeByRequest(RequestFile $file, string $dir = '', $fileName = null): bool;
 }

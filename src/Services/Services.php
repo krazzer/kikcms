@@ -138,10 +138,10 @@ class Services extends BaseServices
      */
     protected function initAnalytics()
     {
-        $keyFileLocation = SITE_PATH . 'config/service-account-credentials.json';
+        $keyFileLocation    = SITE_PATH . 'config/service-account-credentials.json';
         $keyFileEnvLocation = SITE_PATH . 'env/service-account-credentials.json';
 
-        if(is_readable($keyFileEnvLocation)){
+        if (is_readable($keyFileEnvLocation)) {
             $keyFileLocation = $keyFileEnvLocation;
         }
 
@@ -347,14 +347,16 @@ class Services extends BaseServices
      */
     protected function initView()
     {
-        $cmsViewDir     = __DIR__ . '/../Views/';
-        $siteViewDir    = SITE_PATH . 'app/Views/';
-        $cmsResourceDir = __DIR__ . '/../../resources/';
+        $cmsViewDir      = __DIR__ . '/../Views/';
+        $siteViewDir     = SITE_PATH . 'app/Views/';
+        $cmsResourceDir  = __DIR__ . '/../../resources/';
+        $siteResourceDir = SITE_PATH . 'public_html';
 
         $namespaces = [
-            'kikcms'       => $cmsViewDir,
-            'website'      => $siteViewDir,
-            'cmsResources' => $cmsResourceDir,
+            'kikcms'        => $cmsViewDir,
+            'website'       => $siteViewDir,
+            'cmsResources'  => $cmsResourceDir,
+            'siteResources' => $siteResourceDir,
         ];
 
         $namespaces = array_merge($namespaces, $this->getPluginTwigNamespaces());
@@ -439,10 +441,10 @@ class Services extends BaseServices
         $pluginsList = $this->get('websiteSettings')->getPluginList();
 
         foreach ($pluginsList as $plugin) {
-            $name = 'cms' . ucfirst($plugin->getName());
+            $name           = 'cms' . ucfirst($plugin->getName());
             $viewsDirectory = $plugin->getSourceDirectory() . '/Views/';
 
-            if(file_exists($viewsDirectory)){
+            if (file_exists($viewsDirectory)) {
                 $namespaces[$name] = $viewsDirectory;
             }
         }

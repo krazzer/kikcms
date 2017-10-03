@@ -32,7 +32,7 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
-    public function store(RequestFile $file, string $dir = '', $fileName = null)
+    public function storeByRequest(RequestFile $file, string $dir = '', $fileName = null): bool
     {
         if ( ! $fileName) {
             $fileName = $file->getName();
@@ -40,6 +40,15 @@ class File implements FileStorage
 
         $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $file->getExtension();
 
-        $file->moveTo($filePath);
+        return $file->moveTo($filePath);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function store(string $fileName, string $contents, string $dir = '')
+    {
+        $filePath = $this->getStorageDir() . $dir . '/' . $fileName;
+        return file_put_contents($filePath, $contents);
     }
 }

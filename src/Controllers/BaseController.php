@@ -44,15 +44,19 @@ class BaseController extends Controller
      *
      * @param string $filePath
      * @param string $mimeType
-     * @param string $fileName
+     * @param string|null $fileName
      *
      * @return string
      */
-    protected function outputFile(string $filePath, string $mimeType, string $fileName)
+    protected function outputFile(string $filePath, string $mimeType, string $fileName = null)
     {
         if ( ! file_exists($filePath)) {
             $this->response->setStatusCode(404);
             return 'Object not found';
+        }
+
+        if( ! $fileName){
+            $fileName = basename($filePath);
         }
 
         $this->response->setContentType($mimeType);

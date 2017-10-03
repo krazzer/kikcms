@@ -65,7 +65,7 @@ class FinderFileService extends Injectable
             return false;
         }
 
-        $this->fileStorage->store($file, $this->mediaDir, $finderFile->id);
+        $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
 
         return (int) $finderFile->id;
