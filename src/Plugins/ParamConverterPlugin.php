@@ -115,7 +115,7 @@ class ParamConverterPlugin extends Plugin
      */
     private function getObjectParamName(ReflectionClass $class): string
     {
-        return strtolower($class->getShortName());
+        return lcfirst($class->getShortName());
     }
 
     /**
