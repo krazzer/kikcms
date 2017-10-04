@@ -9,6 +9,7 @@ use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
+use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
 use KikCMS\Services\Util\DateTimeService;
@@ -96,8 +97,8 @@ abstract class WebForm extends Renderable
      */
     public function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=1.029');
-        $this->view->assets->addCss('cmsassets/css/webform.css');
+        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=1.29');
+        $this->view->assets->addCss('cmsassets/css/webform.css?v=1.01');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
@@ -374,6 +375,15 @@ abstract class WebForm extends Renderable
         if ($this->isPlaceHolderAsLabel()) {
             foreach ($this->fieldMap as $field) {
                 $field->setAttribute('placeholder', $field->getElement()->getLabel());
+            }
+        }
+
+        // add select field placeholders
+        foreach ($this->fieldMap as $key => $field) {
+            /** @var SelectField $field */
+            if($field->getType() == Field::TYPE_SELECT && $field->getAddPlaceholder()){
+                $placeHolderLabel = $this->translator->tl('webform.selectPlaceHolderLabel');
+                $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
             }
         }
 

@@ -205,6 +205,8 @@ return [
     'global' => [
         'cancel' => 'Annuleer',
         'delete' => 'Verwijder',
+        'no'     => 'Nee',
+        'yes'    => 'Ja',
     ],
 
     'login' => [
@@ -377,8 +379,9 @@ return [
             'slug'             => "Het veld :label mag alleen kleine letters, getallen en '-' bevatten",
         ],
 
-        'defaultSendLabel' => 'Versturen',
-        'detachFile'       => 'Bestand loskoppelen',
-        'requiredMessage'  => 'Velden met een * zijn verplicht',
+        'defaultSendLabel'       => 'Versturen',
+        'detachFile'             => 'Bestand loskoppelen',
+        'requiredMessage'        => 'Velden met een * zijn verplicht',
+        'selectPlaceHolderLabel' => 'Kies een optie...'
     ],
 ];

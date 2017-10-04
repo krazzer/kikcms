@@ -147,7 +147,7 @@ trait FieldShortcuts
      * @param string $label
      * @param array $options
      * @param array $validators
-     * @return Field
+     * @return Field|SelectField
      */
     public function addSelectField(string $key, string $label, array $options, array $validators = []): Field
     {

@@ -181,6 +181,15 @@ abstract class DataTable extends Renderable
 
     /**
      * @param $value
+     * @return string
+     */
+    protected function formatBoolean($value): string
+    {
+        return $this->translator->tl('global.' . ($value ? 'yes' : 'no'));
+    }
+
+    /**
+     * @param $value
      * @param $rowData
      * @param $column
      * @return string

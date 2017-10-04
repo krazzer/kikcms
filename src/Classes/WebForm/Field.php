@@ -20,17 +20,18 @@ use Phalcon\Forms\ElementInterface;
 class Field
 {
     const TYPE_AUTOCOMPLETE      = 'autocomplete';
+    const TYPE_BUTTON            = 'button';
     const TYPE_CHECKBOX          = 'checkbox';
     const TYPE_DATA_TABLE        = 'dataTable';
-    const TYPE_SELECT_DATA_TABLE = 'selectDataTable';
-    const TYPE_MULTI_CHECKBOX    = 'multiCheckbox';
-    const TYPE_WYSIWYG           = 'wysiwyg';
+    const TYPE_DATE              = 'date';
+    const TYPE_FILE              = 'file';
     const TYPE_HIDDEN            = 'hidden';
     const TYPE_HTML              = 'html';
-    const TYPE_FILE              = 'file';
-    const TYPE_BUTTON            = 'button';
-    const TYPE_DATE              = 'date';
+    const TYPE_MULTI_CHECKBOX    = 'multiCheckbox';
+    const TYPE_SELECT            = 'select';
+    const TYPE_SELECT_DATA_TABLE = 'selectDataTable';
     const TYPE_TEXTAREA          = 'textarea';
+    const TYPE_WYSIWYG           = 'wysiwyg';
 
     /** @var WebForm|DataForm */
     protected $form;

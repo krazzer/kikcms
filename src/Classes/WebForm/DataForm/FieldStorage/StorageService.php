@@ -291,7 +291,7 @@ class StorageService extends Injectable
         $mainInput = $this->dbService->toStorageArray($mainInput);
 
         if ($editId) {
-            if ($this->storageData->getFormInput()) {
+            if ($this->storageData->getFormInput() && $mainInput) {
                 $this->dbService->update($table, $mainInput, ['id' => $editId]);
             }
         } else {
