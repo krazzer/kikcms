@@ -58,7 +58,7 @@ class FrontendController extends BaseController
             throw new NotFoundException($languageCode);
         }
 
-        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false) ?: '/');
     }
 
     /**
@@ -74,7 +74,7 @@ class FrontendController extends BaseController
             throw new NotFoundException($languageCode);
         }
 
-        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false) ?: '/');
     }
 
     /**
