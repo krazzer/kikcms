@@ -6,12 +6,14 @@ use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageMap;
+use KikCMS\Services\LanguageService;
 use Phalcon\Di\Injectable;
 
 /**
  * @property PageService $pageService
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
+ * @property LanguageService $languageService
  */
 class FullPageService extends Injectable
 {
@@ -27,11 +29,13 @@ class FullPageService extends Injectable
 
     /**
      * @param PageMap $pageMap
-     * @param string $langCode
+     * @param string|null $langCode
      * @return FullPageMap
      */
-    public function getByPageMap(PageMap $pageMap, string $langCode): FullPageMap
+    public function getByPageMap(PageMap $pageMap, string $langCode = null): FullPageMap
     {
+        $langCode = $langCode ?: $this->languageService->getDefaultLanguageCode();
+
         $fullPageMap = new FullPageMap();
 
         $pageLangMap    = $this->pageLanguageService->getByPageMap($pageMap, $langCode);

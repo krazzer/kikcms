@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\Frontend;
 
+use DateTime;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Util\Identifiable;
@@ -109,6 +110,14 @@ class FullPage extends Identifiable
     public function getContent(): array
     {
         return $this->content;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedDate(): DateTime
+    {
+        return $this->page->getCreatedDate();
     }
 
     /**

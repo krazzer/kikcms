@@ -106,8 +106,9 @@ class FrontendController extends BaseController
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
         }
 
+        $page         = $pageLanguage->page;
         $languageCode = $pageLanguage->language_code;
-        $templateFile = $pageLanguage->page->template;
+        $templateFile = $page->template;
 
         $this->frontendHelper->initialize($languageCode, $pageLanguage, $pageLanguageAlias);
         $this->translator->setLanguageCode($languageCode);
@@ -131,10 +132,11 @@ class FrontendController extends BaseController
 
         $this->view->languageCode = $languageCode;
         $this->view->pageLanguage = $pageLanguage;
+        $this->view->page         = $page;
         $this->view->pageId       = $pageLanguage->getPageId();
 
         $this->view->title   = $pageLanguage->name;
-        $this->view->pageKey = $pageLanguage->page->key;
+        $this->view->pageKey = $page->key;
         $this->view->helper  = $this->frontendHelper;
 
         $this->view->setVars($variables);

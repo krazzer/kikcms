@@ -1,5 +1,5 @@
 {# helper \KikCMS\Services\Website\FrontendHelper #}
-<!DOCTYPE html>
+{# page \KikCMS\Models\Page #}
 <html>
 <head>
     <meta charset="utf-8">
@@ -14,7 +14,7 @@
     {{ assets.outputCss() }}
     {% block head '' %}
 </head>
-<body data-language-code="{{ languageCode }}">
+<body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}">
 {% block body %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/utils.js') }}
 {{ javascriptInclude('cmsassets/js/kikcms.js') }}
@@ -24,7 +24,7 @@
 {{ assets.outputJs() }}
 <script>
     {% for key in jsTranslations %}
-        KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
+    KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
     {% endfor %}
 </script>
 </body>

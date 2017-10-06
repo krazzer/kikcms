@@ -2,7 +2,9 @@
 
 namespace KikCMS\Models;
 
+use DateTime;
 use KikCMS\Classes\Model\Model;
+use KikCMS\Config\DbConfig;
 
 /**
  * @property Page $parent
@@ -23,6 +25,8 @@ class Page extends Model
     const FIELD_LFT           = 'lft';
     const FIELD_RGT           = 'rgt';
     const FIELD_LINK          = 'link';
+    const FIELD_CREATED_AT    = 'created_at';
+    const FIELD_UPDATED_AT    = 'updated_at';
 
     const TYPE_PAGE  = 'page';
     const TYPE_MENU  = 'menu';
@@ -98,5 +102,13 @@ class Page extends Model
         }
 
         return (int) $this->alias;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedDate(): DateTime
+    {
+        return DateTime::createFromFormat(DbConfig::SQL_DATETIME_FORMAT, $this->created_at);
     }
 }
