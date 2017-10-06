@@ -104,19 +104,22 @@ class MailService extends Injectable
      * @param string $subject
      * @param string $body
      * @param array $parameters
+     * @param null|string|array $from normally
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendServiceMail($to, string $subject, string $body, array $parameters = []): int
+    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], $from = null): int
     {
         $developerEmail = $this->applicationConfig->developerEmail;
         $developerName  = $this->applicationConfig->developerName;
+
+        $from = $from ?: [$developerEmail => $developerName];
 
         $parameters = array_merge([
             'logo'    => 'cmsassets/images/kikcms.png',
             'address' => 'Kiksaus, Heinenwaard 4, 1824 DZ Alkmaar',
         ], $parameters);
 
-        return $this->sendMail([$developerEmail => $developerName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
+        return $this->sendMail($from, $to, $subject, $body, '@kikcms/mail/default', $parameters);
     }
 }
