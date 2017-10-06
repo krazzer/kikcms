@@ -75,6 +75,7 @@ return [
     ],
 
     'system' => [
+        'locale'                => 'en_GB',
         'langCode'              => 'en',
         'phpDateFormat'         => 'Y-m-d',
         'dateDisplayFormat'     => '%b %e %Y',
