@@ -6,7 +6,7 @@ var KikCmsClass = Class.extend({
     maxFileUploads: null,
     maxFileSize: null,
     maxFileSizeString: null,
-    renderables: [],
+    renderables: {},
 
     initRenderables: function (parentClass) {
         var self = this;
@@ -19,21 +19,23 @@ var KikCmsClass = Class.extend({
             if ($renderable.attr('data-rendered') == "true") {
                 return;
             }
-            var renderableData   = $.parseJSON($renderable.attr('data-renderable'));
-            var renderableObject = new window[renderableData.class];
+
+            var renderableData = $.parseJSON($renderable.attr('data-renderable'));
+            var instance       = renderableData.properties.renderableInstance;
+
+            self.renderables[instance] = new window[renderableData.class];
 
             $.each(renderableData.properties, function (key, value) {
-                renderableObject[key] = value;
+                self.renderables[instance][key] = value;
             });
 
-            if(parentClass){
-                renderableObject.parent = parentClass;
+            if (parentClass) {
+                self.renderables[instance].parent = parentClass;
             }
 
-            renderableObject.init();
+            self.renderables[instance].init();
 
             $renderable.attr('data-rendered', true);
-            self.renderables.push(renderableObject);
         });
     },
 

@@ -162,8 +162,12 @@ var DataTable = Class.extend({
 
         checkIframe();
 
-        $(window).keydown(keyDownEvent);
-        $(window).keypress(keyPressEvent);
+        // unbind any previously bindings for this instance
+        $(window).unbind('keydown.' + this.renderableInstance);
+        $(window).unbind('keypress.' + this.renderableInstance);
+
+        $(window).bind('keydown.' + this.renderableInstance, keyDownEvent);
+        $(window).bind('keypress.' + this.renderableInstance, keyPressEvent);
     },
 
     initLanguageSwitch: function () {
@@ -699,13 +703,18 @@ var DataTable = Class.extend({
             windowId += 'Level' + level;
         }
 
-        if ($bodyNotFading.find(' > #' + windowId).length < 1) {
-            var $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
+        var $window = $bodyNotFading.find(' > #' + windowId);
+
+        if ( ! $window.length) {
+            $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
             $bodyNotFading.prepend($window);
-            $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(this.attemptToCloseWindow.bind(this));
+        } else {
+            $bodyNotFading.find(' > #' + windowId).find('.closeButton').unbind( "click" );
         }
+
+        $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(this.attemptToCloseWindow.bind(this));
 
         return $('#' + windowId);
     },
