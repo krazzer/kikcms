@@ -178,7 +178,8 @@ var WebForm = Class.extend({
             $(this).popover({
                 placement: 'auto bottom',
                 html: true,
-                content: content
+                content: content,
+                container: 'body'
             });
         });
     },

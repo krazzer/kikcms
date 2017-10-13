@@ -25,22 +25,12 @@ class MediaResizeBase extends WebsiteExtendable
         return $this->typeMethodExists($type);
     }
 
-    public function resizeByType(Adapter $image, string $type)
-    {
-        if ( ! $this->typeMethodExists($type)) {
-            $this->throwMethodDoesNotExistException($this->getMethod($type));
-        }
-
-        $method = $this->getMethod($type);
-        $this->$method($image);
-    }
-
     /**
      * @param Adapter $image
      * @param $width
      * @param $height
      */
-    protected function resize(Adapter $image, $width, $height)
+    public function resize(Adapter $image, $width, $height)
     {
         if($image->getWidth() < $width && $image->getHeight() < $height){
             return;
@@ -52,6 +42,20 @@ class MediaResizeBase extends WebsiteExtendable
         if($image->getWidth() > $width || $image->getHeight() > $height){
             $image->resize($width, $height);
         }
+    }
+
+    /**
+     * @param Adapter $image
+     * @param string $type
+     */
+    public function resizeByType(Adapter $image, string $type)
+    {
+        if ( ! $this->typeMethodExists($type)) {
+            $this->throwMethodDoesNotExistException($this->getMethod($type));
+        }
+
+        $method = $this->getMethod($type);
+        $this->$method($image);
     }
 
     /**

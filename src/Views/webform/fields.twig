@@ -16,11 +16,13 @@
     <div{{ fieldContainterAttributes|raw }}>
         {%- block fieldDefaultInputAndFIeld -%}
             {% if(placeHolderAsLabel == false) %}
-                {{ form.label(element.name)|raw }}
-                {% if field.helpText %}
-                    <a tabindex="0" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
-                       data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
-                {% endif %}
+                {%- block fieldLabel -%}
+                    {{ form.label(element.name)|raw }}
+                    {% if field.helpText %}
+                        <a tabindex="0" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
+                           data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
+                    {% endif %}
+                {% endblock %}
             {% endif %}
 
             {{ form.render(element.name)|raw }}
@@ -70,7 +72,7 @@
 {%- block fieldMultiCheckbox %}
     {# @var field \KikCMS\Classes\WebForm\Fields\MultiCheckboxField #}
     <div{{ fieldContainterAttributes|raw }}>
-        {{ form.label(element.name)|raw }}
+        {{ block('fieldLabel') }}
         {% for key, label  in field.options %}
             {% set checked = field.isset(key) ? ' checked="checked"' : '' %}
             <div class="checkbox">
@@ -85,7 +87,7 @@
 {%- block fieldDataTable %}
     {# @var field \KikCMS\Classes\WebForm\Fields\DataTableField #}
     <div{{ fieldContainterAttributes|raw }}>
-        {{ form.label(element.name)|raw }}
+        {{ block('fieldLabel') }}
         {{ field.renderedDataTable|raw }}
         {{ form.render(element.name)|raw }}
     </div>
@@ -94,7 +96,7 @@
 {%- block fieldFile %}
     {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
     <div{{ fieldContainterAttributes|raw }}>
-        {{ form.label(element.name)|raw }}
+        {{ block('fieldLabel') }}
         {{ form.render(element.name)|raw }}
 
         <div class="field">

@@ -148,4 +148,19 @@ class Model extends PhalconModel
 
         return $names;
     }
+
+    /**
+     * @return array
+     */
+    public static function getNameMap(): array
+    {
+        $results = self::find(['order' => 'name']);
+        $names   = [];
+
+        foreach ($results as $result) {
+            $names[$result->id] = $result->name;
+        }
+
+        return $names;
+    }
 }

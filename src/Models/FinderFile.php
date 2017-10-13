@@ -11,6 +11,7 @@ class FinderFile extends Model
 
     const FIELD_ID        = 'id';
     const FIELD_FOLDER_ID = 'folder_id';
+    const FIELD_IS_FOLDER = 'is_folder';
     const FIELD_NAME      = 'name';
 
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
