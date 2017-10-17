@@ -14,6 +14,7 @@ return [
         'noData'            => 'No data found to display...',
         'add'               => 'Add :itemSingular',
         'edit'              => 'Edit :itemSingular',
+        'view'              => 'View :itemSingular',
         'searchPlaceholder' => 'Search',
         'save'              => 'Save',
         'saveAndClose'      => 'Save & close',
