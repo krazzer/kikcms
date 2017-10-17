@@ -17,6 +17,36 @@ use Phalcon\Di\Injectable;
 class DateTimeService extends Injectable
 {
     /**
+     * Converts a date string (like 2017-12-31) to the default display format
+     *
+     * @param null|string $dateString
+     * @return string
+     */
+    public function stringToDateFormat(?string $dateString): string
+    {
+        if( ! $dateString){
+            return '';
+        }
+
+        return strftime($this->translator->tl('system.dateDisplayFormat'), strtotime($dateString));
+    }
+
+    /**
+     * Converts a datetime string (like 2017-12-31 12:51) to the default display format
+     *
+     * @param null|string $dateTimeString
+     * @return string
+     */
+    public function stringToDateTimeFormat(?string $dateTimeString): string
+    {
+        if( ! $dateTimeString){
+            return '';
+        }
+
+        return strftime($this->translator->tl('system.dateTimeDisplayFormat'), strtotime($dateTimeString));
+    }
+
+    /**
      * @return Date
      */
     public function getValidator(): Date
