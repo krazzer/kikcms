@@ -3,5 +3,9 @@
 {% block title title %}
 
 {% block cmsContent %}
+    {% if flash %}
+        {{ flash.output }}
+    {% endif %}
+
     {{ object|raw }}
 {% endblock %}

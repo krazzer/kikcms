@@ -41,6 +41,7 @@ return [
         'noData'            => 'Er is geen data gevonden om weer te geven...',
         'add'               => ':itemSingular toevoegen',
         'edit'              => ':itemSingular bewerken',
+        'view'              => ':itemSingular bekijken',
         'searchPlaceholder' => 'Zoeken binnen resultaten',
         'save'              => 'Opslaan',
         'saveAndClose'      => 'Opslaan & sluiten',

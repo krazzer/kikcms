@@ -49,10 +49,15 @@ class DataTableController extends RenderableController
 
     /**
      * @return string
+     * @throws UnauthorizedException
      */
     public function deleteAction()
     {
         $dataTable = $this->getRenderable();
+
+        if( ! $dataTable->canDelete()){
+            throw new UnauthorizedException;
+        }
 
         $ids = $this->request->getPost('ids');
 
@@ -100,10 +105,15 @@ class DataTableController extends RenderableController
 
     /**
      * @return string
+     * @throws UnauthorizedException
      */
     public function saveAction()
     {
         $dataTable = $this->getRenderable();
+
+        if( ! $dataTable->canEdit()){
+            throw new UnauthorizedException;
+        }
 
         $editId       = $dataTable->getFilters()->getEditId();
         $parentEditId = $dataTable->getFilters()->getParentEditId();
@@ -210,6 +220,10 @@ class DataTableController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
+        if ($this->acl->resourceExists($this->getClass()) && ! $this->acl->allowed($this->getClass())) {
+            throw new UnauthorizedException();
+        }
+
         if ( ! $this->acl->allowed(Permission::ACCESS_DATATABLES)) {
             throw new UnauthorizedException();
         }

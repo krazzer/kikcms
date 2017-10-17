@@ -73,7 +73,7 @@ class PageForm extends DataForm
                 ->setDefault(1)
         ];
 
-        if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_TYPE_EDIT)) {
+        if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_EDIT)) {
             $keyField = $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), [
                 $urlPatternValidation,
                 new StringLength(["max" => 32])

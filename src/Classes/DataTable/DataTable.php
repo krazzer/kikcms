@@ -5,6 +5,8 @@ namespace KikCMS\Classes\DataTable;
 
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
@@ -23,6 +25,7 @@ use Phalcon\Tag;
  * @property Backend $diskCache
  * @property Translator $translator
  * @property FieldStorageService $fieldStorageService
+ * @property AccessControl $acl
  */
 abstract class DataTable extends Renderable
 {
@@ -139,6 +142,30 @@ abstract class DataTable extends Renderable
     public function addFilter(Filter $filter)
     {
         $this->customFilters[$filter->getField()] = $filter;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDelete(): bool
+    {
+        if( ! $this->acl->resourceExists(static::class)){
+            return true;
+        }
+
+        return $this->acl->allowed(static::class, Permission::ACCESS_DELETE);
+    }
+
+    /**
+     * @return bool
+     */
+    public function canEdit(): bool
+    {
+        if( ! $this->acl->resourceExists(static::class)){
+            return true;
+        }
+
+        return $this->acl->allowed(static::class, Permission::ACCESS_EDIT);
     }
 
     /**
@@ -448,6 +475,10 @@ abstract class DataTable extends Renderable
      */
     public function render(): string
     {
+        if ($this->acl->resourceExists(static::class) && ! $this->acl->allowed(static::class)) {
+            return 'unauthorized';
+        }
+
         $this->initializeDatatable();
         $this->addAssets();
 
@@ -459,6 +490,8 @@ abstract class DataTable extends Renderable
             'languages'       => $this->languageService->getLanguages(),
             'sortLabel'       => $this->translator->tl('dataTable.sort'),
             'fieldFormatting' => $this->fieldFormatting,
+            'canEdit'         => $this->canEdit(),
+            'canDelete'       => $this->canDelete(),
             'self'            => $this,
         ]);
     }
@@ -601,6 +634,7 @@ abstract class DataTable extends Renderable
             'currentTab'      => $this->form->getCurrentTab(),
             'multiLingual'    => $this->isMultiLingual(),
             'currentLangCode' => $this->getFilters()->getWindowLanguageCode(),
+            'canEdit'         => $this->canEdit(),
             'languages'       => $this->languageService->getLanguages(),
         ]);
     }

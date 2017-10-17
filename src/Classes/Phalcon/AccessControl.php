@@ -28,6 +28,22 @@ class AccessControl extends Memory
     }
 
     /**
+     * @inheritdoc
+     */
+    public function addResource($resourceValue, $accessList = Permission::ACCESS_ANY)
+    {
+        parent::addResource($resourceValue, $accessList);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function allow($roleName, $resourceName, $access = Permission::ACCESS_ANY, $func = null)
+    {
+        parent::allow($roleName, $resourceName, $access, $func);
+    }
+
+    /**
      * Shortcut to check if access is allowed for the current logged in user's role
      *
      * @param $resourceName
@@ -36,7 +52,7 @@ class AccessControl extends Memory
      *
      * @return bool
      */
-    public function allowed($resourceName, $access = Permission::ACCESS_TYPE_ANY, array $parameters = null): bool
+    public function allowed($resourceName, $access = Permission::ACCESS_ANY, array $parameters = null): bool
     {
         return parent::isAllowed($this->currentRole, $resourceName, $access, $parameters);
     }
@@ -46,7 +62,7 @@ class AccessControl extends Memory
      */
     public function canDeleteMenu(): bool
     {
-        return $this->allowed(Permission::PAGE_MENU, Permission::ACCESS_TYPE_DELETE);
+        return $this->allowed(Permission::PAGE_MENU, Permission::ACCESS_DELETE);
     }
 
     /**
@@ -80,12 +96,27 @@ class AccessControl extends Memory
      */
     public function requiresUpdate(): bool
     {
-        if( ! $this->updateTime){
+        if ( ! $this->updateTime) {
             return false;
         }
 
         $seconds = (new DateTime)->getTimestamp() - $this->updated->getTimestamp();
 
         return $seconds >= $this->updateTime;
+    }
+
+    /**
+     * @param string $resourceName
+     * @return bool
+     */
+    public function resourceExists(string $resourceName): bool
+    {
+        foreach ($this->getResources() as $resource) {
+            if($resource->getName() == $resourceName){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

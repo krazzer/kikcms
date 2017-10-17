@@ -5,23 +5,27 @@
 <div class="datatable toolbarComponent" id="{{ self.instance }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
 
-        {% block buttonAdd %}
-            <div class="btn btn-default add">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                <span class="lbl">
-                {{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}
-            </span>
-            </div>
-        {% endblock %}
+        {% if canEdit %}
+            {% block buttonAdd %}
+                <div class="btn btn-default add">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="lbl">
+                    {{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}
+                </span>
+                </div>
+            {% endblock %}
+        {% endif %}
 
         {% block additionalButtons '' %}
 
-        {% block buttonDelete %}
-            <div class="btn btn-default delete" style="display: none;">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                <span class="lbl">{{ tl('global.delete') }}</span>
-            </div>
-        {% endblock %}
+        {% if canDelete %}
+            {% block buttonDelete %}
+                <div class="btn btn-default delete" style="display: none;">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <span class="lbl">{{ tl('global.delete') }}</span>
+                </div>
+            {% endblock %}
+        {% endif %}
 
         {% if self.searchableFields %}
             <div class="search">

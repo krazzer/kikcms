@@ -39,6 +39,14 @@ class UserService extends Injectable
     }
 
     /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return (int) $this->session->get('userId');
+    }
+
+    /**
      * Determine whether a given email and password are allowed to login or must still be activated
      *
      * @param string $email

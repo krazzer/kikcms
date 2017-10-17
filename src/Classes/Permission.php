@@ -24,10 +24,10 @@ class Permission extends Injectable
     const CLIENT    = 'client';
     const VISITOR   = 'visitor';
 
-    const ACCESS_TYPE_ANY    = '*';
-    const ACCESS_TYPE_DELETE = 'delete';
-    const ACCESS_TYPE_EDIT   = 'edit';
-    const ACCESS_TYPE_VIEW   = 'view';
+    const ACCESS_ANY    = '*';
+    const ACCESS_DELETE = 'delete';
+    const ACCESS_EDIT   = 'edit';
+    const ACCESS_VIEW   = 'view';
 
     const ACCESS_DATATABLES = 'AccessDataTables';
     const PAGE_MENU         = 'pageMenu';
@@ -93,16 +93,16 @@ class Permission extends Injectable
      */
     private function addDataTablePermissions(AccessControl $acl)
     {
-        $acl->addResource(new Resource(self::ACCESS_DATATABLES), self::ACCESS_TYPE_ANY);
+        $acl->addResource(new Resource(self::ACCESS_DATATABLES), self::ACCESS_ANY);
 
-        $acl->addResource(Languages::class, self::ACCESS_TYPE_ANY);
+        $acl->addResource(Languages::class, self::ACCESS_ANY);
 
-        $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
-        $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
-        $acl->allow(self::USER, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
-        $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, self::ACCESS_TYPE_ANY);
+        $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES, self::ACCESS_ANY);
+        $acl->allow(self::ADMIN, self::ACCESS_DATATABLES, self::ACCESS_ANY);
+        $acl->allow(self::USER, self::ACCESS_DATATABLES, self::ACCESS_ANY);
+        $acl->allow(self::CLIENT, self::ACCESS_DATATABLES, self::ACCESS_ANY);
 
-        $acl->allow(self::DEVELOPER, Languages::class, self::ACCESS_TYPE_ANY);
+        $acl->allow(self::DEVELOPER, Languages::class, self::ACCESS_ANY);
     }
 
     /**
@@ -110,8 +110,8 @@ class Permission extends Injectable
      */
     private function addMenuPermissions(AccessControl $acl)
     {
-        $acl->addResource(new Resource(self::PAGE_MENU), self::ACCESS_TYPE_ANY);
-        $acl->allow(self::DEVELOPER, self::PAGE_MENU, self::ACCESS_TYPE_ANY);
+        $acl->addResource(new Resource(self::PAGE_MENU), self::ACCESS_ANY);
+        $acl->allow(self::DEVELOPER, self::PAGE_MENU, self::ACCESS_ANY);
     }
 
     /**
@@ -119,7 +119,7 @@ class Permission extends Injectable
      */
     private function addPagePermissions(AccessControl $acl)
     {
-        $acl->addResource(new Resource(self::PAGE_KEY), self::ACCESS_TYPE_ANY);
-        $acl->allow(self::DEVELOPER, self::PAGE_KEY, self::ACCESS_TYPE_ANY);
+        $acl->addResource(new Resource(self::PAGE_KEY), self::ACCESS_ANY);
+        $acl->allow(self::DEVELOPER, self::PAGE_KEY, self::ACCESS_ANY);
     }
 }
