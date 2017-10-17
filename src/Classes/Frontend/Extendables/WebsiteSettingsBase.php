@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Cms\CmsMenuGroup;
 use Phalcon\Mvc\Router\Group;
@@ -63,6 +64,14 @@ class WebsiteSettingsBase extends WebsiteExtendable
      * @param Group $frontend
      */
     public function addFrontendRoutes(Group $frontend)
+    {
+
+    }
+
+    /**
+     * @param AccessControl $acl
+     */
+    public function addPermissions(AccessControl $acl)
     {
 
     }

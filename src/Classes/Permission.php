@@ -3,6 +3,7 @@
 namespace KikCMS\Classes;
 
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\DataTables\Languages;
 use KikCMS\Services\UserService;
@@ -13,6 +14,7 @@ use Phalcon\Di\Injectable;
 
 /**
  * @property UserService $userService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class Permission extends Injectable
 {
@@ -44,7 +46,7 @@ class Permission extends Injectable
      */
     public function getAcl()
     {
-        if (isset($this->persistent->acl)) {
+        if (isset($this->persistent->acl) && ! $this->persistent->acl->requiresUpdate()) {
             return $this->persistent->acl;
         }
 
@@ -60,6 +62,10 @@ class Permission extends Injectable
         $this->addDataTablePermissions($acl);
         $this->addMenuPermissions($acl);
         $this->addPagePermissions($acl);
+
+        $this->websiteSettings->addPermissions($acl);
+
+        $acl->update();
 
         $this->persistent->acl = $acl;
 
