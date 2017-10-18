@@ -164,8 +164,10 @@ abstract class WebForm extends Renderable
     /**
      * @param string $name
      * @param Field[] $fields
+     *
+     * @return Tab
      */
-    public function addTab(string $name, array $fields)
+    public function addTab(string $name, array $fields): Tab
     {
         $tab = new Tab($name, $fields);
 
@@ -174,6 +176,8 @@ abstract class WebForm extends Renderable
         }
 
         $this->tabs[] = $tab;
+
+        return $tab;
     }
 
     /**
