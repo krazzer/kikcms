@@ -7,7 +7,7 @@
     border: 1px solid $lightGray;
     background-color: $superLightGray;
     border-radius: $defaultBorderRadius;
-    color: #000;
+    color: $colorBlack;
     width: 250px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -44,7 +44,7 @@
             .name {
                 border-color: $gray;
                 background-color: $gray;
-                color: #fff;
+                color: $colorWhite;
             }
         }
 

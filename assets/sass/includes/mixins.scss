@@ -1,3 +1,5 @@
+@import "variables";
+
 @mixin blur($amount)
 {
     -webkit-filter: blur($amount + px);
@@ -30,7 +32,7 @@
         height: ($size) + px;
         content: ' ';
         width: 1px;
-        background-color: #333;
+        background-color: $colorBlack;
     }
 
     &:before {

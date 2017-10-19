@@ -14,7 +14,7 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba($colorBlack, 0.1);
         opacity: 0;
         z-index: $zIndexWindowLevel0;
         transition: opacity 0.3s;
@@ -22,7 +22,7 @@ body {
 
     .datatableThumbHoverContainer {
         position: absolute;
-        background-color: #fff;
+        background-color: $colorWhite;
         z-index: $zIndexAboveLevel10Window;
 
         img {
@@ -63,7 +63,7 @@ body {
     position: fixed;
     top: 20px;
     bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.97);
+    background-color: rgba($colorWhite, 0.97);
     z-index: $zIndexWindowLevel0;
     left: 50%;
     margin-left: -525px;
@@ -256,7 +256,7 @@ body {
             }
 
             > .active > a {
-                color: #fff;
+                color: $colorWhite;
                 background-color: $colorPink;
                 border-color: $colorPink;
             }
@@ -326,7 +326,7 @@ body {
 
                     &:hover:not(.dragHover) {
                         td {
-                            background-color: #eee;
+                            background-color: $lightGray;
                         }
                     }
 
@@ -343,7 +343,7 @@ body {
                     &.selected{
                         td {
                             background-color: $colorPink;
-                            color: #fff;
+                            color: $colorWhite;
 
                             .highlight{
                                 background-color: $pinkDark;
@@ -407,10 +407,10 @@ body {
     opacity: .95;
 
     &.rowClone {
-        background-color: #fff;
-        -webkit-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
-        -moz-box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
-        box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.25);
+        background-color: $colorWhite;
+        -webkit-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
+        -moz-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
+        box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
 
         td {
             padding: $dataTableCellPadding;

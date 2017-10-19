@@ -37,7 +37,7 @@ $menuBackGroundColor: $superLightGray;
     .menu-item{
         display: block;
         padding: 10px;
-        color: #000;
+        color: $colorBlack;
         border-radius: $defaultBorderRadius;
         line-height: 14px;
         border-top: 1px solid $menuBackGroundColor;

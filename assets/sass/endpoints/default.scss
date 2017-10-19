@@ -4,6 +4,8 @@
 html, body{
     height: 100%;
     -webkit-font-smoothing: subpixel-antialiased;
+    background-color: $colorWhite;
+    color: $colorBlack;
 }
 
 body, table{
@@ -33,7 +35,7 @@ h1, h2, h3, h4, h5, h6 {
     top: 35px;
     padding: 20px;
     border: 1px solid $lightGray;
-    background-color: rgba(255, 255, 255, 0.97);
+    background-color: rgba($colorWhite, 0.97);
     z-index: $zIndexAboveLevel10Window;
     max-width: 1200px;
     max-height: 800px;
@@ -51,7 +53,7 @@ h1, h2, h3, h4, h5, h6 {
     top: 35px;
     padding: 13px 10px;
     border: 1px solid $lightGray;
-    background-color: rgba(255,255,255,0.95);
+    background-color: rgba($colorWhite, 0.95);
     border-radius: $defaultBorderRadius;
     z-index: $zIndexAboveLevel10Window;
     transition: opacity 0.3s;
