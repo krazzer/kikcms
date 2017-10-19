@@ -324,12 +324,12 @@ abstract class DataForm extends WebForm
 
     /**
      * @param DataTableField $field
-     * @return int
+     * @return int|null
      */
-    private function getParentEditIdForField(DataTableField $field): int
+    private function getParentEditIdForField(DataTableField $field): ?int
     {
         if( ! $editId = $this->getFilters()->getEditId()){
-            return 0;
+            return $field->getDataTable()->hasParent() ? 0 : null;
         }
 
         return $this->storageService->getRelatedValueForField($field, $this->getEditData(), $editId);

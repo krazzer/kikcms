@@ -147,25 +147,39 @@ abstract class DataTable extends Renderable
     /**
      * @return bool
      */
-    public function canDelete(): bool
+    public function canAdd(): bool
     {
-        if( ! $this->acl->resourceExists(static::class)){
+        if ( ! $this->acl->resourceExists(static::class)) {
             return true;
         }
 
-        return $this->acl->allowed(static::class, Permission::ACCESS_DELETE);
+        return $this->acl->allowed(static::class, Permission::ACCESS_ADD);
     }
 
     /**
+     * @param null $id
      * @return bool
      */
-    public function canEdit(): bool
+    public function canDelete($id = null): bool
     {
-        if( ! $this->acl->resourceExists(static::class)){
+        if ( ! $this->acl->resourceExists(static::class)) {
             return true;
         }
 
-        return $this->acl->allowed(static::class, Permission::ACCESS_EDIT);
+        return $this->acl->allowed(static::class, Permission::ACCESS_DELETE, ['id' => $id]);
+    }
+
+    /**
+     * @param int|null $id
+     * @return bool
+     */
+    public function canEdit($id = null): bool
+    {
+        if ( ! $this->acl->resourceExists(static::class)) {
+            return true;
+        }
+
+        return $this->acl->allowed(static::class, Permission::ACCESS_EDIT, ['id' => $id]);
     }
 
     /**
@@ -195,6 +209,12 @@ abstract class DataTable extends Renderable
      */
     public function delete(array $ids)
     {
+        foreach ($ids as $i => $id){
+            if( ! $this->canDelete($id)){
+                unset($ids[$i]);
+            }
+        }
+
         $this->dbService->delete($this->getModel(), ['id' => $ids]);
     }
 
@@ -490,6 +510,7 @@ abstract class DataTable extends Renderable
             'languages'       => $this->languageService->getLanguages(),
             'sortLabel'       => $this->translator->tl('dataTable.sort'),
             'fieldFormatting' => $this->fieldFormatting,
+            'canAdd'          => $this->canAdd(),
             'canEdit'         => $this->canEdit(),
             'canDelete'       => $this->canDelete(),
             'self'            => $this,
@@ -634,7 +655,7 @@ abstract class DataTable extends Renderable
             'currentTab'      => $this->form->getCurrentTab(),
             'multiLingual'    => $this->isMultiLingual(),
             'currentLangCode' => $this->getFilters()->getWindowLanguageCode(),
-            'canEdit'         => $this->canEdit(),
+            'canEdit'         => $this->canEdit($this->form->getFilters()->getEditId()),
             'languages'       => $this->languageService->getLanguages(),
         ]);
     }

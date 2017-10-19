@@ -55,7 +55,7 @@ class DataTableController extends RenderableController
     {
         $dataTable = $this->getRenderable();
 
-        if( ! $dataTable->canDelete()){
+        if ( ! $dataTable->canDelete()) {
             throw new UnauthorizedException;
         }
 
@@ -109,14 +109,13 @@ class DataTableController extends RenderableController
      */
     public function saveAction()
     {
-        $dataTable = $this->getRenderable();
-
-        if( ! $dataTable->canEdit()){
-            throw new UnauthorizedException;
-        }
-
+        $dataTable    = $this->getRenderable();
         $editId       = $dataTable->getFilters()->getEditId();
         $parentEditId = $dataTable->getFilters()->getParentEditId();
+
+        if ( ! $dataTable->canEdit($editId)) {
+            throw new UnauthorizedException;
+        }
 
         if ($editId === null) {
             $this->view->form = $dataTable->renderAddForm();

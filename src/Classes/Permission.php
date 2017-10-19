@@ -25,6 +25,7 @@ class Permission extends Injectable
     const VISITOR   = 'visitor';
 
     const ACCESS_ANY    = '*';
+    const ACCESS_ADD    = 'add';
     const ACCESS_DELETE = 'delete';
     const ACCESS_EDIT   = 'edit';
     const ACCESS_VIEW   = 'view';
