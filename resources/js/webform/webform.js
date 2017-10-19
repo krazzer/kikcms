@@ -160,6 +160,10 @@ var WebForm = Class.extend({
             });
 
             $pickAbles.click(function () {
+                if($(this).attr('data-finder') == 0){
+                    return;
+                }
+
                 if ($filePicker.find('.finder').length >= 1) {
                     $filePicker.slideToggle();
                     $uploadButton.toggleClass('disabled');
@@ -222,6 +226,12 @@ var WebForm = Class.extend({
         var uploader = new FinderFileUploader({
             $container: $field,
             action: '/cms/webform/uploadAndPreview',
+            addParametersBeforeUpload: function (formData) {
+                formData.append('field', $field.find('.btn.upload').attr('data-field'));
+                formData.append('renderableInstance', self.renderableInstance);
+                formData.append('renderableClass', self.renderableClass);
+                return formData;
+            },
             onSuccess: function (result) {
                 if (result.fileId) {
                     self.actionPreview($field, result.fileId, result);

@@ -4,6 +4,9 @@ namespace KikCMS\Models;
 
 use KikCMS\Classes\Model\Model;
 
+/**
+ * @property FinderFile $folder
+ */
 class User extends Model
 {
     /** @var int */
@@ -41,5 +44,15 @@ class User extends Model
         $user = parent::findFirst($parameters);
 
         return $user;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->hasOne(User::FIELD_ID, FinderFile::class, FinderFile::FIELD_USER_ID, ["alias" => "folder"]);
     }
 }

@@ -6,9 +6,11 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\DbService;
 use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
@@ -200,6 +202,10 @@ class FinderController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
+        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
+            throw new UnauthorizedException();
+        }
+
         return parent::getRenderable();
     }
 }

@@ -9,6 +9,12 @@ use Phalcon\Forms\Element\Hidden;
 
 class FileField extends Field
 {
+    /** @var bool */
+    private $uploadOnly = false;
+
+    /** @var int|null */
+    private $folderId;
+
     /**
      * @param string $key
      * @param string $label
@@ -40,5 +46,41 @@ class FileField extends Field
     public function getFinderFileById(int $fileId): ?FinderFile
     {
         return FinderFile::getById($fileId);
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFolderId()
+    {
+        return $this->folderId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUploadOnly(): bool
+    {
+        return $this->uploadOnly;
+    }
+
+    /**
+     * @param bool $uploadOnly
+     * @return FileField
+     */
+    public function setUploadOnly(bool $uploadOnly = true): FileField
+    {
+        $this->uploadOnly = $uploadOnly;
+        return $this;
+    }
+
+    /**
+     * @param int|null $folderId
+     * @return FileField
+     */
+    public function setFolderId(?int $folderId): FileField
+    {
+        $this->folderId = $folderId;
+        return $this;
     }
 }

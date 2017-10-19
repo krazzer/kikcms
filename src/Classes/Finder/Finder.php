@@ -3,6 +3,8 @@
 namespace KikCMS\Classes\Finder;
 
 
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
@@ -13,6 +15,7 @@ use Phalcon\Http\Request\File;
 /**
  * @property FinderFileService $finderFileService
  * @property Translator $translator
+ * @property AccessControl $acl
  */
 class Finder extends Renderable
 {
@@ -71,6 +74,10 @@ class Finder extends Renderable
      */
     public function render(): string
     {
+        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
+            return 'unauthorized';
+        }
+
         $this->addAssets();
 
         $files = $this->finderFileService->getByFilters($this->getFilters());

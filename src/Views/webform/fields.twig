@@ -101,7 +101,7 @@
 
         <div class="field">
             <div class="buttons">
-                <div class="btn btn-default preview{{ not element.value ? ' hidden' }}">
+                <div class="btn btn-default preview{{ not element.value ? ' hidden' }}" data-finder="{{ field.uploadOnly ? 0 : 1 }}">
                     <div class="thumb">
                         {% if element.value %}
                             {% set finderFile = field.finderFileById(element.value) %}
@@ -115,12 +115,14 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </div>
 
-                <div class="btn btn-default pick{{ element.value ? ' hidden' }}">
-                    <span class="glyphicon glyphicon-hand-up"></span>
-                    <span class="lbl">{{ tl('dataTable.pickFile') }}</span>
-                </div>
+                {% if not field.uploadOnly %}
+                    <div class="btn btn-default pick{{ element.value ? ' hidden' }}">
+                        <span class="glyphicon glyphicon-hand-up"></span>
+                        <span class="lbl">{{ tl('dataTable.pickFile') }}</span>
+                    </div>
+                {% endif %}
 
-                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}">
+                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}" data-field="{{ field.key }}">
                     <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
                     <span class="lbl">
                         {{ tl('media.button.upload') }}

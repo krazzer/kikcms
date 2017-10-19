@@ -6,6 +6,7 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Renderable\Renderable;
+use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\FinderFile;
 
@@ -57,7 +58,19 @@ class WebFormController extends RenderableController
      */
     public function uploadAndPreviewAction()
     {
+        $fieldKey = $this->request->getPost('field');
+        $webform = $this->getRenderable();
+
+        $webform->initializeForm();
+
+        /** @var FileField $fileField */
+        $fileField = $webform->getFieldMap()->get($fieldKey);
+
         $finder = new Finder();
+
+        if($folderId = $fileField->getFolderId()){
+            $finder->getFilters()->setFolderId($folderId);
+        }
 
         $uploadedFiles = $this->request->getUploadedFiles();
         $uploadStatus  = $finder->uploadFiles($uploadedFiles);
