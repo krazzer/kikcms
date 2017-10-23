@@ -17,7 +17,7 @@
         {%- block fieldDefaultInputAndFIeld -%}
             {% if(placeHolderAsLabel == false) %}
                 {%- block fieldLabel -%}
-                    {{ form.label(element.name)|raw }}
+                    {{ form.label(element.name)|raw }}{{ field.required ? ' *' }}
                     {% if field.helpText %}
                         <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
                            data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>

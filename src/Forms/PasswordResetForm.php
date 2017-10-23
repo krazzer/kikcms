@@ -32,7 +32,7 @@ class PasswordResetForm extends WebForm
         ]);
 
         $this->setPlaceHolderAsLabel(true);
-        $this->setSendLabel('Nieuw wachtwoord instellen');
+        $this->setSendButtonLabel('Nieuw wachtwoord instellen');
     }
 
     /**

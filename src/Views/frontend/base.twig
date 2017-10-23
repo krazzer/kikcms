@@ -9,18 +9,22 @@
     <meta name="description" content="{{ pageLanguage.seo_description }}">
     <meta name="keywords" content="{{ pageLanguage.seo_keywords }}">
     <title>{% block title %}{{ title }}{% endblock %}</title>
-    {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
-    {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
+    {% block styles %}
+        {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
+        {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
+    {% endblock %}
     {{ assets.outputCss() }}
     {% block head '' %}
 </head>
 <body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}">
 {% block body %}{% endblock %}
-{{ javascriptInclude('cmsassets/js/utils.js') }}
-{{ javascriptInclude('cmsassets/js/kikcms.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
+{% block scripts %}
+    {{ javascriptInclude('cmsassets/js/utils.js') }}
+    {{ javascriptInclude('cmsassets/js/kikcms.js') }}
+    {{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
+    {{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
+    {{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
+{% endblock %}
 {{ assets.outputJs() }}
 <script>
     {% for key in jsTranslations %}

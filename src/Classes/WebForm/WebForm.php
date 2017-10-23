@@ -62,11 +62,14 @@ abstract class WebForm extends Renderable
     /** @inheritdoc */
     protected $viewDirectory = 'webform';
 
-    /** @var Form */
-    private $form;
+    /** @var string */
+    protected $sendButtonLabel;
 
     /** @var string */
-    private $sendLabel;
+    protected $sendButtonClass = 'btn btn-submit btn-primary';
+
+    /** @var Form */
+    private $form;
 
     /** @var bool */
     private $placeHolderAsLabel = false;
@@ -89,7 +92,7 @@ abstract class WebForm extends Renderable
 
         $this->fieldMap = new FieldMap();
 
-        $this->sendLabel = $this->translator->tl('webform.defaultSendLabel');
+        $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
     }
 
     /**
@@ -128,7 +131,7 @@ abstract class WebForm extends Renderable
 
         $key = $field->getKey();
 
-        if( ! $field->getColumn()){
+        if ( ! $field->getColumn()) {
             $field->setColumn($key);
         }
 
@@ -154,7 +157,7 @@ abstract class WebForm extends Renderable
             $this->form->add($field->getElement());
         }
 
-        if($tab){
+        if ($tab) {
             $tab->addField($field);
         }
 
@@ -279,13 +282,13 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param string $sendLabel
+     * @param string $sendButtonLabel
      *
      * @return WebForm|$this
      */
-    public function setSendLabel(string $sendLabel)
+    public function setSendButtonLabel(string $sendButtonLabel)
     {
-        $this->sendLabel = $sendLabel;
+        $this->sendButtonLabel = $sendButtonLabel;
         return $this;
     }
 
@@ -300,9 +303,9 @@ abstract class WebForm extends Renderable
     /**
      * @return string
      */
-    public function getSendLabel(): string
+    public function getSendButtonLabel(): string
     {
-        return $this->sendLabel;
+        return $this->sendButtonLabel;
     }
 
     /**
@@ -385,7 +388,7 @@ abstract class WebForm extends Renderable
         // add select field placeholders
         foreach ($this->fieldMap as $key => $field) {
             /** @var SelectField $field */
-            if($field->getType() == Field::TYPE_SELECT && $field->getAddPlaceholder()){
+            if ($field->getType() == Field::TYPE_SELECT && $field->getAddPlaceholder()) {
                 $placeHolderLabel = $this->translator->tl('webform.selectPlaceHolderLabel');
                 $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
             }
@@ -481,7 +484,8 @@ abstract class WebForm extends Renderable
             'currentTab'         => $this->getCurrentTab(),
             'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
             'formId'             => $this->getFormId(),
-            'sendButtonLabel'    => $this->getSendLabel(),
+            'sendButtonClass'    => $this->sendButtonClass,
+            'sendButtonLabel'    => $this->getSendButtonLabel(),
             'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
             'instance'           => $this->getInstance(),
             'jsData'             => $this->getJsData(),

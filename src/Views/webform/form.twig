@@ -42,7 +42,7 @@
 
     {% if(displaySendButton) %}
         <div class="form-group">
-            {{ submitButton(sendButtonLabel, {'class': 'btn btn-submit btn-primary', 'name': 'submit'}) }}
+            {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
         </div>
     {% endif %}
 

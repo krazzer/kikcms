@@ -25,7 +25,7 @@ class LoginForm extends WebForm
         $this->addPasswordField(self::FIELD_PASSWORD, 'Wachtwoord', [new PresenceOf()]);
 
         $this->setPlaceHolderAsLabel(true);
-        $this->setSendLabel('Inloggen');
+        $this->setSendButtonLabel('Inloggen');
     }
 
     /**

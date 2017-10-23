@@ -25,7 +25,7 @@ class PasswordResetLinkForm extends WebForm
             $emailField->setDefault($email);
         }
 
-        $this->setSendLabel($this->translator->tl('login.reset.buttonLabel'));
+        $this->setSendButtonLabel($this->translator->tl('login.reset.buttonLabel'));
         $this->setPlaceHolderAsLabel(true);
     }
 
