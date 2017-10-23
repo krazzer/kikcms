@@ -52,6 +52,12 @@ var KikCmsClass = Class.extend({
             }
         }, 250);
 
+        var langCode = $('html').attr('lang');
+
+        if (langCode) {
+            parameters['activeLangCode'] = langCode;
+        }
+
         var ajaxRequestSettings = {
             url: actionUrl,
             type: 'post',

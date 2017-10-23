@@ -7,13 +7,12 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Mvc\Controller;
 
 /**
  * @property DateTimeService $dateTimeService
  * @property AnalyticsService $analyticsService
  */
-class StatisticsController extends Controller
+class StatisticsController extends BaseController
 {
     /**
      * Get data for the visitors graph, based on the user's input

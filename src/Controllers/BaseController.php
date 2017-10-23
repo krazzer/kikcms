@@ -18,6 +18,8 @@ class BaseController extends Controller
      */
     public function initialize()
     {
+        $this->initializeLanguage();
+
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
         $maxFileUploads    = ini_get('max_file_uploads') ?: 20;
@@ -37,6 +39,18 @@ class BaseController extends Controller
         $this->view->setVar("maxFileUploads", $maxFileUploads);
         $this->view->setVar("maxFileSize", $maxFileSize);
         $this->view->setVar("maxFileSizeString", $maxFileSizeString);
+    }
+
+    /**
+     * Initialize the language
+     */
+    public function initializeLanguage()
+    {
+        if($langCode = $this->request->getPost('activeLangCode')){
+            $this->translator->setLanguageCode($langCode);
+        } else {
+            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+        }
     }
 
     /**

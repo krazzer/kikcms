@@ -12,6 +12,9 @@ use KikCMS\Services\UserService;
  */
 class BaseCmsController extends BaseController
 {
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         parent::initialize();
@@ -24,6 +27,18 @@ class BaseCmsController extends BaseController
 
         $this->view->setVar("menuStructure", $menuStructure);
         $this->highlightMenuItem($this->dispatcher->getActionName());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function initializeLanguage()
+    {
+        if(isset($this->config->application->defaultCmsLanguage)){
+            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
+        } else {
+            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+        }
     }
 
     /**
