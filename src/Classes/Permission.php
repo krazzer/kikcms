@@ -6,6 +6,9 @@ namespace KikCMS\Classes;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\DataTables\Languages;
+use KikCMS\DataTables\Pages;
+use KikCMS\DataTables\Translations;
+use KikCMS\DataTables\Users;
 use KikCMS\Services\UserService;
 use Phalcon\Acl;
 use Phalcon\Acl\Resource;
@@ -97,7 +100,10 @@ class Permission extends Injectable
     {
         $acl->addResource(self::ACCESS_DATATABLES);
         $acl->addResource(self::ACCESS_FINDER);
-        $acl->addResource(Languages::class, self::ACCESS_ANY);
+        $acl->addResource(Languages::class);
+        $acl->addResource(Pages::class);
+        $acl->addResource(Translations::class);
+        $acl->addResource(Users::class);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES);
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES);
@@ -107,6 +113,17 @@ class Permission extends Injectable
         $acl->allow(self::DEVELOPER, self::ACCESS_FINDER);
         $acl->allow(self::ADMIN, self::ACCESS_FINDER);
         $acl->allow(self::USER, self::ACCESS_FINDER);
+
+        $acl->allow(self::DEVELOPER, Pages::class);
+        $acl->allow(self::ADMIN, Pages::class);
+        $acl->allow(self::USER, Pages::class);
+
+        $acl->allow(self::DEVELOPER, Translations::class);
+        $acl->allow(self::ADMIN, Translations::class);
+        $acl->allow(self::USER, Translations::class);
+
+        $acl->allow(self::DEVELOPER, Users::class);
+        $acl->allow(self::ADMIN, Users::class);
 
         $acl->allow(self::DEVELOPER, Languages::class);
     }

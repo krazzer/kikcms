@@ -4,8 +4,11 @@ namespace KikCMS\Services\Cms;
 
 
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
+use KikCMS\DataTables\Pages;
+use KikCMS\DataTables\Users;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 use Website\Classes\WebsiteSettings;
@@ -16,6 +19,7 @@ use Website\Classes\WebsiteSettings;
  * @property Translator $translator
  * @property WebsiteService $websiteService
  * @property WebsiteSettings $websiteSettings
+ * @property AccessControl $acl
  */
 class CmsService extends Injectable
 {
@@ -38,6 +42,14 @@ class CmsService extends Injectable
 
         if( ! $this->config->get('analytics')){
             unset($groups[MenuConfig::MENU_GROUP_STATS]);
+        }
+
+        if( ! $this->acl->allowed(Pages::class)){
+            unset($groups[MenuConfig::MENU_GROUP_CONTENT]);
+        }
+
+        if( ! $this->acl->allowed(Users::class)){
+            $groups[MenuConfig::MENU_GROUP_CMS]->remove(MenuConfig::MENU_ITEM_USERS);
         }
 
         return $this->websiteSettings->getMenuGroups($groups);

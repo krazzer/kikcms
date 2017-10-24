@@ -96,4 +96,12 @@ class CmsMenuGroup
         $this->label = $label;
         return $this;
     }
+
+    /**
+     * @param string $menuItemKey
+     */
+    public function remove(string $menuItemKey)
+    {
+        unset($this->menuItems[$menuItemKey]);
+    }
 }
