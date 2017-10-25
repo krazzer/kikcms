@@ -6,8 +6,12 @@
     {% if helper and helper.aliasUrl %}
         <link rel="canonical" href="{{ helper.aliasUrl }}">
     {% endif %}
-    <meta name="description" content="{{ pageLanguage.seo_description }}">
-    <meta name="keywords" content="{{ pageLanguage.seo_keywords }}">
+
+    {% if pageLanguage %}
+        <meta name="description" content="{{ pageLanguage.seo_description }}">
+        <meta name="keywords" content="{{ pageLanguage.seo_keywords }}">
+    {% endif %}
+
     <title>{% block title %}{{ title }}{% endblock %}</title>
     {% block styles %}
         {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}

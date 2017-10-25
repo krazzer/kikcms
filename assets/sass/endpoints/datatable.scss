@@ -345,6 +345,10 @@ body {
                             background-color: $colorPink;
                             color: $colorWhite;
 
+                            &.action a{
+                                color: $colorWhite;
+                            }
+
                             .highlight{
                                 background-color: $pinkDark;
                             }
@@ -364,6 +368,11 @@ body {
                             text-align: center;
                             width: 60px;
                             cursor: pointer;
+
+                            a{
+                                color: $colorBlack;
+                                text-decoration: none;
+                            }
 
                             .glyphicon {
                                 display: none;

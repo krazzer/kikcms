@@ -16,16 +16,21 @@ class TableButton
     /** @var string */
     private $class;
 
+    /** @var string */
+    private $url;
+
     /**
      * @param string $icon
      * @param string $title
      * @param string $class
+     * @param string|null $url
      */
-    public function __construct(string $icon, string $title, string $class)
+    public function __construct(string $icon, string $title, string $class, string $url = null)
     {
         $this->icon  = $icon;
         $this->title = $title;
         $this->class = $class;
+        $this->url   = $url;
     }
 
     /**
@@ -50,5 +55,28 @@ class TableButton
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    /**
+     * @param array $row
+     * @return string
+     */
+    public function getUrl(array $row): string
+    {
+        $url = $this->url;
+
+        foreach ($row as $key => $value){
+            $url = str_replace(':' . $key, $value, $url);
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasUrl(): bool
+    {
+        return (bool) $this->url;
     }
 }

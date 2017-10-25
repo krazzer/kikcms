@@ -30,6 +30,32 @@ class MediaResizeBase extends WebsiteExtendable
      * @param $width
      * @param $height
      */
+    public function crop(Adapter $image, $width, $height)
+    {
+        if($image->getWidth() < $width && $image->getHeight() < $height){
+            return;
+        }
+
+        if($image->getWidth() / $image->getHeight() > $width / $height){
+            $image->resize($width * ($image->getHeight() / $height), $height);
+        } else {
+            $image->resize($width, $height * ($image->getWidth() / $width));
+        }
+
+        // crop if the width or height is still out of bounds
+        if($image->getWidth() > $width || $image->getHeight() > $height){
+            $offsetX = ($image->getWidth() - $width) / 2;
+            $offsetY = ($image->getHeight() - $height) / 2;
+
+            $image->crop($width, $height, $offsetX, $offsetY);
+        }
+    }
+
+    /**
+     * @param Adapter $image
+     * @param $width
+     * @param $height
+     */
     public function resize(Adapter $image, $width, $height)
     {
         if($image->getWidth() < $width && $image->getHeight() < $height){
