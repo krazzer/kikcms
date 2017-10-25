@@ -8,6 +8,7 @@ use KikCMS\Config\DbConfig;
 
 /**
  * @property Page $parent
+ * @property Page[] $aliases
  */
 class Page extends Model
 {
@@ -48,7 +49,8 @@ class Page extends Model
     {
         parent::initialize();
 
-        $this->belongsTo("parent_id", Page::class, "id", ["alias" => "parent"]);
+        $this->belongsTo(self::FIELD_PARENT_ID, Page::class, Page::FIELD_ID, ["alias" => "parent"]);
+        $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
     }
 
     /**

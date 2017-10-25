@@ -30,6 +30,10 @@ class PageLanguageService extends Injectable
      */
     public function createForAlias(Page $alias)
     {
+        if( ! $alias->getAliasId()){
+            return;
+        }
+        
         $pageLanguageMap = $this->getAllByPageId($alias->getAliasId());
 
         foreach ($pageLanguageMap as $pageLanguage) {
