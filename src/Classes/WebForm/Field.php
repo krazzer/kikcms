@@ -286,10 +286,11 @@ class Field
 
     /**
      * Shortcut to set the storage to None
+     * @return Field
      */
-    public function dontStore()
+    public function dontStore(): Field
     {
-        $this->store(new None());
+        return $this->store(new None());
     }
 
     /**

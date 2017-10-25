@@ -104,7 +104,7 @@ trait FieldShortcuts
      * @param string $content
      * @return Field|HtmlField
      */
-    public function addHtmlField(string $label, string $content)
+    public function addHtmlField(?string $label, string $content)
     {
         return $this->addField(new HtmlField($label, $content));
     }

@@ -43,15 +43,7 @@ class PasswordResetLinkForm extends WebForm
             return;
         }
 
-        $subject     = $this->translator->tl('login.reset.mail.subject');
-        $body        = $this->translator->tl('login.reset.mail.body');
-        $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
-
-        $resetUrl = $this->userService->getResetUrl($user);
-
-        $parameters['buttons'] = [['url' => $resetUrl, 'label' => $buttonLabel]];
-
-        if ($this->mailService->sendServiceMail($user->email, $subject, $body, $parameters)) {
+        if ($this->userService->sendResetMail($user)) {
             $this->flash->success($this->translator->tl('login.reset.flash'));
             $_POST = [];
         } else {

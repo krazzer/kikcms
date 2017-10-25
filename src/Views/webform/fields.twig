@@ -62,7 +62,9 @@
 {%- block fieldHtml -%}
     {# @var field \KikCMS\Classes\WebForm\Fields\Html #}
     <div{{ fieldContainterAttributes|raw }}>
-        <label>{{ field.label|raw }}</label>
+        {% if field.label %}
+            <label>{{ field.label|raw }}</label>
+        {% endif %}
         <div class="field">
             {{ field.content|raw }}
         </div>
@@ -101,7 +103,8 @@
 
         <div class="field">
             <div class="buttons">
-                <div class="btn btn-default preview{{ not element.value ? ' hidden' }}" data-finder="{{ field.uploadOnly ? 0 : 1 }}">
+                <div class="btn btn-default preview{{ not element.value ? ' hidden' }}"
+                     data-finder="{{ field.uploadOnly ? 0 : 1 }}">
                     <div class="thumb">
                         {% if element.value %}
                             {% set finderFile = field.finderFileById(element.value) %}
@@ -122,7 +125,8 @@
                     </div>
                 {% endif %}
 
-                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}" data-field="{{ field.key }}">
+                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}"
+                       data-field="{{ field.key }}">
                     <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
                     <span class="lbl">
                         {{ tl('media.button.upload') }}

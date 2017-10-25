@@ -13,9 +13,19 @@ use Phalcon\Di\Injectable;
  * @property DbService $dbService
  * @property Config $applicationConfig
  * @property Translator $translator
+ * @property MailService $mailService
  */
 class UserService extends Injectable
 {
+    /**
+     * @param string $password
+     * @return string
+     */
+    public function hashPassword(string $password): string
+    {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
     /**
      * @param $email
      *
@@ -85,9 +95,7 @@ class UserService extends Injectable
      */
     public function storePassword(User $user, string $password)
     {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        $user->password = $hashedPassword;
+        $user->password = $this->hashPassword($password);
         $user->save();
     }
 
@@ -95,9 +103,9 @@ class UserService extends Injectable
      * @param User $user
      * @return bool
      */
-    public function isActive(User $user)
+    public function isActive(User $user): bool
     {
-        return $user->active == 1 && $user->password;
+        return (bool) $user->password;
     }
 
     /**
@@ -132,5 +140,24 @@ class UserService extends Injectable
         $this->session->start();
         $this->flash->notice($this->translator->tl('login.logout'));
         $this->response->redirect('cms/login');
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function sendResetMail(User $user): bool
+    {
+        $subject     = $this->translator->tl('login.reset.mail.subject');
+        $body        = $this->translator->tl('login.reset.mail.body');
+        $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
+
+        $resetUrl = $this->userService->getResetUrl($user);
+
+        $parameters['buttons'] = [
+            'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
+        ];
+
+        return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
     }
 }

@@ -10,14 +10,14 @@ class HtmlField extends Field
     /** @var string */
     private $content;
 
-    /** @var string */
+    /** @var string|null */
     private $label;
 
     /**
-     * @param string $label
+     * @param string|null $label
      * @param string $content
      */
-    public function __construct(string $label, string $content)
+    public function __construct(?string $label, string $content)
     {
         $this->setKey('html');
 
@@ -44,9 +44,9 @@ class HtmlField extends Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label;
     }
