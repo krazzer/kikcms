@@ -29,6 +29,14 @@ class WebsiteSettingsBase extends WebsiteExtendable
     }
 
     /**
+     * @return null|string
+     */
+    public function getCustomCss(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @return array
      */
     public function getPlugins(): array

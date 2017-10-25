@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 
@@ -9,6 +10,7 @@ use KikCMS\Services\UserService;
  * Controller for the CMS that can render the menu
  * @property UserService $userService
  * @property CmsService $cmsService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class BaseCmsController extends BaseController
 {
@@ -25,7 +27,11 @@ class BaseCmsController extends BaseController
             $menuStructure = [];
         }
 
-        $this->view->setVar("menuStructure", $menuStructure);
+        if($customCss = $this->websiteSettings->getCustomCss()){
+            $this->view->customCss = $customCss;
+        }
+
+        $this->view->menuStructure = $menuStructure;
         $this->highlightMenuItem($this->dispatcher->getActionName());
     }
 
@@ -46,6 +52,6 @@ class BaseCmsController extends BaseController
      */
     protected function highlightMenuItem(string $menuItem)
     {
-        $this->view->setVar("actionName", $menuItem);
+        $this->view->actionName = $menuItem;
     }
 }

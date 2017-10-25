@@ -16,10 +16,10 @@ body{
 
     .logo{
         margin-bottom: 30px;
-
-        img {
-            width: 158px;
-        }
+        background: url('/cmsassets/images/kikcms.png') no-repeat;
+        background-size: 158px 37px;
+        width: 158px;
+        height: 37px;
     }
 
     .alert{

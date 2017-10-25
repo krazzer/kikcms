@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Forms\LoginForm;
 use KikCMS\Forms\PasswordResetForm;
@@ -16,9 +17,22 @@ use Phalcon\Http\Response;
  * @property MailService $mailService
  * @property UserService $userService
  * @property Config $applicationConfig
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class LoginController extends BaseController
 {
+    /**
+     * @inheritdoc
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        if($customCss = $this->websiteSettings->getCustomCss()){
+            $this->view->customCss = $customCss;
+        }
+    }
+
     public function indexAction()
     {
         $loginForm = (new LoginForm())->render();

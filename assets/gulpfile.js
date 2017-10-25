@@ -3,14 +3,11 @@
 //////////////////////////////
 
 var gulp         = require('gulp');
-var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps   = require('gulp-sourcemaps');
 var sass         = require('gulp-sass');
-var less         = require('gulp-less');
 var cssnano      = require('gulp-cssnano');
 var uglify       = require('gulp-uglify');
 var concat       = require('gulp-concat');
-var watch        = require('gulp-watch');
 
 // Root folder
 var rootFolder = '../resources/';
