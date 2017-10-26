@@ -23,7 +23,7 @@ class FullPageService extends Injectable
      */
     public function getMapByMenu(Menu $menu): FullPageMap
     {
-        $pageMap = $this->pageService->getChildrenByMenu($menu);
+        $pageMap = $this->pageService->getOffspringByMenu($menu);
         return $this->getByPageMap($pageMap, $menu->getLanguageCode());
     }
 

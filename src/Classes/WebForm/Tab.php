@@ -1,6 +1,7 @@
 <?php
 
 namespace KikCMS\Classes\WebForm;
+
 use KikCMS\ObjectLists\FieldMap;
 
 
@@ -17,19 +18,44 @@ class Tab
 
     /**
      * @param string $name
-     * @param array $fields
+     * @param Field[] $fields
      */
     public function __construct(string $name, array $fields)
     {
-        $this->name     = $name;
-        $this->fieldMap = $fields;
+        $this->name = $name;
+
+        $this->fieldMap = new FieldMap();
+
+        foreach ($fields as $field) {
+            $this->fieldMap->add($field, $field->getKey());
+        }
     }
 
-    public function addField(Field $field)
+    /**
+     * @param Field $field
+     * @return $this
+     */
+    public function addField(Field $field): Tab
     {
-        $this->fieldMap[] = $field;
+        $this->fieldMap->add($field, $field->getKey());
 
         $field->setTab($this);
+
+        return $this;
+    }
+
+    /**
+     * @param Field $field
+     * @param string $targetKey
+     * @return $this
+     */
+    public function addFieldAfter(Field $field, string $targetKey): Tab
+    {
+        $this->fieldMap->addAfter($field, $field->getKey(), $targetKey);
+
+        $field->setTab($this);
+
+        return $this;
     }
 
     /**
@@ -49,17 +75,17 @@ class Tab
     }
 
     /**
-     * @return Field[]
+     * @return FieldMap
      */
-    public function getFieldMap(): array
+    public function getFieldMap(): FieldMap
     {
         return $this->fieldMap;
     }
 
     /**
-     * @param Field[] $fieldMap
+     * @param FieldMap $fieldMap
      */
-    public function setFieldMap(array $fieldMap)
+    public function setFieldMap(FieldMap $fieldMap)
     {
         $this->fieldMap = $fieldMap;
     }

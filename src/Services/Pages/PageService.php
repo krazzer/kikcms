@@ -37,14 +37,28 @@ class PageService extends Injectable
      */
     public function getChildren(Page $page): PageMap
     {
-        return $this->dbService->getObjectMap($this->getChildrenQuery($page), PageMap::class);
+        $query = (new Builder)
+            ->from(Page::class)
+            ->where(Page::FIELD_PARENT_ID . ' = :parentId:', ['parentId' => $page->id])
+            ->orderBy(Page::FIELD_DISPLAY_ORDER);
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
+    }
+
+    /**
+     * @param Page $page
+     * @return PageMap
+     */
+    public function getOffspring(Page $page): PageMap
+    {
+        return $this->dbService->getObjectMap($this->getOffspringQuery($page), PageMap::class);
     }
 
     /**
      * @param Page $page
      * @return Builder
      */
-    public function getChildrenQuery(Page $page): Builder
+    public function getOffspringQuery(Page $page): Builder
     {
         $query = (new Builder())
             ->from(Page::class)
@@ -125,7 +139,7 @@ class PageService extends Injectable
      *
      * @return bool
      */
-    public function isChildOf(Page $page, Page $parentPage): bool
+    public function isOffspringOf(Page $page, Page $parentPage): bool
     {
         $query = (new Builder)
             ->from(Page::class)
@@ -144,13 +158,13 @@ class PageService extends Injectable
      * @param Menu $menu
      * @return PageMap
      */
-    public function getChildrenByMenu(Menu $menu): PageMap
+    public function getOffspringByMenu(Menu $menu): PageMap
     {
         if ( ! $menuPage = Page::getById($menu->getMenuId())) {
             return new PageMap();
         }
 
-        $query = $this->getChildrenQuery($menuPage);
+        $query = $this->getOffspringQuery($menuPage);
 
         if ($menu->getRestrictTemplate()) {
             $query->andWhere(Page::FIELD_TEMPLATE . ' = :templateId:', ['templateId' => $menu->getRestrictTemplate()]);

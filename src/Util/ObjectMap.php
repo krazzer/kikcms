@@ -141,6 +141,31 @@ class ObjectMap extends ObjectList implements ObjectMapInterface
         return $this;
     }
 
+    /**
+     * Add an object to the map after given targetKey
+     *
+     * @param $object
+     * @param string $key
+     * @param string $targetKey
+     *
+     * @return $this
+     */
+    public function addAfter($object, string $key, string $targetKey)
+    {
+        $this->addObjectToList($object, $key);
+
+        $sourceKeyIndex = array_search($key, $this->keys, true);
+        $targetKeyIndex = array_search($targetKey, $this->keys, true);
+
+        unset($this->keys[$sourceKeyIndex]);
+        $this->keys = array_add_after_key($this->keys, $targetKeyIndex, $sourceKeyIndex, $key);
+
+        // Renumber key positions
+        $this->keys = array_values($this->keys);
+
+        return $this;
+    }
+
     /** @inheritdoc */
     public function insert($object, $position, $key = null)
     {

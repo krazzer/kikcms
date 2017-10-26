@@ -37,7 +37,7 @@ class PageRearrangeService extends Injectable
     {
         $this->checkOrderIntegrity();
 
-        if ($this->pageService->isChildOf($targetPage, $page)) {
+        if ($this->pageService->isOffspringOf($targetPage, $page)) {
             return;
         }
 
@@ -103,7 +103,7 @@ class PageRearrangeService extends Injectable
         $pageMap = $this->pageService->getDisplayOrderMissing();
 
         foreach ($pageMap as $parentPage) {
-            $children        = $this->pageService->getChildren($parentPage);
+            $children        = $this->pageService->getOffspring($parentPage);
             $maxDisplayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
 
             /** @var Page $page */

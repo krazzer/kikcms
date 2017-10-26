@@ -18,7 +18,7 @@ class SelectField extends Field
      * @param array $options
      * @param array $validators
      */
-    public function __construct(string $key, string $label, array $options, array $validators)
+    public function __construct(string $key, string $label, array $options, array $validators = [])
     {
         $element = (new Select($key))
             ->setOptions($options)
