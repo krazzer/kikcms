@@ -82,17 +82,26 @@ class MailService extends Injectable
      * @param string $subject
      * @param string $body
      *
+     * @param array $parameters
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMailUser($to, string $subject, string $body): int
+    public function sendMailUser($to, string $subject, string $body, array $parameters = []): int
     {
         $companyName  = $this->config->company->name;
         $companyEmail = $this->config->company->email;
 
-        $parameters = [
+        $parameters = array_merge([
             'logo'    => $this->config->company->logoMail,
             'address' => $companyName . ', ' . $this->config->company->address,
-        ];
+        ], $parameters);
+
+        if(isset($this->config->company->mainColor)){
+            $parameters['mainColor'] = $this->config->company->mainColor;
+        }
+
+        if(isset($this->config->company->mainColorDark)){
+            $parameters['mainColorDark'] = $this->config->company->mainColorDark;
+        }
 
         return $this->sendMail([$companyEmail => $companyName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
     }

@@ -223,7 +223,7 @@ return [
             'buttonLabel' => 'Stuur wachtwoord reset link',
 
             'mail' => [
-                'subject'     => 'KikCMS wachtwoord reset',
+                'subject'     => 'Wachtwoord reset / aanvragen',
                 'body'        => 'Druk op de onderstaande knop om uw wachtwoord (opnieuw) in te stellen. ' .
                     'Let op, deze link is slechts 2 uur geldig.',
                 'buttonLabel' => 'Wachtwoord opnieuw instellen',

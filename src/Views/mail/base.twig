@@ -1,3 +1,5 @@
+{% set mainColor = mainColor ?: '#df137a' %}
+{% set mainColorDark = mainColorDark ?: '#9a004e' %}
 <!doctype html>
 <html>
 <head>
@@ -136,7 +138,7 @@
             box-sizing: border-box;
             width: 100%; }
         .btn > tbody > tr > td {
-            padding-bottom: 15px; }
+            padding-bottom: 0; }
         .btn table {
             width: auto; }
         .btn table td {
@@ -145,7 +147,7 @@
             text-align: center; }
         .btn a {
             background-color: #ffffff;
-            border: solid 1px #df137a;
+            border: solid 1px {{ mainColor }};
             border-radius: 5px;
             box-sizing: border-box;
             color: #3498db;
@@ -154,15 +156,15 @@
             font-size: 14px;
             font-weight: normal;
             margin: 0;
-            padding: 12px 25px;
+            padding: 8px 25px;
             text-decoration: none; }
 
         .btn-primary table td {
-            background-color: #df137a; }
+            background-color: {{ mainColor }}; }
 
         .btn-primary a {
-            background-color: #df137a;
-            border-color: #df137a;
+            background-color: {{ mainColor }};
+            border-color: {{ mainColor }};
             color: #ffffff; }
 
         /* -------------------------------------
@@ -237,10 +239,10 @@
                 line-height: inherit !important;
                 text-decoration: none !important; }
             .btn-primary table td:hover {
-                background-color: #9a004e !important; }
+                background-color: {{ mainColorDark }} !important; }
             .btn-primary a:hover {
-                background-color: #9a004e !important;
-                border-color: #9a004e !important; } }
+                background-color: {{ mainColorDark }} !important;
+                border-color: {{ mainColorDark }} !important; } }
 
     </style>
 </head>

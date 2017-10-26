@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\DbService;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\User;
 use Phalcon\Config;
@@ -158,6 +159,10 @@ class UserService extends Injectable
             'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
         ];
 
-        return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
+        if($user->role == Permission::CLIENT){
+            return $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
+        } else {
+            return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
+        }
     }
 }
