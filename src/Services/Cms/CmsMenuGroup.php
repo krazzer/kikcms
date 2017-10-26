@@ -52,6 +52,20 @@ class CmsMenuGroup
     }
 
     /**
+     * @return CmsMenuItem|null
+     */
+    public function getFirst(): ?CmsMenuItem
+    {
+        if( ! $this->menuItems){
+            return null;
+        }
+
+        $firstKey = array_keys($this->menuItems)[0];
+
+        return $this->menuItems[$firstKey];
+    }
+
+    /**
      * @param string $id
      * @return CmsMenuGroup
      */

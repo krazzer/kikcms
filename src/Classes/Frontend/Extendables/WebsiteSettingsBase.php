@@ -23,7 +23,7 @@ class WebsiteSettingsBase extends WebsiteExtendable
      * @param CmsMenuGroup[] $menuGroups
      * @return CmsMenuGroup[]
      */
-    public function getCmsMenuGroups(array $menuGroups)
+    public function getMenuGroups(array $menuGroups): array
     {
         return $menuGroups;
     }

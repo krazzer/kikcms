@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Cms;
 
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
@@ -11,14 +12,13 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
-use Website\Classes\WebsiteSettings;
 
 /**
  * Contains some generic CMS functions
  *
  * @property Translator $translator
  * @property WebsiteService $websiteService
- * @property WebsiteSettings $websiteSettings
+ * @property WebsiteSettingsBase $websiteSettings
  * @property AccessControl $acl
  */
 class CmsService extends Injectable

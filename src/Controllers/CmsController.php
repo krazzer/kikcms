@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 use DateTime;
 use KikCMS\Classes\Finder\Finder;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\MenuConfig;
@@ -12,6 +13,7 @@ use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Analytics\AnalyticsService;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
@@ -27,6 +29,8 @@ use Phalcon\Http\Response;
  * @property TinyMceService $tinyMceService
  * @property DateTimeService $dateTimeService
  * @property AnalyticsService $analyticsService
+ * @property WebsiteSettingsBase $websiteSettings
+ * @property CmsService $cmsService
  */
 class CmsController extends BaseCmsController
 {
@@ -50,7 +54,20 @@ class CmsController extends BaseCmsController
      */
     public function indexAction()
     {
-        return $this->response->redirect('cms/' . MenuConfig::MENU_ITEM_PAGES);
+        $menuGroups    = $this->cmsService->getMenuItemGroups();
+        $menuFirstKey  = array_keys($menuGroups)[0];
+        $firstMenuItem = $menuGroups[$menuFirstKey]->getFirst();
+
+        if($firstMenuItem && $firstMenuItem->getId() != MenuConfig::MENU_ITEM_LOGOUT){
+            return $this->response->redirect($firstMenuItem->getRoute());
+        }
+
+        $this->view->title  = 'No available item found';
+        $this->view->object = $this->view->title;
+
+        $this->view->pick('cms/default');
+
+        return null;
     }
 
     /**
