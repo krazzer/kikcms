@@ -4,6 +4,7 @@ namespace KikCMS\DataTables;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
@@ -22,6 +23,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property Translator $translator
  * @property AccessControl $acl
  * @property TemplateService $templateService
+ * @property TemplateFieldsBase $templateFields
  */
 class Pages extends DataTable
 {
@@ -216,8 +218,26 @@ class Pages extends DataTable
         $this->lockedTitle   = $this->translator->tl('dataTables.pages.titles.locked');
 
         $this->setFieldFormatting('name', [$this, 'formatName']);
+        $this->setFieldFormatting('template', [$this, 'formatTemplateName']);
 
         $this->addTableButton('eye-open', $this->translator->tl('dataTables.pages.preview'), 'preview');
+    }
+
+    /**
+     * @param $templateKey
+     * @return string
+     */
+    protected function formatTemplateName($templateKey): string
+    {
+        $templates = $this->templateFields->getTemplates();
+
+        foreach ($templates as $template){
+            if($template->getKey() == $templateKey){
+                return $template->getName();
+            }
+        }
+
+        return (string) $templateKey;
     }
 
     /**

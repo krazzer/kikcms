@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
+use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\Field;
 
@@ -29,7 +30,7 @@ class TemplateFieldsBase extends WebsiteExtendable
     }
 
     /**
-     * @return array
+     * @return Template[]
      */
     public function getTemplates(): array
     {
