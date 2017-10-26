@@ -116,6 +116,10 @@ class PageLanguageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $languageCode = null): PageLanguageMap
     {
+        if( ! $pageMap->keys()){
+            return new PageLanguageMap;
+        }
+
         $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
 
         $query = (new Builder)
