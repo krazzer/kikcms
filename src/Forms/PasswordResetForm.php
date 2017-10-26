@@ -19,8 +19,11 @@ class PasswordResetForm extends WebForm
      */
     protected function initialize()
     {
+        $user = User::getById($this->request->get('userId'));
+
         $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
 
+        $this->addTextField('email', 'E-mail')->setDefault($user->email)->setAttribute('readonly', 'readonly');
         $this->addPasswordField('password', 'Nieuw wachtwoord', [new PresenceOf(), $passwordStringLength]);
         $this->addPasswordField('password_repeat', 'Herhaal wachtwoord', [
             new PresenceOf(),
