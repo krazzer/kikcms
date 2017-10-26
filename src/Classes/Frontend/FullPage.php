@@ -47,7 +47,7 @@ class FullPage extends Identifiable
      */
     public function __call($name, $arguments)
     {
-        $propertyName = strtolower(str_replace('get', '', $name));
+        $propertyName = lcfirst(str_replace('get', '', $name));
 
         if ( ! array_key_exists($propertyName, $this->content)) {
             return null;

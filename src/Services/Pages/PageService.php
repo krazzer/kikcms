@@ -19,6 +19,19 @@ use Phalcon\Mvc\Model\Query\Builder;
 class PageService extends Injectable
 {
     /**
+     * @param array $pageIds
+     * @return PageMap
+     */
+    public function getByIdList(array $pageIds): PageMap
+    {
+        $query = (new Builder)
+            ->from(Page::class)
+            ->inWhere(Page::FIELD_ID, $pageIds);
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
+    }
+
+    /**
      * @param string $key
      * @return Page|null
      */

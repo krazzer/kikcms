@@ -31,4 +31,12 @@ class FullPageMap extends ObjectMap
     {
         return parent::current();
     }
+
+    /**
+     * @return ObjectMap|FullPageMap|false
+     */
+    public function reverse()
+    {
+        return parent::reverse();
+    }
 }

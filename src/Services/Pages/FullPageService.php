@@ -4,6 +4,7 @@ namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
+use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageMap;
 use KikCMS\Services\LanguageService;
@@ -14,6 +15,7 @@ use Phalcon\Di\Injectable;
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
  * @property LanguageService $languageService
+ * @property Translator $translator
  */
 class FullPageService extends Injectable
 {
@@ -34,7 +36,7 @@ class FullPageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $langCode = null): FullPageMap
     {
-        $langCode = $langCode ?: $this->languageService->getDefaultLanguageCode();
+        $langCode = $langCode ?: $this->translator->getLanguageCode();
 
         $fullPageMap = new FullPageMap();
 
