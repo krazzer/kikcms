@@ -7,11 +7,6 @@
     {{ stylesheetLink('cmsassets/css/statistics.css') }}
 {% endblock %}
 
-{% block jsAssets %}
-    {{ javascriptInclude('https://www.gstatic.com/charts/loader.js') }}
-    {{ javascriptInclude('/cmsassets/js/statistics.js') }}
-{% endblock %}
-
 {% block cmsContent %}
     <div class="controls">
         <input type="hidden" name="settings" value="{{ settings|json_encode }}">

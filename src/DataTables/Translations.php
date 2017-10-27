@@ -22,13 +22,6 @@ class Translations extends DataTable
     /**
      * @inheritdoc
      */
-    public function addAssets()
-    {
-        parent::addAssets();
-
-        $this->view->assets->addJs('cmsassets/js/datatables/translationsDataTable.js');
-    }
-
     public function delete(array $ids)
     {
         parent::delete($ids);

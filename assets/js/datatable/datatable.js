@@ -249,8 +249,8 @@ var DataTable = Class.extend({
             self.actionEdit(id);
         });
 
-        $rows.on('dblclick', function () {
-            self.onRowDblClick($(this));
+        $rows.find('td:not(.action)').on('dblclick', function () {
+            self.onRowDblClick($(this).parent());
         });
 
         var searchValue = this.getSearchField().val();
@@ -379,7 +379,6 @@ var DataTable = Class.extend({
 
     action: function (action, parameters, onSuccess, onError) {
         parameters = this.addActionParameters(parameters);
-
         KikCMS.action(this.actionPath + action, parameters, onSuccess, onError, null, this);
     },
 

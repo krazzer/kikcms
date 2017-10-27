@@ -46,6 +46,10 @@ var Statistics = Class.extend({
      * Initialize the Statistics component
      */
     init: function () {
+        if(typeof google == 'undefined'){
+            return;
+        }
+
         google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(this.renderChart.bind(this));
 
@@ -266,4 +270,7 @@ var Statistics = Class.extend({
 });
 
 var statistics = new Statistics();
-statistics.init();
+
+$(function () {
+    statistics.init();
+});

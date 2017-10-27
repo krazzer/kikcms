@@ -100,8 +100,7 @@ abstract class WebForm extends Renderable
      */
     public function addAssets()
     {
-        $this->view->assets->addJs('cmsassets/js/webform/webform.js?v=1.39');
-        $this->view->assets->addCss('cmsassets/css/webform.css?v=1.01');
+        $this->view->assets->addCss('cmsassets/css/webform.css');
 
         if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
             $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
@@ -109,12 +108,6 @@ abstract class WebForm extends Renderable
 
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
             (new Finder())->addAssets();
-        }
-
-        if ($this->hasFieldWithType(Field::TYPE_DATE)) {
-            $langCode = $this->translator->tl('system.langCode');
-            $this->view->assets->addJs('cmsassets/js/vendor/moment/moment.js');
-            $this->view->assets->addJs('cmsassets/js/vendor/moment/' . $langCode . '.js');
         }
     }
 

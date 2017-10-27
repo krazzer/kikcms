@@ -20,6 +20,7 @@
     "gulp-stylus": "^2.6.0",
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
-    "rupture": "^0.6.2"
+    "gulp-gzip": "^1.4.0",
+    "gulp-plumber": "^1.1.0"
   }
 }

@@ -139,6 +139,8 @@ class CmsController extends BaseCmsController
             'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
         ];
 
+        $this->view->assets->addJs('https://www.gstatic.com/charts/loader.js', false);
+
         $this->view->pick('cms/statistics');
     }
 

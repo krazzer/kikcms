@@ -12,7 +12,6 @@
     {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
     {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
     {{ stylesheetLink('cmsassets/css/default.css') }}
-    {{ javascriptInclude('cmsassets/js/vendor/jquery.min.js') }}
     {{ assets.outputCss() }}
     {% block cssAssets %}{% endblock %}
     {% if customCss %}
@@ -30,13 +29,11 @@
     <div id="ajaxDebugger" onclick="$(this).hide();"></div>
 </div>
 {% block content %}{% endblock %}
-{{ javascriptInclude('cmsassets/js/utils.js') }}
-{{ javascriptInclude('cmsassets/js/kikcms.js') }}
-{{ javascriptInclude('cmsassets/js/main.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
-{{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
+{{ javascriptInclude('cmsassets/js/vendor.js') }}
+{{ javascriptInclude('cmsassets/js/cms.js') }}
 <script>
+    moment.locale('{{ langCode }}');
+
     KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
     KikCMS.maxFileUploads    = {{ maxFileUploads }};
     KikCMS.maxFileSize       = {{ maxFileSize }};
@@ -48,6 +45,5 @@
     {% endfor %}
 </script>
 {{ assets.outputJs() }}
-{% block jsAssets %}{% endblock %}
 </body>
 </html>

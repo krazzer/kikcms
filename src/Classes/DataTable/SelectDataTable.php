@@ -36,7 +36,6 @@ abstract class SelectDataTable extends DataTable
         parent::addAssets();
 
         $this->view->assets->addCss('cmsassets/css/selectDataTable.css');
-        $this->view->assets->addJs('cmsassets/js/selectDataTable.js');
     }
 
     /**

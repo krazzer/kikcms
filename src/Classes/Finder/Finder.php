@@ -48,8 +48,6 @@ class Finder extends Renderable
     {
         $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
         $this->view->assets->addCss('cmsassets/css/finder.css');
-        $this->view->assets->addJs('cmsassets/js/finder/finder.js');
-        $this->view->assets->addJs('cmsassets/js/finder/uploader.js');
 
         $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
     }

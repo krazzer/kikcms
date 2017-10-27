@@ -126,7 +126,8 @@ var WebForm = Class.extend({
             var $field = $(this);
 
             $field.datetimepicker({
-                format: $field.attr('data-format')
+                format: $field.attr('data-format'),
+                locale: moment.locale()
             });
         });
     },
@@ -198,7 +199,7 @@ var WebForm = Class.extend({
                     tinymce.triggerSave();
                 });
             },
-            language_url: '/cmsassets/js/vendor/tinymce/' + KikCMS.tl('system.langCode') + '.js',
+            language_url: '/cmsassets/js/tinymce/' + KikCMS.tl('system.langCode') + '.js',
             language: KikCMS.tl('system.langCode'),
             theme: 'modern',
             relative_urls: false,
