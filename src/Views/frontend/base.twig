@@ -24,11 +24,8 @@
 <body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}">
 {% block body %}{% endblock %}
 {% block scripts %}
-    {{ javascriptInclude('cmsassets/js/utils.js') }}
-    {{ javascriptInclude('cmsassets/js/kikcms.js') }}
-    {{ javascriptInclude('cmsassets/js/vendor/moment/moment.js') }}
-    {{ javascriptInclude('cmsassets/js/vendor/moment/' ~ langCode ~ '.js') }}
-    {{ javascriptInclude('cmsassets/js/vendor/bootstrap.js') }}
+    {{ javascriptInclude('cmsassets/js/frontend/vendor.js') }}
+    {{ javascriptInclude('cmsassets/js/frontend/base.js') }}
 {% endblock %}
 {{ assets.outputJs() }}
 <script>

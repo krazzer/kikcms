@@ -66,7 +66,35 @@ gulp.task('scriptsCms', function () {
         .pipe(gulp.dest(rootFolder + 'js/'));
 });
 
-// Vendors scripts
+// scripts useful, but not required for Frontend
+gulp.task('scriptsFrontend', function () {
+    return gulp.src([
+        'js/utils.js',
+        'js/kikcms.js',
+        'js/webform/webform.js'
+    ])
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('frontend/base.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(rootFolder + 'js/'));
+});
+
+// Vendors scripts Frontend
+gulp.task('vendorsScriptsFrontend', function () {
+    return gulp.src([
+        'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js',
+        'bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js'
+    ])
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(concat('frontend/vendor.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(rootFolder + 'js/'));
+});
+
+// Vendors scripts CMS
 gulp.task('vendorsScriptsCms', function () {
     return gulp.src([
         'bower_components/jquery/dist/jquery.min.js',
@@ -113,7 +141,7 @@ gulp.task('vendors', ['vendorsScripts', 'vendorsStyles']);
 gulp.task('watch', ['styles', 'scriptsCms'], function () {
     gulp.watch('sass/**/*.scss', ['styles']);
     gulp.watch('sass/*.scss', ['styles']);
-    gulp.watch('js/**/*.js', ['scriptsCms']);
+    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend']);
 });
 
 // Default task
