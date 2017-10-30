@@ -2,11 +2,6 @@
 
 {% block title title %}
 
-{% block cssAssets %}
-    {{ parent() }}
-    {{ stylesheetLink('cmsassets/css/statistics.css') }}
-{% endblock %}
-
 {% block cmsContent %}
     <div class="controls">
         <input type="hidden" name="settings" value="{{ settings|json_encode }}">

@@ -16,14 +16,57 @@ var rootFolder = '../resources/';
 // Styles
 gulp.task('styles', function () {
     return gulp.src([
-        'sass/endpoints/*.scss',
-        'sass/endpoints/**/*.scss'
+        'sass/bootstrap/bootstrap-kikcms.scss',
+        'sass/cms/*.scss',
+        'sass/components/*.scss',
+        'sass/datatables/*.scss',
+        'sass/tinymce/*.scss'
     ])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(cssnano({zindex: false}))
+        .pipe(concat('cms.css'))
         .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(rootFolder + 'css/'));
+});
+
+// Styles
+gulp.task('stylesLogin', function () {
+    return gulp.src([
+        'sass/login/*.scss'
+    ])
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(cssnano({zindex: false}))
+        .pipe(concat('login.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(rootFolder + 'css/'));
+});
+
+// Vendors styles
+gulp.task('vendorsStyles', function () {
+    return gulp.src([
+        'sass/bootstrap/bootstrap.scss'
+    ])
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(cssnano({zindex: false}))
+        .pipe(concat('vendor.css'))
+        .pipe(gulp.dest(rootFolder + 'css/'));
+});
+
+// Vendors styles
+gulp.task('stylesFrontend', function () {
+    return gulp.src([
+        'sass/bootstrap/bootstrap.scss',
+        'sass/bootstrap/bootstrap-kikcms.scss'
+    ])
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(cssnano({zindex: false}))
+        .pipe(concat('frontend.css'))
         .pipe(gulp.dest(rootFolder + 'css/'));
 });
 
@@ -43,22 +86,11 @@ gulp.task('scriptsCms', function () {
     return gulp.src([
         'js/utils.js',
         'js/kikcms.js',
-
-        'js/datatable/datatable.js',
-        'js/datatable/sortControl.js',
-        'js/datatable/treeSortControl.js',
-
-        'js/finder/finder.js',
-        'js/finder/uploader.js',
-
-        'js/webform/webform.js',
-
-        'js/datatables/pagesDataTable.js',
-        'js/datatables/selectDataTable.js',
-        'js/datatables/translationsDataTable.js',
-
-        'js/modules/statistics.js',
-        'js/modules/users.js'
+        'js/datatable/*.js',
+        'js/finder/*.js',
+        'js/webform/*.js',
+        'js/datatables/*.js',
+        'js/modules/*.js'
     ])
         .pipe(plumber())
         .pipe(concat('cms.js'))
@@ -119,29 +151,13 @@ gulp.task('vendorsScriptsCms', function () {
         .pipe(gulp.dest(rootFolder + 'js/'));
 });
 
-// Vendors styles
-gulp.task('vendorsStyles', function () {
-    return gulp.src([
-        'sass/bootstrap.scss'
-    ])
-        .pipe(plumber())
-        .pipe(sass())
-        .pipe(cssnano({
-            zindex: false,
-            discardComments: {removeAll: true}
-        }))
-        .pipe(concat('vendor.css'))
-        .pipe(gulp.dest(rootFolder + 'css/vendor/'));
-});
-
 // Vendors combined task
 gulp.task('vendors', ['vendorsScripts', 'vendorsStyles']);
 
 // Watch task with browserSync
 gulp.task('watch', ['styles', 'scriptsCms'], function () {
     gulp.watch('sass/**/*.scss', ['styles']);
-    gulp.watch('sass/*.scss', ['styles']);
-    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend']);
+    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend', 'stylesLogin']);
 });
 
 // Default task

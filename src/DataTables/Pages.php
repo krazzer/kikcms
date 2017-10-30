@@ -57,13 +57,6 @@ class Pages extends DataTable
     /** @var string */
     private $lockedTitle;
 
-    protected function addAssets()
-    {
-        parent::addAssets();
-
-        $this->view->assets->addCss('cmsassets/css/pagesDataTable.css');
-    }
-
     /**
      * @inheritdoc
      */

@@ -665,10 +665,6 @@ abstract class DataTable extends Renderable
      */
     protected function addAssets()
     {
-        $this->view->assets->addCss('cmsassets/css/toolbarComponent.css');
-        $this->view->assets->addCss('cmsassets/css/datatable.css');
-        $this->view->assets->addCss('cmsassets/css/webform.css');
-
         if ($this->preLoadWysiwygJs) {
             $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
         }

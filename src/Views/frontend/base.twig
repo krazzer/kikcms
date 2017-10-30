@@ -15,8 +15,7 @@
 
     <title>{% block title %}{{ title }}{% endblock %}</title>
     {% block styles %}
-        {{ stylesheetLink('cmsassets/css/vendor/bootstrap.css') }}
-        {{ stylesheetLink('cmsassets/css/bootstrap-kikcms.css') }}
+        {{ stylesheetLink('cmsassets/css/frontend.css') }}
     {% endblock %}
     {{ assets.outputCss() }}
     {% block head '' %}

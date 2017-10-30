@@ -29,16 +29,6 @@ abstract class SelectDataTable extends DataTable
     }
 
     /**
-     * @inheritdoc
-     */
-    public function addAssets()
-    {
-        parent::addAssets();
-
-        $this->view->assets->addCss('cmsassets/css/selectDataTable.css');
-    }
-
-    /**
      * @return Filters|SelectDataTableFilters
      */
     public function getEmptyFilters(): Filters

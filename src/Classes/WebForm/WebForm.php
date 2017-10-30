@@ -100,12 +100,6 @@ abstract class WebForm extends Renderable
      */
     public function addAssets()
     {
-        $this->view->assets->addCss('cmsassets/css/webform.css');
-
-        if ($this->hasFieldWithType(Field::TYPE_WYSIWYG)) {
-            $this->view->assets->addCss('cmsassets/css/tinymce/editor.css');
-        }
-
         if ($this->hasFieldWithType(Field::TYPE_FILE)) {
             (new Finder())->addAssets();
         }

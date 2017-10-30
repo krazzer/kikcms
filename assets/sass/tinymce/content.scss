@@ -1,5 +1,5 @@
-@import "../../includes/mixins";
-@import "../../includes/variables";
+@import "../includes/mixins";
+@import "../includes/variables";
 
 .mce-content-body {
     @include fontDefault();

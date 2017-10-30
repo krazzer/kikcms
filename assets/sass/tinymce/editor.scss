@@ -1,12 +1,12 @@
-@import "../../includes/mixins";
-@import "../../includes/variables";
+@import "../includes/mixins";
+@import "../includes/variables";
 
 .form-group .mce-panel{
     border-color: $lightGray !important;
-    background-color: $superLightGray;
+    //background-color: $superLightGray;
 
     .mce-btn{
-        background-color: $superLightGray;
+        //background-color: $superLightGray;
     }
 
     .mce-path{
@@ -21,8 +21,9 @@
         border-radius: $defaultBorderRadius;
 
         &:hover{
-            background-color: $colorWhite;
+            //background-color: $colorWhite;
         }
+
     }
 }
 
