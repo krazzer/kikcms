@@ -164,7 +164,14 @@ class Services extends BaseServices
             return false;
         }
 
-        return new Apc(new Data());
+        $options = null;
+
+        // set the current domain as prefix to prevent caching overlap
+        if($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV){
+            $options = ["prefix" => ':' . $_SERVER['SERVER_NAME'] . ':'];
+        }
+
+        return new Apc(new Data(), $options);
     }
 
     /**
