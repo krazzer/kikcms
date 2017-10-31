@@ -5,6 +5,7 @@ namespace KikCMS\Services\Pages;
 use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Classes\Translator;
+use KikCMS\Models\Page;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageMap;
 use KikCMS\Services\LanguageService;
@@ -62,5 +63,23 @@ class FullPageService extends Injectable
         }
 
         return $fullPageMap;
+    }
+
+    /**
+     * @param Page $page
+     * @param string|null $langCode
+     * @return FullPage|null
+     */
+    public function getByPage(Page $page, string $langCode = null): ?FullPage
+    {
+        $pageMap = (new PageMap)->add($page, $page->getId());
+
+        $fullPageMap = $this->getByPageMap($pageMap, $langCode);
+
+        if($fullPageMap->isEmpty()){
+            return null;
+        }
+
+        return $fullPageMap->getFirst();
     }
 }

@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\DbService;
+use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguageContent;
 use KikCMS\Models\PageLanguage;
@@ -36,5 +37,24 @@ class PageContentService extends Injectable
             ->columns(['plc.field', 'plc.value']);
 
         return $this->dbService->getAssoc($query) + $this->dbService->getAssoc($queryMultiLingual);
+    }
+
+    /**
+     * Get a non-translatable value from the PageContent
+     *
+     * @param Page $page
+     * @param string $field
+     *
+     * @return null|string
+     */
+    public function getPageVariable(Page $page, string $field): ?string
+    {
+        $query = (new Builder)
+            ->from(PageContent::class)
+            ->where(PageContent::FIELD_FIELD . ' = :field:', ['field' => $field])
+            ->andWhere(PageContent::FIELD_PAGE_ID . ' = :pageId:', ['pageId' => $page->getId()])
+            ->columns([PageContent::FIELD_VALUE]);
+
+        return $this->dbService->getValue($query);
     }
 }
