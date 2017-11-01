@@ -62,7 +62,7 @@ class FrontendHelper extends Injectable
         $this->currentPageLanguage      = $pageLanguage;
         $this->currentPageLanguageAlias = $pageLanguageAlias;
 
-        if($pageLanguage->getPageId() !== $pageLanguageAlias->getPageId()){
+        if ($pageLanguage->getPageId() !== $pageLanguageAlias->getPageId()) {
             $this->aliasUrl = $this->urlService->getUrlByPageLanguage($pageLanguage);
         }
     }
@@ -217,8 +217,10 @@ class FrontendHelper extends Injectable
                 $subMenuOutput = $this->buildMenu($pageId, $menu);
             }
 
+            $relativeLevel = $fullPage->getLevel() - $initialLevel;
+
             $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '">';
-            $menuOutput .= $this->getMenuItemOutput($fullPage, $menu->getTemplate());
+            $menuOutput .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel);
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
         }
@@ -233,15 +235,16 @@ class FrontendHelper extends Injectable
     /**
      * @param FullPage $fullPage
      * @param string|null $template
-     *
+     * @param int $relativeLevel
      * @return string
      */
-    private function getMenuItemOutput(FullPage $fullPage, string $template = null): string
+    private function getMenuItemOutput(FullPage $fullPage, string $template = null, int $relativeLevel): string
     {
         if ($template) {
             return $this->view->getPartial('@kikcms/frontend/menu', [
-                'menuBlock' => 'menu' . ucfirst($template),
-                'page'      => $fullPage,
+                'menuBlock'     => 'menu' . ucfirst($template),
+                'page'          => $fullPage,
+                'relativeLevel' => $relativeLevel,
             ]);
         }
 

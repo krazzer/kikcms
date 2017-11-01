@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
+use KikCMS\Config\KikCMSConfig;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 
@@ -19,6 +20,10 @@ class CacheService extends Injectable
      */
     public function clear(string $prefix)
     {
+        if($this->config->application->env == KikCMSConfig::ENV_DEV){
+            $prefix = ':' . $_SERVER['SERVER_NAME'] . ':' . $prefix;
+        }
+
         if( ! $this->cache){
             return;
         }
