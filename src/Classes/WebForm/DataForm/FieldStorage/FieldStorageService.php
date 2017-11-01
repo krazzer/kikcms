@@ -35,7 +35,7 @@ class FieldStorageService extends Injectable
     public function getTranslationKeyId(Field $field, int $relationId = null): int
     {
         if ( ! $relationId) {
-            if(array_key_exists($field->getColumn(), $this->translationKeyCache)){
+            if (array_key_exists($field->getColumn(), $this->translationKeyCache)) {
                 return $this->translationKeyCache[$field->getColumn()];
             }
 
@@ -162,8 +162,9 @@ class FieldStorageService extends Injectable
             throw new InvalidArgumentException(static::class . ' can only store array values');
         }
 
-        $key     = $field->getKey();
-        $storage = $field->getStorage();
+        /** @var ManyToMany $storage */
+        $storage  = $field->getStorage();
+        $fieldKey = $field->getKey();
 
         $table        = $storage->getTableModel();
         $relatedField = $storage->getRelatedField();
@@ -176,9 +177,18 @@ class FieldStorageService extends Injectable
 
         $this->dbService->delete($table, $where);
 
-        foreach ($value as $id) {
-            $insert       = $where;
-            $insert[$key] = $id;
+        foreach ($value as $key => $id) {
+            $insert            = $where;
+            $insert[$fieldKey] = $id;
+
+            // don't story empty values
+            if( ! $id){
+                continue;
+            }
+
+            if($keyField = $storage->getKeyField()){
+                $insert[$keyField] = $key;
+            }
 
             $this->dbService->insert($table, $insert);
         }
@@ -195,6 +205,7 @@ class FieldStorageService extends Injectable
      */
     public function retrieveManyToMany(Field $field, $id, string $langCode = null)
     {
+        /** @var ManyToMany $storage */
         $storage = $field->getStorage();
 
         $query = (new Builder())
@@ -208,6 +219,12 @@ class FieldStorageService extends Injectable
             ]);
         }
 
+        if($keyField = $storage->getKeyField()){
+            $query->columns([$keyField, $field->getKey()]);
+            return $this->dbService->getAssoc($query);
+        }
+
+        $query->columns($field->getKey());
         return $this->dbService->getValues($query);
     }
 
