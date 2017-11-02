@@ -28,7 +28,7 @@ class BaseCmsController extends BaseController
         }
 
         if($customCss = $this->websiteSettings->getCustomCss()){
-            $this->view->customCss = $customCss;
+            $this->view->assets->addCss($customCss);
         }
 
         $this->view->menuStructure = $menuStructure;
