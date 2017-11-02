@@ -153,7 +153,7 @@ class UserService extends Injectable
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
-        $resetUrl = $this->userService->getResetUrl($user);
+        $resetUrl = $this->getResetUrl($user);
 
         $parameters['buttons'] = [
             'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
