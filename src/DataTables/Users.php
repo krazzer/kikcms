@@ -13,6 +13,9 @@ use KikCMS\Services\Cms\CmsService;
  */
 class Users extends DataTable
 {
+    /** @inheritdoc */
+    protected $searchableFields = [User::FIELD_EMAIL];
+
     /**
      * @inheritdoc
      */
