@@ -5,7 +5,11 @@ namespace KikCMS\Models;
 
 class FinderFolder extends FinderFile
 {
+    /** @var int */
     public $is_folder = 1;
+
+    /** @var int */
+    public $size = 0;
 
     /**
      * @inheritdoc
