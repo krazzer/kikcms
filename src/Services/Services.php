@@ -168,7 +168,7 @@ class Services extends BaseServices
 
         // set the current domain as prefix to prevent caching overlap
         if($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV){
-            $options = ["prefix" => ':' . $_SERVER['SERVER_NAME'] . ':'];
+            $options = ["prefix" => explode('.',$_SERVER['SERVER_NAME'])[0] . ':'];
         }
 
         return new Apc(new Data(), $options);

@@ -20,18 +20,24 @@ class CacheService extends Injectable
      */
     public function clear(string $prefix)
     {
-        if($this->config->application->env == KikCMSConfig::ENV_DEV){
-            $prefix = ':' . $_SERVER['SERVER_NAME'] . ':' . $prefix;
-        }
-
         if( ! $this->cache){
             return;
         }
 
-        $keys = $this->cache->queryKeys($prefix);
+        if($this->config->application->env == KikCMSConfig::ENV_DEV){
+            $fullPrefix = explode('.',$_SERVER['SERVER_NAME'])[0] . ':' . $prefix;
+            $keys = $this->cache->queryKeys($fullPrefix);
+        } else {
+            $keys = $this->cache->queryKeys($prefix);
+        }
 
         foreach ($keys as $cacheKey) {
-            $this->cache->delete($cacheKey);
+
+            $cacheKey = str_replace('boltha:', '', $cacheKey);
+
+            $removed = $this->cache->delete($cacheKey);
+
+            dlog($cacheKey, $removed, $this->cache->exists($cacheKey));
         }
     }
 
