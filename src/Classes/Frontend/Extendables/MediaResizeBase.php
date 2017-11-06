@@ -37,9 +37,9 @@ class MediaResizeBase extends WebsiteExtendable
         }
 
         if($image->getWidth() / $image->getHeight() > $width / $height){
-            $image->resize($width * ($image->getHeight() / $height), $height);
+            $image->resize(ceil($width * ($image->getWidth() / $image->getHeight())), $height);
         } else {
-            $image->resize($width, $height * ($image->getWidth() / $width));
+            $image->resize($width, ceil($height * ($image->getHeight() / $image->getWidth())));
         }
 
         // crop if the width or height is still out of bounds
