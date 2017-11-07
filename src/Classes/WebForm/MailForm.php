@@ -2,8 +2,12 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
 
+/**
+ * @property MailService $mailService
+ */
 abstract class MailForm extends WebForm
 {
     /**
@@ -22,8 +26,9 @@ abstract class MailForm extends WebForm
     {
         $adminEmail = $this->config->website->adminEmail;
 
+        $from     = $this->getFrom($input);
         $contents = $this->toMailOutput($input);
-        $mailSend = $this->mailService->sendServiceMail($adminEmail, $this->getSubject(), $contents);
+        $mailSend = $this->mailService->sendServiceMail($adminEmail, $this->getSubject(), $contents, [], $from);
 
         if( ! $mailSend){
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
@@ -59,5 +64,22 @@ abstract class MailForm extends WebForm
         }
 
         return $contents;
+    }
+
+    /**
+     * @param array $input
+     * @return null|string|array
+     */
+    private function getFrom(array $input)
+    {
+        if( ! isset($input['email'])) {
+            return null;
+        }
+
+        if( ! isset($input['name'])) {
+            return $input['email'];
+        }
+
+        return [$input['email'] => $input['name']];
     }
 }
