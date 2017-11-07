@@ -63,6 +63,15 @@ class Page extends Model
     }
 
     /**
+     * @inheritdoc
+     * @return Page[]
+     */
+    public static function getByIdList(array $ids)
+    {
+        return parent::getByIdList($ids);
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
