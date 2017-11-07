@@ -44,7 +44,7 @@ use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
-use Phalcon\Cache\Backend\Apc;
+use Phalcon\Cache\Backend\Apcu;
 use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
@@ -171,7 +171,7 @@ class Services extends BaseServices
             $options = ["prefix" => explode('.',$_SERVER['SERVER_NAME'])[0] . ':'];
         }
 
-        return new Apc(new Data(), $options);
+        return new Apcu(new Data(), $options);
     }
 
     /**

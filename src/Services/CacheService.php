@@ -5,7 +5,6 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DbService;
 use KikCMS\Config\CacheConfig;
-use KikCMS\Config\KikCMSConfig;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 
@@ -20,24 +19,15 @@ class CacheService extends Injectable
      */
     public function clear(string $prefix)
     {
-        if( ! $this->cache){
+        if ( ! $this->cache) {
             return;
         }
 
-        if($this->config->application->env == KikCMSConfig::ENV_DEV){
-            $fullPrefix = explode('.',$_SERVER['SERVER_NAME'])[0] . ':' . $prefix;
-            $keys = $this->cache->queryKeys($fullPrefix);
-        } else {
-            $keys = $this->cache->queryKeys($prefix);
-        }
+
+        $keys = $this->getKeys($prefix);
 
         foreach ($keys as $cacheKey) {
-
-            $cacheKey = str_replace('boltha:', '', $cacheKey);
-
-            $removed = $this->cache->delete($cacheKey);
-
-            dlog($cacheKey, $removed, $this->cache->exists($cacheKey));
+            $this->cache->delete($cacheKey);
         }
     }
 
@@ -61,7 +51,7 @@ class CacheService extends Injectable
      */
     public function cache(string $cacheKey, callable $function, $ttl = CacheConfig::ONE_DAY)
     {
-        if( ! $this->cache){
+        if ( ! $this->cache) {
             return $function();
         }
 
@@ -71,7 +61,7 @@ class CacheService extends Injectable
 
         $result = $function();
 
-        if($result !== null){
+        if ($result !== null) {
             $this->cache->save($cacheKey, $result, $ttl);
         }
 
@@ -84,5 +74,44 @@ class CacheService extends Injectable
     public function createKey(): string
     {
         return implode(':', func_get_args());
+    }
+
+    /**
+     * Get the caches' main prefix
+     *
+     * @return string|null
+     */
+    private function getMainPrefix(): ?string
+    {
+        if( ! $this->cache->getOptions()){
+            return null;
+        }
+
+        if ( ! array_key_exists('prefix', $this->cache->getOptions())) {
+            return null;
+        }
+
+        return $this->cache->getOptions()['prefix'];
+    }
+
+    /**
+     * @param string $prefix
+     * @return array
+     */
+    private function getKeys(string $prefix): array
+    {
+        $mainPrefix = $this->getMainPrefix();
+
+        $keys = $this->cache->queryKeys($mainPrefix . $prefix);
+
+        if( ! $mainPrefix){
+            return $keys;
+        }
+
+        foreach ($keys as &$key){
+            $key = substr($key, strlen($mainPrefix));
+        }
+
+        return $keys;
     }
 }

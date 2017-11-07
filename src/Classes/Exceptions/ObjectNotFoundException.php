@@ -3,6 +3,6 @@
 namespace KikCMS\Classes\Exceptions;
 
 
-class ObjectNotFoundException extends \Exception
+class ObjectNotFoundException extends NotFoundException
 {
 }

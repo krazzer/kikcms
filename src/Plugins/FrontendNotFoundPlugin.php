@@ -27,7 +27,7 @@ class FrontendNotFoundPlugin extends Plugin
      */
     public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
     {
-        //todo: this is a temp fix because forwarding from an exception doesn't work until Phalcon 3.2, fix after update
+        //todo: this is a temp fix because forwarding from an exception doesn't work until Phalcon 3.2.3, fix after update
         if ($exception instanceof ObjectNotFoundException) {
             http_response_code(404);
             echo 'Object not found';
