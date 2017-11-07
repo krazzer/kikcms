@@ -125,7 +125,7 @@ class PageService extends Injectable
     public function getSelect($parentId = 0, PageMap $pageMap, PageLanguageMap $pageLangMap, $level = 0): array
     {
         if ( ! $pageLangMap) {
-            $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap);
+            $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap, null, false);
         }
 
         $selectArray = [];

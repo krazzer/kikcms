@@ -38,7 +38,7 @@ class FrontendController extends BaseController
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        if ( ! $pageLanguage) {
+        if ( ! $pageLanguage || ! $pageLanguage->active) {
             throw new NotFoundException();
         }
 

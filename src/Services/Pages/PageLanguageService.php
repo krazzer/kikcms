@@ -112,9 +112,10 @@ class PageLanguageService extends Injectable
     /**
      * @param PageMap $pageMap
      * @param string $languageCode
+     * @param bool $activeOnly
      * @return PageLanguageMap
      */
-    public function getByPageMap(PageMap $pageMap, string $languageCode = null): PageLanguageMap
+    public function getByPageMap(PageMap $pageMap, string $languageCode = null, bool $activeOnly = true): PageLanguageMap
     {
         if( ! $pageMap->keys()){
             return new PageLanguageMap;
@@ -127,6 +128,10 @@ class PageLanguageService extends Injectable
             ->where('page_id IN ({ids:array}) AND language_code = :langCode:', [
                 'ids' => $pageMap->keys(), 'langCode' => $languageCode
             ]);
+
+        if($activeOnly){
+            $query->andWhere('active = 1');
+        }
 
         return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
     }

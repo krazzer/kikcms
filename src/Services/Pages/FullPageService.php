@@ -33,15 +33,16 @@ class FullPageService extends Injectable
     /**
      * @param PageMap $pageMap
      * @param string|null $langCode
+     * @param bool $activeOnly
      * @return FullPageMap
      */
-    public function getByPageMap(PageMap $pageMap, string $langCode = null): FullPageMap
+    public function getByPageMap(PageMap $pageMap, string $langCode = null, bool $activeOnly = true): FullPageMap
     {
         $langCode = $langCode ?: $this->translator->getLanguageCode();
 
         $fullPageMap = new FullPageMap();
 
-        $pageLangMap    = $this->pageLanguageService->getByPageMap($pageMap, $langCode);
+        $pageLangMap    = $this->pageLanguageService->getByPageMap($pageMap, $langCode, $activeOnly);
         $pageFieldTable = $this->pageLanguageService->getPageFieldTable($pageMap, $langCode);
 
         foreach ($pageMap as $pageId => $page) {
@@ -74,7 +75,7 @@ class FullPageService extends Injectable
     {
         $pageMap = (new PageMap)->add($page, $page->getId());
 
-        $fullPageMap = $this->getByPageMap($pageMap, $langCode);
+        $fullPageMap = $this->getByPageMap($pageMap, $langCode, false);
 
         if($fullPageMap->isEmpty()){
             return null;
