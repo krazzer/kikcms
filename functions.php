@@ -90,6 +90,19 @@ function last(array $array)
     return array_values(array_slice($array, -1))[0];
 }
 
+/**
+ * Return the last key of an array
+ *
+ * @param array $array
+ *
+ * @return mixed
+ */
+function last_key(array $array)
+{
+    $keys = array_keys($array);
+
+    return array_pop($keys);
+}
 
 /**
  * Log the given parameters

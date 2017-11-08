@@ -46,7 +46,7 @@ var Statistics = Class.extend({
      * Initialize the Statistics component
      */
     init: function () {
-        if(typeof google == 'undefined'){
+        if(typeof google == 'undefined' || ! $('#visitors').length){
             return;
         }
 
