@@ -80,6 +80,7 @@ FinderFileUploader.prototype = {
             $progressBar.parent().fadeOut();
         }, function () {
             $uploadButton.removeClass('disabled');
+            $uploadButton.find('input').val('');
             $progressBar.parent().fadeOut();
         }, function () {
             var myXhr = $.ajaxSettings.xhr();
