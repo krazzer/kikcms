@@ -26,7 +26,13 @@ class BaseController extends Controller
         $maxFileSize       = ByteUtil::stringToBytes(ini_get('upload_max_filesize') ?: 1024 * 1024 * 20);
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
         $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
-        $jsTranslations    = array_merge($errorTranslations, ['system.langCode', 'pages.warningTemplateChange']);
+        $jsTranslations    = array_merge($errorTranslations, [
+            'system.langCode',
+            'pages.warningTemplateChange',
+            'media.uploadMaxFilesWarning',
+            'media.uploadMaxFileSizeWarning',
+            'media.fileTypeWarning',
+        ]);
 
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("baseUri", $this->url->getBaseUri());
@@ -46,7 +52,7 @@ class BaseController extends Controller
      */
     public function initializeLanguage()
     {
-        if($langCode = $this->request->getPost('activeLangCode')){
+        if ($langCode = $this->request->getPost('activeLangCode')) {
             $this->translator->setLanguageCode($langCode);
         } else {
             $this->translator->setLanguageCode($this->config->application->defaultLanguage);
@@ -69,7 +75,7 @@ class BaseController extends Controller
             return 'Object not found';
         }
 
-        if( ! $fileName){
+        if ( ! $fileName) {
             $fileName = basename($filePath);
         }
 

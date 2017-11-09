@@ -261,6 +261,7 @@ return [
         'pickFile'                 => 'Kies bestand',
         'uploadMaxFilesWarning'    => 'U kunt maximaal :amount bestanden tegelijk uploaden',
         'uploadMaxFileSizeWarning' => 'Bestanden mogen maximaal :max zijn',
+        'fileTypeWarning'          => 'Alleen bestanden met de volgende extensties zijn toegestaan: ',
         'upload'                   => [
             'error' => [
                 'failed' => 'Er is iets mis gegaan bij het uploaden van :fileName',

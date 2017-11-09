@@ -2,6 +2,7 @@ var FinderFileUploader = function (options) {
     this.onSuccess  = options.onSuccess;
     this.$container = options.$container;
     this.action     = options.action ? options.action : '/cms/finder/upload';
+    this.fileTypes  = options.fileTypes ? options.fileTypes : [];
 
     if (options.addParametersBeforeUpload) {
         this.addParametersBeforeUpload = options.addParametersBeforeUpload;
@@ -12,8 +13,7 @@ var FinderFileUploader = function (options) {
     }
 };
 
-FinderFileUploader.prototype =
-{
+FinderFileUploader.prototype = {
     init: function () {
         var self          = this;
         var $uploadButton = this.$container.find('.btn.upload');
@@ -46,6 +46,10 @@ FinderFileUploader.prototype =
                 filesAdded++;
             }
 
+            if( ! self.checkFileTypes(this.files)){
+                return;
+            }
+
             if (!filesAdded) {
                 return;
             }
@@ -67,11 +71,12 @@ FinderFileUploader.prototype =
         KikCMS.action(this.action, formData, function (result) {
             self.onSuccess(result);
 
-            if (result.errors.length > 0) {
+            if (result.errors && result.errors.length > 0) {
                 alert(result.errors.join("\n"));
             }
 
             $uploadButton.removeClass('disabled');
+            $uploadButton.find('input').val('');
             $progressBar.parent().fadeOut();
         }, function () {
             $uploadButton.removeClass('disabled');
@@ -87,5 +92,27 @@ FinderFileUploader.prototype =
             }
             return myXhr;
         });
+    },
+
+    /**
+     * Check if given files are having the valid extension
+     *
+     * @param files
+     */
+    checkFileTypes: function (files) {
+        for (var j = 0; j < files.length; j++) {
+            var fileName = files[j].name;
+
+            for (var k = 0; k < this.fileTypes.length; k++) {
+                var ext = this.fileTypes[j];
+
+                if (fileName.substr(fileName.length - ext.length, ext.length).toLowerCase() != ext.toLowerCase()) {
+                    alert(KikCMS.tl('media.fileTypeWarning') + this.fileTypes.join(', '));
+                    return;
+                }
+            }
+        }
+
+        return true;
     }
 };

@@ -25,8 +25,6 @@ class Finder extends Renderable
         'media.createFolder',
         'media.defaultFolderName',
         'media.editFileName',
-        'media.uploadMaxFilesWarning',
-        'media.uploadMaxFileSizeWarning',
     ];
 
     /** @inheritdoc */
