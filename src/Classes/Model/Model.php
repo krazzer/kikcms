@@ -163,4 +163,20 @@ class Model extends PhalconModel
 
         return $names;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function save($data = null, $whiteList = null)
+    {
+        $saved = parent::save($data, $whiteList);
+
+        if($messages = $this->getMessages()){
+           foreach ($messages as $message){
+               throw new Exception($message);
+           }
+        }
+
+        return $saved;
+    }
 }
