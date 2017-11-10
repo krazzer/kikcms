@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
+use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_Mime_MimePart;
@@ -54,10 +55,11 @@ class MailService extends Injectable
      *
      * @param null $template
      * @param array $parameters
+     * @param array $attachments
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = []): int
+    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -72,6 +74,10 @@ class MailService extends Injectable
             ->setSubject($subject)
             ->setBody($body, 'text/html');
 
+        foreach ($attachments as $attachment){
+            $message->attach(Swift_Attachment::fromPath($attachment));
+        }
+
         return $this->send($message);
     }
 
@@ -83,9 +89,10 @@ class MailService extends Injectable
      * @param string $body
      *
      * @param array $parameters
+     * @param array $attachments
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMailUser($to, string $subject, string $body, array $parameters = []): int
+    public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
     {
         $companyName  = $this->config->company->name;
         $companyEmail = $this->config->company->email;
@@ -103,7 +110,7 @@ class MailService extends Injectable
             $parameters['mainColorDark'] = $this->config->company->mainColorDark;
         }
 
-        return $this->sendMail([$companyEmail => $companyName], $to, $subject, $body, '@kikcms/mail/default', $parameters);
+        return $this->sendMail([$companyEmail => $companyName], $to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
     }
 
     /**
