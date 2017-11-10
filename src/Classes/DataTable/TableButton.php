@@ -24,13 +24,15 @@ class TableButton
      * @param string $title
      * @param string $class
      * @param string|null $url
+     * @param bool $blank
      */
-    public function __construct(string $icon, string $title, string $class, string $url = null)
+    public function __construct(string $icon, string $title, string $class, string $url = null, bool $blank = false)
     {
         $this->icon  = $icon;
         $this->title = $title;
         $this->class = $class;
         $this->url   = $url;
+        $this->blank = $blank;
     }
 
     /**
@@ -65,7 +67,7 @@ class TableButton
     {
         $url = $this->url;
 
-        foreach ($row as $key => $value){
+        foreach ($row as $key => $value) {
             $url = str_replace(':' . $key, $value, $url);
         }
 
@@ -78,5 +80,23 @@ class TableButton
     public function hasUrl(): bool
     {
         return (bool) $this->url;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBlank(): bool
+    {
+        return $this->blank;
+    }
+
+    /**
+     * @param bool $blank
+     * @return TableButton
+     */
+    public function setBlank(bool $blank): TableButton
+    {
+        $this->blank = $blank;
+        return $this;
     }
 }

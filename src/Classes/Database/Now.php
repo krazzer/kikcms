@@ -25,6 +25,6 @@ class Now
      */
     public function __toString()
     {
-        return "'" . $this->dateTime->format(DbConfig::SQL_DATE_FORMAT) . "'";
+        return "'" . $this->dateTime->format(DbConfig::SQL_DATETIME_FORMAT) . "'";
     }
 }

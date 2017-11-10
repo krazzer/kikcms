@@ -57,7 +57,7 @@
                     {% for tableButton in self.tableButtons %}
                         <td class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
                             {% if tableButton.hasUrl %}
-                                <a target="_blank" href="{{ tableButton.url(row) }}" class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
+                                <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}" class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
                             {% else %}
                                 <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
                             {% endif %}
