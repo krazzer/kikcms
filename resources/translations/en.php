@@ -71,6 +71,12 @@ return [
         'delete' => 'Delete',
     ],
 
+    'media' => [
+        'uploadMaxFilesWarning'    => 'You may only upload :amount files at the same time',
+        'uploadMaxFileSizeWarning' => 'Filesize should be under :max',
+        'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',
+    ],
+
     'pages' => [
         'warningTemplateChange' => 'If you switch template, unsaved changes will not be saved, do you want to continue?',
     ],
