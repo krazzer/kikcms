@@ -250,12 +250,12 @@ class Pages extends DataTable
             return $value;
         }
 
-        if ($rowData[Page::FIELD_KEY] && $rowData[Page::FIELD_TYPE] != Page::TYPE_MENU) {
-            $value = '<span class="glyphicon glyphicon-lock" title="' . $this->lockedTitle . '"></span> ' . $value;
-        }
-
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
             $value = '<span class="glyphicon glyphicon-link" title="' . $this->linkTitle . '"></span> ' . $value;
+        }
+
+        if ($rowData[Page::FIELD_KEY] && $rowData[Page::FIELD_TYPE] != Page::TYPE_MENU) {
+            $value = '<span class="glyphicon glyphicon-lock" title="' . $this->lockedTitle . '"></span> ' . $value;
         }
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_ALIAS) {

@@ -3,9 +3,12 @@
 namespace KikCMS\Forms;
 
 
+use KikCMS\Classes\Permission;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
+use Phalcon\Validation\Validator\StringLength;
 
 class LinkForm extends PageForm
 {
@@ -19,5 +22,24 @@ class LinkForm extends PageForm
 
         $this->addTextField(Page::FIELD_LINK, $this->translator->tl('dataTables.pages.linkToDesc'));
         $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_LINK);
+
+        $urlPatternValidation = new Regex([
+            'pattern'    => '/^$|^([0-9a-z\-]+)$/',
+            'message'    => $this->translator->tl('webform.messages.slug'),
+            'allowEmpty' => true,
+        ]);
+
+        $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
+
+        $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
+            ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
+            ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder'));
+
+        if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_EDIT)) {
+            $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), [
+                $urlPatternValidation,
+                new StringLength(["max" => 32])
+            ]);
+        }
     }
 }

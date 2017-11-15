@@ -20,6 +20,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  *
  * @property DbService $dbService
  * @property LanguageService $languageService
+ * @property PageService $pageService
  */
 class PageLanguageService extends Injectable
 {
@@ -137,6 +138,17 @@ class PageLanguageService extends Injectable
     }
 
     /**
+     * @param PageLanguage $pageLanguage
+     * @return PageLanguageMap
+     */
+    public function getChildren(PageLanguage $pageLanguage): PageLanguageMap
+    {
+        $pageMap = $this->pageService->getChildren($pageLanguage->page);
+
+        return $this->getByPageMap($pageMap, $pageLanguage->getLanguageCode());
+    }
+
+    /**
      * Get the default pageLanguage (homepage), in the default language
      *
      * @return PageLanguage
@@ -229,5 +241,16 @@ class PageLanguageService extends Injectable
         }
 
         return $pageLanguageMap;
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @return PageLanguageMap
+     */
+    public function getSiblings(PageLanguage $pageLanguage): PageLanguageMap
+    {
+        $pageMap = $this->pageService->getChildren($pageLanguage->page->parent);
+
+        return $this->getByPageMap($pageMap, $pageLanguage->getLanguageCode());
     }
 }
