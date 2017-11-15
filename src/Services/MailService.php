@@ -59,7 +59,7 @@ class MailService extends Injectable
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments): int
+    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
     {
         if ($template) {
             $parameters['body']    = $body;
