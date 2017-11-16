@@ -249,6 +249,10 @@ class PageLanguageService extends Injectable
      */
     public function getSiblings(PageLanguage $pageLanguage): PageLanguageMap
     {
+        if( ! $pageLanguage->page->parent){
+            return new PageLanguageMap;
+        }
+
         $pageMap = $this->pageService->getChildren($pageLanguage->page->parent);
 
         return $this->getByPageMap($pageMap, $pageLanguage->getLanguageCode());
