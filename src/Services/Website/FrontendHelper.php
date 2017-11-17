@@ -43,6 +43,11 @@ class FrontendHelper extends Injectable
     /** @var string|null */
     private $aliasUrl;
 
+    public function __construct()
+    {
+        $this->languageCode = $this->translator->getLanguageCode();
+    }
+
     /**
      * @return null|string
      */
@@ -159,6 +164,10 @@ class FrontendHelper extends Injectable
     {
         if ($this->currentPathCached) {
             return $this->currentPathCached;
+        }
+
+        if( ! $this->currentPageLanguage){
+            return new PageLanguageMap();
         }
 
         $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage, $this->currentPageLanguageAlias);
