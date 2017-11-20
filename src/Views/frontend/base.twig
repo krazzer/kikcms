@@ -13,7 +13,15 @@
         <meta name="keywords" content="{{ pageLanguage.seo_keywords }}">
     {% endif %}
 
-    <title>{% block title %}{{ title }}{% endblock %}</title>
+    <title>
+        {% block title %}
+            {% if pageLanguage and pageLanguage.seo_title %}
+                {{ pageLanguage.seo_title }}
+            {% else %}
+                {{ title }}
+            {% endif %}
+        {% endblock %}
+    </title>
     {% block styles %}
         {{ stylesheetLink('cmsassets/css/frontend.css') }}
     {% endblock %}

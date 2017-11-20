@@ -83,10 +83,13 @@ class PageForm extends DataForm
         }
 
         $tabSeoFields = [
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO Keywords')->rows(4)
+            $this->addTextField(PageLanguage::FIELD_SEO_TITLE, 'SEO titel')
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
 
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO Description')->rows(12)
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO sleutelwoorden')->rows(4)
+                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+
+            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO omschrijving')->rows(12)
                 ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
         ];
 
