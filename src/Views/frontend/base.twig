@@ -9,8 +9,8 @@
     {% endif %}
 
     {% if pageLanguage %}
-        <meta name="description" content="{{ pageLanguage.seo_description }}">
-        <meta name="keywords" content="{{ pageLanguage.seo_keywords }}">
+        <meta name="description" content="{% block seoDescription pageLanguage.seo_description %}">
+        <meta name="keywords" content="{% block seoKeywords pageLanguage.seo_keywords %}">
     {% endif %}
 
     <title>
