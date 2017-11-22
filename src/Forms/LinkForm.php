@@ -29,11 +29,11 @@ class LinkForm extends PageForm
             'allowEmpty' => true,
         ]);
 
-        $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
+        $urlValidation = [$urlPatternValidation, new StringLength(["max" => 255])];
 
         $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
             ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
-            ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder'));
+            ->setHelpText($this->translator->tl('dataTables.pages.urlLinkHelpText'));
 
         if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_EDIT)) {
             $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), [

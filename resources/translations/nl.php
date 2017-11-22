@@ -76,23 +76,24 @@ return [
         ],
 
         'pages' => [
-            'singular'       => "pagina",
-            'plural'         => "pagina's",
-            'addItem'        => 'Nieuw...',
-            'page'           => 'Pagina',
-            'menu'           => 'Menu',
-            'link'           => 'Link',
-            'alias'          => 'Alias',
-            'urlPlaceholder' => 'Laat leeg om een url te genereren a.d.h.v. pagina naam',
-            'urlExists'      => 'De gekozen url is al in gebruik',
-            'preview'        => 'Bekijk pagina',
-            'titles'         => [
+            'singular'        => "pagina",
+            'plural'          => "pagina's",
+            'addItem'         => 'Nieuw...',
+            'page'            => 'Pagina',
+            'menu'            => 'Menu',
+            'link'            => 'Link',
+            'alias'           => 'Alias',
+            'urlPlaceholder'  => 'Laat leeg om een url te genereren a.d.h.v. pagina naam',
+            'urlExists'       => 'De gekozen url is al in gebruik',
+            'preview'         => 'Bekijk pagina',
+            'titles'          => [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
                 'inactive' => 'Deze pagina is niet zichtbaar',
                 'locked'   => 'Deze pagina is noodzakelijk voor het correct werken van de website, en kan daarom niet worden verwijderd',
             ],
-            'deleteErrorFk'  => "Alleen pagina's zonder sub-pagina's kunnen worden verwijderd.",
-            'linkToDesc'     => 'Linkt naar (Pagina ID of URL)',
+            'deleteErrorFk'   => "Alleen pagina's zonder sub-pagina's kunnen worden verwijderd.",
+            'linkToDesc'      => 'Linkt naar (Pagina ID of URL)',
+            'urlLinkHelpText' => "Url is optioneel, en wordt alleen gebruikt voor de url generatie van sub-pagina's",
         ],
 
         'aliases' => [

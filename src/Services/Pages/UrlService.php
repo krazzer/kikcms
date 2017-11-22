@@ -63,6 +63,9 @@ class UrlService extends Injectable
     }
 
     /**
+     * todo (#urls): this is getting too complicated, and will only become more complicated in the future
+     * todo (#urls): store the full urls in the db, and fetch them with that
+     *
      * @param string $url
      * @return null|PageLanguage
      */
@@ -109,10 +112,18 @@ class UrlService extends Injectable
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.id = p.parent_id', 'pa')
+            ->leftJoin(PageLanguage::class, 'pal.page_id = pa.id AND pal.language_code = pl.language_code', 'pal')
             ->where('pl.url = :url:', ['url' => $slug]);
 
         if ( ! $parent) {
-            $query->andWhere('p.parent_id IS NULL OR pa.type = :type:', ['type' => Page::TYPE_MENU]);
+            $query->andWhere('
+                p.parent_id IS NULL OR
+                (pa.type = :typeLink: AND pal.url IS NULL) OR
+                pa.type = :typeMenu:
+            ', [
+                'typeLink' => Page::TYPE_LINK,
+                'typeMenu' => Page::TYPE_MENU,
+            ]);
         } else {
             $query->andWhere('pa.id = ' . $parent->getId());
         }
@@ -150,8 +161,8 @@ class UrlService extends Injectable
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         $url = $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
-            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_DEFAULT){
-                if($pageLanguage->getLanguageCode() == $this->languageService->getDefaultLanguageCode()){
+            if ($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_DEFAULT) {
+                if ($pageLanguage->getLanguageCode() == $this->languageService->getDefaultLanguageCode()) {
                     return '';
                 }
             }
@@ -171,7 +182,12 @@ class UrlService extends Injectable
                     break;
                 }
 
-                $parent     = $pageLanguage->page->parent;
+                $parent = $pageLanguage->page->parent;
+
+                if ( ! $pageLanguage->url) {
+                    continue;
+                }
+
                 $urlParts[] = $pageLanguage->url;
             }
 
@@ -330,7 +346,7 @@ class UrlService extends Injectable
      */
     private function getName(PageLanguage $pageLanguage): string
     {
-        if($aliasId = $pageLanguage->page->getAliasId()){
+        if ($aliasId = $pageLanguage->page->getAliasId()) {
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
         }
 
