@@ -95,10 +95,11 @@ class FieldStorageService extends Injectable
      * @param $value
      * @param array $editData
      * @param string|null $langCode
-     * @return bool|mixed
+     * @return bool|int
      */
     public function storeOneToOne(Field $field, $value, array $editData, string $langCode = null)
     {
+        /** @var OneToOne $storage */
         $storage = $field->getStorage();
         $value   = $this->dbService->toStorage($value);
         $editId  = $editData[$storage->getRelatedByField()];
@@ -111,7 +112,15 @@ class FieldStorageService extends Injectable
         }
 
         if ($this->relationRowExists($field, $editId, $langCode)) {
+            if( ! $value && $storage->isRemoveOnEmpty()){
+                return $this->dbService->delete($storage->getTableModel(), $where);
+            }
+
             return $this->dbService->update($storage->getTableModel(), $set, $where);
+        }
+
+        if ( ! $value) {
+            return false;
         }
 
         return $this->dbService->insert($storage->getTableModel(), $set + $where);
@@ -182,11 +191,11 @@ class FieldStorageService extends Injectable
             $insert[$fieldKey] = $id;
 
             // don't story empty values
-            if( ! $id){
+            if ( ! $id) {
                 continue;
             }
 
-            if($keyField = $storage->getKeyField()){
+            if ($keyField = $storage->getKeyField()) {
                 $insert[$keyField] = $key;
             }
 
@@ -219,7 +228,7 @@ class FieldStorageService extends Injectable
             ]);
         }
 
-        if($keyField = $storage->getKeyField()){
+        if ($keyField = $storage->getKeyField()) {
             $query->columns([$keyField, $field->getKey()]);
             return $this->dbService->getAssoc($query);
         }

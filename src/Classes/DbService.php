@@ -144,9 +144,9 @@ class DbService extends Injectable
      * @param string $model
      * @param array $insert
      *
-     * @return mixed
+     * @return int
      */
-    public function insert(string $model, array $insert)
+    public function insert(string $model, array $insert): int
     {
         $table = $this->getTableForModel($model);
 
@@ -184,6 +184,7 @@ class DbService extends Injectable
                 $insertValues[] = '(' . implode(',', $row) . ')';
             }
 
+            /** @noinspection SqlNoDataSourceInspection */
             $this->db->query("
                 INSERT INTO " . $this->getTableForModel($model) . " (" . implode(',', $keys) . ") 
                 VALUES " . implode(',', $insertValues) . "
