@@ -105,9 +105,9 @@ class Template
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getForm(): string
+    public function getForm(): ?string
     {
         return $this->form;
     }
