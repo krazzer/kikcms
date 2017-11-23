@@ -13,6 +13,7 @@ use KikCMS\Classes\WebForm\Field;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
@@ -29,6 +30,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property WebsiteService $websiteService
  * @property TemplateFieldsBase $templateFields
  * @property AccessControl $acl
+ * @property PagesDataTableService $pagesDataTableService
  */
 class PageForm extends DataForm
 {
@@ -59,7 +61,7 @@ class PageForm extends DataForm
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
-        $templateField->getElement()->setDefault($this->getTemplate()->getKey());
+        $templateField->getElement()->setDefault($this->pagesDataTableService->getTemplate($this)->getKey());
 
         $tabAdvancedFields = [
             $templateField,
@@ -113,7 +115,7 @@ class PageForm extends DataForm
         $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
         $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
 
-        $editData[Page::FIELD_TEMPLATE] = $this->getTemplate()->getKey();
+        $editData[Page::FIELD_TEMPLATE] = $this->pagesDataTableService->getTemplate($this)->getKey();
 
         $editData['pageName'] = $editData['name'] ?: $defaultLangPageName;
 
@@ -169,9 +171,10 @@ class PageForm extends DataForm
     /**
      * Adds fields for current template
      */
-    private function addFieldsForCurrentTemplate()
+    protected function addFieldsForCurrentTemplate()
     {
-        $fields = $this->templateService->getFieldsByTemplate($this->getTemplate());
+        $template = $this->pagesDataTableService->getTemplate($this);
+        $fields   = $this->templateService->getFieldsByTemplate($template);
 
         /** @var Field $field */
         foreach ($fields as $field) {

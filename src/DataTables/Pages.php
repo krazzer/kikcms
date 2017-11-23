@@ -15,6 +15,7 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableFilters;
+use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -24,6 +25,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property AccessControl $acl
  * @property TemplateService $templateService
  * @property TemplateFieldsBase $templateFields
+ * @property PagesDataTableService $pagesDataTableService
  */
 class Pages extends DataTable
 {
@@ -142,6 +144,12 @@ class Pages extends DataTable
             case Page::TYPE_LINK:
                 return LinkForm::class;
             break;
+        }
+
+        if($template = $this->pagesDataTableService->getTemplate($this)){
+            if($formClass = $template->getForm()){
+                return $formClass;
+            }
         }
 
         return PageForm::class;

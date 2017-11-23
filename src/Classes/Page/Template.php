@@ -17,6 +17,9 @@ class Template
     /** @var bool */
     private $hidden = false;
 
+    /** @var string */
+    private $form;
+
     /**
      * @param string $key
      * @param string $name
@@ -98,6 +101,24 @@ class Template
     public function setHidden(bool $hidden = true): Template
     {
         $this->hidden = $hidden;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getForm(): string
+    {
+        return $this->form;
+    }
+
+    /**
+     * @param string $form
+     * @return Template
+     */
+    public function setForm(string $form): Template
+    {
+        $this->form = $form;
         return $this;
     }
 }
