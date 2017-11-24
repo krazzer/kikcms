@@ -25,8 +25,8 @@
     {% block styles %}
         {{ stylesheetLink('cmsassets/css/frontend.css') }}
     {% endblock %}
-    {{ assets.outputCss() }}
     {% block head '' %}
+    {{ assets.outputCss() }}
 </head>
 <body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}">
 {% block body %}{% endblock %}
