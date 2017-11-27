@@ -1,0 +1,124 @@
+@import "../includes/variables";
+@import "../includes/mixins";
+
+.webForm {
+    position: relative;
+
+    .type-file {
+
+        input[type=file] {
+            display: none;
+        }
+
+        .btn {
+            margin-right: 4px;
+        }
+
+        .file-picker {
+            display: none;
+            padding: 12px;
+            border: 1px solid $lightGray;
+            border-radius: $defaultBorderRadius;
+            margin-top: 8px;
+
+            .toolbar {
+                padding-bottom: 12px;
+            }
+
+            .files-container {
+                min-height: 342px;
+            }
+
+            > .buttons {
+                text-align: right;
+                padding-top: 12px;
+
+                .btn {
+                    margin-right: 0;
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        .buttons {
+            @include clearFix();
+
+            .preview {
+                position: relative;
+                padding: 7px;
+                float: left;
+                margin-right: 8px;
+                height: auto;
+                width: auto;
+                cursor: pointer;
+                opacity: 1;
+                transition: opacity 0.3s;
+
+                &.hidden {
+                    opacity: 0;
+                }
+
+                .thumb {
+                    transition: width .3s, height .3s;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+
+    .type-wysiwyg{
+        .mce-branding-powered-by, .mce-branding{
+            display: none;
+        }
+    }
+
+    .datatable {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
+
+        .toolbar, .footer, .table .no-data {
+            padding: 12px;
+        }
+
+        .footer {
+            display: none;
+        }
+
+        .table {
+            margin-bottom: 0;
+
+            tbody tr:last-child {
+                td:first-child {
+                    border-bottom-left-radius: $defaultBorderRadius;
+                }
+
+                td:last-child {
+                    border-bottom-right-radius: $defaultBorderRadius;
+                }
+            }
+        }
+
+        > .filters{
+            border-radius: 0;
+        }
+    }
+
+    .type-button .field {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
+        padding: 12px;
+
+        .info {
+            margin-bottom: 10px;
+        }
+    }
+
+    .required-message{
+        color: $gray;
+    }
+
+    .helptext-btn{
+        text-decoration: none;
+        outline: none;
+    }
+}

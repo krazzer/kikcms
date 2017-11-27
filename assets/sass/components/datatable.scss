@@ -1,0 +1,468 @@
+@import "../includes/variables";
+@import "../includes/mixins";
+
+body {
+
+    > *:not(.dataTableWindow) {
+        transition: filter, opacity 0.3s;
+    }
+
+    > #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba($colorBlack, 0.1);
+        opacity: 0;
+        z-index: $zIndexWindowLevel0;
+        transition: opacity 0.3s;
+    }
+
+    .datatableThumbHoverContainer {
+        position: absolute;
+        background-color: $colorWhite;
+        z-index: $zIndexAboveLevel10Window;
+
+        img {
+            max-width: 96px;
+            max-height: 96px;
+            border-radius: $defaultBorderRadius;
+            border: 1px solid $lightGray;
+        }
+    }
+
+    &.noSelect {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+:root > body.datatableBlur{
+    overflow: hidden;
+
+    > #menu, > #main{
+        @include blur(6);
+        @include noTextSelect();
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    #overlay {
+        display: block;
+        opacity: 1;
+    }
+}
+
+.dataTableWindow {
+    width: 1050px;
+    position: fixed;
+    top: 20px;
+    bottom: 20px;
+    background-color: rgba($colorWhite, 0.97);
+    z-index: $zIndexWindowLevel0;
+    left: 50%;
+    margin-left: -525px;
+    border: 1px solid $lightGray;
+    border-radius: $defaultBorderRadius;
+    display: none;
+    min-height: 300px;
+
+    @media #{$lowerThanDesktop}{
+        width: auto;
+        left: 40px;
+        right: 40px;
+        margin-left: 0;
+    }
+
+    &.blur {
+        @include blur(3);
+
+        .windowContent {
+            opacity: .5;
+        }
+    }
+
+    @for $i from 1 through 10 {
+        &.level#{$i} {
+            z-index: $zIndexWindowLevel0 + $i;
+            top: 20px + ($i * 10);
+            bottom: 20px + ($i * 10);
+            width: 900px + ($i * 20);
+            margin-left: -450px - ($i * 10);
+
+            @media #{$lowerThanDesktop}{
+                width: auto;
+                top: 20px;
+                bottom: 20px;
+                left: 50px;
+                right: 50px;
+                margin-left: 0;
+            }
+        }
+    }
+
+    > .closeButton {
+        @include close(30);
+        right: 50px;
+        top: 23px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    > .windowContent {
+
+        > .header {
+            @include clearFix();
+            font-size: $fontSizeLarge;
+            line-height: 36px;
+            padding: 20px 100px 20px 50px;
+            border-bottom: 1px solid $lightGray;
+            width: 100%;
+
+            .lbl {
+                float: left;
+                width: 50%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .filters {
+                text-align: right;
+                float: right;
+
+                select {
+                    width: 150px;
+                    text-indent: 5px;
+                }
+            }
+        }
+
+        > .tabs {
+            @include clearFix();
+            border-bottom: 1px solid $lightGray;
+            white-space: nowrap;
+            overflow: auto;
+
+            .tab {
+                display: inline-block;
+                cursor: pointer;
+                padding: 15px 50px;
+
+                &.error {
+                    color: $colorErrorText;
+                }
+
+                &.active {
+                    background-color: $lightGrayLight;
+                }
+            }
+        }
+
+        > .content {
+            overflow: auto;
+            padding: 30px 50px;
+
+            .tab-contents {
+
+                .tab-content {
+                    display: none;
+
+                    &.active {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        > .footer {
+            position: absolute;
+            padding: 10px;
+            border-top: 1px solid $lightGray;
+            bottom: 0;
+            width: 100%;
+            text-align: right;
+
+            button {
+                margin-left: 5px;
+                padding: 10px 35px;
+            }
+        }
+    }
+
+    @media #{$heightBelowHd} {
+        top: 10px;
+        bottom: 10px;
+
+        > .closeButton {
+            @include close(20);
+            top: 11px;
+        }
+
+        > .windowContent {
+
+            > .header {
+                padding: 10px 90px 10px 50px;
+                font-size: $fontSizeDefault;
+                line-height: 22px;
+
+                select[name=language]{
+                    height: 22px;
+                    font-size: $fontSizeSmall;
+                }
+            }
+
+            > .content{
+                padding-top: 15px;
+                padding-bottom: 15px;
+            }
+
+            > .tabs .tab{
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            > .footer button{
+                padding-top: 3px;
+                padding-bottom: 3px;
+            }
+        }
+    }
+}
+
+.datatable{
+
+    .pages {
+        @include noTextSelect();
+        float: right;
+        max-height: 36px;
+        overflow: hidden;
+
+        .pagination {
+            margin: 0;
+            padding: 0;;
+
+            > li > a {
+                padding: 7px 12px;
+                color: $colorPink;
+                cursor: pointer;
+                min-width: 36px;
+                text-align: center;
+            }
+
+            > .active > a {
+                color: $colorWhite;
+                background-color: $colorPink;
+                border-color: $colorPink;
+            }
+        }
+    }
+
+    .table {
+        @include blurTransition();
+
+        table {
+            width: 100%;
+
+            tr {
+                height: 36px;
+            }
+
+            tr td {
+                padding: $dataTableCellVerticalPadding 15px;
+            }
+
+            thead {
+                font-weight: 700;
+
+                td {
+                    position: relative;
+                    cursor: pointer;
+
+                    .glyphicon{
+                        position: absolute;
+                        top: auto;
+                        margin-left: 8px;
+                        margin-top: 3px;
+                        color: $gray;
+                    }
+                }
+            }
+
+            tbody {
+
+                tr {
+                    cursor: default;
+
+                    td{
+                        transition: padding 0.3s;
+                        @include noTextSelect();
+
+                        .highlight{
+                            background-color: $highLightColor;
+                        }
+
+                        .thumb {
+                            cursor: zoom-in;
+                            width: 34px;
+                            height: 34px;
+                            top: 0;
+                            margin-bottom: -7px;
+                            margin-top: -7px;
+                            background-size: cover;
+                            background-position: center center;
+                            border-radius: $defaultBorderRadius;
+                        }
+                    }
+
+                    &:nth-child(odd) {
+                        background-color: $superLightGray;
+                    }
+
+                    &:hover:not(.dragHover) {
+                        td {
+                            background-color: $lightGray;
+                        }
+                    }
+
+                    &.edited{
+                        td {
+                            background-color: $highLightColor;
+                        }
+
+                        &:hover td{
+                            background-color: $highLightColorDark;
+                        }
+                    }
+
+                    &.selected{
+                        td {
+                            background-color: $colorPink;
+                            color: $colorWhite;
+
+                            &.action a{
+                                color: $colorWhite;
+                            }
+
+                            .highlight{
+                                background-color: $pinkDark;
+                            }
+                        }
+
+                        &:hover td{
+                            background-color: $pinkDark;
+
+                            .highlight{
+                                background-color: $pinkDarker;
+                            }
+                        }
+                    }
+
+                    td {
+                        &.action {
+                            text-align: center;
+                            width: 44px;
+                            cursor: pointer;
+
+                            a{
+                                color: $colorBlack;
+                                text-decoration: none;
+                            }
+
+                            .glyphicon {
+                                display: none;
+                                margin-top: -2px;
+                            }
+                        }
+
+                        &.sort {
+                            cursor: move;
+                        }
+                    }
+
+                    &:hover {
+                        td {
+                            &.action {
+                                .glyphicon {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .no-data{
+            padding: 8px 0;
+        }
+    }
+
+    > .footer{
+        @include clearFix();
+    }
+}
+
+.draggedObject {
+    display: block;
+    z-index: $zIndexWindowLevel0;
+    position: absolute;
+    pointer-events: none;
+    opacity: .95;
+
+    &.rowClone {
+        background-color: $colorWhite;
+        -webkit-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
+        -moz-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
+        box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
+
+        td {
+            padding: $dataTableCellPadding;
+        }
+
+        .action {
+            .glyphicon {
+                display: none;
+            }
+        }
+    }
+}
+
+body.isDragging {
+    * {
+        cursor: default !important;
+    }
+
+    .datatable {
+        tbody, tbody * {
+            cursor: move !important;
+        }
+    }
+}
+
+.datatable .table table tr {
+    &.dragged {
+        opacity: .3;
+    }
+
+    &.dragHover {
+        cursor: move;
+
+        &[data-drop="before"], &[data-drop="after"] + tr {
+            td {
+                padding-top: 44px;
+            }
+        }
+
+        &[data-drop="after"]:last-child {
+            td {
+                padding-bottom: 44px;
+            }
+        }
+    }
+}
