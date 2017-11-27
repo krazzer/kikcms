@@ -13,6 +13,10 @@
         <meta name="keywords" content="{% block seoKeywords pageLanguage.seo_keywords %}">
     {% endif %}
 
+    {% if pageKey == 'page-not-found' %}
+        <meta name="robots" content="noindex" />
+    {% endif %}
+
     <title>
         {% block title %}
             {% if pageLanguage and pageLanguage.seo_title %}
