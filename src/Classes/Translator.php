@@ -3,6 +3,7 @@
 namespace KikCMS\Classes;
 
 
+use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\TranslationKey;

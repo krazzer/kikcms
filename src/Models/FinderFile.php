@@ -3,7 +3,7 @@
 namespace KikCMS\Models;
 
 use DateTime;
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Classes\Model;
 
 class FinderFile extends Model
 {

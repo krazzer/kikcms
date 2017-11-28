@@ -3,7 +3,7 @@
 namespace KikCMS\Services;
 
 
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;

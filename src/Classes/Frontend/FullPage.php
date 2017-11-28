@@ -5,7 +5,7 @@ namespace KikCMS\Classes\Frontend;
 use DateTime;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Util\Identifiable;
+use KikCmsCore\Classes\Identifiable;
 
 /**
  * A FullPage represents a Page in a certain language, with all field content

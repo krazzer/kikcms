@@ -4,7 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Classes\CmsPlugin;
-use KikCMS\Util\ObjectList;
+use KikCmsCore\Classes\ObjectList;
 
 class CmsPluginList extends ObjectList
 {

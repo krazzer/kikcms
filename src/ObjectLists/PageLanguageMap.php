@@ -4,7 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Models\PageLanguage;
-use KikCMS\Util\ObjectMap;
+use KikCmsCore\Classes\ObjectMap;
 
 class PageLanguageMap extends ObjectMap
 {

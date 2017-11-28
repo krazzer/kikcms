@@ -3,7 +3,7 @@
 namespace KikCMS\Services;
 
 
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\User;

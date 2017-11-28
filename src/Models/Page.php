@@ -3,8 +3,8 @@
 namespace KikCMS\Models;
 
 use DateTime;
-use KikCMS\Classes\Model\Model;
-use KikCMS\Config\DbConfig;
+use KikCmsCore\Classes\Model;
+use KikCmsCore\Config\DbConfig;
 
 /**
  * @property Page $parent

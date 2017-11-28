@@ -4,7 +4,7 @@ namespace KikCMS\Classes\Finder;
 
 
 use KikCMS\Classes\Database\Now;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\FileStorage;

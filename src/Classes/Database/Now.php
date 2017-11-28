@@ -4,7 +4,7 @@ namespace KikCMS\Classes\Database;
 
 
 use DateTime;
-use KikCMS\Config\DbConfig;
+use KikCmsCore\Config\DbConfig;
 
 /**
  * Represents the current dateTime.

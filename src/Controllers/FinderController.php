@@ -3,8 +3,8 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\DbService;
-use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
+use KikCmsCore\Services\DbService;
+use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;

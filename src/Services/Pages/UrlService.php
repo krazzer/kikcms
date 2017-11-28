@@ -4,7 +4,7 @@ namespace KikCMS\Services\Pages;
 
 
 use Exception;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Page;

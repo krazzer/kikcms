@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\DataTable;
 
 
-use KikCMS\Config\DbConfig;
+use KikCmsCore\Config\DbConfig;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

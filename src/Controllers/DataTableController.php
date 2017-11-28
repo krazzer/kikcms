@@ -3,12 +3,12 @@
 namespace KikCMS\Controllers;
 
 
+use KikCmsCore\Classes\Model;
+use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\Rearranger;
-use KikCMS\Classes\DbService;
-use KikCMS\Classes\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
-use KikCMS\Classes\Model\Model;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;

@@ -4,7 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Classes\WebForm\Field;
-use KikCMS\Util\ObjectMap;
+use KikCmsCore\Classes\ObjectMap;
 
 class FieldMap extends ObjectMap
 {

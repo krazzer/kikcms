@@ -3,7 +3,7 @@
 namespace KikCMS\Services\DataTable;
 
 use Exception;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;

@@ -4,9 +4,9 @@ namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
-use KikCMS\Config\DbConfig;
+use KikCmsCore\Config\DbConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;

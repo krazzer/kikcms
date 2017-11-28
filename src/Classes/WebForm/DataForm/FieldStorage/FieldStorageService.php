@@ -5,7 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 use Exception;
 use InvalidArgumentException;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\TranslationService;

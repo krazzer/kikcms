@@ -2,7 +2,7 @@
 
 namespace KikCMS\Models;
 
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Classes\Model;
 
 class PageContent extends Model
 {

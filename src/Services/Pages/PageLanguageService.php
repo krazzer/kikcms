@@ -2,8 +2,8 @@
 
 namespace KikCMS\Services\Pages;
 
-use KikCMS\Classes\DbService;
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Services\DbService;
+use KikCmsCore\Classes\Model;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;

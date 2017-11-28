@@ -2,7 +2,7 @@
 
 namespace KikCMS\Services\Pages;
 
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Models\Page;
 use KikCMS\ObjectLists\PageLanguageMap;

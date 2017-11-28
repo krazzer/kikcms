@@ -7,7 +7,7 @@ use DateTime;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\DateField;
-use KikCMS\Config\DbConfig;
+use KikCmsCore\Config\DbConfig;
 
 /**
  * @property Translator $translator;

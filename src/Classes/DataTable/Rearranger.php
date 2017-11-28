@@ -3,8 +3,8 @@
 namespace KikCMS\Classes\DataTable;
 
 use Exception;
-use KikCMS\Classes\DbService;
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Services\DbService;
+use KikCmsCore\Classes\Model;
 use KikCMS\Services\Pages\PageService;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;

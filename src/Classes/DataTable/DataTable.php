@@ -4,7 +4,7 @@ namespace KikCMS\Classes\DataTable;
 
 
 use KikCMS\Classes\DataTable\Filter\Filter;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;

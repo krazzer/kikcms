@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 use Exception;
 use InvalidArgumentException;
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Classes\WebForm\Field;

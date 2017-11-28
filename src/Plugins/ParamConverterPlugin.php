@@ -3,9 +3,9 @@
 namespace KikCMS\Plugins;
 
 
+use KikCmsCore\Classes\Model;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
-use KikCMS\Classes\Model\Model;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;

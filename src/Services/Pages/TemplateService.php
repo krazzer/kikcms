@@ -2,7 +2,7 @@
 
 namespace KikCMS\Services\Pages;
 
-use KikCMS\Classes\DbService;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\WebForm\Field;

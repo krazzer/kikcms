@@ -4,7 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Classes\Frontend\FullPage;
-use KikCMS\Util\ObjectMap;
+use KikCmsCore\Classes\ObjectMap;
 
 class FullPageMap extends ObjectMap
 {

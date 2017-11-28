@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 
 
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Classes\Model;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 

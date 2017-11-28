@@ -4,7 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Models\PageLanguage;
-use KikCMS\Util\ObjectList;
+use KikCmsCore\Classes\ObjectList;
 
 class PageLanguageList extends ObjectList
 {

@@ -3,7 +3,7 @@
 namespace KikCMS\Models\Analytics;
 
 
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Classes\Model;
 
 class GaDayVisit extends Model
 {

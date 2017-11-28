@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
-use KikCMS\Classes\Model\Model;
+use KikCmsCore\Classes\Model;
 use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
