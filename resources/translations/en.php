@@ -71,6 +71,12 @@ return [
         'delete' => 'Delete',
     ],
 
+    'mailForm' => [
+        'sendSuccess' => 'The form has been succesfully send',
+        'sendFail'    => 'Something went wrong sending the form',
+        'subject'     => 'Contactform',
+    ],
+
     'media' => [
         'uploadMaxFilesWarning'    => 'You may only upload :amount files at the same time',
         'uploadMaxFileSizeWarning' => 'Filesize should be under :max',
