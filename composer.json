@@ -1,6 +1,13 @@
 {
+  "repositories": [
+    {
+      "type": "git",
+      "url": "git@bitbucket.org:kiksaus/kikcms-2.git"
+    }
+  ],
   "name": "kiksaus/kikcms",
   "require": {
+    "kiksaus/kikcms-core": "@dev",
     "swiftmailer/swiftmailer": "5.4.*",
     "twig/twig": "~1.0",
     "monolog/monolog": "^1.22",

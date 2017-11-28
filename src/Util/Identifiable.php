@@ -3,27 +3,8 @@
 namespace KikCMS\Util;
 
 /**
- * An Identifiable is an Object that is identified by an Id
+ * @deprecated use \KikCmsCore\Classes\Identifiable instead
  */
-class Identifiable
+class Identifiable extends \KikCmsCore\Classes\Identifiable
 {
-    private $id;
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     * @return Identifiable
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
 }

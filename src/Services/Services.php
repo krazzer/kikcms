@@ -2,7 +2,6 @@
 
 namespace KikCMS\Services;
 
-use KikCMS\Classes\DbService;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -41,6 +40,7 @@ use KikCMS\Services\Util\NumberService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\MenuService;
 use KikCMS\Services\Website\WebsiteService;
+use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;

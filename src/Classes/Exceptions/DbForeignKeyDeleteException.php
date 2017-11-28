@@ -2,8 +2,10 @@
 
 namespace KikCMS\Classes\Exceptions;
 
-
-class DbForeignKeyDeleteException extends \Exception
+/**
+ * @deprecated use \KikCmsCore\Exceptions\DbForeignKeyDeleteException instead
+ */
+class DbForeignKeyDeleteException extends \KikCmsCore\Exceptions\DbForeignKeyDeleteException
 {
 
 }
