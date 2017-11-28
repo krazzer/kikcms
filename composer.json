@@ -3,6 +3,10 @@
     {
       "type": "git",
       "url": "git@bitbucket.org:kiksaus/kikcms-2.git"
+    },
+    {
+      "type": "git",
+      "url": "git@bitbucket.org:kiksaus/kikcms-core.git"
     }
   ],
   "name": "kiksaus/kikcms",
