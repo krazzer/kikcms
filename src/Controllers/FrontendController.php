@@ -6,6 +6,7 @@ use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\UserService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -23,6 +24,7 @@ use Phalcon\Http\Response;
  * @property WebsiteService $websiteService
  * @property FrontendHelper $frontendHelper
  * @property TemplateVariablesBase $templateVariables
+ * @property UserService $userService
  */
 class FrontendController extends BaseController
 {
@@ -38,7 +40,7 @@ class FrontendController extends BaseController
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        if ( ! $pageLanguage || ! $pageLanguage->active) {
+        if ( ! $pageLanguage || ( ! $pageLanguage->active && ! $this->userService->isLoggedIn())) {
             throw new NotFoundException();
         }
 
