@@ -16,13 +16,6 @@
 </head>
 <body>
 <div id="overlay"></div>
-<div id="notFading">
-    <div id="cmsLoader">
-        {{ source('@cmsResources/icons/loader.svg') }}
-        <span>{{ tl('cms.loading') }}</span>
-    </div>
-    <div id="ajaxDebugger" onclick="$(this).hide();"></div>
-</div>
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/vendor.js') }}
 {{ javascriptInclude('cmsassets/js/cms.js') }}

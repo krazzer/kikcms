@@ -5,6 +5,14 @@
 {% extends '@kikcms/base.twig' %}
 
 {% block content %}
+    <div id="notFading">
+        <div id="cmsLoader">
+            {{ source('@cmsResources/icons/loader.svg') }}
+            <span>{{ tl('cms.loading') }}</span>
+        </div>
+        <div id="ajaxDebugger" onclick="$(this).hide();"></div>
+    </div>
+
     <div id="menu">
         <a class="logo" href="{{ route('cms') }}"></a>
 
