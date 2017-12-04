@@ -60,4 +60,12 @@ class MultiCheckboxField extends Field
         $this->options = $options;
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFormFormat($value)
+    {
+        return is_string($value) ? json_decode($value) : $value;
+    }
 }
