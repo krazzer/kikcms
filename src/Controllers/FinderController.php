@@ -89,17 +89,13 @@ class FinderController extends RenderableController
     }
 
     /**
-     * @param int $fileId
+     * @param FinderFile $finderFile
      * @return string
      * @throws NotFoundException
+     * @internal param int $fileId
      */
-    public function fileAction(int $fileId)
+    public function fileAction(FinderFile $finderFile)
     {
-        /** @var FinderFile $finderFile */
-        if ( ! $finderFile = FinderFile::getById($fileId)) {
-            throw new NotFoundException();
-        }
-
         $filePath = $this->finderFileService->getFilePath($finderFile);
 
         if( ! file_exists($filePath)){
