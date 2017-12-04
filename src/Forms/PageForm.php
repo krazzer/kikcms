@@ -61,7 +61,7 @@ class PageForm extends DataForm
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
         $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
-        $templateField->getElement()->setDefault($this->pagesDataTableService->getTemplate($this)->getKey());
+        $templateField->getElement()->setDefault($this->getTemplate()->getKey());
 
         $tabAdvancedFields = [
             $templateField,
@@ -115,7 +115,7 @@ class PageForm extends DataForm
         $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
         $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
 
-        $editData[Page::FIELD_TEMPLATE] = $this->pagesDataTableService->getTemplate($this)->getKey();
+        $editData[Page::FIELD_TEMPLATE] = $this->getTemplate()->getKey();
 
         $editData['pageName'] = $editData['name'] ?: $defaultLangPageName;
 
@@ -173,7 +173,7 @@ class PageForm extends DataForm
      */
     protected function addFieldsForCurrentTemplate()
     {
-        $template = $this->pagesDataTableService->getTemplate($this);
+        $template = $this->getTemplate();
         $fields   = $this->templateService->getFieldsByTemplate($template);
 
         /** @var Field $field */
@@ -187,25 +187,7 @@ class PageForm extends DataForm
      */
     protected function getTemplate(): ?Template
     {
-        $templateKey = $this->request->getPost('template');
-
-        if ($templateKey) {
-            return $this->templateService->getByKey($templateKey);
-        }
-
-        $editId = $this->getFilters()->getEditId();
-
-        if ($editId) {
-            if ($template = $this->templateService->getTemplateByPageId($editId)) {
-                return $template;
-            }
-        }
-
-        if ($firstTemplate = $this->templateService->getDefaultTemplate()) {
-            return $firstTemplate;
-        }
-
-        return null;
+        return $this->pagesDataTableService->getTemplate($this);
     }
 
     /**
