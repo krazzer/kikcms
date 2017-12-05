@@ -2,8 +2,8 @@
 
 use Phalcon\Mvc\Application;
 
-require(__DIR__ . '/../functions.php');
 require(SITE_PATH . 'vendor/autoload.php');
+require(SITE_PATH . 'vendor/kiksaus/kikcms-core/src/functions.php');
 
 $cli         = false;
 $services    = require(__DIR__ . '/services.php');

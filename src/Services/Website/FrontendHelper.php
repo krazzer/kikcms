@@ -6,6 +6,7 @@ namespace KikCMS\Services\Website;
 use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\PageLanguage;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
@@ -106,6 +107,11 @@ class FrontendHelper extends Injectable
             }
 
             $menuId = $page->getId();
+        }
+
+        // disable cache on dev
+        if($this->config->application->env === KikCMSConfig::ENV_DEV){
+            $cache = false;
         }
 
         $menu = (new Menu())
