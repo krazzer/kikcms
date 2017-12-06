@@ -122,7 +122,7 @@ var WebForm = Class.extend({
     },
 
     initDateFields: function () {
-        this.getWebForm().find('.type-date input[type=date]').each(function () {
+        this.getWebForm().find('.type-date input').each(function () {
             var $field = $(this);
 
             $field.datetimepicker({

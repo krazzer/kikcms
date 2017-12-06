@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element\Date;
+use Phalcon\Forms\Element\Text;
 
 class DateField extends Field
 {
@@ -15,7 +15,7 @@ class DateField extends Field
      */
     public function __construct(string $key, string $label, array $validators = [])
     {
-        $element = (new Date($key))
+        $element = (new Text($key))
             ->setLabel($label)
             ->setAttribute('class', 'form-control')
             ->addValidators($validators);
