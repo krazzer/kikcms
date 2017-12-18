@@ -117,7 +117,7 @@ class StorageService extends Injectable
                 return $this->fieldStorageService->retrieveTranslation($field, $id, $langCode);
             break;
 
-            case $field->getStorage() instanceof OneToMany || $field->getStorage() instanceof None:
+            case $field->getStorage() instanceof OneToMany:
                 return null;
             break;
 

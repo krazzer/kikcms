@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\Renderable\Filters;
@@ -99,7 +100,7 @@ abstract class DataForm extends WebForm
         $data = [];
 
         foreach ($this->getFieldMap() as $key => $field) {
-            if ($field->getStorage()) {
+            if ($field->getStorage() && ! $field->getStorage() instanceOf None) {
                 $value      = $this->storageService->retrieve($field, $id, $langCode, $tableData);
                 $data[$key] = $field->getFormFormat($value);
             }
