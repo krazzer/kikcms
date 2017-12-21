@@ -56,7 +56,11 @@ class Finder extends Renderable
         $filters = parent::getFilters();
 
         if ( ! $filters->getFolderId() && $this->session->finderFolderId) {
-            $filters->setFolderId($this->session->finderFolderId);
+            if(FinderFile::getById($this->session->finderFolderId)){
+                $filters->setFolderId($this->session->finderFolderId);
+            } else {
+                $this->session->remove('finderFolderId');
+            }
         }
 
         return $filters;

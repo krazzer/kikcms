@@ -60,6 +60,7 @@ class FinderFileService extends Injectable
         $finderFile->updated   = new Now();
         $finderFile->mimetype  = $mimeType;
         $finderFile->folder_id = $folderId;
+        $finderFile->is_folder = 0;
 
         if ( ! $finderFile->save()) {
             return false;
@@ -82,6 +83,7 @@ class FinderFileService extends Injectable
         $finderDir            = new FinderFolder();
         $finderDir->name      = $folderName;
         $finderDir->folder_id = $folderId;
+        $finderDir->is_folder = 1;
 
         $finderDir->save();
 
