@@ -152,7 +152,7 @@ var WebForm = Class.extend({
             });
 
             $deleteButton.click(function () {
-                $field.find('input[type=hidden]').val('');
+                $field.find(' > input[type=hidden].fileId').val('');
 
                 $pickButton.removeClass('hidden');
                 $deleteButton.addClass('hidden');
