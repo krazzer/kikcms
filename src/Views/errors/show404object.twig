@@ -1,0 +1,10 @@
+{% extends '@kikcms/cms/base.twig' %}
+
+{%- block title tl('error.404object.title') -%}
+
+{% block cmsContent %}
+
+    <h1>{{ tl('error.404object.title') }}</h1>
+    <p>{{ tl('error.404object.description', {object: object})|nl2br }}</p>
+
+{% endblock %}

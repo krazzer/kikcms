@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Renderable\Renderable;
 
 class RenderableController extends BaseController
@@ -29,9 +30,16 @@ class RenderableController extends BaseController
 
     /**
      * @return string
+     * @throws ObjectNotFoundException
      */
     protected function getClass(): string
     {
-        return $this->request->getPost(Renderable::FILTER_CLASS);
+        $class = $this->request->getPost(Renderable::FILTER_CLASS);
+
+        if( ! $class){
+            throw new ObjectNotFoundException('RenderableClass');
+        }
+
+        return $class;
     }
 }

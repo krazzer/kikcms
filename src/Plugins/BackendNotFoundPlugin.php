@@ -4,6 +4,7 @@ namespace KikCMS\Plugins;
 
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Config\StatusCodes;
@@ -57,6 +58,17 @@ class BackendNotFoundPlugin extends Plugin
                     return false;
                 break;
             }
+        }
+
+        if ($exception instanceof ObjectNotFoundException) {
+            $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
+                'controller' => 'errors',
+                'action'     => 'show404object',
+                'params'     => [$exception->getObject()]
+            ]);
+
+            return false;
         }
 
         if ($exception instanceof NotFoundException) {

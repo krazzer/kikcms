@@ -158,6 +158,11 @@ return [
                 "met de webmaster.",
         ],
 
+        '404object' => [
+            'title'       => 'Object niet gevonden',
+            'description' => "Het opgevraagde object (:object) is niet gevonden.",
+        ],
+
         '440' => [
             'title'       => 'Sessie verlopen',
             'description' => "Uw sessie is verlopen. U dient opnieuw in te loggen om verder te gaan.\n\nIndien uw al " .

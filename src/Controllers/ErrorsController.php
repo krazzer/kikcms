@@ -18,6 +18,12 @@ class ErrorsController extends BaseCmsController
         $this->response->setStatusCode(404);
     }
 
+    public function show404ObjectAction($object)
+    {
+        $this->view->object = $object;
+        $this->response->setStatusCode(404);
+    }
+
     public function show401Action()
     {
         $this->response->setStatusCode(401);

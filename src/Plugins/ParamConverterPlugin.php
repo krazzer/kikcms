@@ -101,7 +101,7 @@ class ParamConverterPlugin extends Plugin
         $object = $class->newInstance()::getById($paramValueMap[$idParamName]);
 
         if ( ! $object) {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException($obParamName);
         }
 
         $newParameters = $this->replaceKeyAndValue($paramValueMap, $idParamName, $obParamName, $object);
