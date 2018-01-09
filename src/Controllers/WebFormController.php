@@ -68,7 +68,7 @@ class WebFormController extends RenderableController
 
         $finder = new Finder();
 
-        if($folderId = $fileField->getFolderId()){
+        if($fileField && $folderId = $fileField->getFolderId()){
             $finder->getFilters()->setFolderId($folderId);
         }
 
