@@ -46,6 +46,11 @@ return [
             'description' => "The requested page could not be found",
         ],
 
+        '404object' => [
+            'title'       => 'Object not found',
+            'description' => "The requested object (:object) could not be found.",
+        ],
+
         '440' => [
             'title'       => 'Session expired',
             'description' => "Your session has expired. You need to login again to continue.",
