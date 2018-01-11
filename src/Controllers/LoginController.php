@@ -35,6 +35,18 @@ class LoginController extends BaseController
         }
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function initializeLanguage()
+    {
+        if(isset($this->config->application->defaultCmsLanguage)){
+            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
+        } else {
+            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+        }
+    }
+
     public function indexAction()
     {
         $loginForm = (new LoginForm())->render();
