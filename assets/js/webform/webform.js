@@ -229,7 +229,7 @@ var WebForm = Class.extend({
             $container: $field,
             action: '/cms/webform/uploadAndPreview',
             addParametersBeforeUpload: function (formData) {
-                formData.append('field', $field.find('.btn.upload').attr('data-field'));
+                formData.append('folderId', $field.find('.btn.upload').attr('data-folder-id'));
                 formData.append('renderableInstance', self.renderableInstance);
                 formData.append('renderableClass', self.renderableClass);
                 return formData;
