@@ -182,13 +182,13 @@ class PageLanguageService extends Injectable
 
         $queryPageContent = (new Builder)
             ->from(['p' => Page::class])
-            ->leftJoin(PageContent::class, 'pc.page_id = p.id', 'pc')
+            ->join(PageContent::class, 'pc.page_id = p.id', 'pc')
             ->where('p.id IN ({ids:array})', ['ids' => $pageMap->keys()])
             ->columns(['pc.page_id AS pageId', 'pc.value', 'pc.field']);
 
         $queryPageLanguageContent = (new Builder)
             ->from(['p' => Page::class])
-            ->leftJoin(PageLanguageContent::class, 'plc.page_id = p.id AND plc.language_code = "' . $langCode . '"', 'plc')
+            ->join(PageLanguageContent::class, 'plc.page_id = p.id AND plc.language_code = "' . $langCode . '"', 'plc')
             ->where('p.id IN ({ids:array})', ['ids' => $pageMap->keys()])
             ->columns(['plc.page_id AS pageId', 'plc.value', 'plc.field']);
 

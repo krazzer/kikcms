@@ -4,7 +4,6 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCmsCore\Classes\Model;
-use KikCmsCore\Config\DbConfig;
 
 /**
  * @property Page $parent
@@ -120,6 +119,6 @@ class Page extends Model
      */
     public function getCreatedDate(): DateTime
     {
-        return DateTime::createFromFormat(DbConfig::SQL_DATETIME_FORMAT, $this->created_at);
+        return new DateTime($this->created_at);
     }
 }
