@@ -5,9 +5,9 @@ namespace KikCMS\Services\Util;
 
 use DateInterval;
 use DateTime;
-use KikCMS\Classes\Phalcon\Validator\Date;
 use KikCMS\Classes\Translator;
 use Phalcon\Di\Injectable;
+use Phalcon\Validation\Validator\Date;
 
 /**
  * Utility Service for handling DateTime objects
