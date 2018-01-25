@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
+use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\Renderable\Filters;
@@ -78,7 +79,7 @@ abstract class DataForm extends WebForm
     /**
      * @inheritdoc
      */
-    public function addDateField(string $key, string $label, array $validators = []): Field
+    public function addDateField(string $key, string $label, array $validators = []): DateField
     {
         $dateField = parent::addDateField($key, $label, $validators);
 

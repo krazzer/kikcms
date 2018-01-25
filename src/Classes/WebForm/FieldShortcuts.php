@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SelectDataTable;
+use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
@@ -21,6 +22,9 @@ use KikCMS\Classes\WebForm\Fields\TextareaField;
 use KikCMS\Classes\WebForm\Fields\TextField;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
 
+/**
+ * @property Translator $translator
+ */
 trait FieldShortcuts
 {
     /**
@@ -70,9 +74,14 @@ trait FieldShortcuts
      * @param array $validators
      * @return DateField|Field
      */
-    public function addDateField(string $key, string $label, array $validators = []): Field
+    public function addDateField(string $key, string $label, array $validators = []): DateField
     {
-        return $this->addField(new DateField($key, $label, $validators));
+        $format = $this->translator->tl('system.phpDateFormat');
+
+        $dateField = (new DateField($key, $label, $validators))
+            ->setFormat($format);
+
+        return $this->addField($dateField);
     }
 
     /**

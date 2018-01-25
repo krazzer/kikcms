@@ -344,6 +344,7 @@ return [
         'langCode'              => 'nl',
         'locale'                => 'nl_NL',
         'phpDateFormat'         => 'd-m-Y',
+        'phpDateTimeFormat'     => 'd-m-Y H:i',
         'momentJsDateFormat'    => 'DD-MM-YYYY',
         'dateDisplayFormat'     => '%e %b %Y',
         'dateTimeDisplayFormat' => '%e %b %Y, om %H:%M',

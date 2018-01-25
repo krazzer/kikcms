@@ -96,6 +96,7 @@ return [
         'locale'                => 'en_GB',
         'langCode'              => 'en',
         'phpDateFormat'         => 'Y-m-d',
+        'phpDateTimeFormat'     => 'Y-m-d H:i',
         'dateDisplayFormat'     => '%b %e %Y',
         'dateTimeDisplayFormat' => '%b %e %Y, at %H:%M',
         'momentJsDateFormat'    => 'YYYY-MM-DD',

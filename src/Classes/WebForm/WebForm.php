@@ -8,6 +8,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
@@ -18,6 +19,7 @@ use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
+use Phalcon\Validation\Validator\Date;
 
 /**
  * @property View $view
@@ -133,12 +135,6 @@ abstract class WebForm extends Renderable
 
         $field->setForm($this);
         $this->fieldMap->add($field, $field->getKey());
-
-        if ($field->getType() == Field::TYPE_DATE) {
-            $momentJsDateFormat = $this->translator->tl('system.momentJsDateFormat');
-            $field->setAttribute('data-format', $momentJsDateFormat);
-            $field->getElement()->addValidator($this->dateTimeService->getValidator());
-        }
 
         if ($field->getElement()) {
             $this->form->add($field->getElement());
@@ -374,10 +370,13 @@ abstract class WebForm extends Renderable
 
         // add select field placeholders
         foreach ($this->fieldMap as $key => $field) {
-            /** @var SelectField $field */
-            if ($field->getType() == Field::TYPE_SELECT && $field->getAddPlaceholder()) {
+            if ($field instanceOf SelectField && $field->getAddPlaceholder()) {
                 $placeHolderLabel = $this->translator->tl('webform.selectPlaceHolderLabel');
                 $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
+            }
+
+            if ($field instanceof DateField){
+                $this->initializeDateField($field);
             }
         }
 
@@ -569,6 +568,25 @@ abstract class WebForm extends Renderable
         }
 
         return false;
+    }
+
+    /**
+     * If no validator is provided, add one based on the given format
+     *
+     * @param DateField $field
+     */
+    private function initializeDateField(DateField $field)
+    {
+        if($field->getElement()->getValidators()){
+            return;
+        }
+
+        $validator = new Date([
+            "format"     => $field->getFormat(),
+            "allowEmpty" => true,
+        ]);
+
+        $field->getElement()->addValidator($validator);
     }
 
     /**
