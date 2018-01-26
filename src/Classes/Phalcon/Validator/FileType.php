@@ -38,7 +38,7 @@ class FileType extends Validator
         $message = $validator->getDefaultMessage('FinderFileType');
         $message = str_replace(':types', implode(', ', $allowedFileTypes), $message);
 
-        $validator->appendMessage(new Message($message));
+        $validator->appendMessage(new Message($message, $field));
 
         return false;
     }
