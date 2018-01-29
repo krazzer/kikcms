@@ -31,10 +31,10 @@ class PageLanguageService extends Injectable
      */
     public function createForAlias(Page $alias)
     {
-        if( ! $alias->getAliasId()){
+        if ( ! $alias->getAliasId()) {
             return;
         }
-        
+
         $pageLanguageMap = $this->getAllByPageId($alias->getAliasId());
 
         foreach ($pageLanguageMap as $pageLanguage) {
@@ -118,7 +118,7 @@ class PageLanguageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $languageCode = null, bool $activeOnly = true): PageLanguageMap
     {
-        if( ! $pageMap->keys()){
+        if ( ! $pageMap->keys()) {
             return new PageLanguageMap;
         }
 
@@ -130,7 +130,7 @@ class PageLanguageService extends Injectable
                 'ids' => $pageMap->keys(), 'langCode' => $languageCode
             ]);
 
-        if($activeOnly){
+        if ($activeOnly) {
             $query->andWhere('active = 1');
         }
 
@@ -192,7 +192,11 @@ class PageLanguageService extends Injectable
             ->where('p.id IN ({ids:array})', ['ids' => $pageMap->keys()])
             ->columns(['plc.page_id AS pageId', 'plc.value', 'plc.field']);
 
-        $rows  = $this->dbService->getRows($queryPageContent) + $this->dbService->getRows($queryPageLanguageContent);
+        $rows = array_merge(
+            $this->dbService->getRows($queryPageContent),
+            $this->dbService->getRows($queryPageLanguageContent)
+        );
+
         $table = [];
 
         foreach ($rows as $row) {
@@ -249,7 +253,7 @@ class PageLanguageService extends Injectable
      */
     public function getSiblings(PageLanguage $pageLanguage): PageLanguageMap
     {
-        if( ! $pageLanguage->page->parent){
+        if ( ! $pageLanguage->page->parent) {
             return new PageLanguageMap;
         }
 
