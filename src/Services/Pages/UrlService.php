@@ -4,6 +4,7 @@ namespace KikCMS\Services\Pages;
 
 
 use Exception;
+use KikCMS\Classes\Translator;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
@@ -19,6 +20,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property CacheService $cacheService
  * @property PageLanguageService $pageLanguageService
  * @property LanguageService $languageService
+ * @property Translator $translator
  */
 class UrlService extends Injectable
 {
@@ -199,13 +201,14 @@ class UrlService extends Injectable
 
     /**
      * @param int $pageId
-     * @param string $languageCode
+     * @param string|null $languageCode
      *
      * @return string
      * @throws Exception
      */
-    public function getUrlByPageId(int $pageId, string $languageCode): string
+    public function getUrlByPageId(int $pageId, string $languageCode = null): string
     {
+        $languageCode = $languageCode ?: $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
         if ( ! $pageLanguage) {
@@ -217,11 +220,12 @@ class UrlService extends Injectable
 
     /**
      * @param string $pageKey
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return string
      */
-    public function getUrlByPageKey(string $pageKey, string $languageCode): string
+    public function getUrlByPageKey(string $pageKey, string $languageCode = null): string
     {
+        $languageCode = $languageCode ?: $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
 
         if ( ! $pageLanguage) {
