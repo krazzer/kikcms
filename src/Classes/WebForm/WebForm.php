@@ -94,7 +94,9 @@ abstract class WebForm extends Renderable
 
         $this->fieldMap = new FieldMap();
 
-        $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
+        if( ! $this->sendButtonLabel){
+            $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
+        }
     }
 
     /**
