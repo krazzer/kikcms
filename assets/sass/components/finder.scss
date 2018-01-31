@@ -73,6 +73,7 @@
                     overflow: hidden;
                     line-height: 16px;
                     margin-top: 5px;
+                    text-overflow: ellipsis;
 
                     .highlight {
                         background-color: $highLightColor;
