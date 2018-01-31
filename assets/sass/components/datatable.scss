@@ -126,10 +126,14 @@ body {
 
             .lbl {
                 float: left;
-                width: 50%;
+                width: 100%;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
+            }
+
+            &.has-filters .lbl{
+                width: calc(100% - 150px);
             }
 
             .filters {
