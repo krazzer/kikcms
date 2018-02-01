@@ -442,7 +442,7 @@ var DataTable = Class.extend({
     },
 
     actionReloadWindow: function () {
-        var editId = this.getWindow().find('#editId').val();
+        var editId = this.getFormEditId();
 
         if (editId) {
             this.actionEdit(editId);
@@ -467,6 +467,8 @@ var DataTable = Class.extend({
         var self    = this;
         var $window = this.getWindow();
         var params  = this.getFormGroups().serializeObject();
+
+        params.editId = this.getFormEditId();
 
         $.extend(params, this.getFilters());
 
@@ -669,6 +671,10 @@ var DataTable = Class.extend({
         return this.getWindow().find('form');
     },
 
+    getFormEditId: function () {
+        return this.getWindow().find('.webForm').attr('data-id');
+    },
+
     getLanguageCode: function () {
         return this.getDataTable().find('.toolbar .language select').val();
     },
@@ -704,13 +710,13 @@ var DataTable = Class.extend({
 
         var $window = $bodyNotFading.find(' > #' + windowId);
 
-        if ( ! $window.length) {
+        if (!$window.length) {
             $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
                 '<div class="closeButton"></div><div class="windowContent"></div></div>';
 
             $bodyNotFading.prepend($window);
         } else {
-            $bodyNotFading.find(' > #' + windowId).find('.closeButton').unbind( "click" );
+            $bodyNotFading.find(' > #' + windowId).find('.closeButton').unbind("click");
         }
 
         $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(this.attemptToCloseWindow.bind(this));

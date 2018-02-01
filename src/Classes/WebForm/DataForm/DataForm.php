@@ -31,8 +31,6 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 abstract class DataForm extends WebForm
 {
-    const EDIT_ID = 'editId';
-
     /** @var array */
     protected $events = [];
 
@@ -135,8 +133,6 @@ abstract class DataForm extends WebForm
         $editData        = $this->getEditData();
         $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode, $editData);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
-
-        $this->addHiddenField(DataForm::EDIT_ID, $editId);
 
         /** @var Field $field */
         foreach ($this->fieldMap as $key => $field) {
@@ -365,10 +361,7 @@ abstract class DataForm extends WebForm
             $storageData->addFormInputValue($key, $value);
         }
 
-        // check if the form was saved before, or that the editId was already set
-        if (array_key_exists(self::EDIT_ID, $input)) {
-            $storageData->setEditId($input[self::EDIT_ID]);
-        } elseif($editId = $this->getFilters()->getEditId()){
+        if($editId = $this->getFilters()->getEditId()){
             $storageData->setEditId($editId);
         }
 
@@ -390,7 +383,7 @@ abstract class DataForm extends WebForm
      */
     private function getSystemFields()
     {
-        return [self::WEB_FORM_ID, self::EDIT_ID, DataTable::INSTANCE, DataTable::PAGE];
+        return [self::WEB_FORM_ID, DataTable::INSTANCE, DataTable::PAGE];
     }
 
     /**
@@ -407,11 +400,6 @@ abstract class DataForm extends WebForm
 
         if ($success) {
             $this->getFilters()->setEditId($storageData->getEditId());
-
-            if ( ! $this->fieldMap->has(self::EDIT_ID)) {
-                $this->addHiddenField(self::EDIT_ID, $this->getFilters()->getEditId());
-            }
-
             $this->onSave();
         }
 

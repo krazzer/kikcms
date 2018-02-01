@@ -9,7 +9,7 @@
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
-<div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
+<div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}" data-id="{{ filters.editId }}">
     {{ form({name: 'form'}) }}
 
     {% if flash %}
