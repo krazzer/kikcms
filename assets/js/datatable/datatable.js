@@ -468,7 +468,7 @@ var DataTable = Class.extend({
         var $window = this.getWindow();
         var params  = this.getFormGroups().serializeObject();
 
-        if(this.getFormEditId()){
+        if (this.getFormEditId()) {
             params.editId = this.getFormEditId();
         }
 
@@ -536,21 +536,24 @@ var DataTable = Class.extend({
     },
 
     closeWindow: function () {
-        var $window = this.getWindow();
-        var level   = parseInt($window.attr('data-level'));
+        var $window  = this.getWindow();
+        var $overlay = this.getOverlayContainer();
+
+        var level = parseInt($window.attr('data-level'));
 
         if (level == 0) {
             $('body').removeClass('datatableBlur');
-            $('body #overlay').css('z-index', 3);
+            $overlay.css('z-index', 3);
         } else {
             $('.dataTableWindow.level' + (level - 1)).removeClass('blur');
-            $('body #overlay').css('z-index', level + 2);
+            $overlay.css('z-index', level + 2);
         }
 
         $('.dataTableWindow.level' + (level + 1)).remove();
 
         $window.fadeOut();
         $window.find('.windowContent').html('');
+
         $('.datatableThumbHoverContainer').remove();
 
         if (typeof(tinymce) !== 'undefined') {
@@ -571,14 +574,16 @@ var DataTable = Class.extend({
     },
 
     showWindow: function () {
-        var $window = this.getWindow();
-        var level   = parseInt($window.attr('data-level'));
+        var $window  = this.getWindow();
+        var $overlay = this.getOverlayContainer();
+
+        var level = parseInt($window.attr('data-level'));
 
         if (level == 0) {
             $('body').addClass('datatableBlur');
         } else {
             $('.dataTableWindow.level' + (level - 1)).addClass('blur');
-            $('body #overlay').css('z-index', level + 3);
+            $overlay.css('z-index', level + 3);
         }
 
         $window.fadeIn();
@@ -684,12 +689,23 @@ var DataTable = Class.extend({
     getNotFadingContainer: function () {
         var $bodyNotFading = $('body > #notFading');
 
-        if( ! $bodyNotFading.length){
+        if (!$bodyNotFading.length) {
             $bodyNotFading = $('<div id="notFading"></div>');
             $('body').append($bodyNotFading);
         }
 
         return $bodyNotFading;
+    },
+
+    getOverlayContainer: function () {
+        var $overlay = $('body > #overlay');
+
+        if (!$overlay.length) {
+            $overlay = $('<div id="overlay"></div>');
+            $('body').prepend($overlay);
+        }
+
+        return $overlay;
     },
 
     getWindowLanguageCode: function () {
@@ -711,8 +727,8 @@ var DataTable = Class.extend({
     },
 
     getWindow: function () {
-        var windowId          = this.renderableInstance + 'Window';
-        var $bodyNotFading    = this.getNotFadingContainer();
+        var windowId       = this.renderableInstance + 'Window';
+        var $bodyNotFading = this.getNotFadingContainer();
 
         var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
         var level             = 0;
