@@ -468,7 +468,9 @@ var DataTable = Class.extend({
         var $window = this.getWindow();
         var params  = this.getFormGroups().serializeObject();
 
-        params.editId = this.getFormEditId();
+        if(this.getFormEditId()){
+            params.editId = this.getFormEditId();
+        }
 
         $.extend(params, this.getFilters());
 
@@ -679,6 +681,17 @@ var DataTable = Class.extend({
         return this.getDataTable().find('.toolbar .language select').val();
     },
 
+    getNotFadingContainer: function () {
+        var $bodyNotFading = $('body > #notFading');
+
+        if( ! $bodyNotFading.length){
+            $bodyNotFading = $('<div id="notFading"></div>');
+            $('body').append($bodyNotFading);
+        }
+
+        return $bodyNotFading;
+    },
+
     getWindowLanguageCode: function () {
         return this.getWindow().find('.header select[name=language]').val();
     },
@@ -699,7 +712,8 @@ var DataTable = Class.extend({
 
     getWindow: function () {
         var windowId          = this.renderableInstance + 'Window';
-        var $bodyNotFading    = $('body > #notFading');
+        var $bodyNotFading    = this.getNotFadingContainer();
+
         var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
         var level             = 0;
 
