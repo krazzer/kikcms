@@ -236,6 +236,25 @@ class UrlService extends Injectable
     }
 
     /**
+     * Get only the path of the URL, sans leading slash
+     *
+     * @param string $pageKey
+     * @param string|null $languageCode
+     * @return string
+     */
+    public function getUrlPathByPageKey(string $pageKey, string $languageCode = null): string
+    {
+        $languageCode = $languageCode ?: $this->translator->getLanguageCode();
+        $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
+
+        if ( ! $pageLanguage) {
+            return '/page/' . $languageCode . '/' . $pageKey;
+        }
+
+        return $this->getUrlByPageLanguage($pageLanguage, false);
+    }
+
+    /**
      * Get an array with all pages' id, title, url, type for a certain language
      *
      * @param string $languageCode
