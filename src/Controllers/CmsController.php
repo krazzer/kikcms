@@ -3,8 +3,11 @@
 namespace KikCMS\Controllers;
 
 use DateTime;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\MenuConfig;
@@ -31,6 +34,7 @@ use Phalcon\Http\Response;
  * @property AnalyticsService $analyticsService
  * @property WebsiteSettingsBase $websiteSettings
  * @property CmsService $cmsService
+ * @property AccessControl $acl
  */
 class CmsController extends BaseCmsController
 {
@@ -115,6 +119,10 @@ class CmsController extends BaseCmsController
      */
     public function statsAction()
     {
+        if( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
+            throw new UnauthorizedException();
+        }
+
         $this->view->title = $this->translator->tl('menu.item.stats');
 
         $startDate = $this->dateTimeService->getOneYearAgoFirstDayOfMonth();

@@ -40,7 +40,7 @@ class CmsService extends Injectable
             $groups[$groupId] = $menuGroup;
         }
 
-        if( ! $this->config->get('analytics')){
+        if( ! $this->config->get('analytics') || ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
             unset($groups[MenuConfig::MENU_GROUP_STATS]);
         }
 

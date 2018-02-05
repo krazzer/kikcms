@@ -35,6 +35,7 @@ class Permission extends Injectable
 
     const ACCESS_DATATABLES = 'AccessDataTables';
     const ACCESS_FINDER     = 'AccessFinder';
+    const ACCESS_STATISTICS = 'AccessStatistics';
     const PAGE_MENU         = 'pageMenu';
     const PAGE_KEY          = 'pageKey';
 
@@ -100,6 +101,8 @@ class Permission extends Injectable
     {
         $acl->addResource(self::ACCESS_DATATABLES);
         $acl->addResource(self::ACCESS_FINDER);
+        $acl->addResource(self::ACCESS_STATISTICS);
+
         $acl->addResource(Languages::class);
         $acl->addResource(Pages::class);
         $acl->addResource(Translations::class);
@@ -113,6 +116,10 @@ class Permission extends Injectable
         $acl->allow(self::DEVELOPER, self::ACCESS_FINDER);
         $acl->allow(self::ADMIN, self::ACCESS_FINDER);
         $acl->allow(self::USER, self::ACCESS_FINDER);
+
+        $acl->allow(self::DEVELOPER, self::ACCESS_STATISTICS);
+        $acl->allow(self::ADMIN, self::ACCESS_STATISTICS);
+        $acl->allow(self::USER, self::ACCESS_STATISTICS);
 
         $acl->allow(self::DEVELOPER, Pages::class);
         $acl->allow(self::ADMIN, Pages::class);
