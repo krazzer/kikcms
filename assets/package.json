@@ -13,14 +13,13 @@
     "gulp-autoprefixer": "^3.1.1",
     "gulp-concat": "^2.6.1",
     "gulp-cssnano": "^2.1.2",
+    "gulp-gzip": "^1.4.0",
     "gulp-less": "^3.3.0",
+    "gulp-plumber": "^1.1.0",
     "gulp-pug": "^3.2.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^1.9.1",
-    "gulp-stylus": "^2.6.0",
     "gulp-uglify": "^2.0.0",
-    "gulp-watch": "^4.3.11",
-    "gulp-gzip": "^1.4.0",
-    "gulp-plumber": "^1.1.0"
+    "gulp-watch": "^4.3.11"
   }
 }
