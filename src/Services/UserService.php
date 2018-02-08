@@ -67,6 +67,9 @@ class UserService extends Injectable
      */
     public function isValidOrNotActivatedYet(string $email, string $password): bool
     {
+        // trim password so accidentally added spaces are removed
+        $password = trim($password);
+
         $user = $this->getByEmail($email);
 
         if ( ! $user) {
