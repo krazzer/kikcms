@@ -29,7 +29,7 @@ class AnalyticsService extends Injectable
      */
     public function importIntoDb(): bool
     {
-        if($this->isUpdating()){
+        if ($this->isUpdating()) {
             return true;
         }
 
@@ -123,20 +123,20 @@ class AnalyticsService extends Injectable
             ])
             ->groupBy(GaVisitData::FIELD_VALUE)
             ->orderBy('visits DESC')
-            ->limit(count(StatisticsConfig::TYPES) * 50);
+            ->limit(count(StatisticsConfig::GA_TYPES) * 50);
 
         $this->addDateWhere($query, $start, $end);
 
         $results = $query->getQuery()->execute()->toArray();
 
-        foreach ($results as $result){
+        foreach ($results as $result) {
             $type = $result[GaVisitData::FIELD_TYPE];
 
-            if( ! array_key_exists($type, $visitorData)){
+            if ( ! array_key_exists($type, $visitorData)) {
                 $visitorData[$type] = [];
             }
 
-            if(count($visitorData[$type]) >= 25){
+            if (count($visitorData[$type]) >= 25) {
                 continue;
             }
 
@@ -200,7 +200,7 @@ class AnalyticsService extends Injectable
      */
     public function requiresUpdate(): bool
     {
-        if($this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE) === false){
+        if ($this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE) === false) {
             return false;
         }
 
@@ -212,11 +212,11 @@ class AnalyticsService extends Injectable
 
         $typeMaxDates = $this->getMaxDatePerVisitDataType();
 
-        if( ! $typeMaxDates){
+        if ( ! $typeMaxDates) {
             return true;
         }
 
-        foreach ($typeMaxDates as $type => $maxDate){
+        foreach ($typeMaxDates as $type => $maxDate) {
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
                 return true;
             }
@@ -312,7 +312,7 @@ class AnalyticsService extends Injectable
             ->columns([GaVisitData::FIELD_TYPE, 'MAX(' . GaVisitData::FIELD_DATE . ')'])
             ->groupBy(GaVisitData::FIELD_TYPE);
 
-        return array_map(function($date){
+        return array_map(function ($date) {
             return new DateTime($date);
         }, $this->dbService->getAssoc($query));
     }
@@ -514,12 +514,17 @@ class AnalyticsService extends Injectable
             $insertData = [];
 
             foreach ($results as $resultRow) {
-                $date = $resultRow['ga:year'] . '-' . $resultRow['ga:month'] . '-' . $resultRow['ga:day'];
+                $date  = $resultRow['ga:year'] . '-' . $resultRow['ga:month'] . '-' . $resultRow['ga:day'];
+                $value = $resultRow[$dimension];
+
+                if (strlen($value) > 128) {
+                    $value = substr($value, 0, 115) . uniqid();
+                }
 
                 $insertRow = [
                     GaVisitData::FIELD_DATE   => $date,
                     GaVisitData::FIELD_TYPE   => $type,
-                    GaVisitData::FIELD_VALUE  => $resultRow[$dimension],
+                    GaVisitData::FIELD_VALUE  => $value,
                     GaVisitData::FIELD_VISITS => $resultRow['visits'],
                 ];
 
