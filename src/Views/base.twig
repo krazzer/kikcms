@@ -14,7 +14,7 @@
     {{ assets.outputCss() }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
+<body class="{% block bodyClass '' %}">
 <div id="overlay"></div>
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/vendor.js') }}
