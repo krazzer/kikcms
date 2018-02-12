@@ -71,7 +71,7 @@ var Statistics = Class.extend({
 
         this.$settingsInput   = this.$controls.find('input[name=settings]');
         this.$buttonRefresh   = this.$controls.find('.refresh');
-        this.$rangeInputs     = this.$controls.find('.dateRange input[type=date]');
+        this.$rangeInputs     = this.$controls.find('.dateRange input');
         this.$intervalButtons = this.$controls.find('.interval button');
         this.$fieldStart      = this.$controls.find('.start');
         this.$fieldEnd        = this.$controls.find('.end');
