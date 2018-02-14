@@ -38,7 +38,7 @@
         {% for index, row in tableData.data %}
             <tr data-id="{{ row.id }}" class="{% block tableRowClass '' %}" {% block tableRowAttr '' %}>
                 {% for key, value in tableData.rowDisplayValues(index) %}
-                    <td>
+                    <td data-column="{{ key }}">
                         {% if fieldFormatting[key] is defined %}
                             {{ self.formatValue(key, value, row)|raw }}
                         {% else %}
