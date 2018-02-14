@@ -79,6 +79,13 @@ body {
         margin-left: 0;
     }
 
+    @media (max-width: $screen-xs-min) {
+        top: 10px;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+    }
+
     &.blur {
         @include blur(3);
 
@@ -103,6 +110,13 @@ body {
                 right: 50px;
                 margin-left: 0;
             }
+
+            @media (max-width: $screen-xs-min) {
+                top: 10px;
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+            }
         }
     }
 
@@ -112,6 +126,11 @@ body {
         top: 23px;
         position: absolute;
         cursor: pointer;
+
+        @media (max-width: $screen-xs-min) {
+            right: 20px;
+            top: 13px;
+        }
     }
 
     > .windowContent {
@@ -144,6 +163,10 @@ body {
                     width: 150px;
                     text-indent: 5px;
                 }
+            }
+
+            @media (max-width: $screen-xs-min) {
+                padding: 10px 60px 10px 20px;
             }
         }
 
@@ -182,6 +205,10 @@ body {
                     }
                 }
             }
+
+            @media (max-width: $screen-xs-min) {
+                padding: 10px 20px;
+            }
         }
 
         > .footer {
@@ -195,6 +222,10 @@ body {
             button {
                 margin-left: 5px;
                 padding: 10px 35px;
+
+                @media (max-width: $screen-xs-min) {
+                    padding: 10px 20px;
+                }
             }
         }
     }
