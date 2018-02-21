@@ -198,6 +198,16 @@ class Field
     }
 
     /**
+     * Set the elements' maxlength attribute
+     *
+     * @param int $maxLength
+     */
+    public function setMaxLength(int $maxLength)
+    {
+        $this->getElement()->setAttribute('maxlength', $maxLength);
+    }
+
+    /**
      * Override this method to convert the field's value to a format best handled by PHP
      * e.g. convert a json encoded object to an actual PHP object
      *
