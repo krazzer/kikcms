@@ -200,13 +200,35 @@ class UrlService extends Injectable
     }
 
     /**
-     * @param int $pageId
+     * @param Page $page
      * @param string|null $languageCode
-     *
      * @return string
      * @throws Exception
      */
-    public function getUrlByPageId(int $pageId, string $languageCode = null): string
+    public function getUrlPathByPage(Page $page, string $languageCode = null): string
+    {
+        return $this->getUrlByPageId($page->getId(), $languageCode, false);
+    }
+
+    /**
+     * @param Page $page
+     * @param string|null $languageCode
+     * @param bool $addLeadingSlash
+     * @return string
+     * @throws Exception
+     */
+    public function getUrlByPage(Page $page, string $languageCode = null, bool $addLeadingSlash = true): string
+    {
+        return $this->getUrlByPageId($page->getId(), $languageCode, $addLeadingSlash);
+    }
+
+    /**
+     * @param int $pageId
+     * @param string|null $languageCode
+     * @param bool $addLeadingSlash
+     * @return string
+     */
+    public function getUrlByPageId(int $pageId, string $languageCode = null, bool $addLeadingSlash = true): string
     {
         $languageCode = $languageCode ?: $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
@@ -215,7 +237,7 @@ class UrlService extends Injectable
             return '/page/' . $languageCode . '/' . $pageId;
         }
 
-        return $this->getUrlByPageLanguage($pageLanguage);
+        return $this->getUrlByPageLanguage($pageLanguage, $addLeadingSlash);
     }
 
     /**
