@@ -32,7 +32,7 @@
     {% block head '' %}
     {{ assets.outputCss() }}
 </head>
-<body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}">
+<body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}" style="{% block bodyStyle '' %}">
 {% block body %}{% endblock %}
 {% block scripts %}
     {{ javascriptInclude('cmsassets/js/frontend/vendor.js') }}
