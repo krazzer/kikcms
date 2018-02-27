@@ -4,6 +4,7 @@ namespace KikCMS\Classes\DataTable;
 
 
 use KikCMS\Classes\DataTable\Filter\Filter;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -209,8 +210,8 @@ abstract class DataTable extends Renderable
      */
     public function delete(array $ids)
     {
-        foreach ($ids as $i => $id){
-            if( ! $this->canDelete($id)){
+        foreach ($ids as $i => $id) {
+            if ( ! $this->canDelete($id)) {
                 unset($ids[$i]);
             }
         }
@@ -496,7 +497,7 @@ abstract class DataTable extends Renderable
     public function render(): string
     {
         if ($this->acl->resourceExists(static::class) && ! $this->acl->allowed(static::class)) {
-            return 'unauthorized';
+            throw new UnauthorizedException();
         }
 
         $this->initializeDatatable();

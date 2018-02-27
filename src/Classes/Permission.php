@@ -53,7 +53,9 @@ class Permission extends Injectable
     public function getAcl()
     {
         if (isset($this->persistent->acl) && ! $this->persistent->acl->requiresUpdate()) {
-            return $this->persistent->acl;
+            if($this->persistent->acl->getCurrentRole() == $this->getCurrentRole()){
+                return $this->persistent->acl;
+            }
         }
 
         $acl = new AccessControl($this->getCurrentRole());

@@ -119,4 +119,22 @@ class AccessControl extends Memory
 
         return false;
     }
+
+    /**
+     * @return string
+     */
+    public function getCurrentRole(): string
+    {
+        return $this->currentRole;
+    }
+
+    /**
+     * @param string $currentRole
+     * @return AccessControl
+     */
+    public function setCurrentRole(string $currentRole): AccessControl
+    {
+        $this->currentRole = $currentRole;
+        return $this;
+    }
 }

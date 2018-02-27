@@ -4,6 +4,8 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\Finder\Finder;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
@@ -22,6 +24,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Date;
 
 /**
+ * @property AccessControl $acl
  * @property View $view
  * @property Validation $validation
  * @property Translator $translator
@@ -94,7 +97,7 @@ abstract class WebForm extends Renderable
 
         $this->fieldMap = new FieldMap();
 
-        if( ! $this->sendButtonLabel){
+        if ( ! $this->sendButtonLabel) {
             $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
         }
     }
@@ -377,7 +380,7 @@ abstract class WebForm extends Renderable
                 $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
             }
 
-            if ($field instanceof DateField){
+            if ($field instanceof DateField) {
                 $this->initializeDateField($field);
             }
         }
@@ -463,23 +466,24 @@ abstract class WebForm extends Renderable
         $this->renderDataTableFields();
 
         return $this->renderView($this->formTemplate, [
-            'form'               => $this->form,
-            'fields'             => $this->fieldMap,
-            'tabs'               => $this->tabs,
-            'filters'            => $this->filters,
-            'displaySendButton'  => $this->displaySendButton,
-            'security'           => $this->security,
-            'currentTab'         => $this->getCurrentTab(),
-            'fieldsWithoutTab'   => $this->getFieldsWithoutTab(),
-            'formId'             => $this->getFormId(),
-            'sendButtonClass'    => $this->sendButtonClass,
-            'sendButtonLabel'    => $this->getSendButtonLabel(),
-            'placeHolderAsLabel' => $this->isPlaceHolderAsLabel(),
-            'instance'           => $this->getInstance(),
-            'jsData'             => $this->getJsData(),
-            'class'              => static::class,
-            'errorContainer'     => $errorContainer,
-            'webForm'            => $this,
+            'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER),
+            'form'                => $this->form,
+            'fields'              => $this->fieldMap,
+            'tabs'                => $this->tabs,
+            'filters'             => $this->filters,
+            'displaySendButton'   => $this->displaySendButton,
+            'security'            => $this->security,
+            'currentTab'          => $this->getCurrentTab(),
+            'fieldsWithoutTab'    => $this->getFieldsWithoutTab(),
+            'formId'              => $this->getFormId(),
+            'sendButtonClass'     => $this->sendButtonClass,
+            'sendButtonLabel'     => $this->getSendButtonLabel(),
+            'placeHolderAsLabel'  => $this->isPlaceHolderAsLabel(),
+            'instance'            => $this->getInstance(),
+            'jsData'              => $this->getJsData(),
+            'class'               => static::class,
+            'errorContainer'      => $errorContainer,
+            'webForm'             => $this,
         ]);
     }
 
@@ -579,7 +583,7 @@ abstract class WebForm extends Renderable
      */
     private function initializeDateField(DateField $field)
     {
-        if($field->getElement()->getValidators()){
+        if ($field->getElement()->getValidators()) {
             return;
         }
 
