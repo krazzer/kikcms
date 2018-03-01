@@ -13,6 +13,7 @@ use KikCMS\Models\FinderFile;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
+use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
 
 /**
@@ -165,6 +166,19 @@ class FinderFileService extends Injectable
         }
 
         return $this->getByFolderId($filters->getFolderId());
+    }
+
+    /**
+     * @param string $key
+     * @return FinderFile|null
+     */
+    public function getByKey(string $key): ?FinderFile
+    {
+        $query = (new Builder)
+            ->from(FinderFile::class)
+            ->inWhere(FinderFile::FIELD_KEY, [$key]);
+
+        return $this->dbService->getObject($query);
     }
 
     /**

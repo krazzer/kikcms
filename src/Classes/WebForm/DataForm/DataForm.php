@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
 use KikCMS\Classes\WebForm\Fields\DateField;
+use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\Renderable\Filters;
@@ -84,6 +85,17 @@ abstract class DataForm extends WebForm
         $this->addFieldTransformer(new Date($dateField));
 
         return $dateField;
+    }
+
+    /**
+     * @return mixed|Model|null
+     */
+    public function getObject(): ?Model
+    {
+        /** @var Model $class */
+        $class = $this->getModel();
+
+        return $class::getById($this->getFilters()->getEditId());
     }
 
     /**
