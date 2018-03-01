@@ -5,6 +5,9 @@ namespace KikCMS\Models;
 use DateTime;
 use KikCmsCore\Classes\Model;
 
+/**
+ * @property FinderFolder $folder
+ */
 class FinderFile extends Model
 {
     const TABLE = 'finder_file';
@@ -17,6 +20,16 @@ class FinderFile extends Model
     const FIELD_KEY       = 'key';
 
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+    /**
+     * @inheritdoc
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->hasOne(self::FIELD_FOLDER_ID, FinderFolder::class, FinderFolder::FIELD_ID, ['alias' => 'folder']);
+    }
 
     /**
      * @inheritdoc

@@ -3,6 +3,8 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Models\FinderFolder;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
@@ -11,6 +13,7 @@ use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
 /**
+ * @property AccessControl $acl
  * @property DbService $dbService
  * @property Config $applicationConfig
  * @property Translator $translator
@@ -47,6 +50,14 @@ class UserService extends Injectable
         $hash = $this->security->hash($user->id . $time);
 
         return $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash . '&t=' . $time;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return User::getById($this->getUserId());
     }
 
     /**
@@ -175,5 +186,47 @@ class UserService extends Injectable
         } else {
             return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
         }
+    }
+
+    /**
+     * @param $folderId
+     * @return bool
+     */
+    public function allowedInFolderId($folderId): bool
+    {
+        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
+            return true;
+        }
+
+        $folder = FinderFolder::getById($folderId);
+
+        if( ! $folder){
+            return false;
+        }
+
+        return $this->allowedInFolder($folder);
+    }
+
+    /**
+     * @param FinderFolder $folder
+     * @return bool
+     */
+    public function allowedInFolder(FinderFolder $folder): bool
+    {
+        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
+            return true;
+        }
+
+        $userId = $this->getUserId();
+
+        if($folder->user_id == $userId){
+            return true;
+        }
+
+        if( ! $folder->folder){
+            return false;
+        }
+
+        return $this->allowedInFolder($folder->folder);
     }
 }

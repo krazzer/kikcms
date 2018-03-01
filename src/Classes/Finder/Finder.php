@@ -10,12 +10,16 @@ use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderFile;
+use KikCMS\Services\Finder\FinderService;
+use KikCMS\Services\UserService;
 use Phalcon\Http\Request\File;
 
 /**
+ * @property FinderService $finderService
  * @property FinderFileService $finderFileService
  * @property Translator $translator
  * @property AccessControl $acl
+ * @property UserService $userService
  */
 class Finder extends Renderable
 {
@@ -48,22 +52,35 @@ class Finder extends Renderable
     }
 
     /**
+     * @return bool
+     */
+    public function allowedInCurrentFolder(): bool
+    {
+        if ( ! $this->acl->allowedFinder()) {
+            return false;
+        }
+
+        return $this->userService->allowedInFolderId($this->getFilters()->getFolderId());
+    }
+
+    /**
+     * @return FinderFilters|Filters
+     */
+    public function getFinderFilters(): FinderFilters
+    {
+        return parent::getFilters();
+    }
+
+    /**
      * @return FinderFilters|Filters
      */
     public function getFilters(): Filters
     {
-        /** @var FinderFilters $filters */
-        $filters = parent::getFilters();
-
-        if ( ! $filters->getFolderId() && $this->session->finderFolderId) {
-            if (FinderFile::getById($this->session->finderFolderId)) {
-                $filters->setFolderId($this->session->finderFolderId);
-            } else {
-                $this->session->remove('finderFolderId');
-            }
+        if ( ! $this->getFinderFilters()->getFolderId()) {
+            $this->finderService->setStartingFolder($this->getFinderFilters());
         }
 
-        return $filters;
+        return $this->getFinderFilters();
     }
 
     /**
@@ -71,7 +88,7 @@ class Finder extends Renderable
      */
     public function render(): string
     {
-        if ( ! $this->acl->allowedFinder()) {
+        if ( ! $this->allowedInCurrentFolder()) {
             throw new UnauthorizedException();
         }
 

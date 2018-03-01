@@ -29,6 +29,7 @@ use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\DataTable\TinyMceService;
+use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -79,6 +80,7 @@ class Services extends BaseServices
             DbService::class,
             DeployService::class,
             ImageHandler::class,
+            FinderService::class,
             FieldStorageService::class,
             FullPageService::class,
             FrontendHelper::class,
