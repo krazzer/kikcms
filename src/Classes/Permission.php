@@ -33,11 +33,12 @@ class Permission extends Injectable
     const ACCESS_EDIT   = 'edit';
     const ACCESS_VIEW   = 'view';
 
-    const ACCESS_DATATABLES = 'AccessDataTables';
-    const ACCESS_FINDER     = 'AccessFinder';
-    const ACCESS_STATISTICS = 'AccessStatistics';
-    const PAGE_MENU         = 'pageMenu';
-    const PAGE_KEY          = 'pageKey';
+    const ACCESS_DATATABLES    = 'AccessDataTables';
+    const ACCESS_FINDER_FULL   = 'AccessFinderFull';
+    const ACCESS_FINDER_FOLDER = 'AccessFinderFolder';
+    const ACCESS_STATISTICS    = 'AccessStatistics';
+    const PAGE_MENU            = 'pageMenu';
+    const PAGE_KEY             = 'pageKey';
 
     const ROLES = [
         self::DEVELOPER,
@@ -53,7 +54,7 @@ class Permission extends Injectable
     public function getAcl()
     {
         if (isset($this->persistent->acl) && ! $this->persistent->acl->requiresUpdate()) {
-            if($this->persistent->acl->getCurrentRole() == $this->getCurrentRole()){
+            if ($this->persistent->acl->getCurrentRole() == $this->getCurrentRole()) {
                 return $this->persistent->acl;
             }
         }
@@ -102,7 +103,7 @@ class Permission extends Injectable
     private function addDataTablePermissions(AccessControl $acl)
     {
         $acl->addResource(self::ACCESS_DATATABLES);
-        $acl->addResource(self::ACCESS_FINDER);
+        $acl->addResource(self::ACCESS_FINDER_FULL);
         $acl->addResource(self::ACCESS_STATISTICS);
 
         $acl->addResource(Languages::class);
@@ -115,9 +116,9 @@ class Permission extends Injectable
         $acl->allow(self::USER, self::ACCESS_DATATABLES);
         $acl->allow(self::CLIENT, self::ACCESS_DATATABLES);
 
-        $acl->allow(self::DEVELOPER, self::ACCESS_FINDER);
-        $acl->allow(self::ADMIN, self::ACCESS_FINDER);
-        $acl->allow(self::USER, self::ACCESS_FINDER);
+        $acl->allow(self::DEVELOPER, self::ACCESS_FINDER_FULL);
+        $acl->allow(self::ADMIN, self::ACCESS_FINDER_FULL);
+        $acl->allow(self::USER, self::ACCESS_FINDER_FULL);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_STATISTICS);
         $acl->allow(self::ADMIN, self::ACCESS_STATISTICS);

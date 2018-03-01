@@ -71,7 +71,7 @@ class Finder extends Renderable
      */
     public function render(): string
     {
-        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
+        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
             return 'unauthorized';
         }
 

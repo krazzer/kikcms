@@ -198,7 +198,7 @@ class FinderController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
-        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
+        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
             throw new UnauthorizedException();
         }
 

@@ -466,7 +466,7 @@ abstract class WebForm extends Renderable
         $this->renderDataTableFields();
 
         return $this->renderView($this->formTemplate, [
-            'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER),
+            'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER_FULL),
             'form'                => $this->form,
             'fields'              => $this->fieldMap,
             'tabs'                => $this->tabs,
