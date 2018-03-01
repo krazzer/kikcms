@@ -58,6 +58,14 @@ class UserService extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getRole(): string
+    {
+        return $this->session->get('role');
+    }
+
+    /**
      * Determine whether a given email and password are allowed to login or must still be activated
      *
      * @param string $email
