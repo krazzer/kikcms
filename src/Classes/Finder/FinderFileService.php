@@ -4,6 +4,9 @@ namespace KikCMS\Classes\Finder;
 
 
 use KikCMS\Classes\Database\Now;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
@@ -19,10 +22,12 @@ use Phalcon\Mvc\Model\Resultset;
 /**
  * Handles FinderFiles
  *
+ * @property AccessControl $acl
  * @property ImageHandler $imageHandler
  * @property DbService $dbService
  * @property WebsiteService $websiteService
  * @property MediaResizeBase $mediaResize
+ * @property UserService $userService
  */
 class FinderFileService extends Injectable
 {
@@ -201,8 +206,10 @@ class FinderFileService extends Injectable
      */
     public function getFolderPath(int $folderId, $path = [])
     {
-        if ($folderId == 0) {
-            $path[0] = "Home";
+        $homeFolderId = $this->getHomeFolderId();
+
+        if ($folderId == $homeFolderId) {
+            $path[$homeFolderId] = "Home";
             return $path;
         }
 
@@ -441,5 +448,17 @@ class FinderFileService extends Injectable
                 unlink($thumbFile);
             }
         }
+    }
+
+    /**
+     * @return int
+     */
+    private function getHomeFolderId(): int
+    {
+        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
+            return 0;
+        }
+
+        return $this->userService->getUser()->folder->getId();
     }
 }
