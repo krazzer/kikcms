@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\Finder;
 
 
-use KikCMS\Classes\Permission;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
@@ -56,7 +56,7 @@ class Finder extends Renderable
         $filters = parent::getFilters();
 
         if ( ! $filters->getFolderId() && $this->session->finderFolderId) {
-            if(FinderFile::getById($this->session->finderFolderId)){
+            if (FinderFile::getById($this->session->finderFolderId)) {
                 $filters->setFolderId($this->session->finderFolderId);
             } else {
                 $this->session->remove('finderFolderId');
@@ -71,8 +71,8 @@ class Finder extends Renderable
      */
     public function render(): string
     {
-        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
-            return 'unauthorized';
+        if ( ! $this->acl->allowedFinder()) {
+            throw new UnauthorizedException();
         }
 
         $this->addAssets();

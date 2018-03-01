@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\Phalcon\AccessControl;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
@@ -10,12 +11,12 @@ use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
-use KikCMS\Classes\Permission;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
 
 /**
+ * @property AccessControl $acl
  * @property DbService $dbService
  * @property FinderFileService $finderFileService
  * @property Translator $translator
@@ -98,7 +99,7 @@ class FinderController extends RenderableController
     {
         $filePath = $this->finderFileService->getFilePath($finderFile);
 
-        if( ! file_exists($filePath)){
+        if ( ! file_exists($filePath)) {
             throw new NotFoundException();
         }
 
@@ -198,7 +199,7 @@ class FinderController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
-        if ( ! $this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
+        if ( ! $this->acl->allowedFinder()) {
             throw new UnauthorizedException();
         }
 

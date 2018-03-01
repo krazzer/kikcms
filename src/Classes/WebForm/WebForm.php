@@ -4,7 +4,6 @@ namespace KikCMS\Classes\WebForm;
 
 use InvalidArgumentException;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
@@ -466,7 +465,7 @@ abstract class WebForm extends Renderable
         $this->renderDataTableFields();
 
         return $this->renderView($this->formTemplate, [
-            'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER_FULL),
+            'allowedFinderAccess' => $this->acl->allowedFinder(),
             'form'                => $this->form,
             'fields'              => $this->fieldMap,
             'tabs'                => $this->tabs,
