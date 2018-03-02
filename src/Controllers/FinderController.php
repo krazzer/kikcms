@@ -59,11 +59,22 @@ class FinderController extends RenderableController
     public function deleteAction()
     {
         $finder       = $this->getRenderable();
-        $fileIds      = $this->request->getPost('fileIds');
+        $fileIds      = $this->request->getPost('fileIds', 'int');
         $errorMessage = null;
+        $idsToRemove  = [];
+
+        $files = FinderFile::getByIdList($fileIds);
+
+        foreach ($files as $file) {
+            if ( ! $file->key) {
+                $idsToRemove[] = $file->getId();
+            } else {
+                $errorMessage = $this->translator->tl('media.deleteErrorLocked');
+            }
+        }
 
         try {
-            $this->finderFileService->deleteFilesByIds($fileIds);
+            $this->finderFileService->deleteFilesByIds($idsToRemove);
         } catch (DbForeignKeyDeleteException $e) {
             $errorMessage = $this->translator->tl('media.deleteErrorLinked');
         }
@@ -115,7 +126,7 @@ class FinderController extends RenderableController
     {
         $targetFolderId = $this->request->getPost('folderId', 'int');
 
-        if( ! $this->userService->allowedInFolderId($targetFolderId)){
+        if ( ! $this->userService->allowedInFolderId($targetFolderId)) {
             throw new UnauthorizedException();
         }
 
@@ -210,7 +221,7 @@ class FinderController extends RenderableController
         /** @var Finder $finder */
         $finder = parent::getRenderable();
 
-        if( ! $finder->allowedInCurrentFolder()){
+        if ( ! $finder->allowedInCurrentFolder()) {
             throw new UnauthorizedException();
         }
 

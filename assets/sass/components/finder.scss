@@ -41,6 +41,21 @@
                 height: 156px;
                 margin: 10px 0 0 10px;
 
+                .thumb{
+                    position: relative;
+
+                    .icon-locked{
+                        position: absolute;
+                        width: 16px;
+                        height: 15px;
+                        right: 16px;
+                        bottom: 16px;
+                        color: $grayDark;
+                        top: auto;
+                        font-size: 15px;
+                    }
+                }
+
                 &.edited {
 
                     .thumb {

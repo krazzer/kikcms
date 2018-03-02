@@ -261,6 +261,8 @@ return [
         'deleteConfirmOne'         => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
         'deleteErrorLinked'        => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, ' .
             'omdat deze ergens aan gekoppeld is.',
+        'deleteErrorLocked'        => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat deze nodig ' .
+            'is voor het correct werken van de website.',
         'createFolder'             => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName'        => 'Nieuwe map',
         'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
