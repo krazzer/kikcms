@@ -27,8 +27,6 @@ class FrontendNotFoundPlugin extends Plugin
     public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
     {
         if ($exception instanceof NotFoundException) {
-            $this->response->setStatusCode(404);
-
             $dispatcher->forward([
                 'namespace'  => "KikCMS\\Controllers",
                 'controller' => 'frontend',

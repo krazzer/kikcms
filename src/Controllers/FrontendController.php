@@ -85,6 +85,7 @@ class FrontendController extends BaseController
      */
     public function pageNotFoundAction(string $languageCode = null)
     {
+        $this->response->setStatusCode(404);
         $this->view->reset();
 
         $pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode);
