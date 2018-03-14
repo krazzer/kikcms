@@ -110,7 +110,7 @@ class FrontendHelper extends Injectable
         }
 
         // disable cache on dev
-        if($this->config->application->env === KikCMSConfig::ENV_DEV){
+        if ($this->config->application->env === KikCMSConfig::ENV_DEV) {
             $cache = false;
         }
 
@@ -172,7 +172,7 @@ class FrontendHelper extends Injectable
             return $this->currentPathCached;
         }
 
-        if( ! $this->currentPageLanguage){
+        if ( ! $this->currentPageLanguage) {
             return new PageLanguageMap();
         }
 
@@ -233,8 +233,10 @@ class FrontendHelper extends Injectable
             }
 
             $relativeLevel = $fullPage->getLevel() - $initialLevel;
+            $pageKey       = $fullPage->getPage()->key;
+            $pageKeyAttr   = $pageKey ? ' data-key="' . $pageKey . '"' : '';
 
-            $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '">';
+            $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '"' . $pageKeyAttr . '>';
             $menuOutput .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel);
             $menuOutput .= $subMenuOutput;
             $menuOutput .= '</li>';
