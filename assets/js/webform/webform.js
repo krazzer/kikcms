@@ -215,7 +215,6 @@ var WebForm = Class.extend({
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce/content.css'],
             link_list: this.getLinkListUrl(),
-            ui_container: '#' + this.renderableInstance,
             file_picker_callback: function (callback) {
                 self.getFilePicker(callback);
             }
