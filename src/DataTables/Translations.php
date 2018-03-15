@@ -85,6 +85,12 @@ class Translations extends DataTable
      */
     protected function initialize()
     {
-        // nothing here...
+        $this->setFieldFormatting(TranslationValue::FIELD_VALUE, function ($value) {
+            if(strlen($value) <= 75){
+                return $value;
+            }
+
+            return substr($value, 0, 75) . '...';
+        });
     }
 }
