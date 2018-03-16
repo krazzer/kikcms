@@ -9,7 +9,6 @@ use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
-use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;
 
@@ -219,11 +218,7 @@ class DataTableController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
-        if ($this->acl->resourceExists($this->getClass()) && ! $this->acl->allowed($this->getClass())) {
-            throw new UnauthorizedException();
-        }
-
-        if ( ! $this->acl->allowed(Permission::ACCESS_DATATABLES)) {
+        if( ! $this->acl->dataTableAllowed($this->getClass())){
             throw new UnauthorizedException();
         }
 

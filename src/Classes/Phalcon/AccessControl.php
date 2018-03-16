@@ -153,4 +153,17 @@ class AccessControl extends Memory
         $this->currentRole = $currentRole;
         return $this;
     }
+
+    /**
+     * @param string $class
+     * @return bool
+     */
+    public function dataTableAllowed(string $class): bool
+    {
+        if ($this->resourceExists($class)){
+            return $this->allowed($class);
+        }
+
+        return $this->allowed(Permission::ACCESS_DATATABLES_DEFAULT);
+    }
 }

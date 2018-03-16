@@ -496,7 +496,7 @@ abstract class DataTable extends Renderable
      */
     public function render(): string
     {
-        if ($this->acl->resourceExists(static::class) && ! $this->acl->allowed(static::class)) {
+        if ( ! $this->acl->dataTableAllowed(static::class)) {
             throw new UnauthorizedException();
         }
 
