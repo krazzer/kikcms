@@ -48,7 +48,6 @@ class MailService extends Injectable
     }
 
     /**
-     * @param string|array $from
      * @param string|array $to
      * @param string $subject
      * @param string $body
@@ -59,7 +58,7 @@ class MailService extends Injectable
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
+    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -67,6 +66,8 @@ class MailService extends Injectable
 
             $body = $this->view->getPartial($template, $parameters);
         }
+
+        $from = 'noreply@' . $this->request->getServerName();
 
         $message = $this->createMessage()
             ->setFrom($from)
@@ -95,7 +96,6 @@ class MailService extends Injectable
     public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
     {
         $companyName  = $this->config->company->name;
-        $companyEmail = $this->config->company->email;
 
         $parameters = array_merge([
             'logo'    => $this->config->company->logoMail,
@@ -110,7 +110,7 @@ class MailService extends Injectable
             $parameters['mainColorDark'] = $this->config->company->mainColorDark;
         }
 
-        return $this->sendMail([$companyEmail => $companyName], $to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
     }
 
     /**
@@ -120,22 +120,16 @@ class MailService extends Injectable
      * @param string $subject
      * @param string $body
      * @param array $parameters
-     * @param null|string|array $from normally
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], $from = null): int
+    public function sendServiceMail($to, string $subject, string $body, array $parameters = []): int
     {
-        $developerEmail = $this->applicationConfig->developerEmail;
-        $developerName  = $this->applicationConfig->developerName;
-
-        $from = $from ?: [$developerEmail => $developerName];
-
         $parameters = array_merge([
             'logo'    => 'cmsassets/images/kikcms.png',
             'address' => 'Kiksaus, Heinenwaard 4, 1824 DZ Alkmaar',
         ], $parameters);
 
-        return $this->sendMail($from, $to, $subject, $body, '@kikcms/mail/default', $parameters);
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters);
     }
 }
