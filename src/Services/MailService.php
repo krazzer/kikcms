@@ -67,7 +67,7 @@ class MailService extends Injectable
             $body = $this->view->getPartial($template, $parameters);
         }
 
-        $from = 'noreply@' . $this->request->getServerName();
+        $from = 'noreply@' . str_replace('www.', '', $this->request->getServerName());
 
         $message = $this->createMessage()
             ->setFrom($from)
