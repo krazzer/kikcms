@@ -4,6 +4,10 @@ body{
     background: url('/cmsassets/images/login-background.jpg') no-repeat center center;
     background-size: cover;
     padding-top: 200px;
+
+    @media (max-width: 460px) {
+        padding-top: 35px;
+    }
 }
 
 #login{
@@ -31,6 +35,11 @@ body{
         .btn-submit{
             width: 100%;
         }
+    }
+
+    @media (max-width: 460px) {
+        width: calc(100% - 10px);
+        margin: 0 5px;
     }
 }
 

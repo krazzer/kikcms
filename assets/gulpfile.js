@@ -90,7 +90,8 @@ gulp.task('scriptsCms', function () {
         'js/finder/*.js',
         'js/webform/*.js',
         'js/datatables/*.js',
-        'js/modules/*.js'
+        'js/modules/*.js',
+        'js/cms.js'
     ])
         .pipe(plumber())
         .pipe(concat('cms.js'))
@@ -157,8 +158,8 @@ gulp.task('vendors', ['vendorsScripts', 'vendorsStyles']);
 
 // Watch task with browserSync
 gulp.task('watch', ['styles', 'scriptsCms'], function () {
-    gulp.watch('sass/**/*.scss', ['styles']);
-    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend', 'stylesLogin']);
+    gulp.watch('sass/**/*.scss', ['styles', 'stylesLogin']);
+    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend']);
 });
 
 // Default task

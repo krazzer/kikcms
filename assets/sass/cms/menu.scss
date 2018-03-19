@@ -56,15 +56,19 @@ $menuBackGroundColor: $superLightGray;
             }
         }
     }
+
+    @media #{$lowerThanDesktop} {
+        position: absolute;
+    }
 }
 
 #main{
     padding: 50px 50px 50px 308px;
     height: 100%;
     width: 100%;
+    min-width: 1130px;
 
     #main-content{
-        min-width: 800px;
         padding-bottom: 50px;
 
         h1{
