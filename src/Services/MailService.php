@@ -48,7 +48,7 @@ class MailService extends Injectable
     }
 
     /**
-     * @param string|array $replyTo
+     * @param string|array $from
      * @param string|array $to
      * @param string $subject
      * @param string $body
@@ -59,7 +59,7 @@ class MailService extends Injectable
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail($replyTo, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
+    public function sendMail($from, $to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -68,11 +68,8 @@ class MailService extends Injectable
             $body = $this->view->getPartial($template, $parameters);
         }
 
-        $from = $this->getFrom();
-
         $message = $this->createMessage()
             ->setFrom($from)
-            ->setReplyTo($replyTo)
             ->setTo($to)
             ->setSubject($subject)
             ->setBody($body, 'text/html');
@@ -140,21 +137,5 @@ class MailService extends Injectable
         ], $parameters);
 
         return $this->sendMail($from, $to, $subject, $body, '@kikcms/mail/default', $parameters);
-    }
-
-    /**
-     * @return array|string
-     */
-    private function getFrom()
-    {
-        if( ! $this->config->get('company') || ! $this->config->get('company')->get('email')){
-            return 'noreply@' . $this->request->getServerName();
-        }
-
-        if( ! $this->config->company->get('name')){
-            return $this->config->company->email;
-        }
-
-        return [$this->config->company->email => $this->config->company->name];
     }
 }
