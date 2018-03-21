@@ -52,6 +52,10 @@ abstract class MailForm extends WebForm
                 continue;
             }
 
+            if(is_array($input[$key])){
+                $input[$key] = implode("\n", $input[$key]);
+            }
+
             $value = nl2br($input[$key]);
 
             if( ! $value){
