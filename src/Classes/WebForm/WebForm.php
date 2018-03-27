@@ -586,6 +586,10 @@ abstract class WebForm extends Renderable
             return;
         }
 
+        if( ! $field->getFormat()){
+            $field->setFormat($this->dateTimeService->getDateFormat());
+        }
+
         $validator = new Date([
             "format"     => $field->getFormat(),
             "allowEmpty" => true,

@@ -94,7 +94,7 @@ class DateTimeService extends Injectable
      *
      * @return string
      */
-    private function getDateFormat(): string
+    public function getDateFormat(): string
     {
         return $this->translator->tl('system.phpDateFormat');
     }
