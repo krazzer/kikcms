@@ -99,6 +99,10 @@ class FrontendHelper extends Injectable
      */
     public function menu($menuId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
     {
+        if( ! $menuId){
+            return '';
+        }
+
         if ( ! is_numeric($menuId)) {
             $page = $this->pageService->getByKey($menuId);
 
