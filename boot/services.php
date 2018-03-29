@@ -5,6 +5,10 @@ use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\FactoryDefault\Cli;
 
+if( ! defined('SITE_PATH')){
+    throw new Exception('constant SITE_PATH is missing');
+}
+
 $configFile     = SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini';
 $configSiteFile = SITE_PATH . 'config/config.ini';
 $configEnvFile  = SITE_PATH . 'env/config.ini';

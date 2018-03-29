@@ -1,8 +1,0 @@
-<phpunit>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">Controllers</directory>
-            <file>.</file>
-        </whitelist>
-    </filter>
-</phpunit>
