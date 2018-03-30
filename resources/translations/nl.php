@@ -240,6 +240,7 @@ return [
                 'hashError'   => 'Ongeldige url',
                 'formMessage' => 'Voer het door u gewenste wachtwoord in',
                 'expired'     => 'De geldigheid van de link is verlopen.',
+                'space'       => 'Spaties zijn niet toegestaan',
             ]
         ]
     ],

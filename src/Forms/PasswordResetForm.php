@@ -7,6 +7,7 @@ use KikCMS\Models\User;
 use KikCMS\Services\UserService;
 use Phalcon\Validation\Validator\Identical;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
 
 /**
@@ -22,9 +23,10 @@ class PasswordResetForm extends WebForm
         $user = User::getById($this->request->get('userId'));
 
         $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
+        $password = new Regex(['pattern' => '/^([^ ]*)$/', 'message' => $this->translator->tl('login.reset.password.space')]);
 
         $this->addTextField('email', 'E-mail')->setDefault($user->email)->setAttribute('readonly', 'readonly');
-        $this->addPasswordField('password', 'Nieuw wachtwoord', [new PresenceOf(), $passwordStringLength]);
+        $this->addPasswordField('password', 'Nieuw wachtwoord', [new PresenceOf(), $passwordStringLength, $password]);
         $this->addPasswordField('password_repeat', 'Herhaal wachtwoord', [
             new PresenceOf(),
             new Identical([
