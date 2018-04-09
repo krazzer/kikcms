@@ -408,9 +408,14 @@ class FinderFileService extends Injectable
         }
 
         $dimensions = $this->getImageDimensions($finderFile);
+        $filePath   = $this->getFilePath($finderFile);
+
+        $image      = $this->imageHandler->create($filePath);
+        $jpgQuality = $this->config->media->jpgQuality;
 
         // could not fetch dimensions, so do nothing
         if ( ! $dimensions) {
+            $image->save($filePath, $jpgQuality);
             return;
         }
 
@@ -419,15 +424,14 @@ class FinderFileService extends Injectable
 
         // smaller than required, so do nothing
         if ($dimensions[0] <= $maxWidth && $dimensions[1] <= $maxHeight) {
+            $image->save($filePath, $jpgQuality);
             return;
         }
-
-        $filePath = $this->getFilePath($finderFile);
 
         // resize
         $image = $this->imageHandler->create($filePath);
         $image->resize($maxWidth, $maxHeight);
-        $image->save($filePath, $this->config->media->jpgQuality);
+        $image->save($filePath, $jpgQuality);
     }
 
     /**
@@ -455,7 +459,7 @@ class FinderFileService extends Injectable
      */
     private function getHomeFolderId(): int
     {
-        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
+        if ($this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
             return 0;
         }
 
