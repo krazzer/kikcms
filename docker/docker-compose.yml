@@ -1,0 +1,44 @@
+version: "3"
+services:
+  php:
+    image: kiksaus/kikdev
+    ports:
+        - "443:443"
+    volumes:
+        - ../../../../public_html/:/var/www/html
+        - ../../../../:/var/www
+        - ../../:/var/www/vendor/kiksaus
+        - ~/.docker-kikdev/logs/:/var/log/apache2/
+    depends_on:
+      - mysql
+      - mailhog
+    networks:
+      - kikdev
+
+  mysql:
+    image: mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: adminkik12
+    volumes:
+      - ~/.docker-kikdev/mysql/:/var/lib/mysql
+    networks:
+      kikdev:
+        aliases:
+          - mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      kikdev:
+        aliases:
+          - mail
+
+networks:
+  kikdev:
+    external:
+      name: kikdev

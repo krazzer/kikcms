@@ -1,0 +1,18 @@
+version: "3"
+services:
+  php:
+    image: kiksaus/kikdev
+    ports:
+        - "${SITE_PORT}:443"
+    volumes:
+        - ../../../../public_html/:/var/www/html
+        - ../../../../:/var/www
+        - ../../:/var/www/vendor/kiksaus
+        - ~/.docker-kikdev/logs:/var/log/apache2/
+    networks:
+      - kikdev
+
+networks:
+  kikdev:
+    external:
+      name: kikdev
