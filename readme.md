@@ -7,6 +7,10 @@ Make sure MySQL and Log dirs are created:
 
 `mkdir ~/.docker-kikdev && mkdir ~/.docker-kikdev/mysql && mkdir ~/.docker-kikdev/logs`
 
+and a network is started:
+
+`docker network create kikdev`
+
 <h4>Complete stack</h4> 
 
 <p>To set up a complete environment, with:</p>
@@ -19,14 +23,14 @@ Make sure MySQL and Log dirs are created:
 
 <p>Use this command (from the website root):</p>
 
-`docker stack deploy -c vendor/kiksaus/kikcms/docker-compose.yml kikdev`
+`docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose.yml up -d`
 
 <h4>Multiple websites</h4> 
 <p>To run multiple websites, with a user specified port per website:</p>
 
 Run (from the website root): 
 
-`docker network create kikdev && docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d`
+`docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d`
 
 once, and:
 
