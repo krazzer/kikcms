@@ -36,7 +36,7 @@ class LoginForm extends WebForm
         $user = $this->userService->getByEmail($input[self::FIELD_USERNAME]);
 
         if( ! $user->password){
-            $this->flash->notice($this->translator->tl('login.activate'));
+            $this->flash->notice($this->translator->tl('login.activate.message'));
             return $this->response->redirect('cms/login/reset');
         }
 

@@ -15,17 +15,29 @@ use Phalcon\Validation\Validator\StringLength;
  */
 class PasswordResetForm extends WebForm
 {
+    /** @var User */
+    private $user;
+
+    /**
+     * @param User $user
+     * @return PasswordResetForm
+     */
+    public function setUser(User $user): PasswordResetForm
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     /**
      * @inheritdoc
      */
     protected function initialize()
     {
-        $user = User::getById($this->request->get('userId'));
-
         $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
         $password = new Regex(['pattern' => '/^([^ ]*)$/', 'message' => $this->translator->tl('login.reset.password.space')]);
 
-        $this->addTextField('email', 'E-mail')->setDefault($user->email)->setAttribute('readonly', 'readonly');
+        $this->addTextField('email', 'E-mail')->setDefault($this->user->email)->setAttribute('readonly', 'readonly');
         $this->addPasswordField('password', 'Nieuw wachtwoord', [new PresenceOf(), $passwordStringLength, $password]);
         $this->addPasswordField('password_repeat', 'Herhaal wachtwoord', [
             new PresenceOf(),
@@ -45,12 +57,9 @@ class PasswordResetForm extends WebForm
      */
     protected function successAction(array $input)
     {
-        $userId        = $this->request->get('userId');
         $succesMessage = $this->translator->tl('login.reset.password.flash');
 
-        $user = User::getById($userId);
-
-        $this->userService->storePassword($user, $input['password']);
+        $this->userService->storePassword($this->user, $input['password']);
         $this->flash->success($succesMessage);
         return $this->response->redirect('cms/login');
     }

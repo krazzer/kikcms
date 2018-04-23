@@ -49,7 +49,7 @@ class UserService extends Injectable
         $time = date('U');
         $hash = $this->security->hash($user->id . $time);
 
-        return $this->url->get('cms/login/reset-password') . '?userId=' . $user->id . '&hash=' . $hash . '&t=' . $time;
+        return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $hash . '/' . $time;
     }
 
     /**
@@ -181,7 +181,7 @@ class UserService extends Injectable
             'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
         ];
 
-        if($user->role == Permission::CLIENT){
+        if($this->config->get('company')->get('logoMail')){
             return $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
         } else {
             return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);

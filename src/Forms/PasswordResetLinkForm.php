@@ -14,6 +14,8 @@ use Phalcon\Validation\Validator\Email;
  */
 class PasswordResetLinkForm extends WebForm
 {
+    protected $sendButtonTranslationKey = 'login.reset.buttonLabel';
+
     /**
      * @inheritdoc
      */
@@ -25,7 +27,7 @@ class PasswordResetLinkForm extends WebForm
             $emailField->setDefault($email);
         }
 
-        $this->setSendButtonLabel($this->translator->tl('login.reset.buttonLabel'));
+        $this->setSendButtonLabel($this->translator->tl($this->sendButtonTranslationKey));
         $this->setPlaceHolderAsLabel(true);
     }
 

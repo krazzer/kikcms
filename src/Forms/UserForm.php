@@ -13,6 +13,9 @@ use Phalcon\Validation\Validator\Email;
  */
 class UserForm extends DataForm
 {
+    /** @inheritdoc */
+    protected $saveCreatedAt = true;
+
     /**
      * @inheritdoc
      */

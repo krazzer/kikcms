@@ -1,8 +1,12 @@
 $(function () {
-    $('.action.link').click(function () {
+    $('.datatable').on('click', '.action.link', function () {
         var emailAddress        = $(this).prev().prev().prev().text().trim();
         var protocolAndHostname = window.location.protocol + '//' + window.location.hostname;
 
-        alert(protocolAndHostname + '/cms/login/reset?email=' + emailAddress);
+        if(window.location.port !== 80 && window.location.port !== 443){
+            protocolAndHostname += ':' + window.location.port;
+        }
+
+        alert(protocolAndHostname + '/cms/login/activate?email=' + emailAddress);
     });
 });

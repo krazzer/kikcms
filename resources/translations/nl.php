@@ -217,22 +217,29 @@ return [
     ],
 
     'login' => [
-        'logout'   => 'U bent succesvol uitgelogd',
-        'failed'   => 'Onjuiste combinatie van e-mail en wachtwoord.',
-        'blocked'  => 'U kunt niet inloggen omdat uw account is geblokkeerd.',
-        'activate' => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
-        'expired'  => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
+        'logout'  => 'U bent succesvol uitgelogd',
+        'failed'  => 'Onjuiste combinatie van e-mail en wachtwoord.',
+        'blocked' => 'U kunt niet inloggen omdat uw account is geblokkeerd.',
+        'expired' => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
+        'back'    => 'Terug naar login scherm',
+
+        'activate' => [
+            'message'     => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
+            'buttonLabel' => 'Stuur account activatie link',
+            'title'       => 'Account activeren',
+        ],
 
         'reset' => [
             'flash'       => 'Er is een e-mail met reset link verzonden. Let op, deze url is slechts 2 uur geldig.',
             'error'       => 'Er is iets mis gegaan bij het versturen van de reset link.',
             'buttonLabel' => 'Stuur wachtwoord reset link',
+            'title'       => 'Wachtwoord resetten',
 
             'mail' => [
-                'subject'     => 'Wachtwoord reset / aanvragen',
+                'subject'     => 'Wachtwoord reset / activeren',
                 'body'        => 'Druk op de onderstaande knop om uw wachtwoord (opnieuw) in te stellen. ' .
                     'Let op, deze link is slechts 2 uur geldig.',
-                'buttonLabel' => 'Wachtwoord opnieuw instellen',
+                'buttonLabel' => 'Wachtwoord (opnieuw) instellen',
             ],
 
             'password' => [

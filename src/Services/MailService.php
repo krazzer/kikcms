@@ -69,6 +69,10 @@ class MailService extends Injectable
 
         $from = 'noreply@' . str_replace('www.', '', $this->request->getServerName());
 
+        if($companyName = $this->config->get('company')->get('name')){
+            $from = [$from => $companyName];
+        }
+
         $message = $this->createMessage()
             ->setFrom($from)
             ->setTo($to)

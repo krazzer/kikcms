@@ -57,10 +57,7 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
-        $backend->add("/login/reset-password", [
-            "controller" => "login",
-            "action"     => "resetPassword"
-        ]);
+        $backend->add("/login/reset-password/{userId:[0-9]+}/{hash:.*}/{time:[0-9]+}", "Login::resetPassword");
 
         $backend->add("/datatable/pages/:action", [
             "controller" => "pages-data-table",
