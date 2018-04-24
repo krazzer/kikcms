@@ -171,8 +171,8 @@ class Services extends BaseServices
         $options = null;
 
         // set the current domain as prefix to prevent caching overlap
-        if($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV){
-            $options = ["prefix" => explode('.',$_SERVER['SERVER_NAME'])[0] . ':'];
+        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
+            $options = ["prefix" => explode('.', $_SERVER['SERVER_NAME'])[0] . ':'];
         }
 
         return new Apcu(new Data(), $options);
@@ -304,11 +304,13 @@ class Services extends BaseServices
      */
     protected function initMailService()
     {
-        $sendMailCommand = $this->getApplicationConfig()->get('sendmailCommand');
-        $sendMailCommand = $sendMailCommand ?: '/usr/sbin/sendmail -bs';
+        if ($sendMailCommand = $this->getApplicationConfig()->get('sendmailCommand')) {
+            $transport = Swift_SendmailTransport::newInstance($sendMailCommand);
+        } else {
+            $transport = Swift_SendmailTransport::newInstance();
+        }
 
-        $transport = Swift_SendmailTransport::newInstance($sendMailCommand);
-        $mailer    = Swift_Mailer::newInstance($transport);
+        $mailer = Swift_Mailer::newInstance($transport);
 
         return new MailService($mailer);
     }
