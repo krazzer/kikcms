@@ -144,6 +144,10 @@ class MailService extends Injectable
            $domain = $this->request ? $this->request->getServerName() : gethostname();
         }
 
+        if(strstr($domain, ':')){
+            $domain = explode(':', $domain)[0];
+        }
+
         $from = 'noreply@' . str_replace('www.', '', $domain);
 
         if($companyName = $this->config->get('company')->get('name')){
