@@ -67,11 +67,7 @@ class MailService extends Injectable
             $body = $this->view->getPartial($template, $parameters);
         }
 
-        $from = 'noreply@' . str_replace('www.', '', $this->request->getServerName());
-
-        if($companyName = $this->config->get('company')->get('name')){
-            $from = [$from => $companyName];
-        }
+        $from = $this->getDefaultFrom();
 
         $message = $this->createMessage()
             ->setFrom($from)
@@ -135,5 +131,25 @@ class MailService extends Injectable
         ], $parameters);
 
         return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters);
+    }
+
+    /**
+     * @return string|array
+     */
+    private function getDefaultFrom()
+    {
+        $domain = $this->config->get('website')->get('domain');
+
+        if( ! $domain){
+           $domain = $this->request ? $this->request->getServerName() : gethostname();
+        }
+
+        $from = 'noreply@' . str_replace('www.', '', $domain);
+
+        if($companyName = $this->config->get('company')->get('name')){
+            return [$from => $companyName];
+        }
+
+        return $from;
     }
 }
