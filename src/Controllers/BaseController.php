@@ -23,7 +23,9 @@ class BaseController extends Controller
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
         $maxFileUploads    = ini_get('max_file_uploads') ?: 20;
-        $maxFileSize       = ByteUtil::stringToBytes(ini_get('upload_max_filesize') ?: 1024 * 1024 * 20);
+        $maxFileSizeServer = ByteUtil::stringToBytes(ini_get('upload_max_filesize'));
+        $maxFileSizeConfig = ByteUtil::stringToBytes($this->config->media->maxFileSize);
+        $maxFileSize       = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
         $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
         $jsTranslations    = array_merge($errorTranslations, [

@@ -93,13 +93,15 @@
     .extension {
         position: absolute;
         z-index: 1;
-        font-size: 30px;
+        font-size: 20px;
         text-transform: uppercase;
         font-weight: 900;
-        top: 50px;
+        top: 58px;
         width: 72px;
         text-align: center;
-        color: $lightGrayDark;
+        color: $lightGrayLight;
         cursor: default;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
