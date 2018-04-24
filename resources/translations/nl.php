@@ -262,6 +262,7 @@ return [
             'copyTitle'      => 'Kopieër de geselecteerde bestanden',
             'cutTitle'       => 'Knip de geselecteerde bestanden',
             'pasteTitle'     => 'Plak de geknipte bestanden',
+            'download'       => 'Download het geselecteerde bestand',
         ],
         'title'                    => 'Media',
         'searchPlaceholder'        => 'Zoeken naar bestanden',

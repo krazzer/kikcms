@@ -122,6 +122,7 @@ var Finder = Class.extend({
         this.getToolbar().find('.addFolder').click(this.actionAddFolder.bind(this));
         this.getToolbar().find('.cut').click(this.actionCut.bind(this));
         this.getToolbar().find('.paste').click(this.actionPaste.bind(this));
+        this.getToolbar().find('.download').click(this.download.bind(this));
     },
 
     initCutFiles: function () {
@@ -230,9 +231,9 @@ var Finder = Class.extend({
                 return;
             }
 
-            $fileContainer.find('.file.selected').each(function () {
-                self.fileDeSelect($(this));
-            });
+            var $selectedFiles = $fileContainer.find('.file.selected');
+
+            self.fileDeSelect($selectedFiles);
         });
 
         this.updateToolbar();
@@ -293,6 +294,10 @@ var Finder = Class.extend({
         });
 
         uploader.init();
+    },
+
+    download: function () {
+        this.getFileContainer().find('.file.selected').trigger('dblclick');
     },
 
     getFinder: function () {
@@ -368,6 +373,9 @@ var Finder = Class.extend({
         this.getFinder().find('input.currentFolderId').val(folderId);
     },
 
+    /**
+     * @returns bool
+     */
     selectedSingleFolder: function () {
         var $selectedFiles = this.getFileContainer().find('.file.selected');
 
@@ -385,13 +393,19 @@ var Finder = Class.extend({
         var self     = this;
         var $toolbar = this.getToolbar();
 
+        if (this.getSelectedFileIds().length === 1 && ! this.selectedSingleFolder()) {
+            $toolbar.find('.download').fadeIn();
+        } else {
+            $toolbar.find('.download').fadeOut();
+        }
+
         if (this.getSelectedFileIds().length >= 1) {
             if (this.selectedSingleFolder()) {
                 setTimeout(function () {
                     if (self.getSelectedFileIds().length >= 1) {
                         $toolbar.find('.delete, .cut').fadeIn();
                     }
-                }, 500);
+                }, 250);
             } else {
                 $toolbar.find('.delete, .cut').fadeIn();
             }
