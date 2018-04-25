@@ -6,10 +6,10 @@ services:
     ports:
         - "${SITE_PORT}:443"
     volumes:
-        - ../../../../public_html/:/var/www/html
-        - ../../../../:/var/www
-        - ../../:/var/www/vendor/kiksaus
-        - ~/.docker-kikdev/logs:/var/log/apache2/
+        - ../../../../public_html/:/var/www/html:cached
+        - ../../../../:/var/www:cached
+        - ../../:/var/www/vendor/kiksaus:cached
+        - ~/.docker-kikdev/logs:/var/log/apache2/:cached
     networks:
       - kikdev
 
