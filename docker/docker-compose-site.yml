@@ -2,6 +2,7 @@ version: "3"
 services:
   php:
     image: kiksaus/kikdev
+    restart: always
     ports:
         - "${SITE_PORT}:443"
     volumes:

@@ -2,6 +2,7 @@ version: "3"
 services:
   mysql:
     image: mariadb
+    restart: always
     ports:
       - "3306:3306"
     environment:
@@ -15,6 +16,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    restart: always
     ports:
       - "8025:8025"
       - "1025:1025"
