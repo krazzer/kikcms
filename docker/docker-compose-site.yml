@@ -12,6 +12,9 @@ services:
         - ~/.docker-kikdev/logs:/var/log/apache2/:cached
     networks:
       - kikdev
+    environment:
+      #assuming you're a mac user here. If not, change this to your local ip, if you want to use xdebug
+      XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
 networks:
   kikdev:
