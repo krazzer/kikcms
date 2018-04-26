@@ -52,6 +52,7 @@ MacOS itself. Make sure to install the following plugins:
 * XDebug (optional)
 
 And set up:
+
 * MySQL
 * MailHog
 
