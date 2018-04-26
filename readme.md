@@ -23,7 +23,7 @@ Use this command (from the website root):
 
 `PASS=<password> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose.yml up -d`
 
-Replacing <password> with desired password for MySQL
+Replacing `<password>` with desired password for MySQL
 
 ###Multiple websites 
 To run multiple websites, with a different port (like: https://localhost:9000) per website:
@@ -32,11 +32,11 @@ Run (from the website root) to start MySQL and Mailhog containers:
 
 `PASS=<password> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d`
 
-once, replacing <password> with desired password, and:
+once, replacing `<password>` with desired password, and:
 
 `SITE_PORT=<port> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-site.yml -p <name> up -d`
 
-per site, where you replace <port> with the desired port and <name> with a unique name.
+per site, where you replace `<port>` with the desired port and `<name>` with a unique name.
 
 ###Down 
 To take an environment down, run the same command, but replace `up -d` with `down`
@@ -68,7 +68,7 @@ createdirs.sh`
 
 ##Setting up DB
 Let's start with the Database. Use your favorite GUI like (SequalPro, Navicat, Workbench or PHPMyAdmin) and connect to 
-the MySQL container with these settings, where \<password\> is the same a you used to setup the MySQL container:
+the MySQL container with these settings, where `<password>` is the same a you used to setup the MySQL container:
 
 ```
 Host: localhost  
