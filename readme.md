@@ -1,6 +1,6 @@
-##Setting up dev environment
+#Setting up dev environment
 
-###Docker 
+##Docker 
 Install Docker CE: https://www.docker.com/community-edition
 
 Make sure MySQL and Log dirs are created:
@@ -11,7 +11,7 @@ and a network is started:
 
 `docker network create kikdev`
 
-####Complete stack 
+###Single website
 
 To set up a complete environment, with:
 
@@ -21,41 +21,28 @@ To set up a complete environment, with:
 
 Use this command (from the website root):
 
-`docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose.yml up -d`
+`PASS=<password> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose.yml up -d`
 
-####Multiple websites 
-To run multiple websites, with a user specified port per website:
+Replacing <password> with desired password for MySQL
 
-Run (from the website root): 
+###Multiple websites 
+To run multiple websites, with a different port (like: https://localhost:9000) per website:
 
-`docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d`
+Run (from the website root) to start MySQL and Mailhog containers: 
 
-once, and:
+`PASS=<password> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d`
 
-`SITE_PORT=[PORT] docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-site.yml -p [NAME] up -d`
+once, replacing <password> with desired password, and:
 
-per site, where you replace [PORT] with the desired port and [NAME] with a unique name.
+`SITE_PORT=<port> docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-site.yml -p <name> up -d`
 
-####Down 
+per site, where you replace <port> with the desired port and <name> with a unique name.
+
+###Down 
 To take an environment down, run the same command, but replace `up -d` with `down`
 
-####Database
 
-Make sure you have this in your env/config.ini file, replacing [DB_NAME] with your database name:
-
-```
-[application]
-env = dev
-sendmailCommand = /usr/bin/mhsendmail -t --smtp-addr mail:1025
- 
-[database]
-username = root
-password = adminkik12
-dbname = [DB_NAME] 
-host = mysql
-```
-
-###Alternatives
+##Alternatives
 While Docker is recommended, you can also set-up a environment using MAMP or even on 
 MacOS itself. Make sure to install the following plugins:
 
@@ -67,3 +54,29 @@ MacOS itself. Make sure to install the following plugins:
 And set up:
 * MySQL
 * MailHog
+
+#Create a new website
+To start building on a new website, we need some database tables. Also some boilerplate code and data will be extremely 
+helpful if you're just starting out.
+
+##Boilerplate code
+Let's get some boilerplate code, run (from project root):
+
+`git archive --format=tar --remote=git@bitbucket.org:kiksaus/boilerplate.git HEAD | tar xf - && sh createdirs.sh && rm 
+createdirs.sh`
+
+
+##Setting up DB
+Let's start with the Database. Use your favorite GUI like (SequalPro, Navicat, Workbench or PHPMyAdmin) and connect to 
+the MySQL container with these settings, where \<password\> is the same a you used to setup the MySQL container:
+
+```
+Host: localhost  
+Port: 3306
+User: root
+Pass: <password>
+```
+
+Now run the sql from `install.sql` which came with your boilerplate code. You can remove this file afterwards.
+
+If you already create a development environment with the steps above, you're good to go.
