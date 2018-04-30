@@ -48,6 +48,14 @@ class MailService extends Injectable
     }
 
     /**
+     * @return Swift_Mailer
+     */
+    public function getMailer(): Swift_Mailer
+    {
+        return $this->mailer;
+    }
+
+    /**
      * @param string|array $to
      * @param string $subject
      * @param string $body
