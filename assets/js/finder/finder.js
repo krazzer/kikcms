@@ -409,8 +409,10 @@ var Finder = Class.extend({
             } else {
                 $toolbar.find('.delete, .cut').fadeIn();
             }
+
+            $toolbar.find('.rights').fadeIn();
         } else {
-            $toolbar.find('.delete, .cut').fadeOut();
+            $toolbar.find('.delete, .cut, .rights').fadeOut();
         }
 
         if (this.cutFileIds.length > 0) {

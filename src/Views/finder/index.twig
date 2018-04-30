@@ -16,6 +16,12 @@
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
         </div>
 
+        {% if manageFilePermissions %}
+            <div class="btn btn-default rights" style="display: none;" title="{{ tl('media.button.rights') }}">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            </div>
+        {% endif %}
+
         <div class="btn btn-default delete" style="display: none;" title="{{ tl('media.button.deleteTitle') }}">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>
