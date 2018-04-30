@@ -1,6 +1,6 @@
 <div class="finder toolbarComponent" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}">
 
-    {% if manageFilePermissions %}
+    {% if rights %}
         {% include '@kikcms/finder/rights/modal.twig' %}
     {% endif %}
 
@@ -20,7 +20,7 @@
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
         </div>
 
-        {% if manageFilePermissions %}
+        {% if rights %}
             <div class="btn btn-default rights" data-toggle="modal" data-target="#rightsModal{{ instance }}" style="display: none;" title="{{ tl('media.button.rights') }}">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             </div>

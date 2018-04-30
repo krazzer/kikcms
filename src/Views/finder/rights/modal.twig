@@ -1,4 +1,5 @@
-<div class="modal fade" id="rightsModal{{ instance }}" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog">
+<div class="modal fade rightsModal" id="rightsModal{{ instance }}" data-keyboard="false" data-backdrop="static" tabindex="-1"
+     role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,9 +11,37 @@
                 </h4>
             </div>
             <div class="modal-body">
-                ...
 
-                <br>
+                <table class="table-striped">
+                    <thead>
+                    <tr>
+                        <td></td>
+                        <td>{{ tl('media.button.modal.read') }}</td>
+                        <td>{{ tl('media.button.modal.write') }}</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for role, name in roleMap %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td><input type="checkbox" name="read[{{ role }}]"></td>
+                            <td><input type="checkbox" name="write[{{ role }}]"></td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            <select>
+                                <option>...</option>
+                                {% for user in userMap %}
+                                    <option value="{{ user.id }}">{{ user.email }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox"></td>
+                    </tr>
+                    </tbody>
+                </table>
 
                 <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="rightSubFiles{{ instance }}">

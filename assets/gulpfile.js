@@ -19,6 +19,7 @@ gulp.task('styles', function () {
         'sass/bootstrap/bootstrap-kikcms.scss',
         'sass/cms/*.scss',
         'sass/components/*.scss',
+        'sass/components/**/*.scss',
         'sass/datatables/*.scss',
         'sass/tinymce/*.scss'
     ])

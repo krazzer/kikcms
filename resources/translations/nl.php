@@ -270,6 +270,8 @@ return [
                 'applyToSubFolders' => 'Pas toe op onderliggende bestanden en mappen',
                 'close'             => 'Sluiten',
                 'save'              => 'Opslaan',
+                'read'              => 'Lezen',
+                'write'             => 'Schrijven',
             ],
         ],
         'title'                    => 'Media',

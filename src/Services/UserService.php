@@ -5,12 +5,14 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Models\FinderFolder;
+use KikCMS\ObjectLists\UserMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\User;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property AccessControl $acl
@@ -228,5 +230,17 @@ class UserService extends Injectable
         }
 
         return $this->allowedInFolder($folder->folder);
+    }
+
+    /**
+     * @return UserMap
+     */
+    public function getMap(): UserMap
+    {
+        $query = (new Builder)
+            ->from(User::class)
+            ->orderBy(User::FIELD_EMAIL);
+
+        return $this->dbService->getObjectMap($query, UserMap::class);
     }
 }
