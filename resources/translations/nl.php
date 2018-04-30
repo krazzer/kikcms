@@ -264,6 +264,13 @@ return [
             'pasteTitle'     => 'Plak de geknipte bestanden',
             'download'       => 'Download het geselecteerde bestand',
             'rights'         => 'Beheer rechten van de geselecteerde bestanden',
+
+            'modal' => [
+                'title'             => 'Rechten instellen voor',
+                'applyToSubFolders' => 'Pas toe op onderliggende bestanden en mappen',
+                'close'             => 'Sluiten',
+                'save'              => 'Opslaan',
+            ],
         ],
         'title'                    => 'Media',
         'searchPlaceholder'        => 'Zoeken naar bestanden',
