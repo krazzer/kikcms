@@ -104,7 +104,7 @@ class Finder extends Renderable
             'jsData'      => $this->getJsData(),
             'path'        => $this->renderPath(),
             'pickingMode' => $this->pickingMode,
-            'rights'      => $this->config->media->manageFilePermissions,
+            'permission'  => $this->config->media->manageFilePermissions,
             'roleMap'     => $this->cmsService->getRoleMap(),
             'userMap'     => $this->userService->getMap(),
         ]);

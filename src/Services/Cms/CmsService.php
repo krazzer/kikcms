@@ -45,7 +45,12 @@ class CmsService extends Injectable
         }
 
         if( ! $this->acl->allowed(Pages::class)){
-            unset($groups[MenuConfig::MENU_GROUP_CONTENT]);
+            if( ! $this->acl->allowedFinder()){
+                unset($groups[MenuConfig::MENU_GROUP_CONTENT]);
+            } else {
+                $groups[MenuConfig::MENU_GROUP_CONTENT]->remove(MenuConfig::MENU_ITEM_PAGES);
+                $groups[MenuConfig::MENU_GROUP_CONTENT]->remove(MenuConfig::MENU_ITEM_SETTINGS);
+            }
         }
 
         if( ! $this->acl->allowed(Users::class)){

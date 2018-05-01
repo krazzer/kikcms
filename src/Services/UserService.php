@@ -243,4 +243,45 @@ class UserService extends Injectable
 
         return $this->dbService->getObjectMap($query, UserMap::class);
     }
+
+    /**
+     * Get roles that are below or equal to the role of the current logged in user
+     * @return array
+     */
+    public function getSubordinateAndEqualRoles(): array
+    {
+        $allRoles = Permission::ROLES;
+
+        $roles = [];
+
+        $currentRoleIndex = null;
+
+        foreach ($allRoles as $roleIndex => $role){
+            if($role == $this->getRole()){
+                $currentRoleIndex = $roleIndex;
+            }
+
+            if($currentRoleIndex && $roleIndex >= $currentRoleIndex){
+                $roles[] = $role;
+            }
+        }
+
+        return $roles;
+    }
+
+    /**
+     * Get users that are below or equal to the role of the current logged in user
+     * @return array
+     */
+    public function getSubordinateAndEqualUserIds(): array
+    {
+        $roles = $this->getSubordinateAndEqualRoles();
+
+        $query = (new Builder)
+            ->columns(User::FIELD_ID)
+            ->from(User::class)
+            ->inWhere(User::FIELD_ROLE, $roles);
+
+        return $this->dbService->getValues($query);
+    }
 }

@@ -3,7 +3,9 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\Finder\FinderPermissionPostHelper;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
@@ -23,6 +25,8 @@ use KikCMS\Models\FinderFile;
  * @property Translator $translator
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
+ * @property FinderPermissionService $finderPermissionService
+ * @property FinderPermissionPostHelper $finderPermissionPostHelper
  */
 class FinderController extends RenderableController
 {
@@ -194,6 +198,23 @@ class FinderController extends RenderableController
         }
 
         return $this->outputFile($thumbPath, $finderFile->getMimeType(), $finderFile->getName());
+    }
+
+    /**
+     * Update file permissions
+     */
+    public function updatePermissionsAction()
+    {
+        $permission = (array) $this->request->getPost('permission');
+        $fileIds    = (array) $this->request->getPost('fileIds');
+
+        $permissionList = $this->finderPermissionPostHelper->convertDataToList($permission, $fileIds);
+
+        $success = $this->finderPermissionService->updateByList($permissionList);
+
+        return $this->response->setJsonContent([
+            'success' => $success,
+        ]);
     }
 
     /**

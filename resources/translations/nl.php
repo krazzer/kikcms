@@ -272,6 +272,8 @@ return [
                 'save'              => 'Opslaan',
                 'read'              => 'Lezen',
                 'write'             => 'Schrijven',
+                'saveError'         => 'Er is iets mis gegaan tijdens het bijwerken van de bestandsrechten',
+                'saveSuccess'       => 'De bestandsrechten zijn succesvol bijgewerkt',
             ],
         ],
         'title'                    => 'Media',

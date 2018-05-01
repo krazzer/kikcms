@@ -115,6 +115,7 @@ var Finder = Class.extend({
         this.initButtons();
         this.initSearch();
         this.initPath();
+        this.initPermissions();
     },
 
     initButtons: function () {
@@ -265,6 +266,30 @@ var Finder = Class.extend({
         });
     },
 
+    initPermissions: function () {
+        var self = this;
+
+        var $permissionModal = this.getPermissionModal();
+
+        var $form = $permissionModal.find('form');
+
+        $permissionModal.find('.save').click(function () {
+            var data  = $form.serializeObject();
+
+            data.fileIds = self.getSelectedFileIds();
+
+            self.action('updatePermissions', data, function (response) {
+                $permissionModal.find('.messages .alert').hide();
+
+                if(response.success == true){
+                    $permissionModal.find('.messages .success').fadeIn();
+                } else {
+                    $permissionModal.find('.messages .error').fadeIn();
+                }
+            });
+        });
+    },
+
     initSearch: function () {
         var self = this;
 
@@ -306,6 +331,10 @@ var Finder = Class.extend({
 
     getFileContainer: function () {
         return this.getFinder().find('.files .files-container');
+    },
+
+    getPermissionModal: function () {
+        return this.getFinder().find('.permissionModal');
     },
 
     pickFile: function ($file) {
@@ -393,7 +422,7 @@ var Finder = Class.extend({
         var self     = this;
         var $toolbar = this.getToolbar();
 
-        if (this.getSelectedFileIds().length === 1 && ! this.selectedSingleFolder()) {
+        if (this.getSelectedFileIds().length === 1 && !this.selectedSingleFolder()) {
             $toolbar.find('.download').fadeIn();
         } else {
             $toolbar.find('.download').fadeOut();

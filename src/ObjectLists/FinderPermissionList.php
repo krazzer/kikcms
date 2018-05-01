@@ -4,9 +4,9 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Models\FinderPermission;
-use KikCmsCore\Classes\ObjectMap;
+use KikCmsCore\Classes\ObjectList;
 
-class FinderPermissionMap extends ObjectMap
+class FinderPermissionList extends ObjectList
 {
     /**
      * @param int|string $key
