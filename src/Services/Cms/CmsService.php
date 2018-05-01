@@ -70,13 +70,7 @@ class CmsService extends Injectable
     {
         $roleMap = [];
 
-        $roles = $this->websiteSettings->getRoles();
-
-        foreach (Permission::ROLES as $roleKey){
-            if($roles && ! in_array($roleKey, $roles)){
-                continue;
-            }
-
+        foreach ($this->getRoles() as $roleKey){
             $roleMap[$roleKey] = $this->translator->tl('cms.roles.' . $roleKey);
         }
 
@@ -85,6 +79,18 @@ class CmsService extends Injectable
         }
 
         return $roleMap;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        if($roles = $this->websiteSettings->getRoles()){
+            return $roles;
+        }
+
+        return Permission::ROLES;
     }
 
     /**

@@ -72,7 +72,7 @@ class Translator extends Injectable
 
         // replace string, not in a separate function for performance
         foreach ($replaces as $key => $replace) {
-            if ( ! is_string($replace)) {
+            if ( ! is_string($replace) && ! is_numeric($replace)) {
                 continue;
             }
 

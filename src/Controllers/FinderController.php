@@ -3,7 +3,7 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\Finder\FinderPermissionPostHelper;
+use KikCMS\Classes\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
@@ -17,6 +17,7 @@ use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AccessControl $acl
@@ -26,7 +27,7 @@ use KikCMS\Models\FinderFile;
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FinderPermissionService $finderPermissionService
- * @property FinderPermissionPostHelper $finderPermissionPostHelper
+ * @property FinderPermissionHelper $finderPermissionHelper
  */
 class FinderController extends RenderableController
 {
@@ -124,6 +125,22 @@ class FinderController extends RenderableController
     }
 
     /**
+     * @return ResponseInterface
+     */
+    public function getPermissionDataAction(): ResponseInterface
+    {
+        $fileIds = (array) $this->request->getPost('fileIds');
+
+        $modalTitle      = $this->finderPermissionHelper->getModalTitle($fileIds);
+        $permissionTable = $this->finderPermissionHelper->getPermissionTable($fileIds);
+
+        return $this->response->setJsonContent([
+            'title' => $modalTitle,
+            'table' => $permissionTable,
+        ]);
+    }
+
+    /**
      * @return string
      */
     public function openFolderAction()
@@ -208,7 +225,7 @@ class FinderController extends RenderableController
         $permission = (array) $this->request->getPost('permission');
         $fileIds    = (array) $this->request->getPost('fileIds');
 
-        $permissionList = $this->finderPermissionPostHelper->convertDataToList($permission, $fileIds);
+        $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds);
 
         $success = $this->finderPermissionService->updateByList($permissionList);
 

@@ -124,6 +124,7 @@ var Finder = Class.extend({
         this.getToolbar().find('.cut').click(this.actionCut.bind(this));
         this.getToolbar().find('.paste').click(this.actionPaste.bind(this));
         this.getToolbar().find('.download').click(this.download.bind(this));
+        this.getToolbar().find('.rights').click(this.openPermissionModal.bind(this));
     },
 
     initCutFiles: function () {
@@ -288,6 +289,18 @@ var Finder = Class.extend({
                 }
             });
         });
+
+        $form.find('.check input').change(function () {
+            var $checkbox = $(this);
+
+            if($checkbox.attr('data-right') == 'write' && $checkbox.prop('checked')){
+                $checkbox.parent().parent().prev().find('input').prop('checked', true);
+            }
+
+            if($checkbox.attr('data-right') == 'read' && ! $checkbox.prop('checked')){
+                $checkbox.parent().parent().next().find('input').prop('checked', false);
+            }
+        });
     },
 
     initSearch: function () {
@@ -396,6 +409,14 @@ var Finder = Class.extend({
 
     getCurrentFolderId: function () {
         return this.getFinder().find('input.currentFolderId').val();
+    },
+
+    openPermissionModal: function () {
+        var $modal = this.getPermissionModal();
+
+        this.action('getPermissionData', {fileIds: this.getSelectedFileIds()}, function () {
+            $modal.modal();
+        });
     },
 
     saveCurrentFolderId: function (folderId) {

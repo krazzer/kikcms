@@ -261,7 +261,7 @@ class UserService extends Injectable
                 $currentRoleIndex = $roleIndex;
             }
 
-            if($currentRoleIndex && $roleIndex >= $currentRoleIndex){
+            if($currentRoleIndex !== null && $roleIndex >= $currentRoleIndex){
                 $roles[] = $role;
             }
         }

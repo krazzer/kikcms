@@ -32,8 +32,12 @@
                         {% for role, name in roleMap %}
                             <tr>
                                 <td>{{ name }}</td>
-                                <td><input type="checkbox" name="permission[{{ role }}][read]"></td>
-                                <td><input type="checkbox" name="permission[{{ role }}][write]"></td>
+                                <td class="check">
+                                    <label><input type="checkbox" data-right="read" name="permission[{{ role }}][read]"></label>
+                                </td>
+                                <td class="check">
+                                    <label><input type="checkbox" data-right="write" name="permission[{{ role }}][write]"></label>
+                                </td>
                             </tr>
                         {% endfor %}
                         <tr>
@@ -45,8 +49,12 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><input type="checkbox"></td>
-                            <td><input type="checkbox"></td>
+                            <td class="check">
+                                <label><input type="checkbox" disabled></label>
+                            </td>
+                            <td class="check">
+                                <label><input type="checkbox" disabled></label>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

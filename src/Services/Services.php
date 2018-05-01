@@ -4,7 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Finder\FinderFileService;
-use KikCMS\Classes\Finder\FinderPermissionPostHelper;
+use KikCMS\Classes\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
@@ -84,7 +84,7 @@ class Services extends BaseServices
             ImageHandler::class,
             FinderService::class,
             FinderPermissionService::class,
-            FinderPermissionPostHelper::class,
+            FinderPermissionHelper::class,
             FieldStorageService::class,
             FullPageService::class,
             FrontendHelper::class,

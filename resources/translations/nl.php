@@ -274,6 +274,7 @@ return [
                 'write'             => 'Schrijven',
                 'saveError'         => 'Er is iets mis gegaan tijdens het bijwerken van de bestandsrechten',
                 'saveSuccess'       => 'De bestandsrechten zijn succesvol bijgewerkt',
+                'titleMultiple'     => ':amount bestanden',
             ],
         ],
         'title'                    => 'Media',
