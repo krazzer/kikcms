@@ -61,6 +61,15 @@ class WebsiteSettingsBase extends WebsiteExtendable
     }
 
     /**
+     * Limit roles present in the CMS. Empty means all roles are present.
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return [];
+    }
+
+    /**
      * @param Group $backend
      */
     public function addBackendRoutes(Group $backend)
