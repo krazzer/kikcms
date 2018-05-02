@@ -24,16 +24,16 @@ use Phalcon\Mvc\Model\Query\Builder;
 class FinderPermissionHelper extends Injectable
 {
     /**
-     * @param array $permission
+     * @param array $permissionData
      * @param array $fileIds
      * @return FinderPermissionList
      */
-    public function convertDataToList(array $permission, array $fileIds): FinderPermissionList
+    public function convertDataToList(array $permissionData, array $fileIds): FinderPermissionList
     {
         $list = new FinderPermissionList();
 
         foreach ($fileIds as $fileId) {
-            foreach ($permission as $key => $values) {
+            foreach ($permissionData as $key => $values) {
                 $permission = $this->createPermissionByData($fileId, $key, $values);
                 $list->add($permission);
             }

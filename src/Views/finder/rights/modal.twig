@@ -7,7 +7,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="myModalLabel">
-                    {{ tl('media.button.modal.title') }}: <span class="files"></span>
+                    {{ tl('media.button.modal.title') }}: <span class="file"></span>
                 </h4>
             </div>
             <div class="modal-body">
@@ -17,6 +17,9 @@
                     </div>
                     <div class="alert alert-danger error" style="display: none;">
                         {{ tl('media.button.modal.saveError') }}
+                    </div>
+                    <div class="alert alert-warning warning" style="display: none;">
+                        {{ tl('media.button.modal.intermediateWarning') }}
                     </div>
                 </div>
                 <form>
@@ -59,7 +62,7 @@
                         </tbody>
                     </table>
 
-                    <div class="form-check">
+                    <div class="form-check sub-files-checkbox">
                         <input type="checkbox" class="form-check-input" id="rightSubFiles{{ instance }}">
                         <label class="form-check-label" for="rightSubFiles{{ instance }}">
                             {{ tl('media.button.modal.applyToSubFolders') }}

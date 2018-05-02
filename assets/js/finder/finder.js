@@ -275,14 +275,28 @@ var Finder = Class.extend({
         var $form = $permissionModal.find('form');
 
         $permissionModal.find('.save').click(function () {
-            var data  = $form.serializeObject();
+            var hasIntermediate = false;
+
+            $form.find('input').each(function () {
+                if($(this).prop('indeterminate')){
+                    hasIntermediate = true;
+                }
+            });
+
+            if(hasIntermediate){
+                $permissionModal.find('.messages .alert').hide();
+                $permissionModal.find('.messages .warning').fadeIn();
+                return;
+            }
+
+            var data = $form.serializeObject();
 
             data.fileIds = self.getSelectedFileIds();
 
             self.action('updatePermissions', data, function (response) {
                 $permissionModal.find('.messages .alert').hide();
 
-                if(response.success == true){
+                if (response.success == true) {
                     $permissionModal.find('.messages .success').fadeIn();
                 } else {
                     $permissionModal.find('.messages .error').fadeIn();
@@ -293,12 +307,18 @@ var Finder = Class.extend({
         $form.find('.check input').change(function () {
             var $checkbox = $(this);
 
-            if($checkbox.attr('data-right') == 'write' && $checkbox.prop('checked')){
+            if ($checkbox.attr('data-right') == 'write' && $checkbox.prop('checked')) {
+                $checkbox.parent().parent().prev().find('input').prop('indeterminate', false);
                 $checkbox.parent().parent().prev().find('input').prop('checked', true);
             }
 
-            if($checkbox.attr('data-right') == 'read' && ! $checkbox.prop('checked')){
+            if ($checkbox.attr('data-right') == 'write' && $checkbox.prop('indeterminate')) {
+                $checkbox.parent().parent().prev().find('input').prop('indeterminate', true);
+            }
+
+            if ($checkbox.attr('data-right') == 'read' && !$checkbox.prop('checked')) {
                 $checkbox.parent().parent().next().find('input').prop('checked', false);
+                $checkbox.parent().parent().next().find('input').prop('indeterminate', false);
             }
         });
     },
@@ -335,7 +355,7 @@ var Finder = Class.extend({
     },
 
     download: function () {
-        this.getFileContainer().find('.file.selected').trigger('dblclick');
+        this.getSelectedFiles().trigger('dblclick');
     },
 
     getFinder: function () {
@@ -396,25 +416,73 @@ var Finder = Class.extend({
     getSelectedFileIds: function () {
         var ids = [];
 
-        this.getFileContainer().find('.file.selected').each(function () {
+        this.getSelectedFiles().each(function () {
             ids.push($(this).attr('data-id'));
         });
 
         return ids;
     },
 
+    /**
+     * @returns {*}
+     */
+    getSelectedFiles: function () {
+        return this.getFileContainer().find('.file.selected');
+    },
+
     getToolbar: function () {
         return this.getFinder().find('.toolbar');
     },
 
+    /**
+     * @returns int
+     */
     getCurrentFolderId: function () {
         return this.getFinder().find('input.currentFolderId').val();
     },
 
+    /**
+     * Open the modal window to manage file permissions
+     */
     openPermissionModal: function () {
         var $modal = this.getPermissionModal();
+        var $files = this.getSelectedFiles();
 
-        this.action('getPermissionData', {fileIds: this.getSelectedFileIds()}, function () {
+        this.action('getPermissionData', {fileIds: this.getSelectedFileIds()}, function (response) {
+            $modal.find('.modal-title .file').html(response.title);
+
+            $modal.find('input').prop('indeterminate', false);
+            $modal.find('input').prop('checked', false);
+
+            $modal.find('.messages .alert').hide();
+
+            var $subFileCheckbox = $modal.find('.sub-files-checkbox');
+
+            if ($files.hasClass('folder')) {
+                $subFileCheckbox.show();
+            } else {
+                $subFileCheckbox.hide();
+            }
+
+            $.each(response.table, function (key, permission) {
+                $.each(permission, function (type, value) {
+                    var $checkbox = $('input[name="permission[' + key + '][' + type + ']"]');
+
+                    if (isNumeric(key)) {
+
+                    } else {
+                        switch (value) {
+                            case 2:
+                                $checkbox.prop("indeterminate", true).trigger('change');
+                                break;
+                            case 1:
+                                $checkbox.prop("checked", true).trigger('change');
+                                break;
+                        }
+                    }
+                });
+            });
+
             $modal.modal();
         });
     },
@@ -427,7 +495,7 @@ var Finder = Class.extend({
      * @returns bool
      */
     selectedSingleFolder: function () {
-        var $selectedFiles = this.getFileContainer().find('.file.selected');
+        var $selectedFiles = this.getSelectedFiles();
 
         if ($selectedFiles.length > 1) {
             return false;
