@@ -222,10 +222,11 @@ class FinderController extends RenderableController
      */
     public function updatePermissionsAction()
     {
-        $permission = (array) $this->request->getPost('permission');
-        $fileIds    = (array) $this->request->getPost('fileIds');
+        $permission      = (array) $this->request->getPost('permission');
+        $fileIds         = (array) $this->request->getPost('fileIds');
+        $saveRecursively = (bool) $this->request->getPost('recursive');
 
-        $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds);
+        $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
 
         $success = $this->finderPermissionService->updateByList($permissionList);
 

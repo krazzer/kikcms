@@ -26,11 +26,16 @@ class FinderPermissionHelper extends Injectable
     /**
      * @param array $permissionData
      * @param array $fileIds
+     * @param bool $saveRecursively
      * @return FinderPermissionList
      */
-    public function convertDataToList(array $permissionData, array $fileIds): FinderPermissionList
+    public function convertDataToList(array $permissionData, array $fileIds, bool $saveRecursively): FinderPermissionList
     {
         $list = new FinderPermissionList();
+
+        if($saveRecursively){
+            $fileIds = $this->finderPermissionService->getFileIdsWithSubFiles($fileIds);
+        }
 
         foreach ($fileIds as $fileId) {
             foreach ($permissionData as $key => $values) {

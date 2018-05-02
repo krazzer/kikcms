@@ -304,37 +304,27 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param Resultset $resultSet
-     * @return FinderFile[]
+     * Gets all sub file id's recursively
+     *
+     * @param FinderFile $file
+     * @param array $fileIds
+     *
+     * @return array
      */
-    private function getFiles(Resultset $resultSet)
+    public function getFileIdsRecursive(FinderFile $file, $fileIds = []): array
     {
-        $files = [];
-
-        foreach ($resultSet as $result) {
-            $files[] = $result;
+        if ( ! $file->isFolder()) {
+            $fileIds[] = $file->getId();
+            return $fileIds;
         }
 
-        return $files;
-    }
+        $finderFiles = $this->getByFolderId($file->getId());
 
-    /**
-     * @param FinderFile $finderFile
-     * @return array|null returns same results as @see getimagesize
-     */
-    public function getThumbDimensions(FinderFile $finderFile)
-    {
-        if ( ! $finderFile->isImage()) {
-            return null;
+        foreach ($finderFiles as $subFile) {
+            $fileIds = $this->getFileIdsRecursive($subFile, $fileIds);
         }
 
-        $thumbPath = $this->getThumbPath($finderFile);
-
-        if ( ! file_exists($thumbPath)) {
-            $this->createThumb($finderFile);
-        }
-
-        return getimagesize($thumbPath);
+        return $fileIds;
     }
 
     /**
@@ -357,6 +347,40 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param FinderFile $finderFile
+     * @return array|null returns same results as @see getimagesize
+     */
+    public function getThumbDimensions(FinderFile $finderFile)
+    {
+        if ( ! $finderFile->isImage()) {
+            return null;
+        }
+
+        $thumbPath = $this->getThumbPath($finderFile);
+
+        if ( ! file_exists($thumbPath)) {
+            $this->createThumb($finderFile);
+        }
+
+        return getimagesize($thumbPath);
+    }
+
+    /**
+     * @param Resultset $resultSet
+     * @return FinderFile[]
+     */
+    private function getFiles(Resultset $resultSet)
+    {
+        $files = [];
+
+        foreach ($resultSet as $result) {
+            $files[] = $result;
+        }
+
+        return $files;
+    }
+
+    /**
      * @param int[] $fileIds
      * @param int $folderId
      *
@@ -370,28 +394,6 @@ class FinderFileService extends Injectable
             if (array_key_exists($fileId, $breadCrumbs)) {
                 unset($fileIds[$i]);
             }
-        }
-
-        return $fileIds;
-    }
-
-    /**
-     * @param FinderFile $file
-     * @param array $fileIds
-     *
-     * @return array
-     */
-    private function getFileIdsRecursive(FinderFile $file, $fileIds = []): array
-    {
-        if ( ! $file->isFolder()) {
-            $fileIds[] = $file->getId();
-            return $fileIds;
-        }
-
-        $finderFiles = $this->getByFolderId($file->getId());
-
-        foreach ($finderFiles as $subFile) {
-            $fileIds = $this->getFileIdsRecursive($subFile, $fileIds);
         }
 
         return $fileIds;

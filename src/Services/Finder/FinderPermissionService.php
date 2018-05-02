@@ -5,6 +5,8 @@ namespace KikCMS\Services\Finder;
 
 
 use Exception;
+use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Models\FinderFile;
 use KikCMS\Models\FinderPermission;
 use KikCMS\ObjectLists\FinderPermissionList;
 use KikCMS\Services\UserService;
@@ -16,6 +18,7 @@ use Phalcon\Di\Injectable;
  * @property DbService $dbService
  * @property Logger $logger
  * @property UserService $userService
+ * @property FinderFileService $finderFileService
  */
 class FinderPermissionService extends Injectable
 {
@@ -87,5 +90,28 @@ class FinderPermissionService extends Injectable
         }
 
         return $fileIds;
+    }
+
+    /**
+     * @param int[] $fileIds
+     * @return int[]
+     */
+    public function getFileIdsWithSubFiles(array $fileIds): array
+    {
+        $allFileIds = [];
+
+        $finderFiles = FinderFile::getByIdList($fileIds);
+
+        foreach ($finderFiles as $finderFile){
+            $subFileIds = $this->finderFileService->getFileIdsRecursive($finderFile);
+            $allFileIds = array_merge($allFileIds, $subFileIds);
+
+            // add the folder id itself
+            if($finderFile->isFolder()){
+                $allFileIds[] = $finderFile->getId();
+            }
+        }
+
+        return $allFileIds;
     }
 }
