@@ -117,10 +117,6 @@ class FinderController extends RenderableController
     {
         $filePath = $this->finderFileService->getFilePath($finderFile);
 
-        if ( ! file_exists($filePath)) {
-            throw new NotFoundException();
-        }
-
         return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
     }
 
