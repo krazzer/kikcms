@@ -2,7 +2,7 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
@@ -73,12 +73,12 @@ class BaseController extends Controller
      */
     protected function outputFile(string $filePath, string $mimeType, string $fileName = null)
     {
-        if ( ! file_exists($filePath)) {
-            throw new NotFoundException();
-        }
-
         if ( ! $fileName) {
             $fileName = basename($filePath);
+        }
+
+        if ( ! file_exists($filePath)) {
+            throw new ObjectNotFoundException($fileName);
         }
 
         $this->response->setContentType($mimeType);
