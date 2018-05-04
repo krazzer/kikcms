@@ -332,18 +332,21 @@ class Services extends BaseServices
 
     /**
      * The URL component is used to generate all kind of urls in the application
+     * Note that the baseUri is not set in the CLI
      */
     protected function initUrl()
     {
-        $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
-            "https://" : "http://";
+        if( ! $baseUri = $this->getApplicationConfig()->baseUri){
+            $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
+                "https://" : "http://";
 
-        $domainName = $_SERVER['HTTP_HOST'];
+            $domainName = $_SERVER['HTTP_HOST'];
 
-        $baseUrl = $protocol . $domainName . $this->getApplicationConfig()->baseUri;
+            $baseUri = $protocol . $domainName . '/';
+        }
 
         $url = new Url();
-        $url->setBaseUri($baseUrl);
+        $url->setBaseUri($baseUri);
 
         return $url;
     }
@@ -429,8 +432,10 @@ class Services extends BaseServices
             isset($error->type) ? $error->type : null :
             isset($error['type']) ? $error['type'] : null;
 
+        $recoverableErrorCodes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+
         // don't show recoverable errors in production
-        if ($isProduction && $errorType && ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR])) {
+        if ($isProduction && $errorType && ! in_array($errorType, $recoverableErrorCodes)) {
             return;
         }
 

@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 
+use Exception;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Swift_Attachment;
@@ -13,7 +14,7 @@ use Swift_Mime_MimePart;
 /**
  * Service for sending various mails
  *
- * @property Config $applicationConfig
+ * @property Config $config
  */
 class MailService extends Injectable
 {
@@ -146,17 +147,15 @@ class MailService extends Injectable
      */
     private function getDefaultFrom()
     {
-        $domain = $this->config->get('website')->get('domain');
-
-        if( ! $domain){
-           $domain = $this->request ? $this->request->getServerName() : gethostname();
+        if( ! $domain = $this->config->application->domain){
+            if( ! @$this->request) {
+                throw new Exception('Domain to send from is unknown. Please set the application.domain setting');
+            } else {
+                $domain = $this->request->getServerName();
+            }
         }
 
-        if(strstr($domain, ':')){
-            $domain = explode(':', $domain)[0];
-        }
-
-        $from = 'noreply@' . str_replace('www.', '', $domain);
+        $from = 'noreply@' . $domain;
 
         if($companyName = $this->config->get('company')->get('name')){
             return [$from => $companyName];
