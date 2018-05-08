@@ -11,6 +11,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderFile;
 use KikCMS\Services\Cms\CmsService;
+use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\UserService;
 use Phalcon\Http\Request\File;
@@ -18,6 +19,7 @@ use Phalcon\Http\Request\File;
 /**
  * @property FinderService $finderService
  * @property FinderFileService $finderFileService
+ * @property FinderPermissionService $finderPermissionService
  * @property Translator $translator
  * @property AccessControl $acl
  * @property UserService $userService
@@ -106,7 +108,7 @@ class Finder extends Renderable
             'pickingMode' => $this->pickingMode,
             'permission'  => $this->config->media->manageFilePermissions,
             'roleMap'     => $this->cmsService->getRoleMap(),
-            'userMap'     => $this->userService->getMap(),
+            'userMap'     => $this->finderPermissionService->getEditableUserMap(),
         ]);
     }
 

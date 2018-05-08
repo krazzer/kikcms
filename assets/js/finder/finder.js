@@ -87,9 +87,8 @@ var Finder = Class.extend({
     actionOpenFolder: function (folderId) {
         var self = this;
 
-        this.saveCurrentFolderId(folderId);
-
         this.action('openFolder', {folderId: folderId}, function (result) {
+            self.saveCurrentFolderId(folderId);
             self.setFilesContainer(result.files);
             self.setPath(result.path);
         })

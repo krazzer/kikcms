@@ -121,8 +121,11 @@ var FinderPermission = Class.extend({
                 $lastRow.before($row);
             }
 
-            $.each(permission, function (type, value) {
+            $.each(['read', 'write'], function (index, type) {
+                var value     = permission[type];
                 var $checkbox = $('input[name="permission[' + key + '][' + type + ']"]');
+
+                $checkbox.removeAttr('disabled');
 
                 switch (value) {
                     case 2:
@@ -131,6 +134,10 @@ var FinderPermission = Class.extend({
                     case 1:
                         $checkbox.prop("checked", true).trigger('change');
                         break;
+                }
+
+                if(permission.disabled){
+                    $checkbox.attr('disabled', true);
                 }
             });
         });

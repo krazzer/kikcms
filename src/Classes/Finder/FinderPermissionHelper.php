@@ -11,6 +11,7 @@ use KikCMS\Models\FinderPermission;
 use KikCMS\ObjectLists\FinderPermissionList;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Finder\FinderPermissionService;
+use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -20,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property FinderPermissionService $finderPermissionService
  * @property CmsService $cmsService
  * @property DbService $dbService
+ * @property UserService $userService
  */
 class FinderPermissionHelper extends Injectable
 {
@@ -33,12 +35,19 @@ class FinderPermissionHelper extends Injectable
     {
         $list = new FinderPermissionList();
 
-        if($saveRecursively){
+        if ($saveRecursively) {
             $fileIds = $this->finderPermissionService->getFileIdsWithSubFiles($fileIds);
         }
 
+        $editableKeys = $this->finderPermissionService->getEditableKeys();
+
         foreach ($fileIds as $fileId) {
             foreach ($permissionData as $key => $values) {
+                // only add values that are allowed to edit
+                if ( ! in_array($key, $editableKeys)) {
+                    continue;
+                }
+
                 $permission = $this->createPermissionByData($fileId, $key, $values);
                 $list->add($permission);
             }
@@ -69,6 +78,9 @@ class FinderPermissionHelper extends Injectable
      */
     public function getPermissionTable(array $fileIds): array
     {
+        $userIds = $this->finderPermissionService->getEditableUserIds();
+        $roles   = $this->finderPermissionService->getEditableRoles();
+
         $query = (new Builder)
             ->from(FinderPermission::class)
             ->columns(['IFNULL(role, user_id) as key', 'SUM([right] = 1) as read', 'SUM([right] = 2) as write'])
@@ -76,9 +88,19 @@ class FinderPermissionHelper extends Injectable
             ->andWhere('IFNULL(role, user_id) IS NOT NULL')
             ->groupBy('role, user_id');
 
+        if ($userIds) {
+            $query->andWhere('user_id IS NULL OR user_id IN({ids:array})', ['ids' => $userIds]);
+        } else {
+            $query->andWhere('user_id IS NULL');
+        }
+
         $data = $this->dbService->getKeyedRows($query);
 
-        foreach ($data as &$datum) {
+        foreach ($data as $key => &$datum) {
+            if(!in_array($key, $userIds) && !in_array($key, $roles)){
+                $datum['disabled'] = true;
+            }
+
             foreach (['read', 'write'] as $type) {
                 if ($datum[$type]) {
                     $datum[$type] = $datum[$type] == count($fileIds) ? 1 : 2;

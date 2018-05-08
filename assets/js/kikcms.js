@@ -63,6 +63,7 @@ var KikCmsClass = Class.extend({
             type: 'post',
             dataType: 'json',
             data: parameters,
+            cache: false,
             success: function (result, responseText, response) {
                 ajaxCompleted = true;
                 self.hideLoader();

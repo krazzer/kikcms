@@ -6,10 +6,12 @@ namespace KikCMS\Services\Finder;
 
 use Exception;
 use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Classes\Permission;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;
 use KikCMS\Models\FinderPermission;
 use KikCMS\ObjectLists\FinderPermissionList;
+use KikCMS\ObjectLists\UserMap;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
@@ -38,7 +40,7 @@ class FinderPermissionService extends Injectable
             return true;
         }
 
-        $roles = $this->userService->getGreaterAndEqualRoles();
+        $roles = $this->getGreaterAndEqualRoles();
 
         $this->db->begin();
 
@@ -68,8 +70,8 @@ class FinderPermissionService extends Injectable
      */
     private function deleteByFileIds(array $fileIds)
     {
-        $roles   = $this->userService->getSubordinateAndEqualRoles();
-        $userIds = $this->userService->getSubordinateAndEqualUserIds();
+        $roles   = $this->getEditableRoles();
+        $userIds = $this->getEditableUserIds();
 
         if ($roles) {
             $this->dbService->delete(FinderPermission::class, [
@@ -175,6 +177,60 @@ class FinderPermissionService extends Injectable
     public function filePermissionsAreManaged(): bool
     {
         return $this->config->media->manageFilePermissions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEditableKeys(): array
+    {
+        $roles   = $this->getEditableRoles();
+        $userIds = $this->getEditableUserIds();
+
+        return array_merge($roles, $userIds);
+    }
+
+    /**
+     * @return array
+     */
+    public function getEditableRoles(): array
+    {
+        $role  = $this->userService->getRole();
+        $roles = Permission::ROLES;
+
+        if (in_array($role, [Permission::DEVELOPER, $role == Permission::ADMIN])){
+            $roles = array_slice($roles, array_search($role, $roles));
+        } else {
+            $roles = array_slice($roles, array_search($role, $roles) + 1);
+        }
+
+        return $roles;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getEditableUserIds(): array
+    {
+        return $this->getEditableUserMap()->keys();
+    }
+
+    /**
+     * @return UserMap
+     */
+    public function getEditableUserMap(): UserMap
+    {
+        $roles = $this->getEditableRoles();
+
+        return $this->userService->getByRoles($roles);
+    }
+
+    /**
+     * @return array
+     */
+    public function getGreaterAndEqualRoles(): array
+    {
+        return array_slice(Permission::ROLES, 0, array_search($this->userService->getRole(), Permission::ROLES) + 1);
     }
 
     /**

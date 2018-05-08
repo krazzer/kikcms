@@ -36,35 +36,41 @@
                             <tr>
                                 <td>{{ name }}</td>
                                 <td class="check">
-                                    <label><input type="checkbox" data-right="read" name="permission[{{ role }}][read]"></label>
+                                    <label>
+                                        <input type="checkbox" data-right="read" name="permission[{{ role }}][read]">
+                                    </label>
                                 </td>
                                 <td class="check">
-                                    <label><input type="checkbox" data-right="write" name="permission[{{ role }}][write]"></label>
+                                    <label>
+                                        <input type="checkbox" data-right="write" name="permission[{{ role }}][write]">
+                                    </label>
                                 </td>
                             </tr>
                         {% endfor %}
-                        <tr>
-                            <td>
-                                <select>
-                                    <option value="">...</option>
-                                    {% for user in userMap %}
-                                        <option value="{{ user.id }}">{{ user.email }}</option>
-                                    {% endfor %}
-                                </select>
-                            </td>
-                            <td class="check">
-                                <label><input type="checkbox" disabled></label>
-                            </td>
-                            <td class="check">
-                                <label><input type="checkbox" disabled></label>
-                            </td>
-                        </tr>
+                        {% if userMap.count %}
+                            <tr>
+                                <td>
+                                    <select>
+                                        <option value="">...</option>
+                                        {% for user in userMap %}
+                                            <option value="{{ user.id }}">{{ user.email }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="check">
+                                    <label><input type="checkbox" disabled></label>
+                                </td>
+                                <td class="check">
+                                    <label><input type="checkbox" disabled></label>
+                                </td>
+                            </tr>
+                        {% endif %}
                         </tbody>
                     </table>
 
                     <div class="form-check sub-files-checkbox">
-                        <input type="checkbox" name="recursive" class="form-check-input" id="rightSubFiles{{ instance }}">
-                        <label class="form-check-label" for="rightSubFiles{{ instance }}">
+                        <input type="checkbox" name="recursive" class="form-check-input" id="recursive{{ instance }}">
+                        <label class="form-check-label" for="recursive{{ instance }}">
                             {{ tl('media.button.modal.applyToSubFolders') }}
                         </label>
                     </div>
