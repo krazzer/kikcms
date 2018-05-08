@@ -2,8 +2,6 @@
 
 namespace KikCMS\Controllers;
 
-
-use KikCMS\Classes\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
@@ -17,7 +15,6 @@ use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
-use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AccessControl $acl
@@ -27,7 +24,6 @@ use Phalcon\Http\ResponseInterface;
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FinderPermissionService $finderPermissionService
- * @property FinderPermissionHelper $finderPermissionHelper
  */
 class FinderController extends RenderableController
 {
@@ -135,22 +131,6 @@ class FinderController extends RenderableController
     }
 
     /**
-     * @return ResponseInterface
-     */
-    public function getPermissionDataAction(): ResponseInterface
-    {
-        $fileIds = (array) $this->request->getPost('fileIds');
-
-        $modalTitle      = $this->finderPermissionHelper->getModalTitle($fileIds);
-        $permissionTable = $this->finderPermissionHelper->getPermissionTable($fileIds);
-
-        return $this->response->setJsonContent([
-            'title' => $modalTitle,
-            'table' => $permissionTable,
-        ]);
-    }
-
-    /**
      * @return string
      */
     public function openFolderAction()
@@ -233,23 +213,6 @@ class FinderController extends RenderableController
         }
 
         return $this->outputFile($thumbPath, $finderFile->getMimeType(), $finderFile->getName());
-    }
-
-    /**
-     * Update file permissions
-     */
-    public function updatePermissionsAction()
-    {
-        $permission      = (array) $this->request->getPost('permission');
-        $fileIds         = (array) $this->request->getPost('fileIds');
-        $saveRecursively = (bool) $this->request->getPost('recursive');
-
-        $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
-        $success        = $this->finderPermissionService->updateByList($permissionList, $fileIds);
-
-        return $this->response->setJsonContent([
-            'success' => $success,
-        ]);
     }
 
     /**

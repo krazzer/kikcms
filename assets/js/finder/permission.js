@@ -57,7 +57,7 @@ var FinderPermission = Class.extend({
     openModal: function () {
         var self = this;
 
-        this.finder.action('getPermissionData', {fileIds: this.finder.getSelectedFileIds()}, function (response) {
+        KikCMS.action('/cms/finder/permission/get', {fileIds: this.finder.getSelectedFileIds()}, function (response) {
             self.updateModal(response);
             self.getModal().modal();
         });
@@ -164,7 +164,7 @@ var FinderPermission = Class.extend({
 
         data.fileIds = this.finder.getSelectedFileIds();
 
-        this.finder.action('updatePermissions', data, function (response) {
+        KikCMS.action('/cms/finder/permission/update', data, function (response) {
             $allMessages.hide();
 
             if (response.success == true) {
