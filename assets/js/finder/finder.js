@@ -11,13 +11,13 @@ var Finder = Class.extend({
         }
 
         parameters.renderableInstance = this.renderableInstance;
-        parameters.renderableClass    = this.renderableClass;
+        parameters.renderableClass = this.renderableClass;
 
         KikCMS.action('/cms/finder/' + action, parameters, onSuccess);
     },
 
     actionAddFolder: function () {
-        var self       = this;
+        var self = this;
         var folderName = prompt(KikCMS.tl('media.createFolder'), KikCMS.tl('media.defaultFolderName'));
 
         if (!folderName) {
@@ -35,7 +35,7 @@ var Finder = Class.extend({
     },
 
     actionDelete: function () {
-        var self        = this;
+        var self = this;
         var selectedIds = this.getSelectedFileIds();
 
         var confirmMessage = selectedIds.length > 1
@@ -60,7 +60,7 @@ var Finder = Class.extend({
     actionEditFileName: function ($file) {
         var self = this;
 
-        var fileId          = $file.attr('data-id');
+        var fileId = $file.attr('data-id');
         var currentFileName = KikCMS.removeExtension($file.find('.name span').text());
 
         var newFileName = prompt(KikCMS.tl('media.editFileName'), currentFileName);
@@ -141,12 +141,12 @@ var Finder = Class.extend({
     },
 
     initFiles: function () {
-        var self           = this;
+        var self = this;
         var $fileContainer = this.getFileContainer();
-        var $files         = $fileContainer.find('.file');
+        var $files = $fileContainer.find('.file');
 
         $files.each(function () {
-            var $file            = $(this);
+            var $file = $(this);
             var $fileSelectables = $file.find('img, .glyphicon, .extension, .name span');
 
             // dont de-select selected files on click
@@ -278,12 +278,12 @@ var Finder = Class.extend({
             var hasIntermediate = false;
 
             $form.find('input').each(function () {
-                if($(this).prop('indeterminate')){
+                if ($(this).prop('indeterminate')) {
                     hasIntermediate = true;
                 }
             });
 
-            if(hasIntermediate){
+            if (hasIntermediate) {
                 $permissionModal.find('.messages .alert').hide();
                 $permissionModal.find('.messages .warning').fadeIn();
                 return;
@@ -304,7 +304,7 @@ var Finder = Class.extend({
             });
         });
 
-        $form.find('.check input').change(function () {
+        $form.on('change', '.check input', function () {
             var $checkbox = $(this);
 
             if ($checkbox.attr('data-right') == 'write' && $checkbox.prop('checked')) {
@@ -320,6 +320,29 @@ var Finder = Class.extend({
                 $checkbox.parent().parent().next().find('input').prop('checked', false);
                 $checkbox.parent().parent().next().find('input').prop('indeterminate', false);
             }
+        });
+
+        $form.on('change', 'select', function () {
+            var val = $(this).val();
+            var $row = $(this).parent().parent();
+
+            if (!val) {
+                if ($row.next().length) {
+                    $row.remove();
+                }
+
+                return;
+            }
+
+            // add a new row if there isn't one already
+            if (!$row.next().length) {
+                var $newRow = $row.clone();
+                $form.find('table').append($newRow);
+            }
+
+            $row.find('input').removeAttr('disabled');
+            $row.find('input:first').attr('name', 'permission[' + val + '][read]');
+            $row.find('input:last').attr('name', 'permission[' + val + '][write]');
         });
     },
 
@@ -464,21 +487,37 @@ var Finder = Class.extend({
                 $subFileCheckbox.hide();
             }
 
+            // remove all users with a value
+            $modal.find('select').each(function () {
+                if ($(this).val() || $modal.find('select').length > 1) {
+                    $(this).parent().parent().remove();
+                }
+            });
+
+            var $lastRow = $modal.find('table tr:last');
+
             $.each(response.table, function (key, permission) {
+                if (isNumeric(key)) {
+                    var $row = $lastRow.clone();
+
+                    $row.find('select').val(key);
+                    $row.find('input').removeAttr('disabled');
+                    $row.find('input:first').attr('name', 'permission[' + key + '][read]').attr('data-right', 'read');
+                    $row.find('input:last').attr('name', 'permission[' + key + '][write]').attr('data-right', 'write');
+
+                    $lastRow.before($row);
+                }
+
                 $.each(permission, function (type, value) {
                     var $checkbox = $('input[name="permission[' + key + '][' + type + ']"]');
 
-                    if (isNumeric(key)) {
-
-                    } else {
-                        switch (value) {
-                            case 2:
-                                $checkbox.prop("indeterminate", true).trigger('change');
-                                break;
-                            case 1:
-                                $checkbox.prop("checked", true).trigger('change');
-                                break;
-                        }
+                    switch (value) {
+                        case 2:
+                            $checkbox.prop("indeterminate", true).trigger('change');
+                            break;
+                        case 1:
+                            $checkbox.prop("checked", true).trigger('change');
+                            break;
                     }
                 });
             });
@@ -508,7 +547,7 @@ var Finder = Class.extend({
      * Checks if any toolbar button should be updated by selected files etc
      */
     updateToolbar: function () {
-        var self     = this;
+        var self = this;
         var $toolbar = this.getToolbar();
 
         if (this.getSelectedFileIds().length === 1 && !this.selectedSingleFolder()) {
