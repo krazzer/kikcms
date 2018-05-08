@@ -4,6 +4,7 @@ var Finder = Class.extend({
     shiftKeyPressed: false,
     pickingMode: false,
     cutFileIds: [],
+    permission: null,
 
     action: function (action, parameters, onSuccess) {
         if (typeof parameters.folderId == 'undefined') {
@@ -112,10 +113,10 @@ var Finder = Class.extend({
         this.initUpload();
         this.initFiles();
         this.initKeyEvents();
+        this.initPermissions();
         this.initButtons();
         this.initSearch();
         this.initPath();
-        this.initPermissions();
     },
 
     initButtons: function () {
@@ -124,7 +125,7 @@ var Finder = Class.extend({
         this.getToolbar().find('.cut').click(this.actionCut.bind(this));
         this.getToolbar().find('.paste').click(this.actionPaste.bind(this));
         this.getToolbar().find('.download').click(this.download.bind(this));
-        this.getToolbar().find('.rights').click(this.openPermissionModal.bind(this));
+        this.getToolbar().find('.rights').click(this.permission.openModal.bind(this.permission));
     },
 
     initCutFiles: function () {
@@ -268,82 +269,8 @@ var Finder = Class.extend({
     },
 
     initPermissions: function () {
-        var self = this;
-
-        var $permissionModal = this.getPermissionModal();
-
-        var $form = $permissionModal.find('form');
-
-        $permissionModal.find('.save').click(function () {
-            var hasIntermediate = false;
-
-            $form.find('input').each(function () {
-                if ($(this).prop('indeterminate')) {
-                    hasIntermediate = true;
-                }
-            });
-
-            if (hasIntermediate) {
-                $permissionModal.find('.messages .alert').hide();
-                $permissionModal.find('.messages .warning').fadeIn();
-                return;
-            }
-
-            var data = $form.serializeObject();
-
-            data.fileIds = self.getSelectedFileIds();
-
-            self.action('updatePermissions', data, function (response) {
-                $permissionModal.find('.messages .alert').hide();
-
-                if (response.success == true) {
-                    $permissionModal.find('.messages .success').fadeIn();
-                } else {
-                    $permissionModal.find('.messages .error').fadeIn();
-                }
-            });
-        });
-
-        $form.on('change', '.check input', function () {
-            var $checkbox = $(this);
-
-            if ($checkbox.attr('data-right') == 'write' && $checkbox.prop('checked')) {
-                $checkbox.parent().parent().prev().find('input').prop('indeterminate', false);
-                $checkbox.parent().parent().prev().find('input').prop('checked', true);
-            }
-
-            if ($checkbox.attr('data-right') == 'write' && $checkbox.prop('indeterminate')) {
-                $checkbox.parent().parent().prev().find('input').prop('indeterminate', true);
-            }
-
-            if ($checkbox.attr('data-right') == 'read' && !$checkbox.prop('checked')) {
-                $checkbox.parent().parent().next().find('input').prop('checked', false);
-                $checkbox.parent().parent().next().find('input').prop('indeterminate', false);
-            }
-        });
-
-        $form.on('change', 'select', function () {
-            var val = $(this).val();
-            var $row = $(this).parent().parent();
-
-            if (!val) {
-                if ($row.next().length) {
-                    $row.remove();
-                }
-
-                return;
-            }
-
-            // add a new row if there isn't one already
-            if (!$row.next().length) {
-                var $newRow = $row.clone();
-                $form.find('table').append($newRow);
-            }
-
-            $row.find('input').removeAttr('disabled');
-            $row.find('input:first').attr('name', 'permission[' + val + '][read]');
-            $row.find('input:last').attr('name', 'permission[' + val + '][write]');
-        });
+        this.permission = new FinderPermission(this);
+        this.permission.init();
     },
 
     initSearch: function () {
@@ -387,10 +314,6 @@ var Finder = Class.extend({
 
     getFileContainer: function () {
         return this.getFinder().find('.files .files-container');
-    },
-
-    getPermissionModal: function () {
-        return this.getFinder().find('.permissionModal');
     },
 
     pickFile: function ($file) {
@@ -462,68 +385,6 @@ var Finder = Class.extend({
      */
     getCurrentFolderId: function () {
         return this.getFinder().find('input.currentFolderId').val();
-    },
-
-    /**
-     * Open the modal window to manage file permissions
-     */
-    openPermissionModal: function () {
-        var $modal = this.getPermissionModal();
-        var $files = this.getSelectedFiles();
-
-        this.action('getPermissionData', {fileIds: this.getSelectedFileIds()}, function (response) {
-            $modal.find('.modal-title .file').html(response.title);
-
-            $modal.find('input').prop('indeterminate', false);
-            $modal.find('input').prop('checked', false);
-
-            $modal.find('.messages .alert').hide();
-
-            var $subFileCheckbox = $modal.find('.sub-files-checkbox');
-
-            if ($files.hasClass('folder')) {
-                $subFileCheckbox.show();
-            } else {
-                $subFileCheckbox.hide();
-            }
-
-            // remove all users with a value
-            $modal.find('select').each(function () {
-                if ($(this).val() || $modal.find('select').length > 1) {
-                    $(this).parent().parent().remove();
-                }
-            });
-
-            var $lastRow = $modal.find('table tr:last');
-
-            $.each(response.table, function (key, permission) {
-                if (isNumeric(key)) {
-                    var $row = $lastRow.clone();
-
-                    $row.find('select').val(key);
-                    $row.find('input').removeAttr('disabled');
-                    $row.find('input:first').attr('name', 'permission[' + key + '][read]').attr('data-right', 'read');
-                    $row.find('input:last').attr('name', 'permission[' + key + '][write]').attr('data-right', 'write');
-
-                    $lastRow.before($row);
-                }
-
-                $.each(permission, function (type, value) {
-                    var $checkbox = $('input[name="permission[' + key + '][' + type + ']"]');
-
-                    switch (value) {
-                        case 2:
-                            $checkbox.prop("indeterminate", true).trigger('change');
-                            break;
-                        case 1:
-                            $checkbox.prop("checked", true).trigger('change');
-                            break;
-                    }
-                });
-            });
-
-            $modal.modal();
-        });
     },
 
     saveCurrentFolderId: function (folderId) {
