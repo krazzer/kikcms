@@ -14,12 +14,15 @@ use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
+use Website\Config\Config;
 
 /**
  * @property DbService $dbService
  * @property Logger $logger
  * @property UserService $userService
  * @property FinderFileService $finderFileService
+ * @property Config $config
  */
 class FinderPermissionService extends Injectable
 {
@@ -31,6 +34,10 @@ class FinderPermissionService extends Injectable
      */
     public function create(FinderFile $finderFile): bool
     {
+        if ( ! $this->filePermissionsAreManaged()) {
+            return true;
+        }
+
         $roles = $this->userService->getGreaterAndEqualRoles();
 
         $this->db->begin();
@@ -56,12 +63,11 @@ class FinderPermissionService extends Injectable
 
     /**
      * Remove permission records that are editable by current user
-     * @param FinderPermissionList $permissionList
+     * @param array $fileIds
+     * @throws Exception
      */
-    private function deleteByList(FinderPermissionList $permissionList)
+    private function deleteByFileIds(array $fileIds)
     {
-        $fileIds = $this->getFileIdsByList($permissionList);
-
         $roles   = $this->userService->getSubordinateAndEqualRoles();
         $userIds = $this->userService->getSubordinateAndEqualUserIds();
 
@@ -78,27 +84,6 @@ class FinderPermissionService extends Injectable
                 FinderPermission::FIELD_FILE_ID => $fileIds,
             ]);
         }
-    }
-
-    /**
-     * Extract all fileIds from given FinderPermissionList
-     *
-     * @param FinderPermissionList $permissionList
-     * @return array
-     */
-    private function getFileIdsByList(FinderPermissionList $permissionList): array
-    {
-        $fileIds = [];
-
-        foreach ($permissionList as $finderPermission) {
-            if (in_array($finderPermission->file_id, $fileIds)) {
-                continue;
-            }
-
-            $fileIds[] = $finderPermission->file_id;
-        }
-
-        return $fileIds;
     }
 
     /**
@@ -126,13 +111,14 @@ class FinderPermissionService extends Injectable
 
     /**
      * @param FinderPermissionList $permissionList
+     * @param array $fileIds
      * @return bool
      */
-    public function updateByList(FinderPermissionList $permissionList): bool
+    public function updateByList(FinderPermissionList $permissionList, array $fileIds): bool
     {
         $this->db->begin();
 
-        $this->deleteByList($permissionList);
+        $this->deleteByFileIds($fileIds);
 
         foreach ($permissionList as $finderPermission) {
             try {
@@ -145,5 +131,76 @@ class FinderPermissionService extends Injectable
         }
 
         return $this->db->commit();
+    }
+
+    /**
+     * @param int $fileId
+     * @return bool
+     */
+    public function canEditId(int $fileId): bool
+    {
+        if ( ! $this->filePermissionsAreManaged()) {
+            return true;
+        }
+
+        return $this->can(FinderConfig::RIGHT_WRITE, $fileId);
+    }
+
+    /**
+     * @param FinderFile $file
+     * @return bool
+     */
+    public function canEdit(FinderFile $file): bool
+    {
+        return $this->canEditId($file->getId());
+    }
+
+    /**
+     * @param int $fileId
+     * @return bool
+     */
+    public function canReadId(int $fileId): bool
+    {
+        if ( ! $this->filePermissionsAreManaged()) {
+            return true;
+        }
+
+        return $this->can(FinderConfig::RIGHT_READ, $fileId);
+    }
+
+    /**
+     * @param FinderFile $file
+     * @return bool
+     */
+    public function canRead(FinderFile $file): bool
+    {
+        return $this->canReadId($file->getId());
+    }
+
+    /**
+     * @return bool
+     */
+    public function filePermissionsAreManaged(): bool
+    {
+        return $this->config->media->manageFilePermissions;
+    }
+
+    /**
+     * @param string $right
+     * @param int $fileId
+     * @return bool
+     */
+    private function can(string $right, int $fileId): bool
+    {
+        $userId = $this->userService->getUserId();
+        $role   = $this->userService->getRole();
+
+        $query = (new Builder)
+            ->from(FinderPermission::class)
+            ->where(FinderPermission::FIELD_FILE_ID . ' = :id:', ['id' => $fileId])
+            ->andWhere('[' . FinderPermission::FIELD_RIGHT . '] >= :right:', ['right' => $right])
+            ->andWhere('user_id = :userId: OR role = :role:', ['userId' => $userId, 'role' => $role]);
+
+        return $this->dbService->getExists($query);
     }
 }

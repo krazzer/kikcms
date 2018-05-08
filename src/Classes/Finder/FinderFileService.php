@@ -6,6 +6,8 @@ namespace KikCMS\Classes\Finder;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Config\FinderConfig;
+use KikCMS\Models\FinderPermission;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
@@ -76,9 +78,7 @@ class FinderFileService extends Injectable
             return false;
         }
 
-        if($this->config->media->manageFilePermissions){
-            $this->finderPermissionService->create($finderFile);
-        }
+        $this->finderPermissionService->create($finderFile);
 
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
@@ -101,9 +101,7 @@ class FinderFileService extends Injectable
 
         $finderDir->save();
 
-        if($this->config->media->manageFilePermissions){
-            $this->finderPermissionService->create($finderDir);
-        }
+        $this->finderPermissionService->create($finderDir);
 
         return (int) $finderDir->id;
     }
@@ -168,21 +166,30 @@ class FinderFileService extends Injectable
 
     /**
      * @param FinderFilters $filters
-     * @return FinderFile[]
+     * @return FinderFile[]|Resultset
      */
     public function getByFilters(FinderFilters $filters)
     {
-        if ($filters->getSearch()) {
-            $resultSet = FinderFile::find([
-                'conditions' => 'name LIKE {search}',
-                'bind'       => ['search' => '%' . $filters->getSearch() . '%'],
-                'order'      => 'is_folder DESC, name ASC'
-            ]);
-
-            return $this->getFiles($resultSet);
+        if ( ! $filters->getSearch()) {
+            return $this->getByFolderId($filters->getFolderId());
         }
 
-        return $this->getByFolderId($filters->getFolderId());
+        $query = (new Builder)
+            ->from(['f' => FinderFile::class])
+            ->where(FinderFile::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
+            ->orderBy('is_folder DESC, name ASC');
+
+        if($this->finderPermissionService->filePermissionsAreManaged()){
+            $userId = $this->userService->getUserId();
+            $role   = $this->userService->getRole();
+
+            $query
+                ->join(FinderPermission::class, 'fp.file_id = f.id', 'fp')
+                ->andWhere('[' . FinderPermission::FIELD_RIGHT . '] >= :right:', ['right' => FinderConfig::RIGHT_READ])
+                ->andWhere('fp.user_id = :userId: OR role = :role:', ['userId' => $userId, 'role' => $role]);
+        }
+
+        return $this->dbService->getObjects($query);
     }
 
     /**

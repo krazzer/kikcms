@@ -50,6 +50,10 @@ class FinderController extends RenderableController
         $folderName = $this->request->getPost('folderName');
         $folderId   = $finder->getFilters()->getFolderId();
 
+        if ( ! $this->finderPermissionService->canEditId($folderId)) {
+            throw new UnauthorizedException();
+        }
+
         $folderId = $this->finderFileService->createFolder($folderName, $folderId);
 
         return json_encode([
@@ -71,10 +75,12 @@ class FinderController extends RenderableController
         $files = FinderFile::getByIdList($fileIds);
 
         foreach ($files as $file) {
-            if ( ! $file->key) {
-                $idsToRemove[] = $file->getId();
-            } else {
+            if ($file->key) {
                 $errorMessage = $this->translator->tl('media.deleteErrorLocked');
+            } elseif ( ! $this->finderPermissionService->canEdit($file)) {
+                $errorMessage = $this->translator->tl('media.errorCantEdit');
+            } else {
+                $idsToRemove[] = $file->getId();
             }
         }
 
@@ -99,6 +105,10 @@ class FinderController extends RenderableController
         $fileId   = $this->request->getPost('fileId');
         $fileName = $this->request->getPost('fileName');
 
+        if ( ! $this->finderPermissionService->canEditId($fileId)) {
+            throw new UnauthorizedException();
+        }
+
         $this->finderFileService->updateFileNameById($fileId, $fileName);
 
         return json_encode([
@@ -116,6 +126,10 @@ class FinderController extends RenderableController
     public function fileAction(FinderFile $finderFile)
     {
         $filePath = $this->finderFileService->getFilePath($finderFile);
+
+        if ( ! $this->finderPermissionService->canRead($finderFile)) {
+            throw new UnauthorizedException();
+        }
 
         return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
     }
@@ -143,6 +157,10 @@ class FinderController extends RenderableController
     {
         $targetFolderId = $this->request->getPost('folderId', 'int');
 
+        if ($targetFolderId && ! $this->finderPermissionService->canReadId($targetFolderId)) {
+            throw new UnauthorizedException();
+        }
+
         if ( ! $this->userService->allowedInFolderId($targetFolderId)) {
             throw new UnauthorizedException();
         }
@@ -165,6 +183,10 @@ class FinderController extends RenderableController
         $finder   = $this->getRenderable();
         $fileIds  = $this->request->getPost('fileIds');
         $folderId = $finder->getFilters()->getFolderId();
+
+        if ( ! $this->finderPermissionService->canEditId($folderId)) {
+            throw new UnauthorizedException();
+        }
 
         $this->finderFileService->moveFilesToFolderById($fileIds, $folderId);
 
@@ -223,8 +245,7 @@ class FinderController extends RenderableController
         $saveRecursively = (bool) $this->request->getPost('recursive');
 
         $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
-
-        $success = $this->finderPermissionService->updateByList($permissionList);
+        $success        = $this->finderPermissionService->updateByList($permissionList, $fileIds);
 
         return $this->response->setJsonContent([
             'success' => $success,
@@ -238,7 +259,13 @@ class FinderController extends RenderableController
     {
         $finder        = $this->getRenderable();
         $uploadedFiles = $this->request->getUploadedFiles();
-        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
+        $folderId      = $finder->getFilters()->getFolderId();
+
+        if($folderId && ! $this->finderPermissionService->canEditId($folderId)){
+            throw new UnauthorizedException();
+        }
+
+        $uploadStatus = $finder->uploadFiles($uploadedFiles);
 
         return json_encode([
             'files'   => $finder->renderFiles(),
