@@ -139,10 +139,6 @@ class FinderPermissionService extends Injectable
      */
     public function canEditId(int $fileId): bool
     {
-        if ( ! $this->filePermissionsAreManaged()) {
-            return true;
-        }
-
         return $this->can(FinderConfig::RIGHT_WRITE, $fileId);
     }
 
@@ -161,10 +157,6 @@ class FinderPermissionService extends Injectable
      */
     public function canReadId(int $fileId): bool
     {
-        if ( ! $this->filePermissionsAreManaged()) {
-            return true;
-        }
-
         return $this->can(FinderConfig::RIGHT_READ, $fileId);
     }
 
@@ -192,6 +184,10 @@ class FinderPermissionService extends Injectable
      */
     private function can(string $right, int $fileId): bool
     {
+        if ( ! $this->filePermissionsAreManaged()) {
+            return true;
+        }
+
         $userId = $this->userService->getUserId();
         $role   = $this->userService->getRole();
 
