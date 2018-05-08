@@ -233,6 +233,31 @@ class UserService extends Injectable
     }
 
     /**
+     * Get roles that are greater or equal to the role of the current logged in user
+     * @return array
+     */
+    public function getGreaterAndEqualRoles(): array
+    {
+        $allRoles = Permission::ROLES;
+
+        $roles = [];
+
+        $currentRoleIndex = null;
+
+        foreach ($allRoles as $roleIndex => $role){
+            if($role == $this->getRole()){
+                $currentRoleIndex = $roleIndex;
+            }
+
+            if($currentRoleIndex !== null && $roleIndex <= $currentRoleIndex){
+                $roles[] = $role;
+            }
+        }
+
+        return $roles;
+    }
+
+    /**
      * @return UserMap
      */
     public function getMap(): UserMap
@@ -243,7 +268,6 @@ class UserService extends Injectable
 
         return $this->dbService->getObjectMap($query, UserMap::class);
     }
-
     /**
      * Get roles that are below or equal to the role of the current logged in user
      * @return array

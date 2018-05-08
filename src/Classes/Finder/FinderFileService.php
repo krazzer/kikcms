@@ -6,6 +6,7 @@ namespace KikCMS\Classes\Finder;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -14,6 +15,7 @@ use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Models\FinderFolder;
 use KikCMS\Models\FinderFile;
 use KikCMS\Services\Website\WebsiteService;
+use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -28,6 +30,8 @@ use Phalcon\Mvc\Model\Resultset;
  * @property WebsiteService $websiteService
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
+ * @property FinderPermissionService $finderPermissionService
+ * @property Config $config
  */
 class FinderFileService extends Injectable
 {
@@ -72,6 +76,10 @@ class FinderFileService extends Injectable
             return false;
         }
 
+        if($this->config->media->manageFilePermissions){
+            $this->finderPermissionService->create($finderFile);
+        }
+
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
 
@@ -92,6 +100,10 @@ class FinderFileService extends Injectable
         $finderDir->is_folder = 1;
 
         $finderDir->save();
+
+        if($this->config->media->manageFilePermissions){
+            $this->finderPermissionService->create($finderDir);
+        }
 
         return (int) $finderDir->id;
     }
