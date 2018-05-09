@@ -220,15 +220,16 @@ class FinderController extends RenderableController
      */
     public function uploadAction()
     {
-        $finder        = $this->getRenderable();
-        $uploadedFiles = $this->request->getUploadedFiles();
-        $folderId      = $finder->getFilters()->getFolderId();
+        $finder          = $this->getRenderable();
+        $uploadedFiles   = $this->request->getUploadedFiles();
+        $folderId        = $finder->getFilters()->getFolderId();
+        $overwriteFileId = $this->request->getPost('overwriteFileId', 'int', null);
 
-        if($folderId && ! $this->finderPermissionService->canEditId($folderId)){
+        if ($folderId && ! $this->finderPermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();
         }
 
-        $uploadStatus = $finder->uploadFiles($uploadedFiles);
+        $uploadStatus = $finder->uploadFiles($uploadedFiles, $overwriteFileId);
 
         return json_encode([
             'files'   => $finder->renderFiles(),

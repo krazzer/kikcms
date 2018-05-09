@@ -419,6 +419,50 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param File $file
+     * @param int $fileId
+     * @return bool
+     */
+    public function overwrite(File $file, int $fileId): bool
+    {
+        $mimeType = $file->getRealType();
+
+        $finderFile = FinderFile::getById($fileId);
+
+        $finderFile->name      = $file->getName();
+        $finderFile->extension = $file->getExtension();
+        $finderFile->size      = $file->getSize();
+        $finderFile->updated   = new Now();
+        $finderFile->mimetype  = $mimeType;
+
+        if ( ! $finderFile->save()) {
+            return false;
+        }
+
+        $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
+        $this->resizeWithinBoundaries($finderFile);
+        $this->removeThumbNails($finderFile);
+
+        return true;
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     */
+    private function removeThumbNails(FinderFile $finderFile)
+    {
+        $thumbNailDirs = glob($this->fileStorage->getStorageDir() . $this->getThumbDir() . '/*');
+
+        foreach ($thumbNailDirs as $thumbNailDir) {
+            $thumbFile = $this->getThumbPath($finderFile, basename($thumbNailDir));
+
+            if (file_exists($thumbFile)) {
+                unlink($thumbFile);
+            }
+        }
+    }
+
+    /**
      * @param FinderFile $finderFile
      */
     private function resizeWithinBoundaries(FinderFile $finderFile)
@@ -462,17 +506,8 @@ class FinderFileService extends Injectable
      */
     private function unlinkFiles(FinderFile $finderFile)
     {
-        $thumbNailDirs = glob($this->fileStorage->getStorageDir() . $this->getThumbDir() . '/*');
-
         unlink($this->getFilePath($finderFile));
-
-        foreach ($thumbNailDirs as $thumbNailDir) {
-            $thumbFile = $this->getThumbPath($finderFile, basename($thumbNailDir));
-
-            if (file_exists($thumbFile)) {
-                unlink($thumbFile);
-            }
-        }
+        $this->removeThumbNails($finderFile);
     }
 
     /**

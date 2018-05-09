@@ -256,6 +256,8 @@ return [
         'button'                   => [
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
+            'overwrite'      => 'Overschrijf',
+            'overwriteTitle' => 'Overschrijf het geselecteerde bestand met een nieuw bestand vanaf uw computer',
             'newFolderTitle' => 'Maak een nieuwe map aan',
             'moveTitle'      => 'Geef eerder bekeken mappen weer',
             'deleteTitle'    => 'Verwijder de geselecteerde bestanden',

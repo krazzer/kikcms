@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\Finder;
 
 
+use Exception;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
@@ -165,12 +166,16 @@ class Finder extends Renderable
 
     /**
      * @param File[] $files
-     *
+     * @param int|null $overwriteFileId
      * @return UploadStatus
      */
-    public function uploadFiles(array $files): UploadStatus
+    public function uploadFiles(array $files, int $overwriteFileId = null): UploadStatus
     {
         $uploadStatus = new UploadStatus();
+
+        if($overwriteFileId && count($files) !== 1){
+            throw new Exception('When overwriting, only 1 file is allowed to upload');
+        }
 
         foreach ($files as $index => $file) {
 
@@ -189,15 +194,23 @@ class Finder extends Renderable
                 continue;
             }
 
-            $result = $this->finderFileService->create($file, $this->getFilters()->getFolderId());
+            if($overwriteFileId){
+                if($this->finderFileService->overwrite($file, $overwriteFileId)){
+                    $newFileId = $overwriteFileId;
+                } else {
+                    $newFileId = false;
+                }
+            } else {
+                $newFileId = $this->finderFileService->create($file, $this->getFilters()->getFolderId());
+            }
 
-            if ( ! $result) {
+            if ( ! $newFileId) {
                 $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
                 $uploadStatus->addError($message);
                 continue;
             }
 
-            $uploadStatus->addFileId($result);
+            $uploadStatus->addFileId($newFileId);
         }
 
         return $uploadStatus;

@@ -85,6 +85,7 @@ class BaseController extends Controller
         $this->response->setHeader('Content-Disposition', 'inline; filename="' . $fileName . '"');
         $this->response->setHeader('Cache-control', 'max-age=2592000, public');
         $this->response->setHeader('Expires', gmdate('D, d M Y H:i:s', strtotime('+1 years')) . ' GMT');
+        $this->response->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($filePath)) . ' GMT');
         $this->response->setHeader('Pragma', 'cache');
 
         return file_get_contents($filePath);

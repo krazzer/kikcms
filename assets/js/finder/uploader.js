@@ -1,8 +1,9 @@
 var FinderFileUploader = function (options) {
-    this.onSuccess  = options.onSuccess;
-    this.$container = options.$container;
-    this.action     = options.action ? options.action : '/cms/finder/upload';
-    this.fileTypes  = options.fileTypes ? options.fileTypes : [];
+    this.onSuccess     = options.onSuccess;
+    this.$container    = options.$container;
+    this.$uploadButton = options.$uploadButton ? options.$uploadButton : this.$container.find('.btn.upload');
+    this.action        = options.action ? options.action : '/cms/finder/upload';
+    this.fileTypes     = options.fileTypes ? options.fileTypes : [];
 
     if (options.addParametersBeforeUpload) {
         this.addParametersBeforeUpload = options.addParametersBeforeUpload;
@@ -15,16 +16,15 @@ var FinderFileUploader = function (options) {
 
 FinderFileUploader.prototype = {
     init: function () {
-        var self          = this;
-        var $uploadButton = this.$container.find('.btn.upload');
+        var self = this;
 
-        $uploadButton.find('input').on('click', function (e) {
-            if ($uploadButton.hasClass('disabled')) {
+        this.$uploadButton.find('input').on('click', function (e) {
+            if (self.$uploadButton.hasClass('disabled')) {
                 e.preventDefault();
             }
         });
 
-        $uploadButton.find('input').on('change', function () {
+        this.$uploadButton.find('input').on('change', function () {
             var formData   = new FormData();
             var fileAmount = this.files.length;
             var filesAdded = 0;
@@ -46,7 +46,7 @@ FinderFileUploader.prototype = {
                 filesAdded++;
             }
 
-            if( ! self.checkFileTypes(this.files)){
+            if (!self.checkFileTypes(this.files)) {
                 return;
             }
 
@@ -59,11 +59,10 @@ FinderFileUploader.prototype = {
     },
 
     actionUpload: function (formData) {
-        var self          = this;
-        var $uploadButton = this.$container.find('.btn.upload');
-        var $progressBar  = this.$container.find('.progress-bar');
+        var self         = this;
+        var $progressBar = this.$container.find('.progress-bar');
 
-        $uploadButton.addClass('disabled');
+        this.$uploadButton.addClass('disabled');
         $progressBar.parent().fadeIn();
 
         formData = this.addParametersBeforeUpload(formData);
@@ -75,12 +74,12 @@ FinderFileUploader.prototype = {
                 alert(result.errors.join("\n"));
             }
 
-            $uploadButton.removeClass('disabled');
-            $uploadButton.find('input').val('');
+            self.$uploadButton.removeClass('disabled');
+            self.$uploadButton.find('input').val('');
             $progressBar.parent().fadeOut();
         }, function () {
-            $uploadButton.removeClass('disabled');
-            $uploadButton.find('input').val('');
+            self.$uploadButton.removeClass('disabled');
+            self.$uploadButton.find('input').val('');
             $progressBar.parent().fadeOut();
         }, function () {
             var myXhr = $.ajaxSettings.xhr();

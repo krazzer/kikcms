@@ -12,13 +12,13 @@ var Finder = Class.extend({
         }
 
         parameters.renderableInstance = this.renderableInstance;
-        parameters.renderableClass = this.renderableClass;
+        parameters.renderableClass    = this.renderableClass;
 
         KikCMS.action('/cms/finder/' + action, parameters, onSuccess);
     },
 
     actionAddFolder: function () {
-        var self = this;
+        var self       = this;
         var folderName = prompt(KikCMS.tl('media.createFolder'), KikCMS.tl('media.defaultFolderName'));
 
         if (!folderName) {
@@ -36,7 +36,7 @@ var Finder = Class.extend({
     },
 
     actionDelete: function () {
-        var self = this;
+        var self        = this;
         var selectedIds = this.getSelectedFileIds();
 
         var confirmMessage = selectedIds.length > 1
@@ -61,7 +61,7 @@ var Finder = Class.extend({
     actionEditFileName: function ($file) {
         var self = this;
 
-        var fileId = $file.attr('data-id');
+        var fileId          = $file.attr('data-id');
         var currentFileName = KikCMS.removeExtension($file.find('.name span').text());
 
         var newFileName = prompt(KikCMS.tl('media.editFileName'), currentFileName);
@@ -141,12 +141,12 @@ var Finder = Class.extend({
     },
 
     initFiles: function () {
-        var self = this;
+        var self           = this;
         var $fileContainer = this.getFileContainer();
-        var $files = $fileContainer.find('.file');
+        var $files         = $fileContainer.find('.file');
 
         $files.each(function () {
-            var $file = $(this);
+            var $file            = $(this);
             var $fileSelectables = $file.find('img, .glyphicon, .extension, .name span');
 
             // dont de-select selected files on click
@@ -287,7 +287,7 @@ var Finder = Class.extend({
     initUpload: function () {
         var self = this;
 
-        var uploader = new FinderFileUploader({
+        var uploaderOptions = {
             $container: this.getFinder(),
             onSuccess: function (result) {
                 self.setFilesContainer(result.files, result.fileIds);
@@ -298,9 +298,23 @@ var Finder = Class.extend({
                 formData.append('renderableClass', self.renderableClass);
                 return formData;
             }
-        });
+        };
+
+        var uploader = new FinderFileUploader(uploaderOptions);
 
         uploader.init();
+
+        uploaderOptions.$uploadButton = this.getFinder().find('.btn.overwrite');
+        uploaderOptions.addParametersBeforeUpload = function (formData) {
+            formData.append('overwriteFileId', self.getSelectedFileIds()[0]);
+            formData.append('renderableInstance', self.renderableInstance);
+            formData.append('renderableClass', self.renderableClass);
+            return formData;
+        };
+
+        var overwriteUploader = new FinderFileUploader(uploaderOptions);
+
+        overwriteUploader.init();
     },
 
     download: function () {
@@ -407,13 +421,15 @@ var Finder = Class.extend({
      * Checks if any toolbar button should be updated by selected files etc
      */
     updateToolbar: function () {
-        var self = this;
+        var self     = this;
         var $toolbar = this.getToolbar();
 
         if (this.getSelectedFileIds().length === 1 && !this.selectedSingleFolder()) {
             $toolbar.find('.download').fadeIn();
+            $toolbar.find('.overwrite').fadeIn();
         } else {
             $toolbar.find('.download').fadeOut();
+            $toolbar.find('.overwrite').fadeOut();
         }
 
         if (this.getSelectedFileIds().length >= 1) {

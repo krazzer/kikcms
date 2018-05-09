@@ -20,6 +20,12 @@
             <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
         </div>
 
+        <label class="btn btn-default overwrite" style="display: none;" title="{{ tl('media.button.overwriteTitle') }}">
+            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            <input type="file" name="files[]"/>
+        </label>
+
         {% if permission %}
             <div class="btn btn-default rights" style="display: none;" title="{{ tl('media.button.rights') }}">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
