@@ -77,7 +77,7 @@ class Routing extends Injectable
         ]);
 
         $backend->add("/finder/permission/:action", [
-            "controller" => "finderPermission",
+            "controller" => "finder-permission",
             "action"     => 1
         ]);
 
