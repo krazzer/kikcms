@@ -46,7 +46,7 @@ class FinderController extends RenderableController
         $folderName = $this->request->getPost('folderName');
         $folderId   = $finder->getFilters()->getFolderId();
 
-        if ( ! $this->finderPermissionService->canEditId($folderId)) {
+        if ($folderId && ! $this->finderPermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();
         }
 
