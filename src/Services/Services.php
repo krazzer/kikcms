@@ -336,7 +336,7 @@ class Services extends BaseServices
      */
     protected function initUrl()
     {
-        if( ! $baseUri = $this->getApplicationConfig()->baseUri){
+        if( ! $baseUri = $this->getApplicationConfig()->get('baseUri')){
             $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
                 "https://" : "http://";
 
