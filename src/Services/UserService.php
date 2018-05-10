@@ -252,7 +252,6 @@ class UserService extends Injectable
     public function getByRoles(array $roles): UserMap
     {
         $query = (new Builder)
-            ->columns(User::FIELD_ID)
             ->from(User::class)
             ->inWhere(User::FIELD_ROLE, $roles);
 
