@@ -32,6 +32,8 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Finder\FinderService;
+use KikCMS\Services\Generator\ClassesGeneratorService;
+use KikCMS\Services\Generator\GeneratorService;
 use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -78,7 +80,9 @@ class Services extends BaseServices
         $services = [
             AnalyticsService::class,
             CacheService::class,
+            ClassesGeneratorService::class,
             CmsService::class,
+            GeneratorService::class,
             DateTimeService::class,
             DbService::class,
             DeployService::class,
@@ -338,7 +342,7 @@ class Services extends BaseServices
      */
     protected function initUrl()
     {
-        if( ! $baseUri = $this->getApplicationConfig()->get('baseUri')){
+        if ( ! $baseUri = $this->getApplicationConfig()->get('baseUri')) {
             $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
                 "https://" : "http://";
 

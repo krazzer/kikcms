@@ -14,6 +14,12 @@ class KikCMSConfig
     const NAMESPACE_WEBSITE    = 'Website';
     const NAMESPACE_DATATABLES = 'DataTables';
 
+    const NAMESPACE_PATH_MODELS     = '\\Website\\Models\\';
+    const NAMESPACE_PATH_FORMS      = '\\Website\\Forms\\';
+    const NAMESPACE_PATH_DATATABLES = '\\Website\\DataTables\\';
+    const NAMESPACE_PATH_OBJECTLIST = '\\Website\\ObjectList\\';
+    const NAMESPACE_PATH_SERVICES   = '\\Website\\Services\\';
+
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,
         'textarea'     => self::CONTENT_TYPE_TEXTAREA,
