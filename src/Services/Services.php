@@ -40,6 +40,7 @@ use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Util\DateTimeService;
 use KikCMS\Services\Util\NumberService;
+use KikCMS\Services\Util\StringService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\MenuService;
 use KikCMS\Services\Website\WebsiteService;
@@ -98,6 +99,7 @@ class Services extends BaseServices
             NumberService::class,
             Security::class,
             StorageService::class,
+            StringService::class,
             TemplateService::class,
             TinyMceService::class,
             TranslationService::class,

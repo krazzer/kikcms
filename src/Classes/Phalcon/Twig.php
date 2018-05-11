@@ -192,11 +192,15 @@ class Twig extends Engine implements EngineInterface
             $this->twig->addFunction($function);
         }
 
-        $this->twig->addFilter(new \Twig_SimpleFilter('price', function($price) use ($di){
-            return $di->getShared("numberService")->getPriceFormat((float)$price);
+        $this->twig->addFilter(new \Twig_SimpleFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
+            return $di->getShared("stringService")->truncate((string) $string, $maxLength);
         }));
 
-        $this->twig->addFilter(new \Twig_SimpleFilter('date', function(DateTime $dateTime, string $format = null) use ($di){
+        $this->twig->addFilter(new \Twig_SimpleFilter('price', function ($price) use ($di) {
+            return $di->getShared("numberService")->getPriceFormat((float) $price);
+        }));
+
+        $this->twig->addFilter(new \Twig_SimpleFilter('date', function (DateTime $dateTime, string $format = null) use ($di) {
             $format = $format ?: $di->getShared('translator')->tl('system.dateDisplayFormat');
             return strftime($format, $dateTime->getTimestamp());
         }));

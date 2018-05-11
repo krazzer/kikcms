@@ -42,7 +42,7 @@
                         {% if fieldFormatting[key] is defined %}
                             {{ self.formatValue(key, value, row)|raw }}
                         {% else %}
-                            {{ value }}
+                            {{ value|striptags|truncate|raw }}
                         {% endif %}
                     </td>
                 {% endfor %}
