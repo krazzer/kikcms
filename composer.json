@@ -5,7 +5,8 @@
     "swiftmailer/swiftmailer": "5.4.*",
     "twig/twig": "~1.0",
     "monolog/monolog": "^1.22",
-    "google/apiclient": "^2.0"
+    "google/apiclient": "^2.0",
+    "nette/php-generator": "^3.1"
   },
   "autoload": {
     "psr-4": {
