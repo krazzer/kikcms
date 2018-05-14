@@ -34,6 +34,8 @@ class FrontendController extends BaseController
      */
     public function unauthorizedAction(): ResponseInterface
     {
+        $this->response->setStatusCode(401);
+
         return $this->response->setContent('You are not allowed to view this page');
     }
 
