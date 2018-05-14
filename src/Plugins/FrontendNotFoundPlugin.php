@@ -4,6 +4,7 @@ namespace KikCMS\Plugins;
 
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
@@ -32,6 +33,16 @@ class FrontendNotFoundPlugin extends Plugin
                 'controller' => 'frontend',
                 'action'     => 'pageNotFound',
                 "params"     => ['languageCode' => $exception->getLanguageCode()]
+            ]);
+
+            return false;
+        }
+
+        if ($exception instanceof UnauthorizedException) {
+            $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
+                'controller' => 'frontend',
+                'action'     => 'unauthorized',
             ]);
 
             return false;

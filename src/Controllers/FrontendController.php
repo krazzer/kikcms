@@ -14,6 +14,7 @@ use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property PageService $pageService
@@ -28,6 +29,14 @@ use Phalcon\Http\Response;
  */
 class FrontendController extends BaseController
 {
+    /**
+     * @return ResponseInterface
+     */
+    public function unauthorizedAction(): ResponseInterface
+    {
+        return $this->response->setContent('You are not allowed to view this page');
+    }
+
     /**
      * @param string $url
      * @throws NotFoundException
