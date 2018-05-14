@@ -93,6 +93,7 @@ class Routing extends Injectable
         $frontend->add('/sitemap.xml', "Sitemap::index");
 
         $frontend->add("/finder/file/{finderFileId:[0-9]+}", "Finder::file")->setName('finderFile');
+        $frontend->add("/finder/key/{key:[0-9a-z\-]+}", "Finder::key");
         $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');
         $frontend->add('/finder/thumb/{type:[0-9a-z\/\-]+}/{fileId:[0-9]+}', [
             "controller" => "finder",

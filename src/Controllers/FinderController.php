@@ -131,6 +131,24 @@ class FinderController extends RenderableController
     }
 
     /**
+     * @param string $fileKey
+     * @return string
+     * @throws UnauthorizedException
+     * @internal param int $fileId
+     */
+    public function keyAction(string $fileKey)
+    {
+        $finderFile = $this->finderFileService->getByKey($fileKey);
+        $filePath   = $this->finderFileService->getFilePath($finderFile);
+
+        if ( ! $this->finderPermissionService->canRead($finderFile)) {
+            throw new UnauthorizedException();
+        }
+
+        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
+    }
+
+    /**
      * @return string
      */
     public function openFolderAction()
