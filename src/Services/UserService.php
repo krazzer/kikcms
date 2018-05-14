@@ -75,7 +75,7 @@ class UserService extends Injectable
      */
     public function getRole(): string
     {
-        return $this->session->get('role');
+        return $this->session->get('role') ?: Permission::VISITOR;
     }
 
     /**
