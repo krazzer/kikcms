@@ -109,7 +109,7 @@ var KikCmsClass = Class.extend({
 
         var key = this.translations['error.' + result.status + '.title'] ? result.status : 'unknown';
 
-        if (this.isDev && key == 'unknown') {
+        if (this.isDev && result.status != 440) {
             $("#ajaxDebugger").html(result.responseText).show();
         } else {
             alert(this.translations['error.' + key + '.title'] + "\n\n" + this.translations['error.' + key + '.description']);

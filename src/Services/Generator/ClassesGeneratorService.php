@@ -74,7 +74,7 @@ class ClassesGeneratorService extends Injectable
      */
     public function createDataTableClass(string $className, string $table, string $modelClassName, string $formClassName)
     {
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_DATATABLES, '\\'));
+        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_DATATABLES, '\\'));
 
         $namespace->addUse(DataTable::class);
         $namespace->addUse(KikCMSConfig::NAMESPACE_PATH_MODELS . $modelClassName);
