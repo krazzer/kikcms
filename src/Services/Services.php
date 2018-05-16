@@ -48,6 +48,7 @@ use KikCMS\Services\Website\MenuService;
 use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
+use Monolog\Handler\DeduplicationHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
@@ -292,7 +293,7 @@ class Services extends BaseServices
             $handler->setContentType('text/html');
             $handler->setFormatter(new PhalconHtmlFormatter());
 
-            $logger->pushHandler($handler);
+            $logger->pushHandler(new DeduplicationHandler($handler));
         }
 
         $logger->pushHandler(new ErrorLogHandler());
