@@ -111,11 +111,6 @@ class FinderPermissionService extends Injectable
         foreach ($finderFiles as $finderFile) {
             $subFileIds = $this->finderFileService->getFileIdsRecursive($finderFile);
             $allFileIds = array_merge($allFileIds, $subFileIds);
-
-            // add the folder id itself
-            if ($finderFile->isFolder()) {
-                $allFileIds[] = $finderFile->getId();
-            }
         }
 
         return $allFileIds;
@@ -124,11 +119,17 @@ class FinderPermissionService extends Injectable
     /**
      * @param FinderPermissionList $permissionList
      * @param array $fileIds
+     * @param bool $saveRecursively
      * @return bool
+     * @throws Exception
      */
-    public function updateByList(FinderPermissionList $permissionList, array $fileIds): bool
+    public function updateByList(FinderPermissionList $permissionList, array $fileIds, bool $saveRecursively = false): bool
     {
         $this->db->begin();
+
+        if ($saveRecursively) {
+            $fileIds = $this->getFileIdsWithSubFiles($fileIds);
+        }
 
         $this->deleteByFileIds($fileIds);
 

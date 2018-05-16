@@ -343,6 +343,9 @@ class FinderFileService extends Injectable
             $fileIds = $this->getFileIdsRecursive($subFile, $fileIds);
         }
 
+        // add file id itself
+        $fileIds[] = $file->getId();
+
         return $fileIds;
     }
 

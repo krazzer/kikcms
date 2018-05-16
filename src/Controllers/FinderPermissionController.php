@@ -38,7 +38,7 @@ class FinderPermissionController extends BaseCmsController
         $saveRecursively = (bool) $this->request->getPost('recursive');
 
         $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
-        $success        = $this->finderPermissionService->updateByList($permissionList, $fileIds);
+        $success        = $this->finderPermissionService->updateByList($permissionList, $fileIds, $saveRecursively);
 
         return $this->response->setJsonContent([
             'success' => $success,
