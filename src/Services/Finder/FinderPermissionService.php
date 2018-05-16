@@ -54,6 +54,16 @@ class FinderPermissionService extends Injectable
 
                 $permission->save();
             }
+
+            if($this->config->media->publicReadByDefault){
+                $permission = new FinderPermission();
+
+                $permission->role    = Permission::VISITOR;
+                $permission->file_id = $finderFile->getId();
+                $permission->right   = FinderConfig::RIGHT_READ;
+
+                $permission->save();
+            }
         } catch (Exception $e) {
             $this->logger->log(Logger::ERROR, $e);
             $this->db->rollback();

@@ -41,9 +41,14 @@
                                     </label>
                                 </td>
                                 <td class="check">
-                                    <label>
-                                        <input type="checkbox" data-right="write" name="permission[{{ role }}][write]">
-                                    </label>
+                                    {% if role != visitorRole %}
+                                        <label>
+                                            <input type="checkbox" data-right="write"
+                                                   name="permission[{{ role }}][write]">
+                                        </label>
+                                    {% else %}
+                                        <label><input type="checkbox" disabled></label>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

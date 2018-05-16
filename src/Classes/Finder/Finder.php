@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Finder;
 
 use Exception;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
@@ -108,7 +109,8 @@ class Finder extends Renderable
             'path'        => $this->renderPath(),
             'pickingMode' => $this->pickingMode,
             'permission'  => $this->config->media->manageFilePermissions,
-            'roleMap'     => $this->cmsService->getRoleMap(),
+            'roleMap'     => $this->cmsService->getRoleMap(false),
+            'visitorRole' => Permission::VISITOR,
             'userMap'     => $this->finderPermissionService->getEditableUserMap(),
         ]);
     }
@@ -173,7 +175,7 @@ class Finder extends Renderable
     {
         $uploadStatus = new UploadStatus();
 
-        if($overwriteFileId && count($files) !== 1){
+        if ($overwriteFileId && count($files) !== 1) {
             throw new Exception('When overwriting, only 1 file is allowed to upload');
         }
 
@@ -194,8 +196,8 @@ class Finder extends Renderable
                 continue;
             }
 
-            if($overwriteFileId){
-                if($this->finderFileService->overwrite($file, $overwriteFileId)){
+            if ($overwriteFileId) {
+                if ($this->finderFileService->overwrite($file, $overwriteFileId)) {
                     $newFileId = $overwriteFileId;
                 } else {
                     $newFileId = false;
