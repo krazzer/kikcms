@@ -205,8 +205,8 @@ var FinderPermission = Class.extend({
         }
 
         $row.find('input').removeAttr('disabled');
-        $row.find('input:first').attr('name', 'permission[' + val + '][read]');
-        $row.find('input:last').attr('name', 'permission[' + val + '][write]');
+        $row.find('input:first').attr('name', 'permission[' + val + '][read]').attr('data-right', 'read');
+        $row.find('input:last').attr('name', 'permission[' + val + '][write]').attr('data-right', 'write');
     },
 
     /**

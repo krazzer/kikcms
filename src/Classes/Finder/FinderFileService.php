@@ -78,7 +78,7 @@ class FinderFileService extends Injectable
             return false;
         }
 
-        $this->finderPermissionService->create($finderFile);
+        $this->finderPermissionService->createForFile($finderFile);
 
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
@@ -101,7 +101,7 @@ class FinderFileService extends Injectable
 
         $finderDir->save();
 
-        $this->finderPermissionService->create($finderDir);
+        $this->finderPermissionService->createForFile($finderDir);
 
         return (int) $finderDir->id;
     }
@@ -179,7 +179,7 @@ class FinderFileService extends Injectable
             ->where(FinderFile::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
             ->orderBy('is_folder DESC, name ASC');
 
-        if($this->finderPermissionService->filePermissionsAreManaged()){
+        if($this->finderPermissionService->isEnabled()){
             $userId = $this->userService->getUserId();
             $role   = $this->userService->getRole();
 

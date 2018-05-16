@@ -34,35 +34,34 @@ class FinderPermissionService extends Injectable
      * @param FinderFile $finderFile
      * @return bool
      */
-    public function create(FinderFile $finderFile): bool
+    public function createForFile(FinderFile $finderFile): bool
     {
-        if ( ! $this->filePermissionsAreManaged()) {
+        if ( ! $this->isEnabled()) {
             return true;
         }
 
-        $roles = $this->getGreaterAndEqualRoles();
+        if ($this->userLevel()) {
+            $roles = $this->getGreaterRoles();
+        } else {
+            $roles = $this->getGreaterAndEqualRoles();
+        }
+
+        $fileId = $finderFile->getId();
+        $userId = $this->userService->getUserId();
 
         $this->db->begin();
 
         try {
             foreach ($roles as $role) {
-                $permission = new FinderPermission();
-
-                $permission->role    = $role;
-                $permission->file_id = $finderFile->getId();
-                $permission->right   = FinderConfig::RIGHT_WRITE;
-
-                $permission->save();
+                $this->create($role, $fileId, FinderConfig::RIGHT_WRITE);
             }
 
-            if($this->config->media->publicReadByDefault){
-                $permission = new FinderPermission();
+            if ($this->publicByDefault()) {
+                $this->create(Permission::VISITOR, $fileId, FinderConfig::RIGHT_READ);
+            }
 
-                $permission->role    = Permission::VISITOR;
-                $permission->file_id = $finderFile->getId();
-                $permission->right   = FinderConfig::RIGHT_READ;
-
-                $permission->save();
+            if ($this->userLevel()) {
+                $this->create($userId, $fileId, FinderConfig::RIGHT_WRITE);
             }
         } catch (Exception $e) {
             $this->logger->log(Logger::ERROR, $e);
@@ -74,11 +73,31 @@ class FinderPermissionService extends Injectable
     }
 
     /**
+     * @param $userIdOrRole
+     * @param int $fileId
+     * @param string $right
+     */
+    public function create($userIdOrRole, int $fileId, string $right)
+    {
+        $permission = new FinderPermission();
+
+        if(is_numeric($userIdOrRole)){
+            $permission->user_id = $userIdOrRole;
+        } else {
+            $permission->role = $userIdOrRole;
+        }
+        $permission->file_id = $fileId;
+        $permission->right   = $right;
+
+        $permission->save();
+    }
+
+    /**
      * Remove permission records that are editable by current user
      * @param array $fileIds
      * @throws Exception
      */
-    private function deleteByFileIds(array $fileIds)
+    public function deleteByFileIds(array $fileIds)
     {
         $roles   = $this->getEditableRoles();
         $userIds = $this->getEditableUserIds();
@@ -185,9 +204,27 @@ class FinderPermissionService extends Injectable
     /**
      * @return bool
      */
-    public function filePermissionsAreManaged(): bool
+    public function isEnabled(): bool
     {
-        return $this->config->media->manageFilePermissions;
+        return $this->config->media->filePermissionsEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function userLevel(): bool
+    {
+        if($this->config->media->filePermissionsDefaultUser === true){
+            return true;
+        }
+
+        if ($this->config->media->filePermissionsDefaultUser === false) {
+            return false;
+        }
+
+        $roles = (array) $this->config->media->filePermissionsDefaultUser;
+
+        return in_array($this->userService->getRole(), $roles);
     }
 
     /**
@@ -209,7 +246,7 @@ class FinderPermissionService extends Injectable
         $role  = $this->userService->getRole();
         $roles = Permission::ROLES;
 
-        if (in_array($role, [Permission::DEVELOPER, $role == Permission::ADMIN])){
+        if (in_array($role, [Permission::DEVELOPER, $role == Permission::ADMIN])) {
             $roles = array_slice($roles, array_search($role, $roles));
         } else {
             $roles = array_slice($roles, array_search($role, $roles) + 1);
@@ -245,13 +282,21 @@ class FinderPermissionService extends Injectable
     }
 
     /**
+     * @return array
+     */
+    public function getGreaterRoles(): array
+    {
+        return array_slice(Permission::ROLES, 0, array_search($this->userService->getRole(), Permission::ROLES));
+    }
+
+    /**
      * @param string $right
      * @param int $fileId
      * @return bool
      */
     private function can(string $right, int $fileId): bool
     {
-        if ( ! $this->filePermissionsAreManaged()) {
+        if ( ! $this->isEnabled()) {
             return true;
         }
 
@@ -265,5 +310,13 @@ class FinderPermissionService extends Injectable
             ->andWhere('user_id = :userId: OR role = :role:', ['userId' => $userId, 'role' => $role]);
 
         return $this->dbService->getExists($query);
+    }
+
+    /**
+     * @return bool
+     */
+    private function publicByDefault(): bool
+    {
+        return $this->config->media->filePermissionsDefaultPublic;
     }
 }
