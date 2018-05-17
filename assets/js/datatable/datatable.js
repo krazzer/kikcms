@@ -124,7 +124,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (self.getWindow().hasClass('blur') || !self.getForm().length) {
+                if (self.getWindow().hasClass('blur') || !self.getForm().length || !self.getWindow().find('.save').length) {
                     return true;
                 }
 
