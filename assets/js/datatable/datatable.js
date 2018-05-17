@@ -6,6 +6,8 @@ var DataTable = Class.extend({
     currentSearch: null,
     currentFormInput: null,
     parentEditId: null,
+    sortDirection: null,
+    sortColumn: null,
 
     $table: null,
 
@@ -263,17 +265,22 @@ var DataTable = Class.extend({
             var $column      = $(this);
             var column       = $column.attr('data-column');
             var curDirection = $column.attr('data-sort');
-            var direction    = 'asc';
 
-            if (curDirection == 'asc') {
-                direction = 'desc';
-            } else if (curDirection == 'desc') {
-                direction = '';
+            switch (curDirection){
+                case 'asc':
+                    var direction = 'desc';
+                break;
+                case 'desc':
+                    direction = '';
+                    column = '';
+                break;
+                default:
+                    direction = 'asc';
+                break;
             }
 
-            if (!direction) {
-                column = '';
-            }
+            self.sortDirection = direction;
+            self.sortColumn    = column;
 
             self.actionSort(column, direction);
         });
@@ -644,15 +651,10 @@ var DataTable = Class.extend({
         filters.page   = this.getCurrentPage();
         filters.search = this.getSearchField().val();
 
-        this.getDataTable().find('table thead td[data-sort="asc"]').each(function () {
-            filters.sortDirection = 'asc';
-            filters.sortColumn    = $(this).attr('data-column');
-        });
-
-        this.getDataTable().find('table thead td[data-sort="desc"]').each(function () {
-            filters.sortDirection = 'desc';
-            filters.sortColumn    = $(this).attr('data-column');
-        });
+        if (this.sortColumn && this.sortDirection) {
+            filters.sortDirection = this.sortDirection;
+            filters.sortColumn    = this.sortColumn;
+        }
 
         var languageCode       = this.getLanguageCode();
         var windowLanguageCode = this.getWindowLanguageCode();
