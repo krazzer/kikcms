@@ -32,7 +32,7 @@ var FinderPermission = Class.extend({
      * @returns jQuery
      */
     getForm: function () {
-        return this.getModal().find('form');
+        return this.getModal().find('.form');
     },
 
     /**
@@ -40,7 +40,7 @@ var FinderPermission = Class.extend({
      * @returns jQuery
      */
     getModal: function () {
-        return this.finder.getFinder().find('.permissionModal');
+        return $('#permissionModal' + this.finder.renderableInstance);
     },
 
     /**
@@ -59,7 +59,7 @@ var FinderPermission = Class.extend({
 
         KikCMS.action('/cms/finder/permission/get', {fileIds: this.finder.getSelectedFileIds()}, function (response) {
             self.updateModal(response);
-            self.getModal().modal();
+            self.getModal().appendTo("body").modal();
         });
     },
 
@@ -167,7 +167,7 @@ var FinderPermission = Class.extend({
             return;
         }
 
-        var data = this.getForm().serializeObject();
+        var data = this.getForm().find(':input').serializeObject();
 
         data.fileIds = this.finder.getSelectedFileIds();
 

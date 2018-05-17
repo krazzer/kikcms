@@ -4,7 +4,6 @@ namespace KikCMS\Classes\Finder;
 
 
 use KikCMS\Classes\Database\Now;
-use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderPermission;
@@ -518,7 +517,11 @@ class FinderFileService extends Injectable
      */
     private function getHomeFolderId(): int
     {
-        if ($this->acl->allowed(Permission::ACCESS_FINDER_FULL)) {
+        if ( ! $this->finderPermissionService->isEnabled()) {
+            return 0;
+        }
+
+        if( ! $this->userService->getUser()->folder){
             return 0;
         }
 

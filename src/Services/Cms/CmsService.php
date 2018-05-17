@@ -45,7 +45,7 @@ class CmsService extends Injectable
         }
 
         if( ! $this->acl->allowed(Pages::class)){
-            if( ! $this->acl->allowedFinder()){
+            if( ! $this->acl->allowed(Permission::ACCESS_FINDER)){
                 unset($groups[MenuConfig::MENU_GROUP_CONTENT]);
             } else {
                 $groups[MenuConfig::MENU_GROUP_CONTENT]->remove(MenuConfig::MENU_ITEM_PAGES);

@@ -4,7 +4,6 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Models\FinderFolder;
 use KikCMS\ObjectLists\UserMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
@@ -188,48 +187,6 @@ class UserService extends Injectable
         } else {
             return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
         }
-    }
-
-    /**
-     * @param $folderId
-     * @return bool
-     */
-    public function allowedInFolderId($folderId): bool
-    {
-        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
-            return true;
-        }
-
-        $folder = FinderFolder::getById($folderId);
-
-        if( ! $folder){
-            return false;
-        }
-
-        return $this->allowedInFolder($folder);
-    }
-
-    /**
-     * @param FinderFolder $folder
-     * @return bool
-     */
-    public function allowedInFolder(FinderFolder $folder): bool
-    {
-        if($this->acl->allowed(Permission::ACCESS_FINDER_FULL)){
-            return true;
-        }
-
-        $userId = $this->getUserId();
-
-        if($folder->user_id == $userId){
-            return true;
-        }
-
-        if( ! $folder->folder){
-            return false;
-        }
-
-        return $this->allowedInFolder($folder->folder);
     }
 
     /**

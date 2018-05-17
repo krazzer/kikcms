@@ -11,13 +11,14 @@ use Phalcon\Di\Injectable;
 
 /**
  * @property UserService $userService
+ * @property FinderPermissionService $finderPermissionService
  */
 class FinderService extends Injectable
 {
     /**
-     * @return FinderFolder
+     * @return FinderFolder|null
      */
-    public function getUserFolder(): FinderFolder
+    public function getUserFolder(): ?FinderFolder
     {
         return $this->userService->getUser()->folder;
     }
@@ -33,13 +34,15 @@ class FinderService extends Injectable
             return;
         }
 
-        if($this->userService->allowedInFolderId($filters->getFolderId())) {
+        if($this->finderPermissionService->canReadId($filters->getFolderId())) {
             return;
         }
 
-        $userFolderId = $this->getUserFolder()->getId();
+        if( ! $userFolder = $this->getUserFolder()){
+            return;
+        }
 
-        $filters->setFolderId($userFolderId);
+        $filters->setFolderId($userFolder->getId());
     }
 
     /**
@@ -50,7 +53,7 @@ class FinderService extends Injectable
     {
         $folder = FinderFolder::getById($this->session->finderFolderId);
 
-        if ($folder && $this->userService->allowedInFolderId($folder->getId())) {
+        if ($folder && $this->finderPermissionService->canReadId($folder->getId())) {
             $filters->setFolderId($folder->getId());
             return;
         }

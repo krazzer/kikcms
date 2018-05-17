@@ -62,11 +62,11 @@ class Finder extends Renderable
      */
     public function allowedInCurrentFolder(): bool
     {
-        if ( ! $this->acl->allowedFinder()) {
-            return false;
+        if( ! $folderId = $this->getFilters()->getFolderId()){
+            return true;
         }
 
-        return $this->userService->allowedInFolderId($this->getFilters()->getFolderId());
+        return $this->finderPermissionService->canReadId($folderId);
     }
 
     /**

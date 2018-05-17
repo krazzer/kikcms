@@ -60,22 +60,6 @@ class AccessControl extends Memory
     /**
      * @return bool
      */
-    public function allowedFinder(): bool
-    {
-        if ($this->allowed(Permission::ACCESS_FINDER_FULL)) {
-            return true;
-        }
-
-        if($this->allowed(Permission::ACCESS_FINDER_FOLDER)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
     public function canDeleteMenu(): bool
     {
         return $this->allowed(Permission::PAGE_MENU, Permission::ACCESS_DELETE);

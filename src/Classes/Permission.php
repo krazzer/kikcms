@@ -34,8 +34,7 @@ class Permission extends Injectable
     const ACCESS_VIEW   = 'view';
 
     const ACCESS_DATATABLES_DEFAULT = 'AccessDataTablesDefault';
-    const ACCESS_FINDER_FULL        = 'AccessFinderFull';
-    const ACCESS_FINDER_FOLDER      = 'AccessFinderFolder';
+    const ACCESS_FINDER             = 'AccessFinder';
     const ACCESS_STATISTICS         = 'AccessStatistics';
     const PAGE_MENU                 = 'pageMenu';
     const PAGE_KEY                  = 'pageKey';
@@ -103,7 +102,7 @@ class Permission extends Injectable
     private function addDataTablePermissions(AccessControl $acl)
     {
         $acl->addResource(self::ACCESS_DATATABLES_DEFAULT);
-        $acl->addResource(self::ACCESS_FINDER_FULL);
+        $acl->addResource(self::ACCESS_FINDER);
         $acl->addResource(self::ACCESS_STATISTICS);
 
         $acl->addResource(Languages::class);
@@ -114,9 +113,9 @@ class Permission extends Injectable
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES_DEFAULT);
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES_DEFAULT);
 
-        $acl->allow(self::DEVELOPER, self::ACCESS_FINDER_FULL);
-        $acl->allow(self::ADMIN, self::ACCESS_FINDER_FULL);
-        $acl->allow(self::USER, self::ACCESS_FINDER_FULL);
+        $acl->allow(self::DEVELOPER, self::ACCESS_FINDER);
+        $acl->allow(self::ADMIN, self::ACCESS_FINDER);
+        $acl->allow(self::USER, self::ACCESS_FINDER);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_STATISTICS);
         $acl->allow(self::ADMIN, self::ACCESS_STATISTICS);

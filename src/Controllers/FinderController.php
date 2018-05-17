@@ -159,10 +159,6 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        if ( ! $this->userService->allowedInFolderId($targetFolderId)) {
-            throw new UnauthorizedException();
-        }
-
         $this->session->finderFolderId = $targetFolderId;
 
         $finder = $this->getRenderable();
