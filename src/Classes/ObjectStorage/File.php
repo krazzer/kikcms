@@ -15,6 +15,14 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
+    public function exists(string $fileName, string $dir = ''): bool
+    {
+        return file_exists($this->getStorageDir() . $dir . '/' . $fileName);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getStorageDir()
     {
         return $this->storageDir;

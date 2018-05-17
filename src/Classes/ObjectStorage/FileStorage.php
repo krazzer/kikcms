@@ -13,6 +13,13 @@ interface FileStorage
     public function getStorageDir();
 
     /**
+     * @param string $fileName
+     * @param string $dir
+     * @return bool
+     */
+    public function exists(string $fileName, string $dir = ''): bool;
+
+    /**
      * @param mixed $storageDir
      * @return $this
      */
