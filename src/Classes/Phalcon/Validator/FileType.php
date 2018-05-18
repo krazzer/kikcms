@@ -13,6 +13,13 @@ class FileType extends Validator
     const OPTION_FILETYPES = 'fileTypes';
 
     /**
+     * Override to set allowed filetypes
+     *
+     * @var array
+     */
+    protected $fileTypes = [];
+
+    /**
      * @inheritdoc
      */
     public function validate(Validation $validator, $field)
@@ -23,7 +30,9 @@ class FileType extends Validator
             return true;
         }
 
-        $allowedFileTypes = $this->getOption(self::OPTION_FILETYPES);
+        if( ! $allowedFileTypes = $this->getOption(self::OPTION_FILETYPES)){
+            $allowedFileTypes = $this->fileTypes;
+        }
 
         $finderFile = FinderFile::getById($value);
 
