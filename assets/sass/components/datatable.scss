@@ -380,6 +380,10 @@ body {
                             background-color: $colorPink;
                             color: $colorWhite;
 
+                            svg{
+                                fill: $colorWhite;
+                            }
+
                             &.action a{
                                 color: $colorWhite;
                             }
