@@ -88,7 +88,7 @@
     }
 }
 
-.draggedObject {
+span.draggedObject {
     @include draggablePageName();
 }
 

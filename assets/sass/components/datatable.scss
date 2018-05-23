@@ -1,6 +1,20 @@
 @import "../includes/variables";
 @import "../includes/mixins";
 
+@mixin thumbChild() {
+    .thumb {
+        cursor: zoom-in;
+        width: 34px;
+        height: 34px;
+        top: 0;
+        margin-bottom: -7px;
+        margin-top: -7px;
+        background-size: cover;
+        background-position: center center;
+        border-radius: $defaultBorderRadius;
+    }
+}
+
 body {
 
     > *:not(.dataTableWindow) {
@@ -42,10 +56,10 @@ body {
     }
 }
 
-:root > body.datatableBlur{
+:root > body.datatableBlur {
     overflow: hidden;
 
-    > #menu, > #main{
+    > #menu, > #main {
         @include blur(6);
         @include noTextSelect();
         pointer-events: none;
@@ -151,7 +165,7 @@ body {
                 overflow: hidden;
             }
 
-            &.has-filters .lbl{
+            &.has-filters .lbl {
                 width: calc(100% - 150px);
             }
 
@@ -246,23 +260,23 @@ body {
                 font-size: $fontSizeDefault;
                 line-height: 22px;
 
-                select[name=language]{
+                select[name=language] {
                     height: 22px;
                     font-size: $fontSizeSmall;
                 }
             }
 
-            > .content{
+            > .content {
                 padding-top: 15px;
                 padding-bottom: 15px;
             }
 
-            > .tabs .tab{
+            > .tabs .tab {
                 padding-top: 5px;
                 padding-bottom: 5px;
             }
 
-            > .footer button{
+            > .footer button {
                 padding-top: 3px;
                 padding-bottom: 3px;
             }
@@ -270,7 +284,7 @@ body {
     }
 }
 
-.datatable{
+.datatable {
 
     .pages {
         @include noTextSelect();
@@ -319,7 +333,7 @@ body {
                     position: relative;
                     cursor: pointer;
 
-                    .glyphicon{
+                    .glyphicon {
                         position: absolute;
                         top: auto;
                         margin-left: 8px;
@@ -334,24 +348,13 @@ body {
                 tr {
                     cursor: default;
 
-                    td{
+                    td {
                         transition: padding 0.3s;
                         @include noTextSelect();
+                        @include thumbChild();
 
-                        .highlight{
+                        .highlight {
                             background-color: $highLightColor;
-                        }
-
-                        .thumb {
-                            cursor: zoom-in;
-                            width: 34px;
-                            height: 34px;
-                            top: 0;
-                            margin-bottom: -7px;
-                            margin-top: -7px;
-                            background-size: cover;
-                            background-position: center center;
-                            border-radius: $defaultBorderRadius;
                         }
                     }
 
@@ -365,38 +368,38 @@ body {
                         }
                     }
 
-                    &.edited{
+                    &.edited {
                         td {
                             background-color: $highLightColor;
                         }
 
-                        &:hover td{
+                        &:hover td {
                             background-color: $highLightColorDark;
                         }
                     }
 
-                    &.selected{
+                    &.selected {
                         td {
                             background-color: $colorPink;
                             color: $colorWhite;
 
-                            svg{
+                            svg {
                                 fill: $colorWhite;
                             }
 
-                            &.action a{
+                            &.action a {
                                 color: $colorWhite;
                             }
 
-                            .highlight{
+                            .highlight {
                                 background-color: $pinkDark;
                             }
                         }
 
-                        &:hover td{
+                        &:hover td {
                             background-color: $pinkDark;
 
-                            .highlight{
+                            .highlight {
                                 background-color: $pinkDarker;
                             }
                         }
@@ -408,7 +411,7 @@ body {
                             width: 44px;
                             cursor: pointer;
 
-                            a{
+                            a {
                                 color: $colorBlack;
                                 text-decoration: none;
                             }
@@ -437,12 +440,12 @@ body {
             }
         }
 
-        .no-data{
+        .no-data {
             padding: 8px 0;
         }
     }
 
-    > .footer{
+    > .footer {
         @include clearFix();
     }
 }
@@ -461,6 +464,7 @@ body {
         box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
 
         td {
+            @include thumbChild();
             padding: $dataTableCellPadding;
         }
 
