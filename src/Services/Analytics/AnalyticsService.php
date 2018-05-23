@@ -206,23 +206,27 @@ class AnalyticsService extends Injectable
 
         $maxDate = $this->getMaxDate();
 
+        // if there are 0 zero stats, or today isn't present yet
         if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+            $this->stopUpdatingForSixHours();
             return true;
         }
 
-        $typeMaxDates = $this->getMaxDatePerVisitDataType();
-
-        if ( ! $typeMaxDates) {
+        // if there are no visitor data stats
+        if ( ! $typeMaxDates = $this->getMaxDatePerVisitDataType()) {
+            $this->stopUpdatingForSixHours();
             return true;
         }
 
+        // if there are no visitor data stats for today
         foreach ($typeMaxDates as $type => $maxDate) {
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+                $this->stopUpdatingForSixHours();
                 return true;
             }
         }
 
-        $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
+        $this->stopUpdatingForSixHours();
 
         return false;
     }
@@ -540,5 +544,10 @@ class AnalyticsService extends Injectable
 
             $this->dbService->insertBulk(GaVisitData::class, $insertData);
         }
+    }
+
+    private function stopUpdatingForSixHours()
+    {
+        $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
     }
 }
