@@ -4,6 +4,7 @@
 namespace KikCMS\Classes\Finder;
 
 
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;
@@ -96,15 +97,22 @@ class FinderPermissionHelper extends Injectable
 
         $data = $this->dbService->getKeyedRows($query);
 
-        foreach ($data as $key => &$datum) {
-            if(!in_array($key, $userIds) && !in_array($key, $roles)){
-                $datum['disabled'] = true;
+        foreach ($data as $key => $datum) {
+            if ( ! in_array($key, $userIds) && ! in_array($key, $roles)) {
+                $data[$key]['disabled'] = true;
             }
 
             foreach (['read', 'write'] as $type) {
                 if ($datum[$type]) {
-                    $datum[$type] = $datum[$type] == count($fileIds) ? 1 : 2;
+                    $data[$key][$type] = $datum[$type] == count($fileIds) ? 1 : 2;
                 }
+            }
+        }
+
+        // disable other roles
+        foreach (Permission::ROLES as $role) {
+            if ( ! array_key_exists($role, $data)) {
+                $data[$role] = ['disabled' => (int) ! in_array($role, $roles)];
             }
         }
 
