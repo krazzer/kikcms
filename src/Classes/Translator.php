@@ -11,6 +11,7 @@ use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\TranslationService;
+use Monolog\Logger;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -23,6 +24,7 @@ use Website\Classes\WebsiteSettings;
  * @property Backend $cache
  * @property LanguageService $languageService
  * @property WebsiteSettings $websiteSettings
+ * @property Logger $logger
  */
 class Translator extends Injectable
 {
@@ -59,8 +61,10 @@ class Translator extends Injectable
 
             $translations = $this->getTranslations($langCode);
 
+            // if translation is not found, log the error, and return key instead
             if ( ! array_key_exists($key, $translations)) {
-                throw new \InvalidArgumentException('Translation key "' . $key . '" does not exist');
+                $this->logger->log(Logger::ERROR, 'Translation key "' . $key . '" does not exist');
+                return $key;
             }
 
             $translation = $translations[$key];
