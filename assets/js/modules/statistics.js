@@ -11,10 +11,10 @@ var Statistics = Class.extend({
     COLOR_PINK: '#3669c9',
     COLOR_BLUE: '#df137a',
 
-    STR_FETCHING_NEW_DATA: KikCMS.translations['statistics.fetchingNewData'],
-    STR_FETCHING_FAILED: KikCMS.translations['statistics.fetchingFailed'],
-    STR_FETCH_NEW_DATA: KikCMS.translations['statistics.fetchNewData'],
-    STR_VISITORS: KikCMS.translations['statistics.visitors'],
+    STR_FETCHING_NEW_DATA: null,
+    STR_FETCHING_FAILED: null,
+    STR_FETCH_NEW_DATA: null,
+    STR_VISITORS: null,
 
     URL_GET_VISITORS: '/cms/stats/getVisitors',
     URL_UPDATE_STATISTICS: '/cms/stats/update',
@@ -46,7 +46,7 @@ var Statistics = Class.extend({
      * Initialize the Statistics component
      */
     init: function () {
-        if(typeof google == 'undefined' || ! $('#visitors').length){
+        if (typeof google == 'undefined' || !$('#visitors').length) {
             return;
         }
 
@@ -79,6 +79,11 @@ var Statistics = Class.extend({
         this.$tableOverviewBody = $('#tab-overview').find('table tbody');
 
         this.$buttonRefreshLbl = this.$buttonRefresh.find('.lbl');
+
+        this.STR_FETCHING_NEW_DATA = KikCMS.translations['statistics.fetchingNewData'];
+        this.STR_FETCHING_FAILED   = KikCMS.translations['statistics.fetchingFailed'];
+        this.STR_FETCH_NEW_DATA    = KikCMS.translations['statistics.fetchNewData'];
+        this.STR_VISITORS          = KikCMS.translations['statistics.visitors'];
     },
 
     /**
@@ -126,6 +131,7 @@ var Statistics = Class.extend({
     onDataUpdate: function (response) {
         if (!response.success) {
             this.$buttonRefresh.removeClass(this.CLASS_LOADING);
+            this.$buttonRefresh.addClass(this.CLASS_FAILED);
             this.$buttonRefreshLbl.text(this.STR_FETCHING_FAILED);
             return;
         }
@@ -138,7 +144,7 @@ var Statistics = Class.extend({
 
         this.$buttonRefreshLbl.text(this.STR_FETCH_NEW_DATA);
 
-        this.$rangeInputs.each(function() {
+        this.$rangeInputs.each(function () {
             $(this).data("DateTimePicker").maxDate(moment(response.maxDate));
         });
     },
@@ -170,6 +176,10 @@ var Statistics = Class.extend({
         }
 
         if (this.$buttonRefresh.hasClass(this.CLASS_FAILED)) {
+            this.$buttonRefresh.removeClass(this.CLASS_FAILED);
+            this.$buttonRefresh.addClass(this.CLASS_LOADING);
+            this.$buttonRefreshLbl.text(this.STR_FETCHING_NEW_DATA);
+
             this.updateAnalyticsData();
             return false;
         }
@@ -264,7 +274,8 @@ var Statistics = Class.extend({
         $.ajax({
             url: this.URL_UPDATE_STATISTICS,
             success: this.onDataUpdate.bind(this),
-            dataType: 'json'
+            dataType: 'json',
+            cache: false
         });
     }
 });
