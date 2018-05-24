@@ -56,6 +56,7 @@ class AnalyticsService extends Injectable
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
             $this->diskCache->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+            $this->cache->delete(CacheConfig::STATS_REQUIRE_UPDATE);
             return false;
         }
 
