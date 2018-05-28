@@ -12,6 +12,7 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\Filter\IntArray;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
@@ -59,6 +60,7 @@ use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
+use Phalcon\Filter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
@@ -242,6 +244,18 @@ class Services extends BaseServices
         $fileStorage->setStorageDir(SITE_PATH . 'storage/');
 
         return $fileStorage;
+    }
+
+    /**
+     * @return Filter
+     */
+    protected function initFilter(): Filter
+    {
+        $filter = new Filter();
+
+        $filter->add('intArray', new IntArray);
+
+        return $filter;
     }
 
     /**
