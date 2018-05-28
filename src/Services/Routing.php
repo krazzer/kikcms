@@ -102,8 +102,6 @@ class Routing extends Injectable
             "type"       => 1,
         ]);
 
-        $frontend->add("/deploy", "Deploy::index");
-
         $router->mount($frontend);
         $router->mount($backend);
 
