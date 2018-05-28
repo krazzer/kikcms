@@ -86,7 +86,6 @@ class Services extends BaseServices
             GeneratorService::class,
             DateTimeService::class,
             DbService::class,
-            DeployService::class,
             ImageHandler::class,
             FinderService::class,
             FinderPermissionService::class,
