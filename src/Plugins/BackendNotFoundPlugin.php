@@ -8,6 +8,7 @@ use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Config\StatusCodes;
+use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
 use Phalcon\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
@@ -18,6 +19,8 @@ use Phalcon\Mvc\User\Plugin;
  * NotFoundPlugin
  *
  * Handles not-found controller/actions
+ *
+ * @property UserService $userService
  */
 class BackendNotFoundPlugin extends Plugin
 {
