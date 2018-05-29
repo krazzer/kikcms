@@ -111,7 +111,7 @@ class Services extends BaseServices
             UserService::class,
         ];
 
-        return array_merge($services, $this->getWebsiteServices());
+        return array_merge($services, $this->getWebsiteSimpleServices());
     }
 
     /**
@@ -130,12 +130,21 @@ class Services extends BaseServices
     /**
      * @return array
      */
-    protected function getWebsiteServices(): array
+    protected function getWebsiteSimpleServices(): array
     {
         /** @var WebsiteService $websiteService */
         $websiteServices = $this->get('websiteSettings');
 
-        return $websiteServices->getServices();
+        $services       = $websiteServices->getServices();
+        $simpleServices = [];
+
+        foreach ($services as $service){
+            if(is_string($service)){
+                $simpleServices[] = $service;
+            }
+        }
+
+        return $simpleServices;
     }
 
     /**

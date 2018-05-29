@@ -100,12 +100,4 @@ class WebsiteSettingsBase extends WebsiteExtendable
     {
         return [];
     }
-
-    /**
-     * @return array
-     */
-    public function getOverloadedServices(): array
-    {
-        return [];
-    }
 }
