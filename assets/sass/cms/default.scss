@@ -1,29 +1,56 @@
 @import "../includes/variables";
 @import "../includes/mixins";
 
-html, body{
+html, body {
     height: 100%;
     -webkit-font-smoothing: subpixel-antialiased;
     background-color: $colorWhite;
     color: $colorBlack;
 }
 
-body, table{
+body, table {
     @include fontDefault();
 }
 
-body, input, select, textarea, table td, table th, .btn, .form-control{
+body, input, select, textarea, table td, table th, .btn, .form-control {
     font-size: $fontSizeDefault;
+
+    @media #{$heightBelowHd} {
+        font-size: $fontSizeSmall;
+    }
 }
 
-a{
+a {
     color: $colorPink;
 
-    &:hover{
+    &:hover {
         color: $pinkDark;
     }
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
+}
+
+@media #{$heightBelowHd} {
+    .form-control {
+        padding: 4px 8px;
+        height: 26px;
+    }
+
+    .form-group {
+        margin-bottom: 8px;
+    }
+
+    .toolbarComponent .form-control {
+        height: 33px;
+    }
+
+    .form-group.type-checkbox .checkbox {
+        margin: 5px 0;
+    }
+
+    .form-group.type-checkbox~.form-group.type-checkbox .checkbox {
+        margin: 0 0 5px;
+    }
 }

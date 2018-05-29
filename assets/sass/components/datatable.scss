@@ -251,12 +251,13 @@ body {
         > .closeButton {
             @include close(20);
             top: 11px;
+            right: 30px;
         }
 
         > .windowContent {
 
             > .header {
-                padding: 10px 90px 10px 50px;
+                padding: 10px 70px 10px 30px;
                 font-size: $fontSizeDefault;
                 line-height: 22px;
 
@@ -267,13 +268,11 @@ body {
             }
 
             > .content {
-                padding-top: 15px;
-                padding-bottom: 15px;
+                padding: 15px 30px;
             }
 
             > .tabs .tab {
-                padding-top: 5px;
-                padding-bottom: 5px;
+                padding: 5px 30px;
             }
 
             > .footer button {
