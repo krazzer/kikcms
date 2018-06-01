@@ -196,6 +196,11 @@ class UrlService extends Injectable
             return implode('/', array_reverse($urlParts));
         });
 
+        // external urls never need a leading slash, so just return
+        if(substr($url, 0, 4) == 'http'){
+            return $url;
+        }
+
         return ($addLeadingSlash ? '/' : '') . $url;
     }
 
