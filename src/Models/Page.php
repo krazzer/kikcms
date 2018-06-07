@@ -4,10 +4,12 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCmsCore\Classes\Model;
+use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * @property Page $parent
  * @property Page[] $aliases
+ * @property Simple|PageLanguage[] $pageLanguages
  */
 class Page extends Model
 {
@@ -50,6 +52,7 @@ class Page extends Model
 
         $this->belongsTo(self::FIELD_PARENT_ID, Page::class, Page::FIELD_ID, ["alias" => "parent"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
+        $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
     }
 
     /**
@@ -76,6 +79,16 @@ class Page extends Model
     public function getId(): int
     {
         return (int) $this->id;
+    }
+
+    /**
+     * Retrieves the name of the page, this only works for single-language applications
+     *
+     * @return null|string
+     */
+    public function getName(): ?string
+    {
+        return $this->pageLanguages->getFirst()->name;
     }
 
     /**
