@@ -6,8 +6,7 @@
     "twig/twig": "~1.0",
     "monolog/monolog": "^1.22",
     "google/apiclient": "^2.0",
-    "nette/php-generator": "^3.1",
-    "phalcon/devtools": "^3.4"
+    "nette/php-generator": "^3.1"
   },
   "autoload": {
     "psr-4": {
