@@ -148,7 +148,6 @@
 
 {%- block fieldRadioButton %}
     {# @var field \KikCMS\Classes\WebForm\Fields\RadioButtonField #}
-    {{ dump(field.element.value) }}
     <div{{ fieldContainterAttributes|raw }}>
         {{ block('fieldLabel') }}
         {% for key, label  in field.options %}
