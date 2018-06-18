@@ -16,6 +16,7 @@ use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckboxField;
 use KikCMS\Classes\WebForm\Fields\PasswordField;
+use KikCMS\Classes\WebForm\Fields\RadioButtonField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Classes\WebForm\Fields\TextareaField;
@@ -149,6 +150,18 @@ trait FieldShortcuts
     public function addDataTableSelectField(string $key, SelectDataTable $dataTable, string $label)
     {
         return $this->addField(new SelectDataTableField($key, $dataTable, $label));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $options
+     * @param array $validators
+     * @return Field|RadioButtonField
+     */
+    public function addRadioButtonField(string $key, string $label, array $options, array $validators = []): Field
+    {
+        return $this->addField(new RadioButtonField($key, $label, $options, $validators));
     }
 
     /**

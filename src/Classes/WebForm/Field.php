@@ -29,6 +29,7 @@ class Field
     const TYPE_HTML              = 'html';
     const TYPE_MULTI_CHECKBOX    = 'multiCheckbox';
     const TYPE_SELECT            = 'select';
+    const TYPE_RADIOBUTTON       = 'radioButton';
     const TYPE_SELECT_DATA_TABLE = 'selectDataTable';
     const TYPE_TEXTAREA          = 'textarea';
     const TYPE_WYSIWYG           = 'wysiwyg';

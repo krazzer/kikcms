@@ -146,6 +146,23 @@
     </div>
 {% endblock %}
 
+{%- block fieldRadioButton %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\RadioButtonField #}
+    {{ dump(field.element.value) }}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ block('fieldLabel') }}
+        {% for key, label  in field.options %}
+            {% set checked = field.element.value == key ? ' checked="checked"' : '' %}
+            <div class="radio">
+                <label>
+                    <input type="radio" name="{{ element.name }}" value="{{ key }}"{{ checked }}>
+                    {{ label }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {%- block fieldSelectDataTable -%}
     {{ block('fieldDataTable') }}
 {%- endblock -%}
