@@ -76,7 +76,11 @@
     {% endif %}
 
     <div class="table">
-        {% include '@kikcms/' ~ self.tableView ~ '.twig' %}
+        {% if '@' in self.tableView %}
+            {% include self.tableView ~ '.twig' %}
+        {% else %}
+            {% include '@kikcms/' ~ self.tableView ~ '.twig' %}
+        {% endif %}
     </div>
 
     <div class="footer">
