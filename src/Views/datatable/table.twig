@@ -57,7 +57,13 @@
                     {% for tableButton in self.tableButtons %}
                         <td class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
                             {% if tableButton.hasUrl %}
-                                <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}" class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
+                                {% if tableButton.icon ends with '.svg' %}
+                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}">
+                                        {{ source(tableButton.icon) }}
+                                    </a>
+                                {% else %}
+                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}" class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
+                                {% endif %}
                             {% else %}
                                 <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
                             {% endif %}

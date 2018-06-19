@@ -419,6 +419,10 @@ body {
                                 display: none;
                                 margin-top: -2px;
                             }
+
+                            svg{
+                                display: none;
+                            }
                         }
 
                         &.sort {
@@ -429,7 +433,7 @@ body {
                     &:hover {
                         td {
                             &.action {
-                                .glyphicon {
+                                .glyphicon, svg {
                                     display: block;
                                 }
                             }
@@ -468,7 +472,7 @@ body {
         }
 
         .action {
-            .glyphicon {
+            .glyphicon, svg {
                 display: none;
             }
         }
