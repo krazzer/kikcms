@@ -129,7 +129,7 @@ class FrontendController extends BaseController
 
         $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
         $websiteVariables  = $this->templateVariables->getGlobalVariables();
-        $templateVariables = $this->templateVariables->getTemplateVariables($templateFile);
+        $templateVariables = $this->templateVariables->getTemplateVariables($templateFile, $fieldVariables);
 
         // in case a form has been send, it might want to redirect
         if ($templateVariables instanceof Response) {

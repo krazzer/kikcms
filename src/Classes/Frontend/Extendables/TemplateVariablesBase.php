@@ -23,9 +23,10 @@ class TemplateVariablesBase extends WebsiteExtendable
 
     /**
      * @param string $templateFile
+     * @param array $fieldVariables
      * @return array|Response
      */
-    public function getTemplateVariables(string $templateFile)
+    public function getTemplateVariables(string $templateFile, array $fieldVariables)
     {
         $methodName = 'get' . ucfirst($templateFile) . 'Variables';
 
@@ -33,6 +34,6 @@ class TemplateVariablesBase extends WebsiteExtendable
             return [];
         }
 
-        return $this->$methodName();
+        return $this->$methodName($fieldVariables);
     }
 }

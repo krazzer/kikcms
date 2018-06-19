@@ -10,6 +10,8 @@ use Phalcon\Mvc\Model\Resultset\Simple;
  * @property Page $parent
  * @property Page[] $aliases
  * @property Simple|PageLanguage[] $pageLanguages
+ * @property Simple|PageLanguageContent[] $pageLanguageContents
+ * @property Simple|PageContent[] $pageContents
  */
 class Page extends Model
 {
@@ -53,6 +55,8 @@ class Page extends Model
         $this->belongsTo(self::FIELD_PARENT_ID, Page::class, Page::FIELD_ID, ["alias" => "parent"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
         $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
+        $this->hasMany(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, ["alias" => "pageContents"]);
+        $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, ["alias" => "pageLanguageContents"]);
     }
 
     /**
