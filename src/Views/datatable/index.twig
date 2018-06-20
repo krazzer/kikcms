@@ -65,7 +65,7 @@
                     <select class="form-control" name="{{ filter.field }}">
                         <option value="">{{ tl('dataTable.showAll') }}</option>
                         {% for key, value in filter.options %}
-                            <option {{ key == filter.default ? 'selected="selected"' }} value="{{ key }}">
+                            <option {{ key is same as (filter.default) ? 'selected="selected"' }} value="{{ key }}">
                                 {{ value|raw }}
                             </option>
                         {% endfor %}
