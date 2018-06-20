@@ -35,7 +35,7 @@ class GeneratorService extends Injectable
     /**
      * @param string $table
      */
-    private function generateForTable(string $table)
+    public function generateForTable(string $table)
     {
         $className = $this->getClassName($table);
 
