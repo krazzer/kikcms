@@ -21,6 +21,6 @@
     "bootstrap-sass": "^3.3.7",
     "moment": "^2.19.1",
     "tinymce": "tinymce-dist#^4.7.1",
-    "jquery": "3.1.*"
+    "jquery": "3.*"
   }
 }
