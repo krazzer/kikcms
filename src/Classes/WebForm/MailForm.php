@@ -19,9 +19,9 @@ abstract class MailForm extends WebForm
     }
 
     /**
-     * @return string
+     * @return string|array
      */
-    protected function getToAddress(): string
+    protected function getToAddress()
     {
         return $this->config->website->adminEmail;
     }
