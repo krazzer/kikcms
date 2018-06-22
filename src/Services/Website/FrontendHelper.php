@@ -7,6 +7,7 @@ use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
@@ -155,6 +156,14 @@ class FrontendHelper extends Injectable
     public function getCurrentPageLanguage(): PageLanguage
     {
         return $this->currentPageLanguage;
+    }
+
+    /**
+     * @return Page
+     */
+    public function getPage(): Page
+    {
+        return $this->currentPageLanguage->page;
     }
 
     /**
