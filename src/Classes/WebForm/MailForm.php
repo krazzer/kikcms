@@ -19,15 +19,21 @@ abstract class MailForm extends WebForm
     }
 
     /**
+     * @return string
+     */
+    protected function getToAddress(): string
+    {
+        return $this->config->website->adminEmail;
+    }
+
+    /**
      * @param array $input
      * @return bool|Response
      */
     protected function successAction(array $input)
     {
-        $adminEmail = $this->config->website->adminEmail;
-
         $contents = $this->toMailOutput($input);
-        $mailSend = $this->mailService->sendServiceMail($adminEmail, $this->getSubject(), $contents);
+        $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents);
 
         if( ! $mailSend){
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
