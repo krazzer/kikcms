@@ -15,6 +15,9 @@ use Phalcon\Mvc\Model\Query\Builder;
  */
 class PageContentService extends Injectable
 {
+    /** @var array */
+    private $localPageVariablesCache = [];
+
     /**
      * @param PageLanguage $pageLanguage
      * @return array
@@ -23,6 +26,10 @@ class PageContentService extends Injectable
     {
         $pageId   = $pageLanguage->getPageId();
         $langCode = $pageLanguage->getLanguageCode();
+
+        if (array_key_exists($pageId . $langCode, $this->localPageVariablesCache)) {
+            return $this->localPageVariablesCache[$pageId . $langCode];
+        }
 
         $query = (new Builder)
             ->from(['pc' => PageContent::class])
@@ -36,7 +43,11 @@ class PageContentService extends Injectable
             ])
             ->columns(['plc.field', 'plc.value']);
 
-        return $this->dbService->getAssoc($query) + $this->dbService->getAssoc($queryMultiLingual);
+        $pageVariables = $this->dbService->getAssoc($query) + $this->dbService->getAssoc($queryMultiLingual);
+
+        $this->localPageVariablesCache[$pageId . $langCode] = $pageVariables;
+
+        return $pageVariables;
     }
 
     /**
