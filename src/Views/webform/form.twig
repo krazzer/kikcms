@@ -12,7 +12,7 @@
 <div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}" data-id="{{ filters.editId }}">
     {{ form({name: 'form'}) }}
 
-    {% if flash %}
+    {% if flash and not anotherFormIsPosted %}
         {{ flash.output }}
     {% endif %}
 

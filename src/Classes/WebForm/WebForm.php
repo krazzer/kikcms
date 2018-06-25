@@ -283,7 +283,7 @@ abstract class WebForm extends Renderable
     /**
      * @return string
      */
-    private function getFormId(): string
+    public function getFormId(): string
     {
         return str_replace('\\', '', static::class);
     }
@@ -481,6 +481,7 @@ abstract class WebForm extends Renderable
             'placeHolderAsLabel'  => $this->isPlaceHolderAsLabel(),
             'instance'            => $this->getInstance(),
             'jsData'              => $this->getJsData(),
+            'anotherFormIsPosted' => $this->anotherFormIsPosted(),
             'class'               => static::class,
             'errorContainer'      => $errorContainer,
             'webForm'             => $this,
@@ -587,7 +588,7 @@ abstract class WebForm extends Renderable
             return;
         }
 
-        if( ! $field->getFormat()){
+        if ( ! $field->getFormat()) {
             $field->setFormat($this->dateTimeService->getDateFormat());
         }
 
@@ -618,5 +619,17 @@ abstract class WebForm extends Renderable
                 $field->setDefault($instance);
             }
         }
+    }
+
+    /**
+     * @return bool
+     */
+    private function anotherFormIsPosted(): bool
+    {
+        if ( ! $webFormClass = $this->request->getPost(self::WEB_FORM_ID)) {
+            return false;
+        }
+
+        return ! $this->isPosted();
     }
 }
