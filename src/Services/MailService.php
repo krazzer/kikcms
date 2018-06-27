@@ -84,7 +84,7 @@ class MailService extends Injectable
             ->setSubject($subject)
             ->setBody($body, 'text/html');
 
-        foreach ($attachments as $attachment){
+        foreach ($attachments as $attachment) {
             $message->attach(Swift_Attachment::fromPath($attachment));
         }
 
@@ -104,20 +104,7 @@ class MailService extends Injectable
      */
     public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
     {
-        $companyName  = $this->config->company->name;
-
-        $parameters = array_merge([
-            'logo'    => $this->config->company->logoMail,
-            'address' => $companyName . ', ' . $this->config->company->address,
-        ], $parameters);
-
-        if(isset($this->config->company->mainColor)){
-            $parameters['mainColor'] = $this->config->company->mainColor;
-        }
-
-        if(isset($this->config->company->mainColorDark)){
-            $parameters['mainColorDark'] = $this->config->company->mainColorDark;
-        }
+        $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
         return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
     }
@@ -130,16 +117,39 @@ class MailService extends Injectable
      * @param string $body
      * @param array $parameters
      *
+     * @param array $attachments
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendServiceMail($to, string $subject, string $body, array $parameters = []): int
+    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
+    {
+        $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
+
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
+    }
+
+    /**
+     * Update the e-mail template's parameters with data for the company's appearance for the e-mail
+     *
+     * @param array $parameters
+     * @param Config $config
+     * @return array
+     */
+    private function updateParametersWithCompanyData(array $parameters, Config $config): array
     {
         $parameters = array_merge([
-            'logo'    => 'cmsassets/images/kikcms.png',
-            'address' => 'Kiksaus, Heinenwaard 4, 1824 DZ Alkmaar',
+            'logo'    => $config->logoMail,
+            'address' => $config->name . ', ' . $config->address,
         ], $parameters);
 
-        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters);
+        if (isset($config->mainColor)) {
+            $parameters['mainColor'] = $config->mainColor;
+        }
+
+        if (isset($config->mainColorDark)) {
+            $parameters['mainColorDark'] = $config->mainColorDark;
+        }
+
+        return $parameters;
     }
 
     /**
@@ -147,8 +157,8 @@ class MailService extends Injectable
      */
     private function getDefaultFrom()
     {
-        if( ! $domain = $this->config->application->get('domain')){
-            if( ! @$this->request) {
+        if ( ! $domain = $this->config->application->get('domain')) {
+            if ( ! @$this->request) {
                 throw new Exception('Domain to send from is unknown. Please set the application.domain setting');
             } else {
                 $domain = $this->request->getServerName();
@@ -157,7 +167,7 @@ class MailService extends Injectable
 
         $from = 'noreply@' . $domain;
 
-        if($companyName = $this->config->get('company')->get('name')){
+        if ($companyName = $this->config->get('company')->get('name')) {
             return [$from => $companyName];
         }
 
