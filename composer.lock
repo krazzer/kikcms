@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c31ab76f4734c695f2d36ac606f2046b",
+    "content-hash": "8daa1fa74369f085725187a9cbf0a483",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -390,6 +390,53 @@
                 }
             },
             "time": "2018-01-25T12:01:32+00:00"
+        },
+        {
+            "name": "martijnc/php-csp",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Martijnc/php-csp.git",
+                "reference": "e02bf6efe8705df55168140371873475df13060d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Martijnc/php-csp/zipball/e02bf6efe8705df55168140371873475df13060d",
+                "reference": "e02bf6efe8705df55168140371873475df13060d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Phpcsp": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD"
+            ],
+            "authors": [
+                {
+                    "name": "Martijn Croonen",
+                    "homepage": "https://github.com/martijnc",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Content Security Policy helper for PHP",
+            "homepage": "https://github.com/martijnc/php-csp",
+            "keywords": [
+                "X-Frame-Options",
+                "X-XSS-Protection",
+                "content security policy",
+                "library",
+                "php",
+                "security",
+                "xss"
+            ],
+            "time": "2015-11-27T09:08:40+00:00"
         },
         {
             "name": "monolog/monolog",

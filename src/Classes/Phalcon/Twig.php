@@ -146,11 +146,13 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('getTitle', function () {
                 return Tag::getTitle();
             }, $options),
-            new \Twig_SimpleFunction('stylesheetLink', function ($parameters = null, $local = true) {
-                return Tag::stylesheetLink($parameters, $local);
+            new \Twig_SimpleFunction('stylesheetLink', function (string $url, bool $local = true) {
+                $parameters = [$url, $local, 'nonce' => $this->view->cspNonce];
+                return Tag::stylesheetLink($parameters);
             }, $options),
-            new \Twig_SimpleFunction('javascriptInclude', function ($parameters = null, $local = true) {
-                return Tag::javascriptInclude($parameters, $local);
+            new \Twig_SimpleFunction('javascriptInclude', function (string $url, bool $local = true) {
+                $parameters = [$url, $local, 'nonce' => $this->view->cspNonce];
+                return Tag::javascriptInclude($parameters);
             }, $options),
             new \Twig_SimpleFunction('image', function ($parameters) {
                 return Tag::image($parameters);

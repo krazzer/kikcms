@@ -7,6 +7,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Url;
+use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 /**
  * @property Translator $translator
@@ -20,6 +21,7 @@ class BaseController extends Controller
     public function initialize()
     {
         $this->initializeLanguage();
+        $this->initializeCpsHeaders();
 
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
@@ -89,5 +91,30 @@ class BaseController extends Controller
         $this->response->setHeader('Pragma', 'cache');
 
         return file_get_contents($filePath);
+    }
+
+    /**
+     * Set Content Security Policy headers
+     */
+    private function initializeCpsHeaders()
+    {
+        if( ! $this->config->application->enableCsp){
+            return;
+        }
+
+        $nonce = uniqid();
+
+        $this->view->cspNonce = $nonce;
+
+        $policy = (new ContentSecurityPolicyHeaderBuilder);
+        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, "'self'");
+        $policy->addNonce(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, $nonce);
+
+        $policy->enforcePolicy(false);
+        $policy->setReportUri($this->url->getBaseUri() . 'csp/report');
+
+        foreach ($policy->getHeaders(true) as $header) {
+            header(sprintf('%s: %s', $header['name'], $header['value']));
+        }
     }
 }
