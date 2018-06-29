@@ -98,7 +98,7 @@ class BaseController extends Controller
      */
     private function initializeCpsHeaders()
     {
-        if( ! $this->config->application->enableCsp){
+        if( ! $this->config->application->get('enableCsp')){
             return;
         }
 
