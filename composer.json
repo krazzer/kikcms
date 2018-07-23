@@ -7,7 +7,8 @@
     "monolog/monolog": "^1.22",
     "google/apiclient": "^2.0",
     "nette/php-generator": "^3.1",
-    "martijnc/php-csp": "^1.0"
+    "martijnc/php-csp": "^1.0",
+    "google/recaptcha": "~1.1"
   },
   "autoload": {
     "psr-4": {
