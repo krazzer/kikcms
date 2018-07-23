@@ -114,7 +114,12 @@ class GeneratorService extends Injectable
      */
     public function createFile(string $directory, string $className, PhpNamespace $namespace): bool
     {
-        $filePath = SITE_PATH . 'app/' . $directory . '/' . $className . '.php';
+        $fileDir  = SITE_PATH . 'app/' . $directory . '/';
+        $filePath = $fileDir . $className . '.php';
+
+        if( ! file_exists($fileDir)){
+            mkdir($fileDir);
+        }
 
         return file_put_contents($filePath, "<?php\n\n" . Helpers::tabsToSpaces((string) $namespace));
     }
