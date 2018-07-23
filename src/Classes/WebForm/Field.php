@@ -33,6 +33,7 @@ class Field
     const TYPE_SELECT_DATA_TABLE = 'selectDataTable';
     const TYPE_TEXTAREA          = 'textarea';
     const TYPE_WYSIWYG           = 'wysiwyg';
+    const TYPE_RECAPTCHA         = 'reCaptcha';
 
     /** @var WebForm|DataForm */
     protected $form;

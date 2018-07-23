@@ -414,6 +414,7 @@ return [
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',
             'fieldErrors'      => 'Niet alle velden zijn goed ingevuld. Loop het formulier na op fouten of ontbrekende gegevens.',
             'slug'             => "Het veld :label mag alleen kleine letters, getallen en '-' bevatten",
+            'reCaptcha'        => 'Voer de ReCaptcha uit om te bewijzen dat u geen robot bent',
         ],
 
         'defaultSendLabel'       => 'Versturen',

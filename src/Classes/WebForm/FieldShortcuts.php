@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SelectDataTable;
+use KikCMS\Classes\Phalcon\Validator\ReCaptcha;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
@@ -17,6 +18,7 @@ use KikCMS\Classes\WebForm\Fields\HtmlField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckboxField;
 use KikCMS\Classes\WebForm\Fields\PasswordField;
 use KikCMS\Classes\WebForm\Fields\RadioButtonField;
+use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Classes\WebForm\Fields\TextareaField;
@@ -162,6 +164,20 @@ trait FieldShortcuts
     public function addRadioButtonField(string $key, string $label, array $options, array $validators = []): Field
     {
         return $this->addField(new RadioButtonField($key, $label, $options, $validators));
+    }
+
+    /**
+     * @param string $label
+     * @return Field|ReCaptchaField
+     */
+    public function addRecaptchaField(string $label = null): Field
+    {
+        $this->view->assets->addJs('https://www.google.com/recaptcha/api.js');
+        $this->view->reCaptchaSiteKey = $this->config->recaptcha->siteKey;
+
+        $validators = [new ReCaptcha];
+
+        return $this->addField(new ReCaptchaField($label, $validators));
     }
 
     /**

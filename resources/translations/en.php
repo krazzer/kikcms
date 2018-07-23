@@ -137,6 +137,7 @@ return [
             'csrf'             => 'Your request could not be processed. CSRF validation failed. Please try again.',
             'fieldErrors'      => 'Not all fields are correctly filled. Please walk through the form to check for errors.',
             'slug'             => "The field :label may only contain lowercase letters, numbers and the '-' symbol",
+            'reCaptcha'        => 'Execute the ReCaptcha to prove you are not a robot',
         ],
 
         'defaultSendLabel' => 'Send',

@@ -66,6 +66,7 @@ use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
+use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Throwable;
@@ -343,6 +344,16 @@ class Services extends BaseServices
         $mailer = Swift_Mailer::newInstance($transport);
 
         return new MailService($mailer);
+    }
+
+    /**
+     * @return ReCaptcha
+     */
+    protected function initReCaptcha()
+    {
+        $secret = $this->getConfig('recaptcha', 'secret');
+
+        return new ReCaptcha($secret);
     }
 
     /**

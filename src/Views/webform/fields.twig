@@ -162,6 +162,19 @@
     </div>
 {% endblock %}
 
+{%- block fieldReCaptcha -%}
+    {# @var field \KikCMS\Classes\WebForm\Fields\ReCaptchaField #}
+    <div{{ fieldContainterAttributes|raw }}>
+        {% if field.label %}
+            <label>{{ field.label|raw }}</label>
+        {% endif %}
+        <div class="field">
+            <div class="g-recaptcha" data-sitekey="{{ reCaptchaSiteKey }}"></div>
+        </div>
+    </div>
+    {{ block('errorWarnings') }}
+{%- endblock -%}
+
 {%- block fieldSelectDataTable -%}
     {{ block('fieldDataTable') }}
 {%- endblock -%}
