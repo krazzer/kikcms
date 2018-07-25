@@ -10,6 +10,9 @@ class TableData
     /** @var array */
     private $data = [];
 
+    /** @var array */
+    private $tableHeadColumns = [];
+
     /** @var array contains the fields that are to be shown */
     private $displayMap = [];
 
@@ -33,15 +36,18 @@ class TableData
      */
     public function getTableHeadColumns(): array
     {
-        if ($this->displayMap) {
-            return $this->displayMap;
-        }
+        return $this->tableHeadColumns;
+    }
 
-        if ( ! $this->data) {
-            return [];
-        }
+    /**
+     * @param array $columns
+     * @return TableData|$this
+     */
+    public function setTableHeadColumns(array $columns): TableData
+    {
+        $this->tableHeadColumns = $columns;
 
-        return array_combine(array_keys($this->data[0]), array_keys($this->data[0]));
+        return $this;
     }
 
     /**

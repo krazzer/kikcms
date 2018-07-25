@@ -56,10 +56,6 @@ abstract class DataTable extends Renderable
     /** @var array */
     protected $searchableFields = [];
 
-    /** @var array assoc that contains the column name as key, and the value that will be used for sorting in the query
-     * i.e. [id => p.id] will make sure the id column is sorted by p.id, this must be used to avoid ambiguity  */
-    protected $orderableFields = [];
-
     /** @var array assoc column as key, callable as value, that will be used to format a value in the result table */
     protected $fieldFormatting = [];
 
@@ -396,14 +392,6 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return array
-     */
-    public function getOrderableFields(): array
-    {
-        return $this->orderableFields;
-    }
-
-    /**
      * @return string
      */
     public function getSortableField(): string
@@ -705,11 +693,17 @@ abstract class DataTable extends Renderable
             return $this->tableData;
         }
 
+        $query = $this->getQuery();
+
         $paginate = (new QueryBuilder([
-            "builder" => $this->getQuery(),
+            "builder" => $query,
             "page"    => $this->filters->getPage(),
             "limit"   => $this->limit,
         ]))->getPaginate();
+
+        $tableData = $paginate->items->toArray();
+
+        $headColumns = $this->getHeadColumns($tableData, $query);
 
         $this->tableData = (new TableData())
             ->setPages($paginate->pages)
@@ -718,7 +712,8 @@ abstract class DataTable extends Renderable
             ->setTotalItems($paginate->total_items)
             ->setTotalPages($paginate->total_pages)
             ->setDisplayMap($this->getTableFieldMap())
-            ->setData($paginate->items->toArray());
+            ->setTableHeadColumns($headColumns)
+            ->setData($tableData);
 
         return $this->tableData;
     }
@@ -743,10 +738,80 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @return array
+     */
+    private function getQueryAliases(): array
+    {
+        $aliases = [$this->getQueryFromAlias()];
+
+        foreach ($this->getQuery()->getJoins() as $join) {
+            $aliases[] = $join[2];
+        }
+
+        return $aliases;
+    }
+
+    /**
+     * @return string
+     */
+    private function getQueryFromAlias(): string
+    {
+        return key($this->getQuery()->getFrom());
+    }
+
+    /**
      * @return string
      */
     private function getNewIdsCacheKey()
     {
         return $this->getInstance() . '-ids';
+    }
+
+    /**
+     * @param array $tableData
+     * @param Builder $query
+     * @return array
+     */
+    private function getHeadColumns(array $tableData, Builder $query): array
+    {
+        $queryColumns = $query->getColumns();
+
+        $headColumns  = $this->getHeadColumnsRaw($tableData);
+        $queryAliases = $this->getQueryAliases();
+
+        if ( ! $queryColumns) {
+            return $headColumns;
+        }
+
+        foreach ($headColumns as $column => $name) {
+            foreach ($queryAliases as $alias) {
+                $aliasedColumn = $alias . '.' . $column;
+
+                if ( ! in_array($aliasedColumn, $queryColumns)) {
+                    continue;
+                }
+
+                $headColumns = array_change_key($headColumns, $column, $aliasedColumn);
+            }
+        }
+
+        return $headColumns;
+    }
+
+    /**
+     * @param array $tableData
+     * @return array
+     */
+    private function getHeadColumnsRaw(array $tableData): array
+    {
+        if ($fieldMap = $this->getTableFieldMap()) {
+            return $fieldMap;
+        }
+
+        if ( ! $tableData) {
+            return [];
+        }
+
+        return array_combine(array_keys($tableData[0]), array_keys($tableData[0]));
     }
 }

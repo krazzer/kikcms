@@ -76,10 +76,6 @@ class FilterQueryBuilder
         $direction = $this->filters->getSortDirection();
 
         if (in_array($direction, DbConfig::SQL_SORT_DIRECTIONS)) {
-            if (array_key_exists($column, $this->dataTable->getOrderableFields())) {
-                $column = $this->dataTable->getOrderableFields()[$column];
-            }
-
             $query->orderBy($column . ' ' . $direction);
         }
     }
