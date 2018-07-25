@@ -36,9 +36,6 @@ class Pages extends DataTable
     protected $searchableFields = ['pl.name'];
 
     /** @inheritdoc */
-    protected $orderableFields = ['id' => 'p.id', 'name' => 'pl.name'];
-
-    /** @inheritdoc */
     protected $preLoadWysiwygJs = true;
 
     /** @inheritdoc */
