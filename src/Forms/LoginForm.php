@@ -5,8 +5,6 @@ namespace KikCMS\Forms;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Services\UserService;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Email;
 
 /**
  * @property UserService $userService
@@ -21,8 +19,8 @@ class LoginForm extends WebForm
      */
     protected function initialize()
     {
-        $this->addTextField(self::FIELD_USERNAME, 'E-mail adres', [new PresenceOf(), new Email()]);
-        $this->addPasswordField(self::FIELD_PASSWORD, 'Wachtwoord', [new PresenceOf()]);
+        $this->addTextField(self::FIELD_USERNAME, 'E-mail adres');
+        $this->addPasswordField(self::FIELD_PASSWORD, 'Wachtwoord');
 
         $this->setPlaceHolderAsLabel(true);
         $this->setSendButtonLabel('Inloggen');
