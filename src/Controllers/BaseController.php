@@ -98,7 +98,7 @@ class BaseController extends Controller
      */
     private function initializeCpsHeaders()
     {
-        if( ! $this->config->application->get('enableCsp')){
+        if( ! $cspSettings = $this->config->get('csp')){
             return;
         }
 
@@ -108,10 +108,11 @@ class BaseController extends Controller
 
         $policy = (new ContentSecurityPolicyHeaderBuilder);
         $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, "'self'");
+        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_STYLE_SRC, "* 'unsafe-inline'");
         $policy->addNonce(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, $nonce);
 
         $policy->enforcePolicy(false);
-        $policy->setReportUri($this->url->getBaseUri() . 'csp/report');
+        $policy->setReportUri($cspSettings['reportUri']);
 
         foreach ($policy->getHeaders(true) as $header) {
             header(sprintf('%s: %s', $header['name'], $header['value']));
