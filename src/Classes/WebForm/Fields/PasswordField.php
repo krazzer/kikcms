@@ -22,4 +22,12 @@ class PasswordField extends Field
 
         $this->element = $element;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getType()
+    {
+        return Field::TYPE_PASSWORD;
+    }
 }

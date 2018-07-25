@@ -34,6 +34,7 @@ class Field
     const TYPE_TEXTAREA          = 'textarea';
     const TYPE_WYSIWYG           = 'wysiwyg';
     const TYPE_RECAPTCHA         = 'reCaptcha';
+    const TYPE_PASSWORD          = 'password';
 
     /** @var WebForm|DataForm */
     protected $form;

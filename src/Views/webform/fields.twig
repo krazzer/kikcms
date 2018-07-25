@@ -146,6 +146,11 @@
     </div>
 {% endblock %}
 
+{% block fieldPassword %}
+    {{ block('fieldDefault') }}
+    {{ block('errorWarnings') }}
+{% endblock %}
+
 {%- block fieldRadioButton %}
     {# @var field \KikCMS\Classes\WebForm\Fields\RadioButtonField #}
     <div{{ fieldContainterAttributes|raw }}>
