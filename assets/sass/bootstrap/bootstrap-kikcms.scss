@@ -87,3 +87,13 @@ textarea.form-control{
         border-top: none;
     }
 }
+
+.kikcms-internal-error{
+    position: fixed;
+    z-index: 1000000;
+    top: 10px;
+    background-color: white;
+    padding: 20px;
+    left: 20px;
+    border: 1px solid black;
+}
