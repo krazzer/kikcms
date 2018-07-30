@@ -744,7 +744,11 @@ abstract class DataTable extends Renderable
     {
         $aliases = [$this->getQueryFromAlias()];
 
-        foreach ($this->getQuery()->getJoins() as $join) {
+        if( ! $joins = $this->getQuery()->getJoins()){
+            return $aliases;
+        }
+
+        foreach ($joins as $join) {
             $aliases[] = $join[2];
         }
 
