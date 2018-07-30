@@ -742,7 +742,11 @@ abstract class DataTable extends Renderable
      */
     private function getQueryAliases(): array
     {
-        $aliases = [$this->getQueryFromAlias()];
+        $aliases = [];
+
+        if($alias = $this->getQueryFromAlias()){
+            $aliases[] = $alias;
+        }
 
         if( ! $joins = $this->getQuery()->getJoins()){
             return $aliases;
@@ -756,11 +760,13 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getQueryFromAlias(): string
+    private function getQueryFromAlias(): ?string
     {
-        return key($this->getQuery()->getFrom());
+        $from = $this->getQuery()->getFrom();
+
+        return is_array($from) ? key($from) : null;
     }
 
     /**
