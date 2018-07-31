@@ -202,7 +202,11 @@ class Twig extends Engine implements EngineInterface
             return $di->getShared("numberService")->getPriceFormat((float) $price);
         }));
 
-        $this->twig->addFilter(new \Twig_SimpleFilter('date', function (DateTime $dateTime, string $format = null) use ($di) {
+        $this->twig->addFilter(new \Twig_SimpleFilter('date', function ($dateTime, string $format = null) use ($di) {
+            if( ! $dateTime instanceOf DateTime){
+                $dateTime = new DateTime($dateTime);
+            }
+
             $format = $format ?: $di->getShared('translator')->tl('system.dateDisplayFormat');
             return strftime($format, $dateTime->getTimestamp());
         }));
