@@ -15,6 +15,6 @@ class StringService
      */
     public function truncate(string $string, int $maxLength = 50): string
     {
-        return strlen($string) < $maxLength ? $string : substr($string, 0, 50) . '...';
+        return strlen($string) < $maxLength ? $string : mb_substr($string, 0, 50) . '...';
     }
 }
