@@ -20,7 +20,7 @@
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/vendor.js') }}
 {{ javascriptInclude('cmsassets/js/cms.js?v1.04') }}
-<script>
+<script nonce="{{ cspNonce }}">
     moment.locale('{{ langCode }}');
 
     KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};

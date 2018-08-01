@@ -106,8 +106,14 @@ class BaseController extends Controller
 
         $this->view->cspNonce = $nonce;
 
+        $allowedDomains = [
+            "'self'",
+            'cdn.tinymce.com',
+            'www.gstatic.com',
+        ];
+
         $policy = (new ContentSecurityPolicyHeaderBuilder);
-        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, "'self'");
+        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, implode(' ', $allowedDomains));
         $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_STYLE_SRC, "* 'unsafe-inline'");
         $policy->addNonce(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, $nonce);
 

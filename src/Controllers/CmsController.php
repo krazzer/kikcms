@@ -62,7 +62,7 @@ class CmsController extends BaseCmsController
         $menuFirstKey  = array_keys($menuGroups)[0];
         $firstMenuItem = $menuGroups[$menuFirstKey]->getFirst();
 
-        if($firstMenuItem && $firstMenuItem->getId() != MenuConfig::MENU_ITEM_LOGOUT){
+        if ($firstMenuItem && $firstMenuItem->getId() != MenuConfig::MENU_ITEM_LOGOUT) {
             return $this->response->redirect($firstMenuItem->getRoute());
         }
 
@@ -119,7 +119,7 @@ class CmsController extends BaseCmsController
      */
     public function statsAction()
     {
-        if( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
+        if ( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
             throw new UnauthorizedException();
         }
 
@@ -147,7 +147,9 @@ class CmsController extends BaseCmsController
             'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
         ];
 
-        $this->view->assets->addJs('https://www.gstatic.com/charts/loader.js', false);
+        $this->view->assets->addJs('https://www.gstatic.com/charts/loader.js', false, true, [
+            'nonce' => $this->view->cspNonce
+        ]);
 
         $this->view->pick('cms/statistics');
     }
