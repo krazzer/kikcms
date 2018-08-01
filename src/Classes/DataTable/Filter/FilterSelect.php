@@ -32,8 +32,10 @@ class FilterSelect extends Filter
      */
     public function applyFilter(Builder $builder, $value)
     {
-        $builder->andWhere($this->getFieldWithAlias() . ' = :value:', [
-            'value' => $value,
+        $valueKey = $this->field . '_filterselect_value';
+
+        $builder->andWhere($this->getFieldWithAlias() . ' = :' . $valueKey .':', [
+            $valueKey => $value,
         ]);
     }
 
