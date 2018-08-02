@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
 use KikCMS\Classes\WebForm\Fields\DateField;
+use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
@@ -131,16 +132,16 @@ abstract class DataForm extends WebForm
     /**
      * @inheritdoc
      */
-    public function render()
+    public function initializeForm()
     {
+        parent::initializeForm();
+
         if ( ! $editId = $this->getFilters()->getEditId()) {
-            return parent::render();
+            return;
         }
 
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();
         $currentLangCode = $this->getFilters()->getLanguageCode();
-
-        $this->initializeForm();
 
         $editData        = $this->getEditData();
         $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode, $editData);
@@ -158,8 +159,6 @@ abstract class DataForm extends WebForm
                 }
             }
         }
-
-        return parent::render();
     }
 
     /**
@@ -176,10 +175,6 @@ abstract class DataForm extends WebForm
      */
     public function getEditData(): array
     {
-        if ( ! $this->initialized) {
-            throw new Exception('DataForm::getEditData cannot be called if the form is not initialized');
-        }
-
         $editId   = $this->getFilters()->getEditId();
         $langCode = $this->getFilters()->getLanguageCode();
 
@@ -202,10 +197,18 @@ abstract class DataForm extends WebForm
 
     /**
      * What happens after successfully saving the Form's data
+     * @param bool $isNew
      */
-    public function saveSuccessAction()
+    public function saveSuccessAction(bool $isNew)
     {
         $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+
+        if ( ! $isNew) {
+            return;
+        }
+
+        // re-initialize the form to display the form as if we are editing
+        $this->reInitializeForm();
     }
 
     /**
@@ -214,10 +217,12 @@ abstract class DataForm extends WebForm
      */
     public function successAction(array $input)
     {
+        $isNew = ! (bool) $this->filters->getEditId();
+
         $saveSuccess = $this->saveData($input);
 
         if ($saveSuccess) {
-            return $this->saveSuccessAction();
+            return $this->saveSuccessAction($isNew);
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
             $this->flash->error($this->translator->tl('dataForm.saveFailure'));
@@ -469,5 +474,18 @@ abstract class DataForm extends WebForm
         }
 
         return $this->fieldTransformers[$key]->toStorage($value);
+    }
+
+    /**
+     * Re-initializes the form
+     */
+    private function reInitializeForm()
+    {
+        $this->fieldMap = new FieldMap();
+
+        $this->tabs = [];
+        $this->keys = [];
+
+        $this->initializeForm();
     }
 }

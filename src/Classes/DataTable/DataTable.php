@@ -519,10 +519,6 @@ abstract class DataTable extends Renderable
             $this->form->addHiddenField($this->parentRelationKey, $this->filters->getParentEditId());
         }
 
-        if ($this->form->isPosted()) {
-            return $this->form->render();
-        }
-
         return $this->form->render();
     }
 

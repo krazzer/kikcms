@@ -50,9 +50,6 @@ abstract class WebForm extends Renderable
     protected $formTemplate = 'form';
 
     /** @var bool */
-    protected $initialized = false;
-
-    /** @var bool */
     protected $showRequiredMessage = false;
 
     /** @var bool */
@@ -249,8 +246,6 @@ abstract class WebForm extends Renderable
         $this->initializeForm();
         $this->addAssets();
 
-        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
-
         if ($this->isPosted()) {
             $errorContainer = $this->getErrors();
             $this->updateFieldsByPostData();
@@ -355,17 +350,13 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * Override to build up the form
-     *
      * @return WebForm|$this
      */
     public function initializeForm()
     {
-        if ($this->initialized) {
-            return $this;
-        }
-
         $this->initialize();
+
+        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
 
         if ($this->isPlaceHolderAsLabel()) {
             foreach ($this->fieldMap as $field) {
@@ -384,8 +375,6 @@ abstract class WebForm extends Renderable
                 $this->initializeDateField($field);
             }
         }
-
-        $this->initialized = true;
 
         return $this;
     }
