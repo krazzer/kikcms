@@ -67,7 +67,14 @@ class TableData
         }
 
         foreach ($this->displayMap as $fieldKey => $fieldName) {
-            $rowDataToDisplay[$fieldKey] = $allRowData[$fieldKey];
+            if (strstr($fieldKey, '.')) {
+                list($alias, $column) = explode('.', $fieldKey);
+                $value = $allRowData[$alias]->$column;
+            } else {
+                $value = $allRowData[$fieldKey];
+            }
+
+            $rowDataToDisplay[$fieldKey] = $value;
         }
 
         return $rowDataToDisplay;

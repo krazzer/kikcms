@@ -699,6 +699,10 @@ abstract class DataTable extends Renderable
 
         $tableData = $paginate->items->toArray();
 
+        foreach ($tableData as &$row){
+            $row = (array) $row;
+        }
+
         $headColumns = $this->getHeadColumns($tableData, $query);
 
         $this->tableData = (new TableData())
