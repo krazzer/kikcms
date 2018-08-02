@@ -32,7 +32,7 @@ class FilterSelect extends Filter
      */
     public function applyFilter(Builder $builder, $value)
     {
-        $valueKey = $this->field . '_filterselect_value';
+        $valueKey = 'filter' . uniqid();
 
         $builder->andWhere($this->getFieldWithAlias() . ' = :' . $valueKey .':', [
             $valueKey => $value,
