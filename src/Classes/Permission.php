@@ -133,6 +133,7 @@ class Permission extends Injectable
         $acl->allow(self::ADMIN, Users::class);
 
         $acl->allow(self::DEVELOPER, Languages::class);
+        $acl->allow(self::ADMIN, Languages::class);
     }
 
     /**

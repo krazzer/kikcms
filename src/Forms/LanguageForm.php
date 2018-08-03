@@ -22,6 +22,7 @@ class LanguageForm extends DataForm
     {
         $this->addTextField(Language::FIELD_NAME, $this->translator->tl('fields.name'), [new PresenceOf()]);
         $this->addTextField(Language::FIELD_CODE, $this->translator->tl('fields.code'), [new PresenceOf(), new StringLength(['max' => 2, 'min' => 2])]);
+        $this->addCheckboxField(Language::FIELD_ACTIVE, 'Actief op website');
     }
 
     /**
