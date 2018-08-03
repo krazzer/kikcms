@@ -26,6 +26,10 @@ class ReCaptcha extends Validator
         /** @var Translator $translator */
         $translator = $validation->translator;
 
+        if( ! isset($_POST['g-recaptcha-response'])){
+            return false;
+        }
+
         $response = $reCaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
         if($response->isSuccess()){
