@@ -288,6 +288,8 @@ return [
             'omdat deze ergens aan gekoppeld is.',
         'deleteErrorLocked'        => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat deze nodig ' .
             'is voor het correct werken van de website.',
+        'deleteErrorLinkedPage'    => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de pagina \':pageName\'',
+        'deleteErrorLinkedPages'   => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de volgende pagina\'s: :pageNames',
         'errorCantEdit'            => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat u deze niet mag bewerken',
         'createFolder'             => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName'        => 'Nieuwe map',

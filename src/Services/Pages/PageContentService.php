@@ -2,6 +2,9 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Classes\Translator;
+use KikCMS\Models\FinderFile;
+use KikCMS\ObjectLists\PageLanguageMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
@@ -12,11 +15,59 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
+ * @property Translator $translator
+ * @property TemplateService $templateService
  */
 class PageContentService extends Injectable
 {
     /** @var array */
     private $localPageVariablesCache = [];
+
+    /**
+     * Check if the image is linked to any page, or used in a rich-text field
+     *
+     * @param FinderFile $file
+     * @return PageLanguageMap
+     */
+    public function fileIsLinked(FinderFile $file): PageLanguageMap
+    {
+        $languageCode     = $this->translator->getLanguageCode();
+        $fileFieldKeys    = $this->templateService->getFileFieldKeys();
+        $wysiwygFieldKeys = $this->templateService->getWysiwygFieldKeys();
+
+        $pageLangMap = new PageLanguageMap();
+
+        if ($fileFieldKeys) {
+            $query = (new Builder)
+                ->from(['pl' => PageLanguage::class])
+                ->leftJoin(PageContent::class, 'pc.page_id = pl.page_id', 'pc')
+                ->where(PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+                ->inWhere(PageContent::FIELD_FIELD, $fileFieldKeys)
+                ->andWhere(PageContent::FIELD_VALUE . ' = :fileId:', ['fileId' => $file->getId()])
+                ->groupBy('pl.page_id');
+
+            $pageLangMap = $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
+        }
+
+        if ($wysiwygFieldKeys) {
+            $query = (new Builder)
+                ->from(['pl' => PageLanguage::class])
+                ->leftJoin(PageLanguageContent::class, 'plc.page_id = pl.page_id', 'plc')
+                ->inWhere(PageContent::FIELD_FIELD, $wysiwygFieldKeys)
+                ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+                ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+                ->andWhere(PageContent::FIELD_VALUE . ' LIKE :search:', ['search' => '%/finder/file/' . $file->getId() . '%'])
+                ->groupBy('pl.page_id');
+
+            $pageLanguages = $this->dbService->getObjects($query);
+
+            foreach ($pageLanguages as $pageLanguage){
+                $pageLangMap->add($pageLanguage, $pageLanguage->getPageId());
+            }
+        }
+
+        return $pageLangMap;
+    }
 
     /**
      * @param PageLanguage $pageLanguage

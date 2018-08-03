@@ -2,6 +2,8 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Classes\WebForm\Fields\FileField;
+use KikCMS\Classes\WebForm\Fields\WysiwygField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Page\Template;
@@ -130,5 +132,45 @@ class TemplateService extends Injectable
         }
 
         return $allowedKeys;
+    }
+
+    /**
+     * Get an array of keys for all existing file fields
+     *
+     * @return array
+     */
+    public function getFileFieldKeys(): array
+    {
+        $fields = $this->templateFields->getFields();
+
+        $fieldKeys = [];
+
+        foreach ($fields as $key => $field){
+            if($field instanceof FileField){
+                $fieldKeys[] = $key;
+            }
+        }
+
+        return $fieldKeys;
+    }
+
+    /**
+     * Get an array of keys for all existing wysiwyg fields
+     *
+     * @return array
+     */
+    public function getWysiwygFieldKeys(): array
+    {
+        $fields = $this->templateFields->getFields();
+
+        $fieldKeys = [];
+
+        foreach ($fields as $key => $field){
+            if($field instanceof WysiwygField){
+                $fieldKeys[] = $key;
+            }
+        }
+
+        return $fieldKeys;
     }
 }

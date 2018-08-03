@@ -32,6 +32,7 @@ use Phalcon\Mvc\Model\Resultset;
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FinderPermissionService $finderPermissionService
+ * @property FinderFileRemoveService $finderFileRemoveService
  * @property Config $config
  */
 class FinderFileService extends Injectable
@@ -126,30 +127,6 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param int[] $fileIds
-     */
-    public function deleteFilesByIds(array $fileIds)
-    {
-        $finderFiles = FinderFile::getByIdList($fileIds);
-
-        // get sub files
-        foreach ($finderFiles as $file) {
-            $fileIds = $this->getFileIdsRecursive($file, $fileIds);
-        }
-
-        $finderFiles  = FinderFile::getByIdList($fileIds);
-        $filesRemoved = $this->dbService->delete(FinderFile::class, ['id' => $fileIds]);
-
-        if ($filesRemoved) {
-            foreach ($finderFiles as $finderFile) {
-                if ( ! $finderFile->isFolder()) {
-                    $this->unlinkFiles($finderFile);
-                }
-            }
-        }
-    }
-
-    /**
      * @param int $folderId
      * @return FinderFile[]
      */
@@ -213,7 +190,7 @@ class FinderFileService extends Injectable
     {
         $fileName = $finderFile->id . '.' . $finderFile->getExtension();
 
-        return $this->fileStorage->getStorageDir() . $this->getMediaDir() . '/' . $fileName;
+        return $this->getStorageDir() . $this->getMediaDir() . '/' . $fileName;
     }
 
     /**
@@ -239,6 +216,14 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getStorageDir(): string
+    {
+        return $this->fileStorage->getStorageDir();
+    }
+
+    /**
      * @param FinderFile $finderFile
      * @param string|null $type
      *
@@ -248,7 +233,7 @@ class FinderFileService extends Injectable
     {
         $type     = $type ?: 'default';
         $fileName = $finderFile->id . '.' . $finderFile->getExtension();
-        $dirPath  = $this->fileStorage->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
+        $dirPath  = $this->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
@@ -443,25 +428,9 @@ class FinderFileService extends Injectable
 
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
-        $this->removeThumbNails($finderFile);
+        $this->finderFileRemoveService->removeThumbNails($finderFile);
 
         return true;
-    }
-
-    /**
-     * @param FinderFile $finderFile
-     */
-    private function removeThumbNails(FinderFile $finderFile)
-    {
-        $thumbNailDirs = glob($this->fileStorage->getStorageDir() . $this->getThumbDir() . '/*');
-
-        foreach ($thumbNailDirs as $thumbNailDir) {
-            $thumbFile = $this->getThumbPath($finderFile, basename($thumbNailDir));
-
-            if (file_exists($thumbFile)) {
-                unlink($thumbFile);
-            }
-        }
     }
 
     /**
@@ -499,17 +468,6 @@ class FinderFileService extends Injectable
         $image = $this->imageHandler->create($filePath);
         $image->resize($maxWidth, $maxHeight);
         $image->save($filePath, $jpgQuality);
-    }
-
-    /**
-     * Remove all files and thumb files for the given FinderFile
-     *
-     * @param FinderFile $finderFile
-     */
-    private function unlinkFiles(FinderFile $finderFile)
-    {
-        unlink($this->getFilePath($finderFile));
-        $this->removeThumbNails($finderFile);
     }
 
     /**

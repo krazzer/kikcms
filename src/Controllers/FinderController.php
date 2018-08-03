@@ -2,8 +2,10 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Classes\Finder\FinderFileRemoveService;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Services\Finder\FinderPermissionService;
+use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
@@ -20,10 +22,12 @@ use KikCMS\Models\FinderFile;
  * @property AccessControl $acl
  * @property DbService $dbService
  * @property FinderFileService $finderFileService
+ * @property FinderFileRemoveService $finderFileRemoveService
  * @property Translator $translator
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FinderPermissionService $finderPermissionService
+ * @property PageContentService $pageContentService
  */
 class FinderController extends RenderableController
 {
@@ -63,32 +67,30 @@ class FinderController extends RenderableController
      */
     public function deleteAction()
     {
-        $finder       = $this->getRenderable();
-        $fileIds      = $this->request->getPost('fileIds', 'int');
-        $errorMessage = null;
-        $idsToRemove  = [];
+        $finder        = $this->getRenderable();
+        $fileIds       = $this->request->getPost('fileIds', 'int');
+        $errorMessages = [];
+        $idsToRemove   = [];
 
         $files = FinderFile::getByIdList($fileIds);
 
         foreach ($files as $file) {
-            if ($file->key) {
-                $errorMessage = $this->translator->tl('media.deleteErrorLocked');
-            } elseif ( ! $this->finderPermissionService->canEdit($file)) {
-                $errorMessage = $this->translator->tl('media.errorCantEdit');
+            if ($errorMessage = $this->finderFileRemoveService->getDeleteErrorMessage($file)) {
+                $errorMessages[] = $errorMessage;
             } else {
                 $idsToRemove[] = $file->getId();
             }
         }
 
         try {
-            $this->finderFileService->deleteFilesByIds($idsToRemove);
+            $this->finderFileRemoveService->deleteFilesByIds($idsToRemove);
         } catch (DbForeignKeyDeleteException $e) {
-            $errorMessage = $this->translator->tl('media.deleteErrorLinked');
+            $errorMessages[] = $this->translator->tl('media.deleteErrorLinked');
         }
 
         return json_encode([
-            'files'        => $finder->renderFiles(),
-            'errorMessage' => $errorMessage
+            'files'         => $finder->renderFiles(),
+            'errorMessages' => $errorMessages
         ]);
     }
 

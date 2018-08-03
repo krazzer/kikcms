@@ -48,8 +48,10 @@ var Finder = Class.extend({
         }
 
         this.action('delete', {fileIds: selectedIds}, function (result) {
-            if (result.errorMessage) {
-                alert(result.errorMessage);
+            if (result.errorMessages) {
+                for(var i in result.errorMessages){
+                    alert(result.errorMessages[i]);
+                }
             }
 
             if (result.files) {

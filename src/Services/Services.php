@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Classes\Finder\FinderFileRemoveService;
 use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -88,6 +89,7 @@ class Services extends BaseServices
             DbService::class,
             ImageHandler::class,
             FinderService::class,
+            FinderFileRemoveService::class,
             FinderPermissionService::class,
             FinderPermissionHelper::class,
             FieldStorageService::class,
