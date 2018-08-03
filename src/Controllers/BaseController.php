@@ -39,17 +39,19 @@ class BaseController extends Controller
             'media.fileTypeWarning',
         ]);
 
+        $jsSettings = [
+            'isDev'             => $this->config->application->env == 'dev',
+            'baseUri'           => $this->url->getBaseUri(),
+            'maxFileUploads'    => $maxFileUploads,
+            'maxFileSize'       => $maxFileSize,
+            'maxFileSizeString' => $maxFileSizeString,
+        ];
+
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("baseUri", $this->url->getBaseUri());
-        $this->view->setVar("developerEmail", $this->applicationConfig->developerEmail);
-        $this->view->setVar("jsTranslations", $jsTranslations);
-
         $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
-        $this->view->setVar("phpDateFormat", $this->translator->tl('system.phpDateFormat'));
-
-        $this->view->setVar("maxFileUploads", $maxFileUploads);
-        $this->view->setVar("maxFileSize", $maxFileSize);
-        $this->view->setVar("maxFileSizeString", $maxFileSizeString);
+        $this->view->setVar("jsTranslations", $jsTranslations);
+        $this->view->setVar("jsSettings", $jsSettings);
     }
 
     /**
@@ -98,7 +100,7 @@ class BaseController extends Controller
      */
     private function initializeCpsHeaders()
     {
-        if( ! $cspSettings = $this->config->get('csp')){
+        if ( ! $cspSettings = $this->config->get('csp')) {
             return;
         }
 

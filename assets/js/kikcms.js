@@ -8,6 +8,18 @@ var KikCmsClass = Class.extend({
     maxFileSizeString: null,
     renderables: {},
 
+    init: function () {
+        if (typeof moment !== 'undefined') {
+            moment.locale($('html').attr('lang'));
+        }
+
+        var settings = JSON.parse($('#kikCmsJsSettings').val());
+
+        for(var i in settings){
+            this[i] = settings[i];
+        }
+    },
+
     initRenderables: function (parentClass) {
         var self = this;
 
@@ -160,5 +172,6 @@ var KikCmsClass = Class.extend({
 var KikCMS = new KikCmsClass();
 
 $(function () {
+    KikCMS.init();
     KikCMS.initRenderables();
 });

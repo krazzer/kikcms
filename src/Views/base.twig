@@ -20,15 +20,8 @@
 {% block content %}{% endblock %}
 {{ javascriptInclude('cmsassets/js/vendor.js') }}
 {{ javascriptInclude('cmsassets/js/cms.js?v1.04') }}
+<data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>
 <script nonce="{{ cspNonce }}">
-    moment.locale('{{ langCode }}');
-
-    KikCMS.isDev             = {{ config('application.env') == 'dev' ? 'true' : 'false' }};
-    KikCMS.maxFileUploads    = {{ maxFileUploads }};
-    KikCMS.maxFileSize       = {{ maxFileSize }};
-    KikCMS.maxFileSizeString = '{{ maxFileSizeString }}';
-    KikCMS.baseUri           = '{{ baseUri }}';
-
     {% for key in jsTranslations %}
     KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
     {% endfor %}

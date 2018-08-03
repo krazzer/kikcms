@@ -29,8 +29,8 @@ FinderFileUploader.prototype = {
             var fileAmount = this.files.length;
             var filesAdded = 0;
 
-            if (fileAmount > KikCMS.maxFileAmount) {
-                alert(KikCMS.tl('media.uploadMaxFilesWarning', {amount: KikCMS.maxFileAmount}));
+            if (fileAmount > KikCMS.maxFileUploads) {
+                alert(KikCMS.tl('media.uploadMaxFilesWarning', {amount: KikCMS.maxFileUploads}));
                 return;
             }
 
