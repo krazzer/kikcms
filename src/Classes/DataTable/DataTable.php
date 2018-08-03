@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCmsCore\Services\DbService;
@@ -33,6 +34,7 @@ abstract class DataTable extends Renderable
     const INSTANCE    = 'dataTableInstance';
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
+    const TABLE_KEY   = 'id';
 
     const JS_TRANSLATIONS = [
         'dataTable.delete.confirmOne',
@@ -163,7 +165,7 @@ abstract class DataTable extends Renderable
             return true;
         }
 
-        return $this->acl->allowed(static::class, Permission::ACCESS_DELETE, ['id' => $id]);
+        return $this->acl->allowed(static::class, Permission::ACCESS_DELETE, [self::TABLE_KEY => $id]);
     }
 
     /**
@@ -176,7 +178,7 @@ abstract class DataTable extends Renderable
             return true;
         }
 
-        return $this->acl->allowed(static::class, Permission::ACCESS_EDIT, ['id' => $id]);
+        return $this->acl->allowed(static::class, Permission::ACCESS_EDIT, [self::TABLE_KEY => $id]);
     }
 
     /**
@@ -198,7 +200,7 @@ abstract class DataTable extends Renderable
             return $this->fieldStorageService->store($field, $checked, $id, $editData, $langCode);
         }
 
-        return $this->dbService->update($this->getModel(), [$column => $checked], ['id' => $id]);
+        return $this->dbService->update($this->getModel(), [$column => $checked], [self::TABLE_KEY => $id]);
     }
 
     /**
@@ -212,7 +214,7 @@ abstract class DataTable extends Renderable
             }
         }
 
-        $this->dbService->delete($this->getModel(), ['id' => $ids]);
+        $this->dbService->delete($this->getModel(), [self::TABLE_KEY => $ids]);
     }
 
     /**
@@ -308,10 +310,10 @@ abstract class DataTable extends Renderable
     public function getAliasedTableKey(): string
     {
         if ( ! $alias = $this->getAlias()) {
-            return 'id';
+            return self::TABLE_KEY;
         }
 
-        return $alias . '.id';
+        return $alias . '.' . self::TABLE_KEY;
     }
 
     /**
@@ -488,6 +490,7 @@ abstract class DataTable extends Renderable
             throw new UnauthorizedException();
         }
 
+        $this->checkValidKey();
         $this->initializeDatatable();
         $this->addAssets();
 
@@ -699,7 +702,7 @@ abstract class DataTable extends Renderable
 
         $tableData = $paginate->items->toArray();
 
-        foreach ($tableData as &$row){
+        foreach ($tableData as &$row) {
             $row = (array) $row;
         }
 
@@ -744,11 +747,11 @@ abstract class DataTable extends Renderable
     {
         $aliases = [];
 
-        if($alias = $this->getQueryFromAlias()){
+        if ($alias = $this->getQueryFromAlias()) {
             $aliases[] = $alias;
         }
 
-        if( ! $joins = $this->getQuery()->getJoins()){
+        if ( ! $joins = $this->getQuery()->getJoins()) {
             return $aliases;
         }
 
@@ -823,5 +826,17 @@ abstract class DataTable extends Renderable
         }
 
         return array_combine(array_keys($tableData[0]), array_keys($tableData[0]));
+    }
+
+    /**
+     * Check if the table used has an id field
+     */
+    private function checkValidKey()
+    {
+        $constant = $this->getModel() . '::FIELD_' . strtoupper(self::TABLE_KEY);
+
+        if ( ! defined($constant)) {
+           throw new Exception("DataTables only allow tables with a single primary key named '" . self::TABLE_KEY . "'");
+        }
     }
 }

@@ -35,7 +35,7 @@ class FinderFileRemoveService extends Injectable
         }
 
         $finderFiles  = FinderFile::getByIdList($fileIds);
-        $filesRemoved = $this->dbService->delete(FinderFile::class, ['id' => $fileIds]);
+        $filesRemoved = $this->dbService->delete(FinderFile::class, [FinderFile::FIELD_ID => $fileIds]);
 
         if ($filesRemoved) {
             foreach ($finderFiles as $finderFile) {

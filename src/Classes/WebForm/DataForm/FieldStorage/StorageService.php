@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 use Exception;
 use InvalidArgumentException;
+use KikCMS\Classes\DataTable\DataTable;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
@@ -204,7 +205,7 @@ class StorageService extends Injectable
         $query = (new Builder())
             ->from($this->storageData->getTable())
             ->columns($fieldStorage->getRelatedField())
-            ->where('id = :id:', ['id' => $this->storageData->getEditId()]);
+            ->where(DataTable::TABLE_KEY . ' = :id:', ['id' => $this->storageData->getEditId()]);
 
         return $this->dbService->getValue($query);
     }
@@ -267,7 +268,7 @@ class StorageService extends Injectable
             }
 
             if ($storageData->getEditId() && $relatedFieldValue = $this->getRelatedFieldValue($fieldStorage)) {
-                $this->dbService->update($tableModel, $valueMap, ['id' => $relatedFieldValue]);
+                $this->dbService->update($tableModel, $valueMap, [DataTable::TABLE_KEY => $relatedFieldValue]);
             } else {
                 $id = $this->dbService->insert($tableModel, $valueMap);
                 $this->storageData->addAdditionalInputValue($relatedField, $id);
@@ -292,7 +293,7 @@ class StorageService extends Injectable
 
         if ($editId) {
             if ($this->storageData->getFormInput() && $mainInput) {
-                $this->dbService->update($table, $mainInput, ['id' => $editId]);
+                $this->dbService->update($table, $mainInput, [DataTable::TABLE_KEY => $editId]);
             }
         } else {
             $this->disableForeignKeysForTempKeys();

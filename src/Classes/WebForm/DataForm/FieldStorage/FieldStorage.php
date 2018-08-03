@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
+use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\Field;
 
 /**
@@ -27,7 +28,7 @@ class FieldStorage
     private $relatedField;
 
     /** @var string */
-    private $relatedByField = 'id';
+    private $relatedByField = DataTable::TABLE_KEY;
 
     /**
      * @return boolean

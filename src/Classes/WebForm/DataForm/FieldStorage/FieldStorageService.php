@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 use Exception;
 use InvalidArgumentException;
+use KikCMS\Classes\DataTable\DataTable;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
@@ -49,7 +50,7 @@ class FieldStorageService extends Injectable
         $query = (new Builder())
             ->from($field->getStorage()->getTableModel())
             ->columns($field->getColumn())
-            ->where('id = :id:', ['id' => $relationId]);
+            ->where(DataTable::TABLE_KEY . ' = :id:', ['id' => $relationId]);
 
         if ($translationKeyId = $this->dbService->getValue($query)) {
             return $translationKeyId;
@@ -143,7 +144,7 @@ class FieldStorageService extends Injectable
         $relatedValue = $this->storageService->getRelatedValueForField($field, $editData, $editId);
 
         foreach ($keysToUpdate as $newId) {
-            $success = $this->dbService->update($model, [$relatedField => $relatedValue], ['id' => $newId, $relatedField => 0]);
+            $success = $this->dbService->update($model, [$relatedField => $relatedValue], [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
 
             if ( ! $success) {
                 return false;
@@ -300,7 +301,7 @@ class FieldStorageService extends Injectable
     {
         $query = (new Builder())
             ->from($storage->getTableModel())
-            ->where('id = :id:', ['id' => $referenceId]);
+            ->where(DataTable::TABLE_KEY . ' = :id:', ['id' => $referenceId]);
 
         return $this->dbService->getRow($query);
     }
