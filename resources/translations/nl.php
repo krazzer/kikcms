@@ -326,7 +326,7 @@ return [
             'settings'  => 'Instellingen',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
-            'stats'     => 'Statistieken',
+            'stats'     => 'Bezoekers',
         ],
     ],
 
