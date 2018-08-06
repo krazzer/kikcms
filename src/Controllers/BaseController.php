@@ -96,6 +96,29 @@ class BaseController extends Controller
     }
 
     /**
+     * @param string $fileName
+     * @param array $lines
+     * @param array $headerLines
+     */
+    protected function outputCsv(string $fileName, array $lines, array $headerLines = [])
+    {
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $fileName . '.csv";');
+
+        $f = fopen('php://output', 'w');
+
+        if($headerLines){
+            fputcsv($f, $headerLines, ';');
+        }
+
+        foreach ($lines as $line) {
+            fputcsv($f, $line, ';');
+        }
+
+        fclose($f);
+    }
+
+    /**
      * Set Content Security Policy headers
      */
     private function initializeCpsHeaders()

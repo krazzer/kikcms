@@ -136,11 +136,12 @@ trait FieldShortcuts
      * @param string $key
      * @param string $label
      * @param array $options
+     * @param array $validators
      * @return Field|MultiCheckboxField
      */
-    public function addMultiCheckboxField(string $key, string $label, array $options): Field
+    public function addMultiCheckboxField(string $key, string $label, array $options, array $validators = []): Field
     {
-        return $this->addField(new MultiCheckboxField($key, $label, $options));
+        return $this->addField(new MultiCheckboxField($key, $label, $options, $validators));
     }
 
     /**

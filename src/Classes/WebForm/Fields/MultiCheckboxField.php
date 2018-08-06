@@ -15,15 +15,17 @@ class MultiCheckboxField extends Field
      * @param string $key
      * @param string $label
      * @param array $options
+     * @param array $validators
      */
-    public function __construct(string $key, string $label, array $options)
+    public function __construct(string $key, string $label, array $options, array $validators)
     {
         $element = (new Check($key))
             ->setAttribute('type', 'multiCheckbox')
             ->setLabel($label);
 
-        $this->element = $element;
-        $this->options = $options;
+        $this->element    = $element;
+        $this->options    = $options;
+        $this->validators = $validators;
     }
 
     /**
