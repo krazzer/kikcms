@@ -68,6 +68,10 @@ abstract class MailForm extends WebForm
                 $value = '-';
             }
 
+            if( ! $field->getElement()){
+                continue;
+            }
+
             $contents .= '<b>' . $field->getElement()->getLabel() . ':</b><br>';
             $contents .= $value . '<br><br>';
         }
