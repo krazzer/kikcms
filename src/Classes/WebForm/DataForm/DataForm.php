@@ -400,7 +400,7 @@ abstract class DataForm extends WebForm
      */
     private function getSystemFields()
     {
-        return [self::WEB_FORM_ID, DataTable::INSTANCE, DataTable::PAGE];
+        return [self::WEB_FORM_ID, DataTable::PAGE];
     }
 
     /**

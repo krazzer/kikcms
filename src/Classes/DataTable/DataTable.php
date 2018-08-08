@@ -31,7 +31,6 @@ use Phalcon\Tag;
  */
 abstract class DataTable extends Renderable
 {
-    const INSTANCE    = 'dataTableInstance';
     const PAGE        = 'dataTablePage';
     const SESSION_KEY = 'dataTable';
     const TABLE_KEY   = 'id';
@@ -514,8 +513,6 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable(true);
 
-        $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
-
         if ($this->parentRelationKey && $this->filters->getParentEditId() !== null) {
             $this->form->addHiddenField($this->parentRelationKey, $this->filters->getParentEditId());
         }
@@ -529,8 +526,6 @@ abstract class DataTable extends Renderable
     public function renderEditForm()
     {
         $this->initializeDatatable(true);
-
-        $this->form->addHiddenField(self::INSTANCE, $this->getInstance());
 
         return $this->form->render();
     }
