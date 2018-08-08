@@ -48,7 +48,7 @@ abstract class MailForm extends WebForm
      * @param array $input
      * @return string
      */
-    private function toMailOutput(array $input): string
+    protected function toMailOutput(array $input): string
     {
         $contents = '';
 
