@@ -456,7 +456,6 @@ abstract class DataTable extends Renderable
         }
 
         if ($initializeForm) {
-            $instance     = $this->getInstance();
             $formClass    = $this->getFormClass();
             $editId       = $this->getFilters()->getEditId();
             $languageCode = $this->getFilters()->getWindowLanguageCode();
@@ -473,7 +472,6 @@ abstract class DataTable extends Renderable
                 ->setParentEditId($parentEditId);
 
             $this->form = $dataForm;
-            $this->form->setIdentifier('form_' . $instance);
         }
 
         $this->initialize();

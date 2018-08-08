@@ -308,14 +308,6 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param string $identifier
-     */
-    public function setIdentifier(string $identifier)
-    {
-        $this->identifier = $identifier;
-    }
-
-    /**
      * @param boolean $placeHolderAsLabel
      *
      * @return WebForm|$this
