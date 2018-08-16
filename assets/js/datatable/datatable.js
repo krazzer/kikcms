@@ -371,11 +371,13 @@ var DataTable = Class.extend({
 
     initWindowSize: function () {
         var $window = this.getWindow();
+        var $footer = $window.find('.windowContent > .footer');
 
         var windowHeight = $window.height();
         var headerHeight = $window.find('.windowContent > .header').outerHeight();
-        var footerHeight = $window.find('.windowContent > .footer').outerHeight();
         var tabsHeight   = 0;
+
+        var footerHeight = $footer.length ? $footer.outerHeight() : 0;
 
         if ($window.find('.windowContent > .tabs').length > 0) {
             tabsHeight = $window.find('.windowContent > .tabs').outerHeight();
