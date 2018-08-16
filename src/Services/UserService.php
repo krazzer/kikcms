@@ -182,7 +182,7 @@ class UserService extends Injectable
             'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
         ];
 
-        if($this->config->get('company')->get('logoMail')){
+        if($this->getRole() == Permission::CLIENT){
             return $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
         } else {
             return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
