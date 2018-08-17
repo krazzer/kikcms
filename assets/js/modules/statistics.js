@@ -271,11 +271,17 @@ var Statistics = Class.extend({
     updateAnalyticsData: function () {
         this.$buttonRefresh.fadeIn();
 
-        $.ajax({
-            url: this.URL_UPDATE_STATISTICS,
-            success: this.onDataUpdate.bind(this),
-            dataType: 'json',
-            cache: false
+        var self = this;
+
+        KikCMS.getSecurityToken(function (token) {
+            $.ajax({
+                url: self.URL_UPDATE_STATISTICS,
+                data: {token: token},
+                success: self.onDataUpdate.bind(self),
+                type: 'post',
+                dataType: 'json',
+                cache: false
+            });
         });
     }
 });

@@ -22,7 +22,9 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\DateTimeService;
+use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property UserService $userService
@@ -35,6 +37,7 @@ use Phalcon\Http\Response;
  * @property WebsiteSettingsBase $websiteSettings
  * @property CmsService $cmsService
  * @property AccessControl $acl
+ * @property Backend $diskCache
  */
 class CmsController extends BaseCmsController
 {
@@ -200,5 +203,21 @@ class CmsController extends BaseCmsController
     public function logoutAction()
     {
         $this->userService->logout();
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function generateSecurityTokenAction(): ResponseInterface
+    {
+        if( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
+            return null;
+        }
+
+        $token = uniqid('securityToken', true);
+
+        $this->diskCache->save($token);
+
+        return $this->response->setJsonContent($token);
     }
 }

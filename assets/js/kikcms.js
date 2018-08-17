@@ -112,6 +112,15 @@ var KikCmsClass = Class.extend({
         xmlHttpRequest();
     },
 
+    /**
+     * @param onSuccess
+     */
+    getSecurityToken: function(onSuccess){
+        KikCMS.action('/cms/generate-security-token', {}, function (token) {
+            onSuccess(token);
+        });
+    },
+
     showError: function (result, onError) {
         if (typeof(onError) != 'undefined') {
             onError();

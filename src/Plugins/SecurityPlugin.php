@@ -17,6 +17,16 @@ use Phalcon\Mvc\Dispatcher;
  */
 class SecurityPlugin extends Plugin
 {
+    const CONTROLLER_LOGIN      = 'login';
+    const CONTROLLER_STATISTICS = 'statistics';
+    const CONTROLLER_ERRORS     = 'statistics';
+
+    const ALLOWED_CONTROLLERS = [
+        self::CONTROLLER_LOGIN,
+        self::CONTROLLER_STATISTICS,
+        self::CONTROLLER_ERRORS
+    ];
+
     /**
      * This action is executed before execute any action in the application
      *
@@ -27,12 +37,9 @@ class SecurityPlugin extends Plugin
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         $controller = $dispatcher->getControllerName();
+        $isLoggedIn = $controller == self::CONTROLLER_STATISTICS ?: $this->userService->isLoggedIn();
 
-        //todo #3: this needs to be properly secured
-        $isLoggedIn         = $controller == 'statistics' ? true : $this->userService->isLoggedIn();
-        $allowedControllers = ['login', 'deploy', 'errors'];
-
-        if ( ! $isLoggedIn && ! in_array($controller, $allowedControllers)) {
+        if ( ! $isLoggedIn && ! in_array($controller, self::ALLOWED_CONTROLLERS)) {
             if ($this->request->isAjax()) {
                 $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
             } else {
@@ -45,7 +52,7 @@ class SecurityPlugin extends Plugin
             return false;
         }
 
-        if ($isLoggedIn && $controller == 'login') {
+        if ($isLoggedIn && $controller == self::CONTROLLER_LOGIN) {
             $this->response->redirect('cms');
             return false;
         }
