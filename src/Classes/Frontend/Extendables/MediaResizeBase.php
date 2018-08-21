@@ -32,18 +32,21 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function crop(Adapter $image, $width, $height)
     {
-        if($image->getWidth() < $width && $image->getHeight() < $height){
+        if ($image->getWidth() < $width && $image->getHeight() < $height) {
             return;
         }
 
-        if($image->getWidth() / $image->getHeight() > $width / $height){
-            $image->resize(ceil($width * ($image->getWidth() / $image->getHeight())), $height);
+        $sourceAspectRatio = $image->getWidth() / $image->getHeight();
+        $targetAspectRatio = $width / $height;
+
+        if ($sourceAspectRatio > $targetAspectRatio) {
+            $image->resize(ceil($image->getWidth() * ($height / $image->getHeight())), $height);
         } else {
-            $image->resize($width, ceil($height * ($image->getHeight() / $image->getWidth())));
+            $image->resize($width, ceil($image->getHeight() * ($width / $image->getWidth())));
         }
 
         // crop if the width or height is still out of bounds
-        if($image->getWidth() > $width || $image->getHeight() > $height){
+        if ($image->getWidth() > $width || $image->getHeight() > $height) {
             $offsetX = ($image->getWidth() - $width) / 2;
             $offsetY = ($image->getHeight() - $height) / 2;
 
@@ -58,14 +61,14 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function resize(Adapter $image, $width, $height)
     {
-        if($image->getWidth() < $width && $image->getHeight() < $height){
+        if ($image->getWidth() < $width && $image->getHeight() < $height) {
             return;
         }
 
         $image->resize($width, $height);
 
         // resize again if the width or height is still out of bounds
-        if($image->getWidth() > $width || $image->getHeight() > $height){
+        if ($image->getWidth() > $width || $image->getHeight() > $height) {
             $image->resize($width, $height);
         }
     }
