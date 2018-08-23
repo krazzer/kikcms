@@ -188,15 +188,16 @@ abstract class DataTable extends Renderable
      */
     public function checkCheckbox($id, $column, $checked): bool
     {
-        $this->renderEditForm();
+        if ($form = $this->getForm()) {
+            $this->renderEditForm();
 
-        $form     = $this->getForm();
-        $field    = $form->getFieldMap()->get($column);
-        $langCode = $this->getFilters()->getLanguageCode();
-        $editData = $this->dbService->getTableRowById($this->getModel(), $id);
+            $field    = $form->getFieldMap()->get($column);
+            $langCode = $this->getFilters()->getLanguageCode();
+            $editData = $this->dbService->getTableRowById($this->getModel(), $id);
 
-        if ($field->getStorage()) {
-            return $this->fieldStorageService->store($field, $checked, $id, $editData, $langCode);
+            if ($field->getStorage()) {
+                return $this->fieldStorageService->store($field, $checked, $id, $editData, $langCode);
+            }
         }
 
         return $this->dbService->update($this->getModel(), [$column => $checked], [self::TABLE_KEY => $id]);
@@ -348,9 +349,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return DataForm
+     * @return DataForm|null
      */
-    public function getForm(): DataForm
+    public function getForm(): ?DataForm
     {
         return $this->form;
     }
@@ -829,7 +830,7 @@ abstract class DataTable extends Renderable
         $constant = $this->getModel() . '::FIELD_' . strtoupper(self::TABLE_KEY);
 
         if ( ! defined($constant)) {
-           throw new Exception("DataTables only allow tables with a single primary key named '" . self::TABLE_KEY . "'");
+            throw new Exception("DataTables only allow tables with a single primary key named '" . self::TABLE_KEY . "'");
         }
     }
 }
