@@ -204,10 +204,12 @@ class Field
      * Set the elements' maxlength attribute
      *
      * @param int $maxLength
+     * @return $this|Field
      */
     public function setMaxLength(int $maxLength)
     {
         $this->getElement()->setAttribute('maxlength', $maxLength);
+        return $this;
     }
 
     /**
