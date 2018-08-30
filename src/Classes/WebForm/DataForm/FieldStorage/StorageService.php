@@ -21,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property FieldStorageService $fieldStorageService
  * @property TranslationService $translationService
+ * @property RelationKeyService $relationKeyService
  */
 class StorageService extends Injectable
 {
@@ -44,11 +45,11 @@ class StorageService extends Injectable
      */
     public function getRelatedValueForField(DataTableField $field, array $editData, int $editId): int
     {
-        if( ! $referencedColumn = $field->getDataTable()->getParentRelationKeyReference()) {
+        if ( ! $referencedColumn = $field->getDataTable()->getParentRelationKeyReference()) {
             return $editId;
         }
 
-        if( ! array_key_exists($referencedColumn, $editData)){
+        if ( ! array_key_exists($referencedColumn, $editData)) {
             throw new ParentRelationKeyReferenceMissingException($referencedColumn, get_class($field->getForm()));
         }
 
@@ -291,23 +292,30 @@ class StorageService extends Injectable
     {
         $this->executeBeforeMainEvents();
 
-        $table     = $this->storageData->getTable();
-        $editId    = $this->storageData->getEditId();
         $mainInput = $this->storageData->getMainInput();
-
         $mainInput = $this->dbService->toStorageArray($mainInput);
 
-        if ($editId) {
-            if ($this->storageData->getFormInput() && $mainInput) {
-                $this->dbService->update($table, $mainInput, [DataTable::TABLE_KEY => $editId]);
+        $object = $this->storageData->getObject();
+
+        foreach ($mainInput as $key => $value) {
+            if ( ! $this->relationKeyService->isRelationKey($key)) {
+                $object->$key = $value;
+                continue;
             }
+
+            $value = $this->storageData->getFormInputValue($key);
+            $this->relationKeyService->set($object, $key, $value);
+        }
+
+        if ( ! property_exists($object, DataTable::TABLE_KEY)) {
+            $object->save();
         } else {
             $this->disableForeignKeysForTempKeys();
-            $editId = $this->dbService->insert($table, $mainInput);
+            $object->save();
             $this->enableForeignKeysForTempKeys();
         }
 
-        $this->storageData->setEditId($editId);
+        $this->storageData->setEditId((int) $object->id);
 
         $this->executeAfterMainEvents();
     }

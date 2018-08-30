@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\ObjectLists\FieldMap;
+use KikCmsCore\Classes\Model;
 
 /**
  * Contains formatted data for storage
@@ -34,6 +35,9 @@ class StorageData
 
     /** @var array */
     private $events;
+
+    /** @var Model */
+    private $object;
 
     /**
      * @return null|int
@@ -268,6 +272,24 @@ class StorageData
     public function setAdditionalInput(array $additionalInput): StorageData
     {
         $this->additionalInput = $additionalInput;
+        return $this;
+    }
+
+    /**
+     * @return Model
+     */
+    public function getObject(): Model
+    {
+        return $this->object;
+    }
+
+    /**
+     * @param Model $object
+     * @return StorageData
+     */
+    public function setObject(Model $object): StorageData
+    {
+        $this->object = $object;
         return $this;
     }
 }

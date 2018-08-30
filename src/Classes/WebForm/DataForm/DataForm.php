@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\RelationKeyService;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
@@ -23,13 +24,13 @@ use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use Monolog\Logger;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
  * @property LanguageService $languageService
  * @property Logger $logger
  * @property StorageService $storageService
+ * @property RelationKeyService $relationKeyService
  */
 abstract class DataForm extends WebForm
 {
@@ -111,7 +112,13 @@ abstract class DataForm extends WebForm
     {
         $data = [];
 
+        $object = $this->getObject();
+
         foreach ($this->getFieldMap() as $key => $field) {
+            if($this->relationKeyService->isRelationKey($key)){
+                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key));
+            }
+
             if ($field->getStorage() && ! $field->getStorage() instanceOf None) {
                 $value      = $this->storageService->retrieve($field, $id, $langCode, $tableData);
                 $data[$key] = $field->getFormFormat($value);
@@ -186,7 +193,7 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        $data = $this->getEditDataForModel();
+        $data = $this->getObject()->toArray();
         $data = $this->getDataStoredElseWhere($editId, $langCode, $data) + $data;
         $data = $this->transformDataForDisplay((array) $data);
 
@@ -248,20 +255,6 @@ abstract class DataForm extends WebForm
     {
         $this->dataTable = $dataTable;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getEditDataForModel(): array
-    {
-        $editId = $this->getFilters()->getEditId();
-
-        $query = (new Builder())
-            ->addFrom($this->getModel())
-            ->andWhere('id = ' . $editId);
-
-        return $this->dbService->getRow($query);
     }
 
     /**
@@ -410,6 +403,11 @@ abstract class DataForm extends WebForm
     private function saveData(array $input): bool
     {
         $storageData = $this->getStorageData($input);
+
+        $model  = $this->getModel();
+        $object = $this->getObject() ?: new $model();
+
+        $storageData->setObject($object);
 
         $this->storageService->setStorageData($storageData);
 

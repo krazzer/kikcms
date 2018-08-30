@@ -21,6 +21,7 @@ use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorageService;
+use KikCMS\Classes\WebForm\DataForm\FieldStorage\RelationKeyService;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
@@ -103,6 +104,7 @@ class Services extends BaseServices
             LanguageService::class,
             MenuService::class,
             NumberService::class,
+            RelationKeyService::class,
             Security::class,
             StorageService::class,
             StringService::class,
