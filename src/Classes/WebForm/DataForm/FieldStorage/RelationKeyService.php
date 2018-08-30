@@ -4,7 +4,6 @@
 namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 
-use Exception;
 use KikCMS\Config\DataFormConfig;
 use KikCmsCore\Classes\Model;
 use Phalcon\Di\Injectable;
@@ -61,6 +60,7 @@ class RelationKeyService extends Injectable
 
     /**
      * Get a Models' relations' value by relationKey
+     * Note that we use '@' to supress notices. If it's not there, it's not there. Null will be returned if so.
      *
      * @param Model $model
      * @param string $relationKey
@@ -73,19 +73,32 @@ class RelationKeyService extends Injectable
         switch (count($parts)) {
             case 2:
                 list($part1, $part2) = $parts;
-                return $model->$part1->$part2;
+
+                $relation = $this->getRelation($model, $part1);
+
+                if ($relation->getType() == Relation::HAS_MANY_THROUGH) {
+                    $returnValue = [];
+
+                    foreach ($model->$part1 as $item) {
+                        $returnValue = $item->$part2;
+                    }
+
+                    return $returnValue;
+                }
+
+                return @$model->$part1->$part2;
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
-                return $model->$part1->$part2->$part3;
+                return @$model->$part1->$part2->$part3;
             break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
-                return $model->$part1->$part2->$part3->$part4;
+                return @$model->$part1->$part2->$part3->$part4;
             break;
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
-                return $model->$part1->$part2->$part3->$part4->$part5;
+                return @$model->$part1->$part2->$part3->$part4->$part5;
             break;
         }
 
@@ -125,52 +138,21 @@ class RelationKeyService extends Injectable
             return;
         }
 
-        if ( ! $relation = $this->getRelation($model, $property)) {
-            throw new Exception("Relation '$property' is missing from " . get_class($model));
-        }
+        $relation     = $this->getRelation($model, $property);
+        $relatedModel = $relation->getReferencedModel();
 
-        $relatedModelClass = $relation->getReferencedModel();
-
-        $model->$property = new $relatedModelClass();
-    }
-
-    /**
-     * Get all defined 1-1 relations for a model
-     *
-     * @param Model $model
-     * @return Relation[]
-     */
-    private function getRelations(Model $model): array
-    {
-        $hasOneRelations    = $model->getModelsManager()->getHasOne($model);
-        $belongsToRelations = $model->getModelsManager()->getBelongsTo($model);
-
-        return array_merge($hasOneRelations, $belongsToRelations);
+        $model->$property = new $relatedModel();
     }
 
     /**
      * Get a defined relation by alias
      *
      * @param Model $model
-     * @param string $property
+     * @param string $alias
      * @return Relation
      */
-    private function getRelation(Model $model, string $property): ?Relation
+    private function getRelation(Model $model, string $alias): Relation
     {
-        $relations = $this->getRelations($model);
-
-        foreach ($relations as $relation) {
-            $options = $relation->getOptions();
-
-            if( ! array_key_exists('alias', $options)){
-                continue;
-            }
-
-            if ($options['alias'] === $property) {
-                return $relation;
-            }
-        }
-
-        return null;
+        return $this->modelsManager->getRelationByAlias(get_class($model), $alias);
     }
 }
