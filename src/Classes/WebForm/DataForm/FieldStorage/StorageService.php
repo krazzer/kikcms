@@ -307,7 +307,7 @@ class StorageService extends Injectable
             $this->relationKeyService->set($object, $key, $value);
         }
 
-        if ( ! property_exists($object, DataTable::TABLE_KEY)) {
+        if (property_exists($object, DataTable::TABLE_KEY)) {
             $object->save();
         } else {
             $this->disableForeignKeysForTempKeys();

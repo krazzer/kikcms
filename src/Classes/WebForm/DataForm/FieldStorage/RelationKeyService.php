@@ -41,7 +41,28 @@ class RelationKeyService extends Injectable
         switch (count($parts)) {
             case 2:
                 list($part1, $part2) = $parts;
-                $model->$part1->$part2 = $value;
+
+                $relation = $this->getRelation($model, $part1);
+
+                if ($relation->getType() == Relation::HAS_MANY) {
+                    $relatedObjects = [];
+
+                    foreach ($value as $id){
+                        $referencedModel = $relation->getReferencedModel();
+
+                        /** @var Model $referencedModel */
+                        $referencedModel = new $referencedModel();
+                        $referencedModel->$part2 = $id;
+
+                        $relatedObjects[] = $referencedModel;
+                    }
+
+                    $model->$part1->delete();
+                    $model->$part1 = $relatedObjects;
+                } else {
+                    $model->$part1->$part2 = $value;
+                }
+
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
@@ -76,11 +97,11 @@ class RelationKeyService extends Injectable
 
                 $relation = $this->getRelation($model, $part1);
 
-                if ($relation->getType() == Relation::HAS_MANY_THROUGH) {
+                if ($relation->getType() == Relation::HAS_MANY) {
                     $returnValue = [];
 
                     foreach ($model->$part1 as $item) {
-                        $returnValue = $item->$part2;
+                        $returnValue[] = $item->$part2;
                     }
 
                     return $returnValue;

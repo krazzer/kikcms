@@ -592,6 +592,11 @@ abstract class WebForm extends Renderable
                 $field->setDefault(0);
             }
 
+            // set unposted multi-checkboxes to default empty
+            if ($field->getType() == Field::TYPE_MULTI_CHECKBOX && ! $this->request->hasPost($key)) {
+                $field->setDefault([]);
+            }
+
             // re-use earlier generated dataTable instance
             if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
