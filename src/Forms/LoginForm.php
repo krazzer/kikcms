@@ -4,10 +4,12 @@ namespace KikCMS\Forms;
 
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 
 /**
  * @property UserService $userService
+ * @property CmsService $cmsService
  */
 class LoginForm extends WebForm
 {
@@ -38,6 +40,7 @@ class LoginForm extends WebForm
             return $this->response->redirect('cms/login/reset');
         }
 
+        $this->cmsService->cleanUpDiskCache();
         $this->userService->setLoggedIn($user->id);
 
         return $this->response->redirect('cms');

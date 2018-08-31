@@ -31,9 +31,11 @@ use Phalcon\Tag;
  */
 abstract class DataTable extends Renderable
 {
-    const PAGE        = 'dataTablePage';
-    const SESSION_KEY = 'dataTable';
-    const TABLE_KEY   = 'id';
+    const PAGE             = 'dataTablePage';
+    const SESSION_KEY      = 'dataTable';
+    const INSTANCE_PREFIX  = 'dataTable';
+    const IDS_CACHE_SUFFIX = 'ids';
+    const TABLE_KEY        = 'id';
 
     const JS_TRANSLATIONS = [
         'dataTable.delete.confirmOne',
@@ -52,7 +54,7 @@ abstract class DataTable extends Renderable
     protected $customFilters = [];
 
     /** @var string */
-    protected $instancePrefix = 'dataTable';
+    protected $instancePrefix = self::INSTANCE_PREFIX;
 
     /** @var array */
     protected $searchableFields = [];
@@ -602,20 +604,22 @@ abstract class DataTable extends Renderable
         $cacheKey = $this->getNewIdsCacheKey();
 
         if ($this->diskCache->exists($cacheKey)) {
-            $editKeys = $this->diskCache->get($cacheKey);
+            $newIdsCache = unserialize($this->diskCache->get($cacheKey));
         } else {
-            $editKeys = [];
+            $newIdsCache = (new SubDataTableNewIdsCache)
+                ->setModel($this->getModel())
+                ->setColumn($this->parentRelationKey);
         }
 
-        $editKeys[] = $editId;
+        $newIdsCache->addId($editId);
 
-        $this->diskCache->save($cacheKey, $editKeys);
+        $this->diskCache->save($cacheKey, serialize($newIdsCache));
     }
 
     /**
      * @return array
      */
-    public function getCachedNewIds()
+    public function getCachedNewIds(): array
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
@@ -623,7 +627,17 @@ abstract class DataTable extends Renderable
             return [];
         }
 
-        return $this->diskCache->get($cacheKey);
+        return unserialize($this->diskCache->get($cacheKey))->getIds();
+    }
+
+    /**
+     * Remove cache files
+     */
+    public function removeNewIdCache()
+    {
+        $cacheKey = $this->getNewIdsCacheKey();
+
+        $this->diskCache->delete($cacheKey);
     }
 
     /**
@@ -771,7 +785,7 @@ abstract class DataTable extends Renderable
      */
     private function getNewIdsCacheKey()
     {
-        return $this->getInstance() . '-ids';
+        return $this->getInstance() . self::IDS_CACHE_SUFFIX;
     }
 
     /**

@@ -88,7 +88,13 @@ class StorageService extends Injectable
             return false;
         }
 
-        return $this->db->commit();
+        $success = $this->db->commit();
+
+        if($success){
+            $this->removeSubDataTableTemporaryKeysCache();
+        }
+
+        return $success;
     }
 
     /**
@@ -358,6 +364,21 @@ class StorageService extends Injectable
 
             $this->translationService->saveValue($value, $keyId, $langCode);
             $this->storageData->addAdditionalInputValue($field->getColumn(), $keyId);
+        }
+    }
+
+    /**
+     * Remove temporary keys cache file
+     */
+    private function removeSubDataTableTemporaryKeysCache()
+    {
+        /** @var DataTableField $field */
+        foreach ($this->storageData->getFieldMap() as $field) {
+            if($field->getType() !== Field::TYPE_DATA_TABLE){
+                continue;
+            }
+
+            $field->getDataTable()->removeNewIdCache();
         }
     }
 }
