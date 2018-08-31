@@ -10,6 +10,7 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\DataTables\PagesFlat;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
@@ -60,8 +61,12 @@ class PageForm extends DataForm
 
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
-        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
-        $templateField->getElement()->setDefault($this->getTemplate()->getKey());
+        if($this->getDataTable() instanceof PagesFlat){
+            $templateField = $this->addHiddenField(Page::FIELD_TEMPLATE, $this->getTemplate()->getKey());
+        } else {
+            $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
+            $templateField->getElement()->setDefault($this->getTemplate()->getKey());
+        }
 
         $tabAdvancedFields = [
             $templateField,
