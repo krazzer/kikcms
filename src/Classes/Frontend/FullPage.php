@@ -66,6 +66,14 @@ class FullPage extends Identifiable
     }
 
     /**
+     * @return null|string
+     */
+    public function getKey(): ?string
+    {
+        return $this->getPage()->key;
+    }
+
+    /**
      * @return string
      */
     public function getLanguageCode(): string
@@ -79,6 +87,14 @@ class FullPage extends Identifiable
     public function getLevel(): int
     {
         return $this->getPage()->getLevel();
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLink(): ?int
+    {
+        return $this->getPage()->getLink();
     }
 
     /**

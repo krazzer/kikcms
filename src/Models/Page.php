@@ -8,6 +8,7 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
  * @property Page $parent
+ * @property Page $linkedPage
  * @property Page[] $aliases
  * @property Simple|PageLanguage[] $pageLanguages
  * @property Simple|PageLanguageContent[] $pageLanguageContents
@@ -57,6 +58,7 @@ class Page extends Model
         $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
         $this->hasMany(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, ["alias" => "pageContents"]);
         $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, ["alias" => "pageLanguageContents"]);
+        $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
     }
 
     /**
@@ -137,5 +139,17 @@ class Page extends Model
     public function getCreatedDate(): DateTime
     {
         return new DateTime($this->created_at);
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLink(): ?int
+    {
+        if( ! $this->link){
+            return null;
+        }
+
+        return (int) $this->link;
     }
 }
