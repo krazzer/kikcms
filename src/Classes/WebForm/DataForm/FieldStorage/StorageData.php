@@ -223,6 +223,10 @@ class StorageData
             return null;
         }
 
+        if($this->formInput[$key] === ''){
+            return null;
+        }
+
         return $this->formInput[$key];
     }
 
