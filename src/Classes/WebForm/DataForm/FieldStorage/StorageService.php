@@ -297,9 +297,18 @@ class StorageService extends Injectable
 
         $object = $this->storageData->getObject();
 
+        // set objects' properties
+        foreach ($mainInput as $key => $value) {
+            if ($this->relationKeyService->isRelationKey($key)) {
+                continue;
+            }
+
+            $object->$key = $this->storageData->getFormInputValue($key);
+        }
+
+        // set objects' related properties
         foreach ($mainInput as $key => $value) {
             if ( ! $this->relationKeyService->isRelationKey($key)) {
-                $object->$key = $value;
                 continue;
             }
 
