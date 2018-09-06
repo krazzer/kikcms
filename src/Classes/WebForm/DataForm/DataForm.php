@@ -116,7 +116,7 @@ abstract class DataForm extends WebForm
 
         foreach ($this->getFieldMap() as $key => $field) {
             if($this->relationKeyService->isRelationKey($key)){
-                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key));
+                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
             }
 
             if ($field->getStorage() && ! $field->getStorage() instanceOf None) {

@@ -316,7 +316,7 @@ class StorageService extends Injectable
                 continue;
             }
 
-            $this->relationKeyService->set($object, $key, $value);
+            $this->relationKeyService->set($object, $key, $value, $this->storageData->getLanguageCode());
         }
 
         if (property_exists($object, DataTable::TABLE_KEY)) {

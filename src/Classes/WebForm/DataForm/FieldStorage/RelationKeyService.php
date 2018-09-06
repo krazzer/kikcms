@@ -31,9 +31,12 @@ class RelationKeyService extends Injectable
      * @param Model $model
      * @param string $relationKey
      * @param mixed $value
+     * @param string|null $langCode
      */
-    public function set(Model $model, string $relationKey, $value)
+    public function set(Model $model, string $relationKey, $value, string $langCode = null)
     {
+        $relationKey = $this->replaceLangCode($relationKey, $langCode);
+
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
 
         $this->createMissingRelations($model, $parts);
@@ -81,14 +84,17 @@ class RelationKeyService extends Injectable
 
     /**
      * Get a Models' relations' value by relationKey
-     * Note that we use '@' to supress notices. If it's not there, it's not there. Null will be returned if so.
+     * Note that we use '@' to suppress notices. If it's not there, it's not there. Null will be returned if so.
      *
      * @param Model $model
      * @param string $relationKey
+     * @param string|null $langCode
      * @return mixed
      */
-    public function get(Model $model, string $relationKey)
+    public function get(Model $model, string $relationKey, string $langCode = null)
     {
+        $relationKey = $this->replaceLangCode($relationKey, $langCode);
+
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
 
         switch (count($parts)) {
@@ -175,5 +181,19 @@ class RelationKeyService extends Injectable
     private function getRelation(Model $model, string $alias): Relation
     {
         return $this->modelsManager->getRelationByAlias(get_class($model), $alias);
+    }
+
+    /**
+     * @param string $relationKey
+     * @param string|null $langCode
+     * @return string
+     */
+    private function replaceLangCode(string $relationKey, string $langCode = null): string
+    {
+        if( ! $langCode){
+            return $relationKey;
+        }
+
+        return str_replace(DataFormConfig::RELATION_KEY_LANGUAGE_CODE_PLACEHOLDER, ucfirst($langCode), $relationKey);
     }
 }

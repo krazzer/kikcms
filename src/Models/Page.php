@@ -3,6 +3,7 @@
 namespace KikCMS\Models;
 
 use DateTime;
+use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
 
@@ -62,6 +63,8 @@ class Page extends Model
         $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
 
         $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
+
+        $this->addPageContentRelations();
     }
 
     /**
@@ -154,5 +157,42 @@ class Page extends Model
         }
 
         return (int) $this->link;
+    }
+
+    /**
+     * Add relations for each field, and for each language
+     */
+    private function addPageContentRelations()
+    {
+        $templateFieldKeys = $this->getTemplateFieldKeys();
+        $languages         = $this->getLanguages();
+
+        foreach ($templateFieldKeys as $key) {
+            $this->hasOne(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, [
+                'alias'    => $key,
+                'defaults' => [PageContent::FIELD_FIELD => $key]
+            ]);
+
+            foreach ($languages as $language) {
+                $this->hasOne(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, [
+                    'alias'    => $key . ucfirst($language->code),
+                    'defaults' => [
+                        PageLanguageContent::FIELD_FIELD         => $key,
+                        PageLanguageContent::FIELD_LANGUAGE_CODE => $language->code
+                    ]
+                ]);
+            }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    private function getTemplateFieldKeys(): array
+    {
+        /** @var TemplateFieldsBase $templateFields */
+        $templateFields = $this->getDI()->get('templateFields');
+
+        return array_keys($templateFields->getFields());
     }
 }
