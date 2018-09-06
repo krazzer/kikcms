@@ -9,6 +9,7 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 /**
  * @property Page $parent
  * @property Page $linkedPage
+ * @property PageLanguage $pageLanguage
  * @property Page[] $aliases
  * @property Simple|PageLanguage[] $pageLanguages
  * @property Simple|PageLanguageContent[] $pageLanguageContents
@@ -59,6 +60,8 @@ class Page extends Model
         $this->hasMany(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, ["alias" => "pageContents"]);
         $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, ["alias" => "pageLanguageContents"]);
         $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
+
+        $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
     }
 
     /**
@@ -94,7 +97,7 @@ class Page extends Model
      */
     public function getName(): ?string
     {
-        return $this->pageLanguages->getFirst()->name;
+        return $this->pageLanguage->name;
     }
 
     /**
@@ -146,7 +149,7 @@ class Page extends Model
      */
     public function getLink(): ?int
     {
-        if( ! $this->link){
+        if ( ! $this->link) {
             return null;
         }
 
