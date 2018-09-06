@@ -91,7 +91,7 @@ class StorageService extends Injectable
 
         $success = $this->db->commit();
 
-        if($success){
+        if ($success) {
             $this->removeSubDataTableTemporaryKeysCache();
         }
 
@@ -303,7 +303,11 @@ class StorageService extends Injectable
                 continue;
             }
 
-            $object->$key = $this->storageData->getFormInputValue($key);
+            if($value === ''){
+                $value = null;
+            }
+
+            $object->$key = $value;
         }
 
         // set objects' related properties
@@ -312,7 +316,6 @@ class StorageService extends Injectable
                 continue;
             }
 
-            $value = $this->storageData->getFormInputValue($key);
             $this->relationKeyService->set($object, $key, $value);
         }
 
@@ -391,7 +394,7 @@ class StorageService extends Injectable
     {
         /** @var DataTableField $field */
         foreach ($this->storageData->getFieldMap() as $field) {
-            if($field->getType() !== Field::TYPE_DATA_TABLE){
+            if ($field->getType() !== Field::TYPE_DATA_TABLE) {
                 continue;
             }
 
