@@ -303,11 +303,7 @@ class StorageService extends Injectable
                 continue;
             }
 
-            if($value === ''){
-                $value = null;
-            }
-
-            $object->$key = $this->storageData->getFormInputValue($key);
+            $object->$key = $value === '' ? null : $value;
         }
 
         // set objects' related properties
