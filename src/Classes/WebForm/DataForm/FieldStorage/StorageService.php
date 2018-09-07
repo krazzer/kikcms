@@ -307,7 +307,7 @@ class StorageService extends Injectable
                 $value = null;
             }
 
-            $object->$key = $value;
+            $object->$key = $this->storageData->getFormInputValue($key);
         }
 
         // set objects' related properties
@@ -316,6 +316,7 @@ class StorageService extends Injectable
                 continue;
             }
 
+            $value = $this->storageData->getFormInputValue($key);
             $this->relationKeyService->set($object, $key, $value, $this->storageData->getLanguageCode());
         }
 
