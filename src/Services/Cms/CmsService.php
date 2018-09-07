@@ -54,11 +54,10 @@ class CmsService extends Injectable
 
                 $newIdsCache = unserialize($this->diskCache->get($fileName));
 
-                if( ! $newIdsCache instanceof SubDataTableNewIdsCache) {
-                    throw new Exception("Cache file $file could not be unserialized");
+                if($newIdsCache instanceof SubDataTableNewIdsCache) {
+                    $this->removeUnsavedTemporaryRecords($newIdsCache);
                 }
 
-                $this->removeUnsavedTemporaryRecords($newIdsCache);
                 unlink($file);
             }
         } catch (Exception $exception) {
