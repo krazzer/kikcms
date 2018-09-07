@@ -112,6 +112,10 @@ class StorageData
                 continue;
             }
 
+            if($this->formInput[$key] === ''){
+                $this->formInput[$key] = null;
+            }
+
             $mainInput[$field->getColumn()] = $this->formInput[$key];
         }
 

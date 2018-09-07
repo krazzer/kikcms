@@ -303,7 +303,7 @@ class StorageService extends Injectable
                 continue;
             }
 
-            $object->$key = $value === '' ? null : $value;
+            $object->$key = $value;
         }
 
         // set objects' related properties
