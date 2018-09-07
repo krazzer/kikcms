@@ -61,9 +61,8 @@ class CmsController extends BaseCmsController
      */
     public function indexAction()
     {
-        $menuGroups    = $this->cmsService->getMenuItemGroups();
-        $menuFirstKey  = array_keys($menuGroups)[0];
-        $firstMenuItem = $menuGroups[$menuFirstKey]->getFirst();
+        $menuGroupMap  = $this->cmsService->getMenuGroupMap();
+        $firstMenuItem = $menuGroupMap->getFirst()->getMenuItemMap()->getFirst();
 
         if ($firstMenuItem && $firstMenuItem->getId() != MenuConfig::MENU_ITEM_LOGOUT) {
             return $this->response->redirect($firstMenuItem->getRoute());
@@ -210,7 +209,7 @@ class CmsController extends BaseCmsController
      */
     public function generateSecurityTokenAction(): ResponseInterface
     {
-        if( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
+        if ( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
             return null;
         }
 

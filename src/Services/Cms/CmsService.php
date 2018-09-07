@@ -13,6 +13,8 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
+use KikCMS\ObjectLists\MenuGroupMap;
+use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Classes\Model;
 use Monolog\Logger;
@@ -27,6 +29,7 @@ use Phalcon\Di\Injectable;
  * @property WebsiteSettingsBase $websiteSettings
  * @property AccessControl $acl
  * @property Backend $diskCache
+ * @property Logger $logger
  */
 class CmsService extends Injectable
 {
@@ -54,7 +57,7 @@ class CmsService extends Injectable
 
                 $newIdsCache = unserialize($this->diskCache->get($fileName));
 
-                if($newIdsCache instanceof SubDataTableNewIdsCache) {
+                if ($newIdsCache instanceof SubDataTableNewIdsCache) {
                     $this->removeUnsavedTemporaryRecords($newIdsCache);
                 }
 
@@ -67,40 +70,39 @@ class CmsService extends Injectable
     }
 
     /**
-     * @return CmsMenuGroup[]
+     * @return MenuGroupMap
      */
-    public function getMenuItemGroups(): array
+    public function getMenuGroupMap(): MenuGroupMap
     {
-        $groups = [];
+        $groupMap = new MenuGroupMap();
 
         foreach (MenuConfig::MENU_STRUCTURE as $groupId => $menuItems) {
-            $groupLabel = $this->translator->tl('menu.group.' . $groupId);
-            $menuItems  = $this->getMenuItems($menuItems);
+            $groupLabel  = $this->translator->tl('menu.group.' . $groupId);
+            $menuItemMap = $this->getMenuItemMap($menuItems);
 
-            $menuGroup = (new CmsMenuGroup($groupId, $groupLabel))
-                ->setMenuItems($menuItems);
+            $menuGroup = (new CmsMenuGroup($groupId, $groupLabel))->setMenuItemMap($menuItemMap);
 
-            $groups[$groupId] = $menuGroup;
+            $groupMap->add($menuGroup, $groupId);
         }
 
         if ( ! $this->config->get('analytics') || ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
-            unset($groups[MenuConfig::MENU_GROUP_STATS]);
+            $groupMap->remove(MenuConfig::MENU_GROUP_STATS);
         }
 
         if ( ! $this->acl->allowed(Pages::class)) {
             if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
-                unset($groups[MenuConfig::MENU_GROUP_CONTENT]);
+                $groupMap->remove(MenuConfig::MENU_GROUP_CONTENT);
             } else {
-                $groups[MenuConfig::MENU_GROUP_CONTENT]->remove(MenuConfig::MENU_ITEM_PAGES);
-                $groups[MenuConfig::MENU_GROUP_CONTENT]->remove(MenuConfig::MENU_ITEM_SETTINGS);
+                $groupMap->removeItem(MenuConfig::MENU_GROUP_CONTENT, MenuConfig::MENU_ITEM_PAGES);
+                $groupMap->removeItem(MenuConfig::MENU_GROUP_CONTENT, MenuConfig::MENU_ITEM_SETTINGS);
             }
         }
 
         if ( ! $this->acl->allowed(Users::class)) {
-            $groups[MenuConfig::MENU_GROUP_CMS]->remove(MenuConfig::MENU_ITEM_USERS);
+            $groupMap->removeItem(MenuConfig::MENU_GROUP_CMS, MenuConfig::MENU_ITEM_USERS);
         }
 
-        return $this->websiteSettings->getMenuGroups($groups);
+        return $this->websiteSettings->getMenuGroupMap($groupMap);
     }
 
     /**
@@ -138,21 +140,21 @@ class CmsService extends Injectable
 
     /**
      * @param array $menuItems [menuItemId => route]
-     * @return CmsMenuItem[]
+     * @return MenuItemMap
      */
-    private function getMenuItems(array $menuItems): array
+    private function getMenuItemMap(array $menuItems): MenuItemMap
     {
-        $menuItemObjects = [];
+        $menuItemMap = new MenuItemMap();
 
         foreach ($menuItems as $menuItemId => $route) {
             $label = $this->translator->tl('menu.item.' . $menuItemId);
 
             $menuItemObject = new CmsMenuItem($menuItemId, $label, 'cms/' . $route);
 
-            $menuItemObjects[$menuItemId] = $menuItemObject;
+            $menuItemMap->add($menuItemObject, $menuItemId);
         }
 
-        return $menuItemObjects;
+        return $menuItemMap;
     }
 
     /**
@@ -166,7 +168,7 @@ class CmsService extends Injectable
         $model = new $model();
 
         foreach ($cache->getIds() as $id) {
-            if($object = $model::findFirst([$cache->getColumn() . ' = 0 AND ' . DataTable::TABLE_KEY . ' = ' . $id])){
+            if ($object = $model::findFirst([$cache->getColumn() . ' = 0 AND ' . DataTable::TABLE_KEY . ' = ' . $id])) {
                 $object->delete();
             }
         }

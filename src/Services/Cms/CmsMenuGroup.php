@@ -2,6 +2,8 @@
 
 namespace KikCMS\Services\Cms;
 
+use KikCMS\ObjectLists\MenuItemMap;
+
 /**
  * Value Object for a CMS menu item
  */
@@ -10,11 +12,11 @@ class CmsMenuGroup
     /** @var string */
     private $id;
 
-    /** @var CmsMenuItem[] */
-    private $menuItems = [];
-
     /** @var string */
     private $label;
+
+    /** @var MenuItemMap */
+    private $menuItemMap = [];
 
     /**
      * @param string $id
@@ -34,12 +36,7 @@ class CmsMenuGroup
      */
     public function add(CmsMenuItem $menuItem)
     {
-        $menuItems = $this->getMenuItems();
-
-        $menuItems[$menuItem->getId()] = $menuItem;
-
-        $this->setMenuItems($menuItems);
-
+        $this->getMenuItemMap()->add($menuItem, $menuItem->getId());
         return $this;
     }
 
@@ -49,20 +46,6 @@ class CmsMenuGroup
     public function getId(): string
     {
         return $this->id;
-    }
-
-    /**
-     * @return CmsMenuItem|null
-     */
-    public function getFirst(): ?CmsMenuItem
-    {
-        if( ! $this->menuItems){
-            return null;
-        }
-
-        $firstKey = array_keys($this->menuItems)[0];
-
-        return $this->menuItems[$firstKey];
     }
 
     /**
@@ -76,20 +59,24 @@ class CmsMenuGroup
     }
 
     /**
-     * @return CmsMenuItem[]
+     * @return MenuItemMap
      */
-    public function getMenuItems(): array
+    public function getMenuItemMap(): MenuItemMap
     {
-        return $this->menuItems;
+        if( ! $this->menuItemMap){
+            $this->menuItemMap = new MenuItemMap();
+        }
+
+        return $this->menuItemMap;
     }
 
     /**
-     * @param CmsMenuItem[] $menuItems
+     * @param MenuItemMap $menuItemMap
      * @return CmsMenuGroup
      */
-    public function setMenuItems(array $menuItems): CmsMenuGroup
+    public function setMenuItemMap(MenuItemMap $menuItemMap): CmsMenuGroup
     {
-        $this->menuItems = $menuItems;
+        $this->menuItemMap = $menuItemMap;
         return $this;
     }
 
@@ -109,13 +96,5 @@ class CmsMenuGroup
     {
         $this->label = $label;
         return $this;
-    }
-
-    /**
-     * @param string $menuItemKey
-     */
-    public function remove(string $menuItemKey)
-    {
-        unset($this->menuItems[$menuItemKey]);
     }
 }

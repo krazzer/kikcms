@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 
@@ -22,16 +23,16 @@ class BaseCmsController extends BaseController
         parent::initialize();
 
         if ($this->userService->isLoggedIn()) {
-            $menuStructure = $this->cmsService->getMenuItemGroups();
+            $menuGroupMap = $this->cmsService->getMenuGroupMap();
         } else {
-            $menuStructure = [];
+            $menuGroupMap = new MenuGroupMap();
         }
 
         if($customCss = $this->websiteSettings->getCustomCss()){
             $this->view->assets->addCss($customCss);
         }
 
-        $this->view->menuStructure = $menuStructure;
+        $this->view->menuGroupMap = $menuGroupMap;
         $this->highlightMenuItem($this->dispatcher->getActionName());
     }
 

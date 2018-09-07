@@ -6,7 +6,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 use KikCMS\Classes\Frontend\WebsiteExtendable;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\ObjectLists\CmsPluginList;
-use KikCMS\Services\Cms\CmsMenuGroup;
+use KikCMS\ObjectLists\MenuGroupMap;
 use Phalcon\Mvc\Router\Group;
 
 /**
@@ -20,12 +20,12 @@ use Phalcon\Mvc\Router\Group;
 class WebsiteSettingsBase extends WebsiteExtendable
 {
     /**
-     * @param CmsMenuGroup[] $menuGroups
-     * @return CmsMenuGroup[]
+     * @param MenuGroupMap $menuGroupMap
+     * @return MenuGroupMap
      */
-    public function getMenuGroups(array $menuGroups): array
+    public function getMenuGroupMap(MenuGroupMap $menuGroupMap): MenuGroupMap
     {
-        return $menuGroups;
+        return $menuGroupMap;
     }
 
     /**
