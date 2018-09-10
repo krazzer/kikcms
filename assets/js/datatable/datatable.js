@@ -612,6 +612,20 @@ var DataTable = Class.extend({
         $window.fadeIn();
     },
 
+    setEdited: function(rowId){
+        var $editedRow = this.getDataTable().find("table tr[data-id=" + rowId + "]");
+        $editedRow.addClass('edited');
+
+        setTimeout(function () {
+            $editedRow.addClass('easeOutBgColor');
+            $editedRow.removeClass('edited');
+
+            setTimeout(function () {
+                $editedRow.removeClass('easeOutBgColor');
+            }, 500);
+        }, 5000);
+    },
+
     setPagesContent: function (pagesContent) {
         var $pagination = this.getDataTable().find('.pages');
         $pagination.html(pagesContent);
@@ -629,17 +643,7 @@ var DataTable = Class.extend({
             return;
         }
 
-        var $editedRow = $table.find("tr[data-id=" + editedId + "]");
-        $editedRow.addClass('edited');
-
-        setTimeout(function () {
-            $editedRow.addClass('easeOutBgColor');
-            $editedRow.removeClass('edited');
-
-            setTimeout(function () {
-                $editedRow.removeClass('easeOutBgColor');
-            }, 500);
-        }, 5000);
+        this.setEdited(editedId);
     },
 
     setWindowContent: function (contents) {
