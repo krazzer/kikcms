@@ -472,6 +472,20 @@ var DataTable = Class.extend({
         });
     },
 
+    actionReload: function (onSuccess) {
+        var self    = this;
+        var filters = this.getFilters();
+
+        this.action('page', filters, function (result) {
+            self.setTableContent(result.table);
+            self.setPagesContent(result.pagination);
+
+            if (typeof onSuccess !== 'undefined') {
+                onSuccess();
+            }
+        });
+    },
+
     actionSave: function (closeWindow) {
         var self    = this;
         var $window = this.getWindow();
