@@ -7,8 +7,8 @@ use KikCmsCore\Classes\Model;
 
 class GaVisitData extends Model
 {
-    const TABLE = 'ga_visit_data';
-    const ALIAS = 'gvd';
+    const TABLE = 'cms_analytics_metric';
+    const ALIAS = 'am';
 
     const FIELD_DATE   = 'date';
     const FIELD_TYPE   = 'type';

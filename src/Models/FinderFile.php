@@ -10,7 +10,8 @@ use KikCmsCore\Classes\Model;
  */
 class FinderFile extends Model
 {
-    const TABLE = 'finder_file';
+    const TABLE = 'cms_file';
+    const ALIAS = 'f';
 
     const FIELD_ID        = 'id';
     const FIELD_FOLDER_ID = 'folder_id';
