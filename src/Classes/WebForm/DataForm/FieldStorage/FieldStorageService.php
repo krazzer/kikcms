@@ -32,6 +32,7 @@ class FieldStorageService extends Injectable
      * @param Field $field
      * @param int $relationId
      * @return int
+     * @deprecated Use RelationKeys instead
      */
     public function getTranslationKeyId(Field $field, int $relationId = null): int
     {
@@ -67,6 +68,7 @@ class FieldStorageService extends Injectable
      * @param string|null $langCode
      * @return bool
      * @throws Exception
+     * @deprecated Use RelationKeys instead
      */
     public function store(Field $field, $value, $editId, array $editData, string $langCode = null): bool
     {
@@ -97,6 +99,7 @@ class FieldStorageService extends Injectable
      * @param array $editData
      * @param string|null $langCode
      * @return bool|int
+     * @deprecated Use RelationKeys instead
      */
     public function storeOneToOne(Field $field, $value, array $editData, string $langCode = null)
     {
@@ -161,6 +164,7 @@ class FieldStorageService extends Injectable
      * @param string|null $langCode
      *
      * @return bool
+     * @deprecated Use RelationKeys instead
      */
     public function storeManyToMany(Field $field, $value, $editId, string $langCode = null): bool
     {
@@ -212,6 +216,7 @@ class FieldStorageService extends Injectable
      * @param string|null $langCode
      *
      * @return array
+     * @deprecated Use RelationKeys instead
      */
     public function retrieveManyToMany(Field $field, $id, string $langCode = null)
     {
@@ -243,6 +248,7 @@ class FieldStorageService extends Injectable
      * @param array $tableData
      * @param string|null $langCode
      * @return mixed
+     * @deprecated Use RelationKeys instead
      */
     public function retrieveOneToOne(Field $field, array $tableData, string $langCode = null)
     {
@@ -257,6 +263,7 @@ class FieldStorageService extends Injectable
      * @param array $tableData
      *
      * @return mixed
+     * @deprecated Use RelationKeys instead
      */
     public function retrieveOneToOneRef(Field $field, array $tableData)
     {
@@ -282,6 +289,7 @@ class FieldStorageService extends Injectable
      * @param string|null $langCode
      *
      * @return null|string
+     * @deprecated Use RelationKeys instead
      */
     public function retrieveTranslation(Field $field, $id, string $langCode = null): ?string
     {
@@ -312,6 +320,7 @@ class FieldStorageService extends Injectable
      * @param string $langCode
      *
      * @return Builder
+     * @deprecated Use RelationKeys instead
      */
     private function getRelationQuery(Field $field, $relationId, string $langCode = null)
     {
@@ -339,6 +348,7 @@ class FieldStorageService extends Injectable
      * @param string $langCode
      *
      * @return bool
+     * @deprecated Use RelationKeys instead
      */
     private function relationRowExists(Field $field, $relationId, $langCode = null): bool
     {

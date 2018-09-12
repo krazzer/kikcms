@@ -42,6 +42,7 @@ class StorageService extends Injectable
      * @param int $editId
      * @return int
      * @throws ParentRelationKeyReferenceMissingException
+     * @deprecated Use RelationKeys instead
      */
     public function getRelatedValueForField(DataTableField $field, array $editData, int $editId): int
     {
@@ -105,6 +106,7 @@ class StorageService extends Injectable
      * @param array $tableData
      * @return mixed
      * @throws Exception
+     * @deprecated Use RelationKeys instead
      */
     public function retrieve(Field $field, $id, string $langCode = null, array $tableData)
     {
@@ -206,6 +208,7 @@ class StorageService extends Injectable
     /**
      * @param FieldStorage $fieldStorage
      * @return null|string
+     * @deprecated Use RelationKeys instead
      */
     private function getRelatedFieldValue(FieldStorage $fieldStorage): ?string
     {
@@ -221,6 +224,7 @@ class StorageService extends Injectable
      * Get a StorageValues list, containing data to insert for the OneToOneRef FieldStorage type
      *
      * @return array [relatedField => StorageValues]
+     * @deprecated Use RelationKeys instead
      */
     private function getStorageValuesMap(): array
     {
@@ -331,6 +335,7 @@ class StorageService extends Injectable
 
     /**
      * Store data after the main forms' table row is inserted/updated
+     * @deprecated Use RelationKeys instead
      */
     private function storePostMain()
     {
@@ -364,6 +369,7 @@ class StorageService extends Injectable
 
     /**
      * Store translation fields
+     * @deprecated Use RelationKeys instead
      */
     private function storeTranslations()
     {

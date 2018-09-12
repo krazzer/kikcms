@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 /**
  * Used for MultiCheckbox and DataTableSelect fields, which can be saved in a new row per item
+ * @deprecated Use RelationKeys instead
  */
 class ManyToMany extends FieldStorage
 {

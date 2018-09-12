@@ -8,6 +8,7 @@ use KikCMS\Classes\WebForm\Field;
 /**
  * Contains where and how a certain DataForms' field should be stored and retrieved
  * This class is the default behaviour to store a fields' input in some other table than the one defined in the form
+ * @deprecated Use RelationKeys instead
  */
 class FieldStorage
 {

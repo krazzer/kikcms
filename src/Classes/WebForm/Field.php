@@ -293,6 +293,7 @@ class Field
 
     /**
      * @return null|FieldStorage
+     * @deprecated Use RelationKeys instead
      */
     public function getStorage(): ?FieldStorage
     {
@@ -302,6 +303,7 @@ class Field
     /**
      * Shortcut to set the storage to None
      * @return Field
+     * @deprecated Use RelationKeys instead
      */
     public function dontStore(): Field
     {
@@ -317,6 +319,7 @@ class Field
      * @param array $defaultValues
      *
      * @return $this|Field
+     * @deprecated Use RelationKeys instead
      */
     public function table(string $table, $relatedField, $addLanguageCode = false, $defaultValues = [])
     {
@@ -340,6 +343,7 @@ class Field
      * @param bool $addLanguageCode
      * @param array $defaultValues
      * @return $this|Field
+     * @deprecated Use RelationKeys instead
      */
     public function tableMultiRow(string $table, string $relatedField, $addLanguageCode = false, $defaultValues = [])
     {
@@ -360,6 +364,7 @@ class Field
      *
      * @param null $langCode
      * @return $this
+     * @deprecated Use RelationKeys instead
      */
     public function translate($langCode = null)
     {
@@ -381,6 +386,7 @@ class Field
      *
      * @param FieldStorage $fieldStorage
      * @return Field|$this
+     * @deprecated Use RelationKeys instead
      */
     public function store(FieldStorage $fieldStorage): Field
     {
@@ -393,6 +399,7 @@ class Field
      *
      * @param bool $multiLingual
      * @return Field
+     * @deprecated Use RelationKeys instead
      */
     public function storePage($multiLingual = true): Field
     {
