@@ -491,6 +491,9 @@ var DataTable = Class.extend({
         var $window = this.getWindow();
         var params  = this.getFormGroups().serializeObject();
 
+        var $saveButtons = $window.find('.saveAndClose, .save');
+        $saveButtons.attr('disabled', 'disabled');
+
         if (this.getFormEditId()) {
             params.editId = this.getFormEditId();
         }
@@ -509,6 +512,10 @@ var DataTable = Class.extend({
                 self.setWindowContent(result.window);
                 $window.find('.alert').hide().fadeIn();
             }
+
+            $saveButtons.removeAttr('disabled');
+        }, function () {
+            $saveButtons.removeAttr('disabled');
         });
     },
 
