@@ -303,7 +303,6 @@ class Field
     /**
      * Shortcut to set the storage to None
      * @return Field
-     * @deprecated Use RelationKeys instead
      */
     public function dontStore(): Field
     {
