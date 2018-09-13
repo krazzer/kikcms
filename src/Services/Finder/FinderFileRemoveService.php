@@ -1,12 +1,11 @@
 <?php
 
 
-namespace KikCMS\Classes\Finder;
+namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
-use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;

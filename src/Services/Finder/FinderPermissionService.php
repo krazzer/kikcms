@@ -5,7 +5,6 @@ namespace KikCMS\Services\Finder;
 
 
 use Exception;
-use KikCMS\Classes\Finder\FinderFileService;
 use KikCMS\Classes\Permission;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderFile;

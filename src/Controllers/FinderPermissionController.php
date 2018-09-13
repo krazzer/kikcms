@@ -2,7 +2,7 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\Finder\FinderPermissionHelper;
+use KikCMS\Services\Finder\FinderPermissionHelper;
 use KikCMS\Services\Finder\FinderPermissionService;
 use Phalcon\Http\ResponseInterface;
 

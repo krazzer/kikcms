@@ -13,6 +13,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderFile;
 use KikCMS\Services\Cms\CmsService;
+use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\UserService;

@@ -2,7 +2,7 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Classes\Finder\FinderFileRemoveService;
+use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Pages\PageContentService;
@@ -12,7 +12,7 @@ use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;

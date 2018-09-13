@@ -1,13 +1,13 @@
 <?php
 
-namespace KikCMS\Classes\Finder;
+namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Database\Now;
+use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderPermission;
-use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;

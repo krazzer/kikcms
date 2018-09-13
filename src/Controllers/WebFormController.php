@@ -4,7 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Classes\Finder\FinderFileService;
+use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\FinderFile;

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
+namespace KikCMS\Services\WebForm;
 
 
 use KikCMS\Config\DataFormConfig;

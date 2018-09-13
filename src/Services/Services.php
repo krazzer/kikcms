@@ -3,9 +3,9 @@
 namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
-use KikCMS\Classes\Finder\FinderFileRemoveService;
-use KikCMS\Classes\Finder\FinderFileService;
-use KikCMS\Classes\Finder\FinderPermissionHelper;
+use KikCMS\Services\Finder\FinderFileRemoveService;
+use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
@@ -20,9 +20,9 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorageService;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\RelationKeyService;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageService;
+use KikCMS\Services\WebForm\FieldStorageService;
+use KikCMS\Services\WebForm\RelationKeyService;
+use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Analytics\AnalyticsService;
