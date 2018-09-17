@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
 
@@ -10,6 +11,14 @@ use Phalcon\Http\Response;
  */
 abstract class MailForm extends WebForm
 {
+    /**
+     * @return string
+     */
+    protected function getSuccessMessage(): string
+    {
+        return $this->translator->tl('mailForm.sendSuccess');
+    }
+
     /**
      * @return string
      */
@@ -40,7 +49,7 @@ abstract class MailForm extends WebForm
             return false;
         }
 
-        $this->flash->success($this->translator->tl('mailForm.sendSuccess'));
+        $this->flash->success($this->getSuccessMessage());
         return $this->response->redirect(trim($this->router->getRewriteUri(), '/'));
     }
 
@@ -60,6 +69,10 @@ abstract class MailForm extends WebForm
 
             if( ! array_key_exists($key, $input)){
                 continue;
+            }
+
+            if($field instanceof SelectField){
+                $input[$key] = $field->getElement()->getOptions()[$input[$key]];
             }
 
             if(is_array($input[$key])){
