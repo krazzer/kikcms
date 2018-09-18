@@ -261,7 +261,7 @@ abstract class DataTable extends Renderable
      * @param $value
      * @return string
      */
-    protected function formatFinderImage($value): string
+    public function formatFinderImage($value): string
     {
         if ( ! $value) {
             return '';

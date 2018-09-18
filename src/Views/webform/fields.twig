@@ -92,6 +92,7 @@
         {{ block('fieldLabel') }}
         {{ field.renderedDataTable|raw }}
         {{ form.render(element.name)|raw }}
+        {{ block('errorWarnings') }}
     </div>
 {% endblock %}
 

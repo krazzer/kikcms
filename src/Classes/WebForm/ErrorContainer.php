@@ -20,8 +20,9 @@ class ErrorContainer
      * @param string $message
      * @param string $field
      * @param bool $addToGlobal set this true if you also want this to be shown as form error
+     * @return ErrorContainer
      */
-    public function addFieldError(string $field, string $message, $addToGlobal = false)
+    public function addFieldError(string $field, string $message, $addToGlobal = false): ErrorContainer
     {
         if( ! array_key_exists($field, $this->fieldErrors)){
             $this->fieldErrors[$field] = [];
@@ -33,19 +34,24 @@ class ErrorContainer
         if($addToGlobal){
             $this->addFormError($message);
         }
+
+        return $this;
     }
 
     /**
      * @param string $message
      * @param array $fields mark these fields as they have an error, but will not have a message of their own
+     * @return ErrorContainer
      */
-    public function addFormError(string $message, array $fields = [])
+    public function addFormError(string $message, array $fields = []): ErrorContainer
     {
         foreach ($fields as $field){
             $this->setFieldHasError($field);
         }
 
         $this->formErrors[] = $message;
+
+        return $this;
     }
 
     /**

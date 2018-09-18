@@ -247,6 +247,16 @@ abstract class WebForm extends Renderable
         $this->addAssets();
 
         if ($this->isPosted()) {
+            foreach ($this->fieldMap as $key => $field) {
+                // re-use earlier generated dataTable instance
+                if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
+                    $instance = $this->request->getPost($key);
+                    /** @var DataTableField $field */
+                    $field->getDataTable()->setInstance($instance);
+                    $field->setDefault($instance);
+                }
+            }
+
             $errorContainer = $this->getErrors();
             $this->updateFieldsByPostData();
 
@@ -595,14 +605,6 @@ abstract class WebForm extends Renderable
             // set unposted multi-checkboxes to default empty
             if ($field->getType() == Field::TYPE_MULTI_CHECKBOX && ! $this->request->hasPost($key)) {
                 $field->setDefault([]);
-            }
-
-            // re-use earlier generated dataTable instance
-            if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
-                $instance = $this->request->getPost($key);
-                /** @var DataTableField $field */
-                $field->getDataTable()->setInstance($instance);
-                $field->setDefault($instance);
             }
         }
     }
