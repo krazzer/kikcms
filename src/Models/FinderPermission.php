@@ -8,7 +8,7 @@ use KikCmsCore\Classes\Model;
 
 class FinderPermission extends Model
 {
-    public const TABLE = 'finder_permission';
+    public const TABLE = 'cms_file_permission';
     public const ALIAS = 'fp';
 
     const FIELD_ID      = 'id';
