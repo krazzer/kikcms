@@ -156,7 +156,7 @@ class UrlService extends Injectable
         }
 
         if ($page->type == Page::TYPE_LINK) {
-            return '/' . $this->getUrlForLinkedPage($pageLanguage);
+            return $this->getUrlForLinkedPage($pageLanguage);
         }
 
         $query = (new Builder)
@@ -182,7 +182,7 @@ class UrlService extends Injectable
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
-            return substr($this->createUrlPathByPageLanguage($pageLanguage), 1);
+            return $this->createUrlPathByPageLanguage($pageLanguage);
         });
     }
 
@@ -365,6 +365,10 @@ class UrlService extends Injectable
         }
 
         if ( ! is_numeric($link)) {
+            if (substr($link, 0, 1) !== '/') {
+                return '/' . $link;
+            }
+
             return $link;
         }
 
