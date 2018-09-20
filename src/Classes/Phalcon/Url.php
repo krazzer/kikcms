@@ -40,6 +40,12 @@ class Url extends \Phalcon\Mvc\Url
             $args       = null;
         }
 
+        // remove leading slash to prevent double slashes
+        // this is a bug in Phalcon that should be corrected, added issue #13495
+        if(substr($uri, 0, 1) == '/'){
+            $uri = substr($uri, 1);
+        }
+
         return parent::get($uri, $args, $local, $baseUri);
     }
 }

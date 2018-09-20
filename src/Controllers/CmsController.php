@@ -161,7 +161,7 @@ class CmsController extends BaseCmsController
      */
     public function previewAction(PageLanguage $pageLanguage)
     {
-        $url = $this->urlService->getUrlByPageLanguage($pageLanguage, false);
+        $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
         $this->response->redirect($url);
     }

@@ -40,7 +40,7 @@ class SitemapController extends BaseController
                 continue;
             }
 
-            $links[] = $this->urlService->getUrlByPageLanguage($pageLanguage, false);
+            $links[] = $this->urlService->getUrlByPageLanguage($pageLanguage);
         }
 
         $modifiedAt = new DateTime();

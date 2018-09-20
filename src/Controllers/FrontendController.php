@@ -45,8 +45,8 @@ class FrontendController extends BaseController
      */
     public function pageAction(string $urlPath = null)
     {
-        if ($urlPath) {
-            $pageLanguage = $this->urlService->getPageLanguageByUrl($urlPath);
+        if ($urlPath && $urlPath !== '/') {
+            $pageLanguage = $this->urlService->getPageLanguageByUrlPath($urlPath);
         } else {
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
@@ -71,7 +71,7 @@ class FrontendController extends BaseController
             throw new NotFoundException($languageCode);
         }
 
-        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage));
     }
 
     /**
@@ -87,7 +87,7 @@ class FrontendController extends BaseController
             throw new NotFoundException($languageCode);
         }
 
-        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage, false));
+        $this->response->redirect($this->urlService->getUrlByPageLanguage($pageLanguage));
     }
 
     /**
