@@ -74,7 +74,7 @@ class Pages extends DataTable
 
             parent::delete([$pageId]);
 
-            $this->pageRearrangeService->updateLeftSiblingsOrder($page);
+            $this->pageRearrangeService->updateLeftSiblingsOrder($page->getParentId(), $page->getDisplayOrder());
         }
 
         $this->pageRearrangeService->updateNestedSet();

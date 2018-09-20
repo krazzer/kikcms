@@ -64,6 +64,7 @@ class Page extends Model
 
         $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
 
+        $this->addPageLanguageRelations();
         $this->addPageContentRelations();
     }
 
@@ -83,6 +84,14 @@ class Page extends Model
     public static function getByIdList(array $ids)
     {
         return parent::getByIdList($ids);
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDisplayOrder(): ?int
+    {
+        return (int) $this->display_order ?: null;
     }
 
     /**
@@ -182,6 +191,21 @@ class Page extends Model
                     ]
                 ]);
             }
+        }
+    }
+
+    /**
+     * Add pageLanguage relations for each language, like pageLanguageEn
+     */
+    private function addPageLanguageRelations()
+    {
+        $languages = $this->getLanguages();
+
+        foreach ($languages as $language) {
+            $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, [
+                'alias'    => 'pageLanguage' . ucfirst($language->code),
+                'defaults' => [PageLanguage::FIELD_LANGUAGE_CODE => $language->code]
+            ]);
         }
     }
 

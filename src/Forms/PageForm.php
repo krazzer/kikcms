@@ -47,8 +47,7 @@ class PageForm extends DataForm
     protected function initialize()
     {
         $this->addTab('Pagina', [
-            $this->addTextField(PageLanguage::FIELD_NAME, $this->translator->tl('fields.name'), [new PresenceOf()])
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+            $this->addTextField('pageLanguage*:name', $this->translator->tl('fields.name'), [new PresenceOf()]),
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE),
         ]);
 
@@ -61,7 +60,7 @@ class PageForm extends DataForm
 
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
-        if($this->getDataTable() instanceof PagesFlat){
+        if ($this->getDataTable() instanceof PagesFlat) {
             $templateField = $this->addHiddenField(Page::FIELD_TEMPLATE, $this->getTemplate()->getKey());
         } else {
             $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
@@ -71,12 +70,10 @@ class PageForm extends DataForm
         $tabAdvancedFields = [
             $templateField,
 
-            $this->addTextField(PageLanguage::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
+            $this->addTextField('pageLanguage*:url', $this->translator->tl('fields.url'), $urlValidation)
                 ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
 
-            $this->addCheckboxField(PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true)
+            $this->addCheckboxField('pageLanguage*:' . PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->setDefault(1)
         ];
 
@@ -90,14 +87,9 @@ class PageForm extends DataForm
         }
 
         $tabSeoFields = [
-            $this->addTextField(PageLanguage::FIELD_SEO_TITLE, 'SEO titel')
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
-
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_KEYWORDS, 'SEO sleutelwoorden')->rows(4)
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
-
-            $this->addTextAreaField(PageLanguage::FIELD_SEO_DESCRIPTION, 'SEO omschrijving')->rows(12)
-                ->table(PageLanguage::class, PageLanguage::FIELD_PAGE_ID, true),
+            $this->addTextField('pageLanguage*:seo_title', 'SEO titel'),
+            $this->addTextAreaField('pageLanguage*:seo_keywords', 'SEO sleutelwoorden')->rows(4),
+            $this->addTextAreaField('pageLanguage*:seo_description', 'SEO omschrijving')->rows(12),
         ];
 
         $this->addTab('SEO', $tabSeoFields);
@@ -113,16 +105,7 @@ class PageForm extends DataForm
     {
         $editData = parent::getEditData();
 
-        if ( ! $pageId = $this->getFilters()->getEditId()) {
-            return $editData;
-        }
-
-        $defaultLangPage     = $this->pageLanguageService->getByPageId($pageId);
-        $defaultLangPageName = $defaultLangPage ? $defaultLangPage->name : '';
-
         $editData[Page::FIELD_TEMPLATE] = $this->getTemplate()->getKey();
-
-        $editData['pageName'] = $editData['name'] ?: $defaultLangPageName;
 
         return $editData;
     }
@@ -150,7 +133,7 @@ class PageForm extends DataForm
             return $errorContainer;
         }
 
-        if ( ! $url = $input['url']) {
+        if ( ! $url = $input['pageLanguage*:url']) {
             return $errorContainer;
         }
 
@@ -159,7 +142,7 @@ class PageForm extends DataForm
         $languageCode = $this->getFilters()->getLanguageCode();
 
         if ($this->urlService->urlExists($url, $parentId, $languageCode, $pageLanguage)) {
-            $errorContainer->addFieldError('url', $this->translator->tl('dataTables.pages.urlExists'));
+            $errorContainer->addFieldError('pageLanguage*:url', $this->translator->tl('dataTables.pages.urlExists'));
         }
 
         return $errorContainer;

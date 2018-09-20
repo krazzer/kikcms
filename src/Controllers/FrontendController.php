@@ -40,13 +40,13 @@ class FrontendController extends BaseController
     }
 
     /**
-     * @param string $url
+     * @param string $urlPath
      * @throws NotFoundException
      */
-    public function pageAction(string $url = null)
+    public function pageAction(string $urlPath = null)
     {
-        if ($url) {
-            $pageLanguage = $this->urlService->getPageLanguageByUrl($url);
+        if ($urlPath) {
+            $pageLanguage = $this->urlService->getPageLanguageByUrl($urlPath);
         } else {
             $pageLanguage = $this->pageLanguageService->getDefault();
         }

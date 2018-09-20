@@ -59,17 +59,18 @@ class PageRearrangeService extends Injectable
     }
 
     /**
-     * @param Page $page
+     * @param int|null $parentId
+     * @param int|null $dislplayOrder
      */
-    public function updateLeftSiblingsOrder(Page $page)
+    public function updateLeftSiblingsOrder(int $parentId = null, int $dislplayOrder = null)
     {
-        if ( ! $page->display_order) {
+        if ( ! $dislplayOrder) {
             return;
         }
 
         $this->db->update(Page::TABLE, [Page::FIELD_DISPLAY_ORDER], [new RawValue("display_order - 1")], "
-            display_order > " . $page->display_order . "
-            AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
+            display_order > " . $dislplayOrder . "
+            AND parent_id" . ($parentId ? ' = ' . $parentId : ' IS NULL') . "
             ORDER BY display_order ASC 
         ");
     }
@@ -199,12 +200,15 @@ class PageRearrangeService extends Injectable
         $targetDisplayOrder = $targetPage->display_order;
         $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
 
+        $oldDisplayOrder = $page->getDisplayOrder();
+        $oldParentId     = $page->getParentId();
+
         $this->db->begin();
 
         try {
             $this->updateSiblingOrder($targetPage, $placeAfter);
             $this->updatePage($page, $targetParentId, $newDisplayOrder);
-            $this->updateLeftSiblingsOrder($page);
+            $this->updateLeftSiblingsOrder($oldParentId, $oldDisplayOrder);
         } catch (Exception $exception) {
             $this->db->rollback();
             throw $exception;
@@ -238,8 +242,11 @@ class PageRearrangeService extends Injectable
 
         $displayOrder = $this->pageService->getHighestDisplayOrderChild($targetPage) + 1;
 
+        $oldDisplayOrder = $page->getDisplayOrder();
+        $oldParentId     = $page->getParentId();
+
         $this->updatePage($page, (int) $targetPage->id, $displayOrder);
-        $this->updateLeftSiblingsOrder($page);
+        $this->updateLeftSiblingsOrder($oldParentId, $oldDisplayOrder);
     }
 
     /**
@@ -255,7 +262,7 @@ class PageRearrangeService extends Injectable
             $insertValues[] = '(' . implode(',', array_merge([$pageId], $structure)) . ')';
         }
 
-        if( ! $insertValues){
+        if ( ! $insertValues) {
             return;
         }
 
@@ -285,12 +292,10 @@ class PageRearrangeService extends Injectable
      */
     private function updatePage(Page $page, int $parentId = null, int $displayOrder = null)
     {
-        $this->dbService->update(Page::class, [
-            Page::FIELD_DISPLAY_ORDER => $displayOrder,
-            Page::FIELD_PARENT_ID     => $parentId,
-        ], [
-            Page::FIELD_ID => $page->id
-        ]);
+        $page->parent_id     = $parentId;
+        $page->display_order = $displayOrder;
+
+        $page->save();
     }
 
     /**

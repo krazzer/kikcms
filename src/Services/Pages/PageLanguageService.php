@@ -118,7 +118,7 @@ class PageLanguageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $languageCode = null, bool $activeOnly = true): PageLanguageMap
     {
-        if ( ! $pageMap->keys()) {
+        if ($pageMap->isEmpty()) {
             return new PageLanguageMap;
         }
 

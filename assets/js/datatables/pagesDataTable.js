@@ -40,11 +40,11 @@ var PagesDataTable = DataTable.extend({
     },
 
     actionSave: function (closeWindow) {
-        var pageName = this.getForm().find('input[name=name]').val();
+        var pageName = this.getForm().find('input[name="pageLanguage*:name"]').val();
         var type     = this.getForm().find('input[name=type]').val();
 
         if (type != 'link') {
-            this.getForm().find('input[name=url]').each(function () {
+            this.getForm().find('input[name="pageLanguage*:url"]').each(function () {
                 if (!$(this).val()) {
                     $(this).val(KikCMS.toSlug(pageName));
                 }
