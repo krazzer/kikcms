@@ -42,7 +42,7 @@ class Url extends \Phalcon\Mvc\Url
 
         // remove leading slash to prevent double slashes
         // this is a bug in Phalcon that should be corrected, added issue #13495
-        if(substr($uri, 0, 1) == '/'){
+        if(is_string($uri) && substr($uri, 0, 1) == '/' && substr($uri, 1, 1) != '/'){
             $uri = substr($uri, 1);
         }
 
