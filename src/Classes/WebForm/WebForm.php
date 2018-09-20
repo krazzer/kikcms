@@ -82,6 +82,9 @@ abstract class WebForm extends Renderable
     /** @var callable */
     private $validateAction;
 
+    /** @var array|null */
+    private $input = null;
+
     /**
      * @inheritdoc
      */
@@ -205,17 +208,21 @@ abstract class WebForm extends Renderable
      */
     public function getInput(): array
     {
-        $input = $this->request->getPost();
+        if($this->input !== null){
+            return $this->input;
+        }
 
-        foreach ($input as $key => $value) {
+        $this->input = $this->request->getPost();
+
+        foreach ($this->input as $key => $value) {
             if ( ! $this->fieldMap->has($key)) {
                 continue;
             }
 
-            $input[$key] = $this->fieldMap->get($key)->getInput($value);
+            $this->input[$key] = $this->fieldMap->get($key)->getInput($value);
         }
 
-        return $input;
+        return $this->input;
     }
 
     /**
