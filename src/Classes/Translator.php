@@ -3,7 +3,6 @@
 namespace KikCMS\Classes;
 
 
-use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\TranslationKey;
@@ -11,6 +10,7 @@ use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\TranslationService;
+use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
