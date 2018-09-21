@@ -32,7 +32,7 @@ abstract class MailForm extends WebForm
      */
     protected function getToAddress()
     {
-        return $this->config->website->adminEmail;
+        return $this->config->application->adminEmail;
     }
 
     /**
