@@ -1,0 +1,44 @@
+{# @var cacheNode \KikCMS\Classes\Cache\CacheNode #}
+{# @var cacheNodeMap \KikCMS\ObjectLists\CacheNodeMap #}
+
+{% extends '@kikcms/cms/base.twig' %}
+
+{% block treeLabel %}
+    <div class="treeLabelInner">
+        <span class="key">
+            {{ cacheNode.key }}
+            {% if cacheNode.cacheNodeMap.count %}
+                ({{ cacheNode.total }})
+            {% endif %}
+        </span>
+        <span class="value">{{ cacheNode.valueOutput }}</span>
+        <span class="delete">
+            <a href="/cms/cache/empty/{{ cacheNode.fullKey|url_encode }}" class="btn btn-default">Verwijder</a>
+        </span>
+    </div>
+{% endblock %}
+
+{% macro menu(cacheNodeMap) %}
+    {% for cacheNode in cacheNodeMap %}
+        <li>
+            {% if cacheNode.cacheNodeMap.count > 0 %}
+                <input type="checkbox" id="node:{{ cacheNode.fullKey }}"/>
+                <label class="treeLabel" for="node:{{ cacheNode.fullKey }}">{{ block('treeLabel') }}</label>
+                <ul>{{ _self.menu(cacheNode.cacheNodeMap) }}</ul>
+            {% else %}
+                <div class="treeLabel">{{ block('treeLabel') }}</div>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% block cmsContent %}
+    <ol class="breadcrumb">
+        <li><a href="/cms/settings">Instellingen</a></li>
+        <li class="active">Cache beheer</li>
+    </ol>
+    <a href="/cms/cache/empty" class="btn btn-clear btn-primary">Volledige cache legen</a>
+    <ul class="tree">
+        {{ _self.menu(cacheNodeMap) }}
+    </ul>
+{% endblock %}

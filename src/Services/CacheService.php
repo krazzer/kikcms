@@ -3,6 +3,8 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Cache\CacheNode;
+use KikCMS\ObjectLists\CacheNodeMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use Phalcon\Cache\Backend;
@@ -22,7 +24,6 @@ class CacheService extends Injectable
         if ( ! $this->cache) {
             return;
         }
-
 
         $keys = $this->getKeys($prefix);
 
@@ -77,13 +78,80 @@ class CacheService extends Injectable
     }
 
     /**
+     * Get a CacheNodeMap, which recursively contains all categories with their values
+     *
+     * @param string|null $prefix
+     * @return CacheNodeMap
+     */
+    public function getCacheNodeMap(string $prefix = null): CacheNodeMap
+    {
+        $cacheCategoryMap = new CacheNodeMap();
+
+        $allKeys = $this->getKeys($prefix);
+
+        sort($allKeys);
+
+        foreach ($allKeys as $key) {
+            $keyParts = explode(':', $key);
+
+            $subMap       = $cacheCategoryMap;
+            $fullKeyParts = [];
+
+            foreach ($keyParts as $keyPart) {
+                $fullKeyParts[] = $keyPart;
+
+                if ( ! $cacheNode = $subMap->get($keyPart)) {
+                    $cacheNode = new CacheNode();
+                    $subMap->add($cacheNode, $keyPart);
+                }
+
+                $cacheNode->setKey($keyPart);
+                $cacheNode->setFullKey(implode(':', $fullKeyParts));
+
+                if ($keyPart == last($keyParts)) {
+                    $cacheNode->setValue($this->cache->get($key));
+                } else {
+                    $subMap = $cacheNode->getCacheNodeMap();
+                }
+            }
+        }
+
+        foreach ($cacheCategoryMap as $cacheNode){
+            $cacheNode->flattenSingleNodes();
+        }
+
+        return $cacheCategoryMap;
+    }
+
+    /**
+     * @param string|null $prefix
+     * @return array
+     */
+    public function getKeys(string $prefix = null): array
+    {
+        $mainPrefix = $this->getMainPrefix();
+
+        $keys = $this->cache->queryKeys($mainPrefix . $prefix);
+
+        if ( ! $mainPrefix) {
+            return $keys;
+        }
+
+        foreach ($keys as &$key) {
+            $key = substr($key, strlen($mainPrefix));
+        }
+
+        return $keys;
+    }
+
+    /**
      * Get the caches' main prefix
      *
      * @return string|null
      */
     private function getMainPrefix(): ?string
     {
-        if( ! $this->cache->getOptions()){
+        if ( ! $this->cache->getOptions()) {
             return null;
         }
 
@@ -92,26 +160,5 @@ class CacheService extends Injectable
         }
 
         return $this->cache->getOptions()['prefix'];
-    }
-
-    /**
-     * @param string $prefix
-     * @return array
-     */
-    private function getKeys(string $prefix): array
-    {
-        $mainPrefix = $this->getMainPrefix();
-
-        $keys = $this->cache->queryKeys($mainPrefix . $prefix);
-
-        if( ! $mainPrefix){
-            return $keys;
-        }
-
-        foreach ($keys as &$key){
-            $key = substr($key, strlen($mainPrefix));
-        }
-
-        return $keys;
     }
 }

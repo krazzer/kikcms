@@ -1,0 +1,209 @@
+@import '../includes/variables';
+@import '../includes/mixins';
+
+.btn-clear{
+    margin-bottom: 20px;
+}
+
+.tree {
+    clear: both;
+    margin: 0;
+    padding: 0 0 0 13px;
+    list-style: none;
+
+    ul {
+        list-style: none;
+        padding: 0 0 0 20px;
+    }
+
+    li {
+        position: relative;
+        padding: 0 0 10px 10px;
+
+        .treeLabel:hover {
+            background-color: $lightGrayLight;
+        }
+    }
+
+    ul li {
+        padding: 10px 0 0 10px;
+    }
+
+    > li:last-child {
+        padding-bottom: 0;
+    }
+
+    input {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+
+        ~ ul {
+            display: none;
+        }
+
+        &:checked ~ ul {
+            display: block;
+        }
+    }
+
+    > li:first-child {
+        &:before {
+            top: 15px;
+        }
+
+        .treeLabel:after {
+            border-left: none;
+        }
+    }
+}
+
+/* ————————————————————–
+  Tree labels
+————————————————————–*/
+.treeLabel {
+    position: relative;
+    padding: 5px 7px 5px 7px;
+    width: 100%;
+    margin: 0;
+    display: block;
+    border: 1px solid $lightGray;
+    background-color: $superLightGray;
+    border-radius: $defaultBorderRadius;
+    line-height: 18px;
+
+    .treeLabelInner {
+        display: grid;
+
+        .key {
+            @include noTextSelect();
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding-right: 20px;
+        }
+
+        .value {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: $grayMedium;
+            padding-right: 20px;
+
+            pre {
+                margin-bottom: 0;
+            }
+        }
+
+        .delete{
+            line-height: 16px;
+
+            .btn{
+                width: 100%;
+                padding: 0;
+                font-size: 12px;
+                line-height: 15px;
+            }
+        }
+    }
+}
+
+.tree {
+    .treeLabelInner {
+        grid-template-columns: 450px 1fr 70px;
+    }
+
+    ul .treeLabelInner {
+        grid-template-columns: 420px 1fr 70px;
+    }
+
+    ul ul .treeLabelInner {
+        grid-template-columns: 390px 1fr 70px;
+    }
+
+    ul ul ul .treeLabelInner {
+        grid-template-columns: 360px 1fr 70px;
+    }
+
+    ul ul ul ul .treeLabelInner {
+        grid-template-columns: 330px 1fr 70px;
+    }
+
+    ul ul ul ul ul .treeLabelInner {
+        grid-template-columns: 300px 1fr 70px;
+    }
+}
+
+label.treeLabel {
+    cursor: pointer;
+}
+
+/* ————————————————————–
+  Tree expanded icon
+————————————————————–*/
+label.treeLabel:before {
+    background: $grayDark;
+    color: $colorWhite;
+    position: relative;
+    z-index: 1;
+    float: left;
+    margin: 2px 10px 0 -30px;
+    width: 15px;
+    height: 15px;
+    border-radius: 1em;
+    content: '+';
+    text-align: center;
+    font-size: 13px;
+    line-height: 14px;
+}
+
+:checked ~ label.treeLabel:before {
+    content: '–';
+}
+
+/* ————————————————————–
+Tree branches
+————————————————————–*/
+.tree li:before {
+    position: absolute;
+    top: 0;
+    bottom: -15px;
+    left: -5px;
+    display: block;
+    width: 0;
+    border-left: 1px solid #777;
+    content: "";
+}
+
+.treeLabel:after {
+    position: absolute;
+    top: 0;
+    left: -16px;
+    display: block;
+    height: 15px;
+    width: 15px;
+    border-bottom: 1px solid #777;
+    border-left: 1px solid #777;
+    content: '';
+}
+
+label.treeLabel:after {
+    border-bottom: 0;
+}
+
+:checked ~ label.tree_label:after {
+    border-top: 1px solid #777;
+    border-bottom: 0;
+    border-left: 0;
+    bottom: 0;
+    top: 13px;
+    height: auto;
+}
+
+.tree li:last-child:before {
+    height: 25px;
+    bottom: auto;
+}
+
+.tree > li:last-child:before {
+    display: none;
+}

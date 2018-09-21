@@ -103,7 +103,7 @@ class CmsController extends BaseCmsController
     {
         $this->view->title  = $this->translator->tl('menu.item.settings');
         $this->view->object = (new SettingsForm())->render();
-        $this->view->pick('cms/default');
+        $this->view->pick('cms/settings');
     }
 
     /**
