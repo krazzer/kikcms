@@ -19,6 +19,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property Config $applicationConfig
  * @property Translator $translator
  * @property MailService $mailService
+ * @property Permission $permission
  */
 class UserService extends Injectable
 {
@@ -159,6 +160,7 @@ class UserService extends Injectable
     {
         // remove current session data
         $this->session->destroy();
+        $this->permission->reset();
 
         // start a new session so we can still flash
         $this->session->start();

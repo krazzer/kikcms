@@ -157,7 +157,15 @@ class Services extends BaseServices
      */
     protected function initAcl()
     {
-        return (new Permission())->getAcl();
+        return $this->get('permission')->getAcl();
+    }
+
+    /**
+     * @return Permission
+     */
+    protected function initPermission()
+    {
+        return new Permission();
     }
 
     /**

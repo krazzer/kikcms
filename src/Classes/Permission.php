@@ -97,6 +97,14 @@ class Permission extends Injectable
     }
 
     /**
+     * Reset access control data from session
+     */
+    public function reset()
+    {
+        $this->persistent->destroy();
+    }
+
+    /**
      * @param AccessControl $acl
      */
     private function addDataTablePermissions(AccessControl $acl)
