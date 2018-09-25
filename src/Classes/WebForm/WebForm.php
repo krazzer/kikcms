@@ -254,16 +254,7 @@ abstract class WebForm extends Renderable
         $this->addAssets();
 
         if ($this->isPosted()) {
-            foreach ($this->fieldMap as $key => $field) {
-                // re-use earlier generated dataTable instance
-                if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
-                    $instance = $this->request->getPost($key);
-                    /** @var DataTableField $field */
-                    $field->getDataTable()->setInstance($instance);
-                    $field->setDefault($instance);
-                }
-            }
-
+            $this->reUseDataTableInstances();
             $errorContainer = $this->getErrors();
             $this->updateFieldsByPostData();
 
@@ -626,5 +617,20 @@ abstract class WebForm extends Renderable
         }
 
         return ! $this->isPosted();
+    }
+
+    /**
+     * Make sure datatable instance keys are re-used after a post
+     */
+    private function reUseDataTableInstances()
+    {
+        foreach ($this->fieldMap as $key => $field) {
+            if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
+                $instance = $this->request->getPost($key);
+                /** @var DataTableField $field */
+                $field->getDataTable()->setInstance($instance);
+                $field->setDefault($instance);
+            }
+        }
     }
 }
