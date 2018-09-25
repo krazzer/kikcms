@@ -48,6 +48,9 @@ class Field
     /** @var string */
     protected $key;
 
+    /** @var array */
+    private $cssClasses = [];
+
     /** @var Tab */
     private $tab;
 
@@ -61,7 +64,20 @@ class Field
     private $helpText;
 
     /**
-     * Add a class to the element
+     * Add a css class to the field wrapper
+     *
+     * @param string $class
+     * @return Field|$this
+     */
+    public function addClass(string $class): Field
+    {
+        $this->cssClasses[] = $class;
+
+        return $this;
+    }
+
+    /**
+     * Add a css class to the element
      *
      * @param string $class
      * @return $this|Field
@@ -99,6 +115,14 @@ class Field
         $this->setAttribute('placeholder', $value);
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getClasses(): array
+    {
+        return $this->cssClasses;
     }
 
     /**

@@ -9,8 +9,10 @@
         {% set type = field.type ?: 'default' %}
         {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback') %}
         {% set classes = classes ~ (field.required ? ' required') %}
+        {% if field.classes %}
+            {% set classes = classes ~ ' ' ~ field.classes|join(' ') %}
+        {% endif %}
         {% set fieldContainterAttributes = ' class="' ~ classes ~ '" title="' ~ errorMessages|join("\n") ~ '"' -%}
-
         {{ block('field' ~ ucfirst(type)) ?? block('fieldDefault') }}
     {% endfor %}
 {% endblock %}
