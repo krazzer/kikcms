@@ -312,6 +312,17 @@ class UrlService extends Injectable
     }
 
     /**
+     * @param PageLanguage $pageLang
+     * @return bool
+     */
+    public function urlExistsForPageLanguage(PageLanguage $pageLang): bool
+    {
+        $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
+
+        return $this->urlExists($pageLang->url, $parentId, $pageLang->language_code, $pageLang);
+    }
+
+    /**
      * Get the name for given pageLanguage, if the parent page is an alias, get the alias' name
      *
      * @param PageLanguage $pageLanguage
@@ -375,16 +386,5 @@ class UrlService extends Injectable
         $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
 
         return $this->getUrlByPageLanguage($pageLanguageLink);
-    }
-
-    /**
-     * @param PageLanguage $pageLang
-     * @return bool
-     */
-    private function urlExistsForPageLanguage(PageLanguage $pageLang): bool
-    {
-        $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
-
-        return $this->urlExists($pageLang->url, $parentId, $pageLang->language_code, $pageLang);
     }
 }
