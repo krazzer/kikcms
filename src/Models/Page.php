@@ -121,11 +121,50 @@ class Page extends Model
     }
 
     /**
+     * @param string $langCode
+     * @return PageLanguage|null
+     */
+    public function getPageLanguageByLangCode(string $langCode): ?PageLanguage
+    {
+        $pageLanguageRelation = 'pageLanguage' . ucfirst($langCode);
+
+        /** @var PageLanguage|null $pageLanguage */
+        $pageLanguage = $this->$pageLanguageRelation;
+
+        return $pageLanguage;
+    }
+
+    /**
      * @return int
      */
     public function getParentId(): int
     {
         return (int) $this->parent_id;
+    }
+
+    /**
+     * Traverse up the page hierarchy with given languageCode until a parent PageLanguage is found with a slug
+     *
+     * @param string $langCode
+     * @return PageLanguage|null
+     */
+    public function getParentPageLanguageWithSlugByLangCode(string $langCode): ?PageLanguage
+    {
+        if( ! $this->parent){
+            return null;
+        }
+
+        $pageLanguage = $this->parent->getPageLanguageByLangCode($langCode);
+
+        if($pageLanguage && $pageLanguage->url){
+            return $pageLanguage;
+        }
+
+        if( ! $this->parent->parent){
+            return null;
+        }
+
+        return $this->parent->getParentPageLanguageWithSlugByLangCode($langCode);
     }
 
     /**

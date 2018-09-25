@@ -35,6 +35,8 @@ use Phalcon\Validation\Validator\StringLength;
  */
 class PageForm extends DataForm
 {
+    const FIELD_URL = 'pageLanguage*:url';
+
     /** @inheritdoc */
     protected $saveCreatedAt = true;
 
@@ -70,7 +72,7 @@ class PageForm extends DataForm
         $tabAdvancedFields = [
             $templateField,
 
-            $this->addTextField('pageLanguage*:url', $this->translator->tl('fields.url'), $urlValidation)
+            $this->addTextField(self::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
                 ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
 
             $this->addCheckboxField('pageLanguage*:' . PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
@@ -133,16 +135,18 @@ class PageForm extends DataForm
             return $errorContainer;
         }
 
-        if ( ! $url = $input['pageLanguage*:url']) {
+        if ( ! $urlPath = $input[self::FIELD_URL]) {
             return $errorContainer;
         }
 
-        $parentId     = $this->getParentId();
         $pageLanguage = $this->getPageLanguage();
-        $languageCode = $this->getFilters()->getLanguageCode();
 
-        if ($this->urlService->urlExists($url, $parentId, $languageCode, $pageLanguage)) {
-            $errorContainer->addFieldError('pageLanguage*:url', $this->translator->tl('dataTables.pages.urlExists'));
+        if($pageLanguage && $parentPageLanguage = $pageLanguage->getParentWithSlug()){
+            $urlPath = $this->urlService->getUrlByPageLanguage($parentPageLanguage) . '/' . $urlPath;
+        }
+
+        if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
+            $errorContainer->addFieldError(self::FIELD_URL, $this->translator->tl('dataTables.pages.urlExists'));
         }
 
         return $errorContainer;
@@ -176,22 +180,6 @@ class PageForm extends DataForm
     protected function getTemplate(): ?Template
     {
         return $this->pagesDataTableService->getTemplate($this);
-    }
-
-    /**
-     * @return null|int
-     */
-    private function getParentId(): ?int
-    {
-        $pageId = $this->getFilters()->getEditId();
-
-        if ( ! $pageId) {
-            return null;
-        }
-
-        $page = Page::getById($pageId);
-
-        return (int) $page->parent_id;
     }
 
     /**

@@ -5,7 +5,6 @@ namespace KikCMS\Services\DataTable;
 use Exception;
 use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
-use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
@@ -53,8 +52,8 @@ class PageRearrangeService extends Injectable
             break;
         }
 
-        $this->checkUrl($page, $targetPage, $rearrange);
         $this->updateNestedSet();
+        $this->checkUrls($page);
         $this->cacheService->clearPageCache();
     }
 
@@ -118,28 +117,21 @@ class PageRearrangeService extends Injectable
     }
 
     /**
-     * Checks if the url of the source page is not conflicting in its new target location
-     * If it does, change it
+     * Checks if the url of the source page is not conflicting in its new target location, if so, change it
      *
      * @param Page $page
-     * @param Page $targetPage
-     * @param string $rearrange
      */
-    private function checkUrl(Page $page, Page $targetPage, string $rearrange)
+    private function checkUrls(Page $page)
     {
-        if ($rearrange == self::REARRANGE_INTO) {
-            $parentId = $targetPage->id;
-        } else {
-            $parentId = $targetPage->parent_id;
-        }
+        foreach ($page->pageLanguages as $pageLanguage) {
+            // if there's no url, we don't need to check for dupes
+            if( ! $pageLanguage->url){
+                continue;
+            }
 
-        $pageLanguages = PageLanguage::find([
-            'conditions' => 'page_id = :pageId: AND url IS NOT NULL',
-            'bind'       => ['pageId' => $page->id]
-        ]);
+            $urlPath = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
-        foreach ($pageLanguages as $pageLanguage) {
-            if ($this->urlService->urlExists($pageLanguage->url, $parentId, $pageLanguage->language_code, $pageLanguage)) {
+            if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
                 $this->urlService->deduplicateUrl($pageLanguage);
             }
         }

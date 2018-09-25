@@ -44,6 +44,30 @@ class PageLanguage extends Model
     }
 
     /**
+     * Retrieve the parent pageLanguage, which has the same languageCode
+     *
+     * @return PageLanguage|null
+     */
+    public function getParent(): ?PageLanguage
+    {
+        if( ! $parentPage = $this->page->parent){
+            return null;
+        }
+
+        return $parentPage->getPageLanguageByLangCode($this->getLanguageCode());
+    }
+
+    /**
+     * Traverse up the page hierarchy (with this objects' language) until a parent PageLanguage is found with a slug
+     *
+     * @return null|PageLanguage
+     */
+    public function getParentWithSlug(): ?PageLanguage
+    {
+        return $this->page->getParentPageLanguageWithSlugByLangCode($this->getLanguageCode());
+    }
+
+    /**
      * @return string
      */
     public function getLanguageCode(): string

@@ -51,14 +51,19 @@ class UrlService extends Injectable
     {
         $newUrlIndex = 1;
 
-        $newUrl = $pageLanguage->url . '-' . $newUrlIndex;
+        $newUrl = $currentUrl = $this->getUrlByPageLanguage($pageLanguage);
 
-        while ($this->urlExists($newUrl, $pageLanguage->page->parent_id, $pageLanguage->language_code, $pageLanguage)) {
+        while ($this->urlPathExists($newUrl)) {
+            $newUrl = $currentUrl . '-' . $newUrlIndex;
             $newUrlIndex++;
-            $newUrl = $pageLanguage->url . '-' . $newUrlIndex;
         }
 
-        $pageLanguage->url = $newUrl;
+        // no new url was created, so no need to save
+        if($newUrlIndex === 1){
+            return;
+        }
+
+        $pageLanguage->url = basename($newUrl);
         $pageLanguage->save();
 
         $this->cacheService->clearPageCache();
@@ -70,11 +75,7 @@ class UrlService extends Injectable
      */
     public function getPageLanguageByUrlPath(string $urlPath): ?PageLanguage
     {
-        // remove leading slash
-        if (substr($urlPath, 0, 1) == '/') {
-            $urlPath = substr($urlPath, 1);
-        }
-
+        $urlPath  = $this->removeLeadingSlash($urlPath);
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . ':' . $urlPath;
 
         return $this->cacheService->cache($cacheKey, function () use ($urlPath) {
@@ -276,50 +277,34 @@ class UrlService extends Injectable
     }
 
     /**
-     * Check if the given url exists as child of the given parent, excluding the given page
+     * Check whether given urlPath already exists, excluding given PageLanguage
      *
      * @param string $url
-     * @param int $parentId
-     * @param PageLanguage $pageLanguage
-     * @param string $languageCode
+     * @param PageLanguage $existingPageLanguage
      * @return bool
      */
-    public function urlExists(string $url, int $parentId = null, string $languageCode, PageLanguage $pageLanguage = null): bool
+    public function urlPathExists(string $url, PageLanguage $existingPageLanguage = null): bool
     {
-        $query = (new Builder())
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->where('pl.url = :url:', ['url' => $url]);
-
-        if ($parentId) {
-            $query->andWhere('p.parent_id = :parentId:', ['parentId' => $parentId]);
-        } else {
-            $query->andWhere('p.parent_id IS NULL');
+        if ( ! $pageLanguage = $this->getPageLanguageByUrlPath($url)) {
+            return false;
         }
 
-        $parentPage = $parentId ? Page::getById($parentId) : null;
-
-        // if the page has a parent page that isn't a menu, we only need to check in the same language
-        if ($parentPage && $parentPage->type !== Page::TYPE_MENU) {
-            $query->andWhere('pl.language_code = :languageCode:', ['languageCode' => $languageCode]);
+        if( ! $existingPageLanguage){
+            return true;
         }
 
-        if ($pageLanguage) {
-            $query->andWhere('pl.id != :pageLanguageId:', ['pageLanguageId' => $pageLanguage->id]);
-        }
-
-        return $query->getQuery()->execute()->count();
+        return $pageLanguage->id !== $existingPageLanguage->id;
     }
 
     /**
-     * @param PageLanguage $pageLang
+     * @param PageLanguage $pageLanguage
      * @return bool
      */
-    public function urlExistsForPageLanguage(PageLanguage $pageLang): bool
+    public function urlExistsForPageLanguage(PageLanguage $pageLanguage): bool
     {
-        $parentId = $pageLang->page->parent ? $pageLang->page->parent->id : null;
+        $urlPath = $this->getUrlByPageLanguage($pageLanguage);
 
-        return $this->urlExists($pageLang->url, $parentId, $pageLang->language_code, $pageLang);
+        return $this->urlPathExists($urlPath, $pageLanguage);
     }
 
     /**
@@ -386,5 +371,18 @@ class UrlService extends Injectable
         $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
 
         return $this->getUrlByPageLanguage($pageLanguageLink);
+    }
+
+    /**
+     * @param string $urlPath
+     * @return string
+     */
+    private function removeLeadingSlash(string $urlPath): string
+    {
+        if (substr($urlPath, 0, 1) == '/') {
+            $urlPath = substr($urlPath, 1);
+        }
+
+        return $urlPath;
     }
 }
