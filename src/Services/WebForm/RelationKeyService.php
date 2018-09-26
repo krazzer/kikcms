@@ -63,21 +63,21 @@ class RelationKeyService extends Injectable
                     $model->$part1->delete();
                     $model->$part1 = $relatedObjects;
                 } else {
-                    $model->$part1->$part2 = $value;
+                    $model->$part1->$part2 = $this->formatValue($value);
                 }
 
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
-                $model->$part1->$part2->$part3 = $value;
+                $model->$part1->$part2->$part3 = $this->formatValue($value);
             break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
-                $model->$part1->$part2->$part3->$part4 = $value;
+                $model->$part1->$part2->$part3->$part4 = $this->formatValue($value);
             break;
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
-                $model->$part1->$part2->$part3->$part4->$part5 = $value;
+                $model->$part1->$part2->$part3->$part4->$part5 = $this->formatValue($value);
             break;
         }
     }
@@ -130,6 +130,21 @@ class RelationKeyService extends Injectable
         }
 
         return null;
+    }
+
+    /**
+     * Format the value for db storage
+     *
+     * @param mixed $value
+     * @return string
+     */
+    private function formatValue($value): string
+    {
+        if(is_array($value)){
+            return json_encode($value);
+        }
+
+        return $value;
     }
 
     /**
