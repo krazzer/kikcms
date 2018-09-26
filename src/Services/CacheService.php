@@ -138,7 +138,11 @@ class CacheService extends Injectable
         }
 
         foreach ($keys as &$key) {
-            $key = substr($key, strlen($mainPrefix));
+            if($prefix && ! strstr($key, $prefix . ':') && $key !== $mainPrefix . $prefix){
+                unset($key);
+            } else {
+                $key = substr($key, strlen($mainPrefix));
+            }
         }
 
         return $keys;
