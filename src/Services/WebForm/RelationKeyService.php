@@ -136,9 +136,9 @@ class RelationKeyService extends Injectable
      * Format the value for db storage
      *
      * @param mixed $value
-     * @return string
+     * @return string|null
      */
-    private function formatValue($value): string
+    private function formatValue($value): ?string
     {
         if(is_array($value)){
             return json_encode($value);
