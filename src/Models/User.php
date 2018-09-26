@@ -2,6 +2,7 @@
 
 namespace KikCMS\Models;
 
+use KikCMS\Classes\Database\Now;
 use KikCmsCore\Classes\Model;
 
 /**
@@ -21,6 +22,16 @@ class User extends Model
     const FIELD_BLOCKED    = 'blocked';
     const FIELD_ROLE       = 'role';
     const FIELD_CREATED_AT = 'created_at';
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeValidation()
+    {
+        if( ! property_exists($this, self::FIELD_CREATED_AT)){
+            $this->created_at = new Now;
+        }
+    }
 
     /**
      * @inheritdoc
