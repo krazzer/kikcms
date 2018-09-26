@@ -302,8 +302,6 @@ class StorageService extends Injectable
      */
     private function storeMain()
     {
-        $this->executeBeforeMainEvents();
-
         $mainInput = $this->storageData->getMainInput();
         $mainInput = $this->dbService->toStorageArray($mainInput);
 
@@ -327,6 +325,8 @@ class StorageService extends Injectable
             $value = $this->storageData->getFormInputValue($key);
             $this->relationKeyService->set($object, $key, $value, $this->storageData->getLanguageCode());
         }
+
+        $this->executeBeforeMainEvents();
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
             $object->save();
