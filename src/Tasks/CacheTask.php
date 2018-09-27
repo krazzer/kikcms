@@ -27,6 +27,8 @@ class CacheTask extends Task
 
         $response = json_decode(file_get_contents($url), true);
 
-        print_r($response);
+        if ( ! isset($response['success']) || ! $response['success']) {
+            echo 'Cache clear failed!' . PHP_EOL;
+        }
     }
 }
