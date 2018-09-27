@@ -543,7 +543,7 @@ class Services extends BaseServices
         // walk through the path to see if the domain name can be retrieved
         foreach ($pathParts as $part){
             if(strstr($part, '.')){
-                return $part;
+                return "https://" . $part . '/';
             }
         }
 
