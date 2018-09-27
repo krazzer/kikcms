@@ -213,9 +213,7 @@ class CmsController extends BaseCmsController
             return null;
         }
 
-        $token = uniqid('securityToken', true);
-
-        $this->diskCache->save($token);
+        $token = $this->cmsService->createSecurityToken();
 
         return $this->response->setJsonContent($token);
     }

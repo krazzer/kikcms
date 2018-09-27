@@ -17,9 +17,9 @@ use Phalcon\Di\Injectable;
 class CacheService extends Injectable
 {
     /**
-     * @param string $prefix
+     * @param string|null $prefix
      */
-    public function clear(string $prefix)
+    public function clear(string $prefix = null)
     {
         if ( ! $this->cache) {
             return;

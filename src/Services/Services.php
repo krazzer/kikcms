@@ -385,14 +385,7 @@ class Services extends BaseServices
      */
     protected function initUrl()
     {
-        if ( ! $baseUri = $this->getApplicationConfig()->get('baseUri')) {
-            $protocol = ( ! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ?
-                "https://" : "http://";
-
-            $domainName = $_SERVER['HTTP_HOST'];
-
-            $baseUri = $protocol . $domainName . '/';
-        }
+        $baseUri = $this->getBaseUri();
 
         $url = new Url();
         $url->setBaseUri($baseUri);
@@ -530,5 +523,30 @@ class Services extends BaseServices
         }
 
         return $namespaces;
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getBaseUri(): ?string
+    {
+        if ($baseUri = $this->getApplicationConfig()->get('baseUri')) {
+            return $baseUri;
+        }
+
+        if(isset($_SERVER['HTTP_HOST'])){
+            return "https://" . $_SERVER['HTTP_HOST'] . '/';
+        }
+
+        $pathParts = explode('/', SITE_PATH);
+
+        // walk through the path to see if the domain name can be retrieved
+        foreach ($pathParts as $part){
+            if(strstr($part, '.')){
+                return $part;
+            }
+        }
+
+        return null;
     }
 }

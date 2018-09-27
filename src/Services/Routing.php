@@ -97,6 +97,8 @@ class Routing extends Injectable
         $frontend->add('/page/{lang:[a-z]{2}}/{id:[0-9]+}', "Frontend::pageById");
         $frontend->add('/sitemap.xml', "Sitemap::index");
 
+        $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
+
         $frontend->add("/finder/file/{finderFileId:[0-9]+}", "Finder::file")->setName('finderFile');
         $frontend->add("/finder/key/{key:[0-9a-z\-]+}", "Finder::key");
         $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('finderFileThumb');

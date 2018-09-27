@@ -9,6 +9,7 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatisticsConfig;
 use KikCMS\Services\Analytics\AnalyticsService;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Cache\Backend;
 
@@ -17,6 +18,7 @@ use Phalcon\Cache\Backend;
  * @property AnalyticsService $analyticsService
  * @property AccessControl $acl
  * @property Backend $diskCache
+ * @property CmsService $cmsService
  */
 class StatisticsController extends BaseController
 {
@@ -55,11 +57,7 @@ class StatisticsController extends BaseController
     {
         $token = $this->request->getPost('token');
 
-        if( ! $this->diskCache->exists($token)){
-            throw new UnauthorizedException();
-        }
-
-        $this->diskCache->delete($token);
+        $this->cmsService->checkSecurityToken($token);
 
         if($this->analyticsService->isUpdating()){
             while ($this->analyticsService->isUpdating()){

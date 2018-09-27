@@ -6,6 +6,7 @@ namespace KikCMS\Services\Cms;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -172,5 +173,34 @@ class CmsService extends Injectable
                 $object->delete();
             }
         }
+    }
+
+    /**
+     * Create and store a security token
+     *
+     * @return string
+     */
+    public function createSecurityToken(): string
+    {
+        $token = uniqid('securityToken', true);
+
+        $this->diskCache->save($token);
+
+        return $token;
+    }
+
+    /**
+     * Check if the token exists, remove it if it does, or else throw an exception
+     *
+     * @param string $token
+     * @throws UnauthorizedException
+     */
+    public function checkSecurityToken(string $token)
+    {
+        if( ! $this->diskCache->exists($token)){
+            throw new UnauthorizedException();
+        }
+
+        $this->diskCache->delete($token);
     }
 }
