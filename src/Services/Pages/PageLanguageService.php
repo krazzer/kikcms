@@ -48,16 +48,6 @@ class PageLanguageService extends Injectable
     }
 
     /**
-     * @param Page $page
-     * @param string|null $languageCode
-     * @return null|PageLanguage
-     */
-    public function getByPage(Page $page, string $languageCode = null): ?PageLanguage
-    {
-        return $this->getByPageId($page->getId(), $languageCode);
-    }
-
-    /**
      * Get the PageLanguage by given pageId, using the default languageCode
      *
      * @param int $pageId
