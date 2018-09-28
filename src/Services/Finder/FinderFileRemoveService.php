@@ -27,20 +27,22 @@ class FinderFileRemoveService extends Injectable
     public function deleteFilesByIds(array $fileIds)
     {
         $finderFiles = FinderFile::getByIdList($fileIds);
+        $allFileIds  = $fileIds;
 
         // get sub files
         foreach ($finderFiles as $file) {
-            $fileIds = $this->finderFileService->getFileIdsRecursive($file, $fileIds);
+            $allFileIds = $this->finderFileService->getFileIdsRecursive($file, $allFileIds);
         }
 
-        $finderFiles  = FinderFile::getByIdList($fileIds);
-        $filesRemoved = $this->dbService->delete(FinderFile::class, [FinderFile::FIELD_ID => $fileIds]);
+        $finderFiles = FinderFile::getByIdList($allFileIds);
 
-        if ($filesRemoved) {
-            foreach ($finderFiles as $finderFile) {
-                if ( ! $finderFile->isFolder()) {
-                    $this->unlinkFiles($finderFile);
-                }
+        if( ! $filesRemoved = $this->dbService->delete(FinderFile::class, [FinderFile::FIELD_ID => $fileIds])){
+            return;
+        }
+
+        foreach ($finderFiles as $finderFile) {
+            if ( ! $finderFile->isFolder()) {
+                $this->unlinkFiles($finderFile);
             }
         }
     }
@@ -74,7 +76,7 @@ class FinderFileRemoveService extends Injectable
 
         $pageNameMap = [];
 
-        foreach ($pageLangMap as $pageLang){
+        foreach ($pageLangMap as $pageLang) {
             $pageNameMap[] = $pageLang->getName();
         }
 

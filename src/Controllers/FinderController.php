@@ -200,7 +200,7 @@ class FinderController extends RenderableController
         $finder = $this->getRenderable();
 
         if ($finder->getFilters()->getSearch()) {
-            $finder->getFilters()->setFolderId(0);
+            $finder->getFilters()->setFolderId(null);
         }
 
         return json_encode([

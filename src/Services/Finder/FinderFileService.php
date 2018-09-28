@@ -56,10 +56,10 @@ class FinderFileService extends Injectable
 
     /**
      * @param File $file
-     * @param int $folderId
+     * @param int|null $folderId
      * @return bool|int
      */
-    public function create(File $file, $folderId = 0)
+    public function create(File $file, $folderId = null)
     {
         $mimeType = $file->getRealType();
 
@@ -88,11 +88,11 @@ class FinderFileService extends Injectable
 
     /**
      * @param string $folderName
-     * @param int $folderId
+     * @param int|null $folderId
      *
      * @return int
      */
-    public function createFolder(string $folderName, $folderId = 0): int
+    public function createFolder(string $folderName, $folderId = null): int
     {
         $finderDir            = new FinderFolder();
         $finderDir->name      = $folderName;
@@ -127,17 +127,17 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param int $folderId
-     * @return FinderFile[]
+     * @param int|null $folderId
+     * @return FinderFile[]|Resultset
      */
-    public function getByFolderId(int $folderId = 0)
+    public function getByFolderId(int $folderId = null): Resultset
     {
-        $resultSet = FinderFile::find([
-            FinderFile::FIELD_FOLDER_ID . ' = ' . $folderId,
-            'order' => 'is_folder DESC, name ASC'
-        ]);
+        $query = (new Builder)
+            ->from(FinderFile::class)
+            ->orderBy(FinderFile::FIELD_IS_FOLDER . ' DESC, ' . FinderFile::FIELD_NAME)
+            ->where(FinderFile::FIELD_FOLDER_ID . ($folderId ? ' = ' . $folderId : ' IS NULL'));
 
-        return $this->getFiles($resultSet);
+        return $this->dbService->getObjects($query);
     }
 
     /**
@@ -194,12 +194,12 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param int $folderId
+     * @param int|null $folderId
      * @param array $path
      *
      * @return array
      */
-    public function getFolderPath(int $folderId, $path = [])
+    public function getFolderPath(?int $folderId, $path = [])
     {
         $homeFolderId = $this->getHomeFolderId();
 
@@ -275,7 +275,7 @@ class FinderFileService extends Injectable
         $fileIds = $this->removeFileIdsInPath($fileIds, $folderId);
 
         $this->dbService->update(FinderFile::class, [
-            FinderFile::FIELD_FOLDER_ID => $folderId
+            FinderFile::FIELD_FOLDER_ID => $folderId ?: null
         ], [
             FinderFile::FIELD_ID => $fileIds
         ]);
@@ -372,21 +372,6 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param Resultset $resultSet
-     * @return FinderFile[]
-     */
-    private function getFiles(Resultset $resultSet)
-    {
-        $files = [];
-
-        foreach ($resultSet as $result) {
-            $files[] = $result;
-        }
-
-        return $files;
-    }
-
-    /**
      * @param int[] $fileIds
      * @param int $folderId
      *
@@ -471,16 +456,16 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    private function getHomeFolderId(): int
+    private function getHomeFolderId(): ?int
     {
         if ( ! $this->finderPermissionService->isEnabled()) {
-            return 0;
+            return null;
         }
 
         if( ! $this->userService->getUser()->folder){
-            return 0;
+            return null;
         }
 
         return $this->userService->getUser()->folder->getId();

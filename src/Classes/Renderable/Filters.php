@@ -15,8 +15,12 @@ class Filters
         foreach ($filters as $filterType => $value) {
             $setMethod = 'set' . $filterType;
 
+            if($value === ''){
+                $value = null;
+            }
+
             if (method_exists($this, $setMethod)) {
-                $this->$setMethod($filters[$filterType]);
+                $this->$setMethod($value);
             }
         }
     }

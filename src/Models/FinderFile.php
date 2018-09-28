@@ -74,11 +74,11 @@ class FinderFile extends Model
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getFolderId(): int
+    public function getFolderId(): ?int
     {
-        return (int) $this->folder_id;
+        return (int) $this->folder_id ?: null;
     }
 
     /**

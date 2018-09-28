@@ -43,10 +43,10 @@ class DataFormFilters extends Filters
     }
 
     /**
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return DataFormFilters
      */
-    public function setLanguageCode(string $languageCode)
+    public function setLanguageCode(?string $languageCode)
     {
         $this->languageCode = $languageCode;
         return $this;

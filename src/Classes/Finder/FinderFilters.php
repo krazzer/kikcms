@@ -7,43 +7,43 @@ use KikCMS\Classes\Renderable\Filters;
 
 class FinderFilters extends Filters
 {
-    /** @var int */
-    private $folderId = 0;
+    /** @var int|null */
+    private $folderId;
 
-    /** @var string */
-    private $search = '';
+    /** @var string|null */
+    private $search;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSearch(): string
+    public function getSearch(): ?string
     {
         return $this->search;
     }
 
     /**
-     * @param string $search
+     * @param string|null $search
      * @return FinderFilters
      */
-    public function setSearch(string $search): FinderFilters
+    public function setSearch(?string $search): FinderFilters
     {
         $this->search = $search;
         return $this;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getFolderId(): int
+    public function getFolderId(): ?int
     {
         return $this->folderId;
     }
 
     /**
-     * @param int $folderId
+     * @param int|null $folderId
      * @return FinderFilters
      */
-    public function setFolderId(int $folderId): FinderFilters
+    public function setFolderId(?int $folderId): FinderFilters
     {
         $this->folderId = $folderId;
         return $this;

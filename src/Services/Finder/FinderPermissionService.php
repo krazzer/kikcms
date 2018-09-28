@@ -183,10 +183,10 @@ class FinderPermissionService extends Injectable
     }
 
     /**
-     * @param int $fileId
+     * @param int|null $fileId
      * @return bool
      */
-    public function canReadId(int $fileId): bool
+    public function canReadId(?int $fileId): bool
     {
         return $this->can(FinderConfig::RIGHT_READ, $fileId);
     }
@@ -290,10 +290,10 @@ class FinderPermissionService extends Injectable
 
     /**
      * @param string $right
-     * @param int $fileId
+     * @param int|null $fileId
      * @return bool
      */
-    private function can(string $right, int $fileId): bool
+    private function can(string $right, ?int $fileId): bool
     {
         if ( ! $this->isEnabled()) {
             return true;

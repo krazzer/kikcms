@@ -10,26 +10,26 @@ class DataTableFilters extends Filters
     /** @var int */
     private $page = 1;
 
-    /** @var string */
-    private $search = '';
+    /** @var string|null */
+    private $search;
 
-    /** @var string */
-    private $sortColumn = '';
+    /** @var string|null */
+    private $sortColumn;
 
     /** @var string */
     private $sortDirection = 'asc';
 
-    /** @var int */
-    private $editId = null;
+    /** @var int|null */
+    private $editId;
 
     /** @var int|null */
-    private $parentEditId = null;
+    private $parentEditId;
 
     /** @var null|string */
-    private $languageCode = null;
+    private $languageCode;
 
     /** @var null|string */
-    private $windowLanguageCode = null;
+    private $windowLanguageCode;
 
     /** @var array */
     private $customFilterValues = [];
@@ -71,36 +71,36 @@ class DataTableFilters extends Filters
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSearch(): string
+    public function getSearch(): ?string
     {
         return $this->search;
     }
 
     /**
-     * @param string $search
+     * @param string|null $search
      * @return DataTableFilters
      */
-    public function setSearch(string $search): DataTableFilters
+    public function setSearch(?string $search): DataTableFilters
     {
         $this->search = $search;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSortColumn(): string
+    public function getSortColumn(): ?string
     {
         return $this->sortColumn;
     }
 
     /**
-     * @param string $sortColumn
+     * @param string|null $sortColumn
      * @return DataTableFilters
      */
-    public function setSortColumn(string $sortColumn): DataTableFilters
+    public function setSortColumn(?string $sortColumn): DataTableFilters
     {
         $this->sortColumn = $sortColumn;
         return $this;
