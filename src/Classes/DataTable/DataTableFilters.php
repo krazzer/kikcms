@@ -16,7 +16,7 @@ class DataTableFilters extends Filters
     /** @var string|null */
     private $sortColumn;
 
-    /** @var string */
+    /** @var string|null */
     private $sortDirection = 'asc';
 
     /** @var int|null */
@@ -107,18 +107,18 @@ class DataTableFilters extends Filters
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSortDirection(): string
+    public function getSortDirection(): ?string
     {
         return $this->sortDirection;
     }
 
     /**
-     * @param string $sortDirection
+     * @param string|null $sortDirection
      * @return DataTableFilters
      */
-    public function setSortDirection(string $sortDirection): DataTableFilters
+    public function setSortDirection(?string $sortDirection): DataTableFilters
     {
         $this->sortDirection = $sortDirection;
         return $this;
