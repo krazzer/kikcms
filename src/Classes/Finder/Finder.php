@@ -181,7 +181,6 @@ class Finder extends Renderable
         }
 
         foreach ($files as $index => $file) {
-
             if ($file->getError()) {
                 $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
                 $uploadStatus->addError($message);
