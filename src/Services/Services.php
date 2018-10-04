@@ -285,14 +285,7 @@ class Services extends BaseServices
      */
     protected function initFinderFileService()
     {
-        /** @var FileStorage $fileStorage */
-        $fileStorage = $this->get('fileStorage');
-
-        $finderFileService = new FinderFileService($fileStorage);
-        $finderFileService->setMediaDir('media');
-        $finderFileService->setThumbDir('thumbs');
-
-        return $finderFileService;
+        return new FinderFileService('media', 'thumbs');
     }
 
     /**

@@ -31,15 +31,13 @@ use Phalcon\Mvc\Model\Resultset;
  * @property WebsiteService $websiteService
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
+ * @property FileStorage $fileStorage
  * @property FinderPermissionService $finderPermissionService
  * @property FinderFileRemoveService $finderFileRemoveService
  * @property Config $config
  */
 class FinderFileService extends Injectable
 {
-    /** @var FileStorage */
-    private $fileStorage;
-
     /** @var string */
     private $mediaDir;
 
@@ -47,11 +45,13 @@ class FinderFileService extends Injectable
     private $thumbDir;
 
     /**
-     * @param FileStorage $fileStorage
+     * @param string $mediaDir
+     * @param string $thumbDir
      */
-    public function __construct(FileStorage $fileStorage)
+    public function __construct(string $mediaDir, string $thumbDir)
     {
-        $this->fileStorage = $fileStorage;
+        $this->mediaDir = $mediaDir;
+        $this->thumbDir = $thumbDir;
     }
 
     /**
@@ -251,14 +251,6 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param string $mediaDir
-     */
-    public function setMediaDir(string $mediaDir)
-    {
-        $this->mediaDir = $mediaDir;
-    }
-
-    /**
      * @return string
      */
     public function getThumbDir(): string
@@ -279,14 +271,6 @@ class FinderFileService extends Injectable
         ], [
             FinderFile::FIELD_ID => $fileIds
         ]);
-    }
-
-    /**
-     * @param string $thumbDir
-     */
-    public function setThumbDir(string $thumbDir)
-    {
-        $this->thumbDir = $thumbDir;
     }
 
     /**
