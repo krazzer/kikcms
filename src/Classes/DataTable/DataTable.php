@@ -6,6 +6,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -216,7 +217,14 @@ abstract class DataTable extends Renderable
             }
         }
 
-        $this->dbService->delete($this->getModel(), [self::TABLE_KEY => $ids]);
+        /** @var Model $model */
+        $model = $this->getModel();
+
+        $objects = $model::getByIdList($ids);
+
+        foreach ($objects as $object){
+            $object->delete();
+        }
     }
 
     /**

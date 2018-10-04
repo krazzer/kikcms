@@ -2,6 +2,8 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Config\CacheConfig;
+use KikCMS\Services\CacheService;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Config\KikCMSConfig;
@@ -21,6 +23,8 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property LanguageService $languageService
  * @property PageService $pageService
+ * @property UrlService $urlService
+ * @property CacheService $cacheService
  */
 class PageLanguageService extends Injectable
 {
@@ -250,5 +254,18 @@ class PageLanguageService extends Injectable
         $pageMap = $this->pageService->getChildren($pageLanguage->page->parent);
 
         return $this->getByPageMap($pageMap, $pageLanguage->getLanguageCode());
+    }
+
+    /**
+     * Remove all caches for given PageLanguage
+     *
+     * @param PageLanguage $pageLanguage
+     */
+    public function removeCache(PageLanguage $pageLanguage): void
+    {
+        $urlPath = trim($this->urlService->getUrlByPageLanguage($pageLanguage), '/');
+
+        $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath);
+        $this->cacheService->clear(CacheConfig::URL . CacheConfig::SEPARATOR . $pageLanguage->id);
     }
 }

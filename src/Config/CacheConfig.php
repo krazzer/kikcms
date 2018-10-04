@@ -21,4 +21,6 @@ class CacheConfig
 
     const STATS_REQUIRE_UPDATE     = 'statsRequireUpdate';
     const STATS_UPDATE_IN_PROGRESS = 'statsUpdateInProgress';
+
+    const SEPARATOR = ':';
 }

@@ -131,7 +131,7 @@ class CacheService extends Injectable
     {
         $mainPrefix = $this->getMainPrefix();
 
-        $keys = $this->cache->queryKeys($mainPrefix . $prefix);
+        $keys = $this->cache->queryKeys($mainPrefix . preg_quote($prefix, '/'));
 
         if ( ! $mainPrefix) {
             return $keys;

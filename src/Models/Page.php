@@ -4,6 +4,7 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Services\Pages\PageLanguageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
 
@@ -39,6 +40,19 @@ class Page extends Model
     const TYPE_MENU  = 'menu';
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
+
+    /**
+     * Remove cache when removing a page
+     */
+    public function beforeDelete()
+    {
+        /** @var PageLanguageService $pageLanguageService */
+        $pageLanguageService = $this->getDI()->get('pageLanguageService');
+
+        foreach ($this->pageLanguages as $pageLanguage) {
+            $pageLanguageService->removeCache($pageLanguage);
+        }
+    }
 
     /**
      * @return bool
@@ -150,17 +164,17 @@ class Page extends Model
      */
     public function getParentPageLanguageWithSlugByLangCode(string $langCode): ?PageLanguage
     {
-        if( ! $this->parent){
+        if ( ! $this->parent) {
             return null;
         }
 
         $pageLanguage = $this->parent->getPageLanguageByLangCode($langCode);
 
-        if($pageLanguage && $pageLanguage->url){
+        if ($pageLanguage && $pageLanguage->url) {
             return $pageLanguage;
         }
 
-        if( ! $this->parent->parent){
+        if ( ! $this->parent->parent) {
             return null;
         }
 
