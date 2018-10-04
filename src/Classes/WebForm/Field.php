@@ -6,7 +6,6 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorage;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\ManyToMany;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOne;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
 use KikCMS\Models\PageContent;
@@ -62,6 +61,9 @@ class Field
 
     /** @var string|null */
     private $helpText;
+
+    /** @var bool */
+    private $dontStore = false;
 
     /**
      * Add a css class to the field wrapper
@@ -237,6 +239,14 @@ class Field
     }
 
     /**
+     * @return bool
+     */
+    public function isDontStore(): bool
+    {
+        return $this->dontStore;
+    }
+
+    /**
      * Override this method to convert the field's value to a format best handled by PHP
      * e.g. convert a json encoded object to an actual PHP object
      *
@@ -330,7 +340,9 @@ class Field
      */
     public function dontStore(): Field
     {
-        return $this->store(new None());
+        $this->dontStore = true;
+
+        return $this;
     }
 
     /**

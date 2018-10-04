@@ -108,6 +108,10 @@ class StorageData
                 continue;
             }
 
+            if($field->isDontStore()){
+                continue;
+            }
+
             if( ! array_key_exists($key, $this->formInput)){
                 continue;
             }

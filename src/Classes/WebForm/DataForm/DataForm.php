@@ -4,7 +4,6 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\None;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\ObjectLists\FieldMap;
@@ -119,7 +118,7 @@ abstract class DataForm extends WebForm
                 $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
             }
 
-            if ($field->getStorage() && ! $field->getStorage() instanceOf None) {
+            if ($field->getStorage() && ! $field->isDontStore()) {
                 $value      = $this->storageService->retrieve($field, $id, $langCode, $tableData);
                 $data[$key] = $field->getFormFormat($value);
             }
