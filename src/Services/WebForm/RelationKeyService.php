@@ -48,20 +48,7 @@ class RelationKeyService extends Injectable
                 $relation = $this->getRelation($model, $part1);
 
                 if ($relation->getType() == Relation::HAS_MANY) {
-                    $relatedObjects = [];
-
-                    foreach ($value as $id){
-                        $referencedModel = $relation->getReferencedModel();
-
-                        /** @var Model $referencedModel */
-                        $referencedModel = new $referencedModel();
-                        $referencedModel->$part2 = $id;
-
-                        $relatedObjects[] = $referencedModel;
-                    }
-
-                    $model->$part1->delete();
-                    $model->$part1 = $relatedObjects;
+                    $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
                     $model->$part1->$part2 = $this->formatValue($value);
                 }
@@ -104,13 +91,7 @@ class RelationKeyService extends Injectable
                 $relation = $this->getRelation($model, $part1);
 
                 if ($relation->getType() == Relation::HAS_MANY) {
-                    $returnValue = [];
-
-                    foreach ($model->$part1 as $item) {
-                        $returnValue[] = $item->$part2;
-                    }
-
-                    return $returnValue;
+                    return $this->getValueForHasMany($model, $part1, $part2);
                 }
 
                 return @$model->$part1->$part2;
@@ -140,7 +121,7 @@ class RelationKeyService extends Injectable
      */
     private function formatValue($value): ?string
     {
-        if(is_array($value)){
+        if (is_array($value)) {
             return json_encode($value);
         }
 
@@ -187,6 +168,29 @@ class RelationKeyService extends Injectable
     }
 
     /**
+     * @param Model $model
+     * @param string $relation
+     * @param string $field
+     * @return mixed
+     */
+    private function getValueForHasMany(Model $model, string $relation, string $field)
+    {
+        $returnValue = [];
+
+        foreach ($model->$relation as $item) {
+            if (strstr($field, DataFormConfig::RELATION_KEY_FIELD_SEPARATOR)) {
+                list($keyField, $valueField) = explode(DataFormConfig::RELATION_KEY_FIELD_SEPARATOR, $field);
+
+                $returnValue[$item->$keyField] = $item->$valueField;
+            } else {
+                $returnValue[] = $item->$field;
+            }
+        }
+
+        return $returnValue;
+    }
+
+    /**
      * Get a defined relation by alias
      *
      * @param Model $model
@@ -205,10 +209,48 @@ class RelationKeyService extends Injectable
      */
     private function replaceLangCode(string $relationKey, string $langCode = null): string
     {
-        if( ! $langCode){
+        if ( ! $langCode) {
             return $relationKey;
         }
 
         return str_replace(DataFormConfig::RELATION_KEY_LANGUAGE_CODE_PLACEHOLDER, ucfirst($langCode), $relationKey);
+    }
+
+    /**
+     * @param Model $model
+     * @param string $relationField
+     * @param string $field
+     * @param $value
+     */
+    private function storeHasManyRelation(Model $model, string $relationField, string $field, $value)
+    {
+        $relation = $this->getRelation($model, $relationField);
+
+        $relatedObjects = [];
+
+        foreach ($value as $valueKey => $valueValue) {
+            $referencedModel = $relation->getReferencedModel();
+
+            /** @var Model $referencedModel */
+            $referencedModel = new $referencedModel();
+
+            if (strstr($field, DataFormConfig::RELATION_KEY_FIELD_SEPARATOR)) {
+                list($keyField, $valueField) = explode(DataFormConfig::RELATION_KEY_FIELD_SEPARATOR, $field);
+
+                if( ! $valueValue){
+                    continue;
+                }
+
+                $referencedModel->$keyField   = $valueKey;
+                $referencedModel->$valueField = $valueValue;
+            } else {
+                $referencedModel->$field = $valueValue;
+            }
+
+            $relatedObjects[] = $referencedModel;
+        }
+
+        $model->$relationField->delete();
+        $model->$relationField = $relatedObjects;
     }
 }
