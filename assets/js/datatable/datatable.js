@@ -6,6 +6,8 @@ var DataTable = Class.extend({
     currentSearch: null,
     currentFormInput: null,
     parentEditId: null,
+    parentModel: null,
+    parentRelationKey: null,
     sortDirection: null,
     sortColumn: null,
 
@@ -539,6 +541,14 @@ var DataTable = Class.extend({
 
         if (this.parentEditId != null) {
             parameters.parentEditId = this.parentEditId;
+        }
+
+        if (this.parentModel != null) {
+            parameters.parentModel = this.parentModel;
+        }
+
+        if (this.parentRelationKey != null) {
+            parameters.parentRelationKey = this.parentRelationKey;
         }
 
         var currentTab = this.getWindow().find('.tabs .tab.active').attr('data-tab');

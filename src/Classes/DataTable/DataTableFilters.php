@@ -19,11 +19,17 @@ class DataTableFilters extends Filters
     /** @var string|null */
     private $sortDirection = 'asc';
 
-    /** @var int|null */
+    /** @var int */
     private $editId;
 
     /** @var int|null */
     private $parentEditId;
+
+    /** @var string|null */
+    private $parentRelationKey;
+
+    /** @var string|null */
+    private $parentModel;
 
     /** @var null|string */
     private $languageCode;
@@ -193,6 +199,42 @@ class DataTableFilters extends Filters
     public function setWindowLanguageCode($windowLanguageCode): DataTableFilters
     {
         $this->windowLanguageCode = $windowLanguageCode;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParentRelationKey(): ?string
+    {
+        return $this->parentRelationKey;
+    }
+
+    /**
+     * @param null|string $parentRelationKey
+     * @return DataTableFilters
+     */
+    public function setParentRelationKey(?string $parentRelationKey): DataTableFilters
+    {
+        $this->parentRelationKey = $parentRelationKey;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getParentModel(): ?string
+    {
+        return $this->parentModel;
+    }
+
+    /**
+     * @param null|string $parentModel
+     * @return DataTableFilters
+     */
+    public function setParentModel(?string $parentModel): DataTableFilters
+    {
+        $this->parentModel = $parentModel;
         return $this;
     }
 }

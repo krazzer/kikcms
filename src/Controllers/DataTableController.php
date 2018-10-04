@@ -3,7 +3,7 @@
 namespace KikCMS\Controllers;
 
 
-use KikCmsCore\Classes\Model;
+use KikCMS\Services\ModelService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\DataTable;
@@ -13,8 +13,9 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;
 
 /**
- * @property DbService $dbService
  * @property AccessControl $acl
+ * @property DbService $dbService
+ * @property ModelService $modelService
  */
 class DataTableController extends RenderableController
 {
@@ -133,6 +134,11 @@ class DataTableController extends RenderableController
             if ($dataTable->hasParent() && $parentEditId === 0 && $editId) {
                 $dataTable->cacheNewId($editId);
             }
+
+            // if the datatable has a unsaved parent, cache the new id
+            if ($dataTable->getFilters()->getParentRelationKey() && $parentEditId === 0 && $editId) {
+                $dataTable->cacheNewId($editId);
+            }
         } else {
             $this->view->form     = $dataTable->renderEditForm();
             $this->view->editData = $dataTable->getForm()->getEditData();
@@ -173,9 +179,7 @@ class DataTableController extends RenderableController
         $targetId  = $this->request->getPost('targetId');
         $rearrange = $this->request->getPost('position');
 
-        /** @var Model $model */
-        $model = $dataTable->getModel();
-        $model = new $model();
+        $model = $this->modelService->getModelByClassName($dataTable->getModel());
 
         $source = $model::getById($id);
         $target = $model::getById($targetId);

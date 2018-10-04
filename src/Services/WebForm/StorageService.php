@@ -13,6 +13,7 @@ use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOneRef;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageValues;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
+use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
@@ -343,7 +344,6 @@ class StorageService extends Injectable
 
     /**
      * Store data after the main forms' table row is inserted/updated
-     * @deprecated Use RelationKeys instead
      */
     private function storePostMain()
     {
@@ -369,6 +369,29 @@ class StorageService extends Injectable
                 case $field->getStorage() instanceof ManyToMany:
                     $this->fieldStorageService->storeManyToMany($field, $value, $editId, $langCode);
                 break;
+            }
+
+            if ($field instanceof KeyedDataTableField) {
+                $dataTable = $field->getDataTable();
+
+                $keysToUpdate = $dataTable->getCachedNewIds();
+                $relatedModel = $dataTable->getModel();
+
+                $object = $this->storageData->getObject();
+
+                $relation = $object->getModelsManager()->getRelationByAlias($model, $key);
+
+                $objectField  = $relation->getFields();
+                $relatedField = $relation->getReferencedFields();
+
+                foreach ($keysToUpdate as $newId) {
+                    $success = $this->dbService->update($relatedModel, [$relatedField => $object->$objectField],
+                        [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
+
+                    if ( ! $success) {
+                        throw new Exception('KeyedDataTableField values not updated');
+                    }
+                }
             }
         }
 

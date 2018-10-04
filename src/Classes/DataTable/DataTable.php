@@ -6,6 +6,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Services\ModelService;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
@@ -23,12 +24,13 @@ use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
 
 /**
- * @property DbService $dbService
- * @property LanguageService $languageService
- * @property Backend $diskCache
- * @property Translator $translator
- * @property FieldStorageService $fieldStorageService
  * @property AccessControl $acl
+ * @property Backend $diskCache
+ * @property DbService $dbService
+ * @property FieldStorageService $fieldStorageService
+ * @property LanguageService $languageService
+ * @property ModelService $modelService
+ * @property Translator $translator
  */
 abstract class DataTable extends Renderable
 {
@@ -222,7 +224,7 @@ abstract class DataTable extends Renderable
 
         $objects = $model::getByIdList($ids);
 
-        foreach ($objects as $object){
+        foreach ($objects as $object) {
             $object->delete();
         }
     }
@@ -392,7 +394,18 @@ abstract class DataTable extends Renderable
      */
     public function getParentRelationKey(): ?string
     {
-        return $this->parentRelationKey;
+        $model       = $this->getFilters()->getParentModel();
+        $relationKey = $this->getFilters()->getParentRelationKey();
+
+        if( ! $model || ! $relationKey){
+            return $this->parentRelationKey;
+        }
+
+        if( ! $relation = $this->modelService->getRelation($model, $relationKey)){
+            return null;
+        }
+
+        return $relation->getReferencedFields();
     }
 
     /**
@@ -452,7 +465,7 @@ abstract class DataTable extends Renderable
      */
     public function hasParent(): bool
     {
-        return $this->parentRelationKey != null;
+        return $this->getParentRelationKey() != null;
     }
 
     /**
@@ -524,8 +537,8 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable(true);
 
-        if ($this->parentRelationKey && $this->filters->getParentEditId() !== null) {
-            $this->form->addHiddenField($this->parentRelationKey, $this->filters->getParentEditId());
+        if ($this->getParentRelationKey() && $this->filters->getParentEditId() !== null) {
+            $this->form->addHiddenField($this->getParentRelationKey(), $this->filters->getParentEditId());
         }
 
         return $this->form->render();
@@ -616,7 +629,7 @@ abstract class DataTable extends Renderable
         } else {
             $newIdsCache = (new SubDataTableNewIdsCache)
                 ->setModel($this->getModel())
-                ->setColumn($this->parentRelationKey);
+                ->setColumn($this->getParentRelationKey());
         }
 
         $newIdsCache->addId($editId);
@@ -694,8 +707,10 @@ abstract class DataTable extends Renderable
     protected function getJsProperties(): array
     {
         return [
-            'parentEditId' => $this->filters->getParentEditId(),
-            'labels'       => $this->getLabels(),
+            'parentEditId'      => $this->filters->getParentEditId(),
+            'parentModel'       => $this->filters->getParentModel(),
+            'parentRelationKey' => $this->filters->getParentRelationKey(),
+            'labels'            => $this->getLabels(),
         ];
     }
 

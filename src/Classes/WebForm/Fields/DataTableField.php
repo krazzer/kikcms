@@ -8,6 +8,9 @@ use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Hidden;
 
+/**
+ * @deprecated use KeyedDataTableField instead
+ */
 class DataTableField extends Field
 {
     /** @var DataTable */

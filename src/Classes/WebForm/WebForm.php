@@ -11,6 +11,7 @@ use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\DateField;
+use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
@@ -434,7 +435,7 @@ abstract class WebForm extends Renderable
      */
     protected function renderDataTableFields()
     {
-        /** @var DataTableField|SelectDataTableField $field */
+        /** @var DataTableField|SelectDataTableField|KeyedDataTableField $field */
         foreach ($this->getFieldMap() as $key => $field) {
             if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
                 $this->renderSelectDataTableField($field);
@@ -442,6 +443,10 @@ abstract class WebForm extends Renderable
 
             if ($field->getType() == Field::TYPE_DATA_TABLE) {
                 $this->renderDataTableField($field);
+            }
+
+            if ($field->getType() == Field::TYPE_KEYED_DATA_TABLE) {
+                $this->renderKeyedDataTableField($field);
             }
         }
     }
@@ -475,6 +480,14 @@ abstract class WebForm extends Renderable
             'errorContainer'      => $errorContainer,
             'webForm'             => $this,
         ]);
+    }
+
+    /**
+     * @param KeyedDataTableField $field
+     */
+    protected function renderKeyedDataTableField(KeyedDataTableField $field)
+    {
+        $field->setRenderedDataTable($field->getDataTable()->render());
     }
 
     /**
@@ -625,7 +638,7 @@ abstract class WebForm extends Renderable
     private function reUseDataTableInstances()
     {
         foreach ($this->fieldMap as $key => $field) {
-            if ($field->getType() == Field::TYPE_DATA_TABLE && $this->request->hasPost($key)) {
+            if (in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE]) && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
                 /** @var DataTableField $field */
                 $field->getDataTable()->setInstance($instance);

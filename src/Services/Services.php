@@ -103,6 +103,7 @@ class Services extends BaseServices
             PagesDataTableService::class,
             LanguageService::class,
             MenuService::class,
+            ModelService::class,
             NumberService::class,
             RelationKeyService::class,
             Security::class,

@@ -4,12 +4,13 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
+use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
-use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
 use KikCMS\Services\WebForm\StorageService;
@@ -28,8 +29,9 @@ use Phalcon\Http\Response;
  * @property DbService $dbService
  * @property LanguageService $languageService
  * @property Logger $logger
- * @property StorageService $storageService
+ * @property ModelService $modelService
  * @property RelationKeyService $relationKeyService
+ * @property StorageService $storageService
  */
 abstract class DataForm extends WebForm
 {
@@ -93,10 +95,9 @@ abstract class DataForm extends WebForm
      */
     public function getObject(): ?Model
     {
-        /** @var Model $class */
-        $class = $this->getModel();
+        $model = $this->modelService->getModelByClassName($this->getModel());
 
-        return $class::getById($this->getFilters()->getEditId());
+        return $model::getById($this->getFilters()->getEditId());
     }
 
     /**
@@ -114,7 +115,7 @@ abstract class DataForm extends WebForm
         $object = $this->getObject();
 
         foreach ($this->getFieldMap() as $key => $field) {
-            if($this->relationKeyService->isRelationKey($key)){
+            if ($this->relationKeyService->isRelationKey($key)) {
                 $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
             }
 
@@ -310,7 +311,7 @@ abstract class DataForm extends WebForm
             $storageData->addFormInputValue($key, $value);
         }
 
-        if($editId = $this->getFilters()->getEditId()){
+        if ($editId = $this->getFilters()->getEditId()) {
             $storageData->setEditId($editId);
         }
 
@@ -333,8 +334,7 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @param DataTableField $field
-     * @throws ParentRelationKeyReferenceMissingException
+     * @inheritdoc
      */
     protected function renderDataTableField(DataTableField $field)
     {
@@ -357,6 +357,23 @@ abstract class DataForm extends WebForm
         $this->getEditData();
 
         parent::renderDataTableFields();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function renderKeyedDataTableField(KeyedDataTableField $field)
+    {
+        $langCode     = $this->getFilters()->getLanguageCode();
+        $parentEditId = $this->getParentEditIdForKeyedDataTableField($field);
+
+        $field->getDataTable()->getFilters()
+            ->setParentRelationKey($field->getKey())
+            ->setParentModel($this->getModel())
+            ->setParentEditId($parentEditId)
+            ->setLanguageCode($langCode);
+
+        $field->setRenderedDataTable($field->getDataTable()->render());
     }
 
     /**
@@ -383,11 +400,32 @@ abstract class DataForm extends WebForm
      */
     private function getParentEditIdForField(DataTableField $field): ?int
     {
-        if( ! $editId = $this->getFilters()->getEditId()){
+        if ( ! $editId = $this->getFilters()->getEditId()) {
             return $field->getDataTable()->hasParent() ? 0 : null;
         }
 
         return $this->storageService->getRelatedValueForField($field, $this->getEditData(), $editId);
+    }
+
+    /**
+     * Retrieve the parentEditId for given DataTableField
+     * This can be one of the following:
+     * - The current objects' id
+     * - 0, if their is a relation, but the current forms' object has not been saved yet
+     * - null, if there is no relation at all
+     *
+     * @param KeyedDataTableField $field
+     * @return int|null
+     */
+    private function getParentEditIdForKeyedDataTableField(KeyedDataTableField $field): ?int
+    {
+        if ($object = $this->getObject()) {
+            return (int) $object->id;
+        }
+
+        $relation = $this->modelService->getRelation($this->getModel(), $field->getKey());
+
+        return $relation ? 0 : null;
     }
 
     /**

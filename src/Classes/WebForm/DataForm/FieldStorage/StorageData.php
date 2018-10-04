@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
 
 
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
 
@@ -109,6 +110,10 @@ class StorageData
             }
 
             if($field->isDontStore()){
+                continue;
+            }
+
+            if($field instanceof KeyedDataTableField){
                 continue;
             }
 

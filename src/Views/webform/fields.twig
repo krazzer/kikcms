@@ -14,19 +14,19 @@
 
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
-        {%- block fieldDefaultInputAndFIeld -%}
+        {%- block fieldDefaultInputAndField -%}
             {% if(placeHolderAsLabel == false) %}
                 {%- block fieldLabel -%}
                     {{ form.label(element.name)|raw }}
-                    {% if field.helpText %}
-                        <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
-                           data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
-                    {% endif %}
+                    {%- block helpText -%}
+                        {% if field.helpText %}
+                            <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
+                               data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
+                        {% endif %}
+                    {% endblock %}
                 {% endblock %}
             {% endif %}
-
             {{ form.render(element.name)|raw }}
-
             {% if hasError %}
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             {% endif %}
@@ -96,12 +96,15 @@
     </div>
 {% endblock %}
 
+{%- block fieldKeyedDataTable %}
+    {{ block('fieldDataTable') }}
+{% endblock %}
+
 {%- block fieldFile %}
     {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
     <div{{ fieldContainterAttributes|raw }}>
         {{ block('fieldLabel') }}
         {{ form.render(element.name)|raw }}
-
         <div class="field">
             <div class="buttons">
                 <div class="btn btn-default preview{{ not element.value ? ' hidden' }}"
@@ -113,19 +116,16 @@
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="btn btn-default delete{{ not element.value ? ' hidden' }}"
                      title="{{ tl('webform.detachFile') }}">
                     <span class="glyphicon glyphicon-remove"></span>
                 </div>
-
                 {% if allowedFinderAccess %}
                     <div class="btn btn-default pick{{ element.value ? ' hidden' }}">
                         <span class="glyphicon glyphicon-hand-up"></span>
                         <span class="lbl">{{ tl('dataTable.pickFile') }}</span>
                     </div>
                 {% endif %}
-
                 <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}"
                        data-folder-id="{{ field.folderId }}">
                     <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>

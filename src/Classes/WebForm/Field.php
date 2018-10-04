@@ -22,6 +22,7 @@ class Field
     const TYPE_BUTTON            = 'button';
     const TYPE_CHECKBOX          = 'checkbox';
     const TYPE_DATA_TABLE        = 'dataTable';
+    const TYPE_KEYED_DATA_TABLE  = 'keyedDataTable';
     const TYPE_DATE              = 'date';
     const TYPE_FILE              = 'file';
     const TYPE_HIDDEN            = 'hidden';

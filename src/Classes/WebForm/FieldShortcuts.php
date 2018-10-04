@@ -15,6 +15,7 @@ use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
+use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckboxField;
 use KikCMS\Classes\WebForm\Fields\PasswordField;
 use KikCMS\Classes\WebForm\Fields\RadioButtonField;
@@ -96,6 +97,18 @@ trait FieldShortcuts
     public function addDataTableField(DataTable $dataTable, string $label)
     {
         return $this->addField(new DataTableField($dataTable, $label));
+    }
+
+    /**
+     * @param string $key
+     * @param string $dataTableClass
+     * @param string $label
+     *
+     * @return Field|DataTableField
+     */
+    public function addKeyedDataTableField(string $key, string $dataTableClass, string $label)
+    {
+        return $this->addField(new KeyedDataTableField($key, $dataTableClass, $label));
     }
 
     /**
@@ -203,6 +216,7 @@ trait FieldShortcuts
     {
         return $this->addField(new TextField($key, $label, $validators));
     }
+
     /**
      * @param string $key
      * @param string $label
@@ -213,6 +227,7 @@ trait FieldShortcuts
     {
         return $this->addField(new TextareaField($key, $label, $validators));
     }
+
     /**
      * @param string $key
      * @param string $label
@@ -223,6 +238,7 @@ trait FieldShortcuts
     {
         return $this->addField(new WysiwygField($key, $label, $validators));
     }
+
     /**
      * @param string $key
      * @param mixed $defaultValue
