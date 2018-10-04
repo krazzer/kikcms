@@ -92,41 +92,6 @@ class UrlService extends Injectable
     }
 
     /**
-     * @param string $slug
-     * @param Page|null $parent
-     * @param null $langCode
-     * @return null|PageLanguage
-     */
-    public function getPageLanguageBySlug(string $slug, Page $parent = null, $langCode = null): ?PageLanguage
-    {
-        $query = (new Builder())
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
-            ->leftJoin(Page::class, 'pa.id = p.parent_id', 'pa')
-            ->leftJoin(PageLanguage::class, 'pal.page_id = pa.id AND pal.language_code = pl.language_code', 'pal')
-            ->where('pl.url = :url:', ['url' => $slug]);
-
-        if ( ! $parent) {
-            $query->andWhere('
-                p.parent_id IS NULL OR
-                (pa.type = :typeLink: AND pal.url IS NULL) OR
-                pa.type = :typeMenu:
-            ', [
-                'typeLink' => Page::TYPE_LINK,
-                'typeMenu' => Page::TYPE_MENU,
-            ]);
-        } else {
-            $query->andWhere('pa.id = ' . $parent->getId());
-        }
-
-        if ($langCode) {
-            $query->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :langCode:', ['langCode' => $langCode]);
-        }
-
-        return $this->dbService->getObject($query);
-    }
-
-    /**
      * @return int[]
      */
     public function getPageIdsWithoutUrl(): array
