@@ -131,10 +131,16 @@ var WebForm = Class.extend({
             });
 
             if($field.attr('data-default-date')){
-                $field.mousedown(function () {
-                    var defaultDate = moment($field.attr('data-default-date'), $field.attr('data-format'));
-                    $field.datetimepicker('defaultDate', defaultDate);
-                });
+                var value = $field.val();
+
+                // set default date
+                var defaultDate = moment($field.attr('data-default-date'), $field.attr('data-format'));
+                $field.datetimepicker('defaultDate', defaultDate);
+
+                // setting the default date also sets the value, so clear if it was empty before
+                if( ! value){
+                    $field.val('');
+                }
             }
         });
     },
