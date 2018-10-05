@@ -127,7 +127,8 @@ var WebForm = Class.extend({
 
             $field.datetimepicker({
                 format: $field.attr('data-format'),
-                locale: moment.locale()
+                locale: moment.locale(),
+                useCurrent: false
             });
 
             if($field.attr('data-default-date')){
