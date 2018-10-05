@@ -65,6 +65,9 @@ abstract class DataForm extends WebForm
     /** @var DataTable, will be automatically set when this form is initialized by a DataTable */
     private $dataTable;
 
+    /** @var Model|null */
+    private $object;
+
     /**
      * @return string
      */
@@ -95,9 +98,15 @@ abstract class DataForm extends WebForm
      */
     public function getObject(): ?Model
     {
+        if($this->object){
+            return $this->object;
+        }
+
         $model = $this->modelService->getModelByClassName($this->getModel());
 
-        return $model::getById($this->getFilters()->getEditId());
+        $this->object = $model::getById($this->getFilters()->getEditId());
+
+        return $this->object;
     }
 
     /**
