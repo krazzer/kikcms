@@ -9,6 +9,7 @@ use KikCMS\Services\UserService;
 
 /**
  * Controller for the CMS that can render the menu
+ *
  * @property UserService $userService
  * @property CmsService $cmsService
  * @property WebsiteSettingsBase $websiteSettings
@@ -28,7 +29,7 @@ class BaseCmsController extends BaseController
             $menuGroupMap = new MenuGroupMap();
         }
 
-        if($customCss = $this->websiteSettings->getCustomCss()){
+        if ($customCss = $this->websiteSettings->getCustomCss()) {
             $this->view->assets->addCss($customCss);
         }
 
@@ -39,13 +40,13 @@ class BaseCmsController extends BaseController
     /**
      * @inheritdoc
      */
-    public function initializeLanguage()
+    protected function setDefaultLanguageCode()
     {
-        if(isset($this->config->application->defaultCmsLanguage)){
-            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
-        } else {
-            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+        if ( ! isset($this->config->application->defaultCmsLanguage)) {
+            parent::setDefaultLanguageCode();
         }
+
+        $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
     }
 
     /**

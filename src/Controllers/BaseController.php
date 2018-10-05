@@ -31,6 +31,7 @@ class BaseController extends Controller
         $maxFileSize       = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
         $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
+
         $jsTranslations    = array_merge($errorTranslations, [
             'system.langCode',
             'pages.warningTemplateChange',
@@ -62,7 +63,7 @@ class BaseController extends Controller
         if ($langCode = $this->request->getPost('activeLangCode')) {
             $this->translator->setLanguageCode($langCode);
         } else {
-            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+            $this->setDefaultLanguageCode();
         }
     }
 
@@ -116,6 +117,14 @@ class BaseController extends Controller
         }
 
         fclose($f);
+    }
+
+    /**
+     * Set the language to default
+     */
+    protected function setDefaultLanguageCode()
+    {
+        $this->translator->setLanguageCode($this->config->application->defaultLanguage);
     }
 
     /**
