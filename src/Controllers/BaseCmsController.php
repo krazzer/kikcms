@@ -44,9 +44,9 @@ class BaseCmsController extends BaseController
     {
         if ( ! isset($this->config->application->defaultCmsLanguage)) {
             parent::setDefaultLanguageCode();
+        } else {
+            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
         }
-
-        $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
     }
 
     /**
