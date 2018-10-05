@@ -129,6 +129,13 @@ var WebForm = Class.extend({
                 format: $field.attr('data-format'),
                 locale: moment.locale()
             });
+
+            if($field.attr('data-default-date')){
+                $field.mousedown(function () {
+                    var defaultDate = moment($field.attr('data-default-date'), $field.attr('data-format'));
+                    $field.datetimepicker('defaultDate', defaultDate);
+                });
+            }
         });
     },
 
