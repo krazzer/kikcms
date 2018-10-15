@@ -73,7 +73,9 @@ class MailService extends Injectable
             $parameters['body']    = $body;
             $parameters['subject'] = $subject;
 
-            $body = $this->view->getPartial($template, $parameters);
+            $htmlBody = $this->view->getPartial($template, $parameters);
+        } else {
+            $htmlBody = $body;
         }
 
         $from = $this->getDefaultFrom();
@@ -82,7 +84,8 @@ class MailService extends Injectable
             ->setFrom($from)
             ->setTo($to)
             ->setSubject($subject)
-            ->setBody($body, 'text/html');
+            ->setBody($htmlBody, 'text/html')
+            ->addPart(strip_tags($body), 'text/plain');
 
         foreach ($attachments as $attachment) {
             $message->attach(Swift_Attachment::fromPath($attachment));
