@@ -4,6 +4,7 @@ namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
+use KikCMS\Classes\WebForm\Tab;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Page\Template;
@@ -103,9 +104,9 @@ class TemplateService extends Injectable
 
     /**
      * @param string $fieldKey
-     * @return Field|null
+     * @return Tab|Field|null
      */
-    private function getFieldByKey(string $fieldKey): ?Field
+    private function getFieldByKey(string $fieldKey)
     {
         $fields = $this->templateFields->getFields();
 

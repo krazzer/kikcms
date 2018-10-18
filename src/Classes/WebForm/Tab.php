@@ -27,7 +27,8 @@ class Tab
         $this->fieldMap = new FieldMap();
 
         foreach ($fields as $field) {
-            $this->fieldMap->add($field, $field->getKey());
+            $key = $field->getKey() ?: $field->getElement()->getName();
+            $this->fieldMap->add($field, $key);
         }
     }
 

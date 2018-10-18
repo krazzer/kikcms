@@ -10,6 +10,7 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Tab;
 use KikCMS\DataTables\PagesFlat;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
@@ -170,7 +171,19 @@ class PageForm extends DataForm
 
         /** @var Field $field */
         foreach ($fields as $field) {
-            $this->addField($field, $this->tabs[0]);
+            if($field instanceof Field){
+                $this->addField($field, $this->tabs[0]);
+            }
+
+            if($field instanceof Tab){
+                $tabFields = [];
+
+                foreach ($field->getFieldMap() as $tabField){
+                    $tabFields[] = $this->addField($tabField);
+                }
+
+                $this->addTab($field->getName(), $tabFields);
+            }
         }
     }
 
