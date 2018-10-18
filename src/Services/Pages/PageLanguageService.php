@@ -45,6 +45,7 @@ class PageLanguageService extends Injectable
             $aliasPageLanguage = new PageLanguage();
 
             $aliasPageLanguage->language_code = $pageLanguage->getLanguageCode();
+            $aliasPageLanguage->name          = $pageLanguage->getName();
             $aliasPageLanguage->page_id       = $alias->getId();
 
             $aliasPageLanguage->save();
