@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Services\Finder\FinderPermissionHelper;
@@ -104,6 +105,7 @@ class Services extends BaseServices
             LanguageService::class,
             MenuService::class,
             ModelService::class,
+            NestedSetService::class,
             NumberService::class,
             RelationKeyService::class,
             Security::class,

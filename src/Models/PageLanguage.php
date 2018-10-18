@@ -3,6 +3,7 @@
 namespace KikCMS\Models;
 
 use KikCMS\Services\Pages\PageLanguageService;
+use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Classes\Model;
 
 /**
@@ -26,6 +27,9 @@ class PageLanguage extends Model
     /** @var string|null */
     private $aliasName;
 
+    /** @var string|null */
+    private $url;
+
     /**
      * Remove cache
      */
@@ -35,6 +39,32 @@ class PageLanguage extends Model
         $pageLanguageService = $this->getDI()->get('pageLanguageService');
 
         $pageLanguageService->removeCache($this);
+    }
+
+    /**
+     * Create URL if needed
+     */
+    public function beforeSave()
+    {
+        // url is set, so do nothing
+        if ($this->url) {
+            return;
+        }
+
+        // menu's and links don't require urls
+        if (in_array($this->page->type, [Page::TYPE_MENU, Page::TYPE_LINK])) {
+            return;
+        }
+
+        $this->url = $urlPath = $this->getUrlService()->toSlug($this->getName());
+
+        if ($parent = $this->getParentWithSlug()) {
+            $urlPath = $this->getUrlService()->getUrlByPageLanguage($parent) . '/' . $urlPath;
+        }
+
+        if ($this->getUrlService()->urlPathExists($urlPath, $this)) {
+            $this->getUrlService()->deduplicateUrl($this);
+        }
     }
 
     /**
@@ -62,7 +92,7 @@ class PageLanguage extends Model
      */
     public function getParent(): ?PageLanguage
     {
-        if( ! $parentPage = $this->page->parent){
+        if ( ! $parentPage = $this->page->parent) {
             return null;
         }
 
@@ -105,5 +135,32 @@ class PageLanguage extends Model
     public function setAliasName(string $name)
     {
         $this->aliasName = $name;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param null|string $url
+     * @return PageLanguage
+     */
+    public function setUrl(?string $url): PageLanguage
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * @return UrlService
+     */
+    private function getUrlService(): UrlService
+    {
+        return $this->getDI()->get('urlService');
     }
 }

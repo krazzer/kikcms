@@ -34,10 +34,10 @@ class UrlService extends Injectable
         $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
 
         foreach ($pageLanguageMap as $pageLanguage) {
-            $pageLanguage->url = $this->toSlug($this->getName($pageLanguage));
+            $pageLanguage->setUrl($this->toSlug($this->getName($pageLanguage)));
 
             if ($this->urlExistsForPageLanguage($pageLanguage)) {
-                $this->deduplicateUrl($pageLanguage);
+                $this->deduplicateAndStoreNewUrl($pageLanguage);
             } else {
                 $pageLanguage->save();
             }
@@ -63,7 +63,16 @@ class UrlService extends Injectable
             return;
         }
 
-        $pageLanguage->url = basename($newUrl);
+        $pageLanguage->setUrl(basename($newUrl));
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     */
+    public function deduplicateAndStoreNewUrl(PageLanguage $pageLanguage)
+    {
+        $this->deduplicateUrl($pageLanguage);
+
         $pageLanguage->save();
 
         $this->cacheService->clearPageCache();
@@ -136,7 +145,7 @@ class UrlService extends Injectable
             ])
             ->orderBy('p.lft');
 
-        return '/' . implode('/', array_merge($this->dbService->getValues($query), [$pageLanguage->url]));
+        return '/' . implode('/', array_merge($this->dbService->getValues($query), [$pageLanguage->getUrl()]));
     }
 
     /**
@@ -145,6 +154,11 @@ class UrlService extends Injectable
      */
     public function getUrlByPageLanguage(PageLanguage $pageLanguage): string
     {
+        // hasn't been stored yet, so can't be cached
+        if( ! isset($pageLanguage->id)){
+            return $this->createUrlPathByPageLanguage($pageLanguage);
+        }
+
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
         return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
@@ -244,17 +258,17 @@ class UrlService extends Injectable
     /**
      * Check whether given urlPath already exists, excluding given PageLanguage
      *
-     * @param string $url
+     * @param string $urlPath
      * @param PageLanguage $existingPageLanguage
      * @return bool
      */
-    public function urlPathExists(string $url, PageLanguage $existingPageLanguage = null): bool
+    public function urlPathExists(string $urlPath, PageLanguage $existingPageLanguage = null): bool
     {
-        if ( ! $pageLanguage = $this->getPageLanguageByUrlPath($url)) {
+        if ( ! $pageLanguage = $this->getPageLanguageByUrlPath($urlPath)) {
             return false;
         }
 
-        if( ! $existingPageLanguage){
+        if( ! $existingPageLanguage || ! isset($existingPageLanguage->id)){
             return true;
         }
 

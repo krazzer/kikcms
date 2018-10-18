@@ -4,6 +4,7 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
@@ -40,6 +41,24 @@ class Page extends Model
     const TYPE_MENU  = 'menu';
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
+
+    /**
+     * Set lft, rgt, level and display_order if empty
+     */
+    public function beforeSave()
+    {
+        // no parent, so do nothing
+        if( ! $this->getParentId()){
+            return;
+        }
+
+        // lft and rgt are already set, so do nothing
+        if(isset($this->lft) && $this->lft && isset($this->rgt) && $this->rgt){
+            return;
+        }
+
+        $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
+    }
 
     /**
      * Remove cache when removing a page
@@ -149,11 +168,15 @@ class Page extends Model
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getParentId(): int
+    public function getParentId(): ?int
     {
-        return (int) $this->parent_id;
+        if( ! property_exists($this, self::FIELD_PARENT_ID)){
+            return null;
+        }
+
+        return (int) $this->parent_id ?: null;
     }
 
     /**
@@ -170,7 +193,7 @@ class Page extends Model
 
         $pageLanguage = $this->parent->getPageLanguageByLangCode($langCode);
 
-        if ($pageLanguage && $pageLanguage->url) {
+        if ($pageLanguage && $pageLanguage->getUrl()) {
             return $pageLanguage;
         }
 
@@ -271,5 +294,13 @@ class Page extends Model
         $templateFields = $this->getDI()->get('templateFields');
 
         return array_keys($templateFields->getFields());
+    }
+
+    /**
+     * @return NestedSetService
+     */
+    private function getNestedSetService(): NestedSetService
+    {
+        return $this->getDI()->get('nestedSetService');
     }
 }

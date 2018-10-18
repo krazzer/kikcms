@@ -125,14 +125,14 @@ class PageRearrangeService extends Injectable
     {
         foreach ($page->pageLanguages as $pageLanguage) {
             // if there's no url, we don't need to check for dupes
-            if( ! $pageLanguage->url){
+            if( ! $pageLanguage->getUrl()){
                 continue;
             }
 
             $urlPath = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
             if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
-                $this->urlService->deduplicateUrl($pageLanguage);
+                $this->urlService->deduplicateAndStoreNewUrl($pageLanguage);
             }
         }
     }
