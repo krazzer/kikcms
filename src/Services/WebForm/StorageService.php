@@ -428,7 +428,7 @@ class StorageService extends Injectable
     {
         /** @var DataTableField $field */
         foreach ($this->storageData->getFieldMap() as $field) {
-            if ($field->getType() !== Field::TYPE_DATA_TABLE) {
+            if ( ! in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE])) {
                 continue;
             }
 
