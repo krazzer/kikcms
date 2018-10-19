@@ -46,8 +46,7 @@ class Routing extends Injectable
         $backend->add('/generate-security-token', "Cms::generateSecurityToken");
 
         $backend->add('/cache', "Cache::manager")->setName('cacheManager');
-        $backend->add('/cache/empty/{key:.*}', "Cache::emptyByKey");
-        $backend->add('/cache/empty{key:}', "Cache::emptyByKey");
+        $backend->add('/cache/empty', "Cache::emptyByKey");
 
         $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
         $backend->add("/getTinyMceLinks/{languageCode:[a-z]+}", "Cms::getTinyMceLinks");

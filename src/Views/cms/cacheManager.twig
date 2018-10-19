@@ -13,7 +13,7 @@
         </span>
         <span class="value">{{ cacheNode.valueOutput }}</span>
         <span class="delete">
-            <a href="/cms/cache/empty/{{ cacheNode.fullKey|url_encode }}" class="btn btn-default">Verwijder</a>
+            <a href="/cms/cache/empty?key={{ cacheNode.fullKey|url_encode }}" class="btn btn-default">Verwijder</a>
         </span>
     </div>
 {% endblock %}
