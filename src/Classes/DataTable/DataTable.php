@@ -7,6 +7,7 @@ use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
@@ -31,6 +32,7 @@ use Phalcon\Tag;
  * @property LanguageService $languageService
  * @property ModelService $modelService
  * @property Translator $translator
+ * @property RelationKeyService $relationKeyService
  */
 abstract class DataTable extends Renderable
 {
@@ -193,19 +195,20 @@ abstract class DataTable extends Renderable
      */
     public function checkCheckbox($id, $column, $checked): bool
     {
-        if ($form = $this->getForm()) {
-            $this->renderEditForm();
-
-            $field    = $form->getFieldMap()->get($column);
-            $langCode = $this->getFilters()->getLanguageCode();
-            $editData = $this->dbService->getTableRowById($this->getModel(), $id);
-
-            if ($field->getStorage()) {
-                return $this->fieldStorageService->store($field, $checked, $id, $editData, $langCode);
-            }
+        if( ! $this->canEdit($id)){
+            return false;
         }
 
-        return $this->dbService->update($this->getModel(), [$column => $checked], [self::TABLE_KEY => $id]);
+        $langCode = $this->getFilters()->getLanguageCode();
+        $object   = $this->modelService->getObject($this->getModel(), $id);
+
+        if ($this->relationKeyService->isRelationKey($column)) {
+            $this->relationKeyService->set($object, $column, $checked, $langCode);
+        } else {
+            $object->$column = $checked;
+        }
+
+        return $object->save();
     }
 
     /**
@@ -260,7 +263,10 @@ abstract class DataTable extends Renderable
             'data-col' => $column,
         ];
 
-        if ($rowData[$column] && $value) {
+        // we do this check to prevent unused $rowData error
+        if(array_key_exists($column, $rowData) && $value){
+            $attributes['checked'] = 'checked';
+        } elseif ($value) {
             $attributes['checked'] = 'checked';
         }
 
@@ -397,11 +403,11 @@ abstract class DataTable extends Renderable
         $model       = $this->getFilters()->getParentModel();
         $relationKey = $this->getFilters()->getParentRelationKey();
 
-        if( ! $model || ! $relationKey){
+        if ( ! $model || ! $relationKey) {
             return $this->parentRelationKey;
         }
 
-        if( ! $relation = $this->modelService->getRelation($model, $relationKey)){
+        if ( ! $relation = $this->modelService->getRelation($model, $relationKey)) {
             return null;
         }
 
@@ -589,6 +595,19 @@ abstract class DataTable extends Renderable
         $query        = $this->getDefaultQuery();
 
         return $queryBuilder->getQuery($query);
+    }
+
+    /**
+     * Formats the field as a checkbox, but with the option to add a relationKey if it's stored elsewhere
+     *
+     * @param string $field
+     * @param string|null $relationKey
+     */
+    public function setCheckboxFormat(string $field, string $relationKey = null)
+    {
+        $this->setFieldFormatting($field, function($value, $rowData, $column) use ($relationKey){
+            return $this->formatCheckbox($value, $rowData, $relationKey ?: $column);
+        });
     }
 
     /**

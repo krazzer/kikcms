@@ -32,4 +32,16 @@ class ModelService extends Injectable
     {
         return new $className();
     }
+
+    /**
+     * @param string $className
+     * @param int $id
+     * @return Model
+     */
+    public function getObject(string $className, int $id): Model
+    {
+        $model = $this->getModelByClassName($className);
+
+        return $model::getById($id);
+    }
 }
