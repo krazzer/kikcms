@@ -2,6 +2,16 @@
 @import "../includes/variables";
 @import "../includes/mixins";
 
+// since this field can be shown inside a form-group with has-errors, we prevent it here from getting a red border
+.has-error .search input{
+    border-color: $lightGray;
+    box-shadow: none;
+
+    &:focus{
+        border-color: $lightGray;
+    }
+}
+
 .toolbarComponent {
 
     > .toolbar {

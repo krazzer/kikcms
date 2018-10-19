@@ -13,11 +13,11 @@ var WebForm = Class.extend({
             $filePicker.find('.finder-container').html(result.finder);
             $filePicker.slideDown();
 
-            $filePicker.on("pick", '.file', function () {
+            $filePicker.on("pick", '.file', function (e, onComplete) {
                 var $file          = $(this);
                 var selectedFileId = $file.attr('data-id');
 
-                self.actionPickFile($field, selectedFileId);
+                self.actionPickFile($field, selectedFileId, onComplete);
 
                 $filePicker.slideUp(function () {
                     $file.removeClass('selected');
@@ -57,7 +57,13 @@ var WebForm = Class.extend({
         });
     },
 
-    actionPreview: function ($field, fileId, result) {
+    /**
+     * @param $field
+     * @param fileId
+     * @param result
+     * @param onComplete
+     */
+    actionPreview: function ($field, fileId, result, onComplete) {
         var $preview      = $field.find('.preview');
         var $previewThumb = $field.find('.preview .thumb');
         var $buttonPick   = $field.find('.buttons .pick');
@@ -77,13 +83,22 @@ var WebForm = Class.extend({
 
         $buttonPick.addClass('hidden');
         $buttonDelete.removeClass('hidden');
+
+        if(typeof onComplete !== "undefined"){
+            onComplete();
+        }
     },
 
-    actionPickFile: function ($field, fileId) {
+    /**
+     * @param $field
+     * @param fileId
+     * @param onComplete
+     */
+    actionPickFile: function ($field, fileId, onComplete) {
         var self = this;
 
         KikCMS.action('/cms/webform/getFilePreview', {fileId: fileId}, function (result) {
-            self.actionPreview($field, fileId, result);
+            self.actionPreview($field, fileId, result, onComplete);
         });
     },
 

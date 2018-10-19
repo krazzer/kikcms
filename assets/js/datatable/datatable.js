@@ -268,13 +268,13 @@ var DataTable = Class.extend({
             var column       = $column.attr('data-column');
             var curDirection = $column.attr('data-sort');
 
-            switch (curDirection){
+            switch (curDirection) {
                 case 'asc':
                     var direction = 'desc';
                 break;
                 case 'desc':
                     direction = '';
-                    column = '';
+                    column    = '';
                 break;
                 default:
                     direction = 'asc';
@@ -493,6 +493,16 @@ var DataTable = Class.extend({
         var $window = this.getWindow();
         var params  = this.getFormGroups().serializeObject();
 
+        // if a file has been selected, then auto-pick that file
+        var $selectedFile = $window.find('.file-picker:visible .file.selected');
+
+        if ($selectedFile.length > 0) {
+            $selectedFile.trigger('pick', function () {
+                self.actionSave(closeWindow);
+            });
+            return;
+        }
+
         var $saveButtons = $window.find('.saveAndClose, .save');
         $saveButtons.attr('disabled', 'disabled');
 
@@ -629,7 +639,7 @@ var DataTable = Class.extend({
         $window.fadeIn();
     },
 
-    setEdited: function(rowId){
+    setEdited: function (rowId) {
         var $editedRow = this.getDataTable().find("table tr[data-id=" + rowId + "]");
         $editedRow.addClass('edited');
 
