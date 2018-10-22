@@ -30,15 +30,14 @@ class BaseController extends Controller
         $maxFileSizeConfig = ByteUtil::stringToBytes($this->config->media->maxFileSize);
         $maxFileSize       = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
         $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
-        $errorTranslations = $this->translator->getCmsTranslationGroupKeys('error');
 
-        $jsTranslations    = array_merge($errorTranslations, [
+        $jsTranslations = [
             'system.langCode',
             'pages.warningTemplateChange',
             'media.uploadMaxFilesWarning',
             'media.uploadMaxFileSizeWarning',
             'media.fileTypeWarning',
-        ]);
+        ];
 
         $jsSettings = [
             'isDev'             => $this->config->application->env == 'dev',
@@ -108,7 +107,7 @@ class BaseController extends Controller
 
         $f = fopen('php://output', 'w');
 
-        if($headerLines){
+        if ($headerLines) {
             fputcsv($f, $headerLines, ';');
         }
 

@@ -3,8 +3,14 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Config\KikCMSConfig;
+use Phalcon\Http\ResponseInterface;
+
 class ErrorsController extends BaseCmsController
 {
+    /**
+     * @inheritdoc
+     */
     public function initialize()
     {
         parent::initialize();
@@ -13,24 +19,60 @@ class ErrorsController extends BaseCmsController
         $this->view->hideMenu = $this->request->isAjax();
     }
 
-    public function show404Action()
+    /**
+     * @return ResponseInterface
+     */
+    public function show404Action(): ResponseInterface
     {
         $this->response->setStatusCode(404);
+        return $this->getResponse('404');
     }
 
-    public function show404ObjectAction($object)
+    /**
+     * @param string $object
+     * @return ResponseInterface
+     */
+    public function show404ObjectAction(string $object): ResponseInterface
     {
-        $this->view->object = $object;
         $this->response->setStatusCode(404);
+
+        return $this->getResponse('404object', [
+            'object' => $object,
+        ]);
     }
 
-    public function show401Action()
+    /**
+     * @return ResponseInterface
+     */
+    public function show401Action(): ResponseInterface
     {
         $this->response->setStatusCode(401);
+        return $this->getResponse('401');
     }
 
-    public function show500Action()
+    /**
+     * @return ResponseInterface
+     */
+    public function show500Action(): ResponseInterface
     {
         $this->response->setStatusCode(500);
+        return $this->getResponse('500');
+    }
+
+    /**
+     * @param string $errorType
+     * @param array $parameters
+     * @return ResponseInterface
+     */
+    private function getResponse(string $errorType, array $parameters = []): ResponseInterface
+    {
+        if ($this->request->isAjax() && $this->config->application->env !== KikCMSConfig::ENV_DEV) {
+            return $this->response->setJsonContent([
+                'title'       => $this->translator->tl('error.' . $errorType . '.title'),
+                'description' => $this->translator->tl('error.' . $errorType . '.description', $parameters),
+            ]);
+        } else {
+            return $this->response->setContent($this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters));
+        }
     }
 }
