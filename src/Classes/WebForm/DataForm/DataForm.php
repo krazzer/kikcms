@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
@@ -202,7 +203,11 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        $data = $this->getObject()->toArray();
+        if( ! $object = $this->getObject()){
+            throw new ObjectNotFoundException(basename($this->getModel()) . ':' . $editId);
+        }
+
+        $data = $object->toArray();
         $data = $this->getDataStoredElseWhere($editId, $langCode, $data) + $data;
         $data = $this->transformDataForDisplay((array) $data);
 
