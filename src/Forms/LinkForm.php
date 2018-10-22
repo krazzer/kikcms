@@ -16,10 +16,8 @@ class LinkForm extends PageForm
      */
     protected function initialize()
     {
-        $this->addTextField('pageLanguage*:name', $this->translator->tl('fields.name'), [new PresenceOf()]);
-
-        $this->addTextField(Page::FIELD_LINK, $this->translator->tl('dataTables.pages.linkToDesc'));
-        $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_LINK);
+        $langCode  = $this->getFilters()->getLanguageCode();
+        $urlsRoute = '/cms/get-urls/' . $langCode;
 
         $urlPatternValidation = new Regex([
             'pattern'    => '/^$|^([0-9a-z\-]+)$/',
@@ -27,16 +25,23 @@ class LinkForm extends PageForm
             'allowEmpty' => true,
         ]);
 
+        $keyValidation = [$urlPatternValidation, new StringLength(["max" => 32])];
         $urlValidation = [$urlPatternValidation, new StringLength(["max" => 255])];
 
-        $this->addTextField('pageLanguage*:url', $this->translator->tl('fields.url'), $urlValidation)
-            ->setHelpText($this->translator->tl('dataTables.pages.urlLinkHelpText'));
+        $urlLabel    = $this->translator->tl('fields.slug');
+        $nameLabel   = $this->translator->tl('fields.name');
+        $urlHelpText = $this->translator->tl('dataTables.pages.urlLinkHelpText');
+        $linkLabel   = $this->translator->tl('dataTables.pages.linkToDesc');
+
+        $this->addTextField('pageLanguage*:name', $nameLabel, [new PresenceOf()]);
+        $linkField = $this->addAutoCompleteField(Page::FIELD_LINK, $linkLabel, $urlsRoute);
+        $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_LINK);
+        $this->addTextField('pageLanguage*:url', $urlLabel, $urlValidation)->setHelpText($urlHelpText);
+
+        $this->addFieldTransformer(new UrlToId($linkField, $langCode));
 
         if ($this->acl->allowed(Permission::PAGE_KEY, Permission::ACCESS_EDIT)) {
-            $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), [
-                $urlPatternValidation,
-                new StringLength(["max" => 32])
-            ]);
+            $this->addTextField(Page::FIELD_KEY, $this->translator->tl('fields.key'), $keyValidation);
         }
     }
 }

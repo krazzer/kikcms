@@ -92,8 +92,8 @@ return [
                 'locked'   => 'Deze pagina is noodzakelijk voor het correct werken van de website, en kan daarom niet worden verwijderd',
             ],
             'deleteErrorFk'   => "Alleen pagina's zonder sub-pagina's kunnen worden verwijderd.",
-            'linkToDesc'      => 'Linkt naar (Pagina ID of URL)',
-            'urlLinkHelpText' => "Url is optioneel, en wordt alleen gebruikt voor de url generatie van sub-pagina's",
+            'linkToDesc'      => 'Url waar de pagina naar toe linkt',
+            'urlLinkHelpText' => "Slug onderdeel is het gedeelte van een URL, bijv 'wielen' in '/producten/<b>wielen</b>/wiel'. Optioneel.",
         ],
 
         'aliases' => [
@@ -206,6 +206,7 @@ return [
         'translations'   => 'Vertalingen',
         'type'           => 'Type',
         'url'            => 'Url',
+        'slug'           => 'Slug onderdeel',
         'variable'       => 'Variabele',
     ],
 

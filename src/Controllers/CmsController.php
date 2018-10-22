@@ -197,6 +197,17 @@ class CmsController extends BaseCmsController
     }
 
     /**
+     * Get an url map (pageId => url) for given language
+     *
+     * @param string $langCode
+     * @return ResponseInterface
+     */
+    public function getUrlsAction(string $langCode): ResponseInterface
+    {
+        return $this->response->setJsonContent($this->urlService->getUrlsByLangCode($langCode));
+    }
+
+    /**
      * Logout the CMS user
      */
     public function logoutAction()

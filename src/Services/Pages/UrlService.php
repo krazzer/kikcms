@@ -4,6 +4,7 @@ namespace KikCMS\Services\Pages;
 
 
 use KikCMS\Classes\Translator;
+use KikCMS\ObjectLists\PageLanguageList;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
@@ -237,6 +238,31 @@ class UrlService extends Injectable
             ->orderBy('p.lft');
 
         return $pageUrlDataQuery->getQuery()->execute()->toArray();
+    }
+
+    /**
+     * @param string $langCode
+     * @return array
+     */
+    public function getUrlsByLangCode(string $langCode): array
+    {
+        $query = (new Builder)
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'pl.page_id = p.id', 'p')
+            ->inWhere(PageLanguage::FIELD_LANGUAGE_CODE, [$langCode])
+            ->notInWhere(Page::FIELD_TYPE, [Page::TYPE_MENU, Page::TYPE_LINK]);
+
+        $pageLanguageList = $this->dbService->getObjectList($query, PageLanguageList::class);
+
+        $urls = [];
+
+        foreach ($pageLanguageList as $pageLanguage){
+            $urls[$pageLanguage->page_id] = $this->getUrlByPageLanguage($pageLanguage);
+        }
+
+        sort($urls);
+
+        return $urls;
     }
 
     /**
