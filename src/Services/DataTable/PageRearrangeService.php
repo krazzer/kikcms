@@ -28,6 +28,20 @@ class PageRearrangeService extends Injectable
     const REARRANGE_INTO   = 'into';
 
     /**
+     * @param Page $parentPage
+     * @return int
+     */
+    public function getMaxDisplayOrder(Page $parentPage): int
+    {
+        $query = (new Builder())
+            ->from(Page::class)
+            ->columns(["MAX(" . Page::FIELD_DISPLAY_ORDER . ")"])
+            ->where('parent_id = :parentId:', ['parentId' => $parentPage->getId()]);
+
+        return (int) $this->dbService->getValue($query);
+    }
+
+    /**
      * @param Page $page
      * @param Page $targetPage
      * @param string $rearrange
@@ -100,16 +114,16 @@ class PageRearrangeService extends Injectable
             return;
         }
 
-        $pageMap = $this->pageService->getDisplayOrderMissing();
+        $parentPageMap = $this->pageService->getDisplayOrderMissing();
 
-        foreach ($pageMap as $parentPage) {
-            $children        = $this->pageService->getOffspring($parentPage);
-            $maxDisplayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
+        foreach ($parentPageMap as $parentPage) {
+            $children     = $this->pageService->getChildren($parentPage);
+            $displayOrder = 1;
 
-            /** @var Page $page */
+            // loop through all children and set a new display_order
             foreach ($children as $page) {
-                $page->display_order = $maxDisplayOrder;
-                $maxDisplayOrder++;
+                $page->display_order = $displayOrder;
+                $displayOrder++;
 
                 $page->save();
             }
@@ -125,7 +139,7 @@ class PageRearrangeService extends Injectable
     {
         foreach ($page->pageLanguages as $pageLanguage) {
             // if there's no url, we don't need to check for dupes
-            if( ! $pageLanguage->getUrl()){
+            if ( ! $pageLanguage->getUrl()) {
                 continue;
             }
 
@@ -305,19 +319,5 @@ class PageRearrangeService extends Injectable
             AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
             ORDER BY display_order DESC
         ");
-    }
-
-    /**
-     * @param Page $parentPage
-     * @return int
-     */
-    private function getMaxDisplayOrder(Page $parentPage): int
-    {
-        $query = (new Builder())
-            ->from(Page::class)
-            ->columns(["MAX(" . Page::FIELD_DISPLAY_ORDER . ")"])
-            ->where('parent_id = :parentId:', ['parentId' => $parentPage->getId()]);
-
-        return (int) $this->dbService->getValue($query);
     }
 }

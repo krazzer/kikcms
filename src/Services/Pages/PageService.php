@@ -191,6 +191,8 @@ class PageService extends Injectable
     }
 
     /**
+     * Retrieve all pages that have children which have no display_order set
+     *
      * @return PageMap
      */
     public function getDisplayOrderMissing(): PageMap

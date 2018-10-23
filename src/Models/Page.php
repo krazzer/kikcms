@@ -5,6 +5,7 @@ namespace KikCMS\Models;
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Services\DataTable\NestedSetService;
+use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
@@ -48,16 +49,20 @@ class Page extends Model
     public function beforeSave()
     {
         // no parent, so do nothing
-        if( ! $this->getParentId()){
+        if ( ! $this->getParentId()) {
             return;
         }
 
         // lft and rgt are already set, so do nothing
-        if(isset($this->lft) && $this->lft && isset($this->rgt) && $this->rgt){
+        if (isset($this->lft) && $this->lft && isset($this->rgt) && $this->rgt) {
             return;
         }
 
         $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
+
+        if ( ! $this->getDisplayOrder()) {
+            $this->display_order = $this->getPageRearrangeService()->getMaxDisplayOrder($this->parent) + 1;
+        }
     }
 
     /**
@@ -89,13 +94,14 @@ class Page extends Model
         parent::initialize();
 
         $this->belongsTo(self::FIELD_PARENT_ID, Page::class, Page::FIELD_ID, ["alias" => "parent"]);
+        $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
+        $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
         $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
         $this->hasMany(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, ["alias" => "pageContents"]);
-        $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, ["alias" => "pageLanguageContents"]);
-        $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
-
-        $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
+        $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, [
+            "alias" => "pageLanguageContents"
+        ]);
 
         $this->addPageLanguageRelations();
         $this->addPageContentRelations();
@@ -124,6 +130,10 @@ class Page extends Model
      */
     public function getDisplayOrder(): ?int
     {
+        if ( ! property_exists($this, self::FIELD_DISPLAY_ORDER)){
+            return null;
+        }
+
         return (int) $this->display_order ?: null;
     }
 
@@ -172,7 +182,7 @@ class Page extends Model
      */
     public function getParentId(): ?int
     {
-        if( ! property_exists($this, self::FIELD_PARENT_ID)){
+        if ( ! property_exists($this, self::FIELD_PARENT_ID)) {
             return null;
         }
 
@@ -302,5 +312,13 @@ class Page extends Model
     private function getNestedSetService(): NestedSetService
     {
         return $this->getDI()->get('nestedSetService');
+    }
+
+    /**
+     * @return PageRearrangeService
+     */
+    private function getPageRearrangeService(): PageRearrangeService
+    {
+        return $this->getDI()->get('pageRearrangeService');
     }
 }
