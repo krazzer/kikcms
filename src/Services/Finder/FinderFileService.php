@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Finder;
 
 
+use ImagickException;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -429,7 +430,15 @@ class FinderFileService extends Injectable
 
         // smaller than required, so do nothing
         if ($dimensions[0] <= $maxWidth && $dimensions[1] <= $maxHeight) {
-            $image->save($filePath, $jpgQuality);
+            try{
+                $image->save($filePath, $jpgQuality);
+            } catch(ImagickException $exception){
+                // suppress exception with code 410
+                if($exception->getCode() !== 410){
+                    throw $exception;
+                }
+            }
+
             return;
         }
 
