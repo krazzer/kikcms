@@ -37,6 +37,20 @@
         <li><a href="/cms/settings">Instellingen</a></li>
         <li class="active">Cache beheer</li>
     </ol>
+    <table class="table table-striped stats">
+        <tr>
+            <td>Geheugen gebruik</td>
+            <td>{{ memorySize }}</td>
+        </tr>
+        <tr>
+            <td>Uptime</td>
+            <td>{{ uptime.d }}d {{ uptime.h }}h {{ uptime.i }}m</td>
+        </tr>
+        <tr>
+            <td>Hits / misses</td>
+            <td>{{ cacheInfo.num_hits }} / {{ cacheInfo.num_misses }}</td>
+        </tr>
+    </table>
     <a href="/cms/cache/empty" class="btn btn-clear btn-primary">Volledige cache legen</a>
     <ul class="tree">
         {{ _self.menu(cacheNodeMap) }}

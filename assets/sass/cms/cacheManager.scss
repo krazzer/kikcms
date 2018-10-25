@@ -1,8 +1,19 @@
 @import '../includes/variables';
 @import '../includes/mixins';
 
-.btn-clear{
+.btn-clear {
     margin-bottom: 20px;
+    float: right;
+}
+
+.table.stats {
+    width: 300px;
+    float: left;
+
+    td {
+        border-top: none;
+        padding: 8px 15px;
+    }
 }
 
 .tree {
@@ -94,10 +105,10 @@
             }
         }
 
-        .delete{
+        .delete {
             line-height: 16px;
 
-            .btn{
+            .btn {
                 width: 100%;
                 padding: 0;
                 font-size: 12px;
