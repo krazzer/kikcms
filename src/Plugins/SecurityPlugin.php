@@ -52,11 +52,6 @@ class SecurityPlugin extends Plugin
             return false;
         }
 
-        if ($isLoggedIn && $controller == self::CONTROLLER_LOGIN) {
-            $this->response->redirect('cms');
-            return false;
-        }
-
         // prevent unused parameter warning
         $event->setType($event->getType());
 

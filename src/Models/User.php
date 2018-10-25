@@ -66,4 +66,16 @@ class User extends Model
 
         $this->hasOne(User::FIELD_ID, FinderFolder::class, FinderFolder::FIELD_USER_ID, ["alias" => "folder"]);
     }
+
+    /**
+     * @return int|null
+     */
+    public function getId(): ?int
+    {
+        if( ! property_exists($this, self::FIELD_ID)){
+            return null;
+        }
+
+        return (int) $this->id;
+    }
 }

@@ -244,11 +244,15 @@ return [
             ],
 
             'password' => [
-                'flash'       => 'Uw wachtwoord is bijgewerkt. U kunt nu inloggen.',
                 'hashError'   => 'Ongeldige url',
                 'formMessage' => 'Voer het door u gewenste wachtwoord in',
                 'expired'     => 'De geldigheid van de link is verlopen.',
                 'space'       => 'Spaties zijn niet toegestaan',
+                'flash'       => [
+                    'default'       => 'Uw wachtwoord is bijgewerkt. U kunt nu inloggen.',
+                    'loggedIn'      => 'Uw wachtwoord is bijgewerkt.',
+                    'loggedInOther' => 'Het wachtwoord voor <b>:email</b> is bijgewerkt.',
+                ],
             ]
         ]
     ],
@@ -329,6 +333,8 @@ return [
             'logout'    => 'Uitloggen',
             'stats'     => 'Bezoekers',
         ],
+
+        'username' => 'Ingelogd als: :email',
     ],
 
     'pages' => [

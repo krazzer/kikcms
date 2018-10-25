@@ -34,6 +34,7 @@ class PasswordResetForm extends WebForm
     protected function initialize()
     {
         $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
+
         $password = new Regex(['pattern' => '/^([^ ]*)$/', 'message' => $this->translator->tl('login.reset.password.space')]);
 
         $this->addTextField('email', 'E-mail')->setDefault($this->user->email)->setAttribute('readonly', 'readonly');
@@ -54,10 +55,27 @@ class PasswordResetForm extends WebForm
      */
     protected function successAction(array $input)
     {
-        $succesMessage = $this->translator->tl('login.reset.password.flash');
+        $succesMessage = $this->getSuccessMessage();
 
         $this->userService->storePassword($this->user, $input['password']);
         $this->flash->success($succesMessage);
+
         return $this->response->redirect('cms/login');
+    }
+
+    /**
+     * @return string
+     */
+    private function getSuccessMessage(): string
+    {
+        if ( ! $this->userService->isLoggedIn()) {
+            return $succesMessage = $this->translator->tl('login.reset.password.flash.default');
+        }
+
+        if ($this->user->getId() === $this->userService->getUserId()) {
+            return $this->translator->tl('login.reset.password.flash.loggedIn');
+        }
+
+        return $this->translator->tl('login.reset.password.flash.loggedInOther', ['email' => $this->user->email]);
     }
 }

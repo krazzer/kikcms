@@ -23,6 +23,8 @@ class BaseCmsController extends BaseController
     {
         parent::initialize();
 
+        $this->flash->setAutoescape(false);
+
         if ($this->userService->isLoggedIn()) {
             $menuGroupMap = $this->cmsService->getMenuGroupMap();
         } else {
@@ -33,7 +35,9 @@ class BaseCmsController extends BaseController
             $this->view->assets->addCss($customCss);
         }
 
+        $this->view->userEmail    = $this->userService->getUser()->email;
         $this->view->menuGroupMap = $menuGroupMap;
+
         $this->highlightMenuItem($this->dispatcher->getActionName());
     }
 

@@ -23,7 +23,8 @@
                 </div>
                 {% for id, menuItem in menuGroup.menuItemMap %}
                     {% set class = id == actionName or id == selectedMenuItem ? ' selected' : '' %}
-                    <a class="menu-item{{ class }}" href="{{ url(menuItem.route) }}">
+                    <a class="menu-item{{ class }}" href="{{ url(menuItem.route) }}"
+                       title="{{ id == 'logout' ? tl('menu.username', {'email' : userEmail}) }}">
                         {{ menuItem.label }}
                     </a>
                 {% endfor %}

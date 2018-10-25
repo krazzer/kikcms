@@ -56,6 +56,10 @@ class LoginController extends BaseController
      */
     public function indexAction()
     {
+        if ($this->userService->isLoggedIn()) {
+            return $this->response->redirect('cms');
+        }
+
         $loginForm = (new LoginForm())->render();
 
         if ($loginForm instanceof Response) {
@@ -113,6 +117,6 @@ class LoginController extends BaseController
         $this->flash->notice($this->translator->tl('login.reset.password.formMessage'));
         $this->view->form = $passwordForm;
 
-        return new Response($this->view->getPartial('login/reset'));
+        return $this->response->setContent($this->view->getPartial('login/reset'));
     }
 }
