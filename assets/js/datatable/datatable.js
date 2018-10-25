@@ -651,6 +651,20 @@ var DataTable = Class.extend({
                 $editedRow.removeClass('easeOutBgColor');
             }, 500);
         }, 5000);
+
+        if( ! $editedRow.length){
+            return;
+        }
+
+        // scroll to the edited row if not visible, with a margin of 250px
+        var editedRowY = $editedRow.offset().top;
+
+        var windowHeight = $(window).height();
+        var scrollTop    = $(window).scrollTop();
+
+        if(editedRowY > scrollTop + windowHeight - 250 || editedRowY < scrollTop){
+            $('body').animate({scrollTop: editedRowY - 250}, 1000);
+        }
     },
 
     setPagesContent: function (pagesContent) {

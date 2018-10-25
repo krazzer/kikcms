@@ -139,6 +139,23 @@ class DataTableController extends RenderableController
             if ($dataTable->getFilters()->getParentRelationKey() && $parentEditId === 0 && $editId) {
                 $dataTable->cacheNewId($editId);
             }
+
+            // go to the page where the new id sits
+            if ($editId) {
+                if($fromAlias = $dataTable->getQueryFromAlias()){
+                    $column = $fromAlias . '.' . DataTable::TABLE_KEY;
+                } else {
+                    $column = DataTable::TABLE_KEY;
+                }
+
+                $idsQuery  = (clone $dataTable->getQuery())->columns([$column]);
+
+                $index = array_search($editId, $this->dbService->getValues($idsQuery));
+                $limit = $dataTable->getLimit();
+                $page  = (($index - ($index % $limit)) / $limit) + 1;
+
+                $dataTable->getFilters()->setPage($page);
+            }
         } else {
             $this->view->form     = $dataTable->renderEditForm();
             $this->view->editData = $dataTable->getForm()->getEditData();
@@ -222,7 +239,7 @@ class DataTableController extends RenderableController
      */
     protected function getRenderable(): Renderable
     {
-        if( ! $this->acl->dataTableAllowed($this->getClass())){
+        if ( ! $this->acl->dataTableAllowed($this->getClass())) {
             throw new UnauthorizedException();
         }
 

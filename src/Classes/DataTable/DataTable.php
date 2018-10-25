@@ -671,6 +671,16 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @return string|null
+     */
+    public function getQueryFromAlias(): ?string
+    {
+        $from = $this->getQuery()->getFrom();
+
+        return is_array($from) ? key($from) : null;
+    }
+
+    /**
      * Remove cache files
      */
     public function removeNewIdCache()
@@ -810,16 +820,6 @@ abstract class DataTable extends Renderable
         }
 
         return $aliases;
-    }
-
-    /**
-     * @return string|null
-     */
-    private function getQueryFromAlias(): ?string
-    {
-        $from = $this->getQuery()->getFrom();
-
-        return is_array($from) ? key($from) : null;
     }
 
     /**
