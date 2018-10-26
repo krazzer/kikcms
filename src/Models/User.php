@@ -16,19 +16,23 @@ class User extends Model
     const TABLE = 'cms_user';
     const ALIAS = 'ku';
 
-    const FIELD_ID         = 'id';
-    const FIELD_EMAIL      = 'email';
-    const FIELD_PASSWORD   = 'password';
-    const FIELD_BLOCKED    = 'blocked';
-    const FIELD_ROLE       = 'role';
-    const FIELD_CREATED_AT = 'created_at';
+    const FIELD_ID          = 'id';
+    const FIELD_EMAIL       = 'email';
+    const FIELD_PASSWORD    = 'password';
+    const FIELD_BLOCKED     = 'blocked';
+    const FIELD_ROLE        = 'role';
+    const FIELD_CREATED_AT  = 'created_at';
+    const FIELD_REMEMBER_ME = 'remember_me';
+
+    /** @var string */
+    private $remember_me;
 
     /**
      * @inheritdoc
      */
     public function beforeValidation()
     {
-        if( ! property_exists($this, self::FIELD_CREATED_AT)){
+        if ( ! property_exists($this, self::FIELD_CREATED_AT)) {
             $this->created_at = new Now;
         }
     }
@@ -72,10 +76,28 @@ class User extends Model
      */
     public function getId(): ?int
     {
-        if( ! property_exists($this, self::FIELD_ID)){
+        if ( ! property_exists($this, self::FIELD_ID)) {
             return null;
         }
 
         return (int) $this->id;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRememberMe(): ?string
+    {
+        return $this->remember_me;
+    }
+
+    /**
+     * @param null|string $rememberMe
+     * @return User
+     */
+    public function setRememberMe(?string $rememberMe): User
+    {
+        $this->remember_me = $rememberMe;
+        return $this;
     }
 }

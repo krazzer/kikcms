@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Services\Finder\FinderFileService;
@@ -64,6 +65,7 @@ use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Filter;
+use Phalcon\Http\Response\Cookies;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
@@ -108,6 +110,7 @@ class Services extends BaseServices
             NestedSetService::class,
             NumberService::class,
             RelationKeyService::class,
+            RememberMeService::class,
             Security::class,
             StorageService::class,
             StringService::class,
@@ -210,6 +213,19 @@ class Services extends BaseServices
         }
 
         return new Apcu(new Data(), $options);
+    }
+
+    /**
+     * @return Cookies
+     */
+    protected function initCookies(): Cookies
+    {
+        $cookies = new Cookies();
+
+        // no need for extra encryption here as TLS is required
+        $cookies->useEncryption(false);
+
+        return $cookies;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\ObjectLists\UserMap;
+use KikCMS\Services\Cms\RememberMeService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
@@ -20,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property Translator $translator
  * @property MailService $mailService
  * @property Permission $permission
+ * @property RememberMeService $rememberMeService
  */
 class UserService extends Injectable
 {
@@ -138,7 +140,16 @@ class UserService extends Injectable
      */
     public function isLoggedIn()
     {
-        return $this->session->get('loggedIn', false);
+        if ($this->session->get('loggedIn', false)) {
+            return true;
+        }
+
+        if ( ! $userId = $this->rememberMeService->getUserIdByCookie()) {
+            return false;
+        }
+
+        $this->setLoggedIn($userId);
+        return true;
     }
 
     /**
@@ -158,6 +169,8 @@ class UserService extends Injectable
      */
     public function logout()
     {
+        $this->rememberMeService->removeToken();
+
         // remove current session data
         $this->session->destroy();
         $this->permission->reset();
@@ -184,7 +197,7 @@ class UserService extends Injectable
             'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
         ];
 
-        if($this->getRole() == Permission::CLIENT){
+        if ($this->getRole() == Permission::CLIENT) {
             return $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
         } else {
             return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
