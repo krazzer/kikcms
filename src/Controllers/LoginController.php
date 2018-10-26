@@ -31,7 +31,7 @@ class LoginController extends BaseController
     {
         parent::initialize();
 
-        $this->view->assets->addCss('cmsassets/css/login.css');
+        $this->view->assets->addCss('cmsassets/css/login.css?v=2');
 
         if($customCss = $this->websiteSettings->getCustomCss()){
             $this->view->assets->addCss($customCss);
