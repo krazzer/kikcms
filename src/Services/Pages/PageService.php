@@ -85,6 +85,28 @@ class PageService extends Injectable
     }
 
     /**
+     * @param array $pageIds
+     * @return array [parentId => [offspringIds]]
+     */
+    public function getOffspringIdMap(array $pageIds): array
+    {
+        $query = (new Builder)
+            ->columns(['p.id', 'GROUP_CONCAT(cp.id)'])
+            ->from(['p' => Page::class])
+            ->leftJoin(Page::class, 'p.lft < cp.lft AND p.rgt > cp.rgt', 'cp')
+            ->inWhere('p.id', $pageIds)
+            ->groupBy('p.id');
+
+        $offspringIdMap = $this->dbService->getAssoc($query);
+
+        foreach ($offspringIdMap as $id => $offspringIds){
+            $offspringIdMap[$id] = explode(',', $offspringIds);
+        }
+
+        return $offspringIdMap;
+    }
+
+    /**
      * @param Page $page
      * @return int
      */

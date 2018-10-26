@@ -23,9 +23,13 @@ class User extends Model
     const FIELD_ROLE        = 'role';
     const FIELD_CREATED_AT  = 'created_at';
     const FIELD_REMEMBER_ME = 'remember_me';
+    const FIELD_SETTINGS    = 'settings';
 
     /** @var string */
     private $remember_me;
+
+    /** @var string */
+    private $settings;
 
     /**
      * @inheritdoc
@@ -98,6 +102,24 @@ class User extends Model
     public function setRememberMe(?string $rememberMe): User
     {
         $this->remember_me = $rememberMe;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSettings(): ?string
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param string|null $settings
+     * @return User
+     */
+    public function setSettings(?string $settings): User
+    {
+        $this->settings = $settings;
         return $this;
     }
 }

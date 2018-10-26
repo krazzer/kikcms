@@ -52,6 +52,8 @@ class Routing extends Injectable
         $backend->add("/getTinyMceLinks/{languageCode:[a-z]+}", "Cms::getTinyMceLinks");
         $backend->add("/get-urls/{langCode:[a-z]+}", "Cms::getUrls");
 
+        $backend->add("/user-settings/update-closed-page-ids", "UserSettings::updateClosedPageIds");
+
         $backend->add("/login", [
             "controller" => "login",
             "action"     => "index"

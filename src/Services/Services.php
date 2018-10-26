@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Services\Cms\RememberMeService;
+use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Services\Finder\FinderFileService;
@@ -15,7 +16,6 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Permission;
-use KikCMS\Classes\Phalcon\Filter\IntArray;
 use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
@@ -120,6 +120,7 @@ class Services extends BaseServices
             Translator::class,
             UrlService::class,
             UserService::class,
+            UserSettingsService::class,
         ];
 
         return array_merge($services, $this->getWebsiteSimpleServices());
@@ -293,8 +294,6 @@ class Services extends BaseServices
     protected function initFilter(): Filter
     {
         $filter = new Filter();
-
-        $filter->add('intArray', new IntArray);
 
         return $filter;
     }

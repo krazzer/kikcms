@@ -13,9 +13,11 @@ use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableFilters;
 use KikCMS\Services\DataTable\PagesDataTableService;
+use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -26,6 +28,8 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property TemplateService $templateService
  * @property TemplateFieldsBase $templateFields
  * @property PagesDataTableService $pagesDataTableService
+ * @property UserSettingsService $userSettingsService
+ * @property PageService $pageService
  */
 class Pages extends DataTable
 {
@@ -55,6 +59,9 @@ class Pages extends DataTable
 
     /** @var string */
     private $lockedTitle;
+
+    /** @var array */
+    private $closedPageIdMapCache = [];
 
     /**
      * @inheritdoc
@@ -150,6 +157,27 @@ class Pages extends DataTable
         }
 
         return PageForm::class;
+    }
+
+    /**
+     * @param int $pageId
+     * @return bool
+     */
+    public function isHidden(int $pageId): bool
+    {
+        if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
+            return false;
+        }
+
+        $closedPageIdMap = $this->getClosedPageIdMap();
+
+        foreach ($closedPageIdMap as $closedPageIds){
+            if(in_array($pageId, $closedPageIds)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -271,6 +299,28 @@ class Pages extends DataTable
             $value = '<span class="glyphicon glyphicon-eye-close" title="' . $this->inactiveTitle . '"></span> ' . $value;
         }
 
-        return '<span class="name">' . $value . '</span>';
+        $closedPageIdMap = $this->getClosedPageIdMap();
+
+        $arrowClass = array_key_exists($rowData[Page::FIELD_ID], $closedPageIdMap) ? 'closed' : '';
+
+        return '<span class="arrow ' . $arrowClass . '"></span><span class="name">' . $value . '</span>';
+    }
+
+    /**
+     * Returns an array with pageIds that are collapsed
+     *
+     * @return array [closedPageId => [childIds]
+     */
+    private function getClosedPageIdMap(): array
+    {
+        if($this->closedPageIdMapCache){
+            return $this->closedPageIdMapCache;
+        }
+
+        $closedPageIds = $this->userSettingsService->getClosedPageIdsByClass(static::class);
+
+        $this->closedPageIdMapCache = $this->pageService->getOffspringIdMap($closedPageIds);
+
+        return $this->closedPageIdMapCache;
     }
 }

@@ -1,5 +1,6 @@
 var PagesDataTable = DataTable.extend({
     actionPath: '/cms/datatable/pages/',
+    closedPageIdsCacheKey: "kikcms.closedPageIds",
 
     init: function () {
         this.$.init.call(this);
@@ -22,10 +23,67 @@ var PagesDataTable = DataTable.extend({
     initTable: function () {
         this.$.initTable.call(this);
         this.initTreeSortControl();
+        this.initRowCollapse();
+        this.updateEvenOdd();
 
         $('.action.preview').click(function () {
             var pageLanguageId = $(this).parent().attr('data-plid');
             window.open('/cms/preview/' + pageLanguageId);
+        });
+    },
+
+    /**
+     * Handles logic for collapsing pages
+     */
+    initRowCollapse: function () {
+        var self  = this;
+        var $rows = this.getRows();
+
+        $rows.each(function () {
+            var $row = $(this);
+
+            var level        = parseInt($row.attr('data-level'));
+            var nextRowLevel = parseInt($row.next().attr('data-level'));
+
+            if (nextRowLevel == level + 1) {
+                $row.addClass('hasChildren');
+            }
+
+            $row.find('.arrow').click(function (e) {
+                e.stopPropagation();
+                var $arrow = $(this);
+
+                $arrow.toggleClass('closed');
+
+                var skipLevel = null;
+
+                $row.nextAll().each(function () {
+                    var $nextRow     = $(this);
+                    var nextRowLevel = parseInt($nextRow.attr('data-level'));
+
+                    if (skipLevel !== null && nextRowLevel >= skipLevel) {
+                        return true;
+                    }
+
+                    skipLevel = null;
+
+                    // if this row is a parent which is closed, mark its children to skip
+                    if (!$arrow.hasClass('closed') && $nextRow.find('.arrow').hasClass('closed')) {
+                        skipLevel = nextRowLevel + 1;
+                    }
+
+                    if (nextRowLevel > level) {
+                        $nextRow.toggleClass('collapsed', $arrow.hasClass('closed'));
+                    } else {
+                        return false;
+                    }
+                });
+
+                self.updateEvenOdd();
+                self.updateClosedIdsSetting();
+            }).on('dblclick', function (e) {
+                e.stopPropagation();
+            });
         });
     },
 
@@ -39,6 +97,9 @@ var PagesDataTable = DataTable.extend({
         treeSortControl.init();
     },
 
+    /**
+     * @param closeWindow
+     */
     actionSave: function (closeWindow) {
         var pageName = this.getForm().find('input[name="pageLanguage*:name"]').val();
         var type     = this.getForm().find('input[name=type]').val();
@@ -72,6 +133,18 @@ var PagesDataTable = DataTable.extend({
         return filters;
     },
 
+    /**
+     * @return {*}
+     */
+    getRows: function() {
+        return this.$table.find('tbody tr');
+    },
+
+    /**
+     * @param pageId
+     * @param targetPageId
+     * @param position
+     */
     onPageDrop: function (pageId, targetPageId, position) {
         var self       = this;
         var parameters = this.getFilters();
@@ -93,5 +166,38 @@ var PagesDataTable = DataTable.extend({
      */
     getTemplateField: function () {
         return this.getWindow().find('#template');
+    },
+
+    /**
+     * Update the user's settings with closedIds
+     */
+    updateClosedIdsSetting: function () {
+        var closedIds = [];
+
+        this.$table.find('tbody tr').each(function () {
+            if ($(this).find('.arrow.closed').length) {
+                closedIds.push($(this).attr('data-id'));
+            }
+        });
+
+        KikCMS.action('/cms/user-settings/update-closed-page-ids', {
+            ids: closedIds,
+            className: this.renderableClass
+        }, function (response) {
+            if( ! response.success){
+                console.error('Failed storing closedPageIds');
+            }
+        });
+    },
+
+    /**
+     * Set even and odd by visibility
+     */
+    updateEvenOdd: function () {
+        var $rows = this.getRows();
+
+        $rows.removeClass('even').removeClass('odd');
+        $rows.filter(':visible:even').addClass('even');
+        $rows.filter(':visible:odd').addClass('odd');
     }
 });

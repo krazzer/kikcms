@@ -80,6 +80,14 @@ class PageLanguage extends Model
     /**
      * @return int
      */
+    public function getId(): int
+    {
+        return (int) $this->id;
+    }
+
+    /**
+     * @return int
+     */
     public function getPageId(): int
     {
         return (int) $this->page_id;

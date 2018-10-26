@@ -45,6 +45,7 @@
                 border-color: $gray;
                 background-color: $gray;
                 color: $colorWhite;
+                margin-left: 20px;
             }
         }
 
@@ -58,6 +59,39 @@
 
             &.dragged {
                 opacity: .2;
+            }
+        }
+
+        .arrow {
+            display: none;
+        }
+
+        &.hasChildren {
+
+            .arrow.closed {
+                width: 10px;
+                height: 12px;
+                margin-right: 10px;
+                position: absolute;
+                top: 50%;
+                margin-top: -6px;
+                border-top: 6px solid transparent;
+                border-bottom: 6px solid transparent;
+                border-left: 10px solid $gray;
+            }
+
+            .arrow {
+                display: block;
+                width: 12px;
+                height: 10px;
+                margin-right: 10px;
+                position: absolute;
+                top: 50%;
+                margin-top: -5px;
+                border-top: 10px solid $gray;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                cursor: pointer;
             }
         }
 
@@ -81,10 +115,38 @@
         @for $i from 1 through 10 {
             &.level#{$i} {
                 .name {
+                    margin-left: 40px * ($i) + 20px;
+                }
+
+                .arrow {
                     margin-left: 40px * ($i);
                 }
             }
         }
+    }
+
+    @for $i from 1 through 10 {
+        &.level#{$i} {
+            .name {
+                margin-left: 40px * ($i) + 20px;
+            }
+
+            .arrow {
+                margin-left: 40px * ($i);
+            }
+        }
+    }
+
+    &.collapsed {
+        display: none;
+    }
+
+    &.odd {
+        background-color: white;
+    }
+
+    &.even {
+        background-color: $superLightGray;
     }
 }
 
