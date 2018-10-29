@@ -18,6 +18,7 @@ use Phalcon\Mvc\Model\Resultset\Simple;
  * @property Simple|PageLanguage[] $pageLanguages
  * @property Simple|PageLanguageContent[] $pageLanguageContents
  * @property Simple|PageContent[] $pageContents
+ * @property Simple|Page[] $children
  */
 class Page extends Model
 {
@@ -97,6 +98,7 @@ class Page extends Model
         $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
         $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
+        $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_PARENT_ID, ["alias" => "children"]);
         $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
         $this->hasMany(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, ["alias" => "pageContents"]);
         $this->hasMany(self::FIELD_ID, PageLanguageContent::class, PageLanguageContent::FIELD_PAGE_ID, [
