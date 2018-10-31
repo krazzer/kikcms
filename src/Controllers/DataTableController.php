@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use Exception;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCmsCore\Services\DbService;
@@ -11,11 +12,13 @@ use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;
+use Monolog\Logger;
 
 /**
  * @property AccessControl $acl
  * @property DbService $dbService
  * @property ModelService $modelService
+ * @property Logger $logger
  */
 class DataTableController extends RenderableController
 {
@@ -142,19 +145,24 @@ class DataTableController extends RenderableController
 
             // go to the page where the new id sits
             if ($editId) {
-                if($fromAlias = $dataTable->getQueryFromAlias()){
+                if ($fromAlias = $dataTable->getQueryFromAlias()) {
                     $column = $fromAlias . '.' . DataTable::TABLE_KEY;
                 } else {
                     $column = DataTable::TABLE_KEY;
                 }
 
-                $idsQuery  = (clone $dataTable->getQuery())->columns([$column]);
+                $idsQuery = (clone $dataTable->getQuery())->columns([$column]);
 
-                $index = array_search($editId, $this->dbService->getValues($idsQuery));
-                $limit = $dataTable->getLimit();
-                $page  = (($index - ($index % $limit)) / $limit) + 1;
+                try {
+                    $index = array_search($editId, $this->dbService->getValues($idsQuery));
+                    $limit = $dataTable->getLimit();
+                    $page  = (($index - ($index % $limit)) / $limit) + 1;
 
-                $dataTable->getFilters()->setPage($page);
+                    $dataTable->getFilters()->setPage($page);
+                } catch (Exception $exception) {
+                    $this->logger->log(Logger::NOTICE, $exception);
+                }
+
             }
         } else {
             $this->view->form     = $dataTable->renderEditForm();
