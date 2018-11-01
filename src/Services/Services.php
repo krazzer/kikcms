@@ -22,7 +22,6 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
-use KikCMS\Services\WebForm\FieldStorageService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Config\KikCMSConfig;
@@ -96,7 +95,6 @@ class Services extends BaseServices
             FinderFileRemoveService::class,
             FinderPermissionService::class,
             FinderPermissionHelper::class,
-            FieldStorageService::class,
             FullPageService::class,
             FrontendHelper::class,
             PageContentService::class,

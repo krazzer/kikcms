@@ -5,14 +5,7 @@ namespace KikCMS\Services\WebForm;
 use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorage;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\ManyToMany;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOne;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOneRef;
 use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageData;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\StorageValues;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
 use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
@@ -22,13 +15,11 @@ use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
-use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Service for handling a DataForms' Storage, using the StorageData object
  *
  * @property DbService $dbService
- * @property FieldStorageService $fieldStorageService
  * @property TranslationService $translationService
  * @property RelationKeyService $relationKeyService
  */
@@ -90,7 +81,7 @@ class StorageService extends Injectable
         $this->db->begin();
 
         try {
-            $this->storePreMain();
+            $this->executeBeforeStoreEvents();
             $this->storeMain();
             $this->storePostMain();
         } catch (Exception $exception) {
@@ -106,44 +97,6 @@ class StorageService extends Injectable
         }
 
         return $success;
-    }
-
-    /**
-     * @param Field $field
-     * @param $id
-     * @param string|null $langCode
-     * @param array $tableData
-     * @return mixed
-     * @throws Exception
-     * @deprecated Use RelationKeys instead
-     */
-    public function retrieve(Field $field, $id, string $langCode = null, array $tableData)
-    {
-        switch (true) {
-            case $field->getStorage() instanceof OneToOne:
-                return $this->fieldStorageService->retrieveOneToOne($field, $tableData, $langCode);
-            break;
-
-            case $field->getStorage() instanceof OneToOneRef:
-                return $this->fieldStorageService->retrieveOneToOneRef($field, $tableData);
-            break;
-
-            case $field->getStorage() instanceof ManyToMany:
-                return $this->fieldStorageService->retrieveManyToMany($field, $id, $langCode);
-            break;
-
-            case $field->getStorage() instanceof Translation:
-                return $this->fieldStorageService->retrieveTranslation($field, $id, $langCode);
-            break;
-
-            case $field->getStorage() instanceof OneToMany:
-                return null;
-            break;
-
-            default:
-                throw new Exception('Not implemented yet');
-            break;
-        }
     }
 
     /**
@@ -215,116 +168,21 @@ class StorageService extends Injectable
     }
 
     /**
-     * @param FieldStorage $fieldStorage
-     * @return null|string
-     * @deprecated Use RelationKeys instead
-     */
-    private function getRelatedFieldValue(FieldStorage $fieldStorage): ?string
-    {
-        $query = (new Builder())
-            ->from($this->storageData->getTable())
-            ->columns($fieldStorage->getRelatedField())
-            ->where(DataTable::TABLE_KEY . ' = :id:', ['id' => $this->storageData->getEditId()]);
-
-        return $this->dbService->getValue($query);
-    }
-
-    /**
-     * Get a StorageValues list, containing data to insert for the OneToOneRef FieldStorage type
-     *
-     * @return array [relatedField => StorageValues]
-     * @deprecated Use RelationKeys instead
-     */
-    private function getStorageValuesMap(): array
-    {
-        $fields = [];
-
-        /** @var Field $field */
-        foreach ($this->storageData->getFieldMap() as $key => $field) {
-            $storage = $field->getStorage();
-
-            if ( ! $storage instanceof OneToOneRef) {
-                continue;
-            }
-
-            $relatedField = $storage->getRelatedField();
-
-            if ( ! $value = $this->storageData->getFormInputValue($key)) {
-                continue;
-            }
-
-            if ( ! array_key_exists($relatedField, $fields)) {
-                $fields[$relatedField] = (new StorageValues())->setFieldStorage($storage);
-            }
-
-            $fields[$relatedField]->add($field->getColumn(), $value);
-
-            foreach ($storage->getDefaultValues() as $defaultKey => $value) {
-                $fields[$relatedField]->add($defaultKey, $value);
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
-     * Store data before the main forms' table row is inserted/updated
-     */
-    private function storePreMain()
-    {
-        $this->executeBeforeStoreEvents();
-
-        $storageValuesMap = $this->getStorageValuesMap();
-        $storageData      = $this->storageData;
-
-        /** @var StorageValues $storageValues */
-        foreach ($storageValuesMap as $relatedField => $storageValues) {
-            $fieldStorage = $storageValues->getFieldStorage();
-            $valueMap     = $storageValues->getValueMap();
-            $tableModel   = $fieldStorage->getTableModel();
-
-            if ( ! $valueMap) {
-                continue;
-            }
-
-            if ($storageData->getEditId() && $relatedFieldValue = $this->getRelatedFieldValue($fieldStorage)) {
-                $this->dbService->update($tableModel, $valueMap, [DataTable::TABLE_KEY => $relatedFieldValue]);
-            } else {
-                $id = $this->dbService->insert($tableModel, $valueMap);
-                $this->storageData->addAdditionalInputValue($relatedField, $id);
-            }
-        }
-
-        $this->storeTranslations();
-    }
-
-    /**
      * Store the main forms' table row
      */
     private function storeMain()
     {
         $mainInput = $this->storageData->getMainInput();
-        $mainInput = $this->dbService->toStorageArray($mainInput);
-
-        $object = $this->storageData->getObject();
+        $langCode  = $this->storageData->getLanguageCode();
+        $object    = $this->storageData->getObject();
 
         // set objects' properties
         foreach ($mainInput as $key => $value) {
             if ($this->relationKeyService->isRelationKey($key)) {
-                continue;
+                $this->relationKeyService->set($object, $key, $value, $langCode);
+            } else {
+                $object->$key = $this->dbService->toStorage($value);
             }
-
-            $object->$key = $value;
-        }
-
-        // set objects' related properties
-        foreach ($mainInput as $key => $value) {
-            if ( ! $this->relationKeyService->isRelationKey($key)) {
-                continue;
-            }
-
-            $value = $this->storageData->getFormInputValue($key);
-            $this->relationKeyService->set($object, $key, $value, $this->storageData->getLanguageCode());
         }
 
         $this->executeBeforeMainEvents();
@@ -347,78 +205,59 @@ class StorageService extends Injectable
      */
     private function storePostMain()
     {
-        $editId   = $this->storageData->getEditId();
-        $langCode = $this->storageData->getLanguageCode();
-        $model    = $this->storageData->getTable();
+        $editId = $this->storageData->getEditId();
+        $model  = $this->storageData->getTable();
 
         $editData = $this->dbService->getTableRowById($model, $editId);
 
         /** @var Field $field */
         foreach ($this->storageData->getFieldMap() as $key => $field) {
-            $value = $this->storageData->getFormInputValue($key);
-
-            switch (true) {
-                case $field->getStorage() instanceof OneToOne:
-                    $this->fieldStorageService->storeOneToOne($field, $value, $editData, $langCode);
-                break;
-
-                case $field->getStorage() instanceof OneToMany:
-                    $this->fieldStorageService->storeOneToMany($field, $editId, $editData);
-                break;
-
-                case $field->getStorage() instanceof ManyToMany:
-                    $this->fieldStorageService->storeManyToMany($field, $value, $editId, $langCode);
-                break;
-            }
-
-            if ($field instanceof KeyedDataTableField) {
+            // store old DataTableField
+            if ($field instanceof DataTableField) {
                 $dataTable = $field->getDataTable();
 
                 $keysToUpdate = $dataTable->getCachedNewIds();
-                $relatedModel = $dataTable->getModel();
+                $relatedField = $dataTable->getParentRelationKey();
+                $model        = $dataTable->getModel();
 
-                $object = $this->storageData->getObject();
-
-                $relation = $object->getModelsManager()->getRelationByAlias($model, $key);
-
-                $objectField  = $relation->getFields();
-                $relatedField = $relation->getReferencedFields();
+                $relatedValue = $this->storageService->getRelatedValueForField($field, $editData, $editId);
 
                 foreach ($keysToUpdate as $newId) {
-                    $success = $this->dbService->update($relatedModel, [$relatedField => $object->$objectField],
-                        [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
+                    $success = $this->dbService->update($model, [$relatedField => $relatedValue], [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
 
                     if ( ! $success) {
-                        throw new Exception('KeyedDataTableField values not updated');
+                        continue;
                     }
+                }
+            }
+
+            if ( ! $field instanceof KeyedDataTableField) {
+                continue;
+            }
+
+            $dataTable = $field->getDataTable();
+
+            $keysToUpdate = $dataTable->getCachedNewIds();
+            $relatedModel = $dataTable->getModel();
+
+            $object = $this->storageData->getObject();
+
+            $relation = $object->getModelsManager()->getRelationByAlias($model, $key);
+
+            $objectField  = $relation->getFields();
+            $relatedField = $relation->getReferencedFields();
+
+            foreach ($keysToUpdate as $newId) {
+                $success = $this->dbService->update($relatedModel, [$relatedField => $object->$objectField],
+                    [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
+
+                if ( ! $success) {
+                    throw new Exception('KeyedDataTableField values not updated');
                 }
             }
         }
 
         $this->executeAfterStoreEvents();
-    }
-
-    /**
-     * Store translation fields
-     * @deprecated Use RelationKeys instead
-     */
-    private function storeTranslations()
-    {
-        /** @var Field $field */
-        foreach ($this->storageData->getFieldMap() as $key => $field) {
-            $storage = $field->getStorage();
-
-            if ( ! $storage instanceof Translation) {
-                continue;
-            }
-
-            $value    = $this->storageData->getFormInputValue($key);
-            $keyId    = $this->fieldStorageService->getTranslationKeyId($field, $this->storageData->getEditId());
-            $langCode = $storage->getLanguageCode() ?: $this->storageData->getLanguageCode();
-
-            $this->translationService->saveValue($value, $keyId, $langCode);
-            $this->storageData->addAdditionalInputValue($field->getColumn(), $keyId);
-        }
     }
 
     /**

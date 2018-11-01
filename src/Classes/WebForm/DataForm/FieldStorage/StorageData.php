@@ -95,7 +95,7 @@ class StorageData
     }
 
     /**
-     * Returns an array with only the fields that are to be saved in the main table
+     * Returns an array with only the fields that are to be saved, except DataTableFields
      *
      * @return array [tableColumn => value]
      */
@@ -105,23 +105,11 @@ class StorageData
 
         /** @var Field $field */
         foreach ($this->fieldMap as $key => $field){
-            if($field->getStorage()){
-                continue;
-            }
-
-            if($field->isDontStore()){
-                continue;
-            }
-
-            if($field instanceof KeyedDataTableField){
+            if($field->isDontStore() || $field instanceof KeyedDataTableField){
                 continue;
             }
 
             if( ! array_key_exists($key, $this->formInput)){
-                continue;
-            }
-
-            if($this->formInput[$key] === ''){
                 $this->formInput[$key] = null;
             }
 
@@ -227,36 +215,6 @@ class StorageData
     }
 
     /**
-     * @param string $key
-     * @return mixed
-     */
-    public function getFormInputValue(string $key)
-    {
-        if( ! array_key_exists($key, $this->formInput)){
-            return null;
-        }
-
-        if($this->formInput[$key] === ''){
-            return null;
-        }
-
-        return $this->formInput[$key];
-    }
-
-    /**
-     * @param string $column
-     * @return mixed
-     */
-    public function getAdditionalInputValue(string $column)
-    {
-        if( ! array_key_exists($column, $this->additionalInput)){
-            return null;
-        }
-
-        return $this->additionalInput[$column];
-    }
-
-    /**
      * @return array
      */
     public function getEvents(): array
@@ -271,24 +229,6 @@ class StorageData
     public function setEvents(array $events): StorageData
     {
         $this->events = $events;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAdditionalInput(): array
-    {
-        return $this->additionalInput;
-    }
-
-    /**
-     * @param array $additionalInput
-     * @return StorageData
-     */
-    public function setAdditionalInput(array $additionalInput): StorageData
-    {
-        $this->additionalInput = $additionalInput;
         return $this;
     }
 

@@ -17,7 +17,6 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Services\WebForm\FieldStorageService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
@@ -28,7 +27,6 @@ use Phalcon\Tag;
  * @property AccessControl $acl
  * @property Backend $diskCache
  * @property DbService $dbService
- * @property FieldStorageService $fieldStorageService
  * @property LanguageService $languageService
  * @property ModelService $modelService
  * @property Translator $translator

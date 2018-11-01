@@ -6,11 +6,14 @@ namespace KikCMS\Services\WebForm;
 
 use KikCMS\Config\DataFormConfig;
 use KikCmsCore\Classes\Model;
+use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Relation;
 
 /**
  * Handles DataForm fields that have relations in their keys like: "person:name", called 'RelationKeys'
+ *
+ * @property DbService $dbService
  */
 class RelationKeyService extends Injectable
 {
@@ -50,21 +53,21 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $model->$part1->$part2 = $this->formatValue($value);
+                    $model->$part1->$part2 = $this->dbService->toStorage($value);
                 }
 
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
-                $model->$part1->$part2->$part3 = $this->formatValue($value);
+                $model->$part1->$part2->$part3 = $this->dbService->toStorage($value);
             break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
-                $model->$part1->$part2->$part3->$part4 = $this->formatValue($value);
+                $model->$part1->$part2->$part3->$part4 = $this->dbService->toStorage($value);
             break;
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
-                $model->$part1->$part2->$part3->$part4->$part5 = $this->formatValue($value);
+                $model->$part1->$part2->$part3->$part4->$part5 = $this->dbService->toStorage($value);
             break;
         }
     }
@@ -111,21 +114,6 @@ class RelationKeyService extends Injectable
         }
 
         return null;
-    }
-
-    /**
-     * Format the value for db storage
-     *
-     * @param mixed $value
-     * @return string|null
-     */
-    private function formatValue($value): ?string
-    {
-        if (is_array($value)) {
-            return json_encode($value);
-        }
-
-        return $value;
     }
 
     /**

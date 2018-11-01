@@ -99,7 +99,7 @@ abstract class DataForm extends WebForm
      */
     public function getObject(): ?Model
     {
-        if($this->object){
+        if ($this->object) {
             return $this->object;
         }
 
@@ -113,25 +113,17 @@ abstract class DataForm extends WebForm
     /**
      * Retrieve data from fields that are not stored in the current DataTable's Table
      *
-     * @param int $id
      * @param null|string $langCode
-     * @param array $tableData
      * @return array
      */
-    public function getDataStoredElseWhere(int $id, string $langCode = null, array $tableData): array
+    public function getRelatedData(string $langCode = null): array
     {
-        $data = [];
-
+        $data   = [];
         $object = $this->getObject();
 
         foreach ($this->getFieldMap() as $key => $field) {
             if ($this->relationKeyService->isRelationKey($key)) {
                 $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
-            }
-
-            if ($field->getStorage() && ! $field->isDontStore()) {
-                $value      = $this->storageService->retrieve($field, $id, $langCode, $tableData);
-                $data[$key] = $field->getFormFormat($value);
             }
         }
 
@@ -161,7 +153,7 @@ abstract class DataForm extends WebForm
         $currentLangCode = $this->getFilters()->getLanguageCode();
 
         $editData        = $this->getEditData();
-        $defaultLangData = $this->getDataStoredElseWhere($editId, $defaultLangCode, $editData);
+        $defaultLangData = $this->getRelatedData($defaultLangCode);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
         /** @var Field $field */
@@ -203,12 +195,12 @@ abstract class DataForm extends WebForm
             return $this->cachedEditData[$editId];
         }
 
-        if( ! $object = $this->getObject()){
+        if ( ! $object = $this->getObject()) {
             throw new ObjectNotFoundException(basename($this->getModel()) . ':' . $editId);
         }
 
         $data = $object->toArray();
-        $data = $this->getDataStoredElseWhere($editId, $langCode, $data) + $data;
+        $data = $this->getRelatedData($langCode) + $data;
         $data = $this->transformDataForDisplay((array) $data);
 
         $this->cachedEditData[$editId] = $data;
