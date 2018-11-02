@@ -103,9 +103,11 @@ abstract class DataForm extends WebForm
             return $this->object;
         }
 
-        $model = $this->modelService->getModelByClassName($this->getModel());
+        if ( ! $editId = $this->getFilters()->getEditId()) {
+            return null;
+        }
 
-        $this->object = $model::getById($this->getFilters()->getEditId());
+        $this->object = $this->modelService->getObject($this->getModel(), $editId);
 
         return $this->object;
     }

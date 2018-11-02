@@ -6,6 +6,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Classes\Model;
@@ -193,7 +194,7 @@ abstract class DataTable extends Renderable
      */
     public function checkCheckbox($id, $column, $checked): bool
     {
-        if( ! $this->canEdit($id)){
+        if ( ! $this->canEdit($id)) {
             return false;
         }
 
@@ -262,7 +263,7 @@ abstract class DataTable extends Renderable
         ];
 
         // we do this check to prevent unused $rowData error
-        if(array_key_exists($column, $rowData) && $value){
+        if (array_key_exists($column, $rowData) && $value) {
             $attributes['checked'] = 'checked';
         } elseif ($value) {
             $attributes['checked'] = 'checked';
@@ -410,6 +411,31 @@ abstract class DataTable extends Renderable
         }
 
         return $relation->getReferencedFields();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentRelationValue()
+    {
+        $model  = $this->getFilters()->getParentModel();
+        $editId = $this->getFilters()->getParentEditId();
+
+        if($editId === 0){
+            return 0;
+        }
+
+        /** Required when it @uses DataTableField */
+        if ( ! $relationKey = $this->getFilters()->getParentRelationKey()) {
+            return $editId;
+        }
+
+        $relation     = $this->modelService->getRelation($model, $relationKey);
+        $parentObject = $this->modelService->getObject($model, $editId);
+
+        $field = $relation->getFields();
+
+        return $parentObject->$field;
     }
 
     /**
@@ -603,7 +629,7 @@ abstract class DataTable extends Renderable
      */
     public function setCheckboxFormat(string $field, string $relationKey = null)
     {
-        $this->setFieldFormatting($field, function($value, $rowData, $column) use ($relationKey){
+        $this->setFieldFormatting($field, function ($value, $rowData, $column) use ($relationKey) {
             return $this->formatCheckbox($value, $rowData, $relationKey ?: $column);
         });
     }

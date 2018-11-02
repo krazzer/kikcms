@@ -36,9 +36,9 @@ class ModelService extends Injectable
     /**
      * @param string $className
      * @param int $id
-     * @return Model
+     * @return Model|null
      */
-    public function getObject(string $className, int $id): Model
+    public function getObject(string $className, int $id): ?Model
     {
         $model = $this->getModelByClassName($className);
 

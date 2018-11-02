@@ -90,7 +90,7 @@ class FilterQueryBuilder
         }
 
         $parentEditId = $this->filters->getParentEditId();
-        $query->andWhere($this->dataTable->getParentRelationKey() . ' = ' . (int) $parentEditId);
+        $query->andWhere($this->dataTable->getParentRelationKey() . ' = ' . $this->dataTable->getParentRelationValue());
 
         if ($parentEditId === 0) {
             $ids = $this->dataTable->getCachedNewIds();
