@@ -23,7 +23,7 @@ var PagesDataTable = DataTable.extend({
     initTable: function () {
         this.$.initTable.call(this);
         this.initTreeSortControl();
-        this.initRowCollapse();
+        this.initRowsCollapse();
         this.updateEvenOdd();
 
         $('.action.preview').click(function () {
@@ -33,57 +33,34 @@ var PagesDataTable = DataTable.extend({
     },
 
     /**
+     *
+     * @param $row
+     */
+    initRowCollapse: function ($row) {
+        var self         = this;
+        var level        = parseInt($row.attr('data-level'));
+        var nextRowLevel = parseInt($row.next().attr('data-level'));
+
+        if (nextRowLevel == level + 1) {
+            $row.addClass('hasChildren');
+        }
+
+        $row.find('.arrow').click(function (e) {
+            self.onCollapseArrowClick(e, $(this), $row, level);
+        }).on('dblclick', function (e) {
+            e.stopPropagation();
+        });
+    },
+
+    /**
      * Handles logic for collapsing pages
      */
-    initRowCollapse: function () {
+    initRowsCollapse: function () {
         var self  = this;
         var $rows = this.getRows();
 
         $rows.each(function () {
-            var $row = $(this);
-
-            var level        = parseInt($row.attr('data-level'));
-            var nextRowLevel = parseInt($row.next().attr('data-level'));
-
-            if (nextRowLevel == level + 1) {
-                $row.addClass('hasChildren');
-            }
-
-            $row.find('.arrow').click(function (e) {
-                e.stopPropagation();
-                var $arrow = $(this);
-
-                $arrow.toggleClass('closed');
-
-                var skipLevel = null;
-
-                $row.nextAll().each(function () {
-                    var $nextRow     = $(this);
-                    var nextRowLevel = parseInt($nextRow.attr('data-level'));
-
-                    if (skipLevel !== null && nextRowLevel >= skipLevel) {
-                        return true;
-                    }
-
-                    skipLevel = null;
-
-                    // if this row is a parent which is closed, mark its children to skip
-                    if (!$arrow.hasClass('closed') && $nextRow.find('.arrow').hasClass('closed')) {
-                        skipLevel = nextRowLevel + 1;
-                    }
-
-                    if (nextRowLevel > level) {
-                        $nextRow.toggleClass('collapsed', $arrow.hasClass('closed'));
-                    } else {
-                        return false;
-                    }
-                });
-
-                self.updateEvenOdd();
-                self.updateClosedIdsSetting();
-            }).on('dblclick', function (e) {
-                e.stopPropagation();
-            });
+            self.initRowCollapse($(this));
         });
     },
 
@@ -136,8 +113,47 @@ var PagesDataTable = DataTable.extend({
     /**
      * @return {*}
      */
-    getRows: function() {
+    getRows: function () {
         return this.$table.find('tbody tr');
+    },
+
+    /**
+     * @param e
+     * @param $arrow
+     * @param $row
+     * @param level
+     */
+    onCollapseArrowClick: function(e, $arrow, $row, level) {
+        e.stopPropagation();
+
+        $arrow.toggleClass('closed');
+
+        var skipLevel = null;
+
+        $row.nextAll().each(function () {
+            var $nextRow     = $(this);
+            var nextRowLevel = parseInt($nextRow.attr('data-level'));
+
+            if (skipLevel !== null && nextRowLevel >= skipLevel) {
+                return true;
+            }
+
+            skipLevel = null;
+
+            // if this row is a parent which is closed, mark its children to skip
+            if (!$arrow.hasClass('closed') && $nextRow.find('.arrow').hasClass('closed')) {
+                skipLevel = nextRowLevel + 1;
+            }
+
+            if (nextRowLevel > level) {
+                $nextRow.toggleClass('collapsed', $arrow.hasClass('closed'));
+            } else {
+                return false;
+            }
+        });
+
+        this.updateEvenOdd();
+        this.updateClosedIdsSetting();
     },
 
     /**
@@ -184,7 +200,7 @@ var PagesDataTable = DataTable.extend({
             ids: closedIds,
             className: this.renderableClass
         }, function (response) {
-            if( ! response.success){
+            if (!response.success) {
                 console.error('Failed storing closedPageIds');
             }
         });
