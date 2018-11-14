@@ -96,7 +96,7 @@ class PageForm extends DataForm
         ];
 
         $this->addTab('SEO', $tabSeoFields);
-        $this->addTab($this->translator->tl('fields.advanced'), $tabAdvancedFields);
+        $this->addTab($this->translator->tl('fields.advanced'), $tabAdvancedFields)->setKey('advanced');
     }
 
     /**

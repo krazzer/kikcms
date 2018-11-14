@@ -30,7 +30,8 @@
 {% if tabs %}
     <div class="tabs">
         {% for index, tab in tabs -%}
-            <div class="tab {{ index == currentTab ? ' active' }}" data-tab="{{ index }}">
+            {% set key = tab.key ?: index %}
+            <div class="tab {{ (key is same as (currentTab)) ? ' active' }}" data-tab="{{ key }}">
                 {{ tab.name }}
             </div>
         {%- endfor %}

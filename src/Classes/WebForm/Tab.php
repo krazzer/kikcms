@@ -16,6 +16,9 @@ class Tab
     /** @var FieldMap */
     private $fieldMap;
 
+    /** @var string|null */
+    private $key;
+
     /**
      * @param string $name
      * @param Field[] $fields
@@ -89,5 +92,23 @@ class Tab
     public function setFieldMap(FieldMap $fieldMap)
     {
         $this->fieldMap = $fieldMap;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getKey(): ?string
+    {
+        return $this->key;
+    }
+
+    /**
+     * @param null|string $key
+     * @return Tab
+     */
+    public function setKey(?string $key): Tab
+    {
+        $this->key = $key;
+        return $this;
     }
 }
