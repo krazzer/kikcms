@@ -67,6 +67,9 @@
         }
 
         &.hasChildren {
+            .name {
+                margin-left: 20px;
+            }
 
             .arrow.closed {
                 width: 10px;

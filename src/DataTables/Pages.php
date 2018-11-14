@@ -150,8 +150,8 @@ class Pages extends DataTable
             break;
         }
 
-        if($template = $this->pagesDataTableService->getTemplate($this)){
-            if($formClass = $template->getForm()){
+        if ($template = $this->pagesDataTableService->getTemplate($this)) {
+            if ($formClass = $template->getForm()) {
                 return $formClass;
             }
         }
@@ -171,8 +171,8 @@ class Pages extends DataTable
 
         $closedPageIdMap = $this->getClosedPageIdMap();
 
-        foreach ($closedPageIdMap as $closedPageIds){
-            if(in_array($pageId, $closedPageIds)){
+        foreach ($closedPageIdMap as $closedPageIds) {
+            if (in_array($pageId, $closedPageIds)) {
                 return true;
             }
         }
@@ -254,8 +254,8 @@ class Pages extends DataTable
     {
         $templates = $this->templateFields->getTemplates();
 
-        foreach ($templates as $template){
-            if($template->getKey() == $templateKey){
+        foreach ($templates as $template) {
+            if ($template->getKey() == $templateKey) {
                 return $template->getName();
             }
         }
@@ -301,9 +301,9 @@ class Pages extends DataTable
 
         $closedPageIdMap = $this->getClosedPageIdMap();
 
-        $arrowClass = array_key_exists($rowData[Page::FIELD_ID], $closedPageIdMap) ? 'closed' : '';
+        $arrowClass = array_key_exists($rowData[Page::FIELD_ID], $closedPageIdMap) ? ' closed' : '';
 
-        return '<span class="arrow ' . $arrowClass . '"></span><span class="name">' . $value . '</span>';
+        return '<span class="arrow' . $arrowClass . '"></span><span class="name">' . $value . '</span>';
     }
 
     /**
@@ -313,7 +313,7 @@ class Pages extends DataTable
      */
     private function getClosedPageIdMap(): array
     {
-        if($this->closedPageIdMapCache){
+        if ($this->closedPageIdMapCache) {
             return $this->closedPageIdMapCache;
         }
 
