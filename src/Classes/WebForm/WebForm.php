@@ -202,14 +202,13 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * Get the form's input. The input returned will not be raw, but converted to PHP objects,
-     * e.g. a json encoded object will be converted to an PHP object
+     * Get the form's input. Json encoded object will be converted to an PHP object.
      *
      * @return array
      */
     public function getInput(): array
     {
-        if($this->input !== null){
+        if ($this->input !== null) {
             return $this->input;
         }
 
@@ -608,7 +607,7 @@ abstract class WebForm extends Renderable
     private function updateFieldsByPostData()
     {
         foreach ($this->fieldMap as $key => $field) {
-            // set unposted checkboxes to default 0
+            // set unchecked checkboxes (with default = 1) to default 0
             if ($field->getType() == Field::TYPE_CHECKBOX && ! $this->request->hasPost($key)) {
                 $field->setDefault(0);
             }
@@ -638,7 +637,8 @@ abstract class WebForm extends Renderable
     private function reUseDataTableInstances()
     {
         foreach ($this->fieldMap as $key => $field) {
-            if (in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE]) && $this->request->hasPost($key)) {
+            if (in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE])
+                && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
                 /** @var DataTableField $field */
                 $field->getDataTable()->setInstance($instance);
