@@ -239,8 +239,6 @@ var WebForm = Class.extend({
                 'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
                 'textcolor colorpicker textpattern codesample toc'
             ],
-            toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify' +
-            ' | bullist numlist outdent indent | link image | forecolor backcolor | codesample',
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce/content.css'],
             link_list: this.getLinkListUrl(),
