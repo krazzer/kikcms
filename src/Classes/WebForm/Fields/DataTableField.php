@@ -4,7 +4,6 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToMany;
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Hidden;
 
@@ -29,11 +28,7 @@ class DataTableField extends Field
             ->setLabel($label)
             ->setDefault($dataTable->getInstance());
 
-        $storage = (new OneToMany)
-            ->setTableModel($dataTable->getModel());
-
         $this->dataTable = $dataTable;
-        $this->storage   = $storage;
         $this->element   = $element;
     }
 

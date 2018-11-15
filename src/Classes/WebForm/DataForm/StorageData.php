@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes\WebForm\DataForm\FieldStorage;
+namespace KikCMS\Classes\WebForm\DataForm;
 
 
 use KikCMS\Classes\WebForm\Field;

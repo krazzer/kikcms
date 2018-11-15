@@ -4,12 +4,6 @@ namespace KikCMS\Classes\WebForm;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\FieldStorage;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\ManyToMany;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\OneToOne;
-use KikCMS\Classes\WebForm\DataForm\FieldStorage\Translation;
-use KikCMS\Models\PageContent;
-use KikCMS\Models\PageLanguageContent;
 use Phalcon\Forms\Element;
 use Phalcon\Forms\ElementInterface;
 
@@ -41,9 +35,6 @@ class Field
 
     /** @var Element|null */
     protected $element;
-
-    /** @var FieldStorage|null contains how this field should be stored */
-    protected $storage;
 
     /** @var string */
     protected $key;
@@ -327,134 +318,12 @@ class Field
     }
 
     /**
-     * @return null|FieldStorage
-     * @deprecated Use RelationKeys instead
-     */
-    public function getStorage(): ?FieldStorage
-    {
-        return $this->storage;
-    }
-
-    /**
      * Shortcut to set the storage to None
      * @return Field
      */
     public function dontStore(): Field
     {
         $this->dontStore = true;
-
-        return $this;
-    }
-
-    /**
-     * Shortcut to set the storage to OneToOne
-     *
-     * @param string $table
-     * @param $relatedField
-     * @param bool $addLanguageCode
-     * @param array $defaultValues
-     *
-     * @return $this|Field
-     * @deprecated Use RelationKeys instead
-     */
-    public function table(string $table, $relatedField, $addLanguageCode = false, $defaultValues = [])
-    {
-        $fieldStorage = (new OneToOne())
-            ->setField($this)
-            ->setTableModel($table)
-            ->setRelatedField($relatedField)
-            ->setAddLanguageCode($addLanguageCode)
-            ->setDefaultValues($defaultValues);
-
-        $this->store($fieldStorage);
-
-        return $this;
-    }
-
-    /**
-     * Shortcut to set the storage to ManyToMany
-     *
-     * @param string $table
-     * @param string $relatedField
-     * @param bool $addLanguageCode
-     * @param array $defaultValues
-     * @return $this|Field
-     * @deprecated Use RelationKeys instead
-     */
-    public function tableMultiRow(string $table, string $relatedField, $addLanguageCode = false, $defaultValues = [])
-    {
-        $fieldStorage = (new ManyToMany())
-            ->setField($this)
-            ->setTableModel($table)
-            ->setRelatedField($relatedField)
-            ->setAddLanguageCode($addLanguageCode)
-            ->setDefaultValues($defaultValues);
-
-        $this->store($fieldStorage);
-
-        return $this;
-    }
-
-    /**
-     * Shortcut to set the storage in the cms_translation_value table
-     *
-     * @param null $langCode
-     * @return $this
-     * @deprecated Use RelationKeys instead
-     */
-    public function translate($langCode = null)
-    {
-        $fieldStorage = (new Translation())
-            ->setField($this)
-            ->setTableModel($this->form->getModel());
-
-        if ($langCode) {
-            $fieldStorage->setLanguageCode($langCode);
-        }
-
-        $this->store($fieldStorage);
-
-        return $this;
-    }
-
-    /**
-     * Shortcut for setting to storage
-     *
-     * @param FieldStorage $fieldStorage
-     * @return Field|$this
-     * @deprecated Use RelationKeys instead
-     */
-    public function store(FieldStorage $fieldStorage): Field
-    {
-        $this->storage = $fieldStorage;
-        return $this;
-    }
-
-    /**
-     * Shortcut for setting to the default storage of pages
-     *
-     * @param bool $multiLingual
-     * @return Field
-     * @deprecated Use RelationKeys instead
-     */
-    public function storePage($multiLingual = true): Field
-    {
-        $key = $this->getElement()->getName();
-
-        if ($multiLingual) {
-            $this->storage = (new OneToOne())
-                ->setTableModel(PageLanguageContent::class)
-                ->setRelatedField(PageLanguageContent::FIELD_PAGE_ID)
-                ->setDefaultValues([PageLanguageContent::FIELD_FIELD => $key])
-                ->setAddLanguageCode(true);
-        } else {
-            $this->storage = (new OneToOne())
-                ->setTableModel(PageContent::class)
-                ->setRelatedField(PageContent::FIELD_PAGE_ID)
-                ->setDefaultValues([PageContent::FIELD_FIELD => $key]);
-        }
-
-        $this->setColumn(PageContent::FIELD_VALUE);
 
         return $this;
     }
