@@ -6,6 +6,7 @@ namespace KikCMS\Services\Cms;
 
 use DateInterval;
 use DateTime;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\User;
 use KikCMS\ObjectLists\RememberMeHashList;
 use KikCMS\Objects\RememberMeHash;
@@ -32,7 +33,7 @@ class RememberMeService extends Injectable
 
         $this->store($hashList);
 
-        $this->cookies->set(self::COOKIE_KEY, $cookieToken, $expire->getTimestamp(), '/', true)->send();
+        $this->cookies->set($this->getKey(), $cookieToken, $expire->getTimestamp(), '/', true)->send();
     }
 
     /**
@@ -43,7 +44,7 @@ class RememberMeService extends Injectable
     public function getUserIdByCookie(): ?int
     {
         // there is no cookie
-        if ( ! $cookieToken = $this->cookies->get(self::COOKIE_KEY)->getValue()) {
+        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
             return null;
         }
 
@@ -113,7 +114,7 @@ class RememberMeService extends Injectable
      */
     public function removeToken()
     {
-        if ( ! $cookieToken = $this->cookies->get(self::COOKIE_KEY)->getValue()) {
+        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
             return;
         }
 
@@ -127,7 +128,7 @@ class RememberMeService extends Injectable
 
         $this->store($hashList);
 
-        $this->cookies->get(self::COOKIE_KEY)->delete();
+        $this->cookies->get($this->getKey())->delete();
     }
 
     /**
@@ -145,6 +146,19 @@ class RememberMeService extends Injectable
     private function getExpireDate(): DateTime
     {
         return (new DateTime)->add(new DateInterval('P30D'));
+    }
+
+    /**
+     * @return string
+     */
+    private function getKey(): string
+    {
+        // Add port to cookie in dev, so different ports can be used
+        if($this->config->application->env == KikCMSConfig::ENV_DEV){
+            return self::COOKIE_KEY . '-' . $this->request->getPort();
+        }
+
+        return self::COOKIE_KEY;
     }
 
     /**
