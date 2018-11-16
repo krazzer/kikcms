@@ -13,20 +13,20 @@ use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\LanguageService;
-use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Tag;
 
 /**
  * @property AccessControl $acl
- * @property Backend $diskCache
+ * @property KeyValue $keyValue
  * @property DbService $dbService
  * @property LanguageService $languageService
  * @property ModelService $modelService
@@ -667,8 +667,8 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ($this->diskCache->exists($cacheKey)) {
-            $newIdsCache = unserialize($this->diskCache->get($cacheKey));
+        if ($this->keyValue->exists($cacheKey)) {
+            $newIdsCache = unserialize($this->keyValue->get($cacheKey));
         } else {
             $newIdsCache = (new SubDataTableNewIdsCache)
                 ->setModel($this->getModel())
@@ -677,7 +677,7 @@ abstract class DataTable extends Renderable
 
         $newIdsCache->addId($editId);
 
-        $this->diskCache->save($cacheKey, serialize($newIdsCache));
+        $this->keyValue->save($cacheKey, serialize($newIdsCache));
     }
 
     /**
@@ -687,11 +687,11 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ( ! $this->diskCache->exists($cacheKey)) {
+        if ( ! $this->keyValue->exists($cacheKey)) {
             return [];
         }
 
-        return unserialize($this->diskCache->get($cacheKey))->getIds();
+        return unserialize($this->keyValue->get($cacheKey))->getIds();
     }
 
     /**
@@ -711,7 +711,7 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        $this->diskCache->delete($cacheKey);
+        $this->keyValue->delete($cacheKey);
     }
 
     /**

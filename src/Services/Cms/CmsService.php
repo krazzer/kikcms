@@ -10,6 +10,7 @@ use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
@@ -19,7 +20,6 @@ use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Classes\Model;
 use Monolog\Logger;
-use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 
 /**
@@ -29,7 +29,7 @@ use Phalcon\Di\Injectable;
  * @property WebsiteService $websiteService
  * @property WebsiteSettingsBase $websiteSettings
  * @property AccessControl $acl
- * @property Backend $diskCache
+ * @property KeyValue $keyValue
  * @property Logger $logger
  */
 class CmsService extends Injectable
@@ -41,7 +41,7 @@ class CmsService extends Injectable
     public function cleanUpDiskCache()
     {
         try {
-            $diskCacheFolder = $this->diskCache->getOptions()['cacheDir'];
+            $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
 
             $cacheFiles = glob($diskCacheFolder . '*');
 
@@ -56,7 +56,7 @@ class CmsService extends Injectable
                     continue;
                 }
 
-                $newIdsCache = unserialize($this->diskCache->get($fileName));
+                $newIdsCache = unserialize($this->keyValue->get($fileName));
 
                 if ($newIdsCache instanceof SubDataTableNewIdsCache) {
                     $this->removeUnsavedTemporaryRecords($newIdsCache);
@@ -184,7 +184,7 @@ class CmsService extends Injectable
     {
         $token = uniqid('securityToken', true);
 
-        $this->diskCache->save($token);
+        $this->keyValue->save($token);
 
         return $token;
     }
@@ -197,10 +197,10 @@ class CmsService extends Injectable
      */
     public function checkSecurityToken(string $token)
     {
-        if( ! $this->diskCache->exists($token)){
+        if( ! $this->keyValue->exists($token)){
             throw new UnauthorizedException();
         }
 
-        $this->diskCache->delete($token);
+        $this->keyValue->delete($token);
     }
 }

@@ -56,6 +56,7 @@ use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend;
 use Phalcon\Cache\Backend\Apcu;
 use Phalcon\Cache\Backend\File;
+use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
@@ -148,8 +149,8 @@ class Services extends BaseServices
         $services       = $websiteServices->getServices();
         $simpleServices = [];
 
-        foreach ($services as $service){
-            if(is_string($service)){
+        foreach ($services as $service) {
+            if (is_string($service)) {
                 $simpleServices[] = $service;
             }
         }
@@ -243,13 +244,11 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Backend
+     * @return BackendInterface
      */
-    protected function initDiskCache()
+    protected function initKeyValue()
     {
-        return new File(new Json(["lifetime" => 3600 * 24]), [
-            'cacheDir' => SITE_PATH . 'cache/cache/'
-        ]);
+        return new File(new Json, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
     }
 
     /**
@@ -543,15 +542,15 @@ class Services extends BaseServices
             return $baseUri;
         }
 
-        if(isset($_SERVER['HTTP_HOST'])){
+        if (isset($_SERVER['HTTP_HOST'])) {
             return "https://" . $_SERVER['HTTP_HOST'] . '/';
         }
 
         $pathParts = explode('/', SITE_PATH);
 
         // walk through the path to see if the domain name can be retrieved
-        foreach ($pathParts as $part){
-            if(strstr($part, '.')){
+        foreach ($pathParts as $part) {
+            if (strstr($part, '.')) {
                 return "https://" . $part . '/';
             }
         }

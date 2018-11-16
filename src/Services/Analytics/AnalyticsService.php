@@ -4,6 +4,8 @@ namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
+use KikCMS\Classes\Phalcon\Cache;
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCmsCore\Config\DbConfig;
@@ -11,15 +13,14 @@ use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
-use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property \Google_Service_AnalyticsReporting $analytics
  * @property DbService $dbService
- * @property Backend $cache
- * @property Backend $diskCache
+ * @property Cache $cache
+ * @property KeyValue $keyValue
  */
 class AnalyticsService extends Injectable
 {
@@ -33,7 +34,7 @@ class AnalyticsService extends Injectable
             return true;
         }
 
-        $this->diskCache->save(CacheConfig::STATS_UPDATE_IN_PROGRESS, true);
+        $this->keyValue->save(CacheConfig::STATS_UPDATE_IN_PROGRESS, true);
 
         $this->db->begin();
 
@@ -55,12 +56,12 @@ class AnalyticsService extends Injectable
         } catch (\Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
-            $this->diskCache->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+            $this->keyValue->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
             $this->cache->delete(CacheConfig::STATS_REQUIRE_UPDATE);
             return false;
         }
 
-        $this->diskCache->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+        $this->keyValue->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
 
         return $this->db->commit();
     }
@@ -191,7 +192,7 @@ class AnalyticsService extends Injectable
      */
     public function isUpdating(): bool
     {
-        return $this->diskCache->exists(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+        return $this->keyValue->exists(CacheConfig::STATS_UPDATE_IN_PROGRESS);
     }
 
     /**
