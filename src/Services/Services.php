@@ -248,7 +248,9 @@ class Services extends BaseServices
      */
     protected function initKeyValue()
     {
-        return new File(new Json, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
+        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
+
+        return new File($frontend, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
     }
 
     /**
