@@ -11,13 +11,11 @@ use KikCMS\Config\StatisticsConfig;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Cache\Backend;
 
 /**
  * @property DateTimeService $dateTimeService
  * @property AnalyticsService $analyticsService
  * @property AccessControl $acl
- * @property Backend $diskCache
  * @property CmsService $cmsService
  */
 class StatisticsController extends BaseController

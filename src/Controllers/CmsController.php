@@ -5,7 +5,6 @@ namespace KikCMS\Controllers;
 use DateTime;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
@@ -22,7 +21,6 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Cache\Backend;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
@@ -34,10 +32,8 @@ use Phalcon\Http\ResponseInterface;
  * @property TinyMceService $tinyMceService
  * @property DateTimeService $dateTimeService
  * @property AnalyticsService $analyticsService
- * @property WebsiteSettingsBase $websiteSettings
  * @property CmsService $cmsService
  * @property AccessControl $acl
- * @property Backend $diskCache
  */
 class CmsController extends BaseCmsController
 {
