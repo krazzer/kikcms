@@ -66,6 +66,11 @@ body {
         opacity: 0.5;
     }
 
+    > #menu{
+        // fix weird tinymce issue, where menu cannot have position: fixed
+        position: absolute;
+    }
+
     #overlay {
         display: block;
         opacity: 1;

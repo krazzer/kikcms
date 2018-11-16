@@ -1,43 +1,119 @@
 @import "../includes/mixins";
 @import "../includes/variables";
 
-.form-group .mce-panel{
-    border-color: $lightGray !important;
-
-    .mce-path{
-        display: none;
+body {
+    .mce-top-part:before{
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
     }
 
-    .mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last{
-        border: none;
+    .form-group .mce-panel {
+        border-color: $lightGray;
+
+        .mce-path {
+            display: none;
+        }
+
+        .mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last {
+            border: none;
+        }
+
+        .mce-menubtn, .mce-btn {
+            border-radius: $defaultBorderRadius;
+        }
     }
 
-    .mce-menubtn, .mce-btn{
+    .mce-tooltip-inner{
+        padding-bottom: 6px;
         border-radius: $defaultBorderRadius;
     }
-}
 
-.mce-container, .mce-widget{
-    .mce-txt, .mce-text{
+    .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset, .mce-txt, .mce-text {
         @include fontDefault();
-        font-weight: 400;
     }
-}
 
-.mce-tinymce{
-    border-radius: $defaultBorderRadius;
-    background-color: $colorWhite;
+    .mce-ico {
+        font-family: 'tinymce', Arial, serif;
+    }
 
-    iframe{
+    .mce-tinymce {
+        border-radius: $defaultBorderRadius;
+        background-color: $colorWhite;
+        box-shadow: none;
+
+        iframe {
+            border-bottom-left-radius: $defaultBorderRadius;
+            border-bottom-right-radius: $defaultBorderRadius;
+        }
+    }
+
+    .has-error .mce-tinymce{
+        border: 1px solid $colorErrorText;
+    }
+
+    .mce-edit-area {
         border-bottom-left-radius: $defaultBorderRadius;
         border-bottom-right-radius: $defaultBorderRadius;
     }
-}
 
-.mce-stack-layout-item{
-}
+    .mce-window {
+        border-radius: $defaultBorderRadius;
+    }
 
-.mce-edit-area{
-    border-bottom-left-radius: $defaultBorderRadius;
-    border-bottom-right-radius: $defaultBorderRadius;
+    .mce-foot, .mce-foot > .mce-container-body {
+        border-bottom-left-radius: $defaultBorderRadius;
+        border-bottom-right-radius: $defaultBorderRadius;
+    }
+
+    .mce-panel, .mce-window-head, .mce-tab, .mce-tabs {
+        border-color: $lightGray;
+    }
+
+    .mce-tab {
+        padding-top: 7px;
+        padding-bottom: 12px;
+        border-right: none;
+
+        &.mce-active {
+            background-color: $lightGrayLight;
+            border-bottom: 1px solid $lightGray;
+            color: $colorBlack;
+        }
+    }
+
+    .mce-window-body {
+        .mce-textbox, .mce-listbox, .mce-btn {
+            border-color: $lightGray;
+            border-radius: $defaultBorderRadius;
+        }
+    }
+
+    .mce-window-head {
+        padding: 20px 15px;
+
+        .mce-title {
+            font-weight: 300;
+        }
+
+        .mce-close {
+            top: 12px;
+        }
+    }
+
+    .mce-foot .mce-btn {
+        border-radius: $defaultBorderRadius;
+
+        &:hover{
+            background-color: $lightGray;
+        }
+
+        &.mce-primary {
+            background-color: $colorPink;
+
+            &:hover{
+                background-color: darken($colorPink, 10%);
+            }
+        }
+    }
 }

@@ -1,23 +1,54 @@
 @import "../includes/mixins";
 @import "../includes/variables";
 
+@font-face {
+    font-family: 'Lato';
+    font-weight: 300;
+    src: url(/cmsassets/fonts/lato.woff2) format('woff2');
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-weight: 400;
+    src: url(/cmsassets/fonts/lato-400.woff2) format('woff2');
+}
+
 .mce-content-body {
     @include fontDefault();
     font-size: $fontSizeDefault;
-    padding: 0 10px 10px;
+    padding: 0;
+
+    p {
+        margin-top: 0;
+
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 400;
+    }
+
+    strong {
+        font-weight: 400;
+    }
 
     table {
         border-spacing: 0;
         border-collapse: separate;
-        border: 1px solid $gray;
+        border-top: 1px solid $lightGrayLight;
+        border-left: 1px solid $lightGrayLight;
 
         tr:nth-child(even) {
-            background: #FAFAFA
+            background: $superLightGray;
         }
 
         td, th {
             @include fontDefault();
             font-size: $fontSizeDefault;
+            border-right: 1px solid $lightGrayLight;
+            border-bottom: 1px solid $lightGrayLight;
         }
     }
 }

@@ -21,7 +21,7 @@ gulp.task('styles', function () {
         'sass/components/*.scss',
         'sass/components/**/*.scss',
         'sass/datatables/*.scss',
-        'sass/tinymce/*.scss'
+        'sass/tinymce/editor.scss'
     ])
         .pipe(plumber())
         .pipe(sourcemaps.init())
@@ -44,6 +44,19 @@ gulp.task('stylesLogin', function () {
         .pipe(concat('login.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(rootFolder + 'css/'));
+});
+
+gulp.task('tinyMceContentStyle', function () {
+    return gulp.src([
+        'sass/tinymce/content.scss'
+    ])
+        .pipe(plumber())
+        .pipe(sourcemaps.init())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(cssnano({zindex: false}))
+        .pipe(concat('content.css'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(rootFolder + 'css/tinymce'));
 });
 
 // Vendors styles
@@ -159,7 +172,7 @@ gulp.task('vendors', ['vendorsScripts', 'vendorsStyles']);
 
 // Watch task with browserSync
 gulp.task('watch', ['styles', 'scriptsCms'], function () {
-    gulp.watch('sass/**/*.scss', ['styles', 'stylesLogin']);
+    gulp.watch('sass/**/*.scss', ['styles', 'stylesLogin', 'tinyMceContentStyle']);
     gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend']);
 });
 

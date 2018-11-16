@@ -593,6 +593,9 @@ var DataTable = Class.extend({
 
         if (level == 0) {
             $('body').removeClass('datatableBlur');
+
+            // fix weird tinymce issue, where menu cannot have position: fixed
+            $('body > #menu').css('top', '0');
             $overlay.css('z-index', 3);
         } else {
             $('.dataTableWindow.level' + (level - 1)).removeClass('blur');
@@ -631,6 +634,9 @@ var DataTable = Class.extend({
 
         if (level == 0) {
             $('body').addClass('datatableBlur');
+
+            // fix weird tinymce issue, where menu cannot have position: fixed
+            $('body > #menu').css('top', $(window).scrollTop());
         } else {
             $('.dataTableWindow.level' + (level - 1)).addClass('blur');
             $overlay.css('z-index', level + 3);
