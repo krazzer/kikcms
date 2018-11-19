@@ -28,6 +28,14 @@ a {
     }
 }
 
+b, strong {
+    font-weight: 400;
+}
+
+.dropdown-menu > li > a {
+    font-weight: 300;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 300;
 }
@@ -50,7 +58,7 @@ h1, h2, h3, h4, h5, h6 {
         margin: 5px 0;
     }
 
-    .form-group.type-checkbox~.form-group.type-checkbox .checkbox {
+    .form-group.type-checkbox ~ .form-group.type-checkbox .checkbox {
         margin: 0 0 5px;
     }
 }
