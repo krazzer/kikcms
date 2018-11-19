@@ -6,6 +6,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
@@ -32,6 +33,7 @@ use Phalcon\Tag;
  * @property ModelService $modelService
  * @property Translator $translator
  * @property RelationKeyService $relationKeyService
+ * @property SecuritySingleToken $securitySingleToken
  */
 abstract class DataTable extends Renderable
 {
@@ -516,6 +518,8 @@ abstract class DataTable extends Renderable
 
             /** @var DataForm $dataForm */
             $dataForm = new $formClass();
+
+            $dataForm->security = $this->securitySingleToken;
 
             $dataForm
                 ->setDataTable($this)

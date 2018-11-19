@@ -459,14 +459,15 @@ abstract class WebForm extends Renderable
         $this->renderDataTableFields();
 
         return $this->renderView($this->formTemplate, [
+            'class'               => static::class,
             'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER),
+            'security'            => $this->security,
             'form'                => $this->form,
             'fields'              => $this->fieldMap,
             'tabs'                => $this->tabs,
             'filters'             => $this->filters,
             'displaySendButton'   => $this->displaySendButton,
             'sendButtonClass'     => $this->sendButtonClass,
-            'security'            => $this->security,
             'currentTab'          => $this->getCurrentTab(),
             'fieldsWithoutTab'    => $this->getFieldsWithoutTab(),
             'formId'              => $this->getFormId(),
@@ -475,7 +476,6 @@ abstract class WebForm extends Renderable
             'instance'            => $this->getInstance(),
             'jsData'              => $this->getJsData(),
             'anotherFormIsPosted' => $this->anotherFormIsPosted(),
-            'class'               => static::class,
             'errorContainer'      => $errorContainer,
             'webForm'             => $this,
         ]);

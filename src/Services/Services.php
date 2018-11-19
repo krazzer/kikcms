@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
+use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\NestedSetService;
@@ -16,7 +17,6 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Permission;
-use KikCMS\Classes\Phalcon\Security;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
@@ -66,6 +66,7 @@ use Phalcon\Db\Adapter\Pdo;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Filter;
 use Phalcon\Http\Response\Cookies;
+use Phalcon\Security;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
@@ -111,6 +112,7 @@ class Services extends BaseServices
             RelationKeyService::class,
             RememberMeService::class,
             Security::class,
+            SecuritySingleToken::class,
             StorageService::class,
             StringService::class,
             TemplateService::class,

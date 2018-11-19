@@ -6,7 +6,7 @@ namespace KikCMS\Classes\Phalcon;
  * Use the same token while users' session is active. This is required for having multiple forms active at the same
  * time. Required for subDataTables.
  */
-class Security extends \Phalcon\Security
+class SecuritySingleToken extends \Phalcon\Security
 {
     /**
      * @inheritdoc
