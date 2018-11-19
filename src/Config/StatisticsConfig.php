@@ -15,6 +15,8 @@ class StatisticsConfig
     const TYPE_LOCATION   = 'location';
     const TYPE_RESOLUTION = 'resolution';
 
+    const MAX_IMPORT_ROWS = 10000;
+
     const GA_TYPES = [
         self::TYPE_SOURCE     => 'ga:source',
         self::TYPE_OS         => 'ga:operatingSystem',

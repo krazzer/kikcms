@@ -39,9 +39,8 @@ class AnalyticsService extends Injectable
         $this->db->begin();
 
         try {
-            $results = $this->getVisitDataFromGoogle();
-
-            $this->importVisitorData();
+            $results      = $this->getVisitDataFromGoogle();
+            $rowsImported = $this->importVisitorData();
 
             $results = array_map(function ($row) {
                 return [
@@ -53,6 +52,10 @@ class AnalyticsService extends Injectable
 
             $this->dbService->truncate(GaDayVisit::class);
             $this->dbService->insertBulk(GaDayVisit::class, $results);
+
+            if ( ! $rowsImported) {
+                $this->stopUpdatingForSixHours();
+            }
         } catch (\Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
@@ -210,25 +213,20 @@ class AnalyticsService extends Injectable
 
         // if there are 0 zero stats, or today isn't present yet
         if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
-            $this->stopUpdatingForSixHours();
             return true;
         }
 
         // if there are no visitor data stats
         if ( ! $typeMaxDates = $this->getMaxDatePerVisitDataType()) {
-            $this->stopUpdatingForSixHours();
             return true;
         }
 
         // if there are no visitor data stats for today
         foreach ($typeMaxDates as $type => $maxDate) {
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
-                $this->stopUpdatingForSixHours();
                 return true;
             }
         }
-
-        $this->stopUpdatingForSixHours();
 
         return false;
     }
@@ -451,7 +449,7 @@ class AnalyticsService extends Injectable
         $request->setDateRanges($dateRange);
         $request->setMetrics($metrics);
         $request->setDimensions($dimensions);
-        $request->setPageSize(10000);
+        $request->setPageSize(StatisticsConfig::MAX_IMPORT_ROWS);
 
         return $this->requestToArray($request);
     }
@@ -511,9 +509,13 @@ class AnalyticsService extends Injectable
 
     /**
      * Import various info about visitors
+     *
+     * @return int
      */
-    private function importVisitorData()
+    private function importVisitorData(): int
     {
+        $insertedRows = 0;
+
         foreach (StatisticsConfig::GA_TYPES as $type => $dimension) {
             $fromDate   = $this->getTypeLastUpdate($type);
             $results    = $this->getVisitorDataFromGoogle($dimension, $fromDate);
@@ -545,7 +547,11 @@ class AnalyticsService extends Injectable
             }
 
             $this->dbService->insertBulk(GaVisitData::class, $insertData);
+
+            $insertedRows += count($insertData);
         }
+
+        return $insertedRows;
     }
 
     private function stopUpdatingForSixHours()

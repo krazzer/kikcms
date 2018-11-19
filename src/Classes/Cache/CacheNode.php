@@ -82,7 +82,7 @@ class CacheNode
         }
 
         if (is_bool($this->value)) {
-            return '(bool) ' . $this->value ? 'true' : 'false';
+            return '(bool) ' . ($this->value ? 'true' : 'false');
         }
 
         if (is_scalar($this->value)) {
