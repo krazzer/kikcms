@@ -7,9 +7,11 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\LanguageService;
 
 /**
  * @property CacheService $cacheService
+ * @property LanguageService $languageService
  */
 class TranslationForm extends DataForm
 {
@@ -46,6 +48,12 @@ class TranslationForm extends DataForm
      */
     protected function onSave()
     {
+        // clear cache
+        foreach ($this->languageService->getLanguages() as $language){
+            $cacheKey = CacheConfig::TRANSLATION . ':' . $language->code . ':' . $this->getObject()->key;
+            $this->cacheService->clear($cacheKey);
+        }
+
         $this->cacheService->clear(CacheConfig::USER_TRANSLATIONS);
     }
 }
