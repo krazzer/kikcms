@@ -9,12 +9,10 @@ use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 
 /**
  * Transformer to convert an object's name to the corresponding id
+ * @property AutocompleteField $field
  */
 class NameToId extends FieldTransformer
 {
-    /** @var AutocompleteField */
-    protected $field;
-
     /**
      * @inheritdoc
      */

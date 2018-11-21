@@ -8,6 +8,7 @@ use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Tab;
@@ -142,7 +143,7 @@ class PageForm extends DataForm
 
         $pageLanguage = $this->getPageLanguage();
 
-        if($pageLanguage && $parentPageLanguage = $pageLanguage->getParentWithSlug()){
+        if ($pageLanguage && $parentPageLanguage = $pageLanguage->getParentWithSlug()) {
             $urlPath = $this->urlService->getUrlByPageLanguage($parentPageLanguage) . '/' . $urlPath;
         }
 
@@ -169,20 +170,25 @@ class PageForm extends DataForm
         $template = $this->getTemplate();
         $fields   = $this->templateService->getFieldsByTemplate($template);
 
-        /** @var Field $field */
         foreach ($fields as $field) {
-            if($field instanceof Field){
-                $this->addField($field, $this->tabs[0]);
-            }
+            switch (true) {
+                case $field instanceof Field:
+                    $this->addField($field, $this->tabs[0]);
+                break;
 
-            if($field instanceof Tab){
-                $tabFields = [];
+                case $field instanceof Tab:
+                    $tabFields = [];
 
-                foreach ($field->getFieldMap() as $tabField){
-                    $tabFields[] = $this->addField($tabField);
-                }
+                    foreach ($field->getFieldMap() as $tabField) {
+                        $tabFields[] = $this->addField($tabField);
+                    }
 
-                $this->addTab($field->getName(), $tabFields);
+                    $this->addTab($field->getName(), $tabFields);
+                break;
+
+                case $field instanceof FieldTransformer:
+                    $this->addFieldTransformer($field);
+                break;
             }
         }
     }

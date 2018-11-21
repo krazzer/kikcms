@@ -10,12 +10,10 @@ use KikCMS\Classes\WebForm\Fields\DateField;
 
 /**
  * @property Translator $translator;
+ * @property DateField $field;
  */
 class Date extends FieldTransformer
 {
-    /** @var DateField */
-    protected $field;
-
     /**
      * @inheritdoc
      */
