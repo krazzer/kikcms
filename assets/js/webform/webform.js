@@ -297,11 +297,13 @@ var WebForm = Class.extend({
             window.close();
         };
 
+        var windowHeight = this.getWindowHeight() < 768 ? this.getWindowHeight() - 130 : 768;
+
         var window = tinymce.activeEditor.windowManager.open({
             title: 'Image Picker',
             url: '/cms/filePicker',
             width: 952,
-            height: 768,
+            height: windowHeight,
             buttons: [{
                 text: 'Insert',
                 onclick: function () {
@@ -348,6 +350,13 @@ var WebForm = Class.extend({
         }
 
         return linkListUrl + this.parent.getWindowLanguageCode() + '/';
+    },
+
+    /**
+     * @return int
+     */
+    getWindowHeight: function(){
+        return $(window).height();
     },
 
     getWysiwygSelector: function () {
