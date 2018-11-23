@@ -126,7 +126,7 @@ class AnalyticsService extends Injectable
                 'SUM(' . GaVisitData::FIELD_VISITS . ') AS visits',
                 'ROUND((SUM(' . GaVisitData::FIELD_VISITS . ') / ' . $totalVisits . ') * 100, 1) AS percentage'
             ])
-            ->groupBy(GaVisitData::FIELD_VALUE)
+            ->groupBy(GaVisitData::FIELD_TYPE . ', ' . GaVisitData::FIELD_VALUE)
             ->orderBy('visits DESC')
             ->limit(count(StatisticsConfig::GA_TYPES) * 50);
 
@@ -398,10 +398,11 @@ class AnalyticsService extends Injectable
      * @param string $dimensionName
      * @param DateTime|null $fromDate
      * @param array $addMetrics
+     * @param array $filters
      *
      * @return array
      */
-    private function getVisitorDataFromGoogle(string $dimensionName = null, DateTime $fromDate = null, array $addMetrics = []): array
+    private function getVisitorDataFromGoogle(string $dimensionName = null, DateTime $fromDate = null, array $addMetrics = [], array $filters = []): array
     {
         $fromDate = $fromDate ?: new DateTime('2005-01-01');
 
@@ -450,6 +451,12 @@ class AnalyticsService extends Injectable
         $request->setMetrics($metrics);
         $request->setDimensions($dimensions);
         $request->setPageSize(StatisticsConfig::MAX_IMPORT_ROWS);
+
+        if ($filters) {
+            foreach ($filters as $name => $value) {
+                $request->setFiltersExpression($name . '==' . $value);
+            }
+        }
 
         return $this->requestToArray($request);
     }
@@ -517,8 +524,15 @@ class AnalyticsService extends Injectable
         $requireUpdate = false;
 
         foreach (StatisticsConfig::GA_TYPES as $type => $dimension) {
+            if (is_array($dimension)) {
+                $filters   = $dimension[1];
+                $dimension = $dimension[0];
+            } else {
+                $filters = [];
+            }
+
             $fromDate   = $this->getTypeLastUpdate($type);
-            $results    = $this->getVisitorDataFromGoogle($dimension, $fromDate);
+            $results    = $this->getVisitorDataFromGoogle($dimension, $fromDate, [], $filters);
             $insertData = [];
 
             foreach ($results as $resultRow) {

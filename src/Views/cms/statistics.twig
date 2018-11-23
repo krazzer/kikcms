@@ -36,7 +36,9 @@
             <li><a href="#tab-page" data-toggle="tab">{{ tl('statistics.tab.page') }}</a></li>
             <li><a href="#tab-location" data-toggle="tab">{{ tl('statistics.tab.location') }}</a></li>
             <li><a href="#tab-browser" data-toggle="tab">{{ tl('statistics.tab.browser') }}</a></li>
-            <li><a href="#tab-resolution" data-toggle="tab">{{ tl('statistics.tab.resolution') }}</a></li>
+            <li><a href="#tab-resolutionDesktop" data-toggle="tab">{{ tl('statistics.tab.resolutionDesktop') }}</a></li>
+            <li><a href="#tab-resolutionTablet" data-toggle="tab">{{ tl('statistics.tab.resolutionTablet') }}</a></li>
+            <li><a href="#tab-resolutionMobile" data-toggle="tab">{{ tl('statistics.tab.resolutionMobile') }}</a></li>
             <li><a href="#tab-os" data-toggle="tab">{{ tl('statistics.tab.os') }}</a></li>
         </ul>
 
@@ -94,7 +96,31 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div class="tab-pane" id="tab-resolution">
+            <div class="tab-pane" id="tab-resolutionDesktop">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.resolution') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-resolutionTablet">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ tl('statistics.tab.resolution') }}</th>
+                        <th>{{ tl('statistics.tab.hits') }}</th>
+                        <th>{{ tl('statistics.tab.percentage') }}</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="tab-resolutionMobile">
                 <table class="table table-striped">
                     <thead>
                     <tr>
