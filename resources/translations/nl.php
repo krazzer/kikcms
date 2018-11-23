@@ -370,6 +370,7 @@ return [
             'page'              => "Pagina",
             'location'          => 'Locatie',
             'browser'           => 'Browser',
+            'resolution'        => 'Resolutie',
             'resolutionDesktop' => 'Resolutie (desktop)',
             'resolutionTablet'  => 'Resolutie (tablet)',
             'resolutionMobile'  => 'Resolutie (mobiel)',
