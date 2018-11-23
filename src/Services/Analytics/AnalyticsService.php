@@ -39,8 +39,8 @@ class AnalyticsService extends Injectable
         $this->db->begin();
 
         try {
-            $results      = $this->getVisitDataFromGoogle();
-            $rowsImported = $this->importVisitorData();
+            $results       = $this->getVisitDataFromGoogle();
+            $requireUpdate = $this->importVisitorData();
 
             $results = array_map(function ($row) {
                 return [
@@ -53,7 +53,7 @@ class AnalyticsService extends Injectable
             $this->dbService->truncate(GaDayVisit::class);
             $this->dbService->insertBulk(GaDayVisit::class, $results);
 
-            if ( ! $rowsImported) {
+            if ( ! $requireUpdate) {
                 $this->stopUpdatingForSixHours();
             }
         } catch (\Exception $exception) {
@@ -510,11 +510,11 @@ class AnalyticsService extends Injectable
     /**
      * Import various info about visitors
      *
-     * @return int
+     * @return bool
      */
-    private function importVisitorData(): int
+    private function importVisitorData(): bool
     {
-        $insertedRows = 0;
+        $requireUpdate = false;
 
         foreach (StatisticsConfig::GA_TYPES as $type => $dimension) {
             $fromDate   = $this->getTypeLastUpdate($type);
@@ -548,10 +548,12 @@ class AnalyticsService extends Injectable
 
             $this->dbService->insertBulk(GaVisitData::class, $insertData);
 
-            $insertedRows += count($insertData);
+            if (count($results) == StatisticsConfig::MAX_IMPORT_ROWS) {
+                $requireUpdate = true;
+            }
         }
 
-        return $insertedRows;
+        return $requireUpdate;
     }
 
     private function stopUpdatingForSixHours()
