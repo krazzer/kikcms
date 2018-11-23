@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Text;
+use Phalcon\Validation\Validator\Numericality;
 
 class TextField extends Field
 {
@@ -21,5 +22,28 @@ class TextField extends Field
             ->addValidators($validators);
 
         $this->element = $element;
+    }
+
+    public function getInput($value)
+    {
+        if($this->isNumeric()){
+            return str_replace(',', '.', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isNumeric(): bool
+    {
+        foreach ($this->getElement()->getValidators() as $validator){
+            if($validator instanceof Numericality){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
