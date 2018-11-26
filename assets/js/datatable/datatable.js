@@ -271,14 +271,14 @@ var DataTable = Class.extend({
             switch (curDirection) {
                 case 'asc':
                     var direction = 'desc';
-                break;
+                    break;
                 case 'desc':
                     direction = '';
                     column    = '';
-                break;
+                    break;
                 default:
                     direction = 'asc';
-                break;
+                    break;
             }
 
             self.sortDirection = direction;
@@ -658,7 +658,12 @@ var DataTable = Class.extend({
             }, 500);
         }, 5000);
 
-        if( ! $editedRow.length){
+        if (!$editedRow.length) {
+            return;
+        }
+
+        // less relevant for subdatatables, so not implemented
+        if (this.isSubDataTable()) {
             return;
         }
 
@@ -668,7 +673,7 @@ var DataTable = Class.extend({
         var windowHeight = $(window).height();
         var scrollTop    = $(window).scrollTop();
 
-        if(editedRowY > scrollTop + windowHeight - 250 || editedRowY < scrollTop){
+        if (editedRowY > scrollTop + windowHeight - 250 || editedRowY < scrollTop) {
             $('body').animate({scrollTop: editedRowY - 250}, 1000);
         }
     },
@@ -826,6 +831,13 @@ var DataTable = Class.extend({
     getWysiwygSelector: function () {
         var webFormId = this.getWindow().find('.webForm').attr("id");
         return '#' + webFormId + ' textarea.wysiwyg';
+    },
+
+    /**
+     * @return {boolean}
+     */
+    isSubDataTable: function () {
+        return this.getDataTable().parents('.dataTableWindow').length >= 1;
     },
 
     /**
