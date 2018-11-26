@@ -13,6 +13,7 @@ use KikCMS\Forms\MenuForm;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\CacheService;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableFilters;
@@ -30,6 +31,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property PagesDataTableService $pagesDataTableService
  * @property UserSettingsService $userSettingsService
  * @property PageService $pageService
+ * @property CacheService $cacheService
  */
 class Pages extends DataTable
 {
@@ -85,6 +87,7 @@ class Pages extends DataTable
         }
 
         $this->pageRearrangeService->updateNestedSet();
+        $this->cacheService->clearMenuCache();
     }
 
     /**

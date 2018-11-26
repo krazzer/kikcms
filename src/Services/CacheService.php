@@ -44,6 +44,15 @@ class CacheService extends Injectable
     }
 
     /**
+     * Clears all cached menu's
+     */
+    public function clearMenuCache()
+    {
+        $this->clear(CacheConfig::MENU);
+        $this->clear(CacheConfig::MENU_PAGES);
+    }
+
+    /**
      * @param string $cacheKey
      * @param callable $function
      * @param int $ttl
