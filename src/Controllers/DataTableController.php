@@ -62,7 +62,7 @@ class DataTableController extends RenderableController
             throw new UnauthorizedException;
         }
 
-        $ids = $this->request->getPost('ids');
+        $ids = (array) $this->request->getPost('ids');
 
         try {
             $dataTable->delete($ids);
