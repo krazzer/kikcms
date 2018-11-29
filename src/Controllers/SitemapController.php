@@ -52,7 +52,7 @@ class SitemapController extends BaseController
 
         foreach ($links as $link) {
             $url  = $sitemap->createElement('url');
-            $href = $this->url->getBaseUri() . $link;
+            $href = $this->url->get($link);
             $url->appendChild($sitemap->createElement('loc', $href));
             $url->appendChild($sitemap->createElement('changefreq', 'daily'));
             $url->appendChild($sitemap->createElement('priority', '0.5'));
