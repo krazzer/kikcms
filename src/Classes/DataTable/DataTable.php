@@ -7,7 +7,6 @@ use Exception;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Classes\Model;
@@ -229,6 +228,7 @@ abstract class DataTable extends Renderable
 
         $objects = $model::getByIdList($ids);
 
+        /** @var Model $object */
         foreach ($objects as $object) {
             $object->delete();
         }
@@ -413,7 +413,7 @@ abstract class DataTable extends Renderable
             return null;
         }
 
-        if($relation->getType() !== Relation::HAS_MANY){
+        if ($relation->getType() !== Relation::HAS_MANY) {
             return null;
         }
 
@@ -425,16 +425,12 @@ abstract class DataTable extends Renderable
      */
     public function getParentRelationValue()
     {
-        $model  = $this->getFilters()->getParentModel();
-        $editId = $this->getFilters()->getParentEditId();
+        $model       = $this->getFilters()->getParentModel();
+        $editId      = $this->getFilters()->getParentEditId();
+        $relationKey = $this->getFilters()->getParentRelationKey();
 
-        if($editId === 0){
+        if ($editId === 0) {
             return 0;
-        }
-
-        /** Required when it @uses DataTableField */
-        if ( ! $relationKey = $this->getFilters()->getParentRelationKey()) {
-            return $editId;
         }
 
         $relation     = $this->modelService->getRelation($model, $relationKey);

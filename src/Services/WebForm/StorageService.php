@@ -8,10 +8,8 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
 use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCmsCore\Services\DbService;
-use KikCMS\Classes\Exceptions\ParentRelationKeyReferenceMissingException;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Classes\WebForm\Field;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
@@ -34,27 +32,6 @@ class StorageService extends Injectable
     public function getStorageData(): StorageData
     {
         return $this->storageData;
-    }
-
-    /**
-     * @param DataTableField $field
-     * @param array $editData
-     * @param int $editId
-     * @return int
-     * @throws ParentRelationKeyReferenceMissingException
-     * @deprecated Use RelationKeys instead
-     */
-    public function getRelatedValueForField(DataTableField $field, array $editData, int $editId): int
-    {
-        if ( ! $referencedColumn = $field->getDataTable()->getParentRelationKeyReference()) {
-            return $editId;
-        }
-
-        if ( ! array_key_exists($referencedColumn, $editData)) {
-            throw new ParentRelationKeyReferenceMissingException($referencedColumn, get_class($field->getForm()));
-        }
-
-        return $editData[$referencedColumn];
     }
 
     /**
@@ -205,32 +182,10 @@ class StorageService extends Injectable
      */
     private function storePostMain()
     {
-        $editId = $this->storageData->getEditId();
-        $model  = $this->storageData->getTable();
-
-        $editData = $this->dbService->getTableRowById($model, $editId);
+        $model = $this->storageData->getTable();
 
         /** @var Field $field */
         foreach ($this->storageData->getFieldMap() as $key => $field) {
-            // store old DataTableField
-            if ($field instanceof DataTableField) {
-                $dataTable = $field->getDataTable();
-
-                $keysToUpdate = $dataTable->getCachedNewIds();
-                $relatedField = $dataTable->getParentRelationKey();
-                $model        = $dataTable->getModel();
-
-                $relatedValue = $this->storageService->getRelatedValueForField($field, $editData, $editId);
-
-                foreach ($keysToUpdate as $newId) {
-                    $success = $this->dbService->update($model, [$relatedField => $relatedValue], [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
-
-                    if ( ! $success) {
-                        continue;
-                    }
-                }
-            }
-
             if ( ! $field instanceof KeyedDataTableField) {
                 continue;
             }
@@ -265,13 +220,10 @@ class StorageService extends Injectable
      */
     private function removeSubDataTableTemporaryKeysCache()
     {
-        /** @var DataTableField $field */
         foreach ($this->storageData->getFieldMap() as $field) {
-            if ( ! in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE])) {
-                continue;
+            if ($field instanceof KeyedDataTableField) {
+                $field->getDataTable()->removeNewIdCache();
             }
-
-            $field->getDataTable()->removeNewIdCache();
         }
     }
 }

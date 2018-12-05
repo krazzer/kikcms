@@ -17,7 +17,6 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer\Date;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCmsCore\Config\DbConfig;
 use KikCMS\Config\StatusCodes;
@@ -341,20 +340,6 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @inheritdoc
-     */
-    protected function renderDataTableField(DataTableField $field)
-    {
-        $langCode     = $this->getFilters()->getLanguageCode();
-        $parentEditId = $this->getParentEditIdForField($field);
-
-        $field->getDataTable()->getFilters()->setParentEditId($parentEditId);
-        $field->getDataTable()->getFilters()->setLanguageCode($langCode);
-
-        $field->setRenderedDataTable($field->getDataTable()->render());
-    }
-
-    /**
      * Pre-fetch editData, so for loops through all fields do not conflict
      *
      * @inheritdoc
@@ -399,19 +384,6 @@ abstract class DataForm extends WebForm
         if ($this->getDataTable() && $this->getDataTable()->isSortable() && ! $this->getFilters()->getEditId()) {
             $this->setDisplayOrder($storageData);
         }
-    }
-
-    /**
-     * @param DataTableField $field
-     * @return int|null
-     */
-    private function getParentEditIdForField(DataTableField $field): ?int
-    {
-        if ( ! $editId = $this->getFilters()->getEditId()) {
-            return $field->getDataTable()->hasParent() ? 0 : null;
-        }
-
-        return $this->storageService->getRelatedValueForField($field, $this->getEditData(), $editId);
     }
 
     /**

@@ -3,14 +3,12 @@
 namespace KikCMS\Classes\WebForm;
 
 
-use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Phalcon\Validator\ReCaptcha;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
@@ -89,22 +87,11 @@ trait FieldShortcuts
     }
 
     /**
-     * @param DataTable $dataTable
-     * @param string $label
-     *
-     * @return Field|DataTableField
-     */
-    public function addDataTableField(DataTable $dataTable, string $label)
-    {
-        return $this->addField(new DataTableField($dataTable, $label));
-    }
-
-    /**
      * @param string $key
      * @param string $dataTableClass
      * @param string $label
      *
-     * @return Field|DataTableField
+     * @return Field|KeyedDataTableField
      */
     public function addKeyedDataTableField(string $key, string $dataTableClass, string $label)
     {

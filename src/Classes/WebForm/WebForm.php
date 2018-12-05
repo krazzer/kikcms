@@ -9,7 +9,6 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
@@ -421,27 +420,14 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param DataTableField $field
-     */
-    protected function renderDataTableField(DataTableField $field)
-    {
-        $renderedDataTable = $field->getDataTable()->render();
-        $field->setRenderedDataTable($renderedDataTable);
-    }
-
-    /**
      * Pre-renders the DataTable fields, so that any required asset will be correctly added
      */
     protected function renderDataTableFields()
     {
-        /** @var DataTableField|SelectDataTableField|KeyedDataTableField $field */
+        /** @var SelectDataTableField|KeyedDataTableField $field */
         foreach ($this->getFieldMap() as $key => $field) {
             if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
                 $this->renderSelectDataTableField($field);
-            }
-
-            if ($field->getType() == Field::TYPE_DATA_TABLE) {
-                $this->renderDataTableField($field);
             }
 
             if ($field->getType() == Field::TYPE_KEYED_DATA_TABLE) {
@@ -637,10 +623,8 @@ abstract class WebForm extends Renderable
     private function reUseDataTableInstances()
     {
         foreach ($this->fieldMap as $key => $field) {
-            if (in_array($field->getType(), [Field::TYPE_DATA_TABLE, Field::TYPE_KEYED_DATA_TABLE])
-                && $this->request->hasPost($key)) {
+            if ($field instanceOf KeyedDataTableField && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
-                /** @var DataTableField $field */
                 $field->getDataTable()->setInstance($instance);
                 $field->setDefault($instance);
             }
