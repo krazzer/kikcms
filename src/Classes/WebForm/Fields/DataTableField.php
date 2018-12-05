@@ -26,11 +26,11 @@ class DataTableField extends Field
     public function __construct(string $key, string $class, string $label)
     {
         $this->class = $class;
+        $this->key   = $key;
 
         $this->element = (new Hidden($key))
             ->setLabel($label)
             ->setDefault($this->getDataTable()->getInstance());
-
     }
 
     /**
@@ -38,7 +38,7 @@ class DataTableField extends Field
      */
     public function getDataTable(): DataTable
     {
-        if( ! $this->dataTable){
+        if ( ! $this->dataTable) {
             $this->dataTable = new $this->class();
         }
 

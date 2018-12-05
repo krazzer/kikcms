@@ -21,6 +21,7 @@ class PasswordField extends Field
             ->addValidators($validators);
 
         $this->element = $element;
+        $this->key     = $key;
     }
 
     /**

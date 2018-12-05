@@ -25,6 +25,7 @@ class FileField extends Field
             ->setAttribute('class', 'fileId');
 
         $this->element = $element;
+        $this->key     = $key;
     }
 
     /**

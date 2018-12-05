@@ -20,15 +20,15 @@ class ButtonField extends Field
     private $label;
 
     /**
+     * @param string $key
      * @param string $label
      * @param string $info
      * @param string $buttonLabel
      * @param string $route
      */
-    public function __construct(string $label, string $info, string $buttonLabel, string $route)
+    public function __construct(string $key, string $label, string $info, string $buttonLabel, string $route)
     {
-        $this->key = 'button';
-
+        $this->key   = $key;
         $this->info  = $info;
         $this->label = $label;
         $this->route = $route;

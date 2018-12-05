@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Permission;
@@ -119,26 +120,12 @@ abstract class WebForm extends Renderable
      */
     public function addField(Field $field, Tab $tab = null): Field
     {
-        if ($field->getElement()) {
-            $field->setKey($field->getElement()->getName());
-        }
-
-        $key = $field->getKey();
-
-        if ( ! $field->getColumn()) {
-            $field->setColumn($key);
-        }
-
-        if (array_key_exists($key, $this->keys)) {
-            $newKey             = $key . (count($this->keys[$key]) + 1);
-            $this->keys[$key][] = $newKey;
-
-            $field->setKey($newKey);
-        } else {
-            $this->keys[$key] = [$key];
-        }
-
         $field->setForm($this);
+
+        if($this->fieldMap->has($field->getKey())){
+            throw new Exception('A field with key "' . $field->getKey() . '" already exists');
+        }
+
         $this->fieldMap->add($field, $field->getKey());
 
         if ($field->getElement()) {

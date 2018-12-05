@@ -26,6 +26,7 @@ class MultiCheckboxField extends Field
         $this->element    = $element;
         $this->options    = $options;
         $this->validators = $validators;
+        $this->key        = $key;
     }
 
     /**

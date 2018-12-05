@@ -14,15 +14,15 @@ class HtmlField extends Field
     private $label;
 
     /**
+     * @param string $key
      * @param string|null $label
      * @param string $content
      */
-    public function __construct(?string $label, string $content)
+    public function __construct(string $key, ?string $label, string $content)
     {
-        $this->setKey('html');
-
         $this->label   = $label;
         $this->content = $content;
+        $this->key     = $key;
     }
 
     /**

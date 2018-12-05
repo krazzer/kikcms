@@ -19,6 +19,7 @@ class HiddenField extends Field
             ->setAttribute('type', 'hidden');
 
         $this->element = $element;
+        $this->key     = $key;
     }
 
     /**

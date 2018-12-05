@@ -113,7 +113,7 @@ class StorageData
                 $this->formInput[$key] = null;
             }
 
-            $mainInput[$field->getColumn()] = $this->formInput[$key];
+            $mainInput[$key] = $this->formInput[$key];
         }
 
         $mainInput += $this->additionalInput;

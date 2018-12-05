@@ -10,7 +10,7 @@ use Phalcon\Forms\ElementInterface;
 /**
  * Represents a field of a form
  */
-class Field
+abstract class Field
 {
     const TYPE_AUTOCOMPLETE      = 'autocomplete';
     const TYPE_BUTTON            = 'button';
@@ -35,7 +35,7 @@ class Field
     /** @var Element|null */
     protected $element;
 
-    /** @var string */
+    /** @var string unique identifier for the field */
     protected $key;
 
     /** @var array */
@@ -43,9 +43,6 @@ class Field
 
     /** @var Tab */
     private $tab;
-
-    /** @var string the table column where the value should be saved */
-    private $column;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private $required = false;
@@ -295,24 +292,6 @@ class Field
     public function setTab(Tab $tab): Field
     {
         $this->tab = $tab;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getColumn(): ?string
-    {
-        return $this->column;
-    }
-
-    /**
-     * @param string $column
-     * @return Field
-     */
-    public function setColumn(string $column): Field
-    {
-        $this->column = $column;
         return $this;
     }
 

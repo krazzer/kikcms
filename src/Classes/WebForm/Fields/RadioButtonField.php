@@ -28,6 +28,7 @@ class RadioButtonField extends Field
 
         $this->element = $element;
         $this->options = $options;
+        $this->key     = $key;
     }
 
     /**

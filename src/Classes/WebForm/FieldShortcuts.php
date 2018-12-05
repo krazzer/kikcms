@@ -48,15 +48,16 @@ trait FieldShortcuts
     }
 
     /**
+     * @param string $key
      * @param string $label
      * @param string $info
      * @param string $buttonLabel
      * @param string $route
      * @return ButtonField|Field
      */
-    public function addButtonField(string $label, string $info, string $buttonLabel, string $route): Field
+    public function addButtonField(string $key, string $label, string $info, string $buttonLabel, string $route): Field
     {
-        return $this->addField(new ButtonField($label, $info, $buttonLabel, $route));
+        return $this->addField(new ButtonField($key, $label, $info, $buttonLabel, $route));
     }
 
     /**
@@ -112,13 +113,14 @@ trait FieldShortcuts
     /**
      * Add HTML to a form
      *
+     * @param string $key
      * @param string $label
      * @param string $content
      * @return Field|HtmlField
      */
-    public function addHtmlField(?string $label, string $content)
+    public function addHtmlField(string $key, ?string $label, string $content)
     {
-        return $this->addField(new HtmlField($label, $content));
+        return $this->addField(new HtmlField($key, $label, $content));
     }
 
     /**

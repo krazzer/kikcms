@@ -22,6 +22,7 @@ class TextField extends Field
             ->addValidators($validators);
 
         $this->element = $element;
+        $this->key     = $key;
     }
 
     public function getInput($value)

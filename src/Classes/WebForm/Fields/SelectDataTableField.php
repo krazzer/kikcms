@@ -28,6 +28,7 @@ class SelectDataTableField extends Field
 
         $this->dataTable = $dataTable;
         $this->element   = $element;
+        $this->key       = $key;
     }
 
     /**
