@@ -12,6 +12,35 @@
     {% endif %}
 {%- endblock -%}
 
+{%- block fieldButton %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\Button #}
+    <div{{ fieldContainterAttributes|raw }}>
+        <label>{{ field.label|raw }}</label>
+        <div class="field">
+            <div class="info">{{ field.info }}</div>
+            <a class="btn btn-primary" href="{{ field.route }}">{{ field.buttonLabel }}</a>
+        </div>
+    </div>
+{%- endblock -%}
+
+{%- block fieldCheckbox -%}
+    <div{{ fieldContainterAttributes|raw }}>
+        <div class="checkbox">
+            <label>{{ form.render(element.name)|raw }} {{ element.getLabel|raw }}</label>
+        </div>
+    </div>
+{%- endblock -%}
+
+{%- block fieldDataTable %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\DataTableField #}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ block('fieldLabel') }}
+        {{ field.renderedDataTable|raw }}
+        {{ form.render(element.name)|raw }}
+        {{ block('errorWarnings') }}
+    </div>
+{% endblock %}
+
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
         {%- block fieldDefaultInputAndField -%}
@@ -33,68 +62,6 @@
         {% endblock %}
     </div>
 {%- endblock -%}
-
-{%- block fieldButton %}
-    {# @var field \KikCMS\Classes\WebForm\Fields\Button #}
-    <div{{ fieldContainterAttributes|raw }}>
-        <label>{{ field.label|raw }}</label>
-        <div class="field">
-            <div class="info">{{ field.info }}</div>
-            <a class="btn btn-primary" href="{{ field.route }}">{{ field.buttonLabel }}</a>
-        </div>
-    </div>
-{%- endblock -%}
-
-{%- block fieldHidden -%}
-    {{ form.render(element.name)|raw }}
-{%- endblock -%}
-
-{%- block fieldCheckbox -%}
-    <div{{ fieldContainterAttributes|raw }}>
-        <div class="checkbox">
-            <label>
-                {{ form.render(element.name)|raw }} {{ element.getLabel|raw }}
-            </label>
-        </div>
-    </div>
-{%- endblock -%}
-
-{%- block fieldHtml -%}
-    {# @var field \KikCMS\Classes\WebForm\Fields\Html #}
-    <div{{ fieldContainterAttributes|raw }}>
-        {% if field.label %}
-            <label>{{ field.label|raw }}</label>
-        {% endif %}
-        <div class="field">
-            {{ field.content|raw }}
-        </div>
-    </div>
-{%- endblock -%}
-
-{%- block fieldMultiCheckbox %}
-    {# @var field \KikCMS\Classes\WebForm\Fields\MultiCheckboxField #}
-    <div{{ fieldContainterAttributes|raw }}>
-        {{ block('fieldLabel') }}
-        {% for key, label  in field.options %}
-            {% set checked = field.isset(key) ? ' checked="checked"' : '' %}
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="{{ element.name }}[]" value="{{ key }}"{{ checked }}>{{ label }}
-                </label>
-            </div>
-        {% endfor %}
-    </div>
-{% endblock %}
-
-{%- block fieldDataTable %}
-    {# @var field \KikCMS\Classes\WebForm\Fields\DataTableField #}
-    <div{{ fieldContainterAttributes|raw }}>
-        {{ block('fieldLabel') }}
-        {{ field.renderedDataTable|raw }}
-        {{ form.render(element.name)|raw }}
-        {{ block('errorWarnings') }}
-    </div>
-{% endblock %}
 
 {%- block fieldFile %}
     {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
@@ -143,6 +110,37 @@
     </div>
 {% endblock %}
 
+{%- block fieldHidden -%}
+    {{ form.render(element.name)|raw }}
+{%- endblock -%}
+
+{%- block fieldHtml -%}
+    {# @var field \KikCMS\Classes\WebForm\Fields\Html #}
+    <div{{ fieldContainterAttributes|raw }}>
+        {% if field.label %}
+            <label>{{ field.label|raw }}</label>
+        {% endif %}
+        <div class="field">
+            {{ field.content|raw }}
+        </div>
+    </div>
+{%- endblock -%}
+
+{%- block fieldMultiCheckbox %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\MultiCheckboxField #}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ block('fieldLabel') }}
+        {% for key, label  in field.options %}
+            {% set checked = field.isset(key) ? ' checked="checked"' : '' %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="{{ element.name }}[]" value="{{ key }}"{{ checked }}>{{ label }}
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block fieldPassword %}
     {{ block('fieldDefault') }}
     {{ block('errorWarnings') }}
@@ -176,6 +174,14 @@
     </div>
     {{ block('errorWarnings') }}
 {%- endblock -%}
+
+{% block fieldSection %}
+    {# @var field \KikCMS\Classes\WebForm\Fields\Section #}
+    <div class="section section-{{ field.key }}">
+        {% set fields = field.fieldMap %}
+        {{ block('fields') }}
+    </div>
+{% endblock %}
 
 {%- block fieldSelectDataTable -%}
     {{ block('fieldDataTable') }}

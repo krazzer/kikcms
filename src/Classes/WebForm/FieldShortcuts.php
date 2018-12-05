@@ -18,6 +18,7 @@ use KikCMS\Classes\WebForm\Fields\MultiCheckboxField;
 use KikCMS\Classes\WebForm\Fields\PasswordField;
 use KikCMS\Classes\WebForm\Fields\RadioButtonField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
+use KikCMS\Classes\WebForm\Fields\Section;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Classes\WebForm\Fields\TextareaField;
@@ -181,6 +182,16 @@ trait FieldShortcuts
         $validators = [new ReCaptcha];
 
         return $this->addField(new ReCaptchaField($label, $validators));
+    }
+
+    /**
+     * @param string $key
+     * @param array $fields
+     * @return Section
+     */
+    public function addSection(string $key, array $fields): Field
+    {
+        return $this->addField(new Section($key, $fields));
     }
 
     /**

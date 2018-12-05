@@ -122,7 +122,7 @@ abstract class WebForm extends Renderable
     {
         $field->setForm($this);
 
-        if($this->fieldMap->has($field->getKey())){
+        if ($this->fieldMap->has($field->getKey())) {
             throw new Exception('A field with key "' . $field->getKey() . '" already exists');
         }
 
@@ -432,25 +432,25 @@ abstract class WebForm extends Renderable
         $this->renderDataTableFields();
 
         return $this->renderView($this->formTemplate, [
-            'class'               => static::class,
-            'allowedFinderAccess' => $this->acl->allowed(Permission::ACCESS_FINDER),
-            'security'            => $this->security,
-            'form'                => $this->form,
-            'fields'              => $this->fieldMap,
-            'tabs'                => $this->tabs,
-            'filters'             => $this->filters,
-            'displaySendButton'   => $this->displaySendButton,
-            'sendButtonClass'     => $this->sendButtonClass,
-            'currentTab'          => $this->getCurrentTab(),
-            'fieldsWithoutTab'    => $this->getFieldsWithoutTab(),
-            'formId'              => $this->getFormId(),
-            'sendButtonLabel'     => $this->getSendButtonLabel(),
-            'placeHolderAsLabel'  => $this->isPlaceHolderAsLabel(),
-            'instance'            => $this->getInstance(),
-            'jsData'              => $this->getJsData(),
-            'anotherFormIsPosted' => $this->anotherFormIsPosted(),
-            'errorContainer'      => $errorContainer,
-            'webForm'             => $this,
+            'class'                  => static::class,
+            'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
+            'security'               => $this->security,
+            'form'                   => $this->form,
+            'fields'                 => $this->fieldMap,
+            'tabs'                   => $this->tabs,
+            'filters'                => $this->filters,
+            'displaySendButton'      => $this->displaySendButton,
+            'sendButtonClass'        => $this->sendButtonClass,
+            'currentTab'             => $this->getCurrentTab(),
+            'fieldsWithoutContainer' => $this->getFieldsWithoutContainer(),
+            'formId'                 => $this->getFormId(),
+            'sendButtonLabel'        => $this->getSendButtonLabel(),
+            'placeHolderAsLabel'     => $this->isPlaceHolderAsLabel(),
+            'instance'               => $this->getInstance(),
+            'jsData'                 => $this->getJsData(),
+            'anotherFormIsPosted'    => $this->anotherFormIsPosted(),
+            'errorContainer'         => $errorContainer,
+            'webForm'                => $this,
         ]);
     }
 
@@ -521,19 +521,21 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * Get all fields that are not in a Tab or Section
+     *
      * return Field[]
      */
-    private function getFieldsWithoutTab()
+    private function getFieldsWithoutContainer()
     {
-        $fieldsWithoutTab = [];
+        $fieldsWithoutContainer = [];
 
         foreach ($this->fieldMap as $field) {
-            if ( ! $field->getTab()) {
-                $fieldsWithoutTab[] = $field;
+            if ( ! $field->getTab() && ! $field->getSection()) {
+                $fieldsWithoutContainer[] = $field;
             }
         }
 
-        return $fieldsWithoutTab;
+        return $fieldsWithoutContainer;
     }
 
     /**

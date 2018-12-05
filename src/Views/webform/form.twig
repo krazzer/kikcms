@@ -29,14 +29,15 @@
             {% for index, tab in tabs %}
                 {% set key = (tab.key ?: index) ~ '' %}
                 <div class="tab-{{ key }} tab-content{{ (key is same as (currentTab ~ '')) ? ' active' }}">
-                    {% set fields = tab.fieldMap %}
+                    {% set fields = tab.fieldsWithoutSection %}
                     {{ block('fields') }}
                 </div>
             {% endfor %}
         </div>
-        {% set fields = fieldsWithoutTab %}
+        {% set fields = fieldsWithoutContainer %}
         {{ block('fields') }}
     {% else %}
+        {% set fields = fieldsWithoutContainer %}
         {{ block('fields') }}
     {% endif %}
 

@@ -25,13 +25,11 @@ class Tab
      */
     public function __construct(string $name, array $fields)
     {
-        $this->name = $name;
-
+        $this->name     = $name;
         $this->fieldMap = new FieldMap();
 
         foreach ($fields as $field) {
-            $key = $field->getKey() ?: $field->getElement()->getName();
-            $this->fieldMap->add($field, $key);
+            $this->fieldMap->add($field, $field->getKey());
         }
     }
 
@@ -84,6 +82,22 @@ class Tab
     public function getFieldMap(): FieldMap
     {
         return $this->fieldMap;
+    }
+
+    /**
+     * @return Field[]
+     */
+    public function getFieldsWithoutSection(): array
+    {
+        $fieldsWithoutSection = [];
+
+        foreach ($this->fieldMap as $field){
+            if( ! $field->getSection()){
+                $fieldsWithoutSection[] = $field;
+            }
+        }
+
+        return $fieldsWithoutSection;
     }
 
     /**

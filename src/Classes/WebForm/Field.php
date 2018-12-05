@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\Fields\Section;
 use Phalcon\Forms\Element;
 use Phalcon\Forms\ElementInterface;
 
@@ -28,6 +29,7 @@ abstract class Field
     const TYPE_WYSIWYG           = 'wysiwyg';
     const TYPE_RECAPTCHA         = 'reCaptcha';
     const TYPE_PASSWORD          = 'password';
+    const TYPE_SECTION           = 'section';
 
     /** @var WebForm|DataForm */
     protected $form;
@@ -43,6 +45,9 @@ abstract class Field
 
     /** @var Tab */
     private $tab;
+
+    /** @var Section */
+    private $section;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private $required = false;
@@ -292,6 +297,24 @@ abstract class Field
     public function setTab(Tab $tab): Field
     {
         $this->tab = $tab;
+        return $this;
+    }
+
+    /**
+     * @return Section|null
+     */
+    public function getSection(): ?Section
+    {
+        return $this->section;
+    }
+
+    /**
+     * @param Section $section
+     * @return Field
+     */
+    public function setSection(Section $section): Field
+    {
+        $this->section = $section;
         return $this;
     }
 
