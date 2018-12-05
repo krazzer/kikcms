@@ -5,6 +5,7 @@ namespace KikCMS\DataTables;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
@@ -32,6 +33,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property UserSettingsService $userSettingsService
  * @property PageService $pageService
  * @property CacheService $cacheService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class Pages extends DataTable
 {
@@ -136,7 +138,7 @@ class Pages extends DataTable
      */
     public function getModel(): string
     {
-        return Page::class;
+        return $this->websiteSettings->getPageClass();
     }
 
     /**

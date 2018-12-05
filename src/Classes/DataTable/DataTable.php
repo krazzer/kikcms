@@ -23,6 +23,7 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\LanguageService;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Relation;
 use Phalcon\Tag;
 
 /**
@@ -409,6 +410,10 @@ abstract class DataTable extends Renderable
         }
 
         if ( ! $relation = $this->modelService->getRelation($model, $relationKey)) {
+            return null;
+        }
+
+        if($relation->getType() !== Relation::HAS_MANY){
             return null;
         }
 

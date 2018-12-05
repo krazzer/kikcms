@@ -4,6 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -34,6 +35,7 @@ use Phalcon\Validation\Validator\StringLength;
  * @property TemplateFieldsBase $templateFields
  * @property AccessControl $acl
  * @property PagesDataTableService $pagesDataTableService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class PageForm extends DataForm
 {
@@ -119,7 +121,7 @@ class PageForm extends DataForm
      */
     public function getModel(): string
     {
-        return Page::class;
+        return $this->websiteSettings->getPageClass();
     }
 
     /**

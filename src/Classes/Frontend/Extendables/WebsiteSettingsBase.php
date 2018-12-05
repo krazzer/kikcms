@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Models\Page;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\ObjectLists\MenuGroupMap;
 use Phalcon\Mvc\Router\Group;
@@ -34,6 +35,14 @@ class WebsiteSettingsBase extends WebsiteExtendable
     public function getCustomCss(): ?string
     {
         return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageClass(): string
+    {
+        return Page::class;
     }
 
     /**
