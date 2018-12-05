@@ -6,10 +6,8 @@ use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
-use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
-use KikCMS\Classes\WebForm\Field;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
@@ -67,10 +65,10 @@ class StorageService extends Injectable
             return false;
         }
 
-        $success = $this->db->commit();
-
-        if ($success) {
-            $this->removeSubDataTableTemporaryKeysCache();
+        if ($success = $this->db->commit()) {
+            foreach ($this->storageData->getDataTableFieldMap() as $field) {
+                $field->getDataTable()->removeNewIdCache();
+            }
         }
 
         return $success;
@@ -182,20 +180,12 @@ class StorageService extends Injectable
      */
     private function storePostMain()
     {
-        $model = $this->storageData->getTable();
+        $model  = $this->storageData->getTable();
+        $object = $this->storageData->getObject();
 
-        /** @var Field $field */
-        foreach ($this->storageData->getFieldMap() as $key => $field) {
-            if ( ! $field instanceof DataTableField) {
-                continue;
-            }
-
-            $dataTable = $field->getDataTable();
-
-            $keysToUpdate = $dataTable->getCachedNewIds();
-            $relatedModel = $dataTable->getModel();
-
-            $object = $this->storageData->getObject();
+        foreach ($this->storageData->getDataTableFieldMap() as $key => $field) {
+            $keysToUpdate = $field->getDataTable()->getCachedNewIds();
+            $relatedModel = $field->getDataTable()->getModel();
 
             $relation = $object->getModelsManager()->getRelationByAlias($model, $key);
 
@@ -213,17 +203,5 @@ class StorageService extends Injectable
         }
 
         $this->executeAfterStoreEvents();
-    }
-
-    /**
-     * Remove temporary keys cache file
-     */
-    private function removeSubDataTableTemporaryKeysCache()
-    {
-        foreach ($this->storageData->getFieldMap() as $field) {
-            if ($field instanceof DataTableField) {
-                $field->getDataTable()->removeNewIdCache();
-            }
-        }
     }
 }

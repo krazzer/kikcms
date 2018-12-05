@@ -249,4 +249,20 @@ class StorageData
         $this->object = $object;
         return $this;
     }
+
+    /**
+     * @return DataTableField[]
+     */
+    public function getDataTableFieldMap(): array
+    {
+        $dataTableFields = [];
+
+        foreach ($this->fieldMap as $key => $field){
+            if($field instanceof DataTableField){
+                $dataTableFields[$key] = $field;
+            }
+        }
+
+        return $dataTableFields;
+    }
 }
