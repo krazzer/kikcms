@@ -121,4 +121,10 @@
         text-decoration: none;
         outline: none;
     }
+
+    .header{
+        font-size: $fontSizeMedium;
+        color: $grayMedium;
+        margin-bottom: 15px;
+    }
 }

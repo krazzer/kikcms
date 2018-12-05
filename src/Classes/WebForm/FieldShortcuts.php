@@ -11,6 +11,7 @@ use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\FileField;
+use KikCMS\Classes\WebForm\Fields\Header;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
@@ -112,6 +113,15 @@ trait FieldShortcuts
     }
 
     /**
+     * @param string $label
+     * @return Header
+     */
+    public function addHeader(string $label): Field
+    {
+        return $this->addField(new Header($label));
+    }
+
+    /**
      * Add HTML to a form
      *
      * @param string $key
@@ -119,7 +129,7 @@ trait FieldShortcuts
      * @param string $content
      * @return Field|HtmlField
      */
-    public function addHtmlField(string $key, ?string $label, string $content)
+    public function addHtmlField(string $key, ?string $label, string $content): Field
     {
         return $this->addField(new HtmlField($key, $label, $content));
     }

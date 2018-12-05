@@ -30,6 +30,7 @@ abstract class Field
     const TYPE_RECAPTCHA         = 'reCaptcha';
     const TYPE_PASSWORD          = 'password';
     const TYPE_SECTION           = 'section';
+    const TYPE_HEADER            = 'header';
 
     /** @var WebForm|DataForm */
     protected $form;
