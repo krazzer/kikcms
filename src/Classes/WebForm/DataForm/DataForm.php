@@ -5,7 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
-use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Classes\WebForm\Fields\DateField;
@@ -354,10 +354,10 @@ abstract class DataForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function renderKeyedDataTableField(KeyedDataTableField $field)
+    protected function renderDataTableField(DataTableField $field)
     {
         $langCode     = $this->getFilters()->getLanguageCode();
-        $parentEditId = $this->getParentEditIdForKeyedDataTableField($field);
+        $parentEditId = $this->getParentEditIdForDataTableField($field);
 
         $field->getDataTable()->getFilters()
             ->setParentRelationKey($field->getKey())
@@ -393,10 +393,10 @@ abstract class DataForm extends WebForm
      * - 0, if their is a relation, but the current forms' object has not been saved yet
      * - null, if there is no relation at all
      *
-     * @param KeyedDataTableField $field
+     * @param DataTableField $field
      * @return int|null
      */
-    private function getParentEditIdForKeyedDataTableField(KeyedDataTableField $field): ?int
+    private function getParentEditIdForDataTableField(DataTableField $field): ?int
     {
         if ($object = $this->getObject()) {
             return (int) $object->id;

@@ -13,7 +13,7 @@ use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
-use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\MultiCheckboxField;
 use KikCMS\Classes\WebForm\Fields\PasswordField;
 use KikCMS\Classes\WebForm\Fields\RadioButtonField;
@@ -91,11 +91,11 @@ trait FieldShortcuts
      * @param string $dataTableClass
      * @param string $label
      *
-     * @return Field|KeyedDataTableField
+     * @return Field|DataTableField
      */
-    public function addKeyedDataTableField(string $key, string $dataTableClass, string $label)
+    public function addDataTableField(string $key, string $dataTableClass, string $label)
     {
-        return $this->addField(new KeyedDataTableField($key, $dataTableClass, $label));
+        return $this->addField(new DataTableField($key, $dataTableClass, $label));
     }
 
     /**

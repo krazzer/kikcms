@@ -21,9 +21,9 @@ class SettingsForm extends WebForm
     public function initialize()
     {
         if($this->acl->allowed(Languages::class)) {
-            $this->addKeyedDataTableField('languages', Languages::class, $this->translator->tl("fields.languages"));
+            $this->addDataTableField('languages', Languages::class, $this->translator->tl("fields.languages"));
         }
 
-        $this->addKeyedDataTableField('translations', Translations::class, $this->translator->tl("fields.translations"));
+        $this->addDataTableField('translations', Translations::class, $this->translator->tl("fields.translations"));
     }
 }

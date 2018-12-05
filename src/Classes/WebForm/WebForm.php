@@ -10,7 +10,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\DateField;
-use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
@@ -424,14 +424,14 @@ abstract class WebForm extends Renderable
      */
     protected function renderDataTableFields()
     {
-        /** @var SelectDataTableField|KeyedDataTableField $field */
+        /** @var SelectDataTableField|DataTableField $field */
         foreach ($this->getFieldMap() as $key => $field) {
-            if ($field->getType() == Field::TYPE_SELECT_DATA_TABLE) {
+            if ($field instanceof SelectDataTableField) {
                 $this->renderSelectDataTableField($field);
             }
 
-            if ($field->getType() == Field::TYPE_KEYED_DATA_TABLE) {
-                $this->renderKeyedDataTableField($field);
+            if ($field instanceof DataTableField) {
+                $this->renderDataTableField($field);
             }
         }
     }
@@ -468,9 +468,9 @@ abstract class WebForm extends Renderable
     }
 
     /**
-     * @param KeyedDataTableField $field
+     * @param DataTableField $field
      */
-    protected function renderKeyedDataTableField(KeyedDataTableField $field)
+    protected function renderDataTableField(DataTableField $field)
     {
         $field->setRenderedDataTable($field->getDataTable()->render());
     }
@@ -623,7 +623,7 @@ abstract class WebForm extends Renderable
     private function reUseDataTableInstances()
     {
         foreach ($this->fieldMap as $key => $field) {
-            if ($field instanceOf KeyedDataTableField && $this->request->hasPost($key)) {
+            if ($field instanceOf DataTableField && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
                 $field->getDataTable()->setInstance($instance);
                 $field->setDefault($instance);

@@ -6,7 +6,7 @@ use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
-use KikCMS\Classes\WebForm\Fields\KeyedDataTableField;
+use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Classes\WebForm\Field;
@@ -186,7 +186,7 @@ class StorageService extends Injectable
 
         /** @var Field $field */
         foreach ($this->storageData->getFieldMap() as $key => $field) {
-            if ( ! $field instanceof KeyedDataTableField) {
+            if ( ! $field instanceof DataTableField) {
                 continue;
             }
 
@@ -207,7 +207,7 @@ class StorageService extends Injectable
                     [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
 
                 if ( ! $success) {
-                    throw new Exception('KeyedDataTableField values not updated');
+                    throw new Exception('DataTableField values not updated');
                 }
             }
         }
@@ -221,7 +221,7 @@ class StorageService extends Injectable
     private function removeSubDataTableTemporaryKeysCache()
     {
         foreach ($this->storageData->getFieldMap() as $field) {
-            if ($field instanceof KeyedDataTableField) {
+            if ($field instanceof DataTableField) {
                 $field->getDataTable()->removeNewIdCache();
             }
         }

@@ -7,7 +7,7 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Hidden;
 
-class KeyedDataTableField extends Field
+class DataTableField extends Field
 {
     /** @var string */
     private $class;
@@ -50,7 +50,7 @@ class KeyedDataTableField extends Field
      */
     public function getType()
     {
-        return Field::TYPE_KEYED_DATA_TABLE;
+        return Field::TYPE_DATA_TABLE;
     }
 
     /**
@@ -71,9 +71,9 @@ class KeyedDataTableField extends Field
 
     /**
      * @param string $renderedDataTable
-     * @return KeyedDataTableField
+     * @return DataTableField
      */
-    public function setRenderedDataTable(string $renderedDataTable): KeyedDataTableField
+    public function setRenderedDataTable(string $renderedDataTable): DataTableField
     {
         $this->renderedDataTable = $renderedDataTable;
         return $this;
