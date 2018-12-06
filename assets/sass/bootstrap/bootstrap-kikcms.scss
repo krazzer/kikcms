@@ -88,6 +88,14 @@ textarea.form-control {
             margin: 0 0 10px 0;
         }
     }
+
+    &:last-child{
+        margin-bottom: 0;
+    }
+}
+
+.type-checkbox:last-child .checkbox{
+    margin-bottom: 0;
 }
 
 .tab-content {

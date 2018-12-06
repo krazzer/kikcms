@@ -12,17 +12,19 @@
 <div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}" data-id="{{ filters.editId }}">
     {{ form({name: 'form'}) }}
 
-    {% if flash and not anotherFormIsPosted %}
-        {{ flash.output }}
-    {% endif %}
+    <div class="flashContainer">
+        {%- if not anotherFormIsPosted -%}
+            {{ flash.output }}
+        {%- endif -%}
 
-    {% if errorContainer.hasFormErrors %}
-        {% for error in errorContainer.formErrors %}
-            <div class="alert alert-danger">
-                <i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}
-            </div>
-        {% endfor %}
-    {% endif %}
+        {%- if errorContainer.hasFormErrors -%}
+            {% for error in errorContainer.formErrors %}
+                <div class="alert alert-danger">
+                    <i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}
+                </div>
+            {% endfor %}
+        {%- endif -%}
+    </div>
 
     {% if tabs %}
         <div class="tab-contents">
