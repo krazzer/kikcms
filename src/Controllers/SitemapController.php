@@ -36,7 +36,7 @@ class SitemapController extends BaseController
         $links = [];
 
         foreach ($pageLanguages as $pageLanguage){
-            if( ! $pageLanguage->url){
+            if( ! $pageLanguage->slug){
                 continue;
             }
 
