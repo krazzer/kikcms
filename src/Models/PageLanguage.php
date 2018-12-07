@@ -19,7 +19,7 @@ class PageLanguage extends Model
     const FIELD_LANGUAGE_CODE   = 'language_code';
     const FIELD_ACTIVE          = 'active';
     const FIELD_NAME            = 'name';
-    const FIELD_URL             = 'url';
+    const FIELD_SLUG            = 'slug';
     const FIELD_SEO_TITLE       = 'seo_title';
     const FIELD_SEO_DESCRIPTION = 'seo_description';
     const FIELD_SEO_KEYWORDS    = 'seo_keywords';
@@ -28,7 +28,7 @@ class PageLanguage extends Model
     private $aliasName;
 
     /** @var string|null */
-    private $url;
+    private $slug;
 
     /**
      * Remove cache
@@ -47,7 +47,7 @@ class PageLanguage extends Model
     public function beforeSave()
     {
         // url is set, so do nothing
-        if ($this->url) {
+        if ($this->slug) {
             return;
         }
 
@@ -56,7 +56,7 @@ class PageLanguage extends Model
             return;
         }
 
-        $this->url = $urlPath = $this->getUrlService()->toSlug($this->getName());
+        $this->slug = $urlPath = $this->getUrlService()->toSlug($this->getName());
 
         if ($parent = $this->getParentWithSlug()) {
             $urlPath = $this->getUrlService()->getUrlByPageLanguage($parent) . '/' . $urlPath;
@@ -148,18 +148,18 @@ class PageLanguage extends Model
     /**
      * @return null|string
      */
-    public function getUrl(): ?string
+    public function getSlug(): ?string
     {
-        return $this->url;
+        return $this->slug;
     }
 
     /**
-     * @param null|string $url
+     * @param null|string $slug
      * @return PageLanguage
      */
-    public function setUrl(?string $url): PageLanguage
+    public function setSlug(?string $slug): PageLanguage
     {
-        $this->url = $url;
+        $this->slug = $slug;
 
         return $this;
     }

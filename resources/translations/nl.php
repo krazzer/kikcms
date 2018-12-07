@@ -83,8 +83,8 @@ return [
             'menu'            => 'Menu',
             'link'            => 'Link',
             'alias'           => 'Alias',
-            'urlPlaceholder'  => 'Laat leeg om een url te genereren a.d.h.v. pagina naam',
-            'urlExists'       => 'De gekozen url is al in gebruik',
+            'slugPlaceholder' => 'Laat leeg om een slug te genereren a.d.h.v. pagina naam',
+            'slugExists'      => 'De gekozen slug is al in gebruik',
             'preview'         => 'Bekijk pagina',
             'titles'          => [
                 'link'     => 'Deze pagina linkt door naar een andere pagina',
@@ -206,7 +206,7 @@ return [
         'translations'   => 'Vertalingen',
         'type'           => 'Type',
         'url'            => 'Url',
-        'slug'           => 'Slug onderdeel',
+        'slug'           => 'Slug',
         'variable'       => 'Variabele',
     ],
 
@@ -340,6 +340,7 @@ return [
     'pages' => [
         'warningTemplateChange' => 'Als u van template wisselt, gaan niet-opgeslagen wijzigingen verloren, ' .
             'wilt u zeker weten doorgaan?',
+        'slugHelpText'          => 'De slug is een deel van een URL, bijvoorbeeld "diensten" in https://website.nl/diensten/cms',
     ],
 
     'permissions' => [

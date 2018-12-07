@@ -35,7 +35,7 @@ class UrlService extends Injectable
         $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
 
         foreach ($pageLanguageMap as $pageLanguage) {
-            $pageLanguage->setUrl($this->toSlug($this->getName($pageLanguage)));
+            $pageLanguage->setSlug($this->toSlug($this->getName($pageLanguage)));
 
             if ($this->urlExistsForPageLanguage($pageLanguage)) {
                 $this->deduplicateAndStoreNewUrl($pageLanguage);
@@ -64,7 +64,7 @@ class UrlService extends Injectable
             return;
         }
 
-        $pageLanguage->setUrl(basename($newUrl));
+        $pageLanguage->setSlug(basename($newUrl));
     }
 
     /**
@@ -111,7 +111,7 @@ class UrlService extends Injectable
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'pl.page_id = p.id', 'p')
             ->groupBy(PageLanguage::FIELD_PAGE_ID)
-            ->where(PageLanguage::FIELD_URL . ' IS NULL')
+            ->where(PageLanguage::FIELD_SLUG . ' IS NULL')
             ->inWhere(Page::FIELD_TYPE, [Page::TYPE_PAGE, Page::TYPE_ALIAS]);
 
         return $this->dbService->getValues($query);
@@ -136,17 +136,17 @@ class UrlService extends Injectable
         }
 
         $query = (new Builder)
-            ->columns(['pl.url'])
+            ->columns(['pl.slug'])
             ->from(['p' => Page::class])
             ->join(PageLanguage::class, 'pl.page_id = p.id', 'pl')
-            ->where('p.lft < :lft: AND p.rgt > :rgt: AND pl.url IS NOT NULL AND pl.language_code = :code:', [
+            ->where('p.lft < :lft: AND p.rgt > :rgt: AND pl.slug IS NOT NULL AND pl.language_code = :code:', [
                 'lft'  => $page->lft,
                 'rgt'  => $page->rgt,
                 'code' => $pageLanguage->getLanguageCode(),
             ])
             ->orderBy('p.lft');
 
-        return '/' . implode('/', array_merge($this->dbService->getValues($query), [$pageLanguage->getUrl()]));
+        return '/' . implode('/', array_merge($this->dbService->getValues($query), [$pageLanguage->getSlug()]));
     }
 
     /**
@@ -234,7 +234,7 @@ class UrlService extends Injectable
                 'langCode'        => $languageCode,
                 'defaultLangCode' => $defaultLangCode,
             ])
-            ->columns(['p.id', 'p.parent_id', 'pl.name', 'pl.url', 'p.type'])
+            ->columns(['p.id', 'p.parent_id', 'pl.name', 'pl.slug', 'p.type'])
             ->orderBy('p.lft');
 
         return $pageUrlDataQuery->getQuery()->execute()->toArray();
@@ -335,15 +335,15 @@ class UrlService extends Injectable
     {
         $slugs = explode('/', $url);
 
-        $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.url IS NOT NULL';
+        $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.slug IS NOT NULL';
 
         $query = (new Builder)
-            ->columns(['pl.id', 'pla.url'])
+            ->columns(['pl.id', 'pla.slug'])
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.lft < p.lft AND pa.rgt > p.rgt', 'pa')
             ->leftJoin(PageLanguage::class, $pageLanguageJoin, 'pla')
-            ->where('pl.url = :url:', ['url' => last($slugs)])
+            ->where('pl.slug = :slug:', ['slug' => last($slugs)])
             ->orderBy('pl.id, pa.lft');
 
         $result = $this->dbService->getKeyedValues($query, true);

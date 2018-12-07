@@ -139,7 +139,7 @@ class PageRearrangeService extends Injectable
     {
         foreach ($page->pageLanguages as $pageLanguage) {
             // if there's no url, we don't need to check for dupes
-            if ( ! $pageLanguage->getUrl()) {
+            if ( ! $pageLanguage->getSlug()) {
                 continue;
             }
 

@@ -36,7 +36,7 @@ class LinkForm extends PageForm
         $this->addTextField('pageLanguage*:name', $nameLabel, [new PresenceOf()]);
         $linkField = $this->addAutoCompleteField(Page::FIELD_LINK, $linkLabel, $urlsRoute);
         $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_LINK);
-        $this->addTextField('pageLanguage*:url', $urlLabel, $urlValidation)->setHelpText($urlHelpText);
+        $this->addTextField('pageLanguage*:slug', $urlLabel, $urlValidation)->setHelpText($urlHelpText);
 
         $this->addFieldTransformer(new UrlToId($linkField, $langCode));
 

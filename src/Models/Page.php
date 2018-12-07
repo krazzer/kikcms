@@ -205,7 +205,7 @@ class Page extends Model
 
         $pageLanguage = $this->parent->getPageLanguageByLangCode($langCode);
 
-        if ($pageLanguage && $pageLanguage->getUrl()) {
+        if ($pageLanguage && $pageLanguage->getSlug()) {
             return $pageLanguage;
         }
 

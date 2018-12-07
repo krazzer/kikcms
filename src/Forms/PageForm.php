@@ -39,7 +39,7 @@ use Phalcon\Validation\Validator\StringLength;
  */
 class PageForm extends DataForm
 {
-    const FIELD_URL = 'pageLanguage*:url';
+    const FIELD_SLUG = 'pageLanguage*:slug';
 
     /** @inheritdoc */
     protected $saveCreatedAt = true;
@@ -76,8 +76,9 @@ class PageForm extends DataForm
         $tabAdvancedFields = [
             $templateField,
 
-            $this->addTextField(self::FIELD_URL, $this->translator->tl('fields.url'), $urlValidation)
-                ->setPlaceholder($this->translator->tl('dataTables.pages.urlPlaceholder')),
+            $this->addTextField(self::FIELD_SLUG, $this->translator->tl('fields.slug'), $urlValidation)
+                ->setPlaceholder($this->translator->tl('dataTables.pages.slugPlaceholder'))
+                ->setHelpText($this->translator->tl('pages.slugHelpText')),
 
             $this->addCheckboxField('pageLanguage*:' . PageLanguage::FIELD_ACTIVE, $this->translator->tl('fields.active'))
                 ->setDefault(1)
@@ -139,7 +140,7 @@ class PageForm extends DataForm
             return $errorContainer;
         }
 
-        if ( ! $urlPath = $input[self::FIELD_URL]) {
+        if ( ! $urlPath = $input[self::FIELD_SLUG]) {
             return $errorContainer;
         }
 
@@ -150,7 +151,7 @@ class PageForm extends DataForm
         }
 
         if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
-            $errorContainer->addFieldError(self::FIELD_URL, $this->translator->tl('dataTables.pages.urlExists'));
+            $errorContainer->addFieldError(self::FIELD_SLUG, $this->translator->tl('dataTables.pages.slugExists'));
         }
 
         return $errorContainer;
