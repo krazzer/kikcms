@@ -449,12 +449,12 @@ class Services extends BaseServices
         $view->setNamespaces($namespaces);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                $env   = $di->get('config')->get('application')->get('env');
-                $cache = $env == KikCMSConfig::ENV_PROD ? SITE_PATH . 'cache/twig/' : false;
+                $isDev = $di->get('config')->get('application')->get('env') == KikCMSConfig::ENV_DEV;
+                $cache = $isDev ? false : SITE_PATH . 'cache/twig/';
 
                 return new Twig($view, $di, [
                     'cache' => $cache,
-                    'debug' => $env == KikCMSConfig::ENV_DEV,
+                    'debug' => $isDev,
                 ], $view->getNamespaces());
             }
         ]);
