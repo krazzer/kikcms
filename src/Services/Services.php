@@ -145,10 +145,10 @@ class Services extends BaseServices
      */
     protected function getWebsiteSimpleServices(): array
     {
-        /** @var WebsiteService $websiteService */
-        $websiteServices = $this->get('websiteSettings');
+        /** @var WebsiteSettingsBase $websiteSettings */
+        $websiteSettings = $this->get('websiteSettings');
 
-        $services       = $websiteServices->getServices();
+        $services       = $websiteSettings->getServices();
         $simpleServices = [];
 
         foreach ($services as $service) {
