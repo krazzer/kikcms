@@ -115,8 +115,8 @@ class BaseServices extends ApplicationServices
         }
 
         /** @var WebsiteSettings $websiteSettings */
-        $websiteServices = $this->get('websiteSettings');
-        $overloadedServices = $websiteServices->getServices();
+        $websiteSettings = $this->get('websiteSettings');
+        $overloadedServices = $websiteSettings->getServices();
 
         foreach ($overloadedServices as $name => $callable){
             if( ! is_callable($callable)){

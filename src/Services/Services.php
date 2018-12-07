@@ -148,7 +148,12 @@ class Services extends BaseServices
         /** @var WebsiteSettingsBase $websiteSettings */
         $websiteSettings = $this->get('websiteSettings');
 
-        $services       = $websiteSettings->getServices();
+        $services = $websiteSettings->getServices();
+
+        foreach (glob(SITE_PATH . "app/Services/*.php", GLOB_NOSORT) as $filename) {
+            $services[] = 'Website\Services\\' . basename(substr($filename, 0, -4));
+        }
+
         $simpleServices = [];
 
         foreach ($services as $service) {
