@@ -278,7 +278,7 @@ class FrontendHelper extends Injectable
             ]);
         }
 
-        return '<a href="' . $fullPage->getUrl() . '">' . $fullPage->getName() . '</a>';
+        return '<a title="' . $fullPage->getName() . '" href="' . $fullPage->getUrl() . '">' . $fullPage->getName() . '</a>';
     }
 
     /**
