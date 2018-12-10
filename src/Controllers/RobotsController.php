@@ -7,6 +7,7 @@ namespace KikCMS\Controllers;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\UrlService;
 
@@ -37,6 +38,11 @@ class RobotsController extends BaseController
 
         foreach ($pageLanguages as $pageLanguage) {
             if ( ! $pageLanguage->slug) {
+                continue;
+            }
+
+            // exclude not found page
+            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_NOT_FOUND){
                 continue;
             }
 
