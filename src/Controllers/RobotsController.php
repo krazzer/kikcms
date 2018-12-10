@@ -13,9 +13,9 @@ use KikCMS\Services\Pages\UrlService;
 /**
  * @property UrlService $urlService
  */
-class SitemapController extends BaseController
+class RobotsController extends BaseController
 {
-    public function indexAction()
+    public function sitemapAction()
     {
         $expireDate = new DateTime();
         $expireDate->modify('+1 day');
@@ -35,8 +35,8 @@ class SitemapController extends BaseController
 
         $links = [];
 
-        foreach ($pageLanguages as $pageLanguage){
-            if( ! $pageLanguage->slug){
+        foreach ($pageLanguages as $pageLanguage) {
+            if ( ! $pageLanguage->slug) {
                 continue;
             }
 
@@ -65,5 +65,14 @@ class SitemapController extends BaseController
         $this->response->setContent($sitemap->saveXML());
 
         return $this->response;
+    }
+
+    public function robotsAction()
+    {
+        $this->response->setHeader('Content-type', 'text/plain');
+
+        return $this->view->getPartial('frontend/robots', [
+            'sitemapUrl' => $this->url->getBaseUri() . 'sitemap.xml'
+        ]);
     }
 }

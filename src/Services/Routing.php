@@ -97,7 +97,8 @@ class Routing extends Injectable
         $frontend->add('/', "Frontend::page")->setName('page');
         $frontend->add('/page/{lang:[a-z]{2}}/{id:[0-9a-z\-]+}', "Frontend::pageByKey");
         $frontend->add('/page/{lang:[a-z]{2}}/{id:[0-9]+}', "Frontend::pageById");
-        $frontend->add('/sitemap.xml', "Sitemap::index");
+        $frontend->add('/sitemap.xml', "Robots::sitemap");
+        $frontend->add('/robots.txt', "Robots::robots");
 
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
 
