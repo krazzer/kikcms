@@ -49,7 +49,7 @@ class TinyMceService extends Injectable
         foreach ($linkList as $i => $item)
         {
             if($item['type'] !== Page::TYPE_MENU){
-                $subUrl = $url . '/' . $item['url'];
+                $subUrl = $url . '/' . $item['slug'];
             } else {
                 $subUrl = $url;
             }
