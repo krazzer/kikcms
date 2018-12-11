@@ -73,6 +73,7 @@ class CacheNode
      */
     public function getValueOutput(): string
     {
+        // don't show value when it has subnodes
         if($this->getCacheNodeMap()->count() > 0){
             return '';
         }
