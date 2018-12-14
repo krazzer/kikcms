@@ -1,4 +1,4 @@
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="tests/autoload.php" colors="true">
     <testsuites>
         <testsuite name="KikCMS Test Suite">
             <directory>tests/</directory>

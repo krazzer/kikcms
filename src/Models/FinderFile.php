@@ -38,10 +38,7 @@ class FinderFile extends Model
      */
     public static function getById($id)
     {
-        /** @var FinderFile $finderFile */
-        $finderFile = parent::getById($id);
-
-        return $finderFile;
+        return parent::getById($id);
     }
 
     /**
@@ -51,10 +48,7 @@ class FinderFile extends Model
      */
     public static function getByIdList(array $ids)
     {
-        /** @var FinderFile[] $finderFiles */
-        $finderFiles = parent::getByIdList($ids);
-
-        return $finderFiles;
+        return parent::getByIdList($ids);
     }
 
     /**

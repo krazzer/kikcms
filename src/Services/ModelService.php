@@ -4,10 +4,17 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\DataTable\DataTable;
 use KikCmsCore\Classes\Model;
+use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\Resultset;
 
+/**
+ * @property DbService $dbService
+ */
 class ModelService extends Injectable
 {
     /**
@@ -17,7 +24,7 @@ class ModelService extends Injectable
      */
     public function getRelation($model, string $alias): ?Relation
     {
-        if( ! $model instanceof Model){
+        if ( ! $model instanceof Model) {
             $model = $this->getModelByClassName($model);
         }
 
@@ -43,5 +50,25 @@ class ModelService extends Injectable
         $model = $this->getModelByClassName($className);
 
         return $model::getById($id);
+    }
+
+    /**
+     * @param string $className
+     * @param array $ids
+     * @return Model[]|Resultset
+     */
+    public function getObjects(string $className, array $ids): array
+    {
+        $query = (new Builder)->from($className)
+            ->inWhere(DataTable::TABLE_KEY, $ids);
+
+        $objects = [];
+        $results = $this->dbService->getObjects($query);
+
+        foreach ($results as $object){
+            $objects[] = $object;
+        }
+
+        return $objects;
     }
 }

@@ -9,7 +9,6 @@ use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
-use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -23,7 +22,6 @@ use KikCMS\Services\LanguageService;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
-use Phalcon\Tag;
 
 /**
  * @property AccessControl $acl
@@ -217,12 +215,8 @@ abstract class DataTable extends Renderable
             }
         }
 
-        /** @var Model $model */
-        $model = $this->getModel();
+        $objects = $this->modelService->getObjects($this->getModel(), $ids);
 
-        $objects = $model::getByIdList($ids);
-
-        /** @var Model $object */
         foreach ($objects as $object) {
             $object->delete();
         }
@@ -258,7 +252,7 @@ abstract class DataTable extends Renderable
             $attributes['checked'] = 'checked';
         }
 
-        return Tag::tagHtml('input', $attributes);
+        return $this->tag->tagHtml('input', $attributes);
     }
 
     /**
@@ -276,7 +270,7 @@ abstract class DataTable extends Renderable
 
         $style = 'background-image: url(' . $thumbUrl . ')';
 
-        return Tag::tagHtml('div', [
+        return $this->tag->tagHtml('div', [
             'class'          => 'thumb',
             'data-url'       => $url,
             'data-thumb-url' => $thumbUrl,
