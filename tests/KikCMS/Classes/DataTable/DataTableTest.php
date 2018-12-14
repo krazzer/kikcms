@@ -7,15 +7,18 @@ namespace KikCMS\Classes\DataTable;
 use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Url;
+use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
 use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
+use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Relation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -283,6 +286,205 @@ class DataTableTest extends TestCase
 
         $this->assertEquals('', $dataTable->formatFinderImage(null));
     }
+
+    public function testFormatValue()
+    {
+        $dataTable = new TestableDataTable();
+
+        $dataTable->setFieldFormatting('field', function ($value){ return 'test' . $value; });
+
+        $this->assertEquals('test1', $dataTable->formatValue('field', '1', []));
+        $this->assertNull($dataTable->formatValue('field2', '1', []));
+    }
+
+    public function testGetAlias()
+    {
+        $dataTable = new TestableDataTable();
+
+        $dbServiceMock = $this->createMock(DbService::class);
+
+        $dbServiceMock->expects($this->once())->method('getAliasForModel');
+
+        $dataTable->dbService = $dbServiceMock;
+
+        $dataTable->getAlias();
+    }
+
+    public function testGetAliasedTableKey()
+    {
+        /** @var MockObject|DataTable $dataTableMock */
+        $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
+            ->setMethods(['getAlias'])
+            ->getMock();
+
+        $dataTableMock->method('getAlias')->willReturn('a');
+
+        $this->assertEquals('a.' . $dataTableMock::TABLE_KEY, $dataTableMock->getAliasedTableKey());
+
+        /** @var MockObject|DataTable $dataTableMock */
+        $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
+            ->setMethods(['getAlias'])
+            ->getMock();
+
+        $dataTableMock->method('getAlias')->willReturn(null);
+
+        $this->assertEquals($dataTableMock::TABLE_KEY, $dataTableMock->getAliasedTableKey());
+    }
+
+    public function testGetFilters()
+    {
+        $languageServiceMock = $this->createMock(LanguageService::class);
+        $languageServiceMock->expects($this->once())->method('getDefaultLanguageCode')->willReturn('nl');
+
+        $dataTable = new TestableDataTable();
+        $dataTable->languageService = $languageServiceMock;
+        $dataTable->setFilters(new DataTableFilters());
+
+        $dataTable->getFilters();
+    }
+
+    public function testGetLabels()
+    {
+        $translatorMock = $this->createMock(Translator::class);
+        $translatorMock->expects($this->exactly(2))->method('tl')->willReturn('x');
+
+        $dataTable = new TestableDataTable();
+        $dataTable->translator = $translatorMock;
+
+        $this->assertEquals(['x', 'x'], $dataTable->getLabels());
+    }
+
+    public function testGetAndSetLimit()
+    {
+        $dataTable = new TestableDataTable();
+
+        $dataTable->setLimit(100);
+
+        $this->assertEquals(100, $dataTable->getLimit());
+    }
+
+    public function testGetParentRelationKey()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertNull($dataTable->getParentRelationKey());
+
+        $dataTable->getFilters()->setParentModel(User::class);
+        $dataTable->getFilters()->setParentRelationKey('relationKey');
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn(null);
+
+        $dataTable->modelService = $modelServiceMock;
+
+        $this->assertNull($dataTable->getParentRelationKey());
+
+        $relation = new Relation(Relation::HAS_ONE, User::class, [], []);
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
+
+        $dataTable->modelService = $modelServiceMock;
+
+        $this->assertNull($dataTable->getParentRelationKey());
+
+        $relation = new Relation(Relation::HAS_MANY, User::class, 'field', []);
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
+
+        $dataTable->modelService = $modelServiceMock;
+
+        $this->assertNull($dataTable->getParentRelationKey());
+
+        $relation = new Relation(Relation::HAS_MANY, User::class, 'field', 'fieldRef');
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
+
+        $dataTable->modelService = $modelServiceMock;
+
+        $this->assertEquals('fieldRef', $dataTable->getParentRelationKey());
+    }
+
+    public function testGetParentRelationValue()
+    {
+        $dataTable = new TestableDataTable();
+        $dataTable->getFilters()->setParentEditId(0);
+
+        $this->assertEquals(0, $dataTable->getParentRelationValue());
+
+        $filters = (new DataTableFilters)
+            ->setLanguageCode('nl')
+            ->setParentModel(User::class)
+            ->setParentEditId(1)
+            ->setParentRelationKey('relationKey');
+
+        $dataTable->setFilters($filters);
+
+        $relation = new Relation(0, User::class, 'field', 'fieldRef');
+
+        $userMock = $this->createMock(User::class);
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
+        $modelServiceMock->expects($this->once())->method('getObject')->willReturn($userMock);
+
+        $dataTable->modelService = $modelServiceMock;
+
+        $userMock->expects($this->once())->method('__get');
+
+        $dataTable->getParentRelationValue();
+    }
+
+    public function testGetSearchAbleFields()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertEquals(['test'], $dataTable->getSearchableFields());
+    }
+
+    public function testGetSortableField()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertEquals('test', $dataTable->getSortableField());
+    }
+
+    public function testGetRearanger()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertEquals(new Rearranger($dataTable), $dataTable->getRearranger());
+    }
+
+    public function testIsMultiLingual()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertTrue($dataTable->isMultiLingual());
+    }
+
+    public function testIsSortable()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertTrue($dataTable->isSortable());
+    }
+
+    public function testIsSortableNewFirst()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertTrue($dataTable->isSortableNewFirst());
+    }
+
+    public function testHasParent()
+    {
+        $dataTable = new TestableDataTable();
+
+        $this->assertFalse($dataTable->hasParent());
+    }
 }
 
 class Tag
@@ -295,6 +497,19 @@ class Tag
 
 class TestableDataTable extends DataTable
 {
+    protected $searchableFields = ['test'];
+    protected $sortableField = 'test';
+    protected $multiLingual = true;
+    protected $sortable = true;
+    protected $sortableNewFirst = true;
+
+    public function __construct(?Filters $filters = null)
+    {
+        $filters = (new DataTableFilters)->setLanguageCode('nl');
+
+        parent::__construct($filters);
+    }
+
     public function getModel(): string
     {
         return User::class;

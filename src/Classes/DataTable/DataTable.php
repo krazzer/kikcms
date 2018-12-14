@@ -226,7 +226,7 @@ abstract class DataTable extends Renderable
      * @param $value
      * @return string
      */
-    protected function formatBoolean($value): string
+    public function formatBoolean($value): string
     {
         return $this->translator->tl('global.' . ($value ? 'yes' : 'no'));
     }
@@ -237,7 +237,7 @@ abstract class DataTable extends Renderable
      * @param $column
      * @return string
      */
-    protected function formatCheckbox($value, $rowData, $column)
+    public function formatCheckbox($value, $rowData, $column)
     {
         $attributes = [
             'type'     => 'checkbox',
@@ -289,6 +289,10 @@ abstract class DataTable extends Renderable
      */
     public function formatValue(string $column, $value, array $rowData = []): ?string
     {
+        if ( ! array_key_exists($column, $this->fieldFormatting)) {
+            return null;
+        }
+
         return $this->fieldFormatting[$column]($value, $rowData, $column);
     }
 
@@ -394,6 +398,10 @@ abstract class DataTable extends Renderable
         }
 
         if ($relation->getType() !== Relation::HAS_MANY) {
+            return null;
+        }
+
+        if( ! is_string($relation->getReferencedFields())){
             return null;
         }
 
