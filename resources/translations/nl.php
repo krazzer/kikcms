@@ -57,6 +57,7 @@ return [
         ],
 
         'delete' => [
+            'label'      => ':itemSingular verwijderen',
             'confirmOne' => ':itemSingular verwijderen?',
             'confirm'    => 'Wilt u zeker weten deze :amount :itemPlural verwijderen?',
         ],

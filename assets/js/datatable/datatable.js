@@ -253,6 +253,14 @@ var DataTable = Class.extend({
             self.actionEdit(id);
         });
 
+        $rows.find('td.delete').click(function () {
+            var id = $(this).attr('data-id');
+
+            if (confirm(self.getDeleteConfirmMessage(1))) {
+                self.actionDelete([id]);
+            }
+        });
+
         $rows.find('td:not(.action)').on('dblclick', function () {
             self.onRowDblClick($(this).parent());
         });

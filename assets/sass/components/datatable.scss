@@ -66,7 +66,7 @@ body {
         opacity: 0.5;
     }
 
-    > #menu{
+    > #menu {
         // fix weird tinymce issue, where menu cannot have position: fixed
         position: absolute;
     }
@@ -412,8 +412,10 @@ body {
                     td {
                         &.action {
                             text-align: center;
-                            width: 44px;
                             cursor: pointer;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                            width: 34px;
 
                             a {
                                 color: $colorBlack;
@@ -425,9 +427,14 @@ body {
                                 margin-top: -2px;
                             }
 
-                            svg{
+                            svg {
                                 display: none;
                             }
+                        }
+
+                        &:last-child {
+                            padding-right: 15px;
+                            width: 44px;
                         }
 
                         &.sort {

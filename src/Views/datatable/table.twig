@@ -71,6 +71,12 @@
                     {% endfor %}
                 {% endblock %}
 
+                {% if showDeleteRowButton %}
+                    <td class="action delete" data-id="{{ row.id }}" title="{{ deleteLabel }}">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </td>
+                {% endif %}
+
                 {% block actionEditColumn %}
                     <td class="action edit" title="{{ editLabel }}">
                         <input type="hidden" name="id" value="{{ row.id }}">

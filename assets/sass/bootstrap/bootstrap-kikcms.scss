@@ -58,10 +58,6 @@ textarea.form-control {
     margin-bottom: 0;
 }
 
-.glyphicon-remove {
-    top: 2px;
-}
-
 .has-feedback label ~ .form-control-feedback {
     top: 23px;
 }
@@ -70,6 +66,10 @@ textarea.form-control {
     padding-top: 1px;
     padding-bottom: 1px;
     margin-bottom: 15px;
+
+    > .glyphicon-remove {
+        top: 2px;
+    }
 
     &.required label:after {
         content: ' *';

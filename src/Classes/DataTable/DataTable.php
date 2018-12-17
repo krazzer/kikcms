@@ -85,6 +85,9 @@ abstract class DataTable extends Renderable
     /** @var bool if true, newly added items will be added on top */
     protected $sortableNewFirst = false;
 
+    /** @var bool if true, each row gets a delete button */
+    protected $showDeleteRowButton = false;
+
     /** @var string */
     protected $sortableField = 'display_order';
 
@@ -401,7 +404,7 @@ abstract class DataTable extends Renderable
             return null;
         }
 
-        if( ! is_string($relation->getReferencedFields())){
+        if ( ! is_string($relation->getReferencedFields())) {
             return null;
         }
 
@@ -539,17 +542,19 @@ abstract class DataTable extends Renderable
         $this->addAssets();
 
         return $this->view->getPartial($this->indexView, [
-            'tableData'       => $this->getTableData(),
-            'jsData'          => $this->getJsData(),
-            'editLabel'       => $this->getEditLabel(),
-            'currentLangCode' => $this->getFilters()->getLanguageCode(),
-            'languages'       => $this->languageService->getLanguages(),
-            'sortLabel'       => $this->translator->tl('dataTable.sort'),
-            'fieldFormatting' => $this->fieldFormatting,
-            'canAdd'          => $this->canAdd(),
-            'canEdit'         => $this->canEdit(),
-            'canDelete'       => $this->canDelete(),
-            'self'            => $this,
+            'tableData'           => $this->getTableData(),
+            'jsData'              => $this->getJsData(),
+            'editLabel'           => $this->getEditLabel(),
+            'deleteLabel'         => $this->getDeleteLabel(),
+            'currentLangCode'     => $this->getFilters()->getLanguageCode(),
+            'languages'           => $this->languageService->getLanguages(),
+            'sortLabel'           => $this->translator->tl('dataTable.sort'),
+            'fieldFormatting'     => $this->fieldFormatting,
+            'showDeleteRowButton' => $this->showDeleteRowButton && $this->canDelete(),
+            'canAdd'              => $this->canAdd(),
+            'canEdit'             => $this->canEdit(),
+            'canDelete'           => $this->canDelete(),
+            'self'                => $this,
         ]);
     }
 
@@ -595,11 +600,13 @@ abstract class DataTable extends Renderable
         $this->initializeDatatable();
 
         return $this->view->getPartial($this->tableView, [
-            'tableData'       => $this->getTableData(),
-            'editLabel'       => $this->getEditLabel(),
-            'sortLabel'       => $this->translator->tl('dataTable.sort'),
-            'fieldFormatting' => $this->fieldFormatting,
-            'self'            => $this,
+            'tableData'           => $this->getTableData(),
+            'editLabel'           => $this->getEditLabel(),
+            'deleteLabel'         => $this->getDeleteLabel(),
+            'sortLabel'           => $this->translator->tl('dataTable.sort'),
+            'fieldFormatting'     => $this->fieldFormatting,
+            'showDeleteRowButton' => $this->showDeleteRowButton && $this->canDelete(),
+            'self'                => $this,
         ]);
     }
 
@@ -807,6 +814,14 @@ abstract class DataTable extends Renderable
     protected function getTableFieldMap(): array
     {
         return [];
+    }
+
+    /**
+     * @return string
+     */
+    private function getDeleteLabel(): string
+    {
+        return ucfirst($this->translator->tl('dataTable.delete.label', ['itemSingular' => $this->getLabels()[0]]));
     }
 
     /**
