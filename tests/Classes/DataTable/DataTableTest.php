@@ -291,7 +291,9 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $dataTable->setFieldFormatting('field', function ($value){ return 'test' . $value; });
+        $dataTable->setFieldFormatting('field', function ($value) {
+            return 'test' . $value;
+        });
 
         $this->assertEquals('test1', $dataTable->formatValue('field', '1', []));
         $this->assertNull($dataTable->formatValue('field2', '1', []));
@@ -337,6 +339,7 @@ class DataTableTest extends TestCase
         $languageServiceMock->expects($this->once())->method('getDefaultLanguageCode')->willReturn('nl');
 
         $dataTable = new TestableDataTable();
+
         $dataTable->languageService = $languageServiceMock;
         $dataTable->setFilters(new DataTableFilters());
 
@@ -349,6 +352,7 @@ class DataTableTest extends TestCase
         $translatorMock->expects($this->exactly(2))->method('tl')->willReturn('x');
 
         $dataTable = new TestableDataTable();
+
         $dataTable->translator = $translatorMock;
 
         $this->assertEquals(['x', 'x'], $dataTable->getLabels());
@@ -485,6 +489,24 @@ class DataTableTest extends TestCase
 
         $this->assertFalse($dataTable->hasParent());
     }
+
+    public function testInitializeDatatable()
+    {
+        /** @var MockObject|DataTable $dataTableMock */
+        $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
+            ->setMethods(['getFormClass', 'initialize'])
+            ->getMock();
+
+        $dataTableMock->method('getFormClass')->willReturn(MagicForm::class);
+
+        $dataTableMock->securitySingleToken = null;
+
+        $dataTableMock->expects($this->once())->method('initialize');
+        $dataTableMock->initializeDatatable(true);
+
+        $dataTableMock->expects($this->never())->method('initialize');
+        $dataTableMock->initializeDatatable(true);
+    }
 }
 
 class Tag
@@ -495,12 +517,28 @@ class Tag
     }
 }
 
+class MagicForm
+{
+    public function __set($x, $y)
+    {
+    }
+
+    public function __get($x)
+    {
+    }
+
+    public function __call($name, $arguments)
+    {
+        return $this;
+    }
+}
+
 class TestableDataTable extends DataTable
 {
     protected $searchableFields = ['test'];
-    protected $sortableField = 'test';
-    protected $multiLingual = true;
-    protected $sortable = true;
+    protected $sortableField    = 'test';
+    protected $multiLingual     = true;
+    protected $sortable         = true;
     protected $sortableNewFirst = true;
 
     public function __construct(?Filters $filters = null)

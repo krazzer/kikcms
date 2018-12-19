@@ -5,6 +5,7 @@ namespace KikCMS\Controllers;
 
 use Exception;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\Util\QueryService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\DataTable;
@@ -17,8 +18,9 @@ use Monolog\Logger;
 /**
  * @property AccessControl $acl
  * @property DbService $dbService
- * @property ModelService $modelService
  * @property Logger $logger
+ * @property ModelService $modelService
+ * @property QueryService $queryService
  */
 class DataTableController extends RenderableController
 {
@@ -145,7 +147,7 @@ class DataTableController extends RenderableController
 
             // go to the page where the new id sits
             if ($editId) {
-                if ($fromAlias = $dataTable->getQueryFromAlias()) {
+                if ($fromAlias = $this->queryService->getFromAlias($dataTable->getQuery())) {
                     $column = $fromAlias . '.' . DataTable::TABLE_KEY;
                 } else {
                     $column = DataTable::TABLE_KEY;

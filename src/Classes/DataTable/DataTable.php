@@ -8,6 +8,7 @@ use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\Util\QueryService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
@@ -25,13 +26,14 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * @property AccessControl $acl
- * @property KeyValue $keyValue
  * @property DbService $dbService
+ * @property KeyValue $keyValue
  * @property LanguageService $languageService
+ * @property QueryService $queryService
  * @property ModelService $modelService
- * @property Translator $translator
  * @property RelationKeyService $relationKeyService
  * @property SecuritySingleToken $securitySingleToken
+ * @property Translator $translator
  */
 abstract class DataTable extends Renderable
 {
@@ -695,16 +697,6 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return string|null
-     */
-    public function getQueryFromAlias(): ?string
-    {
-        $from = $this->getQuery()->getFrom();
-
-        return is_array($from) ? key($from) : null;
-    }
-
-    /**
      * Remove cache files
      */
     public function removeNewIdCache()
@@ -833,28 +825,6 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return array
-     */
-    private function getQueryAliases(): array
-    {
-        $aliases = [];
-
-        if ($alias = $this->getQueryFromAlias()) {
-            $aliases[] = $alias;
-        }
-
-        if ( ! $joins = $this->getQuery()->getJoins()) {
-            return $aliases;
-        }
-
-        foreach ($joins as $join) {
-            $aliases[] = $join[2];
-        }
-
-        return $aliases;
-    }
-
-    /**
      * @return string
      */
     private function getNewIdsCacheKey()
@@ -872,7 +842,7 @@ abstract class DataTable extends Renderable
         $queryColumns = $query->getColumns();
 
         $headColumns  = $this->getHeadColumnsRaw($tableData);
-        $queryAliases = $this->getQueryAliases();
+        $queryAliases = $this->queryService->getAliases($this->getQuery());
 
         if ( ! $queryColumns) {
             return $headColumns;
