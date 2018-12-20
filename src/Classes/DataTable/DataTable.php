@@ -4,17 +4,17 @@ namespace KikCMS\Classes\DataTable;
 
 
 use Exception;
+use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
+use KikCMS\Services\DataTable\TableDataService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Util\QueryService;
 use KikCMS\Services\WebForm\RelationKeyService;
-use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\KeyValue;
-use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
@@ -33,6 +33,7 @@ use Phalcon\Mvc\Model\Relation;
  * @property ModelService $modelService
  * @property RelationKeyService $relationKeyService
  * @property SecuritySingleToken $securitySingleToken
+ * @property TableDataService $tableDataService
  * @property Translator $translator
  */
 abstract class DataTable extends Renderable
@@ -768,31 +769,12 @@ abstract class DataTable extends Renderable
             return $this->tableData;
         }
 
-        $query = $this->getQuery();
+        $query    = $this->getQuery();
+        $limit    = $this->getLimit();
+        $page     = $this->getFilters()->getPage();
+        $fieldMap = $this->getTableFieldMap();
 
-        $paginate = (new QueryBuilder([
-            "builder" => $query,
-            "page"    => $this->filters->getPage(),
-            "limit"   => $this->limit,
-        ]))->getPaginate();
-
-        $tableData = $paginate->items->toArray();
-
-        foreach ($tableData as &$row) {
-            $row = (array) $row;
-        }
-
-        $headColumns = $this->getHeadColumns($tableData, $query);
-
-        $this->tableData = (new TableData())
-            ->setPages($paginate->pages)
-            ->setLimit($paginate->limit)
-            ->setCurrent($paginate->current)
-            ->setTotalItems($paginate->total_items)
-            ->setTotalPages($paginate->total_pages)
-            ->setDisplayMap($this->getTableFieldMap())
-            ->setTableHeadColumns($headColumns)
-            ->setData($tableData);
+        $this->tableData = $this->tableDataService->getTableData($query, $page, $limit, $fieldMap);
 
         return $this->tableData;
     }
@@ -830,54 +812,6 @@ abstract class DataTable extends Renderable
     private function getNewIdsCacheKey()
     {
         return $this->getInstance() . self::IDS_CACHE_SUFFIX;
-    }
-
-    /**
-     * @param array $tableData
-     * @param Builder $query
-     * @return array
-     */
-    private function getHeadColumns(array $tableData, Builder $query): array
-    {
-        $queryColumns = $query->getColumns();
-
-        $headColumns  = $this->getHeadColumnsRaw($tableData);
-        $queryAliases = $this->queryService->getAliases($this->getQuery());
-
-        if ( ! $queryColumns) {
-            return $headColumns;
-        }
-
-        foreach ($headColumns as $column => $name) {
-            foreach ($queryAliases as $alias) {
-                $aliasedColumn = $alias . '.' . $column;
-
-                if ( ! in_array($aliasedColumn, $queryColumns)) {
-                    continue;
-                }
-
-                $headColumns = array_change_key($headColumns, $column, $aliasedColumn);
-            }
-        }
-
-        return $headColumns;
-    }
-
-    /**
-     * @param array $tableData
-     * @return array
-     */
-    private function getHeadColumnsRaw(array $tableData): array
-    {
-        if ($fieldMap = $this->getTableFieldMap()) {
-            return $fieldMap;
-        }
-
-        if ( ! $tableData) {
-            return [];
-        }
-
-        return array_combine(array_keys($tableData[0]), array_keys($tableData[0]));
     }
 
     /**

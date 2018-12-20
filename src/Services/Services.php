@@ -7,6 +7,7 @@ use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\NestedSetService;
+use KikCMS\Services\DataTable\TableDataService;
 use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Services\Finder\FinderPermissionHelper;
@@ -117,6 +118,7 @@ class Services extends BaseServices
             SecuritySingleToken::class,
             StorageService::class,
             StringService::class,
+            TableDataService::class,
             TemplateService::class,
             TinyMceService::class,
             TranslationService::class,
