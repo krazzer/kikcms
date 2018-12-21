@@ -4,6 +4,7 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use Helpers\TestHelper;
 use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Url;
@@ -216,17 +217,9 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        /** @var Translator|MockObject $translatorMock */
-        $translatorMock = $this->getMockBuilder(Translator::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['tl'])
-            ->getMock();
+        $dataTable->translator = (new TestHelper)->getTranslator();
 
-        $translatorMock->expects($this->once())->method('tl')->willReturn('string');
-
-        $dataTable->translator = $translatorMock;
-
-        $this->assertEquals('string', $dataTable->formatBoolean(true));
+        $this->assertTrue(is_string($dataTable->formatBoolean(true)));
     }
 
     public function testFormatCheckbox()

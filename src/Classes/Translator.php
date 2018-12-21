@@ -3,6 +3,7 @@
 namespace KikCMS\Classes;
 
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\TranslationKey;
@@ -15,7 +16,6 @@ use Monolog\Logger;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Website\Classes\WebsiteSettings;
 
 /**
  * @property TranslationService $translationService
@@ -23,16 +23,16 @@ use Website\Classes\WebsiteSettings;
  * @property CacheService $cacheService
  * @property Backend $cache
  * @property LanguageService $languageService
- * @property WebsiteSettings $websiteSettings
+ * @property WebsiteSettingsBase $websiteSettings
  * @property Logger $logger
  */
 class Translator extends Injectable
 {
     private $languageCode = null;
 
-    public function __construct()
+    public function __construct(string $languageCode = null)
     {
-        $this->languageCode = $this->languageService->getDefaultLanguageCode();
+        $this->languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
     }
 
     /**
