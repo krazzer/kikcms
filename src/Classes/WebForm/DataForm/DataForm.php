@@ -23,6 +23,7 @@ use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use Monolog\Logger;
 use Phalcon\Http\Response;
+use Phalcon\Mvc\Model\Resultset;
 
 /**
  * @property DbService $dbService
@@ -90,6 +91,32 @@ abstract class DataForm extends WebForm
         $this->addFieldTransformer(new Date($dateField));
 
         return $dateField;
+    }
+
+    /**
+     * @param string $fieldKey
+     * @return Model[]|Resultset
+     */
+    public function getDataTableFieldObjects(string $fieldKey)
+    {
+        if( ! $relation = $this->modelService->getRelation($this->getModel(), $fieldKey)){
+            throw new Exception("Relation $fieldKey does not exist");
+        }
+
+        if ($object = $this->getObject()) {
+            return $object->$fieldKey;
+        }
+
+        /** @var DataTableField $field */
+        if ( ! $field = $this->getFieldMap()->get($fieldKey)) {
+            throw new Exception("Field $fieldKey does not exist");
+        }
+
+        if( ! $ids = $field->getDataTable()->getCachedNewIds()){
+            return [];
+        }
+
+        return $this->modelService->getObjects($relation->getReferencedModel(), $ids);
     }
 
     /**

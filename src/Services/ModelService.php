@@ -27,7 +27,7 @@ class ModelService extends Injectable
             $model = $this->getModelByClassName($model);
         }
 
-        return $model->getModelsManager()->getRelationByAlias(get_class($model), $alias);
+        return $model->getModelsManager()->getRelationByAlias(get_class($model), $alias) ?: null;
     }
 
     /**
