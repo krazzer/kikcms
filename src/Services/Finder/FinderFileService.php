@@ -21,7 +21,6 @@ use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 /**
  * Handles FinderFiles
@@ -129,9 +128,9 @@ class FinderFileService extends Injectable
 
     /**
      * @param int|null $folderId
-     * @return FinderFile[]|Resultset
+     * @return FinderFile[]
      */
-    public function getByFolderId(int $folderId = null): Resultset
+    public function getByFolderId(int $folderId = null): array
     {
         $query = (new Builder)
             ->from(FinderFile::class)
@@ -143,9 +142,9 @@ class FinderFileService extends Injectable
 
     /**
      * @param FinderFilters $filters
-     * @return FinderFile[]|Resultset
+     * @return FinderFile[]
      */
-    public function getByFilters(FinderFilters $filters)
+    public function getByFilters(FinderFilters $filters): array
     {
         if ( ! $filters->getSearch()) {
             return $this->getByFolderId($filters->getFolderId());

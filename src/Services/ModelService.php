@@ -10,7 +10,6 @@ use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
-use Phalcon\Mvc\Model\Resultset;
 
 /**
  * @property DbService $dbService
@@ -55,20 +54,13 @@ class ModelService extends Injectable
     /**
      * @param string $className
      * @param array $ids
-     * @return Model[]|Resultset
+     * @return Model[]
      */
     public function getObjects(string $className, array $ids): array
     {
         $query = (new Builder)->from($className)
             ->inWhere(DataTable::TABLE_KEY, $ids);
 
-        $objects = [];
-        $results = $this->dbService->getObjects($query);
-
-        foreach ($results as $object){
-            $objects[] = $object;
-        }
-
-        return $objects;
+        return $this->dbService->getObjects($query);
     }
 }

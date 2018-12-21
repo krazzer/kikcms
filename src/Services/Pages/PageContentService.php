@@ -59,6 +59,7 @@ class PageContentService extends Injectable
                 ->andWhere(PageContent::FIELD_VALUE . ' LIKE :search:', ['search' => '%/finder/file/' . $file->getId() . '%'])
                 ->groupBy('pl.page_id');
 
+            /** @var PageLanguage[] $pageLanguages */
             $pageLanguages = $this->dbService->getObjects($query);
 
             foreach ($pageLanguages as $pageLanguage){
