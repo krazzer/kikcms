@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 
 use Exception;
+use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Util\QueryService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
@@ -21,6 +22,7 @@ use Monolog\Logger;
  * @property Logger $logger
  * @property ModelService $modelService
  * @property QueryService $queryService
+ * @property DataTableFilterService $dataTableFilterService
  */
 class DataTableController extends RenderableController
 {
@@ -117,6 +119,7 @@ class DataTableController extends RenderableController
         $dataTable    = $this->getRenderable();
         $editId       = $dataTable->getFilters()->getEditId();
         $parentEditId = $dataTable->getFilters()->getParentEditId();
+        $hasParent    = $this->dataTableFilterService->hasParent($dataTable->getFilters());
 
         if ( ! $dataTable->canEdit($editId)) {
             throw new UnauthorizedException;
@@ -136,7 +139,7 @@ class DataTableController extends RenderableController
             }
 
             // if the datatable has a unsaved parent, cache the new id
-            if ($dataTable->hasParent() && $parentEditId === 0 && $editId) {
+            if ($hasParent && $parentEditId === 0 && $editId) {
                 $dataTable->cacheNewId($editId);
             }
 

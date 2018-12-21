@@ -19,14 +19,15 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Relation;
 
 /**
  * @property AccessControl $acl
  * @property DbService $dbService
+ * @property DataTableFilterService $dataTableFilterService
  * @property KeyValue $keyValue
  * @property LanguageService $languageService
  * @property QueryService $queryService
@@ -392,26 +393,7 @@ abstract class DataTable extends Renderable
      */
     public function getParentRelationKey(): ?string
     {
-        $model       = $this->getFilters()->getParentModel();
-        $relationKey = $this->getFilters()->getParentRelationKey();
-
-        if ( ! $model || ! $relationKey) {
-            return null;
-        }
-
-        if ( ! $relation = $this->modelService->getRelation($model, $relationKey)) {
-            return null;
-        }
-
-        if ($relation->getType() !== Relation::HAS_MANY) {
-            return null;
-        }
-
-        if ( ! is_string($relation->getReferencedFields())) {
-            return null;
-        }
-
-        return $relation->getReferencedFields();
+        return $this->dataTableFilterService->getParentRelationKey($this->getFilters());
     }
 
     /**
@@ -419,20 +401,7 @@ abstract class DataTable extends Renderable
      */
     public function getParentRelationValue()
     {
-        $model       = $this->getFilters()->getParentModel();
-        $editId      = $this->getFilters()->getParentEditId();
-        $relationKey = $this->getFilters()->getParentRelationKey();
-
-        if ($editId === 0) {
-            return 0;
-        }
-
-        $relation     = $this->modelService->getRelation($model, $relationKey);
-        $parentObject = $this->modelService->getObject($model, $editId);
-
-        $field = $relation->getFields();
-
-        return $parentObject->$field;
+        return $this->dataTableFilterService->getParentRelationValue($this->getFilters());
     }
 
     /**
@@ -485,14 +454,6 @@ abstract class DataTable extends Renderable
     public function isSortableNewFirst(): bool
     {
         return $this->sortableNewFirst;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasParent(): bool
-    {
-        return $this->getParentRelationKey() != null;
     }
 
     /**
@@ -618,10 +579,21 @@ abstract class DataTable extends Renderable
      */
     public function getQuery(): Builder
     {
-        $queryBuilder = new FilterQueryBuilder($this, $this->filters);
-        $query        = $this->getDefaultQuery();
+        $query           = $this->getDefaultQuery();
+        $filters         = $this->getFilters();
+        $isSortable      = $this->isSortable();
+        $sortableField   = $this->getSortableField();
+        $cachedNewIds    = $this->getCachedNewIds();
+        $aliasedTableKey = $this->getAliasedTableKey();
+        $customFilters   = $this->getCustomFilters();
+        $searchFields    = $this->getSearchableFields();
 
-        return $queryBuilder->getQuery($query);
+        $this->dataTableFilterService->addSearchFilter($query, $filters, $searchFields);
+        $this->dataTableFilterService->addSortFilter($query, $filters, $isSortable, $sortableField);
+        $this->dataTableFilterService->addSubDataTableFilter($query, $filters, $cachedNewIds, $aliasedTableKey);
+        $this->dataTableFilterService->addCustomFilters($query, $filters, $customFilters);
+
+        return $query;
     }
 
     /**

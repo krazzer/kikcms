@@ -18,7 +18,6 @@ use KikCmsCore\Services\DbService;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Relation;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -367,80 +366,6 @@ class DataTableTest extends TestCase
         $this->assertEquals(100, $dataTable->getLimit());
     }
 
-    public function testGetParentRelationKey()
-    {
-        $dataTable = new TestableDataTable();
-
-        $this->assertNull($dataTable->getParentRelationKey());
-
-        $dataTable->getFilters()->setParentModel(User::class);
-        $dataTable->getFilters()->setParentRelationKey('relationKey');
-
-        $modelServiceMock = $this->createMock(ModelService::class);
-        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn(null);
-
-        $dataTable->modelService = $modelServiceMock;
-
-        $this->assertNull($dataTable->getParentRelationKey());
-
-        $relation = new Relation(Relation::HAS_ONE, User::class, [], []);
-
-        $modelServiceMock = $this->createMock(ModelService::class);
-        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
-
-        $dataTable->modelService = $modelServiceMock;
-
-        $this->assertNull($dataTable->getParentRelationKey());
-
-        $relation = new Relation(Relation::HAS_MANY, User::class, 'field', []);
-
-        $modelServiceMock = $this->createMock(ModelService::class);
-        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
-
-        $dataTable->modelService = $modelServiceMock;
-
-        $this->assertNull($dataTable->getParentRelationKey());
-
-        $relation = new Relation(Relation::HAS_MANY, User::class, 'field', 'fieldRef');
-
-        $modelServiceMock = $this->createMock(ModelService::class);
-        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
-
-        $dataTable->modelService = $modelServiceMock;
-
-        $this->assertEquals('fieldRef', $dataTable->getParentRelationKey());
-    }
-
-    public function testGetParentRelationValue()
-    {
-        $dataTable = new TestableDataTable();
-        $dataTable->getFilters()->setParentEditId(0);
-
-        $this->assertEquals(0, $dataTable->getParentRelationValue());
-
-        $filters = (new DataTableFilters)
-            ->setLanguageCode('nl')
-            ->setParentModel(User::class)
-            ->setParentEditId(1)
-            ->setParentRelationKey('relationKey');
-
-        $dataTable->setFilters($filters);
-
-        $relation = new Relation(0, User::class, 'field', 'fieldRef');
-
-        $userMock = $this->createMock(User::class);
-
-        $modelServiceMock = $this->createMock(ModelService::class);
-        $modelServiceMock->expects($this->once())->method('getRelation')->willReturn($relation);
-        $modelServiceMock->expects($this->once())->method('getObject')->willReturn($userMock);
-
-        $dataTable->modelService = $modelServiceMock;
-
-        $userMock->expects($this->once())->method('__get');
-
-        $dataTable->getParentRelationValue();
-    }
-
     public function testGetSearchAbleFields()
     {
         $dataTable = new TestableDataTable();
@@ -481,13 +406,6 @@ class DataTableTest extends TestCase
         $dataTable = new TestableDataTable();
 
         $this->assertTrue($dataTable->isSortableNewFirst());
-    }
-
-    public function testHasParent()
-    {
-        $dataTable = new TestableDataTable();
-
-        $this->assertFalse($dataTable->hasParent());
     }
 
     public function testInitializeDatatable()

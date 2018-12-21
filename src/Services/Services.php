@@ -6,6 +6,7 @@ use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\Cms\UserSettingsService;
+use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\TableDataService;
 use KikCMS\Services\Finder\FinderFileRemoveService;
@@ -92,6 +93,7 @@ class Services extends BaseServices
             ClassesGeneratorService::class,
             CmsService::class,
             GeneratorService::class,
+            DataTableFilterService::class,
             DateTimeService::class,
             DbService::class,
             ImageHandler::class,
