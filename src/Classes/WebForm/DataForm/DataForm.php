@@ -94,6 +94,8 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * Get the Objects for a DataTableField. This can be useful if you want to validate them
+     *
      * @param string $fieldKey
      * @return Model[]|Resultset
      */
