@@ -476,6 +476,7 @@ class AnalyticsService extends Injectable
         $reports = $this->analytics->reports->batchGet($body);
 
         for ($reportIndex = 0; $reportIndex < count($reports); $reportIndex++) {
+            /** @var \Google_Service_AnalyticsReporting_Report $report */
             $report = $reports[$reportIndex];
 
             /** @var \Google_Service_AnalyticsReporting_ColumnHeader $header */
