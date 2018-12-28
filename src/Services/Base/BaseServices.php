@@ -5,6 +5,7 @@ namespace KikCMS\Services\Base;
 use /** @noinspection PhpUndefinedClassInspection */
     ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Routing;
@@ -12,7 +13,6 @@ use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
-use Website\Classes\WebsiteSettings;
 
 /** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
@@ -63,11 +63,11 @@ class BaseServices extends ApplicationServices
     {
         $config = $this->get('config');
 
-        if( ! $group){
+        if ( ! $group) {
             return $config;
         }
 
-        if( ! $item){
+        if ( ! $item) {
             return $config->get($group);
         }
 
@@ -114,12 +114,12 @@ class BaseServices extends ApplicationServices
             });
         }
 
-        /** @var WebsiteSettings $websiteSettings */
-        $websiteSettings = $this->get('websiteSettings');
+        /** @var WebsiteSettingsBase $websiteSettings */
+        $websiteSettings    = $this->get('websiteSettings');
         $overloadedServices = $websiteSettings->getServices();
 
-        foreach ($overloadedServices as $name => $callable){
-            if( ! is_callable($callable)){
+        foreach ($overloadedServices as $name => $callable) {
+            if ( ! is_callable($callable)) {
                 continue;
             }
 

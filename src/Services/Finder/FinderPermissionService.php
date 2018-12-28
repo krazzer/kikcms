@@ -16,14 +16,12 @@ use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Website\Config\Config;
 
 /**
  * @property DbService $dbService
  * @property Logger $logger
  * @property UserService $userService
  * @property FinderFileService $finderFileService
- * @property Config $config
  */
 class FinderPermissionService extends Injectable
 {

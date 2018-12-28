@@ -8,8 +8,12 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Di\Injectable;
 
+/**
+ * @property TemplateService $templateService
+ */
 class PagesDataTableService extends Injectable
 {
     /**

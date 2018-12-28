@@ -4,13 +4,13 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\CmsPlugin;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Router;
 use Phalcon\Mvc\Router\Group;
-use Website\Classes\WebsiteSettings;
 
 /**
- * @property WebsiteSettings $websiteSettings
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class Routing extends Injectable
 {
