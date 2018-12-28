@@ -21,12 +21,12 @@ class MultiCheckboxField extends Field
     {
         $element = (new Check($key))
             ->setAttribute('type', 'multiCheckbox')
+            ->addValidators($validators)
             ->setLabel($label);
 
-        $this->element    = $element;
-        $this->options    = $options;
-        $this->validators = $validators;
-        $this->key        = $key;
+        $this->element = $element;
+        $this->options = $options;
+        $this->key     = $key;
     }
 
     /**

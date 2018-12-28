@@ -71,7 +71,7 @@ textarea.form-control {
         top: 2px;
     }
 
-    &.required label:after {
+    &.required > label:after {
         content: ' *';
     }
 
