@@ -237,4 +237,12 @@ class DataTableFilters extends Filters
         $this->parentModel = $parentModel;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasTempParentEditId(): bool
+    {
+        return $this->parentEditId === 0;
+    }
 }

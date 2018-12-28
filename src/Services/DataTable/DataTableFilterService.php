@@ -95,14 +95,12 @@ class DataTableFilterService extends Injectable
             return;
         }
 
-        $parentEditId = $filters->getParentEditId();
-
         $key   = $this->getParentRelationKey($filters);
         $value = $this->getParentRelationValue($filters);
 
         $query->andWhere($key . ' = ' . $value);
 
-        if ($parentEditId === 0) {
+        if ($filters->hasTempParentEditId()) {
             $query->inWhere($aliasedTableKey, $cachedNewIds);
         }
     }

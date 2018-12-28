@@ -116,10 +116,10 @@ class DataTableController extends RenderableController
      */
     public function saveAction()
     {
-        $dataTable    = $this->getRenderable();
-        $editId       = $dataTable->getFilters()->getEditId();
-        $parentEditId = $dataTable->getFilters()->getParentEditId();
-        $hasParent    = $this->dataTableFilterService->hasParent($dataTable->getFilters());
+        $dataTable       = $this->getRenderable();
+        $editId          = $dataTable->getFilters()->getEditId();
+        $hasTempParentId = $dataTable->getFilters()->hasTempParentEditId();
+        $hasParent       = $this->dataTableFilterService->hasParent($dataTable->getFilters());
 
         if ( ! $dataTable->canEdit($editId)) {
             throw new UnauthorizedException;
@@ -139,12 +139,12 @@ class DataTableController extends RenderableController
             }
 
             // if the datatable has a unsaved parent, cache the new id
-            if ($hasParent && $parentEditId === 0 && $editId) {
+            if ($hasParent && $hasTempParentId && $editId) {
                 $dataTable->cacheNewId($editId);
             }
 
             // if the datatable has a unsaved parent, cache the new id
-            if ($dataTable->getFilters()->getParentRelationKey() && $parentEditId === 0 && $editId) {
+            if ($dataTable->getFilters()->getParentRelationKey() && $hasTempParentId && $editId) {
                 $dataTable->cacheNewId($editId);
             }
 
