@@ -19,21 +19,23 @@ use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\TinyMceService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\TranslationService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
- * @property UserService $userService
- * @property UrlService $urlService
- * @property Translator $translator
+ * @property AccessControl $acl
+ * @property AnalyticsService $analyticsService
+ * @property DateTimeService $dateTimeService
+ * @property CmsService $cmsService
  * @property LanguageService $languageService
  * @property TinyMceService $tinyMceService
- * @property DateTimeService $dateTimeService
- * @property AnalyticsService $analyticsService
- * @property CmsService $cmsService
- * @property AccessControl $acl
+ * @property TranslationService $translationService
+ * @property Translator $translator
+ * @property UrlService $urlService
+ * @property UserService $userService
  */
 class CmsController extends BaseCmsController
 {
@@ -97,6 +99,8 @@ class CmsController extends BaseCmsController
      */
     public function settingsAction()
     {
+        $this->translationService->createSiteTranslationKeys();
+
         $this->view->title  = $this->translator->tl('menu.item.settings');
         $this->view->object = (new SettingsForm())->render();
         $this->view->pick('cms/settings');

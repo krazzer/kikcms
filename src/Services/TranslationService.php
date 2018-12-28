@@ -3,6 +3,7 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Translator;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\TranslationKey;
@@ -13,6 +14,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 /**
  * @property DbService $dbService
  * @property CacheService $cacheService
+ * @property Translator $translator
  */
 class TranslationService extends Injectable
 {
@@ -96,5 +98,28 @@ class TranslationService extends Injectable
         $translationKey->save();
 
         return (int) $translationKey->id;
+    }
+
+    /**
+     * Add entries to the db for site-specific translation keys, that haven't been added yet
+     */
+    public function createSiteTranslationKeys()
+    {
+        $keys = array_keys($this->translator->getWebsiteTranslations());
+
+        $query = (new Builder)
+            ->columns([TranslationKey::FIELD_KEY])
+            ->from(TranslationKey::class)
+            ->inWhere(TranslationKey::FIELD_KEY, $keys);
+
+        $presentKeys = $this->dbService->getValues($query);
+        $missingKeys = array_diff($keys, $presentKeys);
+
+        foreach ($missingKeys as $key){
+            $translationKey = new TranslationKey();
+            $translationKey->key = $key;
+
+            $translationKey->save();
+        }
     }
 }

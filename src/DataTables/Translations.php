@@ -10,10 +10,12 @@ use KikCMS\Forms\TranslationForm;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\Util\StringService;
 
 /**
- * @property Translator $translator
  * @property CacheService $cacheService
+ * @property StringService $stringService
+ * @property Translator $translator
  */
 class Translations extends DataTable
 {
@@ -38,7 +40,8 @@ class Translations extends DataTable
             ->leftJoin(TranslationValue::class, 'tv.key_id = tk.id', 'tv')
             ->where('tk.db = 0 AND (tv.language_code IS NULL OR tv.language_code = :languageCode:)', [
                 'languageCode' => $this->languageService->getDefaultLanguageCode()
-            ])->columns(['tk.id', 'tk.key', 'tv.value']);
+            ])->columns(['tk.id', 'tk.key', 'tv.value'])
+            ->orderBy('tk.key');
     }
 
     /**
@@ -85,6 +88,12 @@ class Translations extends DataTable
      */
     protected function initialize()
     {
+        $this->setFieldFormatting('value', function ($value, $row) {
+            if( ! $value){
+                $value = $this->translator->tl($row['key'], [], $this->languageService->getDefaultLanguageCode());
+            }
 
+            return $this->stringService->truncate($value);
+        });
     }
 }
