@@ -116,7 +116,6 @@ class Services extends BaseServices
             NumberService::class,
             RelationKeyService::class,
             RememberMeService::class,
-            Security::class,
             SecuritySingleToken::class,
             StorageService::class,
             StringService::class,
@@ -400,6 +399,14 @@ class Services extends BaseServices
         $session->start();
 
         return $session;
+    }
+
+    /**
+     * @return Security
+     */
+    protected function initSecurity(): Security
+    {
+        return new SecuritySingleToken();
     }
 
     /**
