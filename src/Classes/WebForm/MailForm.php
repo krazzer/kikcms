@@ -49,6 +49,7 @@ abstract class MailForm extends WebForm
             return false;
         }
 
+        $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
         return $this->response->redirect(trim($this->router->getRewriteUri(), '/'));
     }
@@ -63,7 +64,7 @@ abstract class MailForm extends WebForm
 
         foreach ($this->getFieldMap() as $key => $field)
         {
-            if($key == WebForm::WEB_FORM_ID){
+            if($key == $this->getFormId()){
                 continue;
             }
 

@@ -14,6 +14,8 @@ services:
       kikdev:
         aliases:
           - ${SITE_ALIAS}
+    environment:
+      XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
 networks:
   kikdev:

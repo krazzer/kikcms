@@ -4,7 +4,7 @@
 {# @var tabs \KikCMS\Classes\WebForm\Tab[] #}
 {# @var errorContainer \KikCMS\Classes\WebForm\ErrorContainer #}
 {# @var security \Phalcon\Security #}
-{# @var flash \Phalcon\Flash\Direct #}
+{# @var flash \Phalcon\Flash\Session #}
 
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
@@ -13,7 +13,7 @@
     {{ form({name: 'form'}) }}
 
     <div class="flashContainer">
-        {%- if not anotherFormIsPosted -%}
+        {%- if mayFlash -%}
             {{ flash.output }}
         {%- endif -%}
 

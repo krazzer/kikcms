@@ -66,12 +66,9 @@ use Phalcon\Db;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
-use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Filter;
 use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
-use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
@@ -79,6 +76,9 @@ use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Throwable;
+use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
+use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Flash\Session as FlashSession;
 
 class Services extends BaseServices
 {

@@ -37,6 +37,7 @@ abstract class WebForm extends Renderable
 
     const WEB_FORM_ID    = 'webFormId';
     const WEB_FORM_CLASS = 'webFormClass';
+    const FLASH_KEY      = 'flashForForm';
 
     /** @var FieldMap */
     protected $fieldMap;
@@ -274,7 +275,7 @@ abstract class WebForm extends Renderable
      */
     public function getFormId(): string
     {
-        return str_replace('\\', '', static::class);
+        return self::WEB_FORM_ID . '_' . str_replace('\\', '', static::class);
     }
 
     /**
@@ -298,7 +299,7 @@ abstract class WebForm extends Renderable
      */
     public function isPosted()
     {
-        return $this->request->isPost() && $this->request->get(self::WEB_FORM_ID) == $this->getFormId();
+        return $this->request->getPost($this->getFormId()) == $this->getFormId();
     }
 
     /**
@@ -342,7 +343,7 @@ abstract class WebForm extends Renderable
     {
         $this->initialize();
 
-        $this->addHiddenField(self::WEB_FORM_ID, $this->getFormId());
+        $this->addHiddenField($this->getFormId(), $this->getFormId());
 
         if ($this->isPlaceHolderAsLabel()) {
             foreach ($this->fieldMap as $field) {
@@ -371,6 +372,16 @@ abstract class WebForm extends Renderable
     public function getEmptyFilters(): Filters
     {
         return new Filters();
+    }
+
+    /**
+     * Make sure only this for will output flash messages
+     */
+    public function flashForFormOnly()
+    {
+        $sessionKey = self::FLASH_KEY;
+
+        $this->session->$sessionKey = $this->getFormId();
     }
 
     /**
@@ -448,7 +459,7 @@ abstract class WebForm extends Renderable
             'placeHolderAsLabel'     => $this->isPlaceHolderAsLabel(),
             'instance'               => $this->getInstance(),
             'jsData'                 => $this->getJsData(),
-            'anotherFormIsPosted'    => $this->anotherFormIsPosted(),
+            'mayFlash'               => $this->mayFlash(),
             'errorContainer'         => $errorContainer,
             'webForm'                => $this,
         ]);
@@ -597,13 +608,21 @@ abstract class WebForm extends Renderable
     /**
      * @return bool
      */
-    private function anotherFormIsPosted(): bool
+    private function mayFlash(): bool
     {
-        if ( ! $webFormClass = $this->request->getPost(self::WEB_FORM_ID)) {
+        $sessionKey = self::FLASH_KEY;
+
+        if ( ! $this->session->$sessionKey) {
+            return true;
+        }
+
+        if ($this->session->$sessionKey != $this->getFormId()) {
             return false;
         }
 
-        return ! $this->isPosted();
+        $this->session->remove($sessionKey);
+
+        return true;
     }
 
     /**

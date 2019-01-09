@@ -443,7 +443,7 @@ abstract class DataForm extends WebForm
      */
     private function getSystemFields()
     {
-        return [self::WEB_FORM_ID, DataTable::PAGE];
+        return [$this->getFormId(), DataTable::PAGE];
     }
 
     /**
