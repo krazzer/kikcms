@@ -6,6 +6,7 @@ use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
+use KikCMS\Services\ModelService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Services\TranslationService;
@@ -18,6 +19,7 @@ use Phalcon\Di\Injectable;
  * @property DbService $dbService
  * @property TranslationService $translationService
  * @property RelationKeyService $relationKeyService
+ * @property ModelService $modelService
  */
 class StorageService extends Injectable
 {
@@ -58,7 +60,7 @@ class StorageService extends Injectable
         try {
             $this->executeBeforeStoreEvents();
             $this->storeMain();
-            $this->storePostMain();
+            $this->executeAfterStoreEvents();
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
@@ -160,6 +162,8 @@ class StorageService extends Injectable
             }
         }
 
+        // set subdatatables
+        $this->setSubDataTableData();
         $this->executeBeforeMainEvents();
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
@@ -178,30 +182,13 @@ class StorageService extends Injectable
     /**
      * Store data after the main forms' table row is inserted/updated
      */
-    private function storePostMain()
+    private function setSubDataTableData()
     {
-        $model  = $this->storageData->getTable();
-        $object = $this->storageData->getObject();
-
         foreach ($this->storageData->getDataTableFieldMap() as $key => $field) {
             $keysToUpdate = $field->getDataTable()->getCachedNewIds();
             $relatedModel = $field->getDataTable()->getModel();
 
-            $relation = $object->getModelsManager()->getRelationByAlias($model, $key);
-
-            $objectField  = $relation->getFields();
-            $relatedField = $relation->getReferencedFields();
-
-            foreach ($keysToUpdate as $newId) {
-                $success = $this->dbService->update($relatedModel, [$relatedField => $object->$objectField],
-                    [DataTable::TABLE_KEY => $newId, $relatedField => 0]);
-
-                if ( ! $success) {
-                    throw new Exception('DataTableField values not updated');
-                }
-            }
+            $this->storageData->getObject()->$key = $this->modelService->getObjects($relatedModel, $keysToUpdate);
         }
-
-        $this->executeAfterStoreEvents();
     }
 }
