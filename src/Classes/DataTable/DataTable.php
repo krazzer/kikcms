@@ -577,7 +577,7 @@ abstract class DataTable extends Renderable
     /**
      * @return Builder
      */
-    public function getQuery(): Builder
+    final public function getQuery(): Builder
     {
         $query           = $this->getDefaultQuery();
         $filters         = $this->getFilters();
