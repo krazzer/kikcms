@@ -267,7 +267,7 @@ class Page extends Model
 
         foreach ($templateFieldKeys as $key => $field) {
             // skip fields that aren't content fields
-            if(substr($field->getKey(), -6) !== ':value'){
+            if($field instanceof Field && substr($field->getKey(), -6) !== ':value'){
                 continue;
             }
 
