@@ -4,7 +4,9 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\HtmlField;
 use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
 
@@ -104,12 +106,13 @@ class StorageData
         $mainInput = [];
 
         /** @var Field $field */
-        foreach ($this->fieldMap as $key => $field){
-            if($field->isDontStore() || $field instanceof DataTableField){
+        foreach ($this->fieldMap as $key => $field) {
+            if ($field->isDontStore() || $field instanceof DataTableField || $field instanceof ButtonField ||
+                $field instanceof HtmlField) {
                 continue;
             }
 
-            if( ! array_key_exists($key, $this->formInput)){
+            if ( ! array_key_exists($key, $this->formInput)) {
                 $this->formInput[$key] = null;
             }
 
@@ -257,8 +260,8 @@ class StorageData
     {
         $dataTableFields = [];
 
-        foreach ($this->fieldMap as $key => $field){
-            if($field instanceof DataTableField){
+        foreach ($this->fieldMap as $key => $field) {
+            if ($field instanceof DataTableField) {
                 $dataTableFields[$key] = $field;
             }
         }
