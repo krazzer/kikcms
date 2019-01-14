@@ -40,7 +40,7 @@ class TemplateFieldsBase extends WebsiteExtendable
     /**
      * Get an array of fields for the template. Fields can be one of the following objects: (Field, Tab, FieldTransformer)
      *
-     * @return array [key => field Object]
+     * @return Field[] [key => field Object]
      */
     public function getFields(): array
     {

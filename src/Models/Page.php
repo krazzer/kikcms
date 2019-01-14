@@ -4,6 +4,7 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Classes\WebForm\Field;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -261,10 +262,15 @@ class Page extends Model
      */
     private function addPageContentRelations()
     {
-        $templateFieldKeys = $this->getTemplateFieldKeys();
+        $templateFieldKeys = $this->getTemplateFieldMap();
         $languages         = $this->getLanguages();
 
-        foreach ($templateFieldKeys as $key) {
+        foreach ($templateFieldKeys as $key => $field) {
+            // skip fields that aren't content fields
+            if(substr($field->getKey(), -6) !== ':value'){
+                continue;
+            }
+
             $this->hasOne(self::FIELD_ID, PageContent::class, PageContent::FIELD_PAGE_ID, [
                 'alias'    => $key,
                 'defaults' => [PageContent::FIELD_FIELD => $key]
@@ -298,14 +304,14 @@ class Page extends Model
     }
 
     /**
-     * @return array
+     * @return Field[]
      */
-    private function getTemplateFieldKeys(): array
+    private function getTemplateFieldMap(): array
     {
         /** @var TemplateFieldsBase $templateFields */
         $templateFields = $this->getDI()->get('templateFields');
 
-        return array_keys($templateFields->getFields());
+        return $templateFields->getFields();
     }
 
     /**
