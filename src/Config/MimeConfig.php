@@ -18,8 +18,9 @@ class MimeConfig
         'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
         'ppt'  => ['application/vnd.ms-powerpoint'],
         'pptx' => ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+        'svg'  => ['image/svg+xml', 'text/plain'],
     ];
 
     /** @const array default mimeTypes allowed to upload using the Finder */
-    const UPLOAD_ALLOW_DEFAULT = ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
+    const UPLOAD_ALLOW_DEFAULT = ['jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'svg'];
 }

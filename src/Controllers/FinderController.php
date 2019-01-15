@@ -129,7 +129,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
+        return $this->outputFile($filePath, $finderFile->getOutputMimeType(), $finderFile->getName());
     }
 
     /**
@@ -147,7 +147,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $finderFile->getMimeType(), $finderFile->getName());
+        return $this->outputFile($filePath, $finderFile->getOutputMimeType(), $finderFile->getName());
     }
 
     /**
@@ -228,7 +228,7 @@ class FinderController extends RenderableController
             $this->finderFileService->createThumb($finderFile, $type);
         }
 
-        return $this->outputFile($thumbPath, $finderFile->getMimeType(), $finderFile->getName());
+        return $this->outputFile($thumbPath, $finderFile->getOutputMimeType(), $finderFile->getName());
     }
 
     /**
@@ -238,8 +238,9 @@ class FinderController extends RenderableController
     {
         $finder          = $this->getRenderable();
         $uploadedFiles   = $this->request->getUploadedFiles();
-        $folderId        = $finder->getFilters()->getFolderId();
         $overwriteFileId = $this->request->getPost('overwriteFileId', 'int', null);
+
+        $folderId = $finder->getFilters()->getFolderId();
 
         if ($folderId && ! $this->finderPermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();

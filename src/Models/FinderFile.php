@@ -122,4 +122,18 @@ class FinderFile extends Model
     {
         return in_array($this->getMimeType(), self::IMAGE_TYPES);
     }
+
+    /**
+     * Returns the mimetype that should be used when outputting the file
+     *
+     * @return string
+     */
+    public function getOutputMimeType(): string
+    {
+        if($this->getExtension() == 'svg') {
+            return 'image/svg+xml';
+        }
+
+        return $this->getMimeType();
+    }
 }
