@@ -2,6 +2,7 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Models\Page;
@@ -15,6 +16,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  *
  * @property DbService $dbService
  * @property PageLanguageService $pageLanguageService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class PageService extends Injectable
 {
@@ -25,7 +27,7 @@ class PageService extends Injectable
     public function getByIdList(array $pageIds): PageMap
     {
         $query = (new Builder)
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->inWhere(Page::FIELD_ID, $pageIds);
 
         return $this->dbService->getObjectMap($query, PageMap::class);
@@ -38,7 +40,7 @@ class PageService extends Injectable
     public function getByKey(string $key): ?Page
     {
         $query = (new Builder)
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->where(Page::FIELD_KEY . ' = :key:', ['key' => $key]);
 
         return $this->dbService->getObject($query);
@@ -51,7 +53,7 @@ class PageService extends Injectable
     public function getChildren(Page $page): PageMap
     {
         $query = (new Builder)
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->where(Page::FIELD_PARENT_ID . ' = :parentId:', ['parentId' => $page->id])
             ->orderBy(Page::FIELD_DISPLAY_ORDER);
 
@@ -74,7 +76,7 @@ class PageService extends Injectable
     public function getOffspringQuery(Page $page): Builder
     {
         $query = (new Builder())
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->where('lft > :lft: AND rgt < :rgt:', [
                 'lft' => $page->lft,
                 'rgt' => $page->rgt
@@ -92,7 +94,7 @@ class PageService extends Injectable
     {
         $query = (new Builder)
             ->columns(['p.id', 'GROUP_CONCAT(cp.id)'])
-            ->from(['p' => Page::class])
+            ->from(['p' => $this->websiteSettings->getPageClass()])
             ->leftJoin(Page::class, 'p.lft < cp.lft AND p.rgt > cp.rgt', 'cp')
             ->inWhere('p.id', $pageIds)
             ->groupBy('p.id');
@@ -113,7 +115,7 @@ class PageService extends Injectable
     public function getHighestDisplayOrderChild(Page $page): int
     {
         $query = (new Builder)
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->columns('MAX(' . Page::FIELD_DISPLAY_ORDER . ')')
             ->where('parent_id = :parentId:', ['parentId' => $page->id]);
 
@@ -177,7 +179,7 @@ class PageService extends Injectable
     public function isOffspringOf(Page $page, Page $parentPage): bool
     {
         $query = (new Builder)
-            ->from(Page::class)
+            ->from($this->websiteSettings->getPageClass())
             ->columns(Page::FIELD_ID)
             ->where('lft > :lft: AND rgt < :rgt:', [
                 'lft' => $parentPage->lft,
@@ -220,7 +222,7 @@ class PageService extends Injectable
     public function getDisplayOrderMissing(): PageMap
     {
         $query = (new Builder)
-            ->from(['p' => Page::class])
+            ->from(['p' => $this->websiteSettings->getPageClass()])
             ->join(Page::class, 'cp.parent_id = p.id AND cp.display_order IS NULL', 'cp')
             ->groupBy('p.id');
 

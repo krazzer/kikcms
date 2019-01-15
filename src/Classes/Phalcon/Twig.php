@@ -184,6 +184,19 @@ class Twig extends Engine implements EngineInterface
             new \Twig_SimpleFunction('ucfirst', function ($string) {
                 return ucfirst($string);
             }, $options),
+            new \Twig_SimpleFunction('svg', function ($value) {
+                if(is_numeric($value)){
+                    $filePath = SITE_PATH . 'storage/media/' . $value . '.svg';
+                } else {
+                    $filePath = SITE_PATH . 'public_html/images/icons/' . $value . '.svg';
+                }
+
+                if( ! file_exists($filePath)){
+                    return '?';
+                }
+
+                return file_get_contents($filePath);
+            }, $options),
         ];
 
         if ( ! empty($userFunctions)) {

@@ -222,9 +222,13 @@ class FinderController extends RenderableController
             throw new NotFoundException();
         }
 
+        if($finderFile->getExtension() == 'svg'){
+            return $this->fileAction($finderFile);
+        }
+
         $thumbPath = $this->finderFileService->getThumbPath($finderFile, $type);
 
-        if ( ! file_exists($thumbPath)) {
+        if ( ! file_exists($thumbPath) && $finderFile->isImage()) {
             $this->finderFileService->createThumb($finderFile, $type);
         }
 
