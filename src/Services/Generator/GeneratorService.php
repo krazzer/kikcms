@@ -8,8 +8,8 @@ use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Classes\ObjectMap;
 use KikCmsCore\Services\DbService;
-use Nette\PhpGenerator\Helpers;
 use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PsrPrinter;
 use Phalcon\Di\Injectable;
 
 /**
@@ -121,7 +121,9 @@ class GeneratorService extends Injectable
             mkdir($fileDir);
         }
 
-        return file_put_contents($filePath, "<?php\n\n" . Helpers::tabsToSpaces((string) $namespace));
+        $printer = new PsrPrinter();
+
+        return file_put_contents($filePath, "<?php\n\n" . $printer->printNamespace($namespace));
     }
 
     /**
