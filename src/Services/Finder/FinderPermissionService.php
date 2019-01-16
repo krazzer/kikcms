@@ -163,10 +163,10 @@ class FinderPermissionService extends Injectable
     }
 
     /**
-     * @param int $fileId
+     * @param int|null $fileId
      * @return bool
      */
-    public function canEditId(int $fileId): bool
+    public function canEditId(?int $fileId): bool
     {
         return $this->can(FinderConfig::RIGHT_WRITE, $fileId);
     }

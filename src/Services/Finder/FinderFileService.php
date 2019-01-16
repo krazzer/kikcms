@@ -260,14 +260,14 @@ class FinderFileService extends Injectable
 
     /**
      * @param int[] $fileIds
-     * @param int $folderId
+     * @param int|null $folderId
      */
-    public function moveFilesToFolderById(array $fileIds, int $folderId)
+    public function moveFilesToFolderById(array $fileIds, ?int $folderId)
     {
         $fileIds = $this->removeFileIdsInPath($fileIds, $folderId);
 
         $this->dbService->update(FinderFile::class, [
-            FinderFile::FIELD_FOLDER_ID => $folderId ?: null
+            FinderFile::FIELD_FOLDER_ID => $folderId
         ], [
             FinderFile::FIELD_ID => $fileIds
         ]);
@@ -357,11 +357,11 @@ class FinderFileService extends Injectable
 
     /**
      * @param int[] $fileIds
-     * @param int $folderId
+     * @param int|null $folderId
      *
      * @return int[]
      */
-    private function removeFileIdsInPath(array $fileIds, int $folderId)
+    private function removeFileIdsInPath(array $fileIds, ?int $folderId)
     {
         $breadCrumbs = $this->getFolderPath($folderId);
 
