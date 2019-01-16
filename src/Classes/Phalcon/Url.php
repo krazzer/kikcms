@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Phalcon;
 
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Router;
+use Phalcon\Mvc\Router\RouteInterface;
 
 /**
  * Adds some convenience to Phalcons UrlProvider
@@ -28,11 +29,7 @@ class Url extends \Phalcon\Mvc\Url
 
         // transforms parameters
         if ($uri != null && is_string($uri) && $route = $this->_router->getRouteByName($uri)) {
-            // if the args are scalar, we will use the first param
-            if (is_scalar($args)) {
-                $firstParam = array_search(1, $route->getPaths());
-                $args       = [$firstParam => $args];
-            }
+            $args = $this->convertArguments($args, $route);
 
             $routeName  = $uri;
             $uri        = $args;
@@ -47,5 +44,37 @@ class Url extends \Phalcon\Mvc\Url
         }
 
         return parent::get($uri, $args, $local, $baseUri);
+    }
+
+    /**
+     * @param $args
+     * @param RouteInterface $route
+     * @return array
+     */
+    private function convertArguments($args, RouteInterface $route): array
+    {
+        if( ! $args){
+            return [];
+        }
+
+        $routPaths = $route->getPaths();
+
+        // if the args are scalar, we will use the first param
+        if (is_scalar($args)) {
+            $firstParam = array_search(1, $routPaths);
+            return [$firstParam => $args];
+        }
+
+        $newArgs = [];
+
+        foreach ($args as $key => $value){
+            if(is_numeric($key)){
+                $newArgs[array_search($key + 1, $routPaths)] = $value;
+            } else {
+                $newArgs[$key] = $value;
+            }
+        }
+
+        return $newArgs;
     }
 }

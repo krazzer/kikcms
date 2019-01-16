@@ -124,6 +124,7 @@ class Services extends BaseServices
             TinyMceService::class,
             TranslationService::class,
             Translator::class,
+            TwigService::class,
             UrlService::class,
             UserService::class,
             UserSettingsService::class,

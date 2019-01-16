@@ -236,6 +236,17 @@ class FinderController extends RenderableController
     }
 
     /**
+     * @param string $type
+     * @param int $fileId
+     * @return string
+     * @throws NotFoundException
+     */
+    public function typedThumbAction(string $type, int $fileId)
+    {
+        return $this->thumbAction($fileId, $type);
+    }
+
+    /**
      * @return string
      */
     public function uploadAction()

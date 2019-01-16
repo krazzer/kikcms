@@ -1,8 +1,8 @@
 {# @var finderFile \KikCMS\Models\FinderFile #}
 {% if finderFile.isImage %}
-    <img src="{{ route('finderFileThumb', finderFile.id) }}"/>
+    <img src="{{ url('finderFileThumb', finderFile.id) }}"/>
 {% elseif(finderFile.extension == 'svg') %}
-    <img src="{{ route('finderFile', finderFile.id) }}"/>
+    <img src="{{ url('finderFile', finderFile.id) }}"/>
 {% elseif(finderFile.isFolder) %}
     <img src="/cmsassets/images/folder.png"/>
 {% else %}
