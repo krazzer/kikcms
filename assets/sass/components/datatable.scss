@@ -467,13 +467,13 @@ body {
 
 .draggedObject {
     display: block;
-    z-index: $zIndexWindowLevel0;
+    z-index: $zIndexAboveLevel10Window;
     position: absolute;
     pointer-events: none;
     opacity: .95;
 
     &.rowClone {
-        background-color: $colorWhite;
+        background-color: rgba(255,255,255,.8);
         -webkit-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
         -moz-box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
         box-shadow: 0 0 1px 0 rgba($colorBlack, 0.25);
