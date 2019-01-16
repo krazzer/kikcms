@@ -8,6 +8,7 @@ use KikCMS\Classes\WebForm\Field;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
+use KikCMS\Services\Pages\PageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
 
@@ -72,11 +73,14 @@ class Page extends Model
      */
     public function beforeDelete()
     {
-        /** @var PageLanguageService $pageLanguageService */
-        $pageLanguageService = $this->getDI()->get('pageLanguageService');
-
         foreach ($this->pageLanguages as $pageLanguage) {
-            $pageLanguageService->removeCache($pageLanguage);
+            $this->getPageLanguageService()->removeCache($pageLanguage);
+        }
+
+        $offspringAliases = $this->getPageService()->getOffspringAliases($this);
+
+        foreach ($offspringAliases as $aliasPage) {
+            $aliasPage->delete();
         }
     }
 
@@ -133,7 +137,7 @@ class Page extends Model
      */
     public function getDisplayOrder(): ?int
     {
-        if ( ! property_exists($this, self::FIELD_DISPLAY_ORDER)){
+        if ( ! property_exists($this, self::FIELD_DISPLAY_ORDER)) {
             return null;
         }
 
@@ -267,7 +271,7 @@ class Page extends Model
 
         foreach ($templateFieldKeys as $key => $field) {
             // skip fields that aren't content fields
-            if($field instanceof Field && substr($field->getKey(), -6) !== ':value'){
+            if ($field instanceof Field && substr($field->getKey(), -6) !== ':value') {
                 continue;
             }
 
@@ -328,5 +332,21 @@ class Page extends Model
     private function getPageRearrangeService(): PageRearrangeService
     {
         return $this->getDI()->get('pageRearrangeService');
+    }
+
+    /**
+     * @return PageLanguageService
+     */
+    private function getPageLanguageService(): PageLanguageService
+    {
+        return $this->getDI()->get('pageLanguageService');
+    }
+
+    /**
+     * @return PageService
+     */
+    private function getPageService(): PageService
+    {
+        return $this->getDI()->get('pageService');
     }
 }

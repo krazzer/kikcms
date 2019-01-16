@@ -101,7 +101,7 @@ class PageService extends Injectable
 
         $offspringIdMap = $this->dbService->getAssoc($query);
 
-        foreach ($offspringIdMap as $id => $offspringIds){
+        foreach ($offspringIdMap as $id => $offspringIds) {
             $offspringIdMap[$id] = explode(',', $offspringIds);
         }
 
@@ -178,13 +178,7 @@ class PageService extends Injectable
      */
     public function isOffspringOf(Page $page, Page $parentPage): bool
     {
-        $query = (new Builder)
-            ->from($this->websiteSettings->getPageClass())
-            ->columns(Page::FIELD_ID)
-            ->where('lft > :lft: AND rgt < :rgt:', [
-                'lft' => $parentPage->lft,
-                'rgt' => $parentPage->rgt,
-            ]);
+        $query = $this->getOffspringQuery($parentPage)->columns(Page::FIELD_ID);
 
         $childIds = $this->dbService->getValues($query);
 
@@ -210,6 +204,18 @@ class PageService extends Injectable
         if ($menu->getMaxLevel()) {
             $query->andWhere('level <= ' . (int) ($menuPage->level + $menu->getMaxLevel()));
         }
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
+    }
+
+    /**
+     * @param Page $page
+     * @return PageMap
+     */
+    public function getOffspringAliases(Page $page): PageMap
+    {
+        $query = $this->getOffspringQuery($page)
+            ->inWhere(Page::FIELD_TYPE, [Page::TYPE_ALIAS]);
 
         return $this->dbService->getObjectMap($query, PageMap::class);
     }
