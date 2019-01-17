@@ -54,12 +54,16 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param int $fileId
+     * @param int|null $fileId
      * @param string|null $thumb
      * @return string
      */
-    public function file(int $fileId, string $thumb = null): string
+    public function file(?int $fileId, string $thumb = null): string
     {
+        if( ! $fileId){
+            return '';
+        }
+
         if ( ! $thumb) {
             return $this->url->get('finderFile', $fileId);
         }
@@ -68,11 +72,11 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param int $fileId
+     * @param int|null $fileId
      * @param string|null $thumb
      * @return string
      */
-    public function fileBg(int $fileId, string $thumb = null): string
+    public function fileBg(?int $fileId, string $thumb = null): string
     {
         return "background-image: url('" . $this->file($fileId, $thumb) . "');";
     }
