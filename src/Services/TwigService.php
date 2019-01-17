@@ -140,11 +140,11 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param string $string
+     * @param string|null $string
      * @param array $parameters
      * @return string
      */
-    public function tl(string $string, array $parameters = []): string
+    public function tl(?string $string, array $parameters = []): string
     {
         return $this->translator->tl($string, $parameters);
     }
