@@ -57,9 +57,9 @@ class UserService extends Injectable
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return User::getById($this->getUserId());
     }
