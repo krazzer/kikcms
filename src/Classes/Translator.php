@@ -63,7 +63,7 @@ class Translator extends Injectable
 
             // if translation is not found, log the error, and return key instead
             if ( ! array_key_exists($key, $translations)) {
-                $this->logger->log(Logger::ERROR, 'Translation key "' . $key . '" does not exist');
+                $this->logger->log(Logger::NOTICE, 'Translation key "' . $key . '" does not exist');
                 return $key;
             }
 
