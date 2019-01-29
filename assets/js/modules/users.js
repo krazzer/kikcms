@@ -1,6 +1,6 @@
 $(function () {
     $('.datatable').on('click', '.action.link', function () {
-        var emailAddress        = $(this).prev().prev().prev().text().trim();
+        var emailAddress        = $(this).parent().find('[data-column="email"]').text().trim();
         var protocolAndHostname = window.location.protocol + '//' + window.location.hostname;
 
         if(window.location.port && window.location.port !== 80 && window.location.port !== 443){
