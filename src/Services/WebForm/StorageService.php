@@ -117,7 +117,7 @@ class StorageService extends Injectable
      */
     private function executeAfterMainEvents()
     {
-        $this->executeEvents(StoreEvent::BEFORE_MAIN_STORE);
+        $this->executeEvents(StoreEvent::AFTER_MAIN_STORE);
     }
 
     /**
