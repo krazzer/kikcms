@@ -72,8 +72,6 @@ class BaseController extends Controller
      * @param string $filePath
      * @param string $mimeType
      * @param string|null $fileName
-     *
-     * @return string
      */
     protected function outputFile(string $filePath, string $mimeType, string $fileName = null)
     {
@@ -92,7 +90,8 @@ class BaseController extends Controller
         $this->response->setHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($filePath)) . ' GMT');
         $this->response->setHeader('Pragma', 'cache');
 
-        return file_get_contents($filePath);
+        readfile($filePath);
+        exit;
     }
 
     /**
