@@ -36,6 +36,26 @@ class Translator extends Injectable
     }
 
     /**
+     * @param array $array
+     * @param string $prefix
+     * @return array
+     */
+    public function flatten(array $array, $prefix = ''): array
+    {
+        $result = array();
+
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $result = $result + $this->flatten($value, $prefix . $key . '.');
+            } else {
+                $result[$prefix . $key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string|int|null $key
      * @param array $replaces
      * @param string|null $langCode if null, this->getLanguageCode() will be used
@@ -184,25 +204,6 @@ class Translator extends Injectable
         $langCode = $langCode ?: $this->getLanguageCode();
 
         return (string) $this->translationService->getTranslationValue($id, $langCode);
-    }
-
-    /**
-     * @param array $array
-     * @param string $prefix
-     * @return array
-     */
-    private function flatten(array $array, $prefix = ''): array
-    {
-        $result = array();
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result = $result + $this->flatten($value, $prefix . $key . '.');
-            } else {
-                $result[$prefix . $key] = $value;
-            }
-        }
-        return $result;
     }
 
     /**
