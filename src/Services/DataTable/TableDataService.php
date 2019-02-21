@@ -5,15 +5,17 @@ namespace KikCMS\Services\DataTable;
 
 
 use KikCMS\Classes\DataTable\TableData;
-use KikCMS\Classes\Phalcon\Paginator\QueryBuilder;
+use KikCMS\Services\Util\PaginateListService;
 use KikCMS\Services\Util\QueryService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Paginator\Adapter\QueryBuilder;
 
 /**
  * Handles TableData objects for DataTables
  *
  * @property QueryService $queryService
+ * @property PaginateListService $paginateListService
  */
 class TableDataService extends Injectable
 {
@@ -31,6 +33,8 @@ class TableDataService extends Injectable
             "page"    => $page,
             "limit"   => $limit,
         ]))->getPaginate();
+
+        $paginate->pages = $this->paginateListService->getPageList($paginate->last, $paginate->current);
 
         $tableData = $paginate->items->toArray();
 

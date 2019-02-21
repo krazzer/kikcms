@@ -24,6 +24,7 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
+use KikCMS\Services\Util\PaginateListService;
 use KikCMS\Services\Util\QueryService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
@@ -108,6 +109,7 @@ class Services extends BaseServices
             PageRearrangeService::class,
             PageService::class,
             PagesDataTableService::class,
+            PaginateListService::class,
             QueryService::class,
             LanguageService::class,
             MenuService::class,

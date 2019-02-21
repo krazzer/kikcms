@@ -91,7 +91,6 @@ class BaseController extends Controller
         $this->response->setHeader('Pragma', 'cache');
 
         readfile($filePath);
-        exit;
     }
 
     /**
