@@ -4,7 +4,6 @@ namespace KikCMS\Classes\Phalcon;
 
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Router;
-use Phalcon\Mvc\Router\RouteInterface;
 
 /**
  * Adds some convenience to Phalcons UrlProvider
@@ -29,7 +28,7 @@ class Url extends \Phalcon\Mvc\Url
 
         // transforms parameters
         if ($uri != null && is_string($uri) && $route = $this->_router->getRouteByName($uri)) {
-            $args = $this->convertArguments($args, $route);
+            $args = $this->convertArguments($args, $route->getPaths());
 
             $routeName  = $uri;
             $uri        = $args;
@@ -37,31 +36,25 @@ class Url extends \Phalcon\Mvc\Url
             $args       = null;
         }
 
-        // remove leading slash to prevent double slashes
-        // this is a bug in Phalcon that should be corrected, added issue #13495
-        if(is_string($uri) && substr($uri, 0, 1) == '/' && substr($uri, 1, 1) != '/'){
-            $uri = substr($uri, 1);
-        }
+        $uri = $this->fixDoubleSlashes($uri);
 
         return parent::get($uri, $args, $local, $baseUri);
     }
 
     /**
-     * @param $args
-     * @param RouteInterface $route
+     * @param mixed $args
+     * @param array $routePaths
      * @return array
      */
-    private function convertArguments($args, RouteInterface $route): array
+    public function convertArguments($args, array $routePaths): array
     {
         if( ! $args){
             return [];
         }
 
-        $routPaths = $route->getPaths();
-
         // if the args are scalar, we will use the first param
         if (is_scalar($args)) {
-            $firstParam = array_search(1, $routPaths);
+            $firstParam = array_search(1, $routePaths);
             return [$firstParam => $args];
         }
 
@@ -69,12 +62,28 @@ class Url extends \Phalcon\Mvc\Url
 
         foreach ($args as $key => $value){
             if(is_numeric($key)){
-                $newArgs[array_search($key + 1, $routPaths)] = $value;
+                $newArgs[array_search($key + 1, $routePaths)] = $value;
             } else {
                 $newArgs[$key] = $value;
             }
         }
 
         return $newArgs;
+    }
+
+    /**
+     * Remove leading slash to prevent double slashes
+     * This is a bug in Phalcon that should be corrected, added issue #13495
+     *
+     * @param mixed $uri
+     * @return mixed
+     */
+    public function fixDoubleSlashes($uri)
+    {
+        if(is_string($uri) && substr($uri, 0, 1) == '/' && substr($uri, 1, 1) != '/'){
+            $uri = substr($uri, 1);
+        }
+
+        return $uri;
     }
 }
