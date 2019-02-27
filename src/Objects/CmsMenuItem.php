@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Services\Cms;
+namespace KikCMS\Objects;
 
 /**
  * Value Object for a CMS menu item

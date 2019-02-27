@@ -4,14 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
-use KikCMS\Services\Cms\RememberMeService;
-use KikCMS\Services\Cms\UserSettingsService;
-use KikCMS\Services\DataTable\DataTableFilterService;
-use KikCMS\Services\DataTable\NestedSetService;
-use KikCMS\Services\DataTable\TableDataService;
-use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Services\Finder\FinderFileService;
-use KikCMS\Services\Finder\FinderPermissionHelper;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
@@ -24,33 +17,9 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
-use KikCMS\Services\Util\PaginateListService;
-use KikCMS\Services\Util\QueryService;
-use KikCMS\Services\WebForm\RelationKeyService;
-use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\ObjectLists\CmsPluginList;
-use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Base\BaseServices;
-use KikCMS\Services\Cms\CmsService;
-use KikCMS\Services\DataTable\PageRearrangeService;
-use KikCMS\Services\DataTable\PagesDataTableService;
-use KikCMS\Services\DataTable\TinyMceService;
-use KikCMS\Services\Finder\FinderPermissionService;
-use KikCMS\Services\Finder\FinderService;
-use KikCMS\Services\Generator\ClassesGeneratorService;
-use KikCMS\Services\Generator\GeneratorService;
-use KikCMS\Services\Pages\FullPageService;
-use KikCMS\Services\Pages\PageContentService;
-use KikCMS\Services\Pages\PageLanguageService;
-use KikCMS\Services\Pages\PageService;
-use KikCMS\Services\Pages\TemplateService;
-use KikCMS\Services\Pages\UrlService;
-use KikCMS\Services\Util\DateTimeService;
-use KikCMS\Services\Util\NumberService;
-use KikCMS\Services\Util\StringService;
-use KikCMS\Services\Website\FrontendHelper;
-use KikCMS\Services\Website\MenuService;
 use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
@@ -74,6 +43,8 @@ use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Throwable;
@@ -89,50 +60,22 @@ class Services extends BaseServices
     protected function getSimpleServices(): array
     {
         $services = [
-            AnalyticsService::class,
-            CacheService::class,
-            ClassesGeneratorService::class,
-            CmsService::class,
-            GeneratorService::class,
-            DataTableFilterService::class,
-            DateTimeService::class,
             DbService::class,
             ImageHandler::class,
-            FinderService::class,
-            FinderFileRemoveService::class,
-            FinderPermissionService::class,
-            FinderPermissionHelper::class,
-            FullPageService::class,
-            FrontendHelper::class,
-            PageContentService::class,
-            PageLanguageService::class,
-            PageRearrangeService::class,
-            PageService::class,
-            PagesDataTableService::class,
-            PaginateListService::class,
-            QueryService::class,
-            LanguageService::class,
-            MenuService::class,
-            ModelService::class,
-            NestedSetService::class,
-            NumberService::class,
-            RelationKeyService::class,
-            RememberMeService::class,
             SecuritySingleToken::class,
-            StorageService::class,
-            StringService::class,
-            TableDataService::class,
-            TemplateService::class,
-            TinyMceService::class,
-            TranslationService::class,
             Translator::class,
-            TwigService::class,
-            UrlService::class,
-            UserService::class,
-            UserSettingsService::class,
         ];
 
-        return array_merge($services, $this->getWebsiteSimpleServices());
+        $rii   = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__));
+        $files = [];
+
+        foreach ($rii as $file) {
+            if ( ! $file->isDir()) {
+                $files[] = "KikCMS\\Services" . str_replace([__DIR__, '.php', '/'], ['', '', "\\"], $file->getPathname());
+            }
+        }
+
+        return array_merge($services, $files, $this->getWebsiteSimpleServices());
     }
 
     /**

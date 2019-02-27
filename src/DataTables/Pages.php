@@ -17,7 +17,7 @@ use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\PageRearrangeService;
-use KikCMS\Services\DataTable\PagesDataTableFilters;
+use KikCMS\DataTables\Filters\PagesDataTableFilters;
 use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;

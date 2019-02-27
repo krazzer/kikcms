@@ -4,7 +4,7 @@
 namespace KikCMS\ObjectLists;
 
 
-use KikCMS\Services\Cms\CmsMenuItem;
+use KikCMS\Objects\CmsMenuItem;
 use KikCmsCore\Classes\ObjectMap;
 
 class MenuItemMap extends ObjectMap

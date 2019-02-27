@@ -4,7 +4,7 @@
 namespace KikCMS\ObjectLists;
 
 
-use KikCMS\Services\Cms\CmsMenuGroup;
+use KikCMS\Objects\CmsMenuGroup;
 use KikCmsCore\Classes\ObjectMap;
 
 class MenuGroupMap extends ObjectMap

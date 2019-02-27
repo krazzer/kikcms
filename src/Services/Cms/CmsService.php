@@ -17,6 +17,8 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\ObjectLists\MenuItemMap;
+use KikCMS\Objects\CmsMenuGroup;
+use KikCMS\Objects\CmsMenuItem;
 use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Classes\Model;
 use Monolog\Logger;

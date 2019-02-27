@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Services\DataTable;
+namespace KikCMS\DataTables\Filters;
 
 
 use KikCMS\Classes\DataTable\DataTableFilters;

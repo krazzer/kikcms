@@ -9,7 +9,7 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
-use KikCMS\Services\DataTable\PagesDataTableFilters;
+use KikCMS\DataTables\Filters\PagesDataTableFilters;
 
 /**
  * Pages datatable for one-level, one-template

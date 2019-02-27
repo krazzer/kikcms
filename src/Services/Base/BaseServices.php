@@ -185,6 +185,10 @@ class BaseServices extends ApplicationServices
         foreach ($this->getSimpleServices() as $service) {
             $serviceName = lcfirst(last(explode('\\', $service)));
 
+            if($this->has($serviceName)){
+                continue;
+            }
+
             $this->set($serviceName, function () use ($service) {
                 return new $service();
             });
