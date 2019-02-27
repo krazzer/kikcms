@@ -289,19 +289,19 @@ class Pages extends DataTable
         }
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
-            $value = '<span class="glyphicon glyphicon-link" title="' . $this->linkTitle . '"></span> ' . $value;
+            $value = $this->getNameWithIcon('link', $this->linkTitle, $value);
         }
 
-        if ($rowData[Page::FIELD_KEY] && $rowData[Page::FIELD_TYPE] != Page::TYPE_MENU) {
-            $value = '<span class="glyphicon glyphicon-lock" title="' . $this->lockedTitle . '"></span> ' . $value;
+        if ($rowData[Page::FIELD_TYPE] != Page::TYPE_MENU && $rowData[Page::FIELD_KEY]) {
+            $value = $this->getNameWithIcon('lock', $this->lockedTitle, $value);
         }
 
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_ALIAS) {
-            $value = '<span class="glyphicon glyphicon-share-alt" title="' . $this->linkTitle . '"></span> ' . $value;
+            $value = $this->getNameWithIcon('share-alt', $this->linkTitle, $value);
         }
 
-        if ( ! $rowData[PageLanguage::FIELD_ACTIVE] && $rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE) {
-            $value = '<span class="glyphicon glyphicon-eye-close" title="' . $this->inactiveTitle . '"></span> ' . $value;
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE && ! $rowData[PageLanguage::FIELD_ACTIVE]) {
+            $value = $this->getNameWithIcon('eye-close', $this->inactiveTitle, $value);
         }
 
         $closedPageIdMap = $this->getClosedPageIdMap();
@@ -327,5 +327,16 @@ class Pages extends DataTable
         $this->closedPageIdMapCache = $this->pageService->getOffspringIdMap($closedPageIds);
 
         return $this->closedPageIdMapCache;
+    }
+
+    /**
+     * @param string $icon
+     * @param string $title
+     * @param $value
+     * @return string
+     */
+    private function getNameWithIcon(string $icon, string $title, $value): string
+    {
+        return '<span class="glyphicon glyphicon-' . $icon . '" title="' . $title . '"></span> ' . $value;
     }
 }
