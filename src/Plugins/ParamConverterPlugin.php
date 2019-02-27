@@ -3,6 +3,7 @@
 namespace KikCMS\Plugins;
 
 
+use KikCMS\Services\ModelService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
@@ -11,12 +12,15 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionParameter;
 
 /**
  * Converts Controller method parameters to automatically get the Object by it's id
  *
  * E.g: If the param 'Product $product' is present in the Controller method, and the route contains productId, it will
  * provide the method with the Product object for that id.
+ *
+ * @property ModelService $modelService
  */
 class ParamConverterPlugin extends Plugin
 {
@@ -35,16 +39,32 @@ class ParamConverterPlugin extends Plugin
             return;
         }
 
-        if( ! method_exists($dispatcher->getControllerClass(), $actionName)){
+        if ( ! method_exists($dispatcher->getControllerClass(), $actionName)) {
             return;
         }
 
         $method = new ReflectionMethod($dispatcher->getControllerClass(), $actionName);
 
-        $parameters    = $method->getParameters();
-        $paramValueMap = $dispatcher->getParams();
+        $methodParameters = $method->getParameters();
+        $paramValueMap    = $dispatcher->getParams();
 
-        foreach ($parameters as $parameter) {
+        $replacedParamValueMap = $this->getConvertedParameters($methodParameters, $paramValueMap);
+
+        $dispatcher->setParams($replacedParamValueMap);
+
+        // prevent unused parameter warning
+        $event->setType($event->getType());
+    }
+
+    /**
+     * @param ReflectionParameter[] $methodParameters
+     * @param array $paramValueMap
+     * @return array
+     * @throws ObjectNotFoundException
+     */
+    public function getConvertedParameters(array $methodParameters, array $paramValueMap)
+    {
+        foreach ($methodParameters as $parameter) {
             if ( ! $class = $parameter->getClass()) {
                 continue;
             }
@@ -57,56 +77,32 @@ class ParamConverterPlugin extends Plugin
                 continue;
             }
 
-            $this->replaceParameter($class, $dispatcher);
+            $paramValueMap = $this->replaceParameter($class, $paramValueMap);
         }
 
-        // prevent unused parameter warning
-        $event->setType($event->getType());
-    }
-
-    /**
-     * Replaces the key of given map with a new key at the same position, with also a new value
-     *
-     * @param array $map
-     * @param string $oldKey
-     * @param string $newKey
-     * @param Model $object
-     * @return array
-     */
-    private function replaceKeyAndValue(array $map, string $oldKey, string $newKey, Model $object): array
-    {
-        $keys = array_keys($map);
-
-        $keys[array_search($oldKey, $keys)] = $newKey;
-
-        $map = array_combine($keys, $map);
-
-        $map[$newKey] = $object;
-
-        return $map;
+        return $paramValueMap;
     }
 
     /**
      * @param ReflectionClass $class
-     * @param Dispatcher $dispatcher
+     * @param array $paramValueMap
+     * @return array
      * @throws ObjectNotFoundException
      */
-    private function replaceParameter(ReflectionClass $class, Dispatcher $dispatcher)
+    private function replaceParameter(ReflectionClass $class, array $paramValueMap)
     {
-        $paramValueMap = $dispatcher->getParams();
-
         $obParamName = $this->getObjectParamName($class);
         $idParamName = $this->getIdParamName($class);
 
-        $object = $class->newInstance()::getById($paramValueMap[$idParamName]);
-
-        if ( ! $object) {
+        if ( ! $object = $this->modelService->getObject($class->getName(), $paramValueMap[$idParamName])) {
             throw new ObjectNotFoundException($obParamName);
         }
 
-        $newParameters = $this->replaceKeyAndValue($paramValueMap, $idParamName, $obParamName, $object);
+        $paramValueMap = array_change_key($paramValueMap, $idParamName, $obParamName);
 
-        $dispatcher->setParams($newParameters);
+        $paramValueMap[$obParamName] = $object;
+
+        return $paramValueMap;
     }
 
     /**
