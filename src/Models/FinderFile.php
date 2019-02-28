@@ -19,6 +19,7 @@ class FinderFile extends Model
     const FIELD_NAME      = 'name';
     const FIELD_USER_ID   = 'user_id';
     const FIELD_KEY       = 'key';
+    const FIELD_HASH      = 'hash';
 
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
@@ -130,7 +131,7 @@ class FinderFile extends Model
      */
     public function getOutputMimeType(): string
     {
-        if($this->getExtension() == 'svg') {
+        if ($this->getExtension() == 'svg') {
             return 'image/svg+xml';
         }
 
