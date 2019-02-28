@@ -3,7 +3,6 @@
 namespace KikCMS\Services\Cms;
 
 
-use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
@@ -12,6 +11,7 @@ use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
@@ -19,8 +19,8 @@ use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Objects\CmsMenuGroup;
 use KikCMS\Objects\CmsMenuItem;
+use KikCMS\Services\ModelService;
 use KikCMS\Services\Website\WebsiteService;
-use KikCmsCore\Classes\Model;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
 
@@ -33,42 +33,27 @@ use Phalcon\Di\Injectable;
  * @property AccessControl $acl
  * @property KeyValue $keyValue
  * @property Logger $logger
+ * @property ModelService $modelService
  */
 class CmsService extends Injectable
 {
     /**
      * Clean up cache files saved on disk
-     * These cleanup actions are of no interest to the user, so any error will be hidden, only logged
      */
     public function cleanUpDiskCache()
     {
-        try {
-            $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
+        $cacheFiles      = $this->keyValue->queryKeys(DataTable::INSTANCE_PREFIX);
+        $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
 
-            $cacheFiles = glob($diskCacheFolder . '*');
-
-            foreach ($cacheFiles as $file) {
-                $fileName = basename($file);
-
-                if (substr($fileName, 0, strlen(DataTable::INSTANCE_PREFIX)) !== DataTable::INSTANCE_PREFIX) {
-                    continue;
-                }
-
-                if (filemtime($file) + (3600 * 24) > time()) {
-                    continue;
-                }
-
-                $newIdsCache = unserialize($this->keyValue->get($fileName));
-
-                if ($newIdsCache instanceof SubDataTableNewIdsCache) {
-                    $this->removeUnsavedTemporaryRecords($newIdsCache);
-                }
-
-                unlink($file);
+        foreach ($cacheFiles as $fileName) {
+            // file must be younger than 1 day
+            if (filemtime($diskCacheFolder . $fileName) + CacheConfig::ONE_DAY > time()) {
+                continue;
             }
-        } catch (Exception $exception) {
-            $this->logger->log(Logger::ERROR, $exception);
-            return;
+
+            $newIdsCache = unserialize($this->keyValue->get($fileName));
+
+            $this->removeUnsavedTemporaryRecords($newIdsCache);
         }
     }
 
@@ -165,13 +150,11 @@ class CmsService extends Injectable
      */
     private function removeUnsavedTemporaryRecords(SubDataTableNewIdsCache $cache)
     {
-        $model = $cache->getModel();
+        $column  = $cache->getColumn();
+        $objects = $this->modelService->getObjects($cache->getModel(), $cache->getIds());
 
-        /** @var Model $model */
-        $model = new $model();
-
-        foreach ($cache->getIds() as $id) {
-            if ($object = $model::findFirst([$cache->getColumn() . ' = 0 AND ' . DataTable::TABLE_KEY . ' = ' . $id])) {
+        foreach ($objects as $object) {
+            if ($object->$column === '0') {
                 $object->delete();
             }
         }
@@ -199,7 +182,7 @@ class CmsService extends Injectable
      */
     public function checkSecurityToken(string $token)
     {
-        if( ! $this->keyValue->exists($token)){
+        if ( ! $this->keyValue->exists($token)) {
             throw new UnauthorizedException();
         }
 

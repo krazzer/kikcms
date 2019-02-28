@@ -44,7 +44,6 @@ class LoginForm extends WebForm
             return $this->response->redirect('cms/login/reset');
         }
 
-        $this->cmsService->cleanUpDiskCache();
         $this->userService->setLoggedIn($user->id);
 
         if (isset($input[self::FIELD_REMEMBER])) {

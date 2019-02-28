@@ -3,13 +3,16 @@
 namespace KikCMS\Services;
 
 
+use Exception;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\ObjectLists\UserMap;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\User;
+use Monolog\Logger;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -18,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property AccessControl $acl
  * @property DbService $dbService
  * @property Config $applicationConfig
+ * @property CmsService $cmsService
  * @property Translator $translator
  * @property MailService $mailService
  * @property Permission $permission
@@ -157,6 +161,14 @@ class UserService extends Injectable
      */
     public function setLoggedIn(int $id)
     {
+        // Clean up disk cache. If this fails for any reason, don't bother the user
+        try {
+            $this->cmsService->cleanUpDiskCache();
+        } catch (Exception $exception) {
+            $this->logger->log(Logger::ERROR, $exception);
+            return;
+        }
+
         $user = User::getById($id);
 
         $this->session->set('loggedIn', true);
