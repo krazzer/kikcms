@@ -27,9 +27,19 @@ class TinyMceService extends Injectable
     public function getLinkList(string $languageCode): array
     {
         $pageUrlData = $this->urlService->getUrlData($languageCode);
+
+        return $this->getLinkListByUrlData($pageUrlData);
+    }
+
+    /**
+     * @param array $pageUrlData [[id, parent_id, name, slug, type]]
+     * @return array
+     */
+    public function getLinkListByUrlData(array $pageUrlData): array
+    {
         $pageUrlDataMap = [];
 
-        foreach ($pageUrlData as $pageUrlDatum){
+        foreach ($pageUrlData as $pageUrlDatum) {
             $pageUrlDataMap[$pageUrlDatum['id']] = $pageUrlDatum;
         }
 
@@ -46,9 +56,8 @@ class TinyMceService extends Injectable
      */
     private function addUrls(array $linkList, $url = ''): array
     {
-        foreach ($linkList as $i => $item)
-        {
-            if($item['type'] !== Page::TYPE_MENU){
+        foreach ($linkList as $i => $item) {
+            if ($item['type'] !== Page::TYPE_MENU) {
                 $subUrl = $url . '/' . $item['slug'];
             } else {
                 $subUrl = $url;
@@ -57,7 +66,7 @@ class TinyMceService extends Injectable
             $linkList[$i]['value'] = $subUrl;
             $linkList[$i]['title'] = $item['name'];
 
-            if(isset($item['menu'])){
+            if (isset($item['menu'])) {
                 $linkList[$i]['menu'] = $this->addUrls($item['menu'], $subUrl);
             }
         }
@@ -80,7 +89,7 @@ class TinyMceService extends Injectable
                 $pid = $s['parent_id'];
                 if (isset($source[$pid])) {
                     if ( ! isset($source[$pid]['menu'])) {
-                        $source[$pid]['menu'] = array();
+                        $source[$pid]['menu'] = [];
                     }
 
                     $source[$pid]['menu'][] = &$s;
