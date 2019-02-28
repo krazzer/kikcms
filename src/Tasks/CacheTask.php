@@ -25,7 +25,12 @@ class CacheTask extends Task
     {
         $url = $this->url->getBaseUri() . 'cache/clear/' . $this->cmsService->createSecurityToken();
 
-        $response = json_decode(file_get_contents($url), true);
+        $contextOptions = ["ssl" => [
+            "verify_peer"      => false,
+            "verify_peer_name" => false,
+        ]];
+
+        $response = json_decode(file_get_contents($url, false, stream_context_create($contextOptions)), true);
 
         if ( ! isset($response['success']) || ! $response['success']) {
             echo 'Cache clear failed!' . PHP_EOL;
