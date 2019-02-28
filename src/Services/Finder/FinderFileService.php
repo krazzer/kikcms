@@ -32,6 +32,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FileStorage $fileStorage
+ * @property FinderHashService $finderHashService
  * @property FinderPermissionService $finderPermissionService
  * @property FinderFileRemoveService $finderFileRemoveService
  * @property Config $config
@@ -82,6 +83,7 @@ class FinderFileService extends Injectable
 
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
+        $this->finderHashService->updateHash($finderFile);
 
         return (int) $finderFile->id;
     }
@@ -398,6 +400,7 @@ class FinderFileService extends Injectable
         $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
         $this->resizeWithinBoundaries($finderFile);
         $this->finderFileRemoveService->removeThumbNails($finderFile);
+        $this->finderHashService->updateHash($finderFile);
 
         return true;
     }
