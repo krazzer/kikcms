@@ -7,6 +7,7 @@ use Exception;
 use Helpers\TestHelper;
 use KikCMS\Services\Finder\FinderFileService;
 use Phalcon\Http\Request\File;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class FinderTest extends TestCase
@@ -15,10 +16,7 @@ class FinderTest extends TestCase
     {
         $finder = new Finder((new FinderFilters())->setFolderId(1));
 
-        $fileMock = $this->createMock(File::class);
-        $fileMock->method('getRealType')->willReturn('image/jpeg');
-        $fileMock->method('getExtension')->willReturn('jpg');
-        $fileMock->method('getError')->willReturn(false);
+        $fileMock = $this->getFileMock('image/png', 'png');
 
         $fileServiceMock = $this->createMock(FinderFileService::class);
         $fileServiceMock->method('create')->willReturn(1);
@@ -54,22 +52,12 @@ class FinderTest extends TestCase
         $this->assertCount(1, $result->getErrors());
 
         // test has error
-        $fileMock = $this->createMock(File::class);
-        $fileMock->method('getRealType')->willReturn('image/jpeg');
-        $fileMock->method('getExtension')->willReturn('jpg');
-        $fileMock->method('getError')->willReturn(true);
-
-        $files = [$fileMock];
+        $files = [$this->getFileMock('image/png', 'png', true)];
 
         $this->assertCount(1, $finder->uploadFiles($files)->getErrors());
 
         // test mimetype not allowed
-        $fileMockInValidExt = $this->createMock(File::class);
-        $fileMockInValidExt->method('getRealType')->willReturn('InvalidMimeType');
-        $fileMockInValidExt->method('getExtension')->willReturn('InvalidExtension');
-        $fileMockInValidExt->method('getError')->willReturn(false);
-
-        $files = [$fileMockInValidExt];
+        $files = [$this->getFileMock('InvalidMimeType', 'InvalidExtension')];
 
         $this->assertCount(1, $finder->uploadFiles($files)->getErrors());
 
@@ -79,5 +67,31 @@ class FinderTest extends TestCase
         $files = [$fileMock, $fileMock];
 
         $finder->uploadFiles($files, true);
+    }
+
+    public function testMimeTypeAllowed()
+    {
+        $finder = new Finder();
+
+        $this->assertTrue($finder->mimeTypeAllowed($this->getFileMock('image/png', 'png')));
+        $this->assertFalse($finder->mimeTypeAllowed($this->getFileMock('InvalidMime', 'png')));
+        $this->assertFalse($finder->mimeTypeAllowed($this->getFileMock('image/png', 'InvalidExt')));
+        $this->assertFalse($finder->mimeTypeAllowed($this->getFileMock('image/png', 'jpg')));
+    }
+
+    /**
+     * @param string $mimeType
+     * @param string $extension
+     * @param bool $error
+     * @return MockObject|File
+     */
+    private function getFileMock(string $mimeType, string $extension, bool $error = false): MockObject
+    {
+        $mock = $this->createMock(File::class);
+        $mock->method('getRealType')->willReturn($mimeType);
+        $mock->method('getExtension')->willReturn($extension);
+        $mock->method('getError')->willReturn($error);
+
+        return $mock;
     }
 }

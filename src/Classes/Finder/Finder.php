@@ -227,6 +227,26 @@ class Finder extends Renderable
     }
 
     /**
+     * @param File $file
+     * @return bool
+     */
+    public function mimeTypeAllowed(File $file): bool
+    {
+        $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
+        $fileMimeType = $file->getRealType();
+        $extension    = $file->getExtension();
+        $extension    = strtolower($extension);
+
+        // check if the extension is allowed
+        if ( ! in_array($extension, $allowedMimes)) {
+            return false;
+        }
+
+        // check if the file's mime matches it's extension
+        return in_array($fileMimeType, MimeConfig::ALL_MIME_TYPES[$extension]);
+    }
+
+    /**
      * This method may contain logic that will influence the output when rendered
      */
     protected function initialize()
@@ -239,30 +259,5 @@ class Finder extends Renderable
     protected function getJsProperties(): array
     {
         return ['pickingMode' => $this->pickingMode];
-    }
-
-    /**
-     * @param File $file
-     * @return bool
-     */
-    private function mimeTypeAllowed(File $file): bool
-    {
-        $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
-        $fileMimeType = $file->getRealType();
-        $extension    = $file->getExtension();
-        $extension    = strtolower($extension);
-
-        // check if extension is known
-        if ( ! array_key_exists($extension, MimeConfig::ALL_MIME_TYPES)) {
-            return false;
-        }
-
-        // check if the extension is allowed
-        if ( ! in_array($extension, $allowedMimes)) {
-            return false;
-        }
-
-        // check if the file's mime matches it's extension
-        return in_array($fileMimeType, MimeConfig::ALL_MIME_TYPES[$extension]);
     }
 }
