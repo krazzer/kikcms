@@ -13,20 +13,18 @@ class ByteUtil
      */
     public static function stringToBytes(string $val): int
     {
-        $val  = trim($val);
-        $last = strtolower($val[strlen($val) - 1]);
-        $val  = (int) str_replace($last, '', $val);
+        $sizes = ['b', 'k', 'm', 'g', 't', 'p', 'e', 'z', 'y'];
+        $val   = trim($val);
+        $last  = strtolower($val[strlen($val) - 1]);
 
-        switch ($last) {
-            case 'g':
-                $val *= (1024 * 1024 * 1024);
-            break;
-            case 'm':
-                $val *= (1024 * 1024);
-            break;
-            case 'k':
-                $val *= 1024;
-            break;
+        if ( ! in_array($last, $sizes)) {
+            return (int) $val;
+        }
+
+        $val = (float) str_replace($last, '', $val);
+
+        if ($index = array_search($last, $sizes)) {
+            $val *= pow(1024, $index);
         }
 
         return $val;
@@ -42,7 +40,7 @@ class ByteUtil
      */
     public static function bytesToString(int $bytes, int $decimals = 0): string
     {
-        $size   = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $size   = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $factor = (int) floor((strlen($bytes) - 1) / 3);
 
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];

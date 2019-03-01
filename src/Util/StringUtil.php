@@ -30,7 +30,7 @@ class StringUtil
      * @param bool $capitalizeFirstCharacter
      * @return string
      */
-    private static function toCamelCase(string $string, string $charToConvert, bool $capitalizeFirstCharacter = false): string
+    public static function toCamelCase(string $string, string $charToConvert, bool $capitalizeFirstCharacter = false): string
     {
         $str = str_replace($charToConvert, '', ucwords($string, $charToConvert));
 
