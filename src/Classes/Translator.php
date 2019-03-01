@@ -175,6 +175,28 @@ class Translator extends Injectable
 
     /**
      * @param string|null $langCode
+     * @return array [translationKey => value]
+     */
+    public function getUserTranslations(string $langCode = null): array
+    {
+        $langCode = $langCode ?: $this->getLanguageCode();
+        $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
+
+        return $this->cacheService->cache($cacheKey, function () use ($langCode){
+            $query = (new Builder())
+                ->columns(['tk.key', 'tv.value'])
+                ->from(['tv' => TranslationValue::class])
+                ->join(TranslationKey::class, 'tk.id = tv.key_id', 'tk')
+                ->where('tk.key IS NOT NULL AND tv.language_code = :languageCode:', [
+                    'languageCode' => $langCode
+                ]);
+
+            return $this->dbService->getAssoc($query);
+        });
+    }
+
+    /**
+     * @param string|null $langCode
      * @return array
      */
     public function getWebsiteTranslations(string $langCode = null): array
@@ -204,28 +226,6 @@ class Translator extends Injectable
         $langCode = $langCode ?: $this->getLanguageCode();
 
         return (string) $this->translationService->getTranslationValue($id, $langCode);
-    }
-
-    /**
-     * @param string|null $langCode
-     * @return array [translationKey => value]
-     */
-    private function getUserTranslations(string $langCode = null): array
-    {
-        $langCode = $langCode ?: $this->getLanguageCode();
-        $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
-
-        return $this->cacheService->cache($cacheKey, function () use ($langCode){
-            $query = (new Builder())
-                ->columns(['tk.key', 'tv.value'])
-                ->from(['tv' => TranslationValue::class])
-                ->join(TranslationKey::class, 'tk.id = tv.key_id', 'tk')
-                ->where('tk.key IS NOT NULL AND tv.language_code = :languageCode:', [
-                    'languageCode' => $langCode
-                ]);
-
-            return $this->dbService->getAssoc($query);
-        });
     }
 
     /**

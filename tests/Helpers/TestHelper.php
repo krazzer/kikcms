@@ -8,10 +8,20 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\LanguageService;
+use KikCmsCore\Services\DbService;
+use Phalcon\Db\Adapter\Pdo\Mysql;
+use Phalcon\Di;
+use Phalcon\DiInterface;
+use Phalcon\Mvc\Model\Manager;
+use Phalcon\Mvc\Model\MetaData\Memory;
 use PHPUnit\Framework\TestCase;
 
 class TestHelper extends TestCase
 {
+    /** @var DiInterface */
+    private $testDbDi;
+
     public function testGetterAndSetter(string $className, array $variables)
     {
         foreach ($variables as $variable) {
@@ -63,5 +73,42 @@ class TestHelper extends TestCase
         $translatorMock->websiteSettings = $websiteSettingsMock;
 
         return $translatorMock;
+    }
+
+    /**
+     * @return DiInterface
+     */
+    public function getTestDbDi(): DiInterface
+    {
+        if($this->testDbDi){
+            return $this->testDbDi;
+        }
+
+        $di = new Di\FactoryDefault();
+
+        $cacheService = new CacheService();
+
+        $cacheService->cache = false;
+
+        $dbConfig = [
+            'username' => 'root',
+            'password' => 'adminkik12',
+            'dbname'   => 'test',
+            'host'     => '127.0.0.1',
+            'charset'  => 'utf8mb4',
+        ];
+
+        $di->set('languageService', new LanguageService());
+        $di->set('modelsManager', new Manager());
+        $di->set('modelsMetadata', new Memory());
+        $di->set('cacheService', $cacheService);
+        $di->set('db', new Mysql($dbConfig));
+        $di->set('dbService', new DbService());
+
+        Di::setDefault($di);
+
+        $this->testDbDi = $di;
+
+        return $this->testDbDi;
     }
 }
