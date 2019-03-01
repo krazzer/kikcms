@@ -14,6 +14,7 @@ class StringUtil
     {
         return self::toCamelCase($string, '-', $capitalizeFirstCharacter);
     }
+
     /**
      * @param $string
      * @param bool $capitalizeFirstCharacter
@@ -30,11 +31,11 @@ class StringUtil
      * @param bool $capitalizeFirstCharacter
      * @return string
      */
-    public static function toCamelCase(string $string, string $charToConvert, bool $capitalizeFirstCharacter = false): string
+    private static function toCamelCase(string $string, string $charToConvert, bool $capitalizeFirstCharacter = false): string
     {
         $str = str_replace($charToConvert, '', ucwords($string, $charToConvert));
 
-        if (!$capitalizeFirstCharacter) {
+        if ( ! $capitalizeFirstCharacter) {
             $str = lcfirst($str);
         }
 
