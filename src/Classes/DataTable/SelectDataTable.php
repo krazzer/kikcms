@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\DataTable;
 
+use Exception;
 use KikCMS\Classes\Renderable\Filters;
 use Phalcon\Mvc\Model\Query\Builder;
 
@@ -54,6 +55,10 @@ abstract class SelectDataTable extends DataTable
      */
     public function setQueryToShowSelectionFirst(Builder $query)
     {
+        if( ! $columns = $query->getColumns()){
+            throw new Exception('A SelectDataTable must have columns in its query');
+        }
+
         $selectedIds = $this->getFilters()->getSelectedValues();
         $field       = $this->getAliasedTableKey();
 
@@ -63,9 +68,9 @@ abstract class SelectDataTable extends DataTable
             $selectedColumn = '0 AS dataTableSelectIds';
         }
 
-        $query->columns(array_merge($query->getColumns(), [$selectedColumn]));
+        $query->columns(array_merge($columns, [$selectedColumn]));
 
-        if(is_array($query->getOrderBy())){
+        if (is_array($query->getOrderBy())) {
             $query->orderBy(array_merge(['dataTableSelectIds DESC'], $query->getOrderBy()));
         } else {
             $query->orderBy('dataTableSelectIds DESC, ' . $query->getOrderBy());
