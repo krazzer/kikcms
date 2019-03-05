@@ -2,6 +2,9 @@
 
 use Phalcon\Mvc\Application;
 
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+
 require(SITE_PATH . 'vendor/autoload.php');
 require(SITE_PATH . 'vendor/kiksaus/kikcms-core/src/functions.php');
 
