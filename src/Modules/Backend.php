@@ -36,7 +36,7 @@ class Backend implements ModuleDefinitionInterface
             $eventsManager = new Manager;
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
             $eventsManager->attach('dispatch:beforeException', new BackendNotFoundPlugin);
-            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin());
+            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin);
 
             $dispatcher->setEventsManager($eventsManager);
 

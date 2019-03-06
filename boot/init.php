@@ -1,5 +1,7 @@
 <?php
 
+use KikCMS\Plugins\PlaceholderConverterPlugin;
+use Phalcon\Events\Manager;
 use Phalcon\Mvc\Application;
 
 ini_set('session.cookie_httponly', 1);
@@ -26,6 +28,11 @@ $application->registerModules([
         "className" => "KikCMS\\Modules\\WebsiteBackend",
     ],
 ]);
+
+// add application event manager
+$eventsManager = new Manager();
+$eventsManager->attach("application:beforeSendResponse", new PlaceholderConverterPlugin);
+$application->setEventsManager($eventsManager);
 
 // make sure the errorHandler is initialized
 $application->errorHandler;

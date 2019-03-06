@@ -33,8 +33,8 @@ class Frontend implements ModuleDefinitionInterface
             $dispatcher->setDefaultNamespace($defaultNameSpace);
 
             $eventsManager = new Manager;
-            $eventsManager->attach('dispatch:beforeException', new FrontendNotFoundPlugin());
-            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin());
+            $eventsManager->attach('dispatch:beforeException', new FrontendNotFoundPlugin);
+            $eventsManager->attach("dispatch:beforeDispatchLoop", new ParamConverterPlugin);
 
             $dispatcher->setEventsManager($eventsManager);
 
