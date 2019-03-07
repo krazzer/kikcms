@@ -3,13 +3,14 @@
 namespace KikCMS\ObjectLists;
 
 
+use KikCMS\Objects\PlaceholderFileThumbUrl;
 use KikCmsCore\Classes\ObjectMap;
 
-class PlaceholderTable extends ObjectMap
+class PlaceholderFileThumbUrlMap extends PlaceholderFileUrlMap
 {
     /**
      * @param int|string $key
-     * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
+     * @return PlaceholderFileThumbUrl|false
      */
     public function get($key)
     {
@@ -17,7 +18,7 @@ class PlaceholderTable extends ObjectMap
     }
 
     /**
-     * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
+     * @return PlaceholderFileThumbUrl|false
      */
     public function getFirst()
     {
@@ -25,7 +26,7 @@ class PlaceholderTable extends ObjectMap
     }
 
     /**
-     * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
+     * @return PlaceholderFileThumbUrl|false
      */
     public function current()
     {
@@ -33,7 +34,7 @@ class PlaceholderTable extends ObjectMap
     }
 
     /**
-     * @return ObjectMap|PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
+     * @return ObjectMap|PlaceholderFileThumbUrl|false
      */
     public function reverse()
     {

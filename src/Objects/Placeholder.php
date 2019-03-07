@@ -4,62 +4,44 @@
 namespace KikCMS\Objects;
 
 
-class Placeholder
+abstract class Placeholder
 {
-    /** @var int */
-    private $id;
+    /** @var string */
+    private $key;
 
     /** @var string */
     private $placeholder;
 
-    /** @var array */
-    private $arguments;
-
     /**
-     * @param int $id
+     * @param string $key
      * @param string $placeholder
      * @param array $arguments
      */
-    public function __construct(int $id, string $placeholder, array $arguments = [])
+    public function __construct(string $key, string $placeholder, array $arguments = [])
     {
-        $this->id          = $id;
+        $this->key         = $key;
         $this->placeholder = $placeholder;
-        $this->arguments   = $arguments;
+
+        $this->mapArguments($arguments);
     }
 
+    abstract function mapArguments(array $arguments);
+
     /**
-     * @return int
+     * @return string
      */
-    public function getId(): int
+    public function getKey(): string
     {
-        return $this->id;
+        return $this->key;
     }
 
     /**
-     * @param int $id
+     * @param string $key
      * @return Placeholder
      */
-    public function setId(int $id): Placeholder
+    public function setKey(string $key): Placeholder
     {
-        $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getArguments(): array
-    {
-        return $this->arguments;
-    }
-
-    /**
-     * @param array $arguments
-     * @return Placeholder
-     */
-    public function setArguments(array $arguments): Placeholder
-    {
-        $this->arguments = $arguments;
+        $this->key = $key;
         return $this;
     }
 

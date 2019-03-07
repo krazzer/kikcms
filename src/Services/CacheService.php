@@ -79,11 +79,12 @@ class CacheService extends Injectable
     }
 
     /**
+     * @param array $args
      * @return string
      */
-    public function createKey(): string
+    public function createKey(...$args): string
     {
-        return implode(':', func_get_args());
+        return implode(':', $args);
     }
 
     /**

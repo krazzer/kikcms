@@ -4,55 +4,39 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Phalcon\Cache;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
-use KikCMS\ObjectLists\PlaceholderMap;
+use KikCMS\ObjectLists\FileMap;
+use KikCMS\ObjectLists\PlaceholderFileThumbUrlMap;
+use KikCMS\ObjectLists\PlaceholderFileUrlMap;
 use KikCMS\ObjectLists\PlaceholderTable;
-use KikCMS\Objects\Placeholder;
 use KikCMS\Services\Finder\FinderFileService;
 use Phalcon\Di\Injectable;
 
 /**
+ * @property Cache $cache
+ * @property CacheService $cacheService
  * @property FinderFileService $finderFileService
  */
 class PlaceholderService extends Injectable
 {
     /**
-     * @param string $key
+     * Return the placeholder, or the value if it's cached
+     *
+     * @param string $type
      * @param mixed ...$args
      * @return string
      */
-    public function create(string $key, ...$args): string
+    public function getValue(string $type, ...$args): string
     {
-        return '[[[' . $key . ';' . implode(';', $args) . ']]]';
-    }
+        $key = $type . CacheConfig::SEPARATOR . implode(CacheConfig::SEPARATOR, $args);
 
-    /**
-     * Get all placeholder data in one array
-     *
-     * @param string $content
-     * @return PlaceholderTable
-     */
-    public function getTable(string $content): PlaceholderTable
-    {
-        $placeholderTable = new PlaceholderTable();
-
-        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9;]+)\]\]\]/', $content, $output)) {
-            return $placeholderTable;
+        if ($value = $this->cache->get($key)) {
+            return $value;
         }
 
-        foreach ($output[1] as $index => $item) {
-            $args = explode(';', $item);
-            $key  = array_shift($args);
-            $id   = array_shift($args);
-
-            if ( ! $placeholderTable->has($key)) {
-                $placeholderTable->add(new PlaceholderMap, $key);
-            }
-
-            $placeholderTable->get($key)->add(new Placeholder($id, $output[0][$index], $args), $id);
-        }
-
-        return $placeholderTable;
+        return '[[[' . $key . ']]]';
     }
 
     /**
@@ -61,54 +45,100 @@ class PlaceholderService extends Injectable
      */
     public function replaceAll(string $content): string
     {
-        $placeholderTable = $this->getTable($content);
-
-        if ($thumbPlaceholderMap = $placeholderTable->get(PlaceholderConfig::FILE_THUMB)) {
-            $content = $this->replaceFileThumbUrls($content, $thumbPlaceholderMap);
+        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:]+)\]\]\]/', $content, $output)) {
+            return $content;
         }
 
-        if ($thumbPlaceholderMap = $placeholderTable->get(PlaceholderConfig::FILE_URL)) {
-            $content = $this->replaceFileUrls($content, $thumbPlaceholderMap);
+        $placeholderTable = new PlaceholderTable();
+        $replaceMap       = [];
+
+        foreach ($output[1] as $index => $key) {
+            $args = explode(CacheConfig::SEPARATOR, $key);
+            $type = array_shift($args);
+
+            $className    = PlaceholderConfig::CLASS_MAP[$type];
+            $mapClassName = PlaceholderConfig::MAP_CLASS_MAP[$type];
+
+            if ( ! $placeholderTable->has($type)) {
+                $placeholderTable->add(new $mapClassName, $type);
+            }
+
+            $placeholder = $output[0][$index];
+
+            $placeholderTable->get($type)->add(new $className($key, $placeholder, $args), $key);
         }
 
-        return $content;
+
+        if ($placeholderMap = $placeholderTable->get(PlaceholderConfig::FILE_THUMB_URL)) {
+            $replaceMap = array_merge($replaceMap, $this->getFileThumbUrlReplaceMap($placeholderMap));
+        }
+
+        if ($placeholderMap = $placeholderTable->get(PlaceholderConfig::FILE_URL)) {
+            $replaceMap = array_merge($replaceMap, $this->getFileUrlReplaceMap($placeholderMap));
+        }
+
+        return str_replace(array_keys($replaceMap), array_values($replaceMap), $content);
     }
 
     /**
-     * @param string $content
-     * @param PlaceholderMap $placeholderMap
-     * @return string
+     * @param PlaceholderFileThumbUrlMap $placeholderMap
+     * @return array [key => value]
      */
-    private function replaceFileThumbUrls(string $content, PlaceholderMap $placeholderMap): string
+    private function getFileThumbUrlReplaceMap(PlaceholderFileThumbUrlMap $placeholderMap): array
     {
-        $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
+        $replaceMap = [];
+        $fileMap    = $this->getFileMap($placeholderMap);
 
-        foreach ($placeholderMap as $fileId => $placeholder) {
-            $type    = $placeholder->getArguments()[0];
-            $private = (bool) $placeholder->getArguments()[1];
+        foreach ($placeholderMap as $key => $placeholder) {
+            $file = $fileMap->get($placeholder->getFileId());
 
-            $thumbUrl = $this->finderFileService->getThumbUrl($fileMap->get($fileId), $type, $private);
-            $content  = str_replace($placeholder->getPlaceholder(), $thumbUrl, $content);
+            $type    = $placeholder->getType();
+            $private = $placeholder->isPrivate();
+
+            $thumbUrl = $this->finderFileService->getThumbUrl($file, $type, $private);
+
+            $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
+
+            $this->cache->save($key, $thumbUrl, CacheConfig::ONE_YEAR);
         }
 
-        return $content;
+        return $replaceMap;
     }
 
     /**
-     * @param string $content
-     * @param PlaceholderMap $placeholderMap
-     * @return string
+     * @param PlaceholderFileUrlMap $placeholderMap
+     * @return array [key => value]
      */
-    private function replaceFileUrls(string $content, PlaceholderMap $placeholderMap): string
+    private function getFileUrlReplaceMap(PlaceholderFileUrlMap $placeholderMap): array
     {
-        $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
+        $replaceMap = [];
+        $fileMap    = $this->getFileMap($placeholderMap);
 
-        foreach ($placeholderMap as $fileId => $placeholder) {
-            $private = (bool) $placeholder->getArguments()[0];
-            $fileUrl = $this->finderFileService->getUrl($fileMap->get($fileId), $private);
-            $content = str_replace($placeholder->getPlaceholder(), $fileUrl, $content);
+        foreach ($placeholderMap as $key => $placeholder) {
+            $file = $fileMap->get($placeholder->getFileId());
+
+            $url = $this->finderFileService->getUrl($file, $placeholder->isPrivate());
+
+            $replaceMap[$placeholder->getPlaceholder()] = $url;
+
+            $this->cache->save($key, $url, CacheConfig::ONE_YEAR);
         }
 
-        return $content;
+        return $replaceMap;
+    }
+
+    /**
+     * @param PlaceholderFileUrlMap $placeholderMap
+     * @return FileMap
+     */
+    private function getFileMap(PlaceholderFileUrlMap $placeholderMap): FileMap
+    {
+        $fileIdList = [];
+
+        foreach ($placeholderMap as $key => $placeholder) {
+            $fileIdList[] = $placeholder->getFileId();
+        }
+
+        return $this->finderFileService->getByIdList($fileIdList);
     }
 }

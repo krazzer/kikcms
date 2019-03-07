@@ -87,10 +87,10 @@ class TwigService extends Injectable
         }
 
         if ( ! $thumb) {
-            return $this->placeholderService->create(PlaceholderConfig::FILE_URL, $fileId, $private);
+            return $this->placeholderService->getValue(PlaceholderConfig::FILE_URL, $fileId, $private);
         }
 
-        return $this->placeholderService->create(PlaceholderConfig::FILE_THUMB, $fileId, $thumb, $private);
+        return $this->placeholderService->getValue(PlaceholderConfig::FILE_THUMB_URL, $fileId, $thumb, $private);
     }
 
     /**
