@@ -93,7 +93,7 @@ class Twig extends Engine implements EngineInterface
 
         $functions = [
             'allowed', 'config', 'endForm', 'file', 'fileBg', 'form', 'javascriptInclude', 'route', 'stylesheetLink',
-            'submitButton', 'svg', 'tl', 'ucfirst', 'url'
+            'submitButton', 'svg', 'tl', 'ucfirst', 'url', 'mediaFileBg', 'mediaFile'
         ];
 
         /** @var TwigService $twigService */

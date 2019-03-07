@@ -6,6 +6,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\PlaceholderConfig;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Tag;
@@ -13,6 +14,7 @@ use Phalcon\Tag;
 /**
  * @property AccessControl $acl
  * @property Translator $translator
+ * @property PlaceholderService $placeholderService
  */
 class TwigService extends Injectable
 {
@@ -57,6 +59,7 @@ class TwigService extends Injectable
      * @param int|null $fileId
      * @param string|null $thumb
      * @return string
+     * @deprecated use mediaFile
      */
     public function file(?int $fileId, string $thumb = null): string
     {
@@ -76,9 +79,38 @@ class TwigService extends Injectable
      * @param string|null $thumb
      * @return string
      */
+    public function mediaFile(?int $fileId, string $thumb = null): string
+    {
+        if( ! $fileId){
+            return '';
+        }
+
+        if ( ! $thumb) {
+            return $this->placeholderService->create(PlaceholderConfig::FILE_URL, $fileId);
+        }
+
+        return $this->placeholderService->create(PlaceholderConfig::FILE_THUMB, $fileId, $thumb);
+    }
+
+    /**
+     * @param int|null $fileId
+     * @param string|null $thumb
+     * @return string
+     * @deprecated use mediaFileBg
+     */
     public function fileBg(?int $fileId, string $thumb = null): string
     {
         return "background-image: url('" . $this->file($fileId, $thumb) . "');";
+    }
+
+    /**
+     * @param int|null $fileId
+     * @param string|null $thumb
+     * @return string
+     */
+    public function mediaFileBg(?int $fileId, string $thumb = null): string
+    {
+        return "background-image: url('" . $this->mediaFile($fileId, $thumb) . "');";
     }
 
     /**

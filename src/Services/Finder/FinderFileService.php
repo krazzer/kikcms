@@ -9,6 +9,7 @@ use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Models\FinderPermission;
+use KikCMS\ObjectLists\FileMap;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -111,11 +112,32 @@ class FinderFileService extends Injectable
     /**
      * @param FinderFile $finderFile
      * @param string|null $type
+     * @deprecated use createMediaThumb
      */
     public function createThumb(FinderFile $finderFile, string $type = null)
     {
         $filePath  = $this->getFilePath($finderFile);
         $thumbPath = $this->getThumbPath($finderFile, $type);
+
+        $image = $this->imageHandler->create($filePath);
+
+        if ($type == null) {
+            $image->resize(192, 192);
+        } else {
+            $this->mediaResize->resizeByType($image, $type);
+        }
+
+        $image->save($thumbPath, 90);
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     * @param string|null $type
+     */
+    public function createMediaThumb(FinderFile $finderFile, string $type = null)
+    {
+        $filePath  = $this->getFilePath($finderFile);
+        $thumbPath = $this->getMediaThumbPath($finderFile, $type);
 
         $image = $this->imageHandler->create($filePath);
 
@@ -168,6 +190,19 @@ class FinderFileService extends Injectable
         }
 
         return $this->dbService->getObjects($query);
+    }
+
+    /**
+     * @param array $idList
+     * @return FileMap
+     */
+    public function getByIdList(array $idList): FileMap
+    {
+        $query = (new Builder)
+            ->from(FinderFile::class)
+            ->inWhere(FinderFile::FIELD_ID, $idList);
+
+        return $this->dbService->getObjectMap($query, FileMap::class);
     }
 
     /**
@@ -226,16 +261,50 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getMediaStorageDir(): string
+    {
+        return SITE_PATH . $this->config->application->publicFolder . '/' . FinderConfig::MEDIA_DIR . '/';
+    }
+
+    /**
+     * @return string
+     */
+    public function getMediaThumbsUrl(): string
+    {
+        return $this->url->get(FinderConfig::MEDIA_DIR . '/' . FinderConfig::THUMB_DIR . '/');
+    }
+
+    /**
      * @param FinderFile $finderFile
      * @param string|null $type
      *
      * @return string
+     * @deprecated use getMediaThumbPath instead
      */
     public function getThumbPath(FinderFile $finderFile, string $type = null)
     {
         $type     = $type ?: 'default';
         $fileName = $finderFile->id . '.' . $finderFile->getExtension();
         $dirPath  = $this->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
+
+        if ( ! file_exists($dirPath)) {
+            mkdir($dirPath);
+        }
+
+        return $dirPath . $fileName;
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     * @param string|null $type
+     * @return string
+     */
+    public function getMediaThumbPath(FinderFile $finderFile, string $type = null): string
+    {
+        $fileName = $finderFile->id . '.' . $finderFile->getExtension();
+        $dirPath  = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
@@ -403,6 +472,24 @@ class FinderFileService extends Injectable
         $this->finderHashService->updateHash($finderFile);
 
         return true;
+    }
+
+    /**
+     * Get the url for a thumbnail, and create it if it doesn't exist
+     *
+     * @param FinderFile $file
+     * @param string $type
+     * @return string
+     */
+    public function getThumbUrl(FinderFile $file, string $type): string
+    {
+        $thumbFilePath = $this->getMediaThumbPath($file, $type);
+
+        if( ! file_exists($thumbFilePath)){
+            $this->createMediaThumb($file, $type);
+        }
+
+        return $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName();
     }
 
     /**

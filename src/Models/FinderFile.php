@@ -69,6 +69,14 @@ class FinderFile extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return $this->getId() . '.' . $this->getExtension();
+    }
+
+    /**
      * @return int|null
      */
     public function getFolderId(): ?int
