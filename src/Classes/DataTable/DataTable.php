@@ -4,6 +4,8 @@ namespace KikCMS\Classes\DataTable;
 
 
 use Exception;
+use KikCMS\Config\FinderConfig;
+use KikCMS\Services\TwigService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
@@ -36,6 +38,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property SecuritySingleToken $securitySingleToken
  * @property TableDataService $tableDataService
  * @property Translator $translator
+ * @property TwigService $twigService
  */
 abstract class DataTable extends Renderable
 {
@@ -272,7 +275,7 @@ abstract class DataTable extends Renderable
             return '';
         }
 
-        $thumbUrl = $this->url->get('finderFileThumb', $value);
+        $thumbUrl = $this->twigService->mediaFile($value, FinderConfig::DEFAULT_THUMB_TYPE, true);
         $url      = $this->url->get('finderFile', $value);
 
         $style = 'background-image: url(' . $thumbUrl . ')';

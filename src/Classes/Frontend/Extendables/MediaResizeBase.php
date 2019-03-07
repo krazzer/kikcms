@@ -88,6 +88,14 @@ class MediaResizeBase extends WebsiteExtendable
     }
 
     /**
+     * @param Adapter $image
+     */
+    public function resizeDefault(Adapter $image)
+    {
+        $this->resize($image, 192, 192);
+    }
+
+    /**
      * @param $type
      * @return bool
      */

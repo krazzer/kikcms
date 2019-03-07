@@ -77,19 +77,20 @@ class TwigService extends Injectable
     /**
      * @param int|null $fileId
      * @param string|null $thumb
+     * @param bool $private
      * @return string
      */
-    public function mediaFile(?int $fileId, string $thumb = null): string
+    public function mediaFile(?int $fileId, string $thumb = null, $private = false): string
     {
         if( ! $fileId){
             return '';
         }
 
         if ( ! $thumb) {
-            return $this->placeholderService->create(PlaceholderConfig::FILE_URL, $fileId);
+            return $this->placeholderService->create(PlaceholderConfig::FILE_URL, $fileId, $private);
         }
 
-        return $this->placeholderService->create(PlaceholderConfig::FILE_THUMB, $fileId, $thumb);
+        return $this->placeholderService->create(PlaceholderConfig::FILE_THUMB, $fileId, $thumb, $private);
     }
 
     /**
@@ -106,11 +107,12 @@ class TwigService extends Injectable
     /**
      * @param int|null $fileId
      * @param string|null $thumb
+     * @param bool $private
      * @return string
      */
-    public function mediaFileBg(?int $fileId, string $thumb = null): string
+    public function mediaFileBg(?int $fileId, string $thumb = null, bool $private = false): string
     {
-        return "background-image: url('" . $this->mediaFile($fileId, $thumb) . "');";
+        return "background-image: url('" . $this->mediaFile($fileId, $thumb, $private) . "');";
     }
 
     /**

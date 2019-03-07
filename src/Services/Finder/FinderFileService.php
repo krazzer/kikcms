@@ -133,19 +133,16 @@ class FinderFileService extends Injectable
     /**
      * @param FinderFile $finderFile
      * @param string|null $type
+     * @param bool $private
      */
-    public function createMediaThumb(FinderFile $finderFile, string $type = null)
+    public function createMediaThumb(FinderFile $finderFile, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false)
     {
         $filePath  = $this->getFilePath($finderFile);
-        $thumbPath = $this->getMediaThumbPath($finderFile, $type);
+        $thumbPath = $this->getMediaThumbPath($finderFile, $type, $private);
 
         $image = $this->imageHandler->create($filePath);
 
-        if ($type == null) {
-            $image->resize(192, 192);
-        } else {
-            $this->mediaResize->resizeByType($image, $type);
-        }
+        $this->mediaResize->resizeByType($image, $type);
 
         $image->save($thumbPath, 90);
     }
@@ -286,17 +283,18 @@ class FinderFileService extends Injectable
 
     /**
      * @param FinderFile $file
+     * @param bool $private
      * @return string
      */
-    public function getUrl(FinderFile $file): string
+    public function getUrl(FinderFile $file, bool $private = false): string
     {
-        $fileMediaPath = $this->getMediaFilePath($file);
+        $fileMediaPath = $this->getMediaFilePath($file, $private);
 
         if( ! file_exists($fileMediaPath)){
             symlink($this->getFilePath($file), $fileMediaPath);
         }
 
-        return $this->getMediaFilesUrl() . $file->getFileName();
+        return $this->getMediaFilesUrl() . $file->getFileName($private);
     }
 
     /**
@@ -322,9 +320,10 @@ class FinderFileService extends Injectable
     /**
      * @param FinderFile $finderFile
      * @param string|null $type
+     * @param bool $private
      * @return string
      */
-    public function getMediaThumbPath(FinderFile $finderFile, string $type = null): string
+    public function getMediaThumbPath(FinderFile $finderFile, string $type = null, bool $private = false): string
     {
         $dirPath  = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
 
@@ -332,16 +331,17 @@ class FinderFileService extends Injectable
             mkdir($dirPath);
         }
 
-        return $dirPath . $finderFile->getFileName();
+        return $dirPath . $finderFile->getFileName($private);
     }
 
     /**
      * @param FinderFile $finderFile
+     * @param bool $private
      * @return string
      */
-    public function getMediaFilePath(FinderFile $finderFile): string
+    public function getMediaFilePath(FinderFile $finderFile, bool $private = false): string
     {
-        return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $finderFile->getFileName();
+        return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $finderFile->getFileName($private);
     }
 
     /**
@@ -510,17 +510,18 @@ class FinderFileService extends Injectable
      *
      * @param FinderFile $file
      * @param string $type
+     * @param bool $private
      * @return string
      */
-    public function getThumbUrl(FinderFile $file, string $type): string
+    public function getThumbUrl(FinderFile $file, string $type, bool $private = false): string
     {
-        $thumbFilePath = $this->getMediaThumbPath($file, $type);
+        $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
 
         if( ! file_exists($thumbFilePath)){
-            $this->createMediaThumb($file, $type);
+            $this->createMediaThumb($file, $type, $private);
         }
 
-        return $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName();
+        return $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName($private);
     }
 
     /**

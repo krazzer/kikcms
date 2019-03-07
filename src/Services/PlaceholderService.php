@@ -84,7 +84,10 @@ class PlaceholderService extends Injectable
         $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
 
         foreach ($placeholderMap as $fileId => $placeholder) {
-            $thumbUrl = $this->finderFileService->getThumbUrl($fileMap->get($fileId), $placeholder->getArguments()[0]);
+            $type    = $placeholder->getArguments()[0];
+            $private = (bool) $placeholder->getArguments()[1];
+
+            $thumbUrl = $this->finderFileService->getThumbUrl($fileMap->get($fileId), $type, $private);
             $content  = str_replace($placeholder->getPlaceholder(), $thumbUrl, $content);
         }
 
@@ -101,7 +104,8 @@ class PlaceholderService extends Injectable
         $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
 
         foreach ($placeholderMap as $fileId => $placeholder) {
-            $fileUrl = $this->finderFileService->getUrl($fileMap->get($fileId));
+            $private = (bool) $placeholder->getArguments()[0];
+            $fileUrl = $this->finderFileService->getUrl($fileMap->get($fileId), $private);
             $content = str_replace($placeholder->getPlaceholder(), $fileUrl, $content);
         }
 

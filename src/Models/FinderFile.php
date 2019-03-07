@@ -69,11 +69,16 @@ class FinderFile extends Model
     }
 
     /**
+     * Returns the real file name of the file on disk.
+     *
+     * @param bool $private
      * @return string
      */
-    public function getFileName(): string
+    public function getFileName(bool $private = false): string
     {
-        return $this->getId() . '.' . $this->getExtension();
+        $name = $private ? $this->getHash() : $this->getId();
+
+        return $name . '.' . $this->getExtension();
     }
 
     /**
@@ -82,6 +87,14 @@ class FinderFile extends Model
     public function getFolderId(): ?int
     {
         return (int) $this->folder_id ?: null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHash(): string
+    {
+        return $this->hash;
     }
 
     /**
