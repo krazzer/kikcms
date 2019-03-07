@@ -277,6 +277,29 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getMediaFilesUrl(): string
+    {
+        return $this->url->get(FinderConfig::MEDIA_DIR . '/' . FinderConfig::FILES_DIR . '/');
+    }
+
+    /**
+     * @param FinderFile $file
+     * @return string
+     */
+    public function getUrl(FinderFile $file): string
+    {
+        $fileMediaPath = $this->getMediaFilePath($file);
+
+        if( ! file_exists($fileMediaPath)){
+            symlink($this->getFilePath($file), $fileMediaPath);
+        }
+
+        return $this->getMediaFilesUrl() . $file->getFileName();
+    }
+
+    /**
      * @param FinderFile $finderFile
      * @param string|null $type
      *
@@ -303,14 +326,22 @@ class FinderFileService extends Injectable
      */
     public function getMediaThumbPath(FinderFile $finderFile, string $type = null): string
     {
-        $fileName = $finderFile->id . '.' . $finderFile->getExtension();
         $dirPath  = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
         }
 
-        return $dirPath . $fileName;
+        return $dirPath . $finderFile->getFileName();
+    }
+
+    /**
+     * @param FinderFile $finderFile
+     * @return string
+     */
+    public function getMediaFilePath(FinderFile $finderFile): string
+    {
+        return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $finderFile->getFileName();
     }
 
     /**

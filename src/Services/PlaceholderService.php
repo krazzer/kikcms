@@ -64,7 +64,11 @@ class PlaceholderService extends Injectable
         $placeholderTable = $this->getTable($content);
 
         if ($thumbPlaceholderMap = $placeholderTable->get(PlaceholderConfig::FILE_THUMB)) {
-            $content = $this->replaceFileThumbs($content, $thumbPlaceholderMap);
+            $content = $this->replaceFileThumbUrls($content, $thumbPlaceholderMap);
+        }
+
+        if ($thumbPlaceholderMap = $placeholderTable->get(PlaceholderConfig::FILE_URL)) {
+            $content = $this->replaceFileUrls($content, $thumbPlaceholderMap);
         }
 
         return $content;
@@ -75,15 +79,30 @@ class PlaceholderService extends Injectable
      * @param PlaceholderMap $placeholderMap
      * @return string
      */
-    private function replaceFileThumbs(string $content, PlaceholderMap $placeholderMap): string
+    private function replaceFileThumbUrls(string $content, PlaceholderMap $placeholderMap): string
     {
-        //17 ms
         $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
 
-        //150ms
         foreach ($placeholderMap as $fileId => $placeholder) {
             $thumbUrl = $this->finderFileService->getThumbUrl($fileMap->get($fileId), $placeholder->getArguments()[0]);
             $content  = str_replace($placeholder->getPlaceholder(), $thumbUrl, $content);
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param string $content
+     * @param PlaceholderMap $placeholderMap
+     * @return string
+     */
+    private function replaceFileUrls(string $content, PlaceholderMap $placeholderMap): string
+    {
+        $fileMap = $this->finderFileService->getByIdList($placeholderMap->keys());
+
+        foreach ($placeholderMap as $fileId => $placeholder) {
+            $fileUrl = $this->finderFileService->getUrl($fileMap->get($fileId));
+            $content = str_replace($placeholder->getPlaceholder(), $fileUrl, $content);
         }
 
         return $content;

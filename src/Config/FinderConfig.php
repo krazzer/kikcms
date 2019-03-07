@@ -12,4 +12,7 @@ class FinderConfig
 
     const MEDIA_DIR = 'media';
     const THUMB_DIR = 'thumbs';
+    const FILES_DIR = 'files';
+
+    const DEFAULT_THUMB_TYPE = 'default';
 }
