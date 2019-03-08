@@ -4,17 +4,24 @@
 namespace Helpers;
 
 
+use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\ImageHandler\ImageHandler;
+use KikCMS\Classes\ObjectStorage\File;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\Finder\FinderFileService;
 use KikCMS\Services\LanguageService;
 use KikCmsCore\Services\DbService;
+use Phalcon\Cache\Frontend\Data;
+use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Mvc\Url;
 use PHPUnit\Framework\TestCase;
 
 class TestHelper extends TestCase
@@ -51,9 +58,7 @@ class TestHelper extends TestCase
      */
     public function getTranslator(): Translator
     {
-        if( ! defined('SITE_PATH')){
-            define('SITE_PATH', null);
-        }
+        $this->setSitePath();
 
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
             ->setMethods(['cache'])
@@ -68,8 +73,8 @@ class TestHelper extends TestCase
 
         $translatorMock = new Translator('nl');
 
-        $translatorMock->cache        = null;
-        $translatorMock->cacheService = $cacheServiceMock;
+        $translatorMock->cache           = null;
+        $translatorMock->cacheService    = $cacheServiceMock;
         $translatorMock->websiteSettings = $websiteSettingsMock;
 
         return $translatorMock;
@@ -78,17 +83,15 @@ class TestHelper extends TestCase
     /**
      * @return DiInterface
      */
-    public function getTestDbDi(): DiInterface
+    public function getTestDi(): DiInterface
     {
-        if($this->testDbDi){
+        if ($this->testDbDi) {
             return $this->testDbDi;
         }
 
+        $this->setSitePath();
+
         $di = new Di\FactoryDefault();
-
-        $cacheService = new CacheService();
-
-        $cacheService->cache = false;
 
         $dbConfig = [
             'username' => 'root',
@@ -98,17 +101,43 @@ class TestHelper extends TestCase
             'charset'  => 'utf8mb4',
         ];
 
-        $di->set('languageService', new LanguageService());
-        $di->set('modelsManager', new Manager());
-        $di->set('modelsMetadata', new Memory());
-        $di->set('cacheService', $cacheService);
+        // use cms default config
+        $config = new Ini(dirname(dirname(__DIR__)) . '/config/config.ini');
+
+        $fileStorage = new File();
+        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+
+        $url = new Url();
+        $url->setBaseUri('/');
+
+        $di->set('languageService', new LanguageService);
+        $di->set('modelsManager', new Manager);
+        $di->set('modelsMetadata', new Memory);
+        $di->set('imageHandler', new ImageHandler);
+        $di->set('dbService', new DbService);
+        $di->set('mediaResize', new MediaResizeBase);
+        $di->set('cacheService', new CacheService);
+        $di->set('finderFileService', new FinderFileService('media', 'thumbs'));
+        $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('db', new Mysql($dbConfig));
-        $di->set('dbService', new DbService());
+        $di->set('config', $config);
+        $di->set('fileStorage', $fileStorage);
+        $di->set('url', $url);
 
         Di::setDefault($di);
 
         $this->testDbDi = $di;
 
         return $this->testDbDi;
+    }
+
+    /**
+     * Set a test site path
+     */
+    private function setSitePath()
+    {
+        if ( ! defined('SITE_PATH')) {
+            define('SITE_PATH', dirname(__DIR__) . '/TestSitePath/');
+        }
     }
 }

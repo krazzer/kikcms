@@ -23,7 +23,7 @@ class TranslatorTest extends TestCase
     {
         $translator = new Translator('nl');
 
-        $translator->setDI((new TestHelper)->getTestDbDi());
+        $translator->setDI((new TestHelper)->getTestDi());
 
         $translator->db->delete(TranslationKey::TABLE);
         $translator->db->delete(TranslationValue::TABLE);

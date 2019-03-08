@@ -14,6 +14,7 @@ use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\TwigService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di;
@@ -260,6 +261,7 @@ class DataTableTest extends TestCase
 
         $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
         $urlMock = $this->getMockBuilder(Url::class)->setMethods(['get'])->getMock();
+        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setMethods(['mediaFile'])->getMock();
 
         $attributes = [
             'class'          => 'thumb',
@@ -269,10 +271,12 @@ class DataTableTest extends TestCase
         ];
 
         $tagMock->expects($this->once())->method('tagHtml')->willReturn('url')->with('div', $attributes);
-        $urlMock->expects($this->exactly(2))->method('get')->willReturn('url');
+        $urlMock->expects($this->once())->method('get')->willReturn('url');
+        $twigServiceMock->expects($this->once())->method('mediaFile')->willReturn('url');
 
         $dataTable->tag = $tagMock;
         $dataTable->url = $urlMock;
+        $dataTable->twigService = $twigServiceMock;
 
         $dataTable->formatFinderImage(1);
 
