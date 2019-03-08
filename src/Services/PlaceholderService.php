@@ -45,7 +45,7 @@ class PlaceholderService extends Injectable
      */
     public function replaceAll(string $content): string
     {
-        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:]+)\]\]\]/', $content, $output)) {
+        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:-]+)\]\]\]/', $content, $output)) {
             return $content;
         }
 
