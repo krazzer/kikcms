@@ -15,6 +15,7 @@ use Swift_Mime_MimePart;
  * Service for sending various mails
  *
  * @property Config $config
+ * @property PlaceholderService $placeholderService
  */
 class MailService extends Injectable
 {
@@ -79,6 +80,8 @@ class MailService extends Injectable
         }
 
         $from = $this->getDefaultFrom();
+
+        $htmlBody = $this->placeholderService->replaceAll($htmlBody);
 
         $message = $this->createMessage()
             ->setFrom($from)
