@@ -140,6 +140,12 @@ class FinderFileService extends Injectable
         $filePath  = $this->getFilePath($finderFile);
         $thumbPath = $this->getMediaThumbPath($finderFile, $type, $private);
 
+        // do not resize animated gifs
+        if($this->isAnimatedGif($filePath)){
+            copy($filePath, $thumbPath);
+            return;
+        }
+
         $image = $this->imageHandler->create($filePath);
 
         $this->mediaResize->resizeByType($image, $type);
@@ -176,7 +182,7 @@ class FinderFileService extends Injectable
             ->where(FinderFile::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
             ->orderBy('is_folder DESC, name ASC');
 
-        if($this->finderPermissionService->isEnabled()){
+        if ($this->finderPermissionService->isEnabled()) {
             $userId = $this->userService->getUserId();
             $role   = $this->userService->getRole();
 
@@ -290,7 +296,7 @@ class FinderFileService extends Injectable
     {
         $fileMediaPath = $this->getMediaFilePath($file, $private);
 
-        if( ! file_exists($fileMediaPath)){
+        if ( ! file_exists($fileMediaPath)) {
             symlink($this->getFilePath($file), $fileMediaPath);
         }
 
@@ -325,7 +331,7 @@ class FinderFileService extends Injectable
      */
     public function getMediaThumbPath(FinderFile $finderFile, string $type = null, bool $private = false): string
     {
-        $dirPath  = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
+        $dirPath = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
@@ -458,6 +464,28 @@ class FinderFileService extends Injectable
     }
 
     /**
+     * @param string $filename
+     * @return bool
+     */
+    public function isAnimatedGif(string $filename): bool
+    {
+        if ( ! ($fh = @fopen($filename, 'rb'))) {
+            return false;
+        }
+
+        $count = 0;
+
+        while ( ! feof($fh) && $count < 2) {
+            $chunk = fread($fh, 1024 * 100);
+            $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00[\x2C\x21]#s', $chunk, $matches);
+        }
+
+        fclose($fh);
+
+        return $count > 1;
+    }
+
+    /**
      * @param int[] $fileIds
      * @param int|null $folderId
      *
@@ -517,7 +545,7 @@ class FinderFileService extends Injectable
     {
         $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
 
-        if( ! file_exists($thumbFilePath)){
+        if ( ! file_exists($thumbFilePath)) {
             $this->createMediaThumb($file, $type, $private);
         }
 
@@ -551,11 +579,11 @@ class FinderFileService extends Injectable
 
         // smaller than required, so do nothing
         if ($dimensions[0] <= $maxWidth && $dimensions[1] <= $maxHeight) {
-            try{
+            try {
                 $image->save($filePath, $jpgQuality);
-            } catch(ImagickException $exception){
+            } catch (ImagickException $exception) {
                 // suppress exception with code 410
-                if($exception->getCode() !== 410){
+                if ($exception->getCode() !== 410) {
                     throw $exception;
                 }
             }
@@ -578,7 +606,7 @@ class FinderFileService extends Injectable
             return null;
         }
 
-        if( ! $this->userService->getUser()->folder){
+        if ( ! $this->userService->getUser()->folder) {
             return null;
         }
 
