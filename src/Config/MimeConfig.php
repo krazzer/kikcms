@@ -5,6 +5,19 @@ namespace KikCMS\Config;
 
 class MimeConfig
 {
+    const JPEG = 'jpeg';
+    const JPG  = 'jpg';
+    const PNG  = 'png';
+    const GIF  = 'gif';
+    const PDF  = 'pdf';
+    const DOC  = 'doc';
+    const DOCX = 'docx';
+    const XLS  = 'xls';
+    const XLSX = 'xlsx';
+    const PPT  = 'ppt';
+    const PPTX = 'pptx';
+    const SVG  = 'svg';
+
     /** @const array contains all mimeTypes, extend when necessary */
     const ALL_MIME_TYPES = [
         'jpeg' => ['image/jpeg', 'image/pjpeg'],

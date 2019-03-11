@@ -8,6 +8,7 @@ use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\FinderConfig;
+use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FinderPermission;
 use KikCMS\ObjectLists\FileMap;
 use KikCMS\Services\UserService;
@@ -544,6 +545,11 @@ class FinderFileService extends Injectable
     public function getThumbUrl(FinderFile $file, string $type, bool $private = false): string
     {
         $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
+
+        // svg's don't need thumbs, just return the URL
+        if($file->getExtension() == MimeConfig::SVG){
+            return $this->getUrl($file, $private);
+        }
 
         if ( ! file_exists($thumbFilePath)) {
             $this->createMediaThumb($file, $type, $private);
