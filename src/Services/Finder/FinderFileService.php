@@ -69,7 +69,7 @@ class FinderFileService extends Injectable
         $finderFile = new FinderFile();
 
         $finderFile->name      = $file->getName();
-        $finderFile->extension = $file->getExtension();
+        $finderFile->extension = strtolower($file->getExtension());
         $finderFile->size      = $file->getSize();
         $finderFile->created   = new Now();
         $finderFile->updated   = new Now();
@@ -517,7 +517,7 @@ class FinderFileService extends Injectable
         $finderFile = FinderFile::getById($fileId);
 
         $finderFile->name      = $file->getName();
-        $finderFile->extension = $file->getExtension();
+        $finderFile->extension = strtolower($file->getExtension());
         $finderFile->size      = $file->getSize();
         $finderFile->updated   = new Now();
         $finderFile->mimetype  = $mimeType;
