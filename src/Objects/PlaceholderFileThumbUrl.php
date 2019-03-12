@@ -17,7 +17,7 @@ class PlaceholderFileThumbUrl extends PlaceholderFileUrl
         $this
             ->setFileId((int) $arguments[0])
             ->setType($arguments[1])
-            ->setPrivate((bool) $arguments[2]);
+            ->setPrivate($arguments[2] == 'private');
     }
 
     /**

@@ -86,6 +86,8 @@ class TwigService extends Injectable
             return '';
         }
 
+        $private = $private ? 'private' : 'public';
+
         if ( ! $thumb) {
             return $this->placeholderService->getValue(PlaceholderConfig::FILE_URL, $fileId, $private);
         }
