@@ -78,6 +78,7 @@ class FrontendHelper extends Injectable
      * @param string $type
      * @param int|null $imageId
      * @return string
+     * @deprecated use twig shortcut: mediaFileBg
      */
     public function bgThumb(string $type, int $imageId = null)
     {

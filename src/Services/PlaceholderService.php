@@ -12,12 +12,14 @@ use KikCMS\ObjectLists\PlaceholderFileThumbUrlMap;
 use KikCMS\ObjectLists\PlaceholderFileUrlMap;
 use KikCMS\ObjectLists\PlaceholderTable;
 use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Pages\UrlService;
 use Phalcon\Di\Injectable;
 
 /**
  * @property Cache $cache
  * @property CacheService $cacheService
  * @property FinderFileService $finderFileService
+ * @property UrlService $urlService
  */
 class PlaceholderService extends Injectable
 {
@@ -115,7 +117,10 @@ class PlaceholderService extends Injectable
         $fileMap    = $this->getFileMap($placeholderMap);
 
         foreach ($placeholderMap as $key => $placeholder) {
-            $file = $fileMap->get($placeholder->getFileId());
+            if( ! $file = $fileMap->get($placeholder->getFileId())){
+                $replaceMap[$placeholder->getPlaceholder()] = null;
+                continue;
+            }
 
             $url = $this->finderFileService->getUrl($file, $placeholder->isPrivate());
 
