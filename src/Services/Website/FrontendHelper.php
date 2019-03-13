@@ -75,21 +75,6 @@ class FrontendHelper extends Injectable
     }
 
     /**
-     * @param string $type
-     * @param int|null $imageId
-     * @return string
-     * @deprecated use twig shortcut: mediaFileBg
-     */
-    public function bgThumb(string $type, int $imageId = null)
-    {
-        if ( ! $imageId) {
-            return '';
-        }
-
-        return "background-image: url('/finder/thumb/" . $type . "/" . $imageId . "')";
-    }
-
-    /**
      * Build a multi-level ul li structured menu
      *
      * @param int|string $menuId can be either the id or the key of the menu

@@ -94,6 +94,8 @@ class Routing extends Injectable
         ]);
 
         $backend->add('/file/url/{fileId:[0-9]+}', "Finder::url")->setName('fileUrl');
+        $backend->add("/file/{fileId:[0-9]+}", "Finder::file")->setName('file');
+        $backend->add("/file/key/{key:[0-9a-z\-]+}", "Finder::key");
 
         $frontend->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
         $frontend->add('/', "Frontend::page")->setName('page');
@@ -103,11 +105,6 @@ class Routing extends Injectable
         $frontend->add('/robots.txt', "Robots::robots");
 
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
-
-        $frontend->add("/finder/file/{fileId:[0-9]+}", "Finder::file")->setName('file');
-        $frontend->add("/finder/key/{key:[0-9a-z\-]+}", "Finder::key");
-        $frontend->add("/finder/thumb/{fileId:[0-9]+}", "Finder::thumb")->setName('fileThumb');
-        $frontend->add('/finder/thumb/{type:[0-9a-z\/\-]+}/{fileId:[0-9]+}', "Finder::typedThumb")->setName('fileTypedThumb');
 
         $router->mount($frontend);
         $router->mount($backend);

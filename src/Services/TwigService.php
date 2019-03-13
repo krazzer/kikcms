@@ -58,25 +58,6 @@ class TwigService extends Injectable
     /**
      * @param int|null $fileId
      * @param string|null $thumb
-     * @return string
-     * @deprecated use mediaFile
-     */
-    public function file(?int $fileId, string $thumb = null): string
-    {
-        if( ! $fileId){
-            return '';
-        }
-
-        if ( ! $thumb) {
-            return $this->url->get('file', $fileId);
-        }
-
-        return $this->url->get('fileTypedThumb', [$thumb, $fileId]);
-    }
-
-    /**
-     * @param int|null $fileId
-     * @param string|null $thumb
      * @param bool $private
      * @return string
      */
@@ -93,17 +74,6 @@ class TwigService extends Injectable
         }
 
         return $this->placeholderService->getValue(PlaceholderConfig::FILE_THUMB_URL, $fileId, $thumb, $private);
-    }
-
-    /**
-     * @param int|null $fileId
-     * @param string|null $thumb
-     * @return string
-     * @deprecated use mediaFileBg
-     */
-    public function fileBg(?int $fileId, string $thumb = null): string
-    {
-        return "background-image: url('" . $this->file($fileId, $thumb) . "');";
     }
 
     /**
