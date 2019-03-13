@@ -5,44 +5,44 @@ namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Translator;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
 
 /**
- * Handles the removal of FinderFiles
+ * Handles the removal of Files
  *
  * @property DbService $dbService
- * @property FinderFileService $finderFileService
- * @property FinderPermissionService $finderPermissionService
+ * @property FileService $fileService
+ * @property FilePermissionService $filePermissionService
  * @property PageContentService $pageContentService
  * @property Translator $translator
  */
-class FinderFileRemoveService extends Injectable
+class FileRemoveService extends Injectable
 {
     /**
      * @param int[] $fileIds
      */
     public function deleteFilesByIds(array $fileIds)
     {
-        $finderFiles = FinderFile::getByIdList($fileIds);
+        $files = File::getByIdList($fileIds);
         $allFileIds  = $fileIds;
 
         // get sub files
-        foreach ($finderFiles as $file) {
-            $allFileIds = $this->finderFileService->getFileIdsRecursive($file, $allFileIds);
+        foreach ($files as $file) {
+            $allFileIds = $this->fileService->getFileIdsRecursive($file, $allFileIds);
         }
 
-        $finderFiles = FinderFile::getByIdList($allFileIds);
+        $files = File::getByIdList($allFileIds);
 
-        if( ! $filesRemoved = $this->dbService->delete(FinderFile::class, [FinderFile::FIELD_ID => $fileIds])){
+        if( ! $filesRemoved = $this->dbService->delete(File::class, [File::FIELD_ID => $fileIds])){
             return;
         }
 
-        foreach ($finderFiles as $finderFile) {
-            if ( ! $finderFile->isFolder()) {
-                $this->unlinkFiles($finderFile);
+        foreach ($files as $file) {
+            if ( ! $file->isFolder()) {
+                $this->unlinkFiles($file);
             }
         }
     }
@@ -50,16 +50,16 @@ class FinderFileRemoveService extends Injectable
     /**
      * Check if the file can be deleted. If not, return the corresponding error message
      *
-     * @param FinderFile $file
+     * @param File $file
      * @return null|string
      */
-    public function getDeleteErrorMessage(FinderFile $file): ?string
+    public function getDeleteErrorMessage(File $file): ?string
     {
         if ($file->key) {
             return $this->translator->tl('media.deleteErrorLocked');
         }
 
-        if ( ! $this->finderPermissionService->canEdit($file)) {
+        if ( ! $this->filePermissionService->canEdit($file)) {
             return $this->translator->tl('media.errorCantEdit');
         }
 
@@ -87,14 +87,14 @@ class FinderFileRemoveService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      */
-    public function removeThumbNails(FinderFile $finderFile)
+    public function removeThumbNails(File $file)
     {
-        $thumbNailDirs = glob($this->finderFileService->getStorageDir() . $this->finderFileService->getThumbDir() . '/*');
+        $thumbNailDirs = glob($this->fileService->getStorageDir() . $this->fileService->getThumbDir() . '/*');
 
         foreach ($thumbNailDirs as $thumbNailDir) {
-            $thumbFile = $this->finderFileService->getThumbPath($finderFile, basename($thumbNailDir));
+            $thumbFile = $this->fileService->getThumbPath($file, basename($thumbNailDir));
 
             if (file_exists($thumbFile)) {
                 unlink($thumbFile);
@@ -103,13 +103,13 @@ class FinderFileRemoveService extends Injectable
     }
 
     /**
-     * Remove all files and thumb files for the given FinderFile
+     * Remove all files and thumb files for the given File
      *
-     * @param FinderFile $finderFile
+     * @param File $file
      */
-    private function unlinkFiles(FinderFile $finderFile)
+    private function unlinkFiles(File $file)
     {
-        unlink($this->finderFileService->getFilePath($finderFile));
-        $this->removeThumbNails($finderFile);
+        unlink($this->fileService->getFilePath($file));
+        $this->removeThumbNails($file);
     }
 }

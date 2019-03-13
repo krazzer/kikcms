@@ -276,7 +276,7 @@ abstract class DataTable extends Renderable
         }
 
         $thumbUrl = $this->twigService->mediaFile($value, FinderConfig::DEFAULT_THUMB_TYPE, true);
-        $url      = $this->url->get('finderFile', $value);
+        $url      = $this->url->get('file', $value);
 
         $style = 'background-image: url(' . $thumbUrl . ')';
 

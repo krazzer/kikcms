@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\ObjectStorage;
 
 
-use Phalcon\Http\Request\File as RequestFile;
+use Phalcon\Http\Request\File as UploadedFile;
 
 /**
  * Stores files on disk
@@ -40,15 +40,19 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
-    public function storeByRequest(RequestFile $file, string $dir = '', $fileName = null): bool
+    public function storeByRequest(UploadedFile $uploadedFile, string $dir = '', $fileName = null, bool $overwrite = false): bool
     {
         if ( ! $fileName) {
-            $fileName = $file->getName();
+            $fileName = $uploadedFile->getName();
         }
 
-        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $file->getExtension();
+        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $uploadedFile->getExtension();
 
-        return $file->moveTo($filePath);
+        if ($overwrite && file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        return $uploadedFile->moveTo($filePath);
     }
 
     /**

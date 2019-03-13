@@ -6,7 +6,7 @@ namespace KikCMS\Models;
 
 use KikCmsCore\Classes\Model;
 
-class FinderPermission extends Model
+class FilePermission extends Model
 {
     public const TABLE = 'cms_file_permission';
     public const ALIAS = 'fp';

@@ -1,13 +1,13 @@
-{# @var files \KikCMS\Models\FinderFile[] #}
+{# @var files \KikCMS\Models\File[] #}
 
-{% for finderFile in files %}
-    <div class="file file-{{ finderFile.id }}{{ finderFile.isFolder ? ' folder' }}" data-id="{{ finderFile.id }}"
-            {% if not finderFile.isFolder %} data-url="{{ url('finderFile', finderFile.id) }}" {% endif %}>
+{% for file in files %}
+    <div class="file file-{{ file.id }}{{ file.isFolder ? ' folder' }}" data-id="{{ file.id }}"
+            {% if not file.isFolder %} data-url="{{ url('file', file.id) }}" {% endif %}>
         <div class="thumb">
             {% include "@kikcms/finder/file.twig" %}
         </div>
         <div class="name">
-            <span>{{ finderFile.name }}</span>
+            <span>{{ file.name }}</span>
         </div>
     </div>
 {% endfor %}

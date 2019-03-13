@@ -5,20 +5,20 @@ namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Finder\FinderFilters;
-use KikCMS\Models\FinderFolder;
+use KikCMS\Models\Folder;
 use KikCMS\Services\UserService;
 use Phalcon\Di\Injectable;
 
 /**
  * @property UserService $userService
- * @property FinderPermissionService $finderPermissionService
+ * @property FilePermissionService $filePermissionService
  */
 class FinderService extends Injectable
 {
     /**
-     * @return FinderFolder|null
+     * @return Folder|null
      */
-    public function getUserFolder(): ?FinderFolder
+    public function getUserFolder(): ?Folder
     {
         return $this->userService->getUser()->folder;
     }
@@ -34,7 +34,7 @@ class FinderService extends Injectable
             return;
         }
 
-        if($this->finderPermissionService->canReadId($filters->getFolderId())) {
+        if($this->filePermissionService->canReadId($filters->getFolderId())) {
             return;
         }
 
@@ -51,9 +51,9 @@ class FinderService extends Injectable
      */
     public function setFolderBySession(FinderFilters $filters)
     {
-        $folder = FinderFolder::getById($this->session->finderFolderId);
+        $folder = Folder::getById($this->session->finderFolderId);
 
-        if ($folder && $this->finderPermissionService->canReadId($folder->getId())) {
+        if ($folder && $this->filePermissionService->canReadId($folder->getId())) {
             $filters->setFolderId($folder->getId());
             return;
         }

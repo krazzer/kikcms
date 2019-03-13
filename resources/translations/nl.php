@@ -422,7 +422,6 @@ return [
             'CreditCard'        => 'Het veld :label moet een geldig credit card nummer zijn',
             'Date'              => 'Het veld :label moet een geldige datum zijn',
             'Default'           => 'De waarde van het veld :label is niet geldig',
-            'FinderFileType'    => 'Het bestand mag alleen van de volgende types zijn: :types',
 
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',
             'csrf'             => 'Uw verzoek kon niet worden verwerkt. CSRF validatie mislukt. Probeer het opnieuw.',

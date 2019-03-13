@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Validator;
@@ -34,17 +34,17 @@ class FileType extends Validator
             $allowedFileTypes = $this->fileTypes;
         }
 
-        $finderFile = FinderFile::getById($value);
+        $file = File::getById($value);
 
-        if ( ! $finderFile) {
+        if ( ! $file) {
             return true;
         }
 
-        if (in_array(strtolower($finderFile->getExtension()), $allowedFileTypes)) {
+        if (in_array(strtolower($file->getExtension()), $allowedFileTypes)) {
             return true;
         }
 
-        $message = $validator->getDefaultMessage('FinderFileType');
+        $message = $validator->getDefaultMessage('FileType');
         $message = str_replace(':types', implode(', ', $allowedFileTypes), $message);
 
         $validator->appendMessage(new Message($message, $field));

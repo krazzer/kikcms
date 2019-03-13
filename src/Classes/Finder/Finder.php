@@ -11,18 +11,18 @@ use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\MimeConfig;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use KikCMS\Services\Cms\CmsService;
-use KikCMS\Services\Finder\FinderFileService;
-use KikCMS\Services\Finder\FinderPermissionService;
+use KikCMS\Services\Finder\FileService;
+use KikCMS\Services\Finder\FilePermissionService;
 use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\UserService;
-use Phalcon\Http\Request\File;
+use Phalcon\Http\Request\File as UploadedFile;
 
 /**
  * @property FinderService $finderService
- * @property FinderFileService $finderFileService
- * @property FinderPermissionService $finderPermissionService
+ * @property FileService $fileService
+ * @property FilePermissionService $filePermissionService
  * @property Translator $translator
  * @property AccessControl $acl
  * @property UserService $userService
@@ -67,7 +67,7 @@ class Finder extends Renderable
             return true;
         }
 
-        return $this->finderPermissionService->canReadId($folderId);
+        return $this->filePermissionService->canReadId($folderId);
     }
 
     /**
@@ -101,7 +101,7 @@ class Finder extends Renderable
 
         $this->addAssets();
 
-        $files = $this->finderFileService->getByFilters($this->getFilters());
+        $files = $this->fileService->getByFilters($this->getFilters());
 
         return $this->renderView('index', [
             'files'       => $files,
@@ -109,10 +109,10 @@ class Finder extends Renderable
             'jsData'      => $this->getJsData(),
             'path'        => $this->renderPath(),
             'pickingMode' => $this->pickingMode,
-            'permission'  => $this->finderPermissionService->isEnabled(),
+            'permission'  => $this->filePermissionService->isEnabled(),
             'roleMap'     => $this->cmsService->getRoleMap(false),
             'visitorRole' => Permission::VISITOR,
-            'userMap'     => $this->finderPermissionService->getEditableUserMap(),
+            'userMap'     => $this->filePermissionService->getEditableUserMap(),
         ]);
     }
 
@@ -121,7 +121,7 @@ class Finder extends Renderable
      */
     public function renderFiles()
     {
-        $files = $this->finderFileService->getByFilters($this->getFilters());
+        $files = $this->fileService->getByFilters($this->getFilters());
 
         return $this->renderView('files', [
             'files' => $files,
@@ -129,13 +129,13 @@ class Finder extends Renderable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @return string
      */
-    public function renderFilePreview(FinderFile $finderFile)
+    public function renderFilePreview(File $file)
     {
         return $this->renderView('file', [
-            'finderFile' => $finderFile,
+            'file' => $file,
         ]);
     }
 
@@ -146,7 +146,7 @@ class Finder extends Renderable
     {
         $folderId = $this->getFilters()->getFolderId();
 
-        $path = $this->finderFileService->getFolderPath($folderId);
+        $path = $this->fileService->getFolderPath($folderId);
         $path = array_reverse($path, true);
 
         if (count($path) == 1) {
@@ -168,7 +168,7 @@ class Finder extends Renderable
     }
 
     /**
-     * @param File[] $files
+     * @param UploadedFile[] $files
      * @param int|null $overwriteFileId
      * @return UploadStatus
      */
@@ -197,13 +197,13 @@ class Finder extends Renderable
             }
 
             if ($overwriteFileId) {
-                if ($this->finderFileService->overwrite($file, $overwriteFileId)) {
+                if ($this->fileService->overwrite($file, $overwriteFileId)) {
                     $newFileId = $overwriteFileId;
                 } else {
                     $newFileId = false;
                 }
             } else {
-                $newFileId = $this->finderFileService->create($file, $this->getFilters()->getFolderId());
+                $newFileId = $this->fileService->create($file, $this->getFilters()->getFolderId());
             }
 
             if ( ! $newFileId) {
@@ -227,14 +227,14 @@ class Finder extends Renderable
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $uploadedFile
      * @return bool
      */
-    public function mimeTypeAllowed(File $file): bool
+    public function mimeTypeAllowed(UploadedFile $uploadedFile): bool
     {
         $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
-        $fileMimeType = $file->getRealType();
-        $extension    = $file->getExtension();
+        $fileMimeType = $uploadedFile->getRealType();
+        $extension    = $uploadedFile->getExtension();
         $extension    = strtolower($extension);
 
         // check if the extension is allowed

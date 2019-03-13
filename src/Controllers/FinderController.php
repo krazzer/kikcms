@@ -2,9 +2,9 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Services\Finder\FinderFileRemoveService;
+use KikCMS\Services\Finder\FileRemoveService;
 use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Services\Finder\FinderPermissionService;
+use KikCMS\Services\Finder\FilePermissionService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\UserService;
@@ -13,22 +13,22 @@ use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AccessControl $acl
  * @property DbService $dbService
- * @property FinderFileService $finderFileService
- * @property FinderFileRemoveService $finderFileRemoveService
+ * @property FileService $fileService
+ * @property FileRemoveService $fileRemoveService
  * @property Translator $translator
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
- * @property FinderPermissionService $finderPermissionService
+ * @property FilePermissionService $filePermissionService
  * @property PageContentService $pageContentService
  * @property TwigService $twigService
  */
@@ -53,11 +53,11 @@ class FinderController extends RenderableController
         $folderName = $this->request->getPost('folderName');
         $folderId   = $finder->getFilters()->getFolderId();
 
-        if ($folderId && ! $this->finderPermissionService->canEditId($folderId)) {
+        if ($folderId && ! $this->filePermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();
         }
 
-        $folderId = $this->finderFileService->createFolder($folderName, $folderId);
+        $folderId = $this->fileService->createFolder($folderName, $folderId);
 
         return json_encode([
             'files'   => $finder->renderFiles(),
@@ -75,10 +75,10 @@ class FinderController extends RenderableController
         $errorMessages = [];
         $idsToRemove   = [];
 
-        $files = FinderFile::getByIdList($fileIds);
+        $files = File::getByIdList($fileIds);
 
         foreach ($files as $file) {
-            if ($errorMessage = $this->finderFileRemoveService->getDeleteErrorMessage($file)) {
+            if ($errorMessage = $this->fileRemoveService->getDeleteErrorMessage($file)) {
                 $errorMessages[] = $errorMessage;
             } else {
                 $idsToRemove[] = $file->getId();
@@ -86,7 +86,7 @@ class FinderController extends RenderableController
         }
 
         try {
-            $this->finderFileRemoveService->deleteFilesByIds($idsToRemove);
+            $this->fileRemoveService->deleteFilesByIds($idsToRemove);
         } catch (DbForeignKeyDeleteException $e) {
             $errorMessages[] = $this->translator->tl('media.deleteErrorLinked');
         }
@@ -106,11 +106,11 @@ class FinderController extends RenderableController
         $fileId   = $this->request->getPost('fileId');
         $fileName = $this->request->getPost('fileName');
 
-        if ( ! $this->finderPermissionService->canEditId($fileId)) {
+        if ( ! $this->filePermissionService->canEditId($fileId)) {
             throw new UnauthorizedException();
         }
 
-        $this->finderFileService->updateFileNameById($fileId, $fileName);
+        $this->fileService->updateFileNameById($fileId, $fileName);
 
         return json_encode([
             'files'   => $finder->renderFiles(),
@@ -119,20 +119,20 @@ class FinderController extends RenderableController
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @return string
      * @throws NotFoundException
      * @internal param int $fileId
      */
-    public function fileAction(FinderFile $finderFile)
+    public function fileAction(File $file)
     {
-        $filePath = $this->finderFileService->getFilePath($finderFile);
+        $filePath = $this->fileService->getFilePath($file);
 
-        if ( ! $this->finderPermissionService->canRead($finderFile)) {
+        if ( ! $this->filePermissionService->canRead($file)) {
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $finderFile->getOutputMimeType(), $finderFile->getName());
+        return $this->outputFile($filePath, $file->getOutputMimeType(), $file->getName());
     }
 
     /**
@@ -143,14 +143,14 @@ class FinderController extends RenderableController
      */
     public function keyAction(string $fileKey)
     {
-        $finderFile = $this->finderFileService->getByKey($fileKey);
-        $filePath   = $this->finderFileService->getFilePath($finderFile);
+        $file     = $this->fileService->getByKey($fileKey);
+        $filePath = $this->fileService->getFilePath($file);
 
-        if ( ! $this->finderPermissionService->canRead($finderFile)) {
+        if ( ! $this->filePermissionService->canRead($file)) {
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $finderFile->getOutputMimeType(), $finderFile->getName());
+        return $this->outputFile($filePath, $file->getOutputMimeType(), $file->getName());
     }
 
     /**
@@ -160,7 +160,7 @@ class FinderController extends RenderableController
     {
         $targetFolderId = $this->request->getPost('folderId', 'int');
 
-        if ($targetFolderId && ! $this->finderPermissionService->canReadId($targetFolderId)) {
+        if ($targetFolderId && ! $this->filePermissionService->canReadId($targetFolderId)) {
             throw new UnauthorizedException();
         }
 
@@ -183,11 +183,11 @@ class FinderController extends RenderableController
         $fileIds  = $this->request->getPost('fileIds');
         $folderId = $finder->getFilters()->getFolderId();
 
-        if ( ! $this->finderPermissionService->canEditId($folderId)) {
+        if ( ! $this->filePermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();
         }
 
-        $this->finderFileService->moveFilesToFolderById($fileIds, $folderId);
+        $this->fileService->moveFilesToFolderById($fileIds, $folderId);
 
         return json_encode([
             'files'   => $finder->renderFiles(),
@@ -220,22 +220,22 @@ class FinderController extends RenderableController
      */
     public function thumbAction(int $fileId, string $type = null)
     {
-        /** @var FinderFile $finderFile */
-        if (( ! $finderFile = FinderFile::getById($fileId)) || ! $this->mediaResize->typeExists($type)) {
+        /** @var File $file */
+        if (( ! $file = File::getById($fileId)) || ! $this->mediaResize->typeExists($type)) {
             throw new NotFoundException();
         }
 
-        if($finderFile->getExtension() == 'svg'){
-            return $this->fileAction($finderFile);
+        if ($file->getExtension() == 'svg') {
+            return $this->fileAction($file);
         }
 
-        $thumbPath = $this->finderFileService->getThumbPath($finderFile, $type);
+        $thumbPath = $this->fileService->getThumbPath($file, $type);
 
-        if ( ! file_exists($thumbPath) && $finderFile->isImage()) {
-            $this->finderFileService->createThumb($finderFile, $type);
+        if ( ! file_exists($thumbPath) && $file->isImage()) {
+            $this->fileService->createThumb($file, $type);
         }
 
-        return $this->outputFile($thumbPath, $finderFile->getOutputMimeType(), $finderFile->getName());
+        return $this->outputFile($thumbPath, $file->getOutputMimeType(), $file->getName());
     }
 
     /**
@@ -260,7 +260,7 @@ class FinderController extends RenderableController
 
         $folderId = $finder->getFilters()->getFolderId();
 
-        if ($folderId && ! $this->finderPermissionService->canEditId($folderId)) {
+        if ($folderId && ! $this->filePermissionService->canEditId($folderId)) {
             throw new UnauthorizedException();
         }
 

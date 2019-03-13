@@ -11,14 +11,14 @@ use KikCMS\ObjectLists\FileMap;
 use KikCMS\ObjectLists\PlaceholderFileThumbUrlMap;
 use KikCMS\ObjectLists\PlaceholderFileUrlMap;
 use KikCMS\ObjectLists\PlaceholderTable;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\Pages\UrlService;
 use Phalcon\Di\Injectable;
 
 /**
  * @property Cache $cache
  * @property CacheService $cacheService
- * @property FinderFileService $finderFileService
+ * @property FileService $fileService
  * @property UrlService $urlService
  */
 class PlaceholderService extends Injectable
@@ -97,7 +97,7 @@ class PlaceholderService extends Injectable
             $type    = $placeholder->getType();
             $private = $placeholder->isPrivate();
 
-            $thumbUrl = $this->finderFileService->getThumbUrl($file, $type, $private);
+            $thumbUrl = $this->fileService->getThumbUrl($file, $type, $private);
 
             $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
 
@@ -122,7 +122,7 @@ class PlaceholderService extends Injectable
                 continue;
             }
 
-            $url = $this->finderFileService->getUrl($file, $placeholder->isPrivate());
+            $url = $this->fileService->getUrl($file, $placeholder->isPrivate());
 
             $replaceMap[$placeholder->getPlaceholder()] = $url;
 
@@ -144,6 +144,6 @@ class PlaceholderService extends Injectable
             $fileIdList[] = $placeholder->getFileId();
         }
 
-        return $this->finderFileService->getByIdList($fileIdList);
+        return $this->fileService->getByIdList($fileIdList);
     }
 }

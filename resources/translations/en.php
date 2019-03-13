@@ -132,7 +132,6 @@ return [
             'Date'              => "Field :label is not a valid date",
 
             'Default'          => 'The value of the field :label is not valid',
-            'FinderFileType'   => 'The file may only be one of the following types: :types',
             'passwordMismatch' => 'Passwords must match',
             'csrf'             => 'Your request could not be processed. CSRF validation failed. Please try again.',
             'fieldErrors'      => 'Not all fields are correctly filled. Please walk through the form to check for errors.',

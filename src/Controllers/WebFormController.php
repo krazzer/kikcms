@@ -4,13 +4,13 @@ namespace KikCMS\Controllers;
 
 
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\WebForm\WebForm;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 
 /**
- * @property FinderFileService $finderFileService
+ * @property FileService $fileService
  */
 class WebFormController extends RenderableController
 {
@@ -29,13 +29,13 @@ class WebFormController extends RenderableController
      */
     public function getFilePreviewAction()
     {
-        $fileId     = $this->request->getPost('fileId');
-        $finderFile = FinderFile::getById($fileId);
-        $finder     = new Finder();
+        $fileId = $this->request->getPost('fileId');
+        $file   = File::getById($fileId);
+        $finder = new Finder();
 
         return json_encode([
-            'preview'    => $finder->renderFilePreview($finderFile),
-            'dimensions' => $this->finderFileService->getThumbDimensions($finderFile),
+            'preview'    => $finder->renderFilePreview($file),
+            'dimensions' => $this->fileService->getThumbDimensions($file),
         ]);
     }
 
@@ -59,7 +59,7 @@ class WebFormController extends RenderableController
     {
         $finder = new Finder();
 
-        if($folderId = $this->request->getPost('folderId')){
+        if ($folderId = $this->request->getPost('folderId')) {
             $finder->getFilters()->setFolderId($folderId);
         }
 
@@ -74,9 +74,9 @@ class WebFormController extends RenderableController
             'errors' => $uploadStatus->getErrors(),
         ];
 
-        if ($fileId && $finderFile = FinderFile::getById($fileId)) {
-            $result['preview']    = $finder->renderFilePreview($finderFile);
-            $result['dimensions'] = $this->finderFileService->getThumbDimensions($finderFile);
+        if ($fileId && $file = File::getById($fileId)) {
+            $result['preview']    = $finder->renderFilePreview($file);
+            $result['dimensions'] = $this->fileService->getThumbDimensions($file);
         }
 
         return json_encode($result);

@@ -3,7 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Translator;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
@@ -26,10 +26,10 @@ class PageContentService extends Injectable
     /**
      * Check if the image is linked to any page, or used in a rich-text field
      *
-     * @param FinderFile $file
+     * @param File $file
      * @return PageLanguageMap
      */
-    public function fileIsLinked(FinderFile $file): PageLanguageMap
+    public function fileIsLinked(File $file): PageLanguageMap
     {
         $languageCode     = $this->translator->getLanguageCode();
         $fileFieldKeys    = $this->templateService->getFileFieldKeys();
@@ -50,19 +50,24 @@ class PageContentService extends Injectable
         }
 
         if ($wysiwygFieldKeys) {
+            $searchParams = [
+                'public'  => '%/media/files/' . $file->getId() . '%',
+                'private' => '%/media/files/' . $file->getHash() . '%',
+            ];
+
             $query = (new Builder)
                 ->from(['pl' => PageLanguage::class])
                 ->leftJoin(PageLanguageContent::class, 'plc.page_id = pl.page_id', 'plc')
                 ->inWhere(PageLanguageContent::FIELD_FIELD, $wysiwygFieldKeys)
                 ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
                 ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
-                ->andWhere(PageLanguageContent::FIELD_VALUE . ' LIKE :search:', ['search' => '%/finder/file/' . $file->getId() . '%'])
+                ->andWhere('plc.value LIKE :public: OR plc.value LIKE :private:', $searchParams)
                 ->groupBy('pl.page_id');
 
             /** @var PageLanguage[] $pageLanguages */
             $pageLanguages = $this->dbService->getObjects($query);
 
-            foreach ($pageLanguages as $pageLanguage){
+            foreach ($pageLanguages as $pageLanguage) {
                 $pageLangMap->add($pageLanguage, $pageLanguage->getPageId());
             }
         }

@@ -4,7 +4,7 @@ namespace KikCMS\Services;
 
 
 use Helpers\TestHelper;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use PHPUnit\Framework\TestCase;
 
 class PlaceholderServiceTest extends TestCase
@@ -37,8 +37,8 @@ class PlaceholderServiceTest extends TestCase
             /media/files/hash.png
         ";
 
-        $placeholderService->db->delete(FinderFile::TABLE);
-        $placeholderService->dbService->insert(FinderFile::class, ['id' => 1, 'hash' => 'hash', 'extension' => 'png']);
+        $placeholderService->db->delete(File::TABLE);
+        $placeholderService->dbService->insert(File::class, ['id' => 1, 'hash' => 'hash', 'extension' => 'png']);
 
         $this->assertEquals($expectedResult, $placeholderService->replaceAll($content));
 
@@ -55,6 +55,6 @@ class PlaceholderServiceTest extends TestCase
         }
 
         // clean up db
-        $placeholderService->db->delete(FinderFile::TABLE);
+        $placeholderService->db->delete(File::TABLE);
     }
 }

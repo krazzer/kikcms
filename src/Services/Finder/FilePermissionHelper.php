@@ -7,9 +7,9 @@ namespace KikCMS\Services\Finder;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\FinderConfig;
-use KikCMS\Models\FinderFile;
-use KikCMS\Models\FinderPermission;
-use KikCMS\ObjectLists\FinderPermissionList;
+use KikCMS\Models\File;
+use KikCMS\Models\FilePermission;
+use KikCMS\ObjectLists\FilePermissionList;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
@@ -18,28 +18,28 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property Translator $translator
- * @property FinderPermissionService $finderPermissionService
+ * @property FilePermissionService $filePermissionService
  * @property CmsService $cmsService
  * @property DbService $dbService
  * @property UserService $userService
  */
-class FinderPermissionHelper extends Injectable
+class FilePermissionHelper extends Injectable
 {
     /**
      * @param array $permissionData
      * @param array $fileIds
      * @param bool $saveRecursively
-     * @return FinderPermissionList
+     * @return FilePermissionList
      */
-    public function convertDataToList(array $permissionData, array $fileIds, bool $saveRecursively): FinderPermissionList
+    public function convertDataToList(array $permissionData, array $fileIds, bool $saveRecursively): FilePermissionList
     {
-        $list = new FinderPermissionList();
+        $list = new FilePermissionList();
 
         if ($saveRecursively) {
-            $fileIds = $this->finderPermissionService->getFileIdsWithSubFiles($fileIds);
+            $fileIds = $this->filePermissionService->getFileIdsWithSubFiles($fileIds);
         }
 
-        $editableKeys = $this->finderPermissionService->getEditableKeys();
+        $editableKeys = $this->filePermissionService->getEditableKeys();
 
         foreach ($fileIds as $fileId) {
             foreach ($permissionData as $key => $values) {
@@ -68,7 +68,7 @@ class FinderPermissionHelper extends Injectable
             return $this->translator->tl('media.button.modal.titleMultiple', ['amount' => count($fileIds)]);
         }
 
-        return FinderFile::getById($fileIds[0])->getName();
+        return File::getById($fileIds[0])->getName();
     }
 
     /**
@@ -78,13 +78,13 @@ class FinderPermissionHelper extends Injectable
      */
     public function getPermissionTable(array $fileIds): array
     {
-        $userIds = $this->finderPermissionService->getEditableUserIds();
-        $roles   = $this->finderPermissionService->getEditableRoles();
+        $userIds = $this->filePermissionService->getEditableUserIds();
+        $roles   = $this->filePermissionService->getEditableRoles();
 
         $query = (new Builder)
-            ->from(FinderPermission::class)
+            ->from(FilePermission::class)
             ->columns(['IFNULL(role, user_id) as key', 'SUM([right] = 1) as read', 'SUM([right] = 2) as write'])
-            ->inWhere(FinderPermission::FIELD_FILE_ID, $fileIds)
+            ->inWhere(FilePermission::FIELD_FILE_ID, $fileIds)
             ->andWhere('IFNULL(role, user_id) IS NOT NULL')
             ->groupBy('role, user_id');
 
@@ -122,11 +122,11 @@ class FinderPermissionHelper extends Injectable
      * @param int $fileId
      * @param int|string $key
      * @param array $values
-     * @return FinderPermission
+     * @return FilePermission
      */
-    private function createPermissionByData(int $fileId, $key, array $values): FinderPermission
+    private function createPermissionByData(int $fileId, $key, array $values): FilePermission
     {
-        $permission = new FinderPermission();
+        $permission = new FilePermission();
 
         $permission->right   = $this->getRightByPostValues($values);
         $permission->file_id = $fileId;

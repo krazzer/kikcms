@@ -11,7 +11,7 @@ use KikCMS\Classes\ObjectStorage\File;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Frontend\Data;
@@ -117,7 +117,7 @@ class TestHelper extends TestCase
         $di->set('dbService', new DbService);
         $di->set('mediaResize', new MediaResizeBase);
         $di->set('cacheService', new CacheService);
-        $di->set('finderFileService', new FinderFileService('media', 'thumbs'));
+        $di->set('fileService', new FileService('media', 'thumbs'));
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('db', new Mysql($dbConfig));
         $di->set('config', $config);

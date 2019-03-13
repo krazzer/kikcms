@@ -3,14 +3,14 @@
 namespace KikCMS\ObjectLists;
 
 
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use KikCmsCore\Classes\ObjectMap;
 
 class FileMap extends ObjectMap
 {
     /**
      * @param int|string $key
-     * @return FinderFile|false
+     * @return File|false
      */
     public function get($key)
     {
@@ -18,7 +18,7 @@ class FileMap extends ObjectMap
     }
 
     /**
-     * @return FinderFile|false
+     * @return File|false
      */
     public function current()
     {

@@ -36,7 +36,7 @@
 {% block body %}{% endblock %}
 {% block scripts %}
     {{ javascriptInclude('cmsassets/js/frontend/vendor.js') }}
-    {{ javascriptInclude('cmsassets/js/frontend/base.js') }}
+    {{ javascriptInclude('cmsassets/js/frontend/base.js?v=2') }}
 {% endblock %}
 {{ assets.outputJs() }}
 <data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>

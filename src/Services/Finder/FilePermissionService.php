@@ -7,9 +7,9 @@ namespace KikCMS\Services\Finder;
 use Exception;
 use KikCMS\Classes\Permission;
 use KikCMS\Config\FinderConfig;
-use KikCMS\Models\FinderFile;
-use KikCMS\Models\FinderPermission;
-use KikCMS\ObjectLists\FinderPermissionList;
+use KikCMS\Models\File;
+use KikCMS\Models\FilePermission;
+use KikCMS\ObjectLists\FilePermissionList;
 use KikCMS\ObjectLists\UserMap;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
@@ -21,17 +21,17 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property Logger $logger
  * @property UserService $userService
- * @property FinderFileService $finderFileService
+ * @property FileService $fileService
  */
-class FinderPermissionService extends Injectable
+class FilePermissionService extends Injectable
 {
     /**
-     * Creates default file permissions for given FinderFile
+     * Creates default file permissions for given File
      *
-     * @param FinderFile $finderFile
+     * @param File $file
      * @return bool
      */
-    public function createForFile(FinderFile $finderFile): bool
+    public function createForFile(File $file): bool
     {
         if ( ! $this->isEnabled()) {
             return true;
@@ -43,7 +43,7 @@ class FinderPermissionService extends Injectable
             $roles = $this->getGreaterAndEqualRoles();
         }
 
-        $fileId = $finderFile->getId();
+        $fileId = $file->getId();
         $userId = $this->userService->getUserId();
 
         $this->db->begin();
@@ -76,7 +76,7 @@ class FinderPermissionService extends Injectable
      */
     public function create($userIdOrRole, int $fileId, string $right)
     {
-        $permission = new FinderPermission();
+        $permission = new FilePermission();
 
         if(is_numeric($userIdOrRole)){
             $permission->user_id = $userIdOrRole;
@@ -100,16 +100,16 @@ class FinderPermissionService extends Injectable
         $userIds = $this->getEditableUserIds();
 
         if ($roles) {
-            $this->dbService->delete(FinderPermission::class, [
-                FinderPermission::FIELD_ROLE    => $roles,
-                FinderPermission::FIELD_FILE_ID => $fileIds,
+            $this->dbService->delete(FilePermission::class, [
+                FilePermission::FIELD_ROLE    => $roles,
+                FilePermission::FIELD_FILE_ID => $fileIds,
             ]);
         }
 
         if ($userIds) {
-            $this->dbService->delete(FinderPermission::class, [
-                FinderPermission::FIELD_USER_ID => $userIds,
-                FinderPermission::FIELD_FILE_ID => $fileIds,
+            $this->dbService->delete(FilePermission::class, [
+                FilePermission::FIELD_USER_ID => $userIds,
+                FilePermission::FIELD_FILE_ID => $fileIds,
             ]);
         }
     }
@@ -122,10 +122,10 @@ class FinderPermissionService extends Injectable
     {
         $allFileIds = [];
 
-        $finderFiles = FinderFile::getByIdList($fileIds);
+        $files = File::getByIdList($fileIds);
 
-        foreach ($finderFiles as $finderFile) {
-            $subFileIds = $this->finderFileService->getFileIdsRecursive($finderFile);
+        foreach ($files as $file) {
+            $subFileIds = $this->fileService->getFileIdsRecursive($file);
             $allFileIds = array_merge($allFileIds, $subFileIds);
         }
 
@@ -133,13 +133,13 @@ class FinderPermissionService extends Injectable
     }
 
     /**
-     * @param FinderPermissionList $permissionList
+     * @param FilePermissionList $permissionList
      * @param array $fileIds
      * @param bool $saveRecursively
      * @return bool
      * @throws Exception
      */
-    public function updateByList(FinderPermissionList $permissionList, array $fileIds, bool $saveRecursively = false): bool
+    public function updateByList(FilePermissionList $permissionList, array $fileIds, bool $saveRecursively = false): bool
     {
         $this->db->begin();
 
@@ -149,9 +149,9 @@ class FinderPermissionService extends Injectable
 
         $this->deleteByFileIds($fileIds);
 
-        foreach ($permissionList as $finderPermission) {
+        foreach ($permissionList as $filePermission) {
             try {
-                $finderPermission->save();
+                $filePermission->save();
             } catch (Exception $e) {
                 $this->logger->log(Logger::ERROR, $e);
                 $this->db->rollback();
@@ -172,10 +172,10 @@ class FinderPermissionService extends Injectable
     }
 
     /**
-     * @param FinderFile $file
+     * @param File $file
      * @return bool
      */
-    public function canEdit(FinderFile $file): bool
+    public function canEdit(File $file): bool
     {
         return $this->canEditId($file->getId());
     }
@@ -190,10 +190,10 @@ class FinderPermissionService extends Injectable
     }
 
     /**
-     * @param FinderFile $file
+     * @param File $file
      * @return bool
      */
-    public function canRead(FinderFile $file): bool
+    public function canRead(File $file): bool
     {
         return $this->canReadId($file->getId());
     }
@@ -301,9 +301,9 @@ class FinderPermissionService extends Injectable
         $role   = $this->userService->getRole();
 
         $query = (new Builder)
-            ->from(FinderPermission::class)
-            ->where(FinderPermission::FIELD_FILE_ID . ' = :id:', ['id' => $fileId])
-            ->andWhere('[' . FinderPermission::FIELD_RIGHT . '] >= :right:', ['right' => $right])
+            ->from(FilePermission::class)
+            ->where(FilePermission::FIELD_FILE_ID . ' = :id:', ['id' => $fileId])
+            ->andWhere('[' . FilePermission::FIELD_RIGHT . '] >= :right:', ['right' => $right])
             ->andWhere('user_id = :userId: OR role = :role:', ['userId' => $userId, 'role' => $role]);
 
         return $this->dbService->getExists($query);

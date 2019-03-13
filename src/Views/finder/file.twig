@@ -1,13 +1,13 @@
-{# @var finderFile \KikCMS\Models\FinderFile #}
-{% if finderFile.isImage or finderFile.extension == 'svg' %}
-    <img src="{{ mediaFile(finderFile.id, 'default', true) }}"/>
-{% elseif(finderFile.isFolder) %}
+{# @var file \KikCMS\Models\File #}
+{% if file.isImage or file.extension == 'svg' %}
+    <img src="{{ mediaFile(file.id, 'default', true) }}"/>
+{% elseif(file.isFolder) %}
     <img src="/cmsassets/images/folder.png"/>
 {% else %}
-    <span class="extension">{{ finderFile.extension }}</span>
+    <span class="extension">{{ file.extension }}</span>
     <span class="glyphicon glyphicon-file"></span>
 {% endif %}
 
-{% if finderFile.key %}
+{% if file.key %}
     <span class="icon-locked glyphicon glyphicon-lock"></span>
 {% endif %}

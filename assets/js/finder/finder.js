@@ -302,7 +302,7 @@ var Finder = Class.extend({
             }
         };
 
-        var uploader = new FinderFileUploader(uploaderOptions);
+        var uploader = new FileUploader(uploaderOptions);
 
         uploader.init();
 
@@ -314,7 +314,7 @@ var Finder = Class.extend({
             return formData;
         };
 
-        var overwriteUploader = new FinderFileUploader(uploaderOptions);
+        var overwriteUploader = new FileUploader(uploaderOptions);
 
         overwriteUploader.init();
     },

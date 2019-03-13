@@ -4,7 +4,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
@@ -256,11 +256,11 @@ class Services extends BaseServices
     }
 
     /**
-     * @return FinderFileService
+     * @return FileService
      */
-    protected function initFinderFileService()
+    protected function initFileService()
     {
-        return new FinderFileService('media', 'thumbs');
+        return new FileService('media', 'thumbs');
     }
 
     /**

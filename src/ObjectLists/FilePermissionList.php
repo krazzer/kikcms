@@ -3,14 +3,14 @@
 namespace KikCMS\ObjectLists;
 
 
-use KikCMS\Models\FinderPermission;
+use KikCMS\Models\FilePermission;
 use KikCmsCore\Classes\ObjectList;
 
-class FinderPermissionList extends ObjectList
+class FilePermissionList extends ObjectList
 {
     /**
      * @param int|string $key
-     * @return FinderPermission|false
+     * @return FilePermission|false
      */
     public function get($key)
     {
@@ -18,7 +18,7 @@ class FinderPermissionList extends ObjectList
     }
 
     /**
-     * @return FinderPermission|false
+     * @return FilePermission|false
      */
     public function current()
     {

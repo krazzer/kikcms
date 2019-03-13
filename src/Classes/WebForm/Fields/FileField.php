@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\File;
 use Phalcon\Forms\Element\Hidden;
 
 class FileField extends Field
@@ -39,11 +39,11 @@ class FileField extends Field
     /**
      * @param int $fileId
      *
-     * @return null|FinderFile
+     * @return null|File
      */
-    public function getFinderFileById(int $fileId): ?FinderFile
+    public function getFileById(int $fileId): ?File
     {
-        return FinderFile::getById($fileId);
+        return File::getById($fileId);
     }
 
     /**

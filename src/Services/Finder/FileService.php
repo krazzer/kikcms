@@ -9,23 +9,23 @@ use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
-use KikCMS\Models\FinderPermission;
+use KikCMS\Models\FilePermission;
 use KikCMS\ObjectLists\FileMap;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\FileStorage;
-use KikCMS\Models\FinderFolder;
-use KikCMS\Models\FinderFile;
+use KikCMS\Models\Folder;
+use KikCMS\Models\File;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
-use Phalcon\Http\Request\File;
+use Phalcon\Http\Request\File as UploadedFile;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
- * Handles FinderFiles
+ * Handles Files
  *
  * @property AccessControl $acl
  * @property ImageHandler $imageHandler
@@ -34,12 +34,12 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
  * @property FileStorage $fileStorage
- * @property FinderHashService $finderHashService
- * @property FinderPermissionService $finderPermissionService
- * @property FinderFileRemoveService $finderFileRemoveService
+ * @property FileHashService $fileHashService
+ * @property FilePermissionService $filePermissionService
+ * @property FileRemoveService $fileRemoveService
  * @property Config $config
  */
-class FinderFileService extends Injectable
+class FileService extends Injectable
 {
     /** @var string */
     private $mediaDir;
@@ -58,36 +58,36 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $uploadedFile
      * @param int|null $folderId
      * @return bool|int
      */
-    public function create(File $file, $folderId = null)
+    public function create(UploadedFile $uploadedFile, $folderId = null)
     {
-        $mimeType = $file->getRealType();
+        $mimeType = $uploadedFile->getRealType();
 
-        $finderFile = new FinderFile();
+        $file = new File();
 
-        $finderFile->name      = $file->getName();
-        $finderFile->extension = strtolower($file->getExtension());
-        $finderFile->size      = $file->getSize();
-        $finderFile->created   = new Now();
-        $finderFile->updated   = new Now();
-        $finderFile->mimetype  = $mimeType;
-        $finderFile->folder_id = $folderId;
-        $finderFile->is_folder = 0;
+        $file->name      = $uploadedFile->getName();
+        $file->size      = $uploadedFile->getSize();
+        $file->extension = strtolower($uploadedFile->getExtension());
+        $file->created   = new Now();
+        $file->updated   = new Now();
+        $file->mimetype  = $mimeType;
+        $file->folder_id = $folderId;
+        $file->is_folder = 0;
 
-        if ( ! $finderFile->save()) {
+        if ( ! $file->save()) {
             return false;
         }
 
-        $this->finderPermissionService->createForFile($finderFile);
+        $this->filePermissionService->createForFile($file);
 
-        $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
-        $this->resizeWithinBoundaries($finderFile);
-        $this->finderHashService->updateHash($finderFile);
+        $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id);
+        $this->resizeWithinBoundaries($file);
+        $this->fileHashService->updateHash($file);
 
-        return (int) $finderFile->id;
+        return (int) $file->id;
     }
 
     /**
@@ -98,27 +98,27 @@ class FinderFileService extends Injectable
      */
     public function createFolder(string $folderName, $folderId = null): int
     {
-        $finderDir            = new FinderFolder();
-        $finderDir->name      = $folderName;
-        $finderDir->folder_id = $folderId;
-        $finderDir->is_folder = 1;
+        $folder            = new Folder();
+        $folder->name      = $folderName;
+        $folder->folder_id = $folderId;
+        $folder->is_folder = 1;
 
-        $finderDir->save();
+        $folder->save();
 
-        $this->finderPermissionService->createForFile($finderDir);
+        $this->filePermissionService->createForFile($folder);
 
-        return (int) $finderDir->id;
+        return (int) $folder->id;
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @param string|null $type
      * @deprecated use createMediaThumb
      */
-    public function createThumb(FinderFile $finderFile, string $type = null)
+    public function createThumb(File $file, string $type = null)
     {
-        $filePath  = $this->getFilePath($finderFile);
-        $thumbPath = $this->getThumbPath($finderFile, $type);
+        $filePath  = $this->getFilePath($file);
+        $thumbPath = $this->getThumbPath($file, $type);
 
         $image = $this->imageHandler->create($filePath);
 
@@ -132,14 +132,14 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @param string|null $type
      * @param bool $private
      */
-    public function createMediaThumb(FinderFile $finderFile, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false)
+    public function createMediaThumb(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false)
     {
-        $filePath  = $this->getFilePath($finderFile);
-        $thumbPath = $this->getMediaThumbPath($finderFile, $type, $private);
+        $filePath  = $this->getFilePath($file);
+        $thumbPath = $this->getMediaThumbPath($file, $type, $private);
 
         // do not resize animated gifs
         if($this->isAnimatedGif($filePath)){
@@ -156,21 +156,21 @@ class FinderFileService extends Injectable
 
     /**
      * @param int|null $folderId
-     * @return FinderFile[]
+     * @return File[]
      */
     public function getByFolderId(int $folderId = null): array
     {
         $query = (new Builder)
-            ->from(FinderFile::class)
-            ->orderBy(FinderFile::FIELD_IS_FOLDER . ' DESC, ' . FinderFile::FIELD_NAME)
-            ->where(FinderFile::FIELD_FOLDER_ID . ($folderId ? ' = ' . $folderId : ' IS NULL'));
+            ->from(File::class)
+            ->orderBy(File::FIELD_IS_FOLDER . ' DESC, ' . File::FIELD_NAME)
+            ->where(File::FIELD_FOLDER_ID . ($folderId ? ' = ' . $folderId : ' IS NULL'));
 
         return $this->dbService->getObjects($query);
     }
 
     /**
      * @param FinderFilters $filters
-     * @return FinderFile[]
+     * @return File[]
      */
     public function getByFilters(FinderFilters $filters): array
     {
@@ -179,17 +179,17 @@ class FinderFileService extends Injectable
         }
 
         $query = (new Builder)
-            ->from(['f' => FinderFile::class])
-            ->where(FinderFile::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
+            ->from(['f' => File::class])
+            ->where(File::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
             ->orderBy('is_folder DESC, name ASC');
 
-        if ($this->finderPermissionService->isEnabled()) {
+        if ($this->filePermissionService->isEnabled()) {
             $userId = $this->userService->getUserId();
             $role   = $this->userService->getRole();
 
             $query
-                ->join(FinderPermission::class, 'fp.file_id = f.id', 'fp')
-                ->andWhere('[' . FinderPermission::FIELD_RIGHT . '] >= :right:', ['right' => FinderConfig::RIGHT_READ])
+                ->join(FilePermission::class, 'fp.file_id = f.id', 'fp')
+                ->andWhere('[' . FilePermission::FIELD_RIGHT . '] >= :right:', ['right' => FinderConfig::RIGHT_READ])
                 ->andWhere('fp.user_id = :userId: OR role = :role:', ['userId' => $userId, 'role' => $role]);
         }
 
@@ -203,33 +203,33 @@ class FinderFileService extends Injectable
     public function getByIdList(array $idList): FileMap
     {
         $query = (new Builder)
-            ->from(FinderFile::class)
-            ->inWhere(FinderFile::FIELD_ID, $idList);
+            ->from(File::class)
+            ->inWhere(File::FIELD_ID, $idList);
 
         return $this->dbService->getObjectMap($query, FileMap::class);
     }
 
     /**
      * @param string $key
-     * @return FinderFile|null
+     * @return File|null
      */
-    public function getByKey(string $key): ?FinderFile
+    public function getByKey(string $key): ?File
     {
         $query = (new Builder)
-            ->from(FinderFile::class)
-            ->inWhere(FinderFile::FIELD_KEY, [$key]);
+            ->from(File::class)
+            ->inWhere(File::FIELD_KEY, [$key]);
 
         return $this->dbService->getObject($query);
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      *
      * @return string
      */
-    public function getFilePath(FinderFile $finderFile)
+    public function getFilePath(File $file)
     {
-        $fileName = $finderFile->id . '.' . $finderFile->getExtension();
+        $fileName = $file->id . '.' . $file->getExtension();
 
         return $this->getStorageDir() . $this->getMediaDir() . '/' . $fileName;
     }
@@ -249,7 +249,7 @@ class FinderFileService extends Injectable
             return $path;
         }
 
-        $folder = FinderFolder::getById($folderId);
+        $folder = Folder::getById($folderId);
 
         $path[$folderId] = $folder->name;
 
@@ -289,11 +289,11 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $file
+     * @param File $file
      * @param bool $private
      * @return string
      */
-    public function getUrl(FinderFile $file, bool $private = false): string
+    public function getUrl(File $file, bool $private = false): string
     {
         $fileMediaPath = $this->getMediaFilePath($file, $private);
 
@@ -305,16 +305,16 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @param string|null $type
      *
      * @return string
      * @deprecated use getMediaThumbPath instead
      */
-    public function getThumbPath(FinderFile $finderFile, string $type = null)
+    public function getThumbPath(File $file, string $type = null)
     {
         $type     = $type ?: 'default';
-        $fileName = $finderFile->id . '.' . $finderFile->getExtension();
+        $fileName = $file->id . '.' . $file->getExtension();
         $dirPath  = $this->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
 
         if ( ! file_exists($dirPath)) {
@@ -325,12 +325,12 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @param string|null $type
      * @param bool $private
      * @return string
      */
-    public function getMediaThumbPath(FinderFile $finderFile, string $type = null, bool $private = false): string
+    public function getMediaThumbPath(File $file, string $type = null, bool $private = false): string
     {
         $dirPath = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
 
@@ -338,17 +338,17 @@ class FinderFileService extends Injectable
             mkdir($dirPath);
         }
 
-        return $dirPath . $finderFile->getFileName($private);
+        return $dirPath . $file->getFileName($private);
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @param bool $private
      * @return string
      */
-    public function getMediaFilePath(FinderFile $finderFile, bool $private = false): string
+    public function getMediaFilePath(File $file, bool $private = false): string
     {
-        return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $finderFile->getFileName($private);
+        return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $file->getFileName($private);
     }
 
     /**
@@ -375,10 +375,10 @@ class FinderFileService extends Injectable
     {
         $fileIds = $this->removeFileIdsInPath($fileIds, $folderId);
 
-        $this->dbService->update(FinderFile::class, [
-            FinderFile::FIELD_FOLDER_ID => $folderId
+        $this->dbService->update(File::class, [
+            File::FIELD_FOLDER_ID => $folderId
         ], [
-            FinderFile::FIELD_ID => $fileIds
+            File::FIELD_ID => $fileIds
         ]);
     }
 
@@ -388,35 +388,35 @@ class FinderFileService extends Injectable
      */
     public function updateFileNameById(int $fileId, string $fileName)
     {
-        $finderFile = FinderFile::getById($fileId);
+        $file = File::getById($fileId);
 
-        if ($finderFile->isFolder()) {
-            $finderFile->name = $fileName;
+        if ($file->isFolder()) {
+            $file->name = $fileName;
         } else {
-            $finderFile->name = $fileName . '.' . $finderFile->extension;
+            $file->name = $fileName . '.' . $file->extension;
         }
 
-        $finderFile->save();
+        $file->save();
     }
 
     /**
      * Gets all sub file id's recursively
      *
-     * @param FinderFile $file
+     * @param File $file
      * @param array $fileIds
      *
      * @return array
      */
-    public function getFileIdsRecursive(FinderFile $file, $fileIds = []): array
+    public function getFileIdsRecursive(File $file, $fileIds = []): array
     {
         if ( ! $file->isFolder()) {
             $fileIds[] = $file->getId();
             return $fileIds;
         }
 
-        $finderFiles = $this->getByFolderId($file->getId());
+        $files = $this->getByFolderId($file->getId());
 
-        foreach ($finderFiles as $subFile) {
+        foreach ($files as $subFile) {
             $fileIds = $this->getFileIdsRecursive($subFile, $fileIds);
         }
 
@@ -427,16 +427,16 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @return array|null returns same results as @see getimagesize
      */
-    public function getImageDimensions(FinderFile $finderFile)
+    public function getImageDimensions(File $file)
     {
-        if ( ! $finderFile->isImage()) {
+        if ( ! $file->isImage()) {
             return null;
         }
 
-        $filePath = $this->getFilePath($finderFile);
+        $filePath = $this->getFilePath($file);
 
         if ( ! file_exists($filePath)) {
             return null;
@@ -446,19 +446,19 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      * @return array|null returns same results as @see getimagesize
      */
-    public function getThumbDimensions(FinderFile $finderFile)
+    public function getThumbDimensions(File $file)
     {
-        if ( ! $finderFile->isImage()) {
+        if ( ! $file->isImage()) {
             return null;
         }
 
-        $thumbPath = $this->getThumbPath($finderFile);
+        $thumbPath = $this->getThumbPath($file);
 
         if ( ! file_exists($thumbPath)) {
-            $this->createThumb($finderFile);
+            $this->createThumb($file);
         }
 
         return getimagesize($thumbPath);
@@ -506,30 +506,30 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param File $file
+     * @param UploadedFile $uploadedFile
      * @param int $fileId
      * @return bool
      */
-    public function overwrite(File $file, int $fileId): bool
+    public function overwrite(UploadedFile $uploadedFile, int $fileId): bool
     {
-        $mimeType = $file->getRealType();
+        $mimeType = $uploadedFile->getRealType();
 
-        $finderFile = FinderFile::getById($fileId);
+        $file = File::getById($fileId);
 
-        $finderFile->name      = $file->getName();
-        $finderFile->extension = strtolower($file->getExtension());
-        $finderFile->size      = $file->getSize();
-        $finderFile->updated   = new Now();
-        $finderFile->mimetype  = $mimeType;
+        $file->name      = $uploadedFile->getName();
+        $file->size      = $uploadedFile->getSize();
+        $file->extension = strtolower($uploadedFile->getExtension());
+        $file->updated   = new Now();
+        $file->mimetype  = $mimeType;
 
-        if ( ! $finderFile->save()) {
+        if ( ! $file->save()) {
             return false;
         }
 
-        $this->fileStorage->storeByRequest($file, $this->mediaDir, $finderFile->id);
-        $this->resizeWithinBoundaries($finderFile);
-        $this->finderFileRemoveService->removeThumbNails($finderFile);
-        $this->finderHashService->updateHash($finderFile);
+        $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id, true);
+        $this->resizeWithinBoundaries($file);
+        $this->fileRemoveService->removeThumbNails($file);
+        $this->fileHashService->updateHash($file);
 
         return true;
     }
@@ -537,12 +537,12 @@ class FinderFileService extends Injectable
     /**
      * Get the url for a thumbnail, and create it if it doesn't exist
      *
-     * @param FinderFile $file
+     * @param File $file
      * @param string $type
      * @param bool $private
      * @return string
      */
-    public function getThumbUrl(FinderFile $file, string $type, bool $private = false): string
+    public function getThumbUrl(File $file, string $type, bool $private = false): string
     {
         $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
 
@@ -559,17 +559,17 @@ class FinderFileService extends Injectable
     }
 
     /**
-     * @param FinderFile $finderFile
+     * @param File $file
      */
-    private function resizeWithinBoundaries(FinderFile $finderFile)
+    private function resizeWithinBoundaries(File $file)
     {
         // is no image, so do nothing
-        if ( ! $finderFile->isImage()) {
+        if ( ! $file->isImage()) {
             return;
         }
 
-        $dimensions = $this->getImageDimensions($finderFile);
-        $filePath   = $this->getFilePath($finderFile);
+        $dimensions = $this->getImageDimensions($file);
+        $filePath   = $this->getFilePath($file);
 
         $image      = $this->imageHandler->create($filePath);
         $jpgQuality = $this->config->media->jpgQuality;
@@ -608,7 +608,7 @@ class FinderFileService extends Injectable
      */
     private function getHomeFolderId(): ?int
     {
-        if ( ! $this->finderPermissionService->isEnabled()) {
+        if ( ! $this->filePermissionService->isEnabled()) {
             return null;
         }
 

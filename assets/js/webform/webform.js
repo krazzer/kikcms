@@ -251,7 +251,7 @@ var WebForm = Class.extend({
     initUploader: function ($field) {
         var self = this;
 
-        var uploader = new FinderFileUploader({
+        var uploader = new FileUploader({
             $container: $field,
             action: '/cms/webform/uploadAndPreview',
             addParametersBeforeUpload: function (formData) {

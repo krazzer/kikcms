@@ -6,9 +6,9 @@ use DateTime;
 use KikCmsCore\Classes\Model;
 
 /**
- * @property FinderFolder $folder
+ * @property Folder $folder
  */
-class FinderFile extends Model
+class File extends Model
 {
     const TABLE = 'cms_file';
     const ALIAS = 'f';
@@ -30,12 +30,12 @@ class FinderFile extends Model
     {
         parent::initialize();
 
-        $this->hasOne(self::FIELD_FOLDER_ID, FinderFolder::class, FinderFolder::FIELD_ID, ['alias' => 'folder']);
+        $this->hasOne(self::FIELD_FOLDER_ID, Folder::class, Folder::FIELD_ID, ['alias' => 'folder']);
     }
 
     /**
      * @inheritdoc
-     * @return FinderFile
+     * @return File
      */
     public static function getById($id)
     {
@@ -45,7 +45,7 @@ class FinderFile extends Model
     /**
      * @inheritdoc
      *
-     * @return FinderFile[]
+     * @return File[]
      */
     public static function getByIdList(array $ids)
     {

@@ -1,4 +1,4 @@
-var FinderFileUploader = function (options) {
+var FileUploader = function (options) {
     this.onSuccess     = options.onSuccess;
     this.$container    = options.$container;
     this.$uploadButton = options.$uploadButton ? options.$uploadButton : this.$container.find('.btn.upload');
@@ -14,7 +14,7 @@ var FinderFileUploader = function (options) {
     }
 };
 
-FinderFileUploader.prototype = {
+FileUploader.prototype = {
     init: function () {
         var self = this;
 

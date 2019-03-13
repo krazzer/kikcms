@@ -2,13 +2,13 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Services\Finder\FinderPermissionHelper;
-use KikCMS\Services\Finder\FinderPermissionService;
+use KikCMS\Services\Finder\FilePermissionHelper;
+use KikCMS\Services\Finder\FilePermissionService;
 use Phalcon\Http\ResponseInterface;
 
 /**
- * @property FinderPermissionService $finderPermissionService
- * @property FinderPermissionHelper $finderPermissionHelper
+ * @property FilePermissionService $filePermissionService
+ * @property FilePermissionHelper $filePermissionHelper
  */
 class FinderPermissionController extends BaseCmsController
 {
@@ -19,8 +19,8 @@ class FinderPermissionController extends BaseCmsController
     {
         $fileIds = (array) $this->request->getPost('fileIds');
 
-        $modalTitle      = $this->finderPermissionHelper->getModalTitle($fileIds);
-        $permissionTable = $this->finderPermissionHelper->getPermissionTable($fileIds);
+        $modalTitle      = $this->filePermissionHelper->getModalTitle($fileIds);
+        $permissionTable = $this->filePermissionHelper->getPermissionTable($fileIds);
 
         return $this->response->setJsonContent([
             'title' => $modalTitle,
@@ -37,8 +37,8 @@ class FinderPermissionController extends BaseCmsController
         $fileIds         = (array) $this->request->getPost('fileIds');
         $saveRecursively = (bool) $this->request->getPost('recursive');
 
-        $permissionList = $this->finderPermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
-        $success        = $this->finderPermissionService->updateByList($permissionList, $fileIds, $saveRecursively);
+        $permissionList = $this->filePermissionHelper->convertDataToList($permission, $fileIds, $saveRecursively);
+        $success        = $this->filePermissionService->updateByList($permissionList, $fileIds, $saveRecursively);
 
         return $this->response->setJsonContent([
             'success' => $success,

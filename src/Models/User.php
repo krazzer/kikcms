@@ -6,7 +6,7 @@ use KikCMS\Classes\Database\Now;
 use KikCmsCore\Classes\Model;
 
 /**
- * @property FinderFolder $folder
+ * @property Folder $folder
  */
 class User extends Model
 {
@@ -72,7 +72,7 @@ class User extends Model
     {
         parent::initialize();
 
-        $this->hasOne(User::FIELD_ID, FinderFolder::class, FinderFolder::FIELD_USER_ID, ["alias" => "folder"]);
+        $this->hasOne(User::FIELD_ID, Folder::class, Folder::FIELD_USER_ID, ["alias" => "folder"]);
     }
 
     /**

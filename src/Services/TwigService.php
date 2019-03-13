@@ -68,10 +68,10 @@ class TwigService extends Injectable
         }
 
         if ( ! $thumb) {
-            return $this->url->get('finderFile', $fileId);
+            return $this->url->get('file', $fileId);
         }
 
-        return $this->url->get('finderFileTypedThumb', [$thumb, $fileId]);
+        return $this->url->get('fileTypedThumb', [$thumb, $fileId]);
     }
 
     /**

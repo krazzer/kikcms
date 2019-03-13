@@ -74,7 +74,7 @@
                      data-finder="{{ allowedFinderAccess ? 1 : 0 }}">
                     <div class="thumb">
                         {% if element.value %}
-                            {% set finderFile = field.finderFileById(element.value) %}
+                            {% set file = field.fileById(element.value) %}
                             {% include "@kikcms/finder/file.twig" %}
                         {% endif %}
                     </div>

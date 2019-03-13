@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\ObjectStorage;
 
 
-use Phalcon\Http\Request\File as RequestFile;
+use Phalcon\Http\Request\File as UploadedFile;
 
 interface FileStorage
 {
@@ -34,10 +34,11 @@ interface FileStorage
     public function store(string $fileName, string $contents, string $dir = '');
 
     /**
-     * @param RequestFile $file
+     * @param UploadedFile $uploadedFile
      * @param string $dir
      * @param null $fileName
+     * @param bool $overwrite
      * @return mixed
      */
-    public function storeByRequest(RequestFile $file, string $dir = '', $fileName = null): bool;
+    public function storeByRequest(UploadedFile $uploadedFile, string $dir = '', $fileName = null, bool $overwrite = false): bool;
 }

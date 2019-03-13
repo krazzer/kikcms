@@ -5,7 +5,7 @@ namespace KikCMS\Classes\Finder;
 
 use Exception;
 use Helpers\TestHelper;
-use KikCMS\Services\Finder\FinderFileService;
+use KikCMS\Services\Finder\FileService;
 use Phalcon\Http\Request\File;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -18,16 +18,16 @@ class FinderTest extends TestCase
 
         $fileMock = $this->getFileMock('image/png', 'png');
 
-        $fileServiceMock = $this->createMock(FinderFileService::class);
+        $fileServiceMock = $this->createMock(FileService::class);
         $fileServiceMock->method('create')->willReturn(1);
         $fileServiceMock->method('overwrite')->willReturn(true);
 
-        $fileServiceMockNoOverWrite = $this->createMock(FinderFileService::class);
+        $fileServiceMockNoOverWrite = $this->createMock(FileService::class);
         $fileServiceMockNoOverWrite->method('create')->willReturn(1);
         $fileServiceMockNoOverWrite->method('overwrite')->willReturn(false);
 
-        $finder->translator = (new TestHelper)->getTranslator();
-        $finder->finderFileService = $fileServiceMock;
+        $finder->translator  = (new TestHelper)->getTranslator();
+        $finder->fileService = $fileServiceMock;
 
         $files = [$fileMock, $fileMock];
 
@@ -44,7 +44,7 @@ class FinderTest extends TestCase
         $this->assertEquals([25], $finder->uploadFiles($files, 25)->getFileIds());
 
         // test overwrite fail
-        $finder->finderFileService = $fileServiceMockNoOverWrite;
+        $finder->fileService = $fileServiceMockNoOverWrite;
 
         $result = $finder->uploadFiles($files, 25);
 
