@@ -43,7 +43,9 @@ class MainTask extends Task
             preg_match_all("/finder\/file\/([0-9]+)/", $pageContent->value, $matches);
 
             foreach($matches[1] as $fileId){
-                $file = File::getById($fileId);
+                if( ! $file = File::getById($fileId)){
+                    continue;
+                }
 
                 $source = SITE_PATH . 'storage/media/' . $file->getFileName();
                 $target = SITE_PATH . 'public_html/media/files/' . $file->getFileName();
