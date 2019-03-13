@@ -97,6 +97,10 @@ abstract class Field
      */
     public function setDefault($value): Field
     {
+        if( ! $this->element){
+            return $this;
+        }
+
         $this->element->setDefault($value);
 
         return $this;
