@@ -93,6 +93,8 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
+        $backend->add('/file/url/{fileId:[0-9]+}', "Finder::url")->setName('fileUrl');
+
         $frontend->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
         $frontend->add('/', "Frontend::page")->setName('page');
         $frontend->add('/page/{lang:[a-z]{2}}/{id:[0-9a-z\-]+}', "Frontend::pageByKey");

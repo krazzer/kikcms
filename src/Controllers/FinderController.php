@@ -6,6 +6,7 @@ use KikCMS\Services\Finder\FinderFileRemoveService;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Services\Finder\FinderPermissionService;
 use KikCMS\Services\Pages\PageContentService;
+use KikCMS\Services\TwigService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
@@ -17,6 +18,7 @@ use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\FinderFile;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AccessControl $acl
@@ -28,6 +30,7 @@ use KikCMS\Models\FinderFile;
  * @property UserService $userService
  * @property FinderPermissionService $finderPermissionService
  * @property PageContentService $pageContentService
+ * @property TwigService $twigService
  */
 class FinderController extends RenderableController
 {
@@ -268,6 +271,15 @@ class FinderController extends RenderableController
             'fileIds' => $uploadStatus->getFileIds(),
             'errors'  => $uploadStatus->getErrors(),
         ]);
+    }
+
+    /**
+     * @param int $fileId
+     * @return ResponseInterface
+     */
+    public function urlAction(int $fileId): ResponseInterface
+    {
+        return $this->response->setJsonContent(['url' => $this->twigService->mediaFile($fileId)]);
     }
 
     /**

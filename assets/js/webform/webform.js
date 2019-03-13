@@ -293,8 +293,11 @@ var WebForm = Class.extend({
     getFilePicker: function (callback) {
         var callBackAction = function ($file) {
             var fileId = $file.attr('data-id');
-            callback('/finder/file/' + fileId, {text: $file.find('.name span').text()});
-            window.close();
+
+            KikCMS.action('/cms/file/url/' + fileId, {}, function (result) {
+                callback(result.url, {alt: $file.find('.name span').text()});
+                window.close();
+            });
         };
 
         var windowHeight = this.getWindowHeight() < 768 ? this.getWindowHeight() - 130 : 768;
