@@ -106,9 +106,6 @@ class Routing extends Injectable
 
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
 
-        //temp
-        $frontend->add("/finder/file/{fileId:[0-9]+}", "Finder::file");
-
         $router->mount($frontend);
         $router->mount($backend);
 
