@@ -5,13 +5,15 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\Services\Cms\CmsService;
+use KikCMS\Services\LanguageService;
 use KikCMS\Services\UserService;
 
 /**
  * Controller for the CMS that can render the menu
  *
- * @property UserService $userService
  * @property CmsService $cmsService
+ * @property LanguageService $languageService
+ * @property UserService $userService
  * @property WebsiteSettingsBase $websiteSettings
  */
 class BaseCmsController extends BaseController
@@ -46,11 +48,7 @@ class BaseCmsController extends BaseController
      */
     protected function setDefaultLanguageCode()
     {
-        if ( ! isset($this->config->application->defaultCmsLanguage)) {
-            parent::setDefaultLanguageCode();
-        } else {
-            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
-        }
+        $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }
 
     /**

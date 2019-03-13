@@ -4,12 +4,14 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Translator;
+use KikCMS\Services\LanguageService;
 use KikCMS\Util\ByteUtil;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Url;
 use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 /**
+ * @property LanguageService $languageService
  * @property Translator $translator
  * @property Url $url
  */
@@ -122,7 +124,7 @@ class BaseController extends Controller
      */
     protected function setDefaultLanguageCode()
     {
-        $this->translator->setLanguageCode($this->config->application->defaultLanguage);
+        $this->translator->setLanguageCode($this->languageService->getDefaultLanguageCode());
     }
 
     /**

@@ -5,15 +5,17 @@ namespace KikCMS\Plugins;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\StatusCodes;
+use KikCMS\Services\LanguageService;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 
 /**
- * @property UserService $userService
- * @property Translator $translator
  * @property AccessControl $acl
+ * @property LanguageService $languageService
+ * @property Translator $translator
+ * @property UserService $userService
  */
 class SecurityPlugin extends Plugin
 {
@@ -44,6 +46,7 @@ class SecurityPlugin extends Plugin
                 $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
             } else {
                 if ($dispatcher->getActionName() != 'index') {
+                    $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
                     $this->flash->notice($this->translator->tl('login.expired'));
                 }
                 $this->response->redirect('cms/login');

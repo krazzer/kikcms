@@ -27,6 +27,18 @@ class LanguageService extends Injectable
     }
 
     /**
+     * @return string
+     */
+    public function getDefaultCmsLanguageCode(): string
+    {
+        if (isset($this->config->application->defaultCmsLanguage)) {
+            return $this->config->application->defaultCmsLanguage;
+        }
+
+        return $this->getDefaultLanguageCode();
+    }
+
+    /**
      * @param bool $activeOnly
      * @return Language[]
      */
