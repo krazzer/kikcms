@@ -92,7 +92,10 @@ class PlaceholderService extends Injectable
         $fileMap    = $this->getFileMap($placeholderMap);
 
         foreach ($placeholderMap as $key => $placeholder) {
-            $file = $fileMap->get($placeholder->getFileId());
+            if( ! $file = $fileMap->get($placeholder->getFileId())){
+                $replaceMap[$placeholder->getPlaceholder()] = null;
+                continue;
+            }
 
             $type    = $placeholder->getType();
             $private = $placeholder->isPrivate();
