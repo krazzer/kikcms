@@ -46,7 +46,7 @@ class File implements FileStorage
             $fileName = $uploadedFile->getName();
         }
 
-        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $uploadedFile->getExtension();
+        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . strtolower($uploadedFile->getExtension());
 
         if ($overwrite && file_exists($filePath)) {
             unlink($filePath);
