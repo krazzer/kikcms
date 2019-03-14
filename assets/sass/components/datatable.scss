@@ -248,44 +248,6 @@ body {
             }
         }
     }
-
-    @media #{$heightBelowHd} {
-        top: 10px;
-        bottom: 10px;
-
-        > .closeButton {
-            @include close(20);
-            top: 11px;
-            right: 30px;
-        }
-
-        > .windowContent {
-
-            > .header {
-                padding: 10px 70px 10px 30px;
-                font-size: $fontSizeDefault;
-                line-height: 22px;
-
-                select[name=language] {
-                    height: 22px;
-                    font-size: $fontSizeSmall;
-                }
-            }
-
-            > .content {
-                padding: 15px 30px;
-            }
-
-            > .tabs .tab {
-                padding: 5px 30px;
-            }
-
-            > .footer button {
-                padding-top: 3px;
-                padding-bottom: 3px;
-            }
-        }
-    }
 }
 
 .datatable {
