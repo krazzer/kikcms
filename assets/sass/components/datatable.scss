@@ -315,7 +315,6 @@ body {
                     cursor: default;
 
                     td {
-                        transition: padding 0.3s;
                         @include noTextSelect();
                         @include thumbChild();
 
@@ -454,6 +453,7 @@ body {
 }
 
 body.isDragging {
+
     * {
         cursor: default !important;
     }
@@ -461,6 +461,10 @@ body.isDragging {
     .datatable {
         tbody, tbody * {
             cursor: move !important;
+        }
+
+        .table tbody td{
+            transition: padding .2s;
         }
     }
 }
