@@ -36,6 +36,7 @@ class WebFormController extends RenderableController
         return json_encode([
             'preview'    => $finder->renderFilePreview($file),
             'dimensions' => $this->fileService->getThumbDimensions($file),
+            'name'       => $file->getName(),
         ]);
     }
 

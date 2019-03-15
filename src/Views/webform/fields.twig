@@ -65,16 +65,19 @@
 
 {%- block fieldFile %}
     {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
+    {% if element.value %}
+        {% set file = field.fileById(element.value) %}
+    {% endif %}
     <div{{ fieldContainterAttributes|raw }}>
         {{ block('fieldLabel') }}
         {{ form.render(element.name)|raw }}
+        <span class="filename">{{ element.value ? '(' ~ file.name ~ ')' }}</span>
         <div class="field">
             <div class="buttons">
                 <div class="btn btn-default preview{{ not element.value ? ' hidden' }}"
                      data-finder="{{ allowedFinderAccess ? 1 : 0 }}">
                     <div class="thumb">
                         {% if element.value %}
-                            {% set file = field.fileById(element.value) %}
                             {% include "@kikcms/finder/file.twig" %}
                         {% endif %}
                     </div>

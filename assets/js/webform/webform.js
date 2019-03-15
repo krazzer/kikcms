@@ -68,6 +68,7 @@ var WebForm = Class.extend({
         var $previewThumb = $field.find('.preview .thumb');
         var $buttonPick   = $field.find('.buttons .pick');
         var $buttonDelete = $field.find('.buttons .delete');
+        var $fileName     = $field.find('.filename');
 
         if (result.dimensions) {
             $previewThumb.css('width', result.dimensions[0] / 2);
@@ -79,12 +80,13 @@ var WebForm = Class.extend({
 
         $preview.removeClass('hidden');
         $previewThumb.html(result.preview);
+        $fileName.html('(' + result.name + ')');
         $field.find(' > input[type=hidden].fileId').val(fileId);
 
         $buttonPick.addClass('hidden');
         $buttonDelete.removeClass('hidden');
 
-        if(typeof onComplete !== "undefined"){
+        if (typeof onComplete !== "undefined") {
             onComplete();
         }
     },
@@ -146,7 +148,7 @@ var WebForm = Class.extend({
                 useCurrent: false
             });
 
-            if($field.attr('data-default-date')){
+            if ($field.attr('data-default-date')) {
                 var value = $field.val();
 
                 // set default date
@@ -154,7 +156,7 @@ var WebForm = Class.extend({
                 $field.datetimepicker('defaultDate', defaultDate);
 
                 // setting the default date also sets the value, so clear if it was empty before
-                if( ! value){
+                if (!value) {
                     $field.val('');
                 }
             }
@@ -181,6 +183,7 @@ var WebForm = Class.extend({
             });
 
             $deleteButton.click(function () {
+                $field.find('.filename').html('');
                 $field.find(' > input[type=hidden].fileId').val('');
 
                 $pickButton.removeClass('hidden');
@@ -190,7 +193,7 @@ var WebForm = Class.extend({
             });
 
             $pickAbles.click(function () {
-                if($(this).attr('data-finder') == 0){
+                if ($(this).attr('data-finder') == 0) {
                     return;
                 }
 
@@ -358,7 +361,7 @@ var WebForm = Class.extend({
     /**
      * @return int
      */
-    getWindowHeight: function(){
+    getWindowHeight: function () {
         return $(window).height();
     },
 
