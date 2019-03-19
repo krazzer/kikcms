@@ -9,6 +9,41 @@ use PHPUnit\Framework\TestCase;
 
 class MediaResizeBaseTest extends TestCase
 {
+    public function testCrop()
+    {
+        $mockBuilder = $this->getMockBuilder(MediaResizeBase::class);
+        $mockBuilder->setMethods(['resize']);
+
+        /** @var MockObject|MediaResizeBase $mediaResizeBaseMock */
+        $mediaResizeBaseMock = $mockBuilder->getMock();
+
+        // test inside bounds
+        $imageMock = $this->getImageMock(50, 50);
+        $imageMock->expects($this->never())->method('crop');
+
+        $mediaResizeBaseMock->crop($imageMock, 100, 100);
+
+        // test resize same ratio
+        /** @var MockObject|Adapter $imageMock */
+        $imageMock = $this->createMock(Adapter::class);
+        $imageMock->method('getWidth')->willReturnOnConsecutiveCalls(150, 100);
+        $imageMock->method('getHeight')->willReturnOnConsecutiveCalls(100);
+
+        $imageMock->expects($this->once())->method('crop')->with(100, 100, 0, 0);
+
+        $mediaResizeBaseMock->crop($imageMock, 100, 100);
+
+        // test different ratio
+        /** @var MockObject|Adapter $imageMock */
+        $imageMock = $this->createMock(Adapter::class);
+        $imageMock->method('getWidth')->willReturn(200);
+        $imageMock->method('getHeight')->willReturn(100);
+
+        $imageMock->expects($this->once())->method('crop')->with(100, 100, 50, 0);
+
+        $mediaResizeBaseMock->crop($imageMock, 100, 100);
+    }
+
     public function testResize()
     {
         $mediaResizeBase = new MediaResizeBase();
