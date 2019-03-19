@@ -37,6 +37,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property FileHashService $fileHashService
  * @property FilePermissionService $filePermissionService
  * @property FileRemoveService $fileRemoveService
+ * @property FileCacheService $fileCacheService
  * @property Config $config
  */
 class FileService extends Injectable
@@ -301,7 +302,14 @@ class FileService extends Injectable
             symlink($this->getFilePath($file), $fileMediaPath);
         }
 
-        return $this->getMediaFilesUrl() . $file->getFileName($private);
+        $url = $this->getMediaFilesUrl() . $file->getFileName($private);
+
+        // add seconds between create and update to avoid browser cache
+        if($secondsUpdated = $file->secondsUpdated()){
+            return $url . '?u=' . $secondsUpdated;
+        }
+
+        return $url;
     }
 
     /**
@@ -529,6 +537,7 @@ class FileService extends Injectable
         $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id, true);
         $this->resizeWithinBoundaries($file);
         $this->fileRemoveService->removeThumbNails($file);
+        $this->fileCacheService->removeUrlCache($file);
         $this->fileHashService->updateHash($file);
 
         return true;
@@ -555,7 +564,14 @@ class FileService extends Injectable
             $this->createMediaThumb($file, $type, $private);
         }
 
-        return $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName($private);
+        $url = $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName($private);
+
+        // add seconds between create and update to avoid browser cache
+        if($secondsUpdated = $file->secondsUpdated()){
+            return $url . '?u=' . $secondsUpdated;
+        }
+
+        return $url;
     }
 
     /**

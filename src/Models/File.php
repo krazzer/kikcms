@@ -158,4 +158,22 @@ class File extends Model
 
         return $this->getMimeType();
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdated(): DateTime
+    {
+        return new DateTime($this->updated);
+    }
+
+    /**
+     * Return how much seconds there are between creation time and updated time
+     *
+     * @return int
+     */
+    public function secondsUpdated(): int
+    {
+        return $this->getUpdated()->getTimestamp() - $this->getCreated()->getTimestamp();
+    }
 }

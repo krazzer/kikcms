@@ -1,8 +1,11 @@
 {# @var files \KikCMS\Models\File[] #}
 
 {% for file in files %}
+    {% if not file.isFolder %}
+        {% set url = url('file', file.id) ~ (file.secondsUpdated ? '?u=' ~ file.secondsUpdated) %}
+    {% endif %}
     <div class="file file-{{ file.id }}{{ file.isFolder ? ' folder' }}" data-id="{{ file.id }}"
-            {% if not file.isFolder %} data-url="{{ url('file', file.id) }}" {% endif %}>
+            {% if not file.isFolder %} data-url="{{ url }}" {% endif %}>
         <div class="thumb">
             {% include "@kikcms/finder/file.twig" %}
         </div>
