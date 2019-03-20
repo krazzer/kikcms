@@ -236,10 +236,11 @@ class DataTableTest extends TestCase
             'checked'  => 'checked'
         ];
 
-        $tagMock->expects($this->once())->method('tagHtml')->with('input', $attributes);
+        $tagMock->expects($this->exactly(2))->method('tagHtml')->with('input', $attributes);
         $dataTable->tag = $tagMock;
 
         $dataTable->formatCheckbox(1, [], 'test');
+        $dataTable->formatCheckbox(1, ['test' => 1], 'test');
 
         $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
 

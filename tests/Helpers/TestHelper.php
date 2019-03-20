@@ -8,11 +8,15 @@ use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\File;
+use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\Twig;
+use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
+use KikCMS\Services\TwigService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Config\Adapter\Ini;
@@ -22,6 +26,8 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Mvc\Url;
+use Phalcon\Session\Bag;
+use Phalcon\Validation;
 use PHPUnit\Framework\TestCase;
 
 class TestHelper extends TestCase
@@ -91,6 +97,9 @@ class TestHelper extends TestCase
 
         $this->setSitePath();
 
+        // set session superglobal
+        if ( ! isset($_SESSION)) $_SESSION = [];
+
         $di = new Di\FactoryDefault();
 
         $dbConfig = [
@@ -110,6 +119,8 @@ class TestHelper extends TestCase
         $url = new Url();
         $url->setBaseUri('/');
 
+        $permission = new Permission();
+
         $di->set('languageService', new LanguageService);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
@@ -117,18 +128,58 @@ class TestHelper extends TestCase
         $di->set('dbService', new DbService);
         $di->set('mediaResize', new MediaResizeBase);
         $di->set('cacheService', new CacheService);
+        $di->set('validation', new Validation);
+        $di->set('websiteSettings', new WebsiteSettingsBase);
+        $di->set('twigService', new TwigService);
         $di->set('fileService', new FileService('media', 'thumbs'));
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
+        $di->set('translator', $this->getTranslator());
         $di->set('db', new Mysql($dbConfig));
         $di->set('config', $config);
         $di->set('fileStorage', $fileStorage);
         $di->set('url', $url);
+        $di->set('permisson', $permission);
+        $di->set('persistent', new Bag('test'));
+        $di->set('acl', $permission->getAcl());
+        $di->set('view', $this->getView());
 
         Di::setDefault($di);
 
         $this->testDbDi = $di;
 
         return $this->testDbDi;
+    }
+
+    /**
+     * @return View
+     */
+    private function getView(): View
+    {
+        $cmsViewDir     = dirname(dirname(__DIR__)) . '/src/Views/';
+        $cmsResourceDir = dirname(dirname(__DIR__)) . '/resources/';
+
+        $namespaces = [
+            'kikcms'       => $cmsViewDir,
+            'cmsResources' => $cmsResourceDir,
+        ];
+
+        $view = new View();
+        $view->setViewsDir($cmsViewDir);
+        $view->setNamespaces($namespaces);
+        $view->registerEngines([
+            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
+                $options = [
+                    'cache' => false,
+                    'debug' => true
+                ];
+
+                return new Twig($view, $di, $options, $view->getNamespaces());
+            }
+        ]);
+
+        $view->assets = new Manager();
+
+        return $view;
     }
 
     /**
