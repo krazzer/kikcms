@@ -148,9 +148,13 @@ class TestHelper extends TestCase
         $di->set('fileStorage', $fileStorage);
         $di->set('url', $url);
         $di->set('permisson', $permission);
-        $di->set('persistent', new Bag('test'));
-        $di->set('acl', $permission->getAcl());
+        $di->set('persistent', new Bag('persistent'));
+        $di->set('sessionBag', new Bag('session'));
         $di->set('view', $this->getView());
+
+        $permission->setDI($di);
+
+        $di->set('acl', $permission->getAcl());
 
         Di::setDefault($di);
 
