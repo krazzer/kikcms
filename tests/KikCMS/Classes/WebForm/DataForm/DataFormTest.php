@@ -3,8 +3,14 @@
 namespace KikCMS\Classes\WebForm\DataForm;
 
 
+use DataTables\PersonInterests;
+use Exception;
 use Forms\PersonForm;
 use Helpers\TestHelper;
+use KikCMS\Classes\DataTable\DataTableFilters;
+use Models\Company;
+use Models\Person;
+use Models\PersonInterest;
 use PHPUnit\Framework\TestCase;
 
 class DataFormTest extends TestCase
@@ -20,5 +26,85 @@ class DataFormTest extends TestCase
         $response = $personForm->render();
 
         $this->assertContains('<div class="webForm"', $response);
+    }
+
+    public function testGetDataTableFieldObjects()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $personForm = new PersonForm();
+        $personForm->setDI($di);
+
+        $person       = new Person();
+        $person->id   = 1;
+        $person->name = 'test';
+
+        $company     = new Company();
+        $company->id = 1;
+
+        $person->company = $company;
+
+        $person->save();
+
+        $personForm->getFilters()->setEditId(1);
+
+        // test isset
+        $returnPerson = $personForm->getDataTableFieldObjects('company');
+
+        $this->assertEquals(1, $returnPerson->id);
+
+        // test no object present, and no cached ids
+        $personForm = new PersonForm();
+        $personForm->setDI($di);
+        $personForm->addDataTableField('personInterests', PersonInterests::class, 'Person interests');
+
+        $this->assertEquals([], $personForm->getDataTableFieldObjects('personInterests'));
+
+        // test no object present, but with cached ids
+        $personForm = new PersonForm();
+        $personForm->setDI($di);
+        $field = $personForm->addDataTableField('personInterests', PersonInterests::class, 'Person interests');
+
+        $personInterest = new PersonInterest();
+
+        $personInterest->id         = 128;
+        $personInterest->company_id = 1;
+        $personInterest->person_id  = 1;
+        $personInterest->save();
+
+        $dataTableFilters = (new DataTableFilters)
+            ->setParentRelationKey('personInterests')
+            ->setParentModel(Person::class);
+
+        $field->getDataTable()->setFilters($dataTableFilters);
+        $field->getDataTable()->cacheNewId(128);
+
+        $result  = $personForm->getDataTableFieldObjects('personInterests');
+
+        $this->assertInstanceOf(PersonInterest::class, $result[0]);
+        $this->assertEquals(128, $result[0]->id);
+
+        // remove dummies
+        $person->delete();
+        $company->delete();
+        $personInterest->delete();
+
+        // test exception
+        $this->expectException(Exception::class);
+        $personForm->getDataTableFieldObjects('nonExistingRelation');
+    }
+
+    public function testGetDataTableFieldObjectsFieldMissingException()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $personForm = new PersonForm;
+        $personForm->setDI($di);
+
+        $this->expectExceptionMessage("Field company does not exist");
+
+        // not field fieldMap exception
+        $personForm->getDataTableFieldObjects('company');
+
     }
 }

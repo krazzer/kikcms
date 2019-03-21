@@ -14,11 +14,14 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
+use KikCMS\Services\ModelService;
 use KikCMS\Services\TwigService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Frontend\Data;
+use Phalcon\Cache\Frontend\Json;
 use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
@@ -116,6 +119,9 @@ class TestHelper extends TestCase
         $fileStorage = new File();
         $fileStorage->setStorageDir(SITE_PATH . 'storage/');
 
+        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
+        $keyValue = new \Phalcon\Cache\Backend\File($frontend, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
+
         $url = new Url();
         $url->setBaseUri('/');
 
@@ -131,11 +137,14 @@ class TestHelper extends TestCase
         $di->set('validation', new Validation);
         $di->set('websiteSettings', new WebsiteSettingsBase);
         $di->set('twigService', new TwigService);
+        $di->set('modelService', new ModelService);
+        $di->set('dataTableFilterService', new DataTableFilterService);
         $di->set('fileService', new FileService('media', 'thumbs'));
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('translator', $this->getTranslator());
         $di->set('db', new Mysql($dbConfig));
         $di->set('config', $config);
+        $di->set('keyValue', $keyValue);
         $di->set('fileStorage', $fileStorage);
         $di->set('url', $url);
         $di->set('permisson', $permission);
