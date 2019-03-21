@@ -101,7 +101,7 @@ abstract class DataForm extends WebForm
      */
     public function getDataTableFieldObjects(string $fieldKey)
     {
-        if( ! $relation = $this->modelService->getRelation($this->getModel(), $fieldKey)){
+        if ( ! $relation = $this->modelService->getRelation($this->getModel(), $fieldKey)) {
             throw new Exception("Relation $fieldKey does not exist");
         }
 
@@ -114,7 +114,7 @@ abstract class DataForm extends WebForm
             throw new Exception("Field $fieldKey does not exist");
         }
 
-        if( ! $ids = $field->getDataTable()->getCachedNewIds()){
+        if ( ! $ids = $field->getDataTable()->getCachedNewIds()) {
             return [];
         }
 
@@ -497,7 +497,12 @@ abstract class DataForm extends WebForm
     private function transformDataForDisplay(array $data): array
     {
         foreach ($this->fieldMap as $key => $field) {
-            if ( ! array_key_exists($key, $this->fieldTransformers) || ! isset($data[$key]) || ! $data[$key]) {
+            if ( ! isset($data[$key]) || ! $data[$key]) {
+                continue;
+            }
+
+            if ( ! array_key_exists($key, $this->fieldTransformers)) {
+                $data[$key] = $field->getFormFormat($data[$key]);
                 continue;
             }
 
