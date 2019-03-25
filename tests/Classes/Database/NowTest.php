@@ -17,6 +17,6 @@ class NowTest extends TestCase
     {
         $now = new Now();
 
-        $this->assertEquals(strlen($now->__toString()), 21);
+        $this->assertEquals(strlen($now->__toString()), 19);
     }
 }

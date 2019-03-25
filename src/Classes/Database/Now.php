@@ -23,8 +23,8 @@ class Now
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return "'" . $this->dateTime->format(DbConfig::SQL_DATETIME_FORMAT) . "'";
+        return $this->dateTime->format(DbConfig::SQL_DATETIME_FORMAT);
     }
 }
