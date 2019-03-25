@@ -1,6 +1,8 @@
 {# @var file \KikCMS\Models\File #}
-{% if file.isImage or file.extension == 'svg' %}
-    <img src="{{ mediaFile(file.id, 'default', true) }}"/>
+{% if file.isImage %}
+    <img src="{{ mediaFile(file.id, 'default', true) }}" />
+{% elseif(file.extension == 'svg') %}
+    <img src="{{ mediaFile(file.id, 'default', true) }}" width="96" />
 {% elseif(file.isFolder) %}
     <img src="/cmsassets/images/folder.png"/>
 {% else %}
