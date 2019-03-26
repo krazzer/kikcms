@@ -142,26 +142,6 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * Retrieve data from fields that are not stored in the current DataTable's Table
-     *
-     * @param null|string $langCode
-     * @return array
-     */
-    public function getRelatedData(string $langCode = null): array
-    {
-        $data   = [];
-        $object = $this->getObject();
-
-        foreach ($this->getFieldMap() as $key => $field) {
-            if ($this->relationKeyService->isRelationKey($key)) {
-                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
-            }
-        }
-
-        return $data;
-    }
-
-    /**
      * @return DataFormFilters|Filters
      */
     public function getFilters(): Filters
@@ -436,6 +416,26 @@ abstract class DataForm extends WebForm
         $relation = $this->modelService->getRelation($this->getModel(), $field->getKey());
 
         return $relation ? 0 : null;
+    }
+
+    /**
+     * Retrieve data from fields that are not stored in the current DataTable's Table
+     *
+     * @param null|string $langCode
+     * @return array
+     */
+    private function getRelatedData(string $langCode = null): array
+    {
+        $data   = [];
+        $object = $this->getObject();
+
+        foreach ($this->getFieldMap() as $key => $field) {
+            if ($this->relationKeyService->isRelationKey($key)) {
+                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
+            }
+        }
+
+        return $data;
     }
 
     /**

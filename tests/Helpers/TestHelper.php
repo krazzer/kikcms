@@ -19,6 +19,7 @@ use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\TwigService;
+use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
@@ -138,6 +139,7 @@ class TestHelper extends TestCase
         $di->set('websiteSettings', new WebsiteSettingsBase);
         $di->set('twigService', new TwigService);
         $di->set('modelService', new ModelService);
+        $di->set('relationKeyService', new RelationKeyService);
         $di->set('dataTableFilterService', new DataTableFilterService);
         $di->set('fileService', new FileService('media', 'thumbs'));
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));

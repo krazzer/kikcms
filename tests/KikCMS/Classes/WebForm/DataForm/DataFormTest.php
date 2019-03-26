@@ -105,6 +105,5 @@ class DataFormTest extends TestCase
 
         // not field fieldMap exception
         $personForm->getDataTableFieldObjects('company');
-
     }
 }
