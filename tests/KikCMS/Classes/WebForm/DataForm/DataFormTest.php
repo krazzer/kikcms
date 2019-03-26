@@ -8,6 +8,7 @@ use Exception;
 use Forms\PersonForm;
 use Helpers\TestHelper;
 use KikCMS\Classes\DataTable\DataTableFilters;
+use KikCMS\Services\ModelService;
 use Models\Company;
 use Models\Person;
 use Models\PersonInterest;
@@ -105,5 +106,33 @@ class DataFormTest extends TestCase
 
         // not field fieldMap exception
         $personForm->getDataTableFieldObjects('company');
+    }
+
+    public function testGetObject()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $personForm = new PersonForm;
+        $personForm->setDI($di);
+
+        // test no id set
+        $this->assertNull($personForm->getObject());
+
+        $personMock = $this->createMock(Person::class);
+
+        $modelServiceMock = $this->createMock(ModelService::class);
+        $modelServiceMock->method('getObject')->willReturn($personMock);
+
+        $personForm->getFilters()->setEditId(1);
+
+        $personForm->modelService = $modelServiceMock;
+
+        // test get object
+        $this->assertEquals($personMock, $personForm->getObject());
+
+        $personForm->setFilters(new DataFormFilters);
+
+        // test cache
+        $this->assertEquals($personMock, $personForm->getObject());
     }
 }
