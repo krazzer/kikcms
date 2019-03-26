@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Classes\WebForm\Fields\DateField;
@@ -32,6 +33,7 @@ use Phalcon\Mvc\Model\Resultset;
  * @property ModelService $modelService
  * @property RelationKeyService $relationKeyService
  * @property StorageService $storageService
+ * @property RearrangeService $rearrangeService
  */
 abstract class DataForm extends WebForm
 {
@@ -476,14 +478,13 @@ abstract class DataForm extends WebForm
      */
     private function setDisplayOrder(StorageData $storageData)
     {
-        $dataTable  = $this->getDataTable();
-        $rearranger = $this->getDataTable()->getRearranger();
+        $dataTable = $this->getDataTable();
 
         if ($dataTable->isSortableNewFirst()) {
             $storageData->addAdditionalInputValue($dataTable->getSortableField(), 1);
-            $rearranger->makeRoomForFirst();
+            $this->rearrangeService->makeRoomForFirst($this->getModel());
         } else {
-            $newValue = $rearranger->getMax() + 1;
+            $newValue = $this->rearrangeService->getMax($this->getModel()) + 1;
             $storageData->addAdditionalInputValue($dataTable->getSortableField(), $newValue);
         }
     }

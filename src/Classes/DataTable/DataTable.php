@@ -113,9 +113,6 @@ abstract class DataTable extends Renderable
     /** @var int amount of rows shown on one page */
     private $limit = 100;
 
-    /** @var Rearranger */
-    private $rearranger;
-
     /**
      * Tracks whether the function 'initializeDatatable' has been run yet
      * @var bool
@@ -421,18 +418,6 @@ abstract class DataTable extends Renderable
     public function getSortableField(): string
     {
         return $this->sortableField;
-    }
-
-    /**
-     * @return Rearranger
-     */
-    public function getRearranger(): Rearranger
-    {
-        if ( ! $this->rearranger) {
-            $this->rearranger = new Rearranger($this);
-        }
-
-        return $this->rearranger;
     }
 
     /**

@@ -5,12 +5,12 @@ namespace KikCMS\Controllers;
 
 use Exception;
 use KikCMS\Services\DataTable\DataTableFilterService;
+use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Util\QueryService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\DataTable;
-use KikCMS\Classes\DataTable\Rearranger;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;
@@ -23,6 +23,7 @@ use Monolog\Logger;
  * @property ModelService $modelService
  * @property QueryService $queryService
  * @property DataTableFilterService $dataTableFilterService
+ * @property RearrangeService $rearrangeService
  */
 class DataTableController extends RenderableController
 {
@@ -214,8 +215,7 @@ class DataTableController extends RenderableController
         $source = $model::getById($id);
         $target = $model::getById($targetId);
 
-        $rearranger = new Rearranger($dataTable);
-        $rearranger->rearrange($source, $target, $rearrange);
+        $this->rearrangeService->rearrange($source, $target, $rearrange, $dataTable->getSortableField());
 
         return json_encode(['table' => $dataTable->renderTable()]);
     }

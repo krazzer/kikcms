@@ -378,13 +378,6 @@ class DataTableTest extends TestCase
         $this->assertEquals('test', $dataTable->getSortableField());
     }
 
-    public function testGetRearanger()
-    {
-        $dataTable = new TestableDataTable();
-
-        $this->assertEquals(new Rearranger($dataTable), $dataTable->getRearranger());
-    }
-
     public function testIsMultiLingual()
     {
         $dataTable = new TestableDataTable();
