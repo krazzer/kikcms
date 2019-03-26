@@ -33,4 +33,17 @@ class TranslatorTest extends TestCase
 
         $this->assertEquals(['test' => 'test'], $translator->getUserTranslations());
     }
+
+    public function testGetCmsTranslationGroupKeys()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $translator = new Translator('nl');
+
+        $translator->setDI($di);
+
+        $expected = ['global.cancel', 'global.delete', 'global.no', 'global.yes'];
+
+        $this->assertEquals($expected, $translator->getCmsTranslationGroupKeys('global'));
+    }
 }
