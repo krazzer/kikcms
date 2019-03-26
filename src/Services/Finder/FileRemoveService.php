@@ -91,10 +91,10 @@ class FileRemoveService extends Injectable
      */
     public function removeThumbNails(File $file)
     {
-        $thumbNailDirs = glob($this->fileService->getStorageDir() . $this->fileService->getThumbDir() . '/*');
+        $thumbNailDirs = glob($this->fileService->getMediaThumbDir() . '*');
 
         foreach ($thumbNailDirs as $thumbNailDir) {
-            $thumbFile = $this->fileService->getThumbPath($file, basename($thumbNailDir));
+            $thumbFile = $this->fileService->getMediaThumbPath($file, basename($thumbNailDir));
 
             if (file_exists($thumbFile)) {
                 unlink($thumbFile);

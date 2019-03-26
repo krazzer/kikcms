@@ -114,27 +114,6 @@ class FileService extends Injectable
     /**
      * @param File $file
      * @param string|null $type
-     * @deprecated use createMediaThumb
-     */
-    public function createThumb(File $file, string $type = null)
-    {
-        $filePath  = $this->getFilePath($file);
-        $thumbPath = $this->getThumbPath($file, $type);
-
-        $image = $this->imageHandler->create($filePath);
-
-        if ($type == null) {
-            $image->resize(192, 192);
-        } else {
-            $this->mediaResize->resizeByType($image, $type);
-        }
-
-        $image->save($thumbPath, 90);
-    }
-
-    /**
-     * @param File $file
-     * @param string|null $type
      * @param bool $private
      */
     public function createMediaThumb(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false)
@@ -315,32 +294,12 @@ class FileService extends Injectable
     /**
      * @param File $file
      * @param string|null $type
-     *
-     * @return string
-     * @deprecated use getMediaThumbPath instead
-     */
-    public function getThumbPath(File $file, string $type = null)
-    {
-        $type     = $type ?: 'default';
-        $fileName = $file->id . '.' . $file->getExtension();
-        $dirPath  = $this->getStorageDir() . $this->getThumbDir() . '/' . $type . '/';
-
-        if ( ! file_exists($dirPath)) {
-            mkdir($dirPath);
-        }
-
-        return $dirPath . $fileName;
-    }
-
-    /**
-     * @param File $file
-     * @param string|null $type
      * @param bool $private
      * @return string
      */
     public function getMediaThumbPath(File $file, string $type = null, bool $private = false): string
     {
-        $dirPath = $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/' . $type . '/';
+        $dirPath = $this->getMediaThumbDir() . $type . '/';
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
@@ -357,6 +316,14 @@ class FileService extends Injectable
     public function getMediaFilePath(File $file, bool $private = false): string
     {
         return $this->getMediaStorageDir() . '/' . FinderConfig::FILES_DIR . '/' . $file->getFileName($private);
+    }
+
+    /**
+     * @return string
+     */
+    public function getMediaThumbDir(): string
+    {
+        return $this->getMediaStorageDir() . '/' . FinderConfig::THUMB_DIR . '/';
     }
 
     /**
@@ -463,10 +430,10 @@ class FileService extends Injectable
             return null;
         }
 
-        $thumbPath = $this->getThumbPath($file);
+        $thumbPath = $this->getMediaThumbPath($file);
 
         if ( ! file_exists($thumbPath)) {
-            $this->createThumb($file);
+            $this->createMediaThumb($file);
         }
 
         return getimagesize($thumbPath);

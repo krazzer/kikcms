@@ -213,43 +213,6 @@ class FinderController extends RenderableController
     }
 
     /**
-     * @param int $fileId
-     * @param string|null $type
-     * @return string
-     * @throws NotFoundException
-     */
-    public function thumbAction(int $fileId, string $type = null)
-    {
-        /** @var File $file */
-        if (( ! $file = File::getById($fileId)) || ! $this->mediaResize->typeExists($type)) {
-            throw new NotFoundException();
-        }
-
-        if ($file->getExtension() == 'svg') {
-            return $this->fileAction($file);
-        }
-
-        $thumbPath = $this->fileService->getThumbPath($file, $type);
-
-        if ( ! file_exists($thumbPath) && $file->isImage()) {
-            $this->fileService->createThumb($file, $type);
-        }
-
-        return $this->outputFile($thumbPath, $file->getOutputMimeType(), $file->getName());
-    }
-
-    /**
-     * @param string $type
-     * @param int $fileId
-     * @return string
-     * @throws NotFoundException
-     */
-    public function typedThumbAction(string $type, int $fileId)
-    {
-        return $this->thumbAction($fileId, $type);
-    }
-
-    /**
      * @return string
      */
     public function uploadAction()
