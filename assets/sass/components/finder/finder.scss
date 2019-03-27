@@ -70,8 +70,10 @@
                     }
 
                     .name {
+                        color: $colorWhite;
+                        max-height: 31px;
+
                         span {
-                            color: $colorWhite;
                             background-color: $selectedTextBlue;
                         }
                     }
