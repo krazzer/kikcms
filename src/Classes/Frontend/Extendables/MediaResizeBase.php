@@ -32,15 +32,30 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function crop(Adapter $image, $width, $height)
     {
-        if ($image->getWidth() < $width && $image->getHeight() < $height) {
+        $sourceWidth = $image->getWidth();
+        $sourceHeight = $image->getHeight();
+
+        if ($sourceWidth < $width && $sourceHeight < $height) {
             return;
         }
 
-        // resize first to maintain aspect ratio
-        $this->resize($image, $width, $height);
+        $sourceAspectRatio  = $sourceWidth / $sourceHeight;
+        $desiredAspectRatio = $width / $height;
 
-        $x0 = ($image->getWidth() - $width) / 2;
-        $y0 = ($image->getHeight() - $height) / 2;
+        if ($sourceAspectRatio > $desiredAspectRatio) {
+            $newHeight = $height;
+            $newWidth  = (int) ($height * $sourceAspectRatio);
+        } else {
+            $newWidth  = $width;
+            $newHeight = (int) ($width / ($sourceAspectRatio));
+        }
+
+        $x0 = ($newWidth - $width) / 2;
+        $y0 = ($newHeight - $height) / 2;
+
+        if($newWidth != $sourceWidth || $newHeight != $sourceHeight){
+            $image->resize($newWidth, $newHeight);
+        }
 
         $image->crop($width, $height, $x0, $y0);
     }
@@ -56,21 +71,15 @@ class MediaResizeBase extends WebsiteExtendable
             return;
         }
 
-        $sourceHeight = $image->getHeight();
-        $sourceWidth  = $image->getWidth();
+        $ratio = $image->getWidth() / $image->getHeight();
 
-        $sourceAspectRatio  = $sourceWidth / $sourceHeight;
-        $desiredAspectRatio = $width / $height;
-
-        if ($sourceAspectRatio > $desiredAspectRatio) {
-            $newHeight = $height;
-            $newWidth  = (int) ($height * $sourceAspectRatio);
+        if ($ratio < 1) {
+            $width = $height * $ratio;
         } else {
-            $newWidth  = $width;
-            $newHeight = (int) ($width / ($sourceAspectRatio));
+            $height = $width / $ratio;
         }
 
-        $image->resize($newWidth, $newHeight);
+        $image->resize($width, $height);
     }
 
     /**
