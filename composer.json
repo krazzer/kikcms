@@ -8,7 +8,7 @@
     "google/apiclient": "^2.0",
     "nette/php-generator": "^3.1",
     "martijnc/php-csp": "^1.0",
-    "google/recaptcha": "~1.1"
+    "google/recaptcha": "^1.2"
   },
   "autoload": {
     "psr-4": {
