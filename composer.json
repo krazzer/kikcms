@@ -2,7 +2,7 @@
   "name": "kiksaus/kikcms",
   "require": {
     "kiksaus/kikcms-core": "@dev",
-    "swiftmailer/swiftmailer": "^6.0",
+    "swiftmailer/swiftmailer": "5.4.*",
     "twig/twig": "~1.0",
     "monolog/monolog": "^1.22",
     "google/apiclient": "^2.0",
