@@ -2,7 +2,7 @@
 <html lang="{{ langCode }}">
 <head>
     <meta charset="utf-8">
-    <title>KikCMS - {% block title title %}</title>
+    <title>{{ cmsTitlePrefix ? cmsTitlePrefix ~ ' - ' }}{% block title title %}</title>
     <link rel="shortcut icon" href="/cmsassets/favicon.ico"/>
     <link rel="apple-touch-icon" href="/cmsassets/icons/kikcms-icon-76.png">
     <link rel="apple-touch-icon" sizes="76x76" href="/cmsassets/icons/kikcms-icon-76.png">

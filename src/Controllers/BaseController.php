@@ -6,11 +6,13 @@ use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Services\LanguageService;
 use KikCMS\Util\ByteUtil;
+use Phalcon\Config;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Url;
 use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 /**
+ * @property Config $config
  * @property LanguageService $languageService
  * @property Translator $translator
  * @property Url $url
@@ -52,7 +54,9 @@ class BaseController extends Controller
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("baseUri", $this->url->getBaseUri());
         $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
+        $this->view->setVar("cmsTitlePrefix", $this->config->application->cmsTitlePrefix);
         $this->view->setVar("jsTranslations", $jsTranslations);
+        $this->view->setVar("jsSettings", $jsSettings);
         $this->view->setVar("jsSettings", $jsSettings);
     }
 
