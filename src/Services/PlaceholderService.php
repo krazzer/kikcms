@@ -34,7 +34,7 @@ class PlaceholderService extends Injectable
     {
         $key = $type . CacheConfig::SEPARATOR . implode(CacheConfig::SEPARATOR, $args);
 
-        if ($value = $this->cache->get($key)) {
+        if ($this->cache && $value = $this->cache->get($key)) {
             return $value;
         }
 
