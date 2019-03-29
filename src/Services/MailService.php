@@ -46,7 +46,7 @@ class MailService extends Injectable
      */
     public function createMessage()
     {
-        return Swift_Message::newInstance();
+        return new Swift_Message();
     }
 
     /**

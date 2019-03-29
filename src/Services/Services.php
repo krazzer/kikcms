@@ -46,7 +46,7 @@ use ReCaptcha\ReCaptcha;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Swift_Mailer;
-use Swift_SendmailTransport;
+use Swift_SmtpTransport;
 use Throwable;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
@@ -316,12 +316,12 @@ class Services extends BaseServices
     protected function initMailService()
     {
         if ($sendMailCommand = $this->getApplicationConfig()->get('sendmailCommand')) {
-            $transport = Swift_SendmailTransport::newInstance($sendMailCommand);
+            $transport = new Swift_SmtpTransport('mail', 1025);
         } else {
-            $transport = Swift_SendmailTransport::newInstance();
+            $transport = new Swift_SmtpTransport();
         }
 
-        $mailer = Swift_Mailer::newInstance($transport);
+        $mailer = new Swift_Mailer($transport);
 
         return new MailService($mailer);
     }

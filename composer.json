@@ -1,10 +1,14 @@
 {
+  "repositories": [
+    {
+      "url": "../kikcms-core",
+      "type": "path"
+    }
+  ],
   "name": "kiksaus/kikcms",
   "require": {
     "kiksaus/kikcms-core": "@dev",
-    "swiftmailer/swiftmailer": "5.4.*",
     "twig/twig": "~1.0",
-    "monolog/monolog": "^1.22",
     "google/apiclient": "^2.0",
     "nette/php-generator": "^3.1",
     "martijnc/php-csp": "^1.0",
