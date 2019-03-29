@@ -312,9 +312,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return MailService
+     * @return Swift_Mailer
      */
-    protected function initMailService()
+    protected function initMailer(): Swift_Mailer
     {
         $transport = new Swift_SendmailTransport();
 
@@ -324,7 +324,15 @@ class Services extends BaseServices
             }
         }
 
-        return new MailService(new Swift_Mailer($transport));
+        return new Swift_Mailer($transport);
+    }
+
+    /**
+     * @return MailService
+     */
+    protected function initMailService()
+    {
+        return new MailService($this->get('mailer'));
     }
 
     /**

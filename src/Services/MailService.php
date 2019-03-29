@@ -155,8 +155,6 @@ class MailService extends Injectable
             $parameters['mainColorDark'] = $config->mainColorDark;
         }
 
-        $parameters['baseUrl'] = $this->url->getBaseUri();
-
         return $parameters;
     }
 
