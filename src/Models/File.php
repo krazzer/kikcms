@@ -90,9 +90,9 @@ class File extends Model
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHash(): string
+    public function getHash(): ?string
     {
         return $this->hash;
     }

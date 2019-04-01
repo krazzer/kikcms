@@ -16,6 +16,14 @@ class CmsMenuItem
     /** @var string */
     private $label;
 
+    /** @var bool */
+    private $targetBlank = false;
+
+    /**
+     * @param string $id
+     * @param string $label
+     * @param string $route
+     */
     public function __construct(string $id, string $label, string $route)
     {
         $this->id    = $id;
@@ -74,6 +82,24 @@ class CmsMenuItem
     public function setLabel(string $label): CmsMenuItem
     {
         $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTargetBlank(): bool
+    {
+        return $this->targetBlank;
+    }
+
+    /**
+     * @param bool $targetBlank
+     * @return CmsMenuItem
+     */
+    public function setTargetBlank(bool $targetBlank): CmsMenuItem
+    {
+        $this->targetBlank = $targetBlank;
         return $this;
     }
 }

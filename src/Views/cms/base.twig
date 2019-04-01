@@ -1,6 +1,6 @@
 {# @var menuGroupMap \KikCMS\ObjectLists\MenuGroupMap #}
 {# @var menuGroup \KikCMS\Services\Cms\CmsMenuGroup #}
-{# @var menuItem \KikCMS\Services\Cms\CmsMenuItem #}
+{# @var menuItem \KikCMS\Objects\CmsMenuItem #}
 
 {% extends '@kikcms/base.twig' %}
 
@@ -22,8 +22,9 @@
                 </div>
                 {% for id, menuItem in menuGroup.menuItemMap %}
                     {% set class = id == actionName or id == selectedMenuItem ? ' selected' : '' %}
+                    {% set target = menuItem.targetBlank ? '_blank' : '_self' %}
                     <a class="menu-item{{ class }}" href="{{ url(menuItem.route) }}"
-                       title="{{ id == 'logout' ? tl('menu.username', {'email' : userEmail}) }}">
+                       title="{{ id == 'logout' ? tl('menu.username', {'email' : userEmail}) }}" target="{{ target }}">
                         {{ menuItem.label }}
                     </a>
                 {% endfor %}
