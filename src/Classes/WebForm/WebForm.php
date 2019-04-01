@@ -479,9 +479,8 @@ abstract class WebForm extends Renderable
     protected function renderSelectDataTableField(SelectDataTableField $field)
     {
         // set selected ids filter for SelectDataTable
-        if ($field->getElement()->getValue()) {
-            $filters = $field->getDataTable()->getFilters();
-            $filters->setSelectedValues(json_decode($field->getElement()->getValue()));
+        if ($value = $field->getElement()->getValue()) {
+            $field->getDataTable()->getFilters()->setSelectedValues(json_decode($value));
         }
 
         $field->setRenderedDataTable($field->getDataTable()->render());

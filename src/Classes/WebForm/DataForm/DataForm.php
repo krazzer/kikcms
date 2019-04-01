@@ -431,7 +431,7 @@ abstract class DataForm extends WebForm
 
         foreach ($this->getFieldMap() as $key => $field) {
             if ($this->relationKeyService->isRelationKey($key)) {
-                $data[$key] = $field->getFormFormat($this->relationKeyService->get($object, $key, $langCode));
+                $data[$key] = $this->relationKeyService->get($object, $key, $langCode);
             }
         }
 
@@ -498,7 +498,7 @@ abstract class DataForm extends WebForm
     private function transformDataForDisplay(array $data): array
     {
         foreach ($this->fieldMap as $key => $field) {
-            if ( ! isset($data[$key]) || ! $data[$key]) {
+            if ( ! isset($data[$key]) || ( ! $data[$key] && ! is_array($data[$key]))) {
                 continue;
             }
 
