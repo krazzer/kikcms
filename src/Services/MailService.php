@@ -173,7 +173,7 @@ class MailService extends Injectable
 
         $from = 'noreply@' . $domain;
 
-        if ($companyName = $this->config->get('company')->get('name')) {
+        if ($this->config->get('company') && $companyName = $this->config->get('company')->get('name')) {
             return [$from => $companyName];
         }
 
