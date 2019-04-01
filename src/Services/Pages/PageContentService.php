@@ -49,28 +49,29 @@ class PageContentService extends Injectable
             $pageLangMap = $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
         }
 
-        if ($wysiwygFieldKeys) {
-            $searchParams = ['public' => '%/media/files/' . $file->getId() . '%'];
+        if ( ! $wysiwygFieldKeys || $file->isFolder()) {
+            return $pageLangMap;
+        }
 
-            if ($hash = $file->getHash()) {
-                $searchParams['private'] = '%/media/files/' . $hash . '%';
-            }
+        $searchParams = [
+            'public'  => '%/media/files/' . $file->getId() . '%',
+            'private' => '%/media/files/' . $file->getHash() . '%',
+        ];
 
-            $query = (new Builder)
-                ->from(['pl' => PageLanguage::class])
-                ->leftJoin(PageLanguageContent::class, 'plc.page_id = pl.page_id', 'plc')
-                ->inWhere(PageLanguageContent::FIELD_FIELD, $wysiwygFieldKeys)
-                ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
-                ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
-                ->andWhere('plc.value LIKE :public:' . ($hash ? ' OR plc.value LIKE :private:' : ''), $searchParams)
-                ->groupBy('pl.page_id');
+        $query = (new Builder)
+            ->from(['pl' => PageLanguage::class])
+            ->leftJoin(PageLanguageContent::class, 'plc.page_id = pl.page_id', 'plc')
+            ->inWhere(PageLanguageContent::FIELD_FIELD, $wysiwygFieldKeys)
+            ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+            ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+            ->andWhere('plc.value LIKE :public: OR plc.value LIKE :private:', $searchParams)
+            ->groupBy('pl.page_id');
 
-            /** @var PageLanguage[] $pageLanguages */
-            $pageLanguages = $this->dbService->getObjects($query);
+        /** @var PageLanguage[] $pageLanguages */
+        $pageLanguages = $this->dbService->getObjects($query);
 
-            foreach ($pageLanguages as $pageLanguage) {
-                $pageLangMap->add($pageLanguage, $pageLanguage->getPageId());
-            }
+        foreach ($pageLanguages as $pageLanguage) {
+            $pageLangMap->add($pageLanguage, $pageLanguage->getPageId());
         }
 
         return $pageLangMap;
