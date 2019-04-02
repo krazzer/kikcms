@@ -21,9 +21,10 @@ class TranslatorTest extends TestCase
 
     public function testGetUserTranslations()
     {
-        $translator = new Translator('nl');
+        $translator = new Translator();
 
         $translator->setDI((new TestHelper)->getTestDi());
+        $translator->setLanguageCode('nl');
 
         $translator->db->delete(TranslationKey::TABLE);
         $translator->db->delete(TranslationValue::TABLE);
@@ -38,12 +39,13 @@ class TranslatorTest extends TestCase
     {
         $di = (new TestHelper)->getTestDi();
 
-        $translator = new Translator('nl');
+        $translator = new Translator(['nl' => (new TestHelper)->getTestFilesPath() . 'nl.php']);
 
+        $translator->setLanguageCode('nl');
         $translator->setDI($di);
 
-        $expected = ['global.cancel', 'global.delete', 'global.no', 'global.yes'];
+        $expected = ['test.subtest.subsubtest'];
 
-        $this->assertEquals($expected, $translator->getCmsTranslationGroupKeys('global'));
+        $this->assertEquals($expected, $translator->getCmsTranslationGroupKeys('test'));
     }
 }

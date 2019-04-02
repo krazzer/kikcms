@@ -9,12 +9,14 @@ use KikCMS\Util\ByteUtil;
 use Phalcon\Config;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Url;
+use Phalcon\Validation;
 use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 /**
  * @property Config $config
  * @property LanguageService $languageService
  * @property Translator $translator
+ * @property Validation $validation
  * @property Url $url
  */
 class BaseController extends Controller
@@ -26,6 +28,7 @@ class BaseController extends Controller
     {
         $this->initializeLanguage();
         $this->initializeCpsHeaders();
+        $this->initializeValidation();
 
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
@@ -63,7 +66,7 @@ class BaseController extends Controller
     /**
      * Initialize the language
      */
-    public function initializeLanguage()
+    protected function initializeLanguage()
     {
         if ($langCode = $this->request->getPost('activeLangCode')) {
             $this->translator->setLanguageCode($langCode);
@@ -161,5 +164,21 @@ class BaseController extends Controller
         foreach ($policy->getHeaders(true) as $header) {
             header(sprintf('%s: %s', $header['name'], $header['value']));
         }
+    }
+
+    /**
+     * Initialize validation default messages
+     */
+    private function initializeValidation()
+    {
+        $webFormMessagesKeys = $this->translator->getCmsTranslationGroupKeys('webform.messages');
+
+        $defaultMessages = [];
+
+        foreach ($webFormMessagesKeys as $key) {
+            $defaultMessages[last(explode('.', $key))] = $this->translator->tl($key);
+        }
+
+        $this->validation->setDefaultMessages($defaultMessages);
     }
 }

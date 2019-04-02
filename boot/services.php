@@ -5,7 +5,7 @@ use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\FactoryDefault\Cli;
 
-if( ! defined('SITE_PATH')){
+if ( ! defined('SITE_PATH')) {
     throw new Exception('constant SITE_PATH is missing');
 }
 
@@ -32,14 +32,16 @@ if ( ! isset($config->application->path)) {
     $config->application->path = SITE_PATH;
 }
 
+$cmsPath = $config->application->cmsPath = dirname(__DIR__) . "/";
+
 $loader = (new \Phalcon\Loader())
     ->registerNamespaces([
-        "Website" => SITE_PATH . "app/",
-        "KikCMS"  => __DIR__ . "/../src/",
+        'Website' => SITE_PATH . 'app/',
+        'KikCMS'  => $cmsPath . 'src/',
     ])
     ->registerDirs([
-        __DIR__ . "/../src/Tasks",
-        SITE_PATH . "app/Tasks",
+        $cmsPath . 'src/Tasks',
+        SITE_PATH . 'app/Tasks',
     ])
     ->register();
 

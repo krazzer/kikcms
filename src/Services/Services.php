@@ -18,6 +18,7 @@ use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Services\Website\WebsiteService;
@@ -352,6 +353,22 @@ class Services extends BaseServices
     }
 
     /**
+     * @return Translator
+     */
+    protected function initTranslator(): Translator
+    {
+        $translator = new Translator([
+            TranslatorConfig::LANGUAGE_NL => $this->getAppConfig()->cmsPath . 'resources/translations/nl.php',
+            TranslatorConfig::LANGUAGE_EN => $this->getAppConfig()->cmsPath . 'resources/translations/en.php',
+        ], [
+            TranslatorConfig::LANGUAGE_NL => $this->getAppConfig()->path . 'resources/translations/nl.php',
+            TranslatorConfig::LANGUAGE_EN => $this->getAppConfig()->path . 'resources/translations/en.php',
+        ]);
+
+        return $translator;
+    }
+
+    /**
      * The URL component is used to generate all kind of urls in the application
      * Note that the baseUri is not set in the CLI
      */
@@ -368,21 +385,9 @@ class Services extends BaseServices
     /**
      * @return Validation
      */
-    protected function initValidation()
+    protected function initValidation(): Validation
     {
-        $validation = new Validation();
-
-        $webFormMessagesKeys = $this->get('translator')->getCmsTranslationGroupKeys('webform.messages');
-
-        $defaultMessages = [];
-
-        foreach ($webFormMessagesKeys as $key) {
-            $defaultMessages[last(explode('.', $key))] = $this->get('translator')->tl($key);
-        }
-
-        $validation->setDefaultMessages($defaultMessages);
-
-        return $validation;
+        return new Validation();
     }
 
     /**

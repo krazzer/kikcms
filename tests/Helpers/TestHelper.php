@@ -12,6 +12,7 @@ use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\DataTableFilterService;
@@ -81,7 +82,12 @@ class TestHelper extends TestCase
         $cacheServiceMock->method('cache')->willReturn([]);
         $websiteSettingsMock->method('getPluginList')->willReturn(new CmsPluginList);
 
-        $translatorMock = new Translator('nl');
+        $translatorMock = new Translator([
+            TranslatorConfig::LANGUAGE_NL => dirname(dirname(__DIR__)) . '/resources/translations/nl.php',
+            TranslatorConfig::LANGUAGE_EN => dirname(dirname(__DIR__)) . '/resources/translations/en.php',
+        ]);
+
+        $translatorMock->setLanguageCode('nl');
 
         $translatorMock->cache           = null;
         $translatorMock->cacheService    = $cacheServiceMock;
@@ -163,6 +169,14 @@ class TestHelper extends TestCase
         $this->testDbDi = $di;
 
         return $this->testDbDi;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTestFilesPath(): string
+    {
+        return dirname(__DIR__) . '/TestSitePath/';
     }
 
     /**

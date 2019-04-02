@@ -31,12 +31,20 @@ class Translator extends Injectable
     /** @var null|string */
     private $languageCode = null;
 
+    /** @var array */
+    private $siteFiles = [];
+
+    /** @var array */
+    private $cmsFiles = [];
+
     /**
-     * @param string|null $languageCode
+     * @param array $siteFiles
+     * @param array $cmsFiles
      */
-    public function __construct(string $languageCode = null)
+    public function __construct(array $cmsFiles = [], array $siteFiles = [])
     {
-        $this->languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
+        $this->siteFiles = $siteFiles;
+        $this->cmsFiles  = $cmsFiles;
     }
 
     /**
@@ -207,7 +215,11 @@ class Translator extends Injectable
     {
         $langCode = $langCode ?: $this->getLanguageCode();
 
-        return $this->getByFile(SITE_PATH . 'resources/translations/' . $langCode . '.php');
+        if( ! array_key_exists($langCode, $this->siteFiles)){
+            return [];
+        }
+
+        return $this->getByFile($this->siteFiles[$langCode]);
     }
 
     /**
@@ -253,7 +265,11 @@ class Translator extends Injectable
     {
         $langCode = $langCode ?: $this->getLanguageCode();
 
-        return $this->getByFile(__DIR__ . '/../../resources/translations/' . $langCode . '.php');
+        if( ! array_key_exists($langCode, $this->cmsFiles)){
+            return [];
+        }
+
+        return $this->getByFile($this->cmsFiles[$langCode]);
     }
 
     /**
