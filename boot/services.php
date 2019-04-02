@@ -28,6 +28,10 @@ $configEnv  = new Ini($configEnvFile);
 $config->merge($configSite);
 $config->merge($configEnv);
 
+if ( ! isset($config->application->path)) {
+    $config->application->path = SITE_PATH;
+}
+
 $loader = (new \Phalcon\Loader())
     ->registerNamespaces([
         "Website" => SITE_PATH . "app/",

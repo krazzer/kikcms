@@ -43,8 +43,6 @@ use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
@@ -67,16 +65,9 @@ class Services extends BaseServices
             Translator::class,
         ];
 
-        $rii   = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__));
-        $files = [];
+        $cmsServices = $this->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
 
-        foreach ($rii as $file) {
-            if ( ! $file->isDir()) {
-                $files[] = "KikCMS\\Services" . str_replace([__DIR__, '.php', '/'], ['', '', "\\"], $file->getPathname());
-            }
-        }
-
-        return array_merge($services, $files, $this->getWebsiteSimpleServices());
+        return array_merge($services, $cmsServices, $this->getWebsiteSimpleServices());
     }
 
     /**
@@ -97,14 +88,10 @@ class Services extends BaseServices
      */
     protected function getWebsiteSimpleServices(): array
     {
-        /** @var WebsiteSettingsBase $websiteSettings */
-        $websiteSettings = $this->get('websiteSettings');
+        $services        = $this->getWebsiteSettings()->getServices();
+        $websiteServices = $this->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
 
-        $services = $websiteSettings->getServices();
-
-        foreach (glob(SITE_PATH . "app/Services/*.php", GLOB_NOSORT) as $filename) {
-            $services[] = 'Website\Services\\' . basename(substr($filename, 0, -4));
-        }
+        $services = array_merge($services, $websiteServices);
 
         $simpleServices = [];
 
@@ -138,8 +125,8 @@ class Services extends BaseServices
      */
     protected function initAnalytics()
     {
-        $keyFileLocation    = SITE_PATH . 'config/service-account-credentials.json';
-        $keyFileEnvLocation = SITE_PATH . 'env/service-account-credentials.json';
+        $keyFileLocation    = $this->getAppConfig()->path . 'config/service-account-credentials.json';
+        $keyFileEnvLocation = $this->getAppConfig()->path . 'env/service-account-credentials.json';
 
         if (is_readable($keyFileEnvLocation)) {
             $keyFileLocation = $keyFileEnvLocation;
@@ -167,7 +154,7 @@ class Services extends BaseServices
         $options = null;
 
         // set the current domain as prefix to prevent caching overlap
-        if ($this->getApplicationConfig()->env == KikCMSConfig::ENV_DEV) {
+        if ($this->getAppConfig()->env == KikCMSConfig::ENV_DEV) {
             $options = ["prefix" => explode('.', $_SERVER['SERVER_NAME'])[0] . ':'];
         }
 
@@ -192,7 +179,7 @@ class Services extends BaseServices
      */
     protected function initDb()
     {
-        $config = $this->getDatabaseConfig()->toArray();
+        $config = $this->getDbConfig()->toArray();
 
         $dbClass = Pdo::class . '\\' . $config['adapter'];
         unset($config['adapter']);
@@ -209,7 +196,7 @@ class Services extends BaseServices
     {
         $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
 
-        return new File($frontend, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
+        return new File($frontend, ['cacheDir' => $this->getAppConfig()->path . 'storage/keyvalue/']);
     }
 
     /**
@@ -217,7 +204,7 @@ class Services extends BaseServices
      */
     protected function initErrorHandler()
     {
-        $isProduction = $this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD;
+        $isProduction = $this->getAppConfig()->env == KikCMSConfig::ENV_PROD;
         $errorHandler = new ErrorHandler($this->get('logger'));
 
         set_exception_handler(function (Throwable $error) use ($isProduction) {
@@ -241,7 +228,7 @@ class Services extends BaseServices
     protected function initFileStorage()
     {
         $fileStorage = new FileStorageFile();
-        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+        $fileStorage->setStorageDir($this->getAppConfig()->path . 'storage/');
 
         return $fileStorage;
     }
@@ -282,12 +269,12 @@ class Services extends BaseServices
      */
     protected function initLogger()
     {
-        $isProduction = $this->getApplicationConfig()->env == KikCMSConfig::ENV_PROD;
+        $isProduction = $this->getAppConfig()->env == KikCMSConfig::ENV_PROD;
 
         $logger = new Logger('logger');
 
         if ($isProduction) {
-            $developerEmail = $this->getApplicationConfig()->developerEmail;
+            $developerEmail = $this->getAppConfig()->developerEmail;
             $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
             $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);
@@ -404,9 +391,9 @@ class Services extends BaseServices
     protected function initView()
     {
         $cmsViewDir      = __DIR__ . '/../Views/';
-        $siteViewDir     = SITE_PATH . 'app/Views/';
         $cmsResourceDir  = __DIR__ . '/../../resources/';
-        $siteResourceDir = SITE_PATH . 'public_html';
+        $siteViewDir     = $this->getAppConfig()->path . 'app/Views/';
+        $siteResourceDir = $this->getAppConfig()->path . 'public_html';
 
         $namespaces = [
             'kikcms'        => $cmsViewDir,
@@ -422,8 +409,8 @@ class Services extends BaseServices
         $view->setNamespaces($namespaces);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                $isDev = $di->get('config')->get('application')->get('env') == KikCMSConfig::ENV_DEV;
-                $cache = $isDev ? false : SITE_PATH . 'cache/twig/';
+                $isDev = $this->getAppConfig()->env == KikCMSConfig::ENV_DEV;
+                $cache = $isDev ? false : $this->getAppConfig()->path . 'cache/twig/';
 
                 return new Twig($view, $di, [
                     'cache' => $cache,
@@ -515,7 +502,7 @@ class Services extends BaseServices
      */
     private function getBaseUri(): ?string
     {
-        if ($baseUri = $this->getApplicationConfig()->get('baseUri')) {
+        if ($baseUri = $this->getAppConfig()->get('baseUri')) {
             return $baseUri;
         }
 
@@ -523,7 +510,7 @@ class Services extends BaseServices
             return "https://" . $_SERVER['HTTP_HOST'] . '/';
         }
 
-        $pathParts = explode('/', SITE_PATH);
+        $pathParts = explode('/', $this->getAppConfig()->path);
 
         // walk through the path to see if the domain name can be retrieved
         foreach ($pathParts as $part) {

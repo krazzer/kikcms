@@ -4,9 +4,10 @@ namespace KikCMS\Services\Website;
 
 
 use KikCMS\Classes\WebForm\WebForm;
+use Phalcon\Di\Injectable;
 use Phalcon\Http\Response;
 
-class WebsiteService
+class WebsiteService extends Injectable
 {
     /**
      * Look inside the page's variables for form tags that need to be replaced.

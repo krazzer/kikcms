@@ -1,20 +1,20 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassInspection */
 
 namespace KikCMS\Services\Base;
 
-use /** @noinspection PhpUndefinedClassInspection */
-    ApplicationServices;
+use ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Config\KikCMSConfig;
-use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Routing;
+use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Loader;
 use Phalcon\Mvc\Model\MetaData\Files;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
-/** @noinspection PhpUndefinedClassInspection */
 class BaseServices extends ApplicationServices
 {
     /**
@@ -105,18 +105,16 @@ class BaseServices extends ApplicationServices
             });
         }
 
-        if ($this->getApplicationConfig()->env !== KikCMSConfig::ENV_DEV) {
+        if ($this->getAppConfig()->env !== KikCMSConfig::ENV_DEV) {
             $this->set('modelsMetadata', function () {
                 return new Files([
                     "lifetime"    => 86400,
-                    "metaDataDir" => SITE_PATH . "cache/metadata/"
+                    "metaDataDir" => $this->getAppConfig()->path . "cache/metadata/"
                 ]);
             });
         }
 
-        /** @var WebsiteSettingsBase $websiteSettings */
-        $websiteSettings    = $this->get('websiteSettings');
-        $overloadedServices = $websiteSettings->getServices();
+        $overloadedServices = $this->getWebsiteSettings()->getServices();
 
         foreach ($overloadedServices as $name => $callable) {
             if ( ! is_callable($callable)) {
@@ -130,7 +128,7 @@ class BaseServices extends ApplicationServices
     /**
      * @return Config
      */
-    protected function getDatabaseConfig()
+    protected function getDbConfig(): Config
     {
         return $this->get('config')->get('database');
     }
@@ -138,9 +136,75 @@ class BaseServices extends ApplicationServices
     /**
      * @return Config
      */
-    protected function getApplicationConfig()
+    protected function getAppConfig(): Config
     {
         return $this->get('config')->get('application');
+    }
+
+    /**
+     * @return WebsiteSettingsBase
+     */
+    protected function getWebsiteSettings(): WebsiteSettingsBase
+    {
+        return $this->get('websiteSettings');
+    }
+
+    /**
+     * @return WebsiteService
+     */
+    protected function getWebsiteService(): WebsiteService
+    {
+        return $this->get('websiteSettings');
+    }
+
+    /**
+     * @return Loader
+     */
+    protected function getLoader(): Loader
+    {
+        return $this->get('loader');
+    }
+
+    /**
+     * @param string $namespace
+     * @return array
+     */
+    protected function getClassNamesByNamespace(string $namespace): array
+    {
+        $services = [];
+
+        $path  = $this->getPathByNamespace($namespace);
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+
+            $search  = [$path, '.php', DIRECTORY_SEPARATOR];
+            $replace = [null, null, KikCMSConfig::NAMESPACE_SEPARATOR];
+
+            $services[] = $namespace . str_replace($search, $replace, $file->getPathname());
+        }
+
+        return $services;
+    }
+
+    /**
+     * @param string $namespace
+     * @return string
+     */
+    protected function getPathByNamespace(string $namespace): string
+    {
+        $loadedNamespaces = $this->getLoader()->getNamespaces();
+
+        $namespaceParts = explode(KikCMSConfig::NAMESPACE_SEPARATOR, trim($namespace, KikCMSConfig::NAMESPACE_SEPARATOR));
+
+        $path = $loadedNamespaces[$namespaceParts[0]][0];
+
+        array_shift($namespaceParts);
+
+        return $path . implode(DIRECTORY_SEPARATOR, $namespaceParts) . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -168,8 +232,7 @@ class BaseServices extends ApplicationServices
      */
     private function bindPluginServices()
     {
-        /** @var CmsPluginList $pluginsList */
-        $pluginsList = $this->get('websiteSettings')->getPluginList();
+        $pluginsList = $this->getWebsiteSettings()->getPluginList();
 
         foreach ($pluginsList as $plugin) {
             $plugin->addServices($this);
@@ -185,7 +248,7 @@ class BaseServices extends ApplicationServices
         foreach ($this->getSimpleServices() as $service) {
             $serviceName = lcfirst(last(explode('\\', $service)));
 
-            if($this->has($serviceName)){
+            if ($this->has($serviceName)) {
                 continue;
             }
 

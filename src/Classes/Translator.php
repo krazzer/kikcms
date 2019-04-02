@@ -18,18 +18,22 @@ use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
- * @property TranslationService $translationService
- * @property DbService $dbService
- * @property CacheService $cacheService
  * @property Backend $cache
+ * @property CacheService $cacheService
+ * @property DbService $dbService
  * @property LanguageService $languageService
- * @property WebsiteSettingsBase $websiteSettings
  * @property Logger $logger
+ * @property TranslationService $translationService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class Translator extends Injectable
 {
+    /** @var null|string */
     private $languageCode = null;
 
+    /**
+     * @param string|null $languageCode
+     */
     public function __construct(string $languageCode = null)
     {
         $this->languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
@@ -182,7 +186,7 @@ class Translator extends Injectable
         $langCode = $langCode ?: $this->getLanguageCode();
         $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
 
-        return $this->cacheService->cache($cacheKey, function () use ($langCode){
+        return $this->cacheService->cache($cacheKey, function () use ($langCode) {
             $query = (new Builder())
                 ->columns(['tk.key', 'tv.value'])
                 ->from(['tv' => TranslationValue::class])
@@ -264,11 +268,10 @@ class Translator extends Injectable
 
         $pluginsList = $this->websiteSettings->getPluginList();
 
-        /** @var CmsPlugin $plugin */
-        foreach ($pluginsList as $plugin){
+        foreach ($pluginsList as $plugin) {
             $translationsFile = $plugin->getTranslationsDirectory() . $langCode . '.php';
 
-            if(file_exists($translationsFile)){
+            if (file_exists($translationsFile)) {
                 $translations += $this->getByFile($translationsFile);
             }
         }
