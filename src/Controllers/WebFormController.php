@@ -75,9 +75,10 @@ class WebFormController extends RenderableController
             'errors' => $uploadStatus->getErrors(),
         ];
 
-        if ($fileId && $file = File::getById($fileId)) {
+        if ($file = File::getById($fileId)) {
             $result['preview']    = $finder->renderFilePreview($file);
             $result['dimensions'] = $this->fileService->getThumbDimensions($file);
+            $result['name']       = $file->getName();
         }
 
         return json_encode($result);
