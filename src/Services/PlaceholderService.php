@@ -92,15 +92,20 @@ class PlaceholderService extends Injectable
         $fileMap    = $this->getFileMap($placeholderMap);
 
         foreach ($placeholderMap as $key => $placeholder) {
-            if( ! $file = $fileMap->get($placeholder->getFileId())){
-                $replaceMap[$placeholder->getPlaceholder()] = null;
-                continue;
-            }
-
             $type    = $placeholder->getType();
             $private = $placeholder->isPrivate();
 
-            $thumbUrl = $this->fileService->getThumbUrl($file, $type, $private);
+            if ( ! $file = $fileMap->get($placeholder->getFileId())) {
+                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getThumbUrl($file, $type, $private);
+                continue;
+            }
+
+            if ( ! file_exists($this->fileService->getFilePath($file))) {
+                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getThumbUrl($file, $type, $private);
+                continue;
+            }
+
+            $thumbUrl = $this->fileService->getThumbUrlCreateIfMissing($file, $type, $private);
 
             $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
 
@@ -120,12 +125,17 @@ class PlaceholderService extends Injectable
         $fileMap    = $this->getFileMap($placeholderMap);
 
         foreach ($placeholderMap as $key => $placeholder) {
-            if( ! $file = $fileMap->get($placeholder->getFileId())){
-                $replaceMap[$placeholder->getPlaceholder()] = null;
+            if ( ! $file = $fileMap->get($placeholder->getFileId())) {
+                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getUrl($file, $placeholder->isPrivate());
                 continue;
             }
 
-            $url = $this->fileService->getUrl($file, $placeholder->isPrivate());
+            if ( ! file_exists($this->fileService->getFilePath($file))) {
+                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getUrl($file, $placeholder->isPrivate());
+                continue;
+            }
+
+            $url = $this->fileService->getUrlCreateIfMissing($file, $placeholder->isPrivate());
 
             $replaceMap[$placeholder->getPlaceholder()] = $url;
 

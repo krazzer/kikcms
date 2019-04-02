@@ -273,7 +273,7 @@ class FileService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function getUrl(File $file, bool $private = false): string
+    public function getUrlCreateIfMissing(File $file, bool $private = false): string
     {
         $fileMediaPath = $this->getMediaFilePath($file, $private);
 
@@ -281,14 +281,22 @@ class FileService extends Injectable
             symlink($this->getFilePath($file), $fileMediaPath);
         }
 
-        $url = $this->getMediaFilesUrl() . $file->getFileName($private);
-
         // add seconds between create and update to avoid browser cache
         if($secondsUpdated = $file->secondsUpdated()){
-            return $url . '?u=' . $secondsUpdated;
+            return $this->getUrl($file, $private) . '?u=' . $secondsUpdated;
         }
 
-        return $url;
+        return $this->getUrl($file, $private);
+    }
+
+    /**
+     * @param File $file
+     * @param bool $private
+     * @return string
+     */
+    public function getUrl(File $file, bool $private = false): string
+    {
+        return $this->getMediaFilesUrl() . $file->getFileName($private);
     }
 
     /**
@@ -511,8 +519,6 @@ class FileService extends Injectable
     }
 
     /**
-     * Get the url for a thumbnail, and create it if it doesn't exist
-     *
      * @param File $file
      * @param string $type
      * @param bool $private
@@ -520,18 +526,31 @@ class FileService extends Injectable
      */
     public function getThumbUrl(File $file, string $type, bool $private = false): string
     {
+        return $this->getMediaThumbsUrl() . $type . DIRECTORY_SEPARATOR . $file->getFileName($private);
+    }
+
+    /**
+     * Get the url for a thumbnail, and create it if it doesn't exist
+     *
+     * @param File $file
+     * @param string $type
+     * @param bool $private
+     * @return string
+     */
+    public function getThumbUrlCreateIfMissing(File $file, string $type, bool $private = false): string
+    {
         $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
 
         // svg's don't need thumbs, just return the URL
         if($file->getExtension() == MimeConfig::SVG){
-            return $this->getUrl($file, $private);
+            return $this->getUrlCreateIfMissing($file, $private);
         }
 
         if ( ! file_exists($thumbFilePath)) {
             $this->createMediaThumb($file, $type, $private);
         }
 
-        $url = $this->getMediaThumbsUrl() . $type . '/' . $file->getFileName($private);
+        $url = $this->getThumbUrl($file, $type, $private);
 
         // add seconds between create and update to avoid browser cache
         if($secondsUpdated = $file->secondsUpdated()){
