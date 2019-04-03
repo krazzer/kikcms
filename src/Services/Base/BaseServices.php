@@ -173,7 +173,12 @@ class BaseServices extends ApplicationServices
     {
         $services = [];
 
-        $path  = $this->getPathByNamespace($namespace);
+        $path = $this->getPathByNamespace($namespace);
+
+        if ( ! is_readable($path)) {
+            return $services;
+        }
+
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
 
         foreach ($files as $file) {
@@ -232,9 +237,10 @@ class BaseServices extends ApplicationServices
      */
     private function bindPluginServices()
     {
-        $pluginsList = $this->getWebsiteSettings()->getPluginList();
+        $pluginList = $this->getWebsiteSettings()->getPluginList();
 
-        foreach ($pluginsList as $plugin) {
+        /** @var CmsPlugin $plugin */
+        foreach ($pluginList as $plugin) {
             $plugin->addServices($this);
             $this->addPluginSimpleServices($plugin);
         }
