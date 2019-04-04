@@ -103,6 +103,7 @@ class Routing extends Injectable
         $frontend->add('/page/{lang:[a-z]{2}}/{id:[0-9]+}', "Frontend::pageById");
         $frontend->add('/sitemap.xml', "Robots::sitemap");
         $frontend->add('/robots.txt', "Robots::robots");
+        $frontend->add('/object-not-found', "Frontend::objectNotFound")->setName('objectNotFound');
 
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
 

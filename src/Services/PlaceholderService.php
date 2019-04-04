@@ -96,7 +96,7 @@ class PlaceholderService extends Injectable
             $private = $placeholder->isPrivate();
 
             if ( ! $file = $fileMap->get($placeholder->getFileId())) {
-                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getThumbUrl($file, $type, $private);
+                $replaceMap[$placeholder->getPlaceholder()] = $this->url->get('objectNotFound');
                 continue;
             }
 
@@ -126,7 +126,7 @@ class PlaceholderService extends Injectable
 
         foreach ($placeholderMap as $key => $placeholder) {
             if ( ! $file = $fileMap->get($placeholder->getFileId())) {
-                $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getUrl($file, $placeholder->isPrivate());
+                $replaceMap[$placeholder->getPlaceholder()] = $this->url->get('objectNotFound');
                 continue;
             }
 

@@ -5,13 +5,13 @@ namespace KikCMS\Classes\Exceptions;
 
 class ObjectNotFoundException extends NotFoundException
 {
-    /** @var string */
+    /** @var string|null */
     private $object;
 
     /**
      * @param string $object
      */
-    public function __construct(string $object)
+    public function __construct(string $object = null)
     {
         $this->object = $object;
 
@@ -19,9 +19,9 @@ class ObjectNotFoundException extends NotFoundException
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getObject(): string
+    public function getObject(): ?string
     {
         return $this->object;
     }

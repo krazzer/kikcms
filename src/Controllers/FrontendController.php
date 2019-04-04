@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\NotFoundException;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
@@ -37,6 +38,14 @@ class FrontendController extends BaseController
         $this->response->setStatusCode(401);
 
         return $this->response->setContent('You are not allowed to view this page');
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function objectNotFoundAction(): ResponseInterface
+    {
+        throw new ObjectNotFoundException();
     }
 
     /**
