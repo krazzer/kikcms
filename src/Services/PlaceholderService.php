@@ -79,7 +79,7 @@ class PlaceholderService extends Injectable
             $replaceMap = array_merge($replaceMap, $this->getFileUrlReplaceMap($placeholderMap));
         }
 
-        return str_replace(array_keys($replaceMap), array_values($replaceMap), $content);
+        return strtr($content, $replaceMap);
     }
 
     /**
