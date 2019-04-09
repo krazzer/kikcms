@@ -3,7 +3,7 @@
 use Phalcon\Cli\Console;
 
 require(__DIR__ . '/../../kikcms-core/src/functions.php');
-require(SITE_PATH . 'vendor/autoload.php');
+require($sitePath . 'vendor/autoload.php');
 
 $cli      = true;
 $services = require(__DIR__ . '/services.php');

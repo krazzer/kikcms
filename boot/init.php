@@ -7,8 +7,10 @@ use Phalcon\Mvc\Application;
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
 
-require(SITE_PATH . 'vendor/autoload.php');
-require(SITE_PATH . 'vendor/kiksaus/kikcms-core/src/functions.php');
+$sitePath = SITE_PATH;
+
+require($sitePath . 'vendor/autoload.php');
+require($sitePath . 'vendor/kiksaus/kikcms-core/src/functions.php');
 
 $cli         = false;
 $services    = require(__DIR__ . '/services.php');

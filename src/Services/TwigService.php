@@ -18,6 +18,22 @@ use Phalcon\Tag;
  */
 class TwigService extends Injectable
 {
+    /** @var string */
+    private $mediaStoragePath;
+
+    /** @var string */
+    private $iconStoragePath;
+
+    /**
+     * @param string $mediaStoragePath
+     * @param string $iconStoragePath
+     */
+    public function __construct(string $mediaStoragePath, string $iconStoragePath)
+    {
+        $this->mediaStoragePath = $mediaStoragePath;
+        $this->iconStoragePath  = $iconStoragePath;
+    }
+
     /**
      * @param string $resourceName
      * @param string $access
@@ -63,7 +79,7 @@ class TwigService extends Injectable
      */
     public function mediaFile(?int $fileId, string $thumb = null, $private = false): string
     {
-        if( ! $fileId){
+        if ( ! $fileId) {
             return '';
         }
 
@@ -137,9 +153,9 @@ class TwigService extends Injectable
     public function svg($value): string
     {
         if (is_numeric($value)) {
-            $filePath = SITE_PATH . 'storage/media/' . $value . '.svg';
+            $filePath = $this->mediaStoragePath . $value . '.svg';
         } else {
-            $filePath = SITE_PATH . 'public_html/images/icons/' . $value . '.svg';
+            $filePath = $this->iconStoragePath . $value . '.svg';
         }
 
         if ( ! file_exists($filePath)) {

@@ -369,6 +369,17 @@ class Services extends BaseServices
     }
 
     /**
+     * @return TwigService
+     */
+    protected function initTwigService(): TwigService
+    {
+        return new TwigService(
+            $this->getAppConfig()->path . 'storage/media/',
+            $this->getAppConfig()->path . $this->getAppConfig()->publicFolder . '/images/icons/'
+        );
+    }
+
+    /**
      * The URL component is used to generate all kind of urls in the application
      * Note that the baseUri is not set in the CLI
      */
@@ -398,7 +409,7 @@ class Services extends BaseServices
         $cmsViewDir      = __DIR__ . '/../Views/';
         $cmsResourceDir  = __DIR__ . '/../../resources/';
         $siteViewDir     = $this->getAppConfig()->path . 'app/Views/';
-        $siteResourceDir = $this->getAppConfig()->path . 'public_html';
+        $siteResourceDir = $this->getAppConfig()->path . $this->getAppConfig()->publicFolder;
 
         $namespaces = [
             'kikcms'        => $cmsViewDir,

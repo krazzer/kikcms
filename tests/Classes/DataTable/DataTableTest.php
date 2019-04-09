@@ -262,7 +262,7 @@ class DataTableTest extends TestCase
 
         $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
         $urlMock = $this->getMockBuilder(Url::class)->setMethods(['get'])->getMock();
-        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setMethods(['mediaFile'])->getMock();
+        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->setMethods(['mediaFile'])->getMock();
 
         $attributes = [
             'class'          => 'thumb',

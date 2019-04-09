@@ -11,7 +11,8 @@ class PlaceholderServiceTest extends TestCase
 {
     public function testReplaceAll()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di       = (new TestHelper)->getTestDi();
+        $sitePath = (new TestHelper)->getSitePath();
 
         $placeholderService = new PlaceholderService();
         $placeholderService->setDI($di);
@@ -43,13 +44,13 @@ class PlaceholderServiceTest extends TestCase
         $this->assertEquals($expectedResult, $placeholderService->replaceAll($content));
 
         $createdFiles = [
-            SITE_PATH . 'public_html/media/files/1.png',
-            SITE_PATH . 'public_html/media/files/hash.png',
-            SITE_PATH . 'public_html/media/thumbs/default/1.png',
-            SITE_PATH . 'public_html/media/thumbs/default/hash.png',
+            $sitePath . 'public_html/media/files/1.png',
+            $sitePath . 'public_html/media/files/hash.png',
+            $sitePath . 'public_html/media/thumbs/default/1.png',
+            $sitePath . 'public_html/media/thumbs/default/hash.png',
         ];
 
-        foreach ($createdFiles as $file){
+        foreach ($createdFiles as $file) {
             $this->assertFileExists($file);
             unlink($file);
         }

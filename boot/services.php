@@ -1,5 +1,7 @@
 <?php
 
+use KikCMS\Classes\Phalcon\Loader;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Services;
 use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
@@ -9,9 +11,11 @@ if ( ! defined('SITE_PATH')) {
     throw new Exception('constant SITE_PATH is missing');
 }
 
-$configFile     = SITE_PATH . 'vendor/kiksaus/kikcms/config/config.ini';
-$configSiteFile = SITE_PATH . 'config/config.ini';
-$configEnvFile  = SITE_PATH . 'env/config.ini';
+$sitePath = SITE_PATH;
+
+$configFile     = $sitePath . 'vendor/kiksaus/kikcms/config/config.ini';
+$configSiteFile = $sitePath . 'config/config.ini';
+$configEnvFile  = $sitePath . 'env/config.ini';
 
 if ( ! is_readable($configSiteFile)) {
     throw new Exception('No site config file found! Should be present at ' . $configSiteFile);
@@ -29,19 +33,20 @@ $config->merge($configSite);
 $config->merge($configEnv);
 
 if ( ! isset($config->application->path)) {
-    $config->application->path = SITE_PATH;
+    $config->application->path = $sitePath;
 }
 
 $cmsPath = $config->application->cmsPath = dirname(__DIR__) . "/";
 
-$loader = (new \Phalcon\Loader())
+/** @var Loader $loader */
+$loader = (new Loader)
     ->registerNamespaces([
-        'Website' => SITE_PATH . 'app/',
-        'KikCMS'  => $cmsPath . 'src/',
+        KikCMSConfig::NAMESPACE_WEBSITE => $sitePath . 'app/',
+        KikCMSConfig::NAMESPACE_KIKCMS  => $cmsPath . 'src/',
     ])
     ->registerDirs([
+        $sitePath . 'app/Tasks',
         $cmsPath . 'src/Tasks',
-        SITE_PATH . 'app/Tasks',
     ])
     ->register();
 

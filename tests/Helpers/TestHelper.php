@@ -69,8 +69,6 @@ class TestHelper extends TestCase
      */
     public function getTranslator(): Translator
     {
-        $this->setSitePath();
-
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
             ->setMethods(['cache'])
             ->getMock();
@@ -105,8 +103,6 @@ class TestHelper extends TestCase
             return $this->testDbDi;
         }
 
-        $this->setSitePath();
-
         // set session superglobal
         if ( ! isset($_SESSION)) $_SESSION = [];
 
@@ -123,11 +119,13 @@ class TestHelper extends TestCase
         // use cms default config
         $config = new Ini(dirname(dirname(__DIR__)) . '/config/config.ini');
 
+        $config->application->path = $this->getSitePath();
+
         $fileStorage = new File();
-        $fileStorage->setStorageDir(SITE_PATH . 'storage/');
+        $fileStorage->setStorageDir($this->getSitePath() . 'storage/');
 
         $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
-        $keyValue = new \Phalcon\Cache\Backend\File($frontend, ['cacheDir' => SITE_PATH . 'storage/keyvalue/']);
+        $keyValue = new \Phalcon\Cache\Backend\File($frontend, ['cacheDir' => $this->getSitePath() . 'storage/keyvalue/']);
 
         $url = new Url();
         $url->setBaseUri('/');
@@ -143,7 +141,7 @@ class TestHelper extends TestCase
         $di->set('cacheService', new CacheService);
         $di->set('validation', new Validation);
         $di->set('websiteSettings', new WebsiteSettingsBase);
-        $di->set('twigService', new TwigService);
+        $di->set('twigService', new TwigService('', ''));
         $di->set('modelService', new ModelService);
         $di->set('relationKeyService', new RelationKeyService);
         $di->set('dataTableFilterService', new DataTableFilterService);
@@ -214,10 +212,8 @@ class TestHelper extends TestCase
     /**
      * Set a test site path
      */
-    private function setSitePath()
+    public function getSitePath()
     {
-        if ( ! defined('SITE_PATH')) {
-            define('SITE_PATH', dirname(__DIR__) . '/TestSitePath/');
-        }
+        return dirname(__DIR__) . '/TestSitePath/';
     }
 }

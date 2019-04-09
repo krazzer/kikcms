@@ -249,7 +249,7 @@ class FileService extends Injectable
      */
     public function getMediaStorageDir(): string
     {
-        return SITE_PATH . $this->config->application->publicFolder . '/' . FinderConfig::MEDIA_DIR . '/';
+        return $this->config->application->path . $this->config->application->publicFolder . '/' . FinderConfig::MEDIA_DIR . '/';
     }
 
     /**

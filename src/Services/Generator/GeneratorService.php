@@ -4,6 +4,7 @@
 namespace KikCMS\Services\Generator;
 
 
+use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Classes\ObjectMap;
@@ -15,6 +16,7 @@ use Phalcon\Di\Injectable;
 /**
  * @property ClassesGeneratorService $classesGeneratorService
  * @property DbService $dbService
+ * @property Loader $loader
  */
 class GeneratorService extends Injectable
 {
@@ -114,7 +116,7 @@ class GeneratorService extends Injectable
      */
     public function createFile(string $directory, string $className, PhpNamespace $namespace): bool
     {
-        $fileDir  = SITE_PATH . 'app/' . $directory . '/';
+        $fileDir  = $this->loader->getWebsiteSrcPath() . $directory . '/';
         $filePath = $fileDir . $className . '.php';
 
         if( ! file_exists($fileDir)){

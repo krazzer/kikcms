@@ -11,7 +11,8 @@ class FileRemoveServiceTest extends TestCase
 {
     public function testRemoveThumbNails()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di       = (new TestHelper)->getTestDi();
+        $sitePath = (new TestHelper)->getSitePath();
 
         $fileRemoveService = new FileRemoveService();
         $fileRemoveService->setDI($di);
@@ -20,8 +21,8 @@ class FileRemoveServiceTest extends TestCase
         $file->id = 1;
         $file->extension = 'png';
 
-        $dir1 = SITE_PATH . 'public_html/media/thumbs/dir1/';
-        $dir2 = SITE_PATH . 'public_html/media/thumbs/dir2/';
+        $dir1 = $sitePath . 'public_html/media/thumbs/dir1/';
+        $dir2 = $sitePath . 'public_html/media/thumbs/dir2/';
 
         $file1 = $dir1 . '1.png';
         $file2 = $dir2 . '1.png';
@@ -29,8 +30,8 @@ class FileRemoveServiceTest extends TestCase
         mkdir($dir1);
         mkdir($dir2);
 
-        copy(SITE_PATH . 'storage/media/1.png', $file1);
-        copy(SITE_PATH . 'storage/media/1.png', $file2);
+        copy($sitePath . 'storage/media/1.png', $file1);
+        copy($sitePath . 'storage/media/1.png', $file2);
 
         $fileRemoveService->removeThumbNails($file);
 
@@ -38,11 +39,11 @@ class FileRemoveServiceTest extends TestCase
         $this->assertFileNotExists($file2);
 
         // clean up
-        if(file_exists($file1)){
+        if (file_exists($file1)) {
             unlink($file1);
         }
 
-        if(file_exists($file2)){
+        if (file_exists($file2)) {
             unlink($file2);
         }
 
