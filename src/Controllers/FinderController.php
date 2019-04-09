@@ -10,7 +10,6 @@ use KikCMS\Services\TwigService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
-use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Services\Finder\FileService;
@@ -121,18 +120,14 @@ class FinderController extends RenderableController
     /**
      * @param File $file
      * @return string
-     * @throws NotFoundException
-     * @internal param int $fileId
      */
     public function fileAction(File $file)
     {
-        $filePath = $this->fileService->getFilePath($file);
-
         if ( ! $this->filePermissionService->canRead($file)) {
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $file->getOutputMimeType(), $file->getName());
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
     }
 
     /**
