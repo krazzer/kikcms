@@ -2,6 +2,8 @@
 
 use Phalcon\Cli\Console;
 
+$sitePath = SITE_PATH;
+
 require(__DIR__ . '/../../kikcms-core/src/functions.php');
 require($sitePath . 'vendor/autoload.php');
 
