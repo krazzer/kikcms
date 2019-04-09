@@ -93,8 +93,14 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterService->addSortFilter($query, $filters, false, '');
 
-        // test sort sort
+        // test sort
         $this->assertEquals('field asc', $query->getOrderBy());
+
+        // test sort with alias
+        $query->columns(['CONCAT(field1, field2) AS field']);
+        $dataTableFilterService->addSortFilter($query, $filters, false, '');
+
+        $this->assertEquals('CONCAT(field1, field2) asc', $query->getOrderBy());
     }
 
     public function testAddSubDataTableFilter()

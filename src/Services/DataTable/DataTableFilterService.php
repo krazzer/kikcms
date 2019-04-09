@@ -78,6 +78,17 @@ class DataTableFilterService extends Injectable
         $column    = $filters->getSortColumn();
         $direction = $filters->getSortDirection();
 
+        // if an alias is used, use the non-alias for ordering
+        if (is_array($query->getColumns())) {
+            foreach ($query->getColumns() as $queryColumn) {
+                $parts = preg_split('/ as /i', $queryColumn);
+
+                if (count($parts) == 2 && $parts[1] == $column) {
+                    $column = $parts[0];
+                }
+            }
+        }
+
         if (in_array($direction, DbConfig::SQL_SORT_DIRECTIONS)) {
             $query->orderBy($column . ' ' . $direction);
         }
