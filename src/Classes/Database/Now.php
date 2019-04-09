@@ -27,4 +27,12 @@ class Now
     {
         return $this->dateTime->format(DbConfig::SQL_DATETIME_FORMAT);
     }
+
+    /**
+     * @return string
+     */
+    public function str(): string
+    {
+        return $this->__toString();
+    }
 }
