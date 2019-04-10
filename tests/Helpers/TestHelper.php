@@ -112,7 +112,7 @@ class TestHelper extends TestCase
             'username' => 'root',
             'password' => 'adminkik12',
             'dbname'   => 'test',
-            'host'     => '127.0.0.1',
+            'host'     => 'mysql',
             'charset'  => 'utf8mb4',
         ];
 
