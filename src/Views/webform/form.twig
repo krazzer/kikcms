@@ -9,51 +9,49 @@
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
-<div class="webForm" id="{{ instance }}" data-renderable="{{ jsData|json_encode }}" data-id="{{ filters.editId }}">
-    {{ form({name: 'form'}) }}
+<div class="webForm" id="{{ formId }}" data-renderable="{{ jsData|json_encode }}" data-id="{{ filters.editId }}">
+    <form name="form" method="post" action="#{{ formId }}">
+        <div class="flashContainer">
+            {%- if mayFlash -%}
+                {{ flash.output }}
+            {%- endif -%}
 
-    <div class="flashContainer">
-        {%- if mayFlash -%}
-            {{ flash.output }}
-        {%- endif -%}
-
-        {%- if errorContainer.hasFormErrors -%}
-            {% for error in errorContainer.formErrors %}
-                <div class="alert alert-danger">
-                    <i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}
-                </div>
-            {% endfor %}
-        {%- endif -%}
-    </div>
-
-    {% if tabs %}
-        <div class="tab-contents">
-            {% for index, tab in tabs %}
-                {% set key = (tab.key ?: index) ~ '' %}
-                <div class="tab-{{ key }} tab-content{{ (key is same as (currentTab ~ '')) ? ' active' }}">
-                    {% set fields = tab.fieldsWithoutSection %}
-                    {{ block('fields') }}
-                </div>
-            {% endfor %}
+            {%- if errorContainer.hasFormErrors -%}
+                {% for error in errorContainer.formErrors %}
+                    <div class="alert alert-danger">
+                        <i class="glyphicon glyphicon-exclamation-sign"></i> {{ error }}
+                    </div>
+                {% endfor %}
+            {%- endif -%}
         </div>
-        {% set fields = fieldsWithoutContainer %}
-        {{ block('fields') }}
-    {% else %}
-        {% set fields = fieldsWithoutContainer %}
-        {{ block('fields') }}
-    {% endif %}
 
-    {% if(displaySendButton) %}
-        <div class="form-group">
-            {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
-        </div>
-    {% endif %}
+        {% if tabs %}
+            <div class="tab-contents">
+                {% for index, tab in tabs %}
+                    {% set key = (tab.key ?: index) ~ '' %}
+                    <div class="tab-{{ key }} tab-content{{ (key is same as (currentTab ~ '')) ? ' active' }}">
+                        {% set fields = tab.fieldsWithoutSection %}
+                        {{ block('fields') }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% set fields = fieldsWithoutContainer %}
+            {{ block('fields') }}
+        {% else %}
+            {% set fields = fieldsWithoutContainer %}
+            {{ block('fields') }}
+        {% endif %}
 
-    <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
+        {% if(displaySendButton) %}
+            <div class="form-group">
+                {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
+            </div>
+        {% endif %}
 
-    {% if webForm.showRequiredMessage %}
-        <div class="required-message">{{ tl('webform.requiredMessage') }}</div>
-    {% endif %}
+        <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 
-    {{ endForm() }}
+        {% if webForm.showRequiredMessage %}
+            <div class="required-message">{{ tl('webform.requiredMessage') }}</div>
+        {% endif %}
+    </form>
 </div>
