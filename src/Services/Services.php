@@ -143,7 +143,7 @@ class Services extends BaseServices
     }
 
     /**
-     * @return BackendInterface|false
+     * @return BackendInterface|null
      */
     protected function initCache(): ?BackendInterface
     {
