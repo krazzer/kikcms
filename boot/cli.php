@@ -2,7 +2,9 @@
 
 use Phalcon\Cli\Console;
 
-$sitePath = SITE_PATH;
+if ( ! isset($sitePath)){
+    throw new Exception('Variable $sitePath must be set');
+}
 
 require(__DIR__ . '/../../kikcms-core/src/functions.php');
 require($sitePath . 'vendor/autoload.php');

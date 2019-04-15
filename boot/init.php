@@ -7,7 +7,9 @@ use Phalcon\Mvc\Application;
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
 
-$sitePath = SITE_PATH;
+if ( ! isset($sitePath)){
+    throw new Exception('Variable $sitePath must be set');
+}
 
 require($sitePath . 'vendor/autoload.php');
 require($sitePath . 'vendor/kiksaus/kikcms-core/src/functions.php');
