@@ -27,7 +27,6 @@ use Monolog\ErrorHandler;
 use Monolog\Handler\DeduplicationHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
-use Phalcon\Cache\Backend;
 use Phalcon\Cache\Backend\Apcu;
 use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\BackendInterface;
@@ -144,9 +143,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Backend|false
+     * @return BackendInterface|false
      */
-    protected function initCache()
+    protected function initCache(): ?BackendInterface
     {
         if ($this instanceof Cli || isset($_GET['nocache'])) {
             return false;

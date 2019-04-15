@@ -5,10 +5,12 @@ namespace KikCMS\Services\Base;
 use ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Routing;
 use KikCMS\Services\Website\WebsiteService;
 use KikCMS\Classes\Phalcon\Loader;
+use Phalcon\Cache\BackendInterface;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Files;
@@ -126,6 +128,14 @@ class BaseServices extends ApplicationServices
     }
 
     /**
+     * @return BackendInterface|null
+     */
+    protected function getCache(): ?BackendInterface
+    {
+        return $this->get('cache');
+    }
+
+    /**
      * @return Config
      */
     protected function getDbConfig(): Config
@@ -171,6 +181,12 @@ class BaseServices extends ApplicationServices
      */
     protected function getClassNamesByNamespace(string $namespace): array
     {
+        $cacheKey = 'services:' . $namespace;
+
+        if($this->getCache() && $services = $this->getCache()->get($cacheKey)){
+            return $services;
+        }
+
         $services = [];
 
         $path = $this->getPathByNamespace($namespace);
@@ -190,6 +206,11 @@ class BaseServices extends ApplicationServices
             $replace = [null, null, KikCMSConfig::NAMESPACE_SEPARATOR];
 
             $services[] = $namespace . str_replace($search, $replace, $file->getPathname());
+        }
+
+        // only cache on production, to prevent errors when creating new services
+        if($this->getCache() && $this->getAppConfig()->env == KikCMSConfig::ENV_PROD){
+            $this->getCache()->save($cacheKey, $services, CacheConfig::ONE_YEAR);
         }
 
         return $services;
