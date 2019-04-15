@@ -148,7 +148,7 @@ class Services extends BaseServices
     protected function initCache(): ?BackendInterface
     {
         if ($this instanceof Cli || isset($_GET['nocache'])) {
-            return false;
+            return null;
         }
 
         $options = null;
