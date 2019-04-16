@@ -11,9 +11,7 @@ services:
         - ../../:/var/www/vendor/kiksaus:cached
         - ~/.docker-kikdev/logs:/var/log/apache2/:cached
     networks:
-      kikdev:
-        aliases:
-          - ${SITE_ALIAS}
+        - kikdev
     environment:
       XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
