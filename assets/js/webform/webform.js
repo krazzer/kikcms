@@ -105,7 +105,7 @@ var WebForm = Class.extend({
     },
 
     getWebForm: function () {
-        return $('#' + this.renderableInstance);
+        return $('[data-instance=' + this.renderableInstance + ']');
     },
 
     init: function () {
