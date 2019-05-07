@@ -36,13 +36,33 @@ abstract class MailForm extends WebForm
     }
 
     /**
+     * If provided, the mail will have the reply-to header set to the value of given field
+     *
+     * @return null|string
+     */
+    protected function getReplyToField(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param array $input
      * @return bool|Response
      */
     protected function successAction(array $input)
     {
+        $params = [];
+
+        if($replyToField = $this->getReplyToField()){
+            if(array_key_exists($replyToField, $input)){
+                $params['replyTo'] = $input[$replyToField];
+            } else {
+                trigger_error("Reply-to field " . $replyToField . " doesn't exist", E_USER_WARNING);
+            }
+        }
+
         $contents = $this->toMailOutput($input);
-        $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents);
+        $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents, $params);
 
         if( ! $mailSend){
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
