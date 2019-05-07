@@ -92,6 +92,7 @@ class MailService extends Injectable
 
         if(array_key_exists('replyTo', $parameters)){
             $message->addReplyTo($parameters['replyTo']);
+            $message->setFrom($parameters['replyTo']);
         }
 
         foreach ($attachments as $attachment) {
