@@ -1,5 +1,7 @@
 <?php
 
+namespace KikCMS\Tasks;
+
 use KikCMS\Services\Generator\GeneratorService;
 use Phalcon\Cli\Task;
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace KikCMS\Tasks;
+
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Finder\FileHashService;
 use KikCMS\Services\LanguageService;

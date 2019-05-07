@@ -1,5 +1,7 @@
 <?php
 
+namespace KikCMS\Tasks;
+
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Cms\CmsService;
 use Phalcon\Cli\Task;

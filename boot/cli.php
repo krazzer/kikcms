@@ -1,8 +1,9 @@
 <?php
 
+use KikCMS\Config\KikCMSConfig;
 use Phalcon\Cli\Console;
 
-if ( ! isset($sitePath)){
+if ( ! isset($sitePath)) {
     throw new Exception('Variable $sitePath must be set');
 }
 
@@ -17,7 +18,14 @@ $arguments = [];
 
 foreach ($argv as $k => $arg) {
     if ($k === 1) {
-        $arguments["task"] = $arg;
+        $className    = KikCMSConfig::NAMESPACE_PATH_TASKS . ucfirst($arg);
+        $cmsClassName = KikCMSConfig::NAMESPACE_PATH_CMS_TASKS . ucfirst($arg);
+
+        if ( ! class_exists($className . 'Task')) {
+            $className = $cmsClassName;
+        }
+
+        $arguments["task"] = $className;
     } elseif ($k === 2) {
         $arguments["action"] = $arg;
     } elseif ($k >= 3) {
@@ -28,6 +36,6 @@ foreach ($argv as $k => $arg) {
 try {
     $console->handle($arguments);
 } catch (\Phalcon\Exception $e) {
-    echo $e->getMessage();
+    echo $e->getMessage() . PHP_EOL;
     exit(255);
 }

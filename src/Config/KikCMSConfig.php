@@ -21,8 +21,10 @@ class KikCMSConfig
     const NAMESPACE_PATH_DATATABLES = '\\Website\\DataTables\\';
     const NAMESPACE_PATH_OBJECTLIST = '\\Website\\ObjectList\\';
     const NAMESPACE_PATH_SERVICES   = '\\Website\\Services\\';
+    const NAMESPACE_PATH_TASKS      = '\\Website\\Tasks\\';
 
     const NAMESPACE_PATH_CMS_SERVICES = '\\KikCMS\\Services\\';
+    const NAMESPACE_PATH_CMS_TASKS    = '\\KikCMS\\Tasks\\';
 
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,

@@ -1,5 +1,7 @@
 <?php
 
+namespace KikCMS\Tasks;
+
 use KikCMS\Services\Pages\UrlService;
 use Phalcon\Cli\Task;
 
