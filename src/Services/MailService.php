@@ -90,11 +90,6 @@ class MailService extends Injectable
             ->setBody($htmlBody, 'text/html')
             ->addPart(strip_tags($body), 'text/plain');
 
-        if(array_key_exists('replyTo', $parameters)){
-            $message->addReplyTo($parameters['replyTo']);
-            $message->setFrom($parameters['replyTo']);
-        }
-
         foreach ($attachments as $attachment) {
             $message->attach(Swift_Attachment::fromPath($attachment));
         }
