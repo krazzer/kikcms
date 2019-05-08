@@ -10,7 +10,7 @@ var DataTable = Class.extend({
     parentRelationKey: null,
     sortDirection: null,
     sortColumn: null,
-
+    restore: null,
     $table: null,
 
     getDeleteConfirmMessage: function (amount) {
@@ -49,6 +49,7 @@ var DataTable = Class.extend({
         this.initButtons();
         this.initKeyEvents();
         this.initFilters();
+        this.initRestore();
     },
 
     initButtons: function () {
@@ -126,7 +127,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (self.getWindow().hasClass('blur') || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
+                if (self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
                     return true;
                 }
 
@@ -138,7 +139,7 @@ var DataTable = Class.extend({
 
         var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
-                if (self.getWindow().hasClass('blur') || !self.getForm().length) {
+                if (self.windowIsActive() || !self.getForm().length) {
                     return true;
                 }
 
@@ -354,6 +355,10 @@ var DataTable = Class.extend({
         });
     },
 
+    initRestore: function(){
+        this.restore = new DataTableRestore(this);
+    },
+
     initWindow: function () {
         var self        = this;
         var $window     = this.getWindow();
@@ -377,6 +382,8 @@ var DataTable = Class.extend({
         this.currentFormInput = this.getFormSerialized();
 
         $(window).resize(this.initWindowSize.bind(this));
+
+        this.restore.startPolling();
     },
 
     initWindowSize: function () {
@@ -622,6 +629,7 @@ var DataTable = Class.extend({
         }
 
         this.currentFormInput = null;
+        this.restore.stopPolling();
     },
 
     onRowClick: function ($row) {
@@ -709,6 +717,14 @@ var DataTable = Class.extend({
     setWindowContent: function (contents) {
         this.getWindow().find('.windowContent').html(contents);
         this.initWindow();
+    },
+
+    /**
+     * @return string
+     */
+    getClassWithoutSlashes: function()
+    {
+        return this.renderableClass.replace(/\\/g, '');
     },
 
     getCurrentPage: function () {
@@ -882,5 +898,12 @@ var DataTable = Class.extend({
         } else {
             $deleteButton.fadeOut();
         }
+    },
+
+    /**
+     * @return {boolean}
+     */
+    windowIsActive: function () {
+        return ! this.getWindow().hasClass('blur');
     }
 });
