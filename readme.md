@@ -74,3 +74,10 @@ Pass: <password>
 ##Test run
 
 Now you're good to go! Test if the app is working in the browser: [https://localhost:9001](https://localhost:9001) (or another port if you chose to)
+
+##CMS
+
+To be able to login to the CMS, make sure you change the default `info@kiksaus.nl` user to the e-mail address to your 
+liking (even though it doesn't matter much, because all e-mails will be catched by mailhog anyway)
+
+Now go to [https://localhost:9001/cms](https://localhost:9001/cms) to login (use password lost to activate your account)
