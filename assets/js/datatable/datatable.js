@@ -127,7 +127,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
+                if ( ! self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
                     return true;
                 }
 
@@ -139,7 +139,7 @@ var DataTable = Class.extend({
 
         var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
-                if (self.windowIsActive() || !self.getForm().length) {
+                if ( ! self.windowIsActive() || !self.getForm().length) {
                     return true;
                 }
 
