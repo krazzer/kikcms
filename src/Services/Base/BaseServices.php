@@ -123,7 +123,7 @@ class BaseServices extends ApplicationServices
                 continue;
             }
 
-            $this->set($name, $callable($this));
+            $this->set($name, $callable);
         }
     }
 
