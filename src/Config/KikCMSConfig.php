@@ -16,12 +16,13 @@ class KikCMSConfig
     const NAMESPACE_WEBSITE    = 'Website';
     const NAMESPACE_DATATABLES = 'DataTables';
 
-    const NAMESPACE_PATH_MODELS     = '\\Website\\Models\\';
-    const NAMESPACE_PATH_FORMS      = '\\Website\\Forms\\';
-    const NAMESPACE_PATH_DATATABLES = '\\Website\\DataTables\\';
-    const NAMESPACE_PATH_OBJECTLIST = '\\Website\\ObjectList\\';
-    const NAMESPACE_PATH_SERVICES   = '\\Website\\Services\\';
-    const NAMESPACE_PATH_TASKS      = '\\Website\\Tasks\\';
+    const NAMESPACE_PATH_MODELS      = '\\Website\\Models\\';
+    const NAMESPACE_PATH_FORMS       = '\\Website\\Forms\\';
+    const NAMESPACE_PATH_DATATABLES  = '\\Website\\DataTables\\';
+    const NAMESPACE_PATH_OBJECTLIST  = '\\Website\\ObjectList\\';
+    const NAMESPACE_PATH_SERVICES    = '\\Website\\Services\\';
+    const NAMESPACE_PATH_TASKS       = '\\Website\\Tasks\\';
+    const NAMESPACE_PATH_CONTROLLERS = '\\Website\\Controllers\\';
 
     const NAMESPACE_PATH_CMS_SERVICES = '\\KikCMS\\Services\\';
     const NAMESPACE_PATH_CMS_TASKS    = '\\KikCMS\\Tasks\\';

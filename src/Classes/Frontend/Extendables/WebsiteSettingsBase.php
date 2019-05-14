@@ -38,6 +38,21 @@ class WebsiteSettingsBase extends WebsiteExtendable
     }
 
     /**
+     * If present, this route will be used to present a 404 not found page
+     *
+     * Use Phalcon array route format, for example:
+     * "namespace"  => KikCMSConfig::NAMESPACE_PATH_CONTROLLERS,
+     * "controller" => "Website",
+     * "action"     => "notFound"
+     *
+     * @return array|null
+     */
+    public function getNotFoundRoute(): ?array
+    {
+        return null;
+    }
+
+    /**
      * @return string
      */
     public function getPageClass(): string

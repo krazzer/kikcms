@@ -5,6 +5,7 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\UserService;
@@ -18,15 +19,16 @@ use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
- * @property PageService $pageService
+ * @property FrontendHelper $frontendHelper
  * @property PageContentService $pageContentService
  * @property PageLanguageService $pageLanguageService
- * @property UrlService $urlService
- * @property Translator $translator
- * @property WebsiteService $websiteService
- * @property FrontendHelper $frontendHelper
+ * @property PageService $pageService
  * @property TemplateVariablesBase $templateVariables
+ * @property Translator $translator
+ * @property UrlService $urlService
  * @property UserService $userService
+ * @property WebsiteService $websiteService
+ * @property WebsiteSettingsBase $websiteSettings
  */
 class FrontendController extends BaseController
 {
@@ -108,13 +110,15 @@ class FrontendController extends BaseController
         $this->response->setStatusCode(404);
         $this->view->reset();
 
-        $pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode);
-
-        if ( ! $pageLanguage) {
-            return $this->translator->tl('error.404.description');
+        if ($pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode)) {
+            return $this->loadPage($pageLanguage);
         }
 
-        return $this->loadPage($pageLanguage);
+        if ($route = $this->websiteSettings->getNotFoundRoute()) {
+            return $this->dispatcher->forward($route);
+        }
+
+        return $this->translator->tl('error.404.description');
     }
 
     /**
