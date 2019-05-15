@@ -11,6 +11,7 @@ use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FilePermission;
 use KikCMS\ObjectLists\FileMap;
+use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -28,17 +29,18 @@ use Phalcon\Mvc\Model\Query\Builder;
  * Handles Files
  *
  * @property AccessControl $acl
- * @property ImageHandler $imageHandler
+ * @property Config $config
  * @property DbService $dbService
- * @property WebsiteService $websiteService
- * @property MediaResizeBase $mediaResize
- * @property UserService $userService
+ * @property ImageHandler $imageHandler
  * @property FileStorage $fileStorage
  * @property FileHashService $fileHashService
  * @property FilePermissionService $filePermissionService
  * @property FileRemoveService $fileRemoveService
  * @property FileCacheService $fileCacheService
- * @property Config $config
+ * @property MediaResizeBase $mediaResize
+ * @property UserService $userService
+ * @property UrlService $urlService
+ * @property WebsiteService $websiteService
  */
 class FileService extends Injectable
 {
@@ -122,7 +124,7 @@ class FileService extends Injectable
         $thumbPath = $this->getMediaThumbPath($file, $type, $private);
 
         // do not resize animated gifs
-        if($this->isAnimatedGif($filePath)){
+        if ($this->isAnimatedGif($filePath)) {
             copy($filePath, $thumbPath);
             return;
         }
@@ -277,12 +279,18 @@ class FileService extends Injectable
     {
         $fileMediaPath = $this->getMediaFilePath($file, $private);
 
+        // create dir if not existing (which is always the case for private files)
+        if ( ! is_dir(dirname($fileMediaPath))) {
+            mkdir(dirname($fileMediaPath));
+        }
+
+        // symlink to original if the file is missing
         if ( ! file_exists($fileMediaPath)) {
             symlink($this->getFilePath($file), $fileMediaPath);
         }
 
         // add seconds between create and update to avoid browser cache
-        if($secondsUpdated = $file->secondsUpdated()){
+        if ($secondsUpdated = $file->secondsUpdated()) {
             return $this->getUrl($file, $private) . '?u=' . $secondsUpdated;
         }
 
@@ -296,7 +304,11 @@ class FileService extends Injectable
      */
     public function getUrl(File $file, bool $private = false): string
     {
-        return $this->getMediaFilesUrl() . $file->getFileName($private);
+        if ( ! $private) {
+            return $this->getMediaFilesUrl() . $file->getFileName();
+        }
+
+        return $this->getMediaFilesUrl() . $file->getHash() . DIRECTORY_SEPARATOR . $this->getUrlFriendlyFileName($file);
     }
 
     /**
@@ -307,7 +319,7 @@ class FileService extends Injectable
      */
     public function getMediaThumbPath(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false): string
     {
-        $dirPath = $this->getMediaThumbDir() . $type . '/';
+        $dirPath = $this->getMediaThumbDir() . $type . DIRECTORY_SEPARATOR;
 
         if ( ! file_exists($dirPath)) {
             mkdir($dirPath);
@@ -323,7 +335,13 @@ class FileService extends Injectable
      */
     public function getMediaFilePath(File $file, bool $private = false): string
     {
-        return $this->getMediaStorageDir() . FinderConfig::FILES_DIR . '/' . $file->getFileName($private);
+        $filesDir = $this->getMediaStorageDir() . FinderConfig::FILES_DIR . DIRECTORY_SEPARATOR;
+
+        if ( ! $private) {
+            return $filesDir . $file->getFileName();
+        }
+
+        return $filesDir . $file->getHash() . DIRECTORY_SEPARATOR . $this->getUrlFriendlyFileName($file);
     }
 
     /**
@@ -331,7 +349,7 @@ class FileService extends Injectable
      */
     public function getMediaThumbDir(): string
     {
-        return $this->getMediaStorageDir() . FinderConfig::THUMB_DIR . '/';
+        return $this->getMediaStorageDir() . FinderConfig::THUMB_DIR . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -542,7 +560,7 @@ class FileService extends Injectable
         $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
 
         // svg's don't need thumbs, just return the URL
-        if($file->getExtension() == MimeConfig::SVG){
+        if ($file->getExtension() == MimeConfig::SVG) {
             return $this->getUrlCreateIfMissing($file, $private);
         }
 
@@ -553,11 +571,30 @@ class FileService extends Injectable
         $url = $this->getThumbUrl($file, $type, $private);
 
         // add seconds between create and update to avoid browser cache
-        if($secondsUpdated = $file->secondsUpdated()){
+        if ($secondsUpdated = $file->secondsUpdated()) {
             return $url . '?u=' . $secondsUpdated;
         }
 
         return $url;
+    }
+
+    /**
+     * @param File $file
+     * @return string
+     */
+    public function getUrlFriendlyFileName(File $file): string
+    {
+        $fileNameParts = explode('.', $file->getName());
+
+        if(count($fileNameParts) == 1){
+            return $this->urlService->toSlug($file->getName());
+        }
+
+        $extension = last($fileNameParts);
+
+        array_pop($fileNameParts);
+
+        return $this->urlService->toSlug(implode('.', $fileNameParts)) . '.' . $extension;
     }
 
     /**

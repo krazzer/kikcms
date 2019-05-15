@@ -35,17 +35,17 @@ class PlaceholderServiceTest extends TestCase
             /media/thumbs/default/1.png
             /media/thumbs/default/hash.png
             /media/files/1.png
-            /media/files/hash.png
+            /media/files/hash/test.png
         ";
 
         $placeholderService->db->delete(File::TABLE);
-        $placeholderService->dbService->insert(File::class, ['id' => 1, 'hash' => 'hash', 'extension' => 'png']);
+        $placeholderService->dbService->insert(File::class, ['id' => 1, 'name' => 'test.png', 'hash' => 'hash', 'extension' => 'png']);
 
         $this->assertEquals($expectedResult, $placeholderService->replaceAll($content));
 
         $createdFiles = [
             $sitePath . 'public_html/media/files/1.png',
-            $sitePath . 'public_html/media/files/hash.png',
+            $sitePath . 'public_html/media/files/hash/test.png',
             $sitePath . 'public_html/media/thumbs/default/1.png',
             $sitePath . 'public_html/media/thumbs/default/hash.png',
         ];

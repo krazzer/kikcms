@@ -19,6 +19,7 @@ use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
@@ -144,6 +145,7 @@ class TestHelper extends TestCase
         $di->set('twigService', new TwigService('', ''));
         $di->set('modelService', new ModelService);
         $di->set('relationKeyService', new RelationKeyService);
+        $di->set('urlService', new UrlService);
         $di->set('dataTableFilterService', new DataTableFilterService);
         $di->set('fileService', new FileService('media', 'thumbs'));
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
