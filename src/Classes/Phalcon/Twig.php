@@ -92,8 +92,8 @@ class Twig extends Engine implements EngineInterface
         $options = ['is_safe' => ['html']];
 
         $functions = [
-            'allowed', 'config', 'endForm', 'file', 'fileBg', 'form', 'javascriptInclude', 'route', 'stylesheetLink',
-            'submitButton', 'svg', 'tl', 'ucfirst', 'url', 'mediaFileBg', 'mediaFile'
+            'allowed', 'config', 'endForm', 'file', 'fileBg', 'form', 'javascriptInclude', 'pageUrl',
+            'stylesheetLink', 'submitButton', 'svg', 'tl', 'ucfirst', 'url', 'mediaFileBg', 'mediaFile'
         ];
 
         /** @var TwigService $twigService */

@@ -7,6 +7,7 @@ namespace KikCMS\Services;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\PlaceholderConfig;
+use KikCMS\Services\Pages\UrlService;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Tag;
@@ -15,6 +16,7 @@ use Phalcon\Tag;
  * @property AccessControl $acl
  * @property Translator $translator
  * @property PlaceholderService $placeholderService
+ * @property UrlService $urlService
  */
 class TwigService extends Injectable
 {
@@ -113,6 +115,25 @@ class TwigService extends Injectable
     }
 
     /**
+     * @param int|mixed|string $pageId
+     * @return string
+     */
+    public function pageUrl($pageId): string
+    {
+        $langCode = $this->translator->getLanguageCode();
+
+        if (is_numeric($pageId)) {
+            return $this->urlService->getUrlByPageId($pageId, $langCode);
+        }
+
+        if (strstr($pageId, '/')) {
+            return $pageId;
+        }
+
+        return $this->urlService->getUrlByPageKey($pageId, $langCode);
+    }
+
+    /**
      * @param string $url
      * @param bool $local
      * @return string
@@ -193,5 +214,4 @@ class TwigService extends Injectable
     {
         return $this->url->get($route, $args);
     }
-
 }

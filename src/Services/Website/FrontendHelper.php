@@ -181,25 +181,6 @@ class FrontendHelper extends Injectable
     }
 
     /**
-     * @param int|mixed|string $pageId
-     * @return string
-     */
-    public function getUrl($pageId): string
-    {
-        $langCode = $this->translator->getLanguageCode();
-
-        if (is_numeric($pageId)) {
-            return $this->urlService->getUrlByPageId($pageId, $langCode);
-        }
-
-        if (strstr($pageId, '/')) {
-            return $pageId;
-        }
-
-        return $this->urlService->getUrlByPageKey($pageId, $langCode);
-    }
-
-    /**
      * @param int $pageId
      * @return bool
      */
