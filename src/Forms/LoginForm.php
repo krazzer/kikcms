@@ -44,8 +44,6 @@ class LoginForm extends WebForm
             return $this->response->redirect('cms/login/reset');
         }
 
-        dlog($user->id);
-
         $this->userService->setLoggedIn($user->id);
 
         if (isset($input[self::FIELD_REMEMBER])) {

@@ -211,9 +211,7 @@ class FileService extends Injectable
      */
     public function getFilePath(File $file)
     {
-        $fileName = $file->id . '.' . $file->getExtension();
-
-        return $this->getStorageDir() . $this->getMediaDir() . '/' . $fileName;
+        return $this->getStorageDir() . $this->getMediaDir() . '/' . $file->getFileName();
     }
 
     /**
@@ -284,9 +282,9 @@ class FileService extends Injectable
             mkdir(dirname($fileMediaPath));
         }
 
-        // symlink to original if the file is missing
+        // symlink to original (relative) if the file is missing
         if ( ! file_exists($fileMediaPath)) {
-            symlink($this->getFilePath($file), $fileMediaPath);
+            symlink($this->getRelativePath($fileMediaPath, $this->getFilePath($file)), $fileMediaPath);
         }
 
         // add seconds between create and update to avoid browser cache
@@ -586,7 +584,7 @@ class FileService extends Injectable
     {
         $fileNameParts = explode('.', $file->getName());
 
-        if(count($fileNameParts) == 1){
+        if (count($fileNameParts) == 1) {
             return $this->urlService->toSlug($file->getName());
         }
 
@@ -595,6 +593,39 @@ class FileService extends Injectable
         array_pop($fileNameParts);
 
         return $this->urlService->toSlug(implode('.', $fileNameParts)) . '.' . $extension;
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @return string
+     */
+    public function getRelativePath(string $from, string $to): string
+    {
+        $from    = explode('/', $from);
+        $to      = explode('/', $to);
+        $relPath = $to;
+
+        foreach ($from as $depth => $dir) {
+            // find first non-matching dir
+            if ($dir === $to[$depth]) {
+                // ignore this directory
+                array_shift($relPath);
+            } else {
+                // get number of remaining dirs to $from
+                $remaining = count($from) - $depth;
+                if ($remaining > 1) {
+                    // add traversals up to first matching dir
+                    $padLength = (count($relPath) + $remaining - 1) * -1;
+                    $relPath   = array_pad($relPath, $padLength, '..');
+                    break;
+                } else {
+                    $relPath[0] = './' . $relPath[0];
+                }
+            }
+        }
+
+        return implode('/', $relPath);
     }
 
     /**
