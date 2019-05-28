@@ -5,7 +5,10 @@ namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Translator;
+use KikCMS\Config\CacheConfig;
+use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Models\File;
+use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
@@ -13,6 +16,7 @@ use Phalcon\Di\Injectable;
 /**
  * Handles the removal of Files
  *
+ * @property CacheService $cacheService
  * @property DbService $dbService
  * @property FileService $fileService
  * @property FilePermissionService $filePermissionService
@@ -26,8 +30,8 @@ class FileRemoveService extends Injectable
      */
     public function deleteFilesByIds(array $fileIds)
     {
-        $files = File::getByIdList($fileIds);
-        $allFileIds  = $fileIds;
+        $files      = File::getByIdList($fileIds);
+        $allFileIds = $fileIds;
 
         // get sub files
         foreach ($files as $file) {
@@ -36,7 +40,7 @@ class FileRemoveService extends Injectable
 
         $files = File::getByIdList($allFileIds);
 
-        if( ! $filesRemoved = $this->dbService->delete(File::class, [File::FIELD_ID => $fileIds])){
+        if ( ! $filesRemoved = $this->dbService->delete(File::class, [File::FIELD_ID => $fileIds])) {
             return;
         }
 
@@ -94,10 +98,15 @@ class FileRemoveService extends Injectable
         $thumbNailDirs = glob($this->fileService->getMediaThumbDir() . '*');
 
         foreach ($thumbNailDirs as $thumbNailDir) {
-            $thumbFile = $this->fileService->getMediaThumbPath($file, basename($thumbNailDir));
+            $thumbFile        = $this->fileService->getMediaThumbPath($file, basename($thumbNailDir));
+            $privateThumbFile = $this->fileService->getMediaThumbPath($file, basename($thumbNailDir), true);
 
             if (file_exists($thumbFile)) {
                 unlink($thumbFile);
+            }
+
+            if (file_exists($privateThumbFile)) {
+                unlink($privateThumbFile);
             }
         }
     }
@@ -109,7 +118,27 @@ class FileRemoveService extends Injectable
      */
     private function unlinkFiles(File $file)
     {
-        unlink($this->fileService->getFilePath($file));
+        $filePath             = $this->fileService->getFilePath($file);
+        $mediaFilePath        = $this->fileService->getMediaFilePath($file);
+        $privateMediaFilePath = $this->fileService->getMediaFilePath($file, true);
+
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        if (file_exists($mediaFilePath)) {
+            unlink($mediaFilePath);
+        }
+
+        dlog($privateMediaFilePath,is_link($privateMediaFilePath) );
+        if (is_link($privateMediaFilePath)) {
+            unlink($privateMediaFilePath);
+            rmdir(dirname($privateMediaFilePath));
+        }
+
+        $this->cacheService->clear(PlaceholderConfig::FILE_THUMB_URL . CacheConfig::SEPARATOR . $file->getId());
+        $this->cacheService->clear(PlaceholderConfig::FILE_URL . CacheConfig::SEPARATOR . $file->getId());
+
         $this->removeThumbNails($file);
     }
 }
