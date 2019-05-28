@@ -110,6 +110,8 @@ class Page extends Model
             "alias" => "pageLanguageContents"
         ]);
 
+        $this->skipAttributesOnCreate([self::FIELD_CREATED_AT, self::FIELD_UPDATED_AT]);
+
         $this->addPageLanguageRelations();
         $this->addPageContentRelations();
     }

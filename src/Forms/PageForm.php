@@ -41,12 +41,6 @@ class PageForm extends DataForm
 {
     const FIELD_SLUG = 'pageLanguage*:slug';
 
-    /** @inheritdoc */
-    protected $saveCreatedAt = true;
-
-    /** @inheritdoc */
-    protected $saveUpdatedAt = true;
-
     /**
      * @inheritdoc
      */

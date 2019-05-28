@@ -73,6 +73,8 @@ class User extends Model
         parent::initialize();
 
         $this->hasOne(User::FIELD_ID, Folder::class, Folder::FIELD_USER_ID, ["alias" => "folder"]);
+
+        $this->skipAttributesOnCreate([self::FIELD_CREATED_AT]);
     }
 
     /**
