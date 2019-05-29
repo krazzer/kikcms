@@ -86,8 +86,7 @@ gulp.task('stylesFrontend', function () {
 
 // Minimum requirements for the frontend
 gulp.task('scriptsFrontend', function () {
-    return gulp.src([
-    ])
+    return gulp.src([])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(concat('frontend.js'))
@@ -158,7 +157,7 @@ gulp.task('vendorsScriptsCms', function () {
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js',
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js',
         'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-        'bower_components/bootstrap3-typeahead/bootstrap3-typeahead.min.js'
+        'bower_components/typeahead.js/dist/typeahead.bundle.js'
     ])
         .pipe(plumber())
         .pipe(sourcemaps.init())

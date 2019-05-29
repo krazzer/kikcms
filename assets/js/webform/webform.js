@@ -120,6 +120,11 @@ var WebForm = Class.extend({
         var self     = this;
         var $webForm = this.getWebForm();
 
+        $webForm.on("mouseover", ".tt-suggestion", function () {
+            $('.tt-suggestion').removeClass('tt-cursor');
+            $(this).addClass('tt-cursor');
+        });
+
         $webForm.find('.autocomplete').each(function () {
             var $field   = $(this);
             var fieldKey = $field.attr('data-field-key');
@@ -130,9 +135,24 @@ var WebForm = Class.extend({
                 renderableInstance: self.renderableInstance,
                 renderableClass: self.renderableClass
             }, function (data) {
-                $field.typeahead({
-                    items: 10,
-                    source: data
+                var substringMatcher = function (strs) {
+                    return function findMatches(q, cb) {
+                        var matches     = [];
+                        var substrRegex = new RegExp(q, 'i');
+
+                        $.each(strs, function (i, str) {
+                            if (substrRegex.test(str)) {
+                                matches.push(str);
+                            }
+                        });
+
+                        cb(matches);
+                    };
+                };
+
+                $field.typeahead({hint: true, highlight: true}, {
+                    limit: 10,
+                    source: substringMatcher(data)
                 });
             });
         });
