@@ -18,6 +18,12 @@ var KikCmsClass = Class.extend({
         for(var i in settings){
             this[i] = settings[i];
         }
+
+        // fix mouseover for all typeahead instances
+        $('body').on("mouseover", ".tt-suggestion", function () {
+            $('.tt-suggestion').removeClass('tt-cursor');
+            $(this).addClass('tt-cursor');
+        });
     },
 
     initRenderables: function (parentClass) {

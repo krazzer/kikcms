@@ -120,11 +120,6 @@ var WebForm = Class.extend({
         var self     = this;
         var $webForm = this.getWebForm();
 
-        $webForm.on("mouseover", ".tt-suggestion", function () {
-            $('.tt-suggestion').removeClass('tt-cursor');
-            $(this).addClass('tt-cursor');
-        });
-
         $webForm.find('.autocomplete').each(function () {
             var $field   = $(this);
             var fieldKey = $field.attr('data-field-key');
