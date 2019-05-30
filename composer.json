@@ -2,7 +2,7 @@
   "repositories": [
     {
       "type": "git",
-      "url": "git@bitbucket.org:kiksaus/kikcms-core.git"
+      "url": "git@github.com:krazzer/kikcms-core.git"
     }
   ],
   "name": "kiksaus/kikcms",
