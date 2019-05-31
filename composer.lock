@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13c7662db4476963d1bcb2ccdab869ee",
+    "content-hash": "090149e1ea837448933fb60ca14fd7c6",
     "packages": [
         {
             "name": "doctrine/lexer",
@@ -540,8 +540,8 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git@bitbucket.org:kiksaus/kikcms-core.git",
-                "reference": "24b85da605923bfae9e4cd4baec64053c966797b"
+                "url": "https://github.com/krazzer/kikcms-core.git",
+                "reference": "1919c28ea972570d103d9dcd4f59d9aff62085b2"
             },
             "require": {
                 "monolog/monolog": "^1.22",
@@ -553,7 +553,7 @@
                     "KikCmsCore\\": "src"
                 }
             },
-            "time": "2019-03-29T09:59:23+00:00"
+            "time": "2019-04-18T09:06:02+00:00"
         },
         {
             "name": "martijnc/php-csp",
