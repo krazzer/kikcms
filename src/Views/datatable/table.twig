@@ -7,6 +7,7 @@
         <thead>
         <tr>
             {% for key, name in tableData.tableHeadColumns %}
+                {% set title = '' %}
                 {% set sortClass = '' %}
                 {% set sortDirection = '' %}
                 {% if self.filters.sortColumn == key %}
@@ -17,7 +18,11 @@
                     {% endif %}
                     {% set sortDirection = self.filters.sortDirection %}
                 {% endif %}
-                <td data-column="{{ key }}" data-sort="{{ sortDirection }}">
+                {% if name is iterable %}
+                    {% set title = name[1] %}
+                    {% set name = name[0] %}
+                {% endif %}
+                <td data-column="{{ key }}" data-sort="{{ sortDirection }}" title="{{ title }}">
                     {{ name }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
@@ -62,7 +67,9 @@
                                         {{ source(tableButton.icon) }}
                                     </a>
                                 {% else %}
-                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}" class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
+                                    <a {{ tableButton.blank ? 'target="_blank"' }}
+                                            href="{{ tableButton.url(row) }}"
+                                            class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
                                 {% endif %}
                             {% else %}
                                 <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
