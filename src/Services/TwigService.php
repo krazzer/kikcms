@@ -56,7 +56,7 @@ class TwigService extends Injectable
         $string = explode('.', $string);
 
         /** @var Config $configGroup */
-        $configGroup = $this->config->get("config")->get($string[0]);
+        $configGroup = $this->config->get($string[0]);
 
         if ( ! $configGroup) {
             return null;
