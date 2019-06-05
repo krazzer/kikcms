@@ -273,8 +273,7 @@ class Services extends BaseServices
 
         $logger = new Logger('logger');
 
-        if ($isProduction) {
-            $developerEmail = $this->getAppConfig()->developerEmail;
+        if ($isProduction && $developerEmail = $this->getAppConfig()->developerEmail) {
             $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
 
             $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);

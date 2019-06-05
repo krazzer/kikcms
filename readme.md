@@ -77,7 +77,6 @@ Now you're good to go! Test if the app is working in the browser: [https://local
 
 ## CMS
 
-To be able to login to the CMS, make sure you change the default `info@kiksaus.nl` user to the e-mail address to your 
-liking (even though it doesn't matter much, because all e-mails will be catched by mailhog anyway)
+To be able to login to the CMS, make sure you create a user in the `cms_user` table, with an e-mail address and role set to `developer`.
 
 Now go to [https://localhost:9001/cms](https://localhost:9001/cms) to login (use password lost to activate your account)
