@@ -2,13 +2,13 @@
 // Gulp tasks
 //////////////////////////////
 
-var gulp         = require('gulp');
-var sourcemaps   = require('gulp-sourcemaps');
-var sass         = require('gulp-sass');
-var cssnano      = require('gulp-cssnano');
-var uglify       = require('gulp-uglify');
-var concat       = require('gulp-concat');
-var plumber      = require('gulp-plumber');
+var gulp       = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
+var sass       = require('gulp-sass');
+var postcss    = require('gulp-postcss');
+var uglify     = require('gulp-uglify');
+var concat     = require('gulp-concat');
+var plumber    = require('gulp-plumber');
 
 // Root folder
 var rootFolder = '../resources/';
@@ -26,7 +26,7 @@ gulp.task('styles', function () {
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
-        .pipe(cssnano({zindex: false}))
+        .pipe(postcss({zindex: false}))
         .pipe(concat('cms.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(rootFolder + 'css/'));
@@ -40,7 +40,7 @@ gulp.task('stylesLogin', function () {
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
-        .pipe(cssnano({zindex: false}))
+        .pipe(postcss({zindex: false}))
         .pipe(concat('login.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(rootFolder + 'css/'));
@@ -53,7 +53,7 @@ gulp.task('tinyMceContentStyle', function () {
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
-        .pipe(cssnano({zindex: false}))
+        .pipe(postcss({zindex: false}))
         .pipe(concat('content.css'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(rootFolder + 'css/tinymce'));
@@ -66,7 +66,7 @@ gulp.task('vendorsStyles', function () {
     ])
         .pipe(plumber())
         .pipe(sass())
-        .pipe(cssnano({zindex: false}))
+        .pipe(postcss({zindex: false}))
         .pipe(concat('vendor.css'))
         .pipe(gulp.dest(rootFolder + 'css/'));
 });
@@ -79,7 +79,7 @@ gulp.task('stylesFrontend', function () {
     ])
         .pipe(plumber())
         .pipe(sass())
-        .pipe(cssnano({zindex: false}))
+        .pipe(postcss({zindex: false}))
         .pipe(concat('frontend.css'))
         .pipe(gulp.dest(rootFolder + 'css/'));
 });
@@ -166,18 +166,8 @@ gulp.task('vendorsScriptsCms', function () {
         .pipe(gulp.dest(rootFolder + 'js/'));
 });
 
-// Vendors combined task
-gulp.task('vendors', ['vendorsScripts', 'vendorsStyles']);
-
-// Watch task with browserSync
-gulp.task('watch', ['styles', 'scriptsCms'], function () {
-    gulp.watch('sass/**/*.scss', ['styles', 'stylesLogin', 'tinyMceContentStyle']);
-    gulp.watch('js/**/*.js', ['scriptsCms', 'scriptsFrontend']);
-});
-
-// Default task
-gulp.task('default', [
-    'styles',
-    'scripts',
-    'vendors'
-]);
+// Watch task
+gulp.task('watch', gulp.series('styles', 'scriptsCms', function () {
+    gulp.watch('sass/**/*.scss', gulp.series('styles', 'stylesLogin', 'tinyMceContentStyle'));
+    gulp.watch('js/**/*.js', gulp.series('scriptsCms', 'scriptsFrontend'));
+}));

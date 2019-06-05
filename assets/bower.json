@@ -17,10 +17,10 @@
   ],
   "dependencies": {
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "bootstrap3-typeahead": "git://github.com/bassjobsen/Bootstrap-3-Typeahead.git#master",
     "bootstrap-sass": "^3.3.7",
     "moment": "^2.19.1",
     "tinymce": "tinymce-dist#^4.7.1",
-    "jquery": "3.*"
+    "jquery": "3.*",
+    "typeahead.js": "^0.11.1"
   }
 }
