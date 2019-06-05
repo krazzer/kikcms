@@ -3,6 +3,33 @@
 return [
     'cms' => [
         'loading' => 'Loading...',
+        'roles'   => [
+            'developer' => 'Developer',
+            'admin'     => 'Administrator',
+            'user'      => 'User',
+            'client'    => 'Client',
+            'visitor'   => 'Visitor',
+        ],
+    ],
+
+    'contentTypes' => [
+        'text'         => 'Textfield',
+        'textarea'     => 'Textarea',
+        'int'          => 'Numberfield',
+        'checkbox'     => 'Checkbox',
+        'tinymce'      => 'TinyMCE',
+        'image'        => 'Image',
+        'file'         => 'File',
+        'tab'          => 'Tab',
+        'pagepicker'   => 'Page picker',
+        'date'         => 'Date',
+        'datetime'     => 'Date & time',
+        'time'         => 'Time',
+        'select'       => 'Select',
+        'select_table' => 'Multi checkbox',
+        'radio'        => 'Radiobutton',
+        'color'        => 'Colorpicker',
+        'custom'       => 'Custom',
     ],
 
     'dataForm' => [
@@ -30,8 +57,91 @@ return [
         ],
 
         'delete' => [
-            'confirmOne' => 'Are you sure you want to delete this :itemSingular?',
-            'confirm'    => 'Are you sure you want to delete these :amount :itemPlural?',
+            'label'      => 'Delete :itemSingular',
+            'confirmOne' => 'Delete :itemSingular?',
+            'confirm'    => 'Are you sure you want to remove these :amount :itemPlural?',
+        ],
+
+        'deleteErrorLinked' => 'This item cannot be removed, because it is used elsewhere in the system.',
+    ],
+
+    'dataTables' => [
+        'default' => [
+            'singular' => "item",
+            'plural'   => "items",
+        ],
+
+        'products' => [
+            'singular' => "product",
+            'plural'   => "products",
+        ],
+
+        'pages' => [
+            'singular'        => "page",
+            'plural'          => "pages",
+            'addItem'         => 'New...',
+            'page'            => 'Page',
+            'menu'            => 'Menu',
+            'link'            => 'Link',
+            'alias'           => 'Alias',
+            'slugPlaceholder' => 'Leave empty to generate a slug by page name',
+            'slugExists'      => 'The chosen slug is already in use',
+            'preview'         => 'Preview page',
+            'titles'          => [
+                'link'     => 'This page links to another page',
+                'inactive' => 'This page is not visible',
+                'locked'   => 'This page is required for the website to work correctly, and therefore cannot be removed',
+            ],
+            'deleteErrorFk'   => "Only pages without sub-pages can be removed.",
+            'linkToDesc'      => 'Url to where this page must link',
+            'urlLinkHelpText' => "Slug is a part of an URL, for example 'wheels' in '/products/<b>wheels</b>/wheel'. Optional.",
+        ],
+
+        'aliases' => [
+            'singular' => "alias",
+            'plural'   => "aliasses",
+        ],
+
+        'menus' => [
+            'singular' => "menu",
+            'plural'   => "menus",
+        ],
+
+        'language' => [
+            'singular' => "language",
+            'plural'   => "languages",
+        ],
+
+        'links' => [
+            'singular' => "link",
+            'plural'   => "links",
+        ],
+
+        'templates' => [
+            'singular' => "template",
+            'plural'   => "templates",
+        ],
+
+        'translation' => [
+            'singular' => "translation",
+            'plural'   => "translations",
+        ],
+
+        'fields' => [
+            'singular' => "field",
+            'plural'   => "fields",
+        ],
+
+        'templateFields' => [
+            'singular' => "template field",
+            'plural'   => "template fields",
+        ],
+
+        'users' => [
+            'singular' => "user",
+            'plural'   => "users",
+
+            'activationLink' => 'Generate activation link',
         ],
     ],
 
@@ -68,12 +178,131 @@ return [
     ],
 
     'fields' => [
-        'price' => 'Prijs',
+        'active'         => 'Active',
+        'advanced'       => 'Advanced',
+        'allFields'      => 'All fields',
+        'blocked'        => 'Blocked',
+        'code'           => 'Code',
+        'countries'      => 'Countries',
+        'date'           => 'Date',
+        'description'    => 'Description',
+        'email'          => 'E-mail address',
+        'file'           => 'File',
+        'hide'           => 'Hide',
+        'id'             => 'Id',
+        'key'            => 'Key',
+        'languages'      => 'Languages',
+        'multilingual'   => 'Multilingual',
+        'name'           => 'Name',
+        'price'          => 'Price',
+        'role'           => 'Role',
+        'template'       => 'Template',
+        'templateFields' => 'Template fields',
+        'templates'      => 'Templates',
+        'translations'   => 'Translations',
+        'type'           => 'Type',
+        'url'            => 'Url',
+        'slug'           => 'Slug',
+        'variable'       => 'Variable',
     ],
 
     'global' => [
         'cancel' => 'Cancel',
         'delete' => 'Delete',
+        'no'     => 'No',
+        'yes'    => 'Yes',
+    ],
+
+    'login' => [
+        'logout'  => 'You have been logged out',
+        'failed'  => 'Incorrect combination of e-mail and password.',
+        'blocked' => 'You cannot login because your account has been blocked.',
+        'expired' => 'You need to (re)login to continue.',
+        'back'    => 'Back to login screen',
+
+        'activate' => [
+            'message'     => 'Your account is not active yet, fill in your e-mail address to activate your account.',
+            'buttonLabel' => 'Send account activation link',
+            'title'       => 'Activate account',
+        ],
+
+        'reset' => [
+            'flash'       => 'An e-mail with reset link has been send. This url will expire in 2 hours.',
+            'error'       => 'Something went wrong sending the reset link.',
+            'buttonLabel' => 'Send password reset link',
+            'title'       => 'Reset password',
+
+            'mail' => [
+                'subject'     => 'Password reset / activation',
+                'body'        => 'Press the button below to (re)set your password. This link will expire in 2 hours.',
+                'buttonLabel' => '(re)set password',
+            ],
+
+            'password' => [
+                'hashError'   => 'Invalid url',
+                'formMessage' => 'Enter your desired password',
+                'expired'     => 'The URL validity has expired.',
+                'space'       => 'Spaces are not allowed',
+                'flash'       => [
+                    'default'       => 'Your password has been updated. You may now login.',
+                    'loggedIn'      => 'Your password has been updated.',
+                    'loggedInOther' => 'The password for <b>:email</b> has been updated.',
+                ],
+            ]
+        ]
+    ],
+
+    'media' => [
+        'button'                   => [
+            'upload'         => 'Upload',
+            'uploadTitle'    => 'Upload files from your device',
+            'overwrite'      => 'Overwrite',
+            'overwriteTitle' => 'Overwrite the selected file with a new file from your device',
+            'newFolderTitle' => 'Create a new folder',
+            'moveTitle'      => 'Show earlier viewed folders',
+            'deleteTitle'    => 'Delete the selected files',
+            'copyTitle'      => 'Copy the selected files',
+            'cutTitle'       => 'Cut the selected files',
+            'pasteTitle'     => 'Paste the selected files',
+            'download'       => 'Download tje geselected file',
+            'rights'         => 'Edit rights of the geselected files',
+
+            'modal' => [
+                'title'               => 'Edit rights for',
+                'applyToSubFolders'   => 'Apply to sub files and folders',
+                'close'               => 'Close',
+                'save'                => 'Save',
+                'read'                => 'Read',
+                'write'               => 'Edit',
+                'saveError'           => 'Something went wrong updating filerights',
+                'saveSuccess'         => 'The filerights have been succesfully updated',
+                'intermediateWarning' => 'Saving is not possible when values are in between (-)',
+                'titleMultiple'       => ':amount files',
+            ],
+        ],
+        'title'                    => 'Media',
+        'searchPlaceholder'        => 'Search files',
+        'deleteConfirm'            => 'Are you sure you want to remove the :amount selected files?',
+        'deleteConfirmOne'         => 'Are you sure you want to remove the selected file?',
+        'deleteErrorLinked'        => 'At least one of the selected files cannot be removed because it is used elsewhere.',
+        'deleteErrorLocked'        => 'At least one of the selected files hasn\'t been removed, because it is required ' .
+            'for the website to work correctly.',
+        'deleteErrorLinkedPage'    => 'The file :image cannot be removed, because it is used in the page \':pageName\'',
+        'deleteErrorLinkedPages'   => 'The file :image cannot be removed, because it is used in the following pages: :pageNames',
+        'errorCantEdit'            => 'At least one of the selected files cannot be removed because of insuffient rights',
+        'createFolder'             => 'Give a name for the new folder',
+        'defaultFolderName'        => 'New folder',
+        'editFileName'             => 'Give a name to the file',
+        'pickFile'                 => 'Pick file',
+        'uploadMaxFilesWarning'    => 'You can upload ca maximum of :amount files at the same time',
+        'uploadMaxFileSizeWarning' => 'Files cannot be bigger than :max',
+        'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',
+        'upload'                   => [
+            'error' => [
+                'failed' => 'Something went wrong uploading :fileName',
+                'mime'   => "File type ':extension' is not allowed (:fileName)",
+            ],
+        ],
     ],
 
     'mailForm' => [
@@ -82,14 +311,67 @@ return [
         'subject'     => 'Contactform',
     ],
 
-    'media' => [
-        'uploadMaxFilesWarning'    => 'You may only upload :amount files at the same time',
-        'uploadMaxFileSizeWarning' => 'Filesize should be under :max',
-        'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',
+    'menu' => [
+        'group' => [
+            'content' => 'Content',
+            'stats'   => 'Statistics',
+            'cms'     => 'CMS',
+        ],
+
+        'item' => [
+            'pages'     => "Pages",
+            'media'     => 'Media',
+            'templates' => 'Templates',
+            'settings'  => 'Settings',
+            'users'     => 'Users',
+            'logout'    => 'Logout',
+            'stats'     => 'Visitors',
+        ],
+
+        'username' => 'Logged in as: :email',
     ],
 
     'pages' => [
-        'warningTemplateChange' => 'If you switch template, unsaved changes will not be saved, do you want to continue?',
+        'warningTemplateChange' => 'If you switch templates, unsaved changes are lost, do you wish to continue?',
+        'slugHelpText'          => 'The slug is part of and URL, for example "services" in https://website.com/services/cms',
+    ],
+
+    'permissions' => [
+        'editMenus' => "You cannot edit menus",
+    ],
+
+    'statistics' => [
+        'fetchingNewData' => 'Retrieving new data...',
+        'fetchingFailed'  => 'Retrieving new data has failed',
+        'fetchNewData'    => 'Renew data',
+        'visitors'        => 'Visitors',
+        'uniqueVisitors'  => 'Unique visitors',
+        'fromDate'        => 'From date',
+        'untilDate'       => 'until date',
+        'intervalDay'     => 'Per day',
+        'intervalMaand'   => 'Per month',
+
+        'overview' => [
+            'totalVisits'       => 'Total visitors',
+            'totalUniqueVisits' => 'Total unique visitors',
+            'dailyAverage'      => 'Average visitors per day',
+            'monthlyAverage'    => 'Average visitors per month',
+        ],
+
+        'tab' => [
+            'overview'          => 'Overview',
+            'source'            => 'Source',
+            'page'              => "Page",
+            'location'          => 'Location',
+            'browser'           => 'Browser',
+            'resolution'        => 'Resolution',
+            'resolutionDesktop' => 'Resolution (desktop)',
+            'resolutionTablet'  => 'Resolution (tablet)',
+            'resolutionMobile'  => 'Resolution (mobiel)',
+            'os'                => 'Operating system',
+            'hits'              => 'Hits',
+            'percentage'        => 'Percentage',
+        ],
     ],
 
     'system' => [
@@ -100,6 +382,7 @@ return [
         'dateDisplayFormat'     => '%b %e %Y',
         'dateTimeDisplayFormat' => '%b %e %Y, at %H:%M',
         'momentJsDateFormat'    => 'YYYY-MM-DD',
+        'monthDisplayFormat'    => '%b %Y',
         'decimalNotation'       => 'point',
     ],
 
@@ -139,8 +422,9 @@ return [
             'reCaptcha'        => 'Execute the ReCaptcha to prove you are not a robot',
         ],
 
-        'defaultSendLabel' => 'Send',
-        'detachFile'       => 'Detach file',
-        'requiredMessage'  => 'Fields with a * are mandatory',
+        'defaultSendLabel'       => 'Send',
+        'detachFile'             => 'Detach file',
+        'requiredMessage'        => 'Fields with a * are mandatory',
+        'selectPlaceHolderLabel' => 'Choose and option...'
     ],
 ];
