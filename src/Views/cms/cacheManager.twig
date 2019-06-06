@@ -13,7 +13,7 @@
         </span>
         <span class="value">{{ cacheNode.valueOutput }}</span>
         <span class="delete">
-            <a href="/cms/cache/empty?key={{ cacheNode.fullKey|url_encode }}" class="btn btn-default">Verwijder</a>
+            <a href="/cms/cache/empty?key={{ cacheNode.fullKey|url_encode }}" class="btn btn-default">{{ tl('global.delete') }}</a>
         </span>
     </div>
 {% endblock %}
@@ -34,24 +34,24 @@
 
 {% block cmsContent %}
     <ol class="breadcrumb">
-        <li><a href="/cms/settings">Instellingen</a></li>
-        <li class="active">Cache beheer</li>
+        <li><a href="/cms/settings">{{ tl('menu.item.settings') }}</a></li>
+        <li class="active">{{ tl('cms.cacheManagement.title') }}</li>
     </ol>
     <table class="table table-striped stats">
         <tr>
-            <td>Geheugen gebruik</td>
+            <td>{{ tl('cms.cacheManagement.memoryUsage') }}</td>
             <td>{{ memorySize }}</td>
         </tr>
         <tr>
-            <td>Uptime</td>
+            <td>{{ tl('cms.cacheManagement.uptime') }}</td>
             <td>{{ uptime.d }}d {{ uptime.h }}h {{ uptime.i }}m</td>
         </tr>
         <tr>
-            <td>Hits / misses</td>
+            <td>{{ tl('cms.cacheManagement.hitsAndMisses') }}</td>
             <td>{{ cacheInfo.num_hits }} / {{ cacheInfo.num_misses }}</td>
         </tr>
     </table>
-    <a href="/cms/cache/empty" class="btn btn-clear btn-primary">Volledige cache legen</a>
+    <a href="/cms/cache/empty" class="btn btn-clear btn-primary">{{ tl('cms.cacheManagement.empty') }}</a>
     <ul class="tree">
         {{ _self.menu(cacheNodeMap) }}
     </ul>

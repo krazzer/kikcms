@@ -2,8 +2,16 @@
 
 return [
     'cms' => [
-        'loading' => 'Loading...',
-        'roles'   => [
+        'cacheManagement' => [
+            'buttonLabel'   => 'Go to cache management',
+            'title'         => 'Cache management',
+            'memoryUsage'   => 'Memory usage',
+            'uptime'        => 'Uptime',
+            'hitsAndMisses' => 'Hits / misses',
+            'empty'         => 'Completely clear cache',
+        ],
+        'loading'         => 'Loading...',
+        'roles'           => [
             'developer' => 'Developer',
             'admin'     => 'Administrator',
             'user'      => 'User',

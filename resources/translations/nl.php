@@ -2,8 +2,16 @@
 
 return [
     'cms' => [
-        'loading' => 'Bezig met laden...',
-        'roles'   => [
+        'cacheManager' => [
+            'buttonLabel'   => 'Ga naar cache beheer',
+            'title'         => 'Cache beheer',
+            'memoryUsage'   => 'Geheugen gebruik',
+            'uptime'        => 'Uptime',
+            'hitsAndMisses' => 'Hits / misses',
+            'empty'         => 'Volledige cache legen',
+        ],
+        'loading'      => 'Bezig met laden...',
+        'roles'        => [
             'developer' => 'Developer',
             'admin'     => 'Administrator',
             'user'      => 'Gebruiker',
