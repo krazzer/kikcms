@@ -270,7 +270,7 @@ class Page extends Model
     private function addPageContentRelations()
     {
         $templateFieldKeys = $this->getTemplateFieldMap();
-        $languages         = $this->getLanguages();
+        $languages         = $this->getDI()->get('languageService')->getLanguages();
 
         foreach ($templateFieldKeys as $key => $field) {
             // skip fields that aren't content fields
@@ -300,7 +300,7 @@ class Page extends Model
      */
     private function addPageLanguageRelations()
     {
-        $languages = $this->getLanguages();
+        $languages = $this->getDI()->get('languageService')->getLanguages();
 
         foreach ($languages as $language) {
             $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, [

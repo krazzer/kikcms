@@ -19,7 +19,7 @@ class TranslationKey extends Model
     {
         parent::initialize();
 
-        $languages = $this->getLanguages();
+        $languages = $this->getDI()->get('languageService')->getLanguages();
 
         // add an relation for each language, e.g. valueEn
         foreach ($languages as $language) {
