@@ -2,7 +2,7 @@
 
 return [
     'cms' => [
-        'cacheManager' => [
+        'cacheManagement' => [
             'buttonLabel'   => 'Ga naar cache beheer',
             'title'         => 'Cache beheer',
             'memoryUsage'   => 'Geheugen gebruik',
