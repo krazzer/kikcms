@@ -49,8 +49,31 @@ class MultiCheckboxFieldTest extends TestCase
         $this->assertTrue($personInterests[0]['interest_id'] == 1);
         $this->assertTrue($personInterests[1]['interest_id'] == 2);
 
+        $_POST = [
+            $form->getFormId()             => $form->getFormId(),
+            $form->security->getTokenKey() => $form->security->getToken(),
+            'name'                         => 'Elon',
+            'personInterests:interest_id'  => [],
+        ];
+
+        $filters = $form->getFilters();
+
+        $form = new PersonMultiCheckboxForm();
+        $form->setDI($testDi);
+        $form->setFilters($filters);
+
+        $form->render();
+
+        $query = (new Builder)
+            ->columns([PersonInterest::FIELD_PERSON_ID, PersonInterest::FIELD_INTEREST_ID])
+            ->from(PersonInterest::class);
+
+        $personInterests = $form->dbService->getRows($query);
+
         $form->db->delete(Interest::TABLE);
         $form->db->delete(PersonInterest::TABLE);
         $form->db->delete(Person::TABLE);
+
+        $this->assertEquals([], $personInterests);
     }
 }
