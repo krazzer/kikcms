@@ -20,6 +20,7 @@ class FileRemoveServiceTest extends TestCase
         $file = new File();
         $file->id = 1;
         $file->extension = 'png';
+        $file->hash = 'x';
 
         $dir1 = $sitePath . 'public_html/media/thumbs/dir1/';
         $dir2 = $sitePath . 'public_html/media/thumbs/dir2/';

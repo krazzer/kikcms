@@ -195,7 +195,7 @@ class DataTableTest extends TestCase
 
         /** @var User|MockObject $userReturnMock */
         $userReturnMock = $this->getMockBuilder(User::class)
-            ->setConstructorArgs([null, $di])
+            ->disableOriginalConstructor()
             ->setMethods(['delete'])
             ->getMock();
 

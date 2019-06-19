@@ -22,7 +22,10 @@ use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\WebForm\RelationKeyService;
+use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Config\Adapter\Ini;
@@ -133,6 +136,9 @@ class TestHelper extends TestCase
 
         $permission = new Permission();
 
+        $log = new Logger('name');
+        $log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
+
         $di->set('languageService', new LanguageService);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
@@ -158,7 +164,9 @@ class TestHelper extends TestCase
         $di->set('permisson', $permission);
         $di->set('persistent', new Bag('persistent'));
         $di->set('sessionBag', new Bag('session'));
+        $di->set('storageService', new StorageService);
         $di->set('view', $this->getView());
+        $di->set('logger', $log);
 
         $permission->setDI($di);
 
