@@ -16,11 +16,15 @@ use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\DataTableFilterService;
+use KikCMS\Services\DataTable\TableDataService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TwigService;
+use KikCMS\Services\Util\PaginateListService;
+use KikCMS\Services\Util\QueryService;
+use KikCMS\Services\Util\StringService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
@@ -165,8 +169,14 @@ class TestHelper extends TestCase
         $di->set('persistent', new Bag('persistent'));
         $di->set('sessionBag', new Bag('session'));
         $di->set('storageService', new StorageService);
+        $di->set('tableDataService', new TableDataService);
+        $di->set('paginateListService', new PaginateListService);
+        $di->set('queryService', new QueryService);
+        $di->set('stringService', new StringService);
         $di->set('view', $this->getView());
         $di->set('logger', $log);
+
+        $di->get('session')->set('role', Permission::ADMIN);
 
         $permission->setDI($di);
 

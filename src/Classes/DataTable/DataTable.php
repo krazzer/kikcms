@@ -692,7 +692,7 @@ abstract class DataTable extends Renderable
             $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
         }
 
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
+        $this->view->jsTranslations = array_merge((array) $this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
     }
 
     /**
