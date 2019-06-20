@@ -16,6 +16,7 @@ use Monolog\Logger;
 use Phalcon\Cache\Backend;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Validation;
 
 /**
  * @property Backend $cache
@@ -24,6 +25,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property LanguageService $languageService
  * @property Logger $logger
  * @property TranslationService $translationService
+ * @property Validation $validation
  * @property WebsiteSettingsBase $websiteSettings
  */
 class Translator extends Injectable
@@ -182,6 +184,9 @@ class Translator extends Injectable
     public function setLanguageCode($languageCode)
     {
         $this->languageCode = $languageCode;
+
+        $this->setValidatorMessages();
+
         return $this;
     }
 
@@ -293,5 +298,21 @@ class Translator extends Injectable
         }
 
         return $translations;
+    }
+
+    /**
+     * Set the validators' default messages to match the current language
+     */
+    private function setValidatorMessages()
+    {
+        $webFormMessagesKeys = $this->getCmsTranslationGroupKeys('webform.messages');
+
+        $defaultMessages = [];
+
+        foreach ($webFormMessagesKeys as $key) {
+            $defaultMessages[last(explode('.', $key))] = $this->tl($key);
+        }
+
+        $this->validation->setDefaultMessages($defaultMessages);
     }
 }

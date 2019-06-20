@@ -139,7 +139,6 @@ class FrontendController extends BaseController
 
         $this->frontendHelper->initialize($languageCode, $pageLanguage, $pageLanguageAlias);
         $this->translator->setLanguageCode($languageCode);
-        $this->initializeValidation();
 
         $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
         $websiteVariables  = $this->templateVariables->getGlobalVariables();

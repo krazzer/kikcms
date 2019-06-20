@@ -28,7 +28,6 @@ class BaseController extends Controller
     {
         $this->initializeLanguage();
         $this->initializeCpsHeaders();
-        $this->initializeValidation();
 
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
