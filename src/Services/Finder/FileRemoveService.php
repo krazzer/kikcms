@@ -67,7 +67,9 @@ class FileRemoveService extends Injectable
             return $this->translator->tl('media.errorCantEdit');
         }
 
-        if (($pageLangMap = $this->pageContentService->fileIsLinked($file))->isEmpty()) {
+        $pageLangMap = $this->pageContentService->fileIsLinked($file);
+
+        if ($pageLangMap->isEmpty()) {
             return null;
         }
 
@@ -130,7 +132,6 @@ class FileRemoveService extends Injectable
             unlink($mediaFilePath);
         }
 
-        dlog($privateMediaFilePath,is_link($privateMediaFilePath) );
         if (is_link($privateMediaFilePath)) {
             unlink($privateMediaFilePath);
             rmdir(dirname($privateMediaFilePath));
