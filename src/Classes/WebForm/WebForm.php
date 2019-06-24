@@ -446,6 +446,7 @@ abstract class WebForm extends Renderable
             'class'                  => static::class,
             'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
             'security'               => $this->security,
+            'router'                 => $this->router,
             'form'                   => $this->form,
             'fields'                 => $this->fieldMap,
             'tabs'                   => $this->tabs,
