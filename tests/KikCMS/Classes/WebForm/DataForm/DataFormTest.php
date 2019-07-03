@@ -26,7 +26,7 @@ class DataFormTest extends TestCase
 
         $response = $personForm->render();
 
-        $this->assertContains('<div class="webForm"', $response);
+        $this->assertStringContainsString('<div class="webForm"', $response);
     }
 
     public function testGetDataTableFieldObjects()

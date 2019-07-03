@@ -3,3 +3,4 @@ vendor
 assets/bower_components
 assets/node_modules
 tests/TestSitePath/storage
+.phpunit.result.cache

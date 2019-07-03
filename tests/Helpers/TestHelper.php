@@ -36,6 +36,7 @@ use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
 use Phalcon\DiInterface;
+use Phalcon\Flash\Session;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Mvc\Url;
@@ -85,6 +86,10 @@ class TestHelper extends TestCase
             ->setMethods(['getPluginList'])
             ->getMock();
 
+        $validationMock = $this->getMockBuilder(Validation::class)
+            ->setMethods(['setDefaultMessages'])
+            ->getMock();
+
         $cacheServiceMock->method('cache')->willReturn([]);
         $websiteSettingsMock->method('getPluginList')->willReturn(new CmsPluginList);
 
@@ -93,11 +98,12 @@ class TestHelper extends TestCase
             TranslatorConfig::LANGUAGE_EN => dirname(dirname(__DIR__)) . '/resources/translations/en.php',
         ]);
 
-        $translatorMock->setLanguageCode('nl');
-
         $translatorMock->cache           = null;
         $translatorMock->cacheService    = $cacheServiceMock;
         $translatorMock->websiteSettings = $websiteSettingsMock;
+        $translatorMock->validation      = $validationMock;
+
+        $translatorMock->setLanguageCode('nl');
 
         return $translatorMock;
     }
@@ -175,6 +181,7 @@ class TestHelper extends TestCase
         $di->set('stringService', new StringService);
         $di->set('view', $this->getView());
         $di->set('logger', $log);
+        $di->set('flash', new Session);
 
         $di->get('session')->set('role', Permission::ADMIN);
 

@@ -217,7 +217,7 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterServiceMock = $this->getMock(['getParentRelationKey']);
 
-        $dataTableFilterServiceMock->method('getParentRelationKey')->willReturn(true);
+        $dataTableFilterServiceMock->method('getParentRelationKey')->willReturn('key');
 
         $this->assertTrue($dataTableFilterServiceMock->hasParent($filters));
     }
