@@ -9,6 +9,7 @@ use KikCMS\Forms\PasswordResetForm;
 use KikCMS\Forms\PasswordResetLinkActivateForm;
 use KikCMS\Forms\PasswordResetLinkForm;
 use KikCMS\Models\User;
+use KikCMS\Services\AssetService;
 use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
 use Phalcon\Config;
@@ -16,6 +17,7 @@ use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
+ * @property AssetService $assetService
  * @property Translator $translator
  * @property MailService $mailService
  * @property UserService $userService
@@ -31,7 +33,7 @@ class LoginController extends BaseController
     {
         parent::initialize();
 
-        $this->view->assets->addCss('cmsassets/css/login.css?v=2');
+        $this->assetService->addCss('cmsassets/css/login.css');
 
         if($customCss = $this->websiteSettings->getCustomCss()){
             $this->view->assets->addCss($customCss);

@@ -14,6 +14,7 @@ use Phalcon\Tag;
 
 /**
  * @property AccessControl $acl
+ * @property AssetService $assetService
  * @property Translator $translator
  * @property PlaceholderService $placeholderService
  * @property UrlService $urlService
@@ -63,6 +64,19 @@ class TwigService extends Injectable
         }
 
         return $configGroup->get($string[1]);
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     */
+    public function css(string $url): string
+    {
+        $url = $this->assetService->addVersion($url);
+
+        $parameters = [$url, true];
+
+        return Tag::stylesheetLink($parameters);
     }
 
     /**
