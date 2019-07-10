@@ -8,9 +8,9 @@
     <link rel="apple-touch-icon" sizes="76x76" href="/cmsassets/icons/kikcms-icon-76.png">
     <link rel="apple-touch-icon" sizes="120x120" href="/cmsassets/icons/kikcms-icon-120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/cmsassets/icons/kikcms-icon-152.png">
-    {{ stylesheetLink('//fonts.googleapis.com/css?family=Lato:300,400,700') }}
-    {{ stylesheetLink('cmsassets/css/vendor.css') }}
-    {{ stylesheetLink('cmsassets/css/cms.css?v=4') }}
+    {{ css('//fonts.googleapis.com/css?family=Lato:300,400,700') }}
+    {{ css('cmsassets/css/vendor.css') }}
+    {{ css('cmsassets/css/cms.css') }}
     {{ assets.outputCss() }}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
@@ -18,8 +18,8 @@
 <body class="{% block bodyClass '' %}">
 <div id="overlay"></div>
 {% block content %}{% endblock %}
-{{ javascriptInclude('cmsassets/js/vendor.js') }}
-{{ javascriptInclude('cmsassets/js/cms.js?v=18') }}
+{{ js('cmsassets/js/vendor.js') }}
+{{ js('cmsassets/js/cms.js') }}
 <data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>
 <script nonce="{{ cspNonce }}">
     {% for key in jsTranslations %}

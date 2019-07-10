@@ -27,7 +27,7 @@
         {% endblock %}
     </title>
     {% block styles %}
-        {{ stylesheetLink('cmsassets/css/frontend.css') }}
+        {{ css('cmsassets/css/frontend.css') }}
     {% endblock %}
     {% block head '' %}
     {{ assets.outputCss() }}
@@ -35,8 +35,8 @@
 <body data-language-code="{{ languageCode }}" class="{% block bodyClass page.template %}" style="{% block bodyStyle '' %}">
 {% block body %}{% endblock %}
 {% block scripts %}
-    {{ javascriptInclude('cmsassets/js/frontend/vendor.js') }}
-    {{ javascriptInclude('cmsassets/js/frontend/base.js?v=3') }}
+    {{ js('cmsassets/js/frontend/vendor.js') }}
+    {{ js('cmsassets/js/frontend/base.js') }}
 {% endblock %}
 {{ assets.outputJs() }}
 <data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>

@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\ObjectLists\MenuGroupMap;
+use KikCMS\Services\AssetService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\UserService;
@@ -11,6 +12,7 @@ use KikCMS\Services\UserService;
 /**
  * Controller for the CMS that can render the menu
  *
+ * @property AssetService $assetService
  * @property CmsService $cmsService
  * @property LanguageService $languageService
  * @property UserService $userService
@@ -34,7 +36,7 @@ class BaseCmsController extends BaseController
         }
 
         if ($customCss = $this->websiteSettings->getCustomCss()) {
-            $this->view->assets->addCss($customCss);
+            $this->assetService->addCss($customCss);
         }
 
         $this->view->userEmail    = $this->userService->getUser()->email;
