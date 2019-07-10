@@ -6,6 +6,9 @@ namespace KikCMS\Services;
 
 use Phalcon\Di\Injectable;
 
+/**
+ * @property AssetService $assetService
+ */
 class AssetService extends Injectable
 {
     /**
@@ -35,5 +38,15 @@ class AssetService extends Injectable
         $file = $this->addVersion($file);
 
         $this->view->assets->addCss($file);
+    }
+
+    /**
+     * @param string $file
+     */
+    public function addJs(string $file)
+    {
+        $file = $this->addVersion($file);
+
+        $this->view->assets->addJs($file);
     }
 }

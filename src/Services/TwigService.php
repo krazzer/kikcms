@@ -149,26 +149,15 @@ class TwigService extends Injectable
 
     /**
      * @param string $url
-     * @param bool $local
      * @return string
      */
-    public function javascriptInclude(string $url, bool $local = true): string
+    public function js(string $url): string
     {
-        $parameters = [$url, $local, 'nonce' => $this->view->cspNonce];
+        $url = $this->assetService->addVersion($url);
+
+        $parameters = [$url, true];
 
         return Tag::javascriptInclude($parameters);
-    }
-
-    /**
-     * @param string $url
-     * @param bool $local
-     * @return string
-     */
-    public function stylesheetLink(string $url, bool $local = true): string
-    {
-        $parameters = [$url, $local, 'nonce' => $this->view->cspNonce];
-
-        return Tag::stylesheetLink($parameters);
     }
 
     /**
