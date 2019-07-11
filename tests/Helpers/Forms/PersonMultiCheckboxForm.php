@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Forms;
+namespace Helpers\Forms;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use Models\Person;
+use Helpers\Models\Person;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class PersonMultiCheckboxForm extends DataForm

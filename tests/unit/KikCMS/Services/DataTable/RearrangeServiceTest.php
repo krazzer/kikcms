@@ -4,7 +4,7 @@ namespace KikCMS\Services\DataTable;
 
 use Exception;
 use Helpers\TestHelper;
-use Models\Person;
+use Helpers\Models\Person;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\TestCase;
 

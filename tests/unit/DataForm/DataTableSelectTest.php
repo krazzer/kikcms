@@ -4,15 +4,15 @@
 namespace Integration\DataForm;
 
 
-use Forms\PersonMultiCheckboxForm;
+use Helpers\Forms\PersonDataTableSelectForm;
 use Helpers\TestHelper;
-use Models\Interest;
-use Models\Person;
-use Models\PersonInterest;
+use Helpers\Models\Interest;
+use Helpers\Models\Person;
+use Helpers\Models\PersonInterest;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\TestCase;
 
-class MultiCheckboxFieldTest extends TestCase
+class DataTableSelectTest extends TestCase
 {
     public function testSave()
     {
@@ -28,14 +28,14 @@ class MultiCheckboxFieldTest extends TestCase
         $interest->name = 'Rockets';
         $interest->save();
 
-        $form = new PersonMultiCheckboxForm();
+        $form = new PersonDataTableSelectForm();
         $form->setDI($testDi);
 
         $_POST = [
             $form->getFormId()             => $form->getFormId(),
             $form->security->getTokenKey() => $form->security->getToken(),
             'name'                         => 'Elon',
-            'personInterests:interest_id'  => [1,2],
+            'personInterests:interest_id'  => json_encode([1,2]),
         ];
 
         $form->render();
@@ -53,12 +53,12 @@ class MultiCheckboxFieldTest extends TestCase
             $form->getFormId()             => $form->getFormId(),
             $form->security->getTokenKey() => $form->security->getToken(),
             'name'                         => 'Elon',
-            'personInterests:interest_id'  => [],
+            'personInterests:interest_id'  => json_encode([]),
         ];
 
         $filters = $form->getFilters();
 
-        $form = new PersonMultiCheckboxForm();
+        $form = new PersonDataTableSelectForm();
         $form->setDI($testDi);
         $form->setFilters($filters);
 

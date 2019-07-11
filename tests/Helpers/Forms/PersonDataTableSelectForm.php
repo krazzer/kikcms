@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Forms;
+namespace Helpers\Forms;
 
 
-use DataTables\PersonInterestsSelect;
+use Helpers\DataTables\PersonInterestsSelect;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use Models\Person;
+use Helpers\Models\Person;
 use Phalcon\Validation\Validator\PresenceOf;
 
 class PersonDataTableSelectForm extends DataForm

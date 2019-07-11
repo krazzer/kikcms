@@ -1,11 +1,11 @@
 <?php
 
 
-namespace DataTables;
+namespace Helpers\DataTables;
 
 
 use KikCMS\Classes\DataTable\SelectDataTable;
-use Models\PersonInterest;
+use Helpers\Models\PersonInterest;
 
 class PersonInterestsSelect extends SelectDataTable
 {

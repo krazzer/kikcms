@@ -4,13 +4,16 @@
 namespace KikCMS\Classes\DataTable;
 
 
+use Helpers\EditableDataTable;
+use Helpers\MagicForm;
+use Helpers\NonEditableDataTable;
+use Helpers\Tag;
+use Helpers\TestableDataTable;
 use Helpers\TestHelper;
 use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Url;
-use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
-use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
@@ -415,96 +418,5 @@ class DataTableTest extends TestCase
 
         $dataTableMock->expects($this->never())->method('initialize');
         $dataTableMock->initializeDatatable(true);
-    }
-}
-
-class Tag
-{
-    public function tagHtml()
-    {
-        return null;
-    }
-}
-
-class MagicForm
-{
-    public function __set($x, $y)
-    {
-    }
-
-    public function __get($x)
-    {
-    }
-
-    public function __call($name, $arguments)
-    {
-        return $this;
-    }
-}
-
-class TestableDataTable extends DataTable
-{
-    protected $searchableFields = ['test'];
-    protected $sortableField    = 'test';
-    protected $multiLingual     = true;
-    protected $sortable         = true;
-    protected $sortableNewFirst = true;
-
-    public function __construct(?Filters $filters = null)
-    {
-        $filters = (new DataTableFilters)->setLanguageCode('nl');
-
-        parent::__construct($filters);
-    }
-
-    public function getModel(): string
-    {
-        return User::class;
-    }
-
-    public function getFormClass(): string
-    {
-        return UserForm::class;
-    }
-
-    public function testableGetDefaultQuery()
-    {
-        return $this->getDefaultQuery();
-    }
-
-    public function formatBoolean($value): string
-    {
-        return parent::formatBoolean($value);
-    }
-
-    public function formatCheckbox($value, $rowData, $column)
-    {
-        return parent::formatCheckbox($value, $rowData, $column);
-    }
-
-    public function formatFinderImage($value): string
-    {
-        return parent::formatFinderImage($value);
-    }
-
-    protected function initialize()
-    {
-        // nothing as of yet
-    }
-}
-
-class NonEditableDataTable extends TestableDataTable
-{
-    public function canEdit($id = null): bool
-    {
-        return false;
-    }
-}
-
-class EditableDataTable extends TestableDataTable
-{
-    public function canEdit($id = null): bool
-    {
-        return true;
     }
 }

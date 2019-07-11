@@ -3,15 +3,15 @@
 namespace KikCMS\Classes\WebForm\DataForm;
 
 
-use DataTables\PersonInterests;
+use Helpers\DataTables\PersonInterests;
 use Exception;
-use Forms\PersonForm;
+use Helpers\Forms\PersonForm;
 use Helpers\TestHelper;
 use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Services\ModelService;
-use Models\Company;
-use Models\Person;
-use Models\PersonInterest;
+use Helpers\Models\Company;
+use Helpers\Models\Person;
+use Helpers\Models\PersonInterest;
 use PHPUnit\Framework\TestCase;
 
 class DataFormTest extends TestCase

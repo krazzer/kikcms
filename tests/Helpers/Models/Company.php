@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Models;
+namespace Helpers\Models;
 
 
 use KikCmsCore\Classes\Model;
