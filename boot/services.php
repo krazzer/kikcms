@@ -7,11 +7,12 @@ use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\FactoryDefault\Cli;
 
-if ( ! isset($sitePath)){
+if ( ! isset($sitePath)) {
     throw new Exception('Variable $sitePath must be set');
 }
 
-$configFile     = $sitePath . 'vendor/kiksaus/kikcms/config/config.ini';
+$configFile = dirname(__DIR__) . '/config/config.ini';
+
 $configSiteFile = $sitePath . 'config/config.ini';
 $configEnvFile  = $sitePath . 'env/config.ini';
 
@@ -48,10 +49,12 @@ $loader = (new Loader)
     ])
     ->register();
 
-if ($cli) {
-    class ApplicationServices extends Cli{}
-} else {
-    class ApplicationServices extends FactoryDefault{}
+if( ! class_exists('ApplicationServices')) {
+    if ($cli) {
+        class ApplicationServices extends Cli{}
+    } else {
+        class ApplicationServices extends FactoryDefault{}
+    }
 }
 
 return new Services($config, $loader);
