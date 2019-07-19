@@ -444,9 +444,9 @@ abstract class WebForm extends Renderable
 
         return $this->renderView($this->formTemplate, [
             'class'                  => static::class,
+            'requestUri'             => $this->request->getServer('REQUEST_URI'),
             'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
             'security'               => $this->security,
-            'router'                 => $this->router,
             'form'                   => $this->form,
             'fields'                 => $this->fieldMap,
             'tabs'                   => $this->tabs,

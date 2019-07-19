@@ -10,7 +10,7 @@
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
 <div class="webForm" id="{{ formId }}" data-renderable="{{ jsData|json_encode }}" data-instance="{{ instance }}" data-id="{{ filters.editId }}">
-    <form name="form" method="post" action="{{ router.getRewriteUri }}#{{ formId }}">
+    <form name="form" method="post" action="{{ requestUri }}#{{ formId }}">
         <div class="flashContainer">
             {%- if mayFlash -%}
                 {{ flash.output }}
