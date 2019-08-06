@@ -5,6 +5,7 @@ namespace KikCMS\Forms;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Config\CacheConfig;
+use KikCMS\Models\Language;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
@@ -37,9 +38,14 @@ class TranslationForm extends DataForm
 
         $this->addSelectField(TranslationKey::FIELD_KEY, $keyLabel, $keyOptions);
 
-        foreach ($this->languageService->getLanguages() as $language){
+        foreach ($this->languageService->getLanguages() as $language) {
             $relationKey = 'value' . ucfirst($language->code) . ':value';
-            $this->addTextAreaField($relationKey, $language->name)->setAttribute('data-language-code', $language->code);
+            $valueField  = $this->addTextAreaField($relationKey, $language->name)
+                ->setAttribute('data-language-code', $language->code);
+
+            if ($key = $this->getObject()) {
+                $valueField->setDefault($this->cache->get($this->getCacheKey($language)));
+            }
         }
     }
 
@@ -49,11 +55,19 @@ class TranslationForm extends DataForm
     protected function onSave()
     {
         // clear cache
-        foreach ($this->languageService->getLanguages() as $language){
-            $cacheKey = CacheConfig::TRANSLATION . ':' . $language->code . ':' . $this->getObject()->key;
-            $this->cacheService->clear($cacheKey);
+        foreach ($this->languageService->getLanguages() as $language) {
+            $this->cacheService->clear($this->getCacheKey($language));
         }
 
         $this->cacheService->clear(CacheConfig::USER_TRANSLATIONS);
+    }
+
+    /**
+     * @param Language $language
+     * @return string
+     */
+    private function getCacheKey(Language $language): string
+    {
+        return CacheConfig::TRANSLATION . ':' . $language->code . ':' . $this->getObject()->key;
     }
 }
