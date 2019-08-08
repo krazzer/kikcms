@@ -1,0 +1,6 @@
+<?php
+
+include 'autoloader.php';
+
+$sitePath = __DIR__ . '/';
+include '/kikcms/boot/cli.php';
