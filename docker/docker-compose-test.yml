@@ -1,0 +1,25 @@
+version: "3"
+services:
+  php:
+    image: kiksaus/kikdev
+    restart: always
+    ports:
+        - "9901:443"
+    volumes:
+        - ../tests/TestSitePath/public_html/:/var/www/html:cached
+        - ../resources/:/var/www/html/cmsassets:cached
+        - ../tests/TestSitePath/:/var/www:cached
+        - ../tests/TestSitePath/vendor/:/var/www/vendor:cached
+        - ../:/kikcms:cached
+        - ~/.docker-kikdev/logs:/var/log/apache2/:cached
+    networks:
+      kikdev:
+        aliases:
+          - kikcmstest.dev
+    environment:
+      XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
+
+networks:
+  kikdev:
+    external:
+      name: kikdev
