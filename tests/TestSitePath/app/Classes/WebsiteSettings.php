@@ -28,6 +28,7 @@ class WebsiteSettings extends WebsiteSettingsBase
     public function addBackendRoutes(Group $backend)
     {
         $backend->add('/test/datatable', 'Module::testDataTable');
+        $backend->add('/test/personform', 'Module::personForm');
     }
 
     /**
@@ -36,7 +37,8 @@ class WebsiteSettings extends WebsiteSettingsBase
     public function getMenuGroupMap(MenuGroupMap $menuGroupMap): MenuGroupMap
     {
         $testMenuGroup = (new CmsMenuGroup('test', 'Test'))
-            ->add(new CmsMenuItem('datatabletest', 'DataTable test', '/cms/test/datatable'));
+            ->add(new CmsMenuItem('datatabletest', 'DataTable test', '/cms/test/datatable'))
+            ->add(new CmsMenuItem('personform', 'Person form', '/cms/test/personform'));
 
         return $menuGroupMap->addAfter($testMenuGroup, 'test', MenuConfig::MENU_GROUP_CONTENT);
     }

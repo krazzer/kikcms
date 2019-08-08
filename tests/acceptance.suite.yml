@@ -8,6 +8,6 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: https://kiksaus.dev/cms
+            url: https://kikcmstest.dev/cms
         - \Helper\Acceptance
     step_decorators: ~        

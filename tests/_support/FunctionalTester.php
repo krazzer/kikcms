@@ -15,12 +15,21 @@
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+    public function login(string $username = 'test@test', $password = 'TestUserPass')
+    {
+        $I = $this;
+        $I->amOnPage('/cms');
+        $I->submitForm('#login-form form', [
+            'username' => $username,
+            'password' => $password,
+            'remember' => null,
+        ]);
+
+        $I->seeElement('#menu');
+    }
 }
