@@ -481,7 +481,7 @@ abstract class WebForm extends Renderable
     {
         // set selected ids filter for SelectDataTable
         if ($value = $field->getElement()->getValue()) {
-            $field->getDataTable()->getFilters()->setSelectedValues(json_decode($value));
+            $field->getDataTable()->getFilters()->setSelectedValues((array) json_decode($value));
         }
 
         $field->setRenderedDataTable($field->getDataTable()->render());

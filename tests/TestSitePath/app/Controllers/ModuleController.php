@@ -11,7 +11,9 @@ class ModuleController extends BaseCmsController
 {
     public function testDataTableAction()
     {
-        $this->view->object = (new DataTableTestObjects)->render();
+        $this->view->object           = (new DataTableTestObjects)->render();
+        $this->view->selectedMenuItem = 'datatabletest';
+        $this->view->title            = 'Test DataTable';
 
         $this->view->pick('cms/default');
     }
