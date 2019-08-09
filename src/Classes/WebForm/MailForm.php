@@ -60,7 +60,7 @@ abstract class MailForm extends WebForm
      * @param array $input
      * @return string
      */
-    protected function toMailOutput(array $input): string
+    public function toMailOutput(array $input): string
     {
         $contents = '';
 
@@ -83,6 +83,7 @@ abstract class MailForm extends WebForm
             }
 
             $value = nl2br($input[$key]);
+            $value = str_replace("\n", '', $value);
 
             if( ! $value){
                 $value = '-';
