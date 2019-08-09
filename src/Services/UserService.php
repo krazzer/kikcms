@@ -166,7 +166,6 @@ class UserService extends Injectable
             $this->cmsService->cleanUpDiskCache();
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
-            return;
         }
 
         $user = User::getById($id);
