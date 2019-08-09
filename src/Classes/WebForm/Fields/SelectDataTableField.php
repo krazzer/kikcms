@@ -44,7 +44,7 @@ class SelectDataTableField extends Field
      */
     public function getFormFormat($value)
     {
-        return json_encode($value);
+        return is_array($value) ? json_encode($value) : $value;
     }
 
     /**
