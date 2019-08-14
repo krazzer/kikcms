@@ -1,3 +1,7 @@
+The video below shows how you can create a functional multi-level CRUD system (DataTable) inside the CMS in about 10 minutes.
+
+[![KikCMS DataTable Tutorial](https://i.ytimg.com/vi/gZmVBre4c2c/maxresdefault.jpg)](https://www.youtube.com/watch?v=gZmVBre4c2c "KikCMS DataTable Tutorial")
+
 # What is KikCMS and who is it for?
 
 KikCMS is a CMS and high level framework based on the [Phalcon framework](https://phalconphp.com/).
