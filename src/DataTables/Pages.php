@@ -24,15 +24,15 @@ use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
- * @property PageRearrangeService $pageRearrangeService
- * @property Translator $translator
  * @property AccessControl $acl
- * @property TemplateService $templateService
- * @property TemplateFieldsBase $templateFields
- * @property PagesDataTableService $pagesDataTableService
- * @property UserSettingsService $userSettingsService
- * @property PageService $pageService
  * @property CacheService $cacheService
+ * @property PageRearrangeService $pageRearrangeService
+ * @property PageService $pageService
+ * @property PagesDataTableService $pagesDataTableService
+ * @property TemplateFieldsBase $templateFields
+ * @property TemplateService $templateService
+ * @property Translator $translator
+ * @property UserSettingsService $userSettingsService
  * @property WebsiteSettingsBase $websiteSettings
  */
 class Pages extends DataTable
@@ -275,40 +275,17 @@ class Pages extends DataTable
      */
     protected function formatName($value, array $rowData)
     {
-        if ( ! $value && $rowData['default_language_name']) {
-            $value = '<span class="defaultLanguagePlaceHolder">' . $rowData['default_language_name'] . '</span>';
-        }
+        $value = $this->pagesDataTableService->getValue($value, $rowData);
 
-        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_MENU) {
-            $value = $rowData['default_language_name'];
-        }
-
-        // disable dragging / tree structure when sorting or searching
         if ($this->filters->getSearch() || $this->filters->getSortColumn()) {
             return $value;
         }
 
-        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
-            $value = $this->getNameWithIcon('link', $this->linkTitle, $value);
-        }
+        $iconTitleMap = $this->getIconTitleMap($rowData);
 
-        if ($rowData[Page::FIELD_TYPE] != Page::TYPE_MENU && $rowData[Page::FIELD_KEY]) {
-            $value = $this->getNameWithIcon('lock', $this->lockedTitle, $value);
-        }
+        $isClosed = array_key_exists($rowData[Page::FIELD_ID], $this->getClosedPageIdMap());
 
-        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_ALIAS) {
-            $value = $this->getNameWithIcon('share-alt', $this->linkTitle, $value);
-        }
-
-        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE && ! $rowData[PageLanguage::FIELD_ACTIVE]) {
-            $value = $this->getNameWithIcon('eye-close', $this->inactiveTitle, $value);
-        }
-
-        $closedPageIdMap = $this->getClosedPageIdMap();
-
-        $arrowClass = array_key_exists($rowData[Page::FIELD_ID], $closedPageIdMap) ? ' closed' : '';
-
-        return '<span class="arrow' . $arrowClass . '"></span><span class="name">' . $value . '</span>';
+        return $this->pagesDataTableService->formatName($value, $iconTitleMap, $isClosed);
     }
 
     /**
@@ -316,7 +293,7 @@ class Pages extends DataTable
      *
      * @return array [closedPageId => [childIds]
      */
-    private function getClosedPageIdMap(): array
+    public function getClosedPageIdMap(): array
     {
         if ($this->closedPageIdMapCache) {
             return $this->closedPageIdMapCache;
@@ -330,13 +307,29 @@ class Pages extends DataTable
     }
 
     /**
-     * @param string $icon
-     * @param string $title
-     * @param $value
-     * @return string
+     * @param array $rowData
+     * @return array
      */
-    private function getNameWithIcon(string $icon, string $title, $value): string
+    private function getIconTitleMap(array $rowData): array
     {
-        return '<span class="glyphicon glyphicon-' . $icon . '" title="' . $title . '"></span> ' . $value;
+        $iconTitleMap = [];
+
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_LINK) {
+            $iconTitleMap['link'] = $this->linkTitle;
+        }
+
+        if ($rowData[Page::FIELD_TYPE] != Page::TYPE_MENU && $rowData[Page::FIELD_KEY]) {
+            $iconTitleMap['lock'] = $this->lockedTitle;
+        }
+
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_ALIAS) {
+            $iconTitleMap['share-alt'] = $this->linkTitle;
+        }
+
+        if ($rowData[Page::FIELD_TYPE] == Page::TYPE_PAGE && ! $rowData[PageLanguage::FIELD_ACTIVE]) {
+            $iconTitleMap['eye-close'] = $this->inactiveTitle;
+        }
+
+        return $iconTitleMap;
     }
 }
