@@ -93,25 +93,25 @@ class AnalyticsServiceTest extends Unit
             'source'   => [
                 ['type' => 'source', 'value' => 'site-one.com', 'visits' => '4', 'percentage' => '40.0'],
                 ['type' => 'source', 'value' => '(direct)', 'visits' => '3', 'percentage' => '30.0'],
-                ['type' => 'source', 'value' => 'site-two.com', 'visits' => '2', 'percentage' => '20.0'],
                 ['type' => 'source', 'value' => 'linkedin.com', 'visits' => '2', 'percentage' => '20.0'],
                 ['type' => 'source', 'value' => 'site-three.com', 'visits' => '2', 'percentage' => '20.0'],
+                ['type' => 'source', 'value' => 'site-two.com', 'visits' => '2', 'percentage' => '20.0'],
                 ['type' => 'source', 'value' => 'site-four.com', 'visits' => '1', 'percentage' => '10.0'],
             ],
             'browser'  => [
                 ['type' => 'browser', 'value' => 'Chrome', 'visits' => '6', 'percentage' => '60.0'],
                 ['type' => 'browser', 'value' => 'Safari', 'visits' => '5', 'percentage' => '50.0'],
-                ['type' => 'browser', 'value' => 'Internet Explorer', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'browser', 'value' => 'Firefox', 'visits' => '1', 'percentage' => '10.0'],
+                ['type' => 'browser', 'value' => 'Internet Explorer', 'visits' => '1', 'percentage' => '10.0'],
             ],
             'location' => [
                 ['type' => 'location', 'value' => 'Alkmaar', 'visits' => '4', 'percentage' => '40.0'],
                 ['type' => 'location', 'value' => 'Ahmedabad', 'visits' => '2', 'percentage' => '20.0'],
-                ['type' => 'location', 'value' => 'Groningen', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'location', 'value' => '(not set)', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'location', 'value' => 'Amsterdam', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'location', 'value' => 'Duisburg', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'location', 'value' => 'Gondomar', 'visits' => '1', 'percentage' => '10.0'],
+                ['type' => 'location', 'value' => 'Groningen', 'visits' => '1', 'percentage' => '10.0'],
                 ['type' => 'location', 'value' => 'Ter Aar', 'visits' => '1', 'percentage' => '10.0'],
             ],
         ];

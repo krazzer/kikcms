@@ -129,7 +129,7 @@ class AnalyticsService extends Injectable
                 'ROUND((SUM(' . GaVisitData::FIELD_VISITS . ') / ' . $totalVisits . ') * 100, 1) AS percentage'
             ])
             ->groupBy(GaVisitData::FIELD_TYPE . ', ' . GaVisitData::FIELD_VALUE)
-            ->orderBy('visits DESC')
+            ->orderBy('visits DESC, value ASC')
             ->limit(count(StatisticsConfig::GA_TYPES) * 50);
 
         $this->addDateWhere($query, $start, $end);
