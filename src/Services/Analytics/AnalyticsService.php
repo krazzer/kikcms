@@ -6,6 +6,7 @@ namespace KikCMS\Services\Analytics;
 use DateTime;
 use KikCMS\Classes\Phalcon\Cache;
 use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Translator;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCmsCore\Config\DbConfig;
@@ -21,6 +22,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property Cache $cache
  * @property KeyValue $keyValue
+ * @property Translator $translator
  */
 class AnalyticsService extends Injectable
 {
