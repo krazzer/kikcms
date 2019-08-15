@@ -14,12 +14,18 @@ class File extends Model
     const ALIAS = 'f';
 
     const FIELD_ID        = 'id';
-    const FIELD_FOLDER_ID = 'folder_id';
-    const FIELD_IS_FOLDER = 'is_folder';
     const FIELD_NAME      = 'name';
+    const FIELD_EXTENSION = 'extension';
+    const FIELD_MIMETYPE  = 'mimetype';
+    const FIELD_CREATED   = 'created';
+    const FIELD_UPDATED   = 'updated';
+    const FIELD_IS_FOLDER = 'is_folder';
+    const FIELD_FOLDER_ID = 'folder_id';
+    const FIELD_SIZE      = 'size';
     const FIELD_USER_ID   = 'user_id';
     const FIELD_KEY       = 'key';
     const FIELD_HASH      = 'hash';
+
 
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
