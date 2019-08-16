@@ -81,20 +81,7 @@ class BaseServices extends ApplicationServices
      */
     protected function bindServices()
     {
-        $reflection = new \ReflectionObject($this);
-        $methods    = $reflection->getMethods();
-
-        foreach ($methods as $method) {
-            if ((strlen($method->name) > 10) && (strpos($method->name, 'initShared') === 0)) {
-                $this->set(lcfirst(substr($method->name, 10)), $method->getClosure($this));
-                continue;
-            }
-
-            if ((strlen($method->name) > 4) && (strpos($method->name, 'init') === 0)) {
-                $this->set(lcfirst(substr($method->name, 4)), $method->getClosure($this));
-            }
-        }
-
+        $this->bindMethodServices();
         $this->bindExtendableServices();
         $this->bindSimpleServices();
         $this->bindPluginServices();
@@ -107,7 +94,8 @@ class BaseServices extends ApplicationServices
             });
         }
 
-        if ($this->getAppConfig()->env !== KikCMSConfig::ENV_DEV) {
+        // initialize models meta data only in production
+        if ($this->getAppConfig()->env === KikCMSConfig::ENV_PROD) {
             $this->set('modelsMetadata', function () {
                 return new Files([
                     "lifetime"    => 86400,
@@ -298,6 +286,26 @@ class BaseServices extends ApplicationServices
             $this->set($serviceName, function () use ($service) {
                 return new $service();
             });
+        }
+    }
+
+    /**
+     * Bind services by methods of the current class that start with init or initShared
+     */
+    private function bindMethodServices()
+    {
+        $reflection = new \ReflectionObject($this);
+        $methods    = $reflection->getMethods();
+
+        foreach ($methods as $method) {
+            if ((strlen($method->name) > 10) && (strpos($method->name, 'initShared') === 0)) {
+                $this->set(lcfirst(substr($method->name, 10)), $method->getClosure($this));
+                continue;
+            }
+
+            if ((strlen($method->name) > 4) && (strpos($method->name, 'init') === 0)) {
+                $this->set(lcfirst(substr($method->name, 4)), $method->getClosure($this));
+            }
         }
     }
 }
