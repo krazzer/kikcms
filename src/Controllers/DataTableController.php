@@ -3,8 +3,8 @@
 namespace KikCMS\Controllers;
 
 
-use Exception;
 use KikCMS\Services\DataTable\DataTableFilterService;
+use KikCMS\Services\DataTable\DataTableService;
 use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Util\QueryService;
@@ -18,6 +18,7 @@ use Monolog\Logger;
 
 /**
  * @property AccessControl $acl
+ * @property DataTableService $dataTableService
  * @property DbService $dbService
  * @property Logger $logger
  * @property ModelService $modelService
@@ -47,11 +48,8 @@ class DataTableController extends RenderableController
     {
         $dataTable = $this->getRenderable();
 
-        $this->view->form   = $dataTable->renderAddForm();
-        $this->view->labels = $dataTable->getLabels();
-
         return json_encode([
-            'window' => $dataTable->renderWindow(self::TEMPLATE_ADD)
+            'window' => $dataTable->renderWindow($dataTable->renderAddForm())
         ]);
     }
 
@@ -102,12 +100,8 @@ class DataTableController extends RenderableController
     {
         $dataTable = $this->getRenderable();
 
-        $this->view->form     = $dataTable->renderEditForm();
-        $this->view->labels   = $dataTable->getLabels();
-        $this->view->editData = $dataTable->getForm()->getEditData();
-
         return json_encode([
-            'window' => $dataTable->renderWindow(self::TEMPLATE_EDIT)
+            'window' => $dataTable->renderWindow($dataTable->renderEditForm())
         ]);
     }
 
@@ -117,69 +111,22 @@ class DataTableController extends RenderableController
      */
     public function saveAction()
     {
-        $dataTable       = $this->getRenderable();
-        $editId          = $dataTable->getFilters()->getEditId();
-        $hasTempParentId = $dataTable->getFilters()->hasTempParentEditId();
-        $hasParent       = $this->dataTableFilterService->hasParent($dataTable->getFilters());
+        $dataTable = $this->getRenderable();
+        $editId    = $dataTable->getFilters()->getEditId();
 
         if ( ! $dataTable->canEdit($editId)) {
             throw new UnauthorizedException;
         }
 
-        if ($editId === null) {
-            $this->view->form = $dataTable->renderAddForm();
+        $renderedForm = $this->dataTableService->getRenderedForm($dataTable);
 
-            $view = self::TEMPLATE_ADD;
-
-            // if the form was succesfully saved, an edit id can be fetched
-            $editId = $dataTable->getForm()->getFilters()->getEditId();
-
-            if ($editId) {
-                $this->view->editData = $dataTable->getForm()->getEditData();
-                $view                 = self::TEMPLATE_EDIT;
-            }
-
-            // if the datatable has a unsaved parent, cache the new id
-            if ($hasParent && $hasTempParentId && $editId) {
-                $dataTable->cacheNewId($editId);
-            }
-
-            // if the datatable has a unsaved parent, cache the new id
-            if ($dataTable->getFilters()->getParentRelationKey() && $hasTempParentId && $editId) {
-                $dataTable->cacheNewId($editId);
-            }
-
-            // go to the page where the new id sits
-            if ($editId) {
-                if ($fromAlias = $this->queryService->getFromAlias($dataTable->getQuery())) {
-                    $column = $fromAlias . '.' . DataTable::TABLE_KEY;
-                } else {
-                    $column = DataTable::TABLE_KEY;
-                }
-
-                $idsQuery = (clone $dataTable->getQuery())->columns([$column]);
-
-                try {
-                    $index = array_search($editId, $this->dbService->getValues($idsQuery));
-                    $limit = $dataTable->getLimit();
-                    $page  = (($index - ($index % $limit)) / $limit) + 1;
-
-                    $dataTable->getFilters()->setPage($page);
-                } catch (Exception $exception) {
-                    $this->logger->log(Logger::NOTICE, $exception);
-                }
-
-            }
-        } else {
-            $this->view->form     = $dataTable->renderEditForm();
-            $this->view->editData = $dataTable->getForm()->getEditData();
-            $view                 = self::TEMPLATE_EDIT;
+        // checks if the form has an edit id áfter rendering
+        if ($editId === null && $editId = $dataTable->getForm()->getFilters()->getEditId()) {
+            $this->dataTableService->handleNewObject($dataTable);
         }
 
-        $this->view->labels = $dataTable->getLabels();
-
         return json_encode([
-            'window'     => $dataTable->renderWindow($view),
+            'window'     => $dataTable->renderWindow($renderedForm),
             'table'      => $dataTable->renderTable(),
             'pagination' => $dataTable->renderPagination(),
             'editedId'   => $editId,

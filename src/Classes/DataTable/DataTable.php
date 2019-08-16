@@ -23,7 +23,6 @@ use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
-use Phalcon\Http\Response;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -511,9 +510,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Response
+     * @return string
      */
-    public function renderAddForm()
+    public function renderAddForm(): string
     {
         $this->initializeDatatable(true);
 
@@ -525,9 +524,9 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Response
+     * @return string
      */
-    public function renderEditForm()
+    public function renderEditForm(): string
     {
         $this->initializeDatatable(true);
 
@@ -668,18 +667,23 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @param string $template
+     * @param string $renderedForm
      * @return string
      */
-    public function renderWindow(string $template)
+    public function renderWindow(string $renderedForm)
     {
+        $template = $this->getFilters()->getEditId() ? 'add' : 'edit';
+
         return $this->renderView($template, [
             'tabs'            => $this->form->getTabs(),
             'currentTab'      => $this->form->getCurrentTab(),
             'multiLingual'    => $this->isMultiLingual(),
+            'labels'          => $this->getLabels(),
             'currentLangCode' => $this->getFilters()->getWindowLanguageCode(),
+            'editData'        => $this->getForm()->getEditData(),
             'canEdit'         => $this->canEdit($this->form->getFilters()->getEditId()),
             'languages'       => $this->languageService->getLanguages(),
+            'form'            => $renderedForm,
         ]);
     }
 
