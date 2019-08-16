@@ -46,7 +46,6 @@ use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
-use Throwable;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
@@ -204,15 +203,14 @@ class Services extends BaseServices
      */
     protected function initErrorHandler()
     {
-        $isProduction = $this->getAppConfig()->env == KikCMSConfig::ENV_PROD;
         $errorHandler = new ErrorHandler($this->get('logger'));
 
-        set_exception_handler(function (Throwable $error) use ($isProduction) {
-            $this->handleError($error, $isProduction);
+        set_exception_handler(function ($error) {
+            $this->get('errorService')->handleError($error);
         });
 
-        register_shutdown_function(function () use ($isProduction) {
-            $this->handleError(error_get_last(), $isProduction);
+        register_shutdown_function(function () {
+            $this->get('errorService')->handleError(error_get_last());
         });
 
         $errorHandler->registerExceptionHandler();
@@ -274,7 +272,7 @@ class Services extends BaseServices
         $logger = new Logger('logger');
 
         if ($isProduction && $developerEmail = $this->getAppConfig()->developerEmail) {
-            $errorFromMail  = 'error@' . $_SERVER['HTTP_HOST'];
+            $errorFromMail = 'error@' . $_SERVER['HTTP_HOST'];
 
             $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);
             $handler->setContentType('text/html');
@@ -444,49 +442,6 @@ class Services extends BaseServices
     protected function initWebsiteService()
     {
         return new WebsiteService();
-    }
-
-    /**
-     * @param mixed $error
-     * @param bool $isProduction
-     */
-    private function handleError($error, bool $isProduction)
-    {
-        if ( ! $error) {
-            return;
-        }
-
-        $errorType = is_object($error) ?
-            isset($error->type) ? $error->type : null :
-            isset($error['type']) ? $error['type'] : null;
-
-        $recoverableErrorCodes = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
-
-        // don't show recoverable errors in production
-        if ($isProduction && $errorType && ! in_array($errorType, $recoverableErrorCodes)) {
-            return;
-        }
-
-        http_response_code(500);
-
-        if ($this->isAjaxRequest() && ! $isProduction) {
-            echo $this->get('view')->getRender('errors', 'error500content', ['error' => $error]);
-            return;
-        }
-
-        echo $this->get('view')->getRender('errors', 'show500', [
-            'error' => $isProduction ? null : $error,
-        ]);
-    }
-
-    /**
-     * @return bool
-     */
-    private function isAjaxRequest(): bool
-    {
-        $ajaxHeader = 'HTTP_X_REQUESTED_WITH';
-
-        return ! empty($_SERVER[$ajaxHeader]) && strtolower($_SERVER[$ajaxHeader]) == 'xmlhttprequest';
     }
 
     /**
