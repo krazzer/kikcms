@@ -64,7 +64,7 @@ class Services extends BaseServices
             Translator::class,
         ];
 
-        $cmsServices = $this->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
+        $cmsServices = $this->get('namespaceService')->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
 
         return array_merge($services, $cmsServices, $this->getWebsiteSimpleServices());
     }
@@ -88,7 +88,7 @@ class Services extends BaseServices
     protected function getWebsiteSimpleServices(): array
     {
         $services        = $this->getWebsiteSettings()->getServices();
-        $websiteServices = $this->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
+        $websiteServices = $this->get('namespaceService')->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
 
         $services = array_merge($services, $websiteServices);
 

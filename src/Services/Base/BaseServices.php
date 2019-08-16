@@ -5,17 +5,14 @@ namespace KikCMS\Services\Base;
 use ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
-use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
 use KikCMS\Services\Website\WebsiteService;
 use KikCMS\Classes\Phalcon\Loader;
-use Phalcon\Cache\BackendInterface;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Files;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class BaseServices extends ApplicationServices
 {
@@ -45,13 +42,15 @@ class BaseServices extends ApplicationServices
      */
     public function __construct(Config $config, Loader $loader)
     {
-        /** @noinspection PhpUndefinedClassInspection */
         parent::__construct();
 
         $this->setShared('config', $config);
         $this->setShared('applicationConfig', $config->get('application'));
         $this->setShared('databaseConfig', $config->get('database'));
         $this->setShared('loader', $loader);
+        $this->setShared('namespaceService', function (){
+            return new NamespaceService();
+        });
 
         $this->bindServices();
     }
@@ -116,14 +115,6 @@ class BaseServices extends ApplicationServices
     }
 
     /**
-     * @return BackendInterface|null
-     */
-    protected function getCache(): ?BackendInterface
-    {
-        return $this->get('cache');
-    }
-
-    /**
      * @return Config
      */
     protected function getDbConfig(): Config
@@ -156,72 +147,6 @@ class BaseServices extends ApplicationServices
     }
 
     /**
-     * @return Loader
-     */
-    protected function getLoader(): Loader
-    {
-        return $this->get('loader');
-    }
-
-    /**
-     * @param string $namespace
-     * @return array
-     */
-    protected function getClassNamesByNamespace(string $namespace): array
-    {
-        $cacheKey = 'services:' . $namespace;
-
-        if($this->getCache() && $services = $this->getCache()->get($cacheKey)){
-            return $services;
-        }
-
-        $services = [];
-
-        $path = $this->getPathByNamespace($namespace);
-
-        if ( ! is_readable($path)) {
-            return $services;
-        }
-
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
-
-        foreach ($files as $file) {
-            if ($file->isDir()) {
-                continue;
-            }
-
-            $search  = [$path, '.php', DIRECTORY_SEPARATOR];
-            $replace = [null, null, KikCMSConfig::NAMESPACE_SEPARATOR];
-
-            $services[] = $namespace . str_replace($search, $replace, $file->getPathname());
-        }
-
-        // only cache on production, to prevent errors when creating new services
-        if($this->getCache() && $this->getAppConfig()->env == KikCMSConfig::ENV_PROD){
-            $this->getCache()->save($cacheKey, $services, CacheConfig::ONE_YEAR);
-        }
-
-        return $services;
-    }
-
-    /**
-     * @param string $namespace
-     * @return string
-     */
-    protected function getPathByNamespace(string $namespace): string
-    {
-        $loadedNamespaces = $this->getLoader()->getNamespaces();
-
-        $namespaceParts = explode(KikCMSConfig::NAMESPACE_SEPARATOR, trim($namespace, KikCMSConfig::NAMESPACE_SEPARATOR));
-
-        $path = $loadedNamespaces[$namespaceParts[0]][0];
-
-        array_shift($namespaceParts);
-
-        return $path . implode(DIRECTORY_SEPARATOR, $namespaceParts) . DIRECTORY_SEPARATOR;
-    }
-
-    /**
      * Binds services that are extendable by the website
      */
     private function bindExtendableServices()
@@ -229,7 +154,7 @@ class BaseServices extends ApplicationServices
         foreach ($this->getExtendableServices() as $service) {
             $serviceName        = lcfirst(last(explode('\\', $service)));
             $serviceWebsiteName = substr($serviceName, 0, -4);
-            $classNameWebsite   = 'Website\\Classes\\' . ucfirst($serviceWebsiteName);
+            $classNameWebsite   = KikCMSConfig::NAMESPACE_PATH_CLASSES . ucfirst($serviceWebsiteName);
 
             $this->set($serviceWebsiteName, function () use ($service, $classNameWebsite) {
                 if (class_exists($classNameWebsite)) {
