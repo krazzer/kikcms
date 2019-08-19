@@ -73,11 +73,11 @@ class ParamConverterPlugin extends Plugin
                 continue;
             }
 
-            if ( ! array_key_exists($this->getIdParamName($class), $paramValueMap)) {
+            if ( ! array_key_exists($this->getIdParamName($parameter), $paramValueMap)) {
                 continue;
             }
 
-            $paramValueMap = $this->replaceParameter($class, $paramValueMap);
+            $paramValueMap = $this->replaceParameter($class, $parameter, $paramValueMap);
         }
 
         return $paramValueMap;
@@ -85,16 +85,19 @@ class ParamConverterPlugin extends Plugin
 
     /**
      * @param ReflectionClass $class
+     * @param ReflectionParameter $parameter
      * @param array $paramValueMap
      * @return array
      * @throws ObjectNotFoundException
      */
-    private function replaceParameter(ReflectionClass $class, array $paramValueMap)
+    private function replaceParameter(ReflectionClass $class, ReflectionParameter $parameter, array $paramValueMap)
     {
-        $obParamName = $this->getObjectParamName($class);
-        $idParamName = $this->getIdParamName($class);
+        $obParamName = $this->getParamName($parameter);
+        $idParamName = $this->getIdParamName($parameter);
 
-        if ( ! $object = $this->modelService->getObject($class->getName(), $paramValueMap[$idParamName])) {
+        $object = $this->modelService->getObject($class->getName(), $paramValueMap[$idParamName]);
+
+        if ( ! $object && ! $parameter->allowsNull()) {
             throw new ObjectNotFoundException($obParamName);
         }
 
@@ -106,20 +109,20 @@ class ParamConverterPlugin extends Plugin
     }
 
     /**
-     * @param ReflectionClass $class
+     * @param ReflectionParameter $parameter
      * @return string
      */
-    private function getObjectParamName(ReflectionClass $class): string
+    private function getParamName(ReflectionParameter $parameter): string
     {
-        return lcfirst($class->getShortName());
+        return $parameter->getName();
     }
 
     /**
-     * @param ReflectionClass $class
+     * @param ReflectionParameter $parameter
      * @return string
      */
-    private function getIdParamName(ReflectionClass $class): string
+    private function getIdParamName(ReflectionParameter $parameter): string
     {
-        return $this->getObjectParamName($class) . 'Id';
+        return $this->getParamName($parameter) . 'Id';
     }
 }
