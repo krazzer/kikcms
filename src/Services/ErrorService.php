@@ -22,7 +22,7 @@ class ErrorService extends Injectable
             return;
         }
 
-        $isProduction       = $this->config->application->env != KikCMSConfig::ENV_PROD;
+        $isProduction       = $this->config->application->env === KikCMSConfig::ENV_PROD;
         $isRecoverableError = $this->isRecoverableError($error);
 
         // don't show recoverable errors in production
