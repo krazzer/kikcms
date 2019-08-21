@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Services;
@@ -41,9 +41,9 @@ class TwigService extends Injectable
      * @param string $resourceName
      * @param string $access
      * @param array|null $parameters
-     * @return string
+     * @return bool
      */
-    public function allowed(string $resourceName, $access = '*', array $parameters = null): string
+    public function allowed(string $resourceName, $access = '*', array $parameters = null): bool
     {
         return $this->acl->allowed($resourceName, $access, $parameters);
     }
@@ -60,7 +60,7 @@ class TwigService extends Injectable
         $configGroup = $this->config->get($string[0]);
 
         if ( ! $configGroup) {
-            return null;
+            return '';
         }
 
         return $configGroup->get($string[1]);
@@ -88,12 +88,12 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param int|null $fileId
+     * @param mixed $fileId
      * @param string|null $thumb
      * @param bool $private
      * @return string
      */
-    public function mediaFile(?int $fileId, string $thumb = null, $private = false): string
+    public function mediaFile($fileId, string $thumb = null, $private = false): string
     {
         if ( ! $fileId) {
             return '';

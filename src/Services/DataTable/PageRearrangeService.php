@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services\DataTable;
 
@@ -202,7 +202,7 @@ class PageRearrangeService extends Injectable
      */
     private function placeBeforeOrAfter(Page $page, Page $targetPage, bool $placeAfter)
     {
-        $targetParentId     = $targetPage->parent_id;
+        $targetParentId     = $targetPage->getParentId();
         $targetDisplayOrder = $targetPage->display_order;
         $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
 

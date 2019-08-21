@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Models;
 
@@ -162,7 +162,7 @@ class Page extends Model
      */
     public function getName(): ?string
     {
-        return $this->pageLanguage->name;
+        return (string) $this->pageLanguage->name;
     }
 
     /**

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Services\Finder;
@@ -72,9 +72,9 @@ class FilePermissionService extends Injectable
     /**
      * @param $userIdOrRole
      * @param int $fileId
-     * @param string $right
+     * @param int $right
      */
-    public function create($userIdOrRole, int $fileId, string $right)
+    public function create($userIdOrRole, int $fileId, int $right)
     {
         $permission = new FilePermission();
 
@@ -287,11 +287,11 @@ class FilePermissionService extends Injectable
     }
 
     /**
-     * @param string $right
+     * @param int $right
      * @param int|null $fileId
      * @return bool
      */
-    private function can(string $right, ?int $fileId): bool
+    private function can(int $right, ?int $fileId): bool
     {
         if ( ! $this->isEnabled()) {
             return true;

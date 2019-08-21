@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php declare(strict_types=1); /** @noinspection PhpUndefinedClassInspection */
 
 namespace KikCMS\Services\Base;
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services\Pages;
 
@@ -162,7 +162,7 @@ class UrlService extends Injectable
 
         $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
 
-        return $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
+        return (string) $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
             return $this->createUrlPathByPageLanguage($pageLanguage);
         });
     }
@@ -324,7 +324,7 @@ class UrlService extends Injectable
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
         }
 
-        return $pageLanguage->name;
+        return (string) $pageLanguage->name;
     }
 
     /**
@@ -370,7 +370,7 @@ class UrlService extends Injectable
                 return '/' . $link;
             }
 
-            return $link;
+            return (string) $link;
         }
 
         $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());

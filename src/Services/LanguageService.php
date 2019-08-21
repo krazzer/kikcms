@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services;
 
@@ -62,7 +62,7 @@ class LanguageService extends Injectable
     {
         foreach ($this->getLanguages() as $language){
             if($language->code == $this->getDefaultLanguageCode()){
-                return $language->name;
+                return (string) $language->name;
             }
         }
 

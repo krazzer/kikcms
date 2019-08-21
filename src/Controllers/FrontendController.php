@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Controllers;
 
@@ -134,8 +134,8 @@ class FrontendController extends BaseController
         }
 
         $page         = $pageLanguage->page;
-        $languageCode = $pageLanguage->language_code;
-        $templateFile = $page->template;
+        $languageCode = $pageLanguage->getLanguageCode();
+        $templateFile = $page->getTemplate();
 
         $this->frontendHelper->initialize($languageCode, $pageLanguage, $pageLanguageAlias);
         $this->translator->setLanguageCode($languageCode);

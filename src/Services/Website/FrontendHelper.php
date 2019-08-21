@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services\Website;
 
@@ -86,7 +86,7 @@ class FrontendHelper extends Injectable
      */
     public function menu($menuId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
     {
-        if( ! $menuId){
+        if ( ! $menuId) {
             return '';
         }
 
@@ -133,7 +133,7 @@ class FrontendHelper extends Injectable
 
         $cacheKey = $this->menuService->getCacheKey($menu);
 
-        return $this->setActive($this->cacheService->cache($cacheKey, $getMenu));
+        return $this->setActive((string) $this->cacheService->cache($cacheKey, $getMenu));
     }
 
     /**

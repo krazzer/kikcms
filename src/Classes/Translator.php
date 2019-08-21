@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Classes;
 
@@ -117,7 +117,7 @@ class Translator extends Injectable
             $translation = str_replace(':' . $key, $replace, $translation);
         }
 
-        return $translation;
+        return (string) $translation;
     }
 
     /**

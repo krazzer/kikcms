@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Models;
 
@@ -63,7 +63,7 @@ class File extends Model
      */
     public function getCreated()
     {
-        return new DateTime($this->created);
+        return new DateTime($this->created ?: 'now');
     }
 
     /**
@@ -100,7 +100,7 @@ class File extends Model
      */
     public function getHash(): string
     {
-        return $this->hash;
+        return (string) $this->hash;
     }
 
     /**
@@ -170,7 +170,7 @@ class File extends Model
      */
     public function getUpdated(): DateTime
     {
-        return new DateTime($this->updated);
+        return new DateTime($this->updated ?: 'now');
     }
 
     /**

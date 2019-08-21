@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Util;
 
@@ -27,7 +27,7 @@ class ByteUtil
             $val *= pow(1024, $index);
         }
 
-        return $val;
+        return (int) $val;
     }
 
     /**
@@ -41,7 +41,7 @@ class ByteUtil
     public static function bytesToString(int $bytes, int $decimals = 0): string
     {
         $size   = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        $factor = (int) floor((strlen($bytes) - 1) / 3);
+        $factor = (int) floor((strlen((string)$bytes) - 1) / 3);
 
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }

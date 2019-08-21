@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Services;
@@ -35,7 +35,7 @@ class PlaceholderService extends Injectable
         $key = $type . CacheConfig::SEPARATOR . implode(CacheConfig::SEPARATOR, $args);
 
         if ($this->cache && $value = $this->cache->get($key)) {
-            return $value;
+            return (string) $value;
         }
 
         return '[[[' . $key . ']]]';

@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpUnusedParameterInspection */
+<?php declare(strict_types=1); /** @noinspection PhpUnusedParameterInspection */
 
 namespace KikCMS\Plugins;
 

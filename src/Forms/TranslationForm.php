@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Forms;
 
@@ -40,7 +40,7 @@ class TranslationForm extends DataForm
 
         foreach ($this->languageService->getLanguages() as $language) {
             $relationKey = 'value' . ucfirst($language->code) . ':value';
-            $valueField  = $this->addTextAreaField($relationKey, $language->name)
+            $valueField  = $this->addTextAreaField($relationKey, (string) $language->name)
                 ->setAttribute('data-language-code', $language->code);
 
             if ($key = $this->getObject()) {

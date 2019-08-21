@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Forms;
 
@@ -44,7 +44,7 @@ class LoginForm extends WebForm
             return $this->response->redirect('cms/login/reset');
         }
 
-        $this->userService->setLoggedIn($user->id);
+        $this->userService->setLoggedIn($user->getId());
 
         if (isset($input[self::FIELD_REMEMBER])) {
             $this->rememberMeService->addToken();

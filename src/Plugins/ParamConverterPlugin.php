@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Plugins;
 
@@ -95,7 +95,7 @@ class ParamConverterPlugin extends Plugin
         $obParamName = $this->getParamName($parameter);
         $idParamName = $this->getIdParamName($parameter);
 
-        $object = $this->modelService->getObject($class->getName(), $paramValueMap[$idParamName]);
+        $object = $this->modelService->getObject($class->getName(), (int) $paramValueMap[$idParamName]);
 
         if ( ! $object && ! $parameter->allowsNull()) {
             throw new ObjectNotFoundException($obParamName);

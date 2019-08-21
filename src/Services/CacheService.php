@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services;
 
@@ -17,9 +17,9 @@ use Phalcon\Di\Injectable;
 class CacheService extends Injectable
 {
     /**
-     * @param string|null $prefix
+     * @param string $prefix
      */
-    public function clear(string $prefix = null)
+    public function clear(string $prefix = '')
     {
         if ( ! $this->cache) {
             return;
@@ -90,10 +90,10 @@ class CacheService extends Injectable
     /**
      * Get a CacheNodeMap, which recursively contains all categories with their values
      *
-     * @param string|null $prefix
+     * @param string $prefix
      * @return CacheNodeMap
      */
-    public function getCacheNodeMap(string $prefix = null): CacheNodeMap
+    public function getCacheNodeMap(string $prefix = ''): CacheNodeMap
     {
         $cacheCategoryMap = new CacheNodeMap();
 
@@ -134,10 +134,10 @@ class CacheService extends Injectable
     }
 
     /**
-     * @param string|null $prefix
+     * @param string $prefix
      * @return array
      */
-    public function getKeys(string $prefix = null): array
+    public function getKeys(string $prefix = ''): array
     {
         $mainPrefix = $this->getMainPrefix();
 

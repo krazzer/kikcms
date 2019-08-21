@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Services\Generator;
@@ -125,7 +125,7 @@ class GeneratorService extends Injectable
 
         $printer = new PsrPrinter();
 
-        return file_put_contents($filePath, "<?php\n\n" . $printer->printNamespace($namespace));
+        return file_put_contents($filePath, "<?php declare(strict_types=1);\n\n" . $printer->printNamespace($namespace));
     }
 
     /**

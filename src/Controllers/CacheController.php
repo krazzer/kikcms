@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Controllers;
@@ -28,7 +28,7 @@ class CacheController extends BaseCmsController
         $this->view->title            = 'Cache beheer';
         $this->view->cacheInfo        = $cacheInfo;
         $this->view->uptime           = $startTime->diff(new DateTime());
-        $this->view->memorySize       = ByteUtil::bytesToString($cacheInfo['mem_size']);
+        $this->view->memorySize       = ByteUtil::bytesToString((int)$cacheInfo['mem_size']);
         $this->view->selectedMenuItem = MenuConfig::MENU_ITEM_SETTINGS;
         $this->view->cacheNodeMap     = $this->cacheService->getCacheNodeMap();
 

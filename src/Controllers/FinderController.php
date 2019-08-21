@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Controllers;
 
@@ -153,7 +153,7 @@ class FinderController extends RenderableController
      */
     public function openFolderAction()
     {
-        $targetFolderId = $this->request->getPost('folderId', 'int');
+        $targetFolderId = (int) $this->request->getPost('folderId', 'int');
 
         if ($targetFolderId && ! $this->filePermissionService->canReadId($targetFolderId)) {
             throw new UnauthorizedException();

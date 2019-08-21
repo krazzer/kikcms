@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Classes\Frontend;
 
@@ -70,7 +70,7 @@ class FullPage extends Identifiable
      */
     public function getKey(): ?string
     {
-        return $this->getPage()->key;
+        return (string) $this->getPage()->key;
     }
 
     /**

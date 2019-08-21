@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Controllers;
 
@@ -62,7 +62,7 @@ class PagesDataTableController extends DataTableController
 
         if ($pageId = $dataTable->getFilters()->getEditId()) {
             $page = Page::getById($pageId);
-            $dataTable->getFilters()->setPageType($page->type);
+            $dataTable->getFilters()->setPageType((string)$page->type);
         }
 
         return $dataTable;

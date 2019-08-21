@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Services;
 
@@ -209,9 +209,9 @@ class UserService extends Injectable
         ];
 
         if ($this->getRole() == Permission::CLIENT) {
-            return $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
+            return (bool) $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
         } else {
-            return $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
+            return (bool) $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
         }
     }
 

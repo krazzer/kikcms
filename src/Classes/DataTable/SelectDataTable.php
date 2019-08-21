@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace KikCMS\Classes\DataTable;
 
@@ -26,7 +26,7 @@ abstract class SelectDataTable extends DataTable
      */
     public function getFormClass(): string
     {
-        return null;
+        return '';
     }
 
     /**

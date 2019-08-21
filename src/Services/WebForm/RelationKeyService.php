@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 
 namespace KikCMS\Services\WebForm;
@@ -25,7 +25,7 @@ class RelationKeyService extends Injectable
      */
     public function isRelationKey(string $key): bool
     {
-        return strstr($key, DataFormConfig::RELATION_KEY_SEPARATOR);
+        return (bool) strstr($key, DataFormConfig::RELATION_KEY_SEPARATOR);
     }
 
     /**
