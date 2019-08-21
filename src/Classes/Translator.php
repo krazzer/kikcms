@@ -90,7 +90,7 @@ class Translator extends Injectable
         if ( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
             // numeric values given indicate it's a translation managed from a DataTable
             if (is_numeric($key)) {
-                return $this->getDbTranslation($key, $langCode);
+                return $this->getDbTranslation((int) $key, $langCode);
             }
 
             $translations = $this->getTranslations($langCode);
@@ -220,7 +220,7 @@ class Translator extends Injectable
     {
         $langCode = $langCode ?: $this->getLanguageCode();
 
-        if( ! array_key_exists($langCode, $this->siteFiles)){
+        if ( ! array_key_exists($langCode, $this->siteFiles)) {
             return [];
         }
 
@@ -270,7 +270,7 @@ class Translator extends Injectable
     {
         $langCode = $langCode ?: $this->getLanguageCode();
 
-        if( ! array_key_exists($langCode, $this->cmsFiles)){
+        if ( ! array_key_exists($langCode, $this->cmsFiles)) {
             return [];
         }
 

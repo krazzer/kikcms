@@ -98,6 +98,8 @@ class FrontendHelper extends Injectable
             }
 
             $menuId = $page->getId();
+        } else {
+            $menuId = (int) $menuId;
         }
 
         // disable cache on dev

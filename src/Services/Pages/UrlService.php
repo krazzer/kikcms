@@ -60,7 +60,7 @@ class UrlService extends Injectable
         }
 
         // no new url was created, so no need to save
-        if($newUrlIndex === 1){
+        if ($newUrlIndex === 1) {
             return;
         }
 
@@ -156,7 +156,7 @@ class UrlService extends Injectable
     public function getUrlByPageLanguage(PageLanguage $pageLanguage): string
     {
         // hasn't been stored yet, so can't be cached
-        if( ! isset($pageLanguage->id)){
+        if ( ! isset($pageLanguage->id)) {
             return $this->createUrlPathByPageLanguage($pageLanguage);
         }
 
@@ -256,7 +256,7 @@ class UrlService extends Injectable
 
         $urls = [];
 
-        foreach ($pageLanguageList as $pageLanguage){
+        foreach ($pageLanguageList as $pageLanguage) {
             $urls[$pageLanguage->page_id] = $this->getUrlByPageLanguage($pageLanguage);
         }
 
@@ -294,7 +294,7 @@ class UrlService extends Injectable
             return false;
         }
 
-        if( ! $existingPageLanguage || ! isset($existingPageLanguage->id)){
+        if ( ! $existingPageLanguage || ! isset($existingPageLanguage->id)) {
             return true;
         }
 
@@ -373,10 +373,10 @@ class UrlService extends Injectable
             return (string) $link;
         }
 
-        $pageLanguageLink = $this->pageLanguageService->getByPageId($link, $pageLanguage->getLanguageCode());
+        $pageLanguageLink = $this->pageLanguageService->getByPageId((int) $link, $pageLanguage->getLanguageCode());
 
         // you cannot link to a link
-        if($pageLanguageLink->page->type == Page::TYPE_LINK){
+        if ($pageLanguageLink->page->type == Page::TYPE_LINK) {
             return '';
         }
 

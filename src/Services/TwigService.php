@@ -137,7 +137,7 @@ class TwigService extends Injectable
         $langCode = $this->translator->getLanguageCode();
 
         if (is_numeric($pageId)) {
-            return $this->urlService->getUrlByPageId($pageId, $langCode);
+            return $this->urlService->getUrlByPageId((int) $pageId, $langCode);
         }
 
         if (strstr($pageId, '/')) {
