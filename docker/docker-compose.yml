@@ -10,6 +10,9 @@ services:
         - ../../../../:/var/www:cached
         - ../../:/var/www/vendor/kiksaus:cached
         - ~/.docker-kikdev/logs/:/var/log/apache2/:cached
+        - /var/www/assets/
+        - /var/www/.git/
+        - /var/www/vendor/kiksaus/kikcms/assets/
     depends_on:
       - mysql
       - mailhog
