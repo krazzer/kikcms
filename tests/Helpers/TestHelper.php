@@ -17,11 +17,13 @@ use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\TableDataService;
+use KikCMS\Services\Finder\FilePermissionService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TwigService;
+use KikCMS\Services\UserService;
 use KikCMS\Services\Util\PaginateListService;
 use KikCMS\Services\Util\QueryService;
 use KikCMS\Services\Util\StringService;
@@ -182,6 +184,8 @@ class TestHelper extends TestCase
         $di->set('view', $this->getView());
         $di->set('logger', $log);
         $di->set('flash', new Session);
+        $di->set('filePermissionService', new FilePermissionService);
+        $di->set('userService', new UserService);
 
         $di->get('session')->set('role', Permission::ADMIN);
 

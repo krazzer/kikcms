@@ -14,5 +14,7 @@ class DataFormCest
         //TestUserPass
         $I->amOnPage('/cms/test/personform');
         $I->seeElement('#webFormId_WebsiteFormsPersonForm');
+
+        $I->cleanDb();
     }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use KikCMS\Models\User;
+use KikCmsCore\Services\DbService;
+
 
 /**
  * Inherited Methods
@@ -20,9 +23,14 @@ class FunctionalTester extends \Codeception\Actor
 {
     use _generated\FunctionalTesterActions;
 
-    public function login(string $username = 'test@test', $password = 'TestUserPass')
+    const TEST_USERNAME = 'test@test.com';
+
+    public function login(string $username = self::TEST_USERNAME, $password = 'TestUserPass')
     {
         $I = $this;
+
+        $this->addUser();
+
         $I->amOnPage('/cms');
         $I->submitForm('#login-form form', [
             'username' => $username,
@@ -31,5 +39,30 @@ class FunctionalTester extends \Codeception\Actor
         ]);
 
         $I->seeElement('#menu');
+    }
+
+    /**
+     * @return DbService
+     */
+    public function getDbService(): DbService
+    {
+        return $this->getApplication()->di->get('dbService');
+    }
+
+    private function addUser()
+    {
+        $this->getDbService()->truncate(User::class);
+
+        $this->getDbService()->insert(User::class, [
+            User::FIELD_PASSWORD => '$2y$10$I1eyBL8OVtc8QP6YaiMC5uAkUyH7LMJmUlrzUTOC5vvX/kXJrk1.y',
+            User::FIELD_EMAIL    => self::TEST_USERNAME,
+            User::FIELD_ROLE     => 'developer',
+            User::FIELD_ID       => 1,
+        ]);
+    }
+
+    public function cleanDb()
+    {
+        $this->getDbService()->truncate(User::class);
     }
 }
