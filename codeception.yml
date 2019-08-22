@@ -8,15 +8,13 @@ actor_suffix: Tester
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
-settings:
-  bootstrap: _bootstrap.php
 coverage:
   include:
     - src/*
   remote: false
   show_only_summary: true
   enabled: true
-  work_dir: /opt/project
+  work_dir: /kikcms
   remote_context_options:
     http:
       timeout: 60

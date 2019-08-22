@@ -20,7 +20,8 @@
     }
   },
   "require-dev": {
-    "codeception/codeception": "3.0.x-dev"
+    "codeception/codeception": "3.0.x-dev",
+    "codeception/c3": "2.*"
   },
   "minimum-stability": "dev"
 }

@@ -1,5 +1,6 @@
 <?php
+include '/kikcms/c3.php';
 include '../autoloader.php';
 
-$sitePath = dirname(__DIR__) . '/';
-include('/kikcms/boot/init.php');
+$sitePath = '/kikcms/tests/TestSitePath/';
+include '/kikcms/boot/init.php';
