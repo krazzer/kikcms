@@ -25,8 +25,9 @@ class KikCMSConfig
     const NAMESPACE_PATH_CONTROLLERS = '\\Website\\Controllers\\';
     const NAMESPACE_PATH_CLASSES     = '\\Website\\Classes\\';
 
-    const NAMESPACE_PATH_CMS_SERVICES = '\\KikCMS\\Services\\';
-    const NAMESPACE_PATH_CMS_TASKS    = '\\KikCMS\\Tasks\\';
+    const NAMESPACE_PATH_CMS_CONTROLLERS = '\\KikCMS\\Controllers\\';
+    const NAMESPACE_PATH_CMS_SERVICES    = '\\KikCMS\\Services\\';
+    const NAMESPACE_PATH_CMS_TASKS       = '\\KikCMS\\Tasks\\';
 
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,

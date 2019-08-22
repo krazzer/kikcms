@@ -7,6 +7,7 @@ use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
@@ -24,6 +25,11 @@ use Phalcon\Mvc\User\Plugin;
  */
 class BackendNotFoundPlugin extends Plugin
 {
+    const DISPATCH_ERRORS = [
+        Dispatcher::EXCEPTION_HANDLER_NOT_FOUND,
+        Dispatcher::EXCEPTION_ACTION_NOT_FOUND
+    ];
+
     /**
      * This action is executed before execute any action in the application
      *
@@ -35,69 +41,45 @@ class BackendNotFoundPlugin extends Plugin
      */
     public function beforeException(Event $event, MvcDispatcher $dispatcher, Exception $exception)
     {
-        $controller = $dispatcher->getControllerName();
-        $isLoggedIn = $this->userService->isLoggedIn();
+        $isDispatchError = $exception instanceof DispatcherException && in_array($exception->getCode(), self::DISPATCH_ERRORS);
 
-        if ($controller == 'cms' && ! $isLoggedIn) {
-            $this->response->redirect('cms/login');
-            return false;
-        }
-
-        if ($exception instanceof SessionExpiredException) {
-            $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
-            return false;
-        }
-
-        if ($exception instanceof DispatcherException) {
-            switch ($exception->getCode()) {
-                case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-                case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-                    $dispatcher->forward([
-                        'namespace'  => "KikCMS\\Controllers",
-                        'controller' => 'errors',
-                        'action'     => 'show404'
-                    ]);
-
-                    return false;
-                break;
-            }
-        }
-
-        if ($exception instanceof ObjectNotFoundException) {
-            $dispatcher->forward([
-                'namespace'  => "KikCMS\\Controllers",
-                'controller' => 'errors',
-                'action'     => 'show404object',
-                'params'     => [$exception->getObject()]
-            ]);
-
-            return false;
-        }
-
-        if ($exception instanceof NotFoundException) {
-            $dispatcher->forward([
-                'namespace'  => "KikCMS\\Controllers",
-                'controller' => 'errors',
-                'action'     => 'show404'
-            ]);
-
-            return false;
-        }
-
-        if ($exception instanceof UnauthorizedException) {
-            $this->response->setStatusCode(401);
-            $dispatcher->forward([
-                'namespace'  => "KikCMS\\Controllers",
-                'controller' => 'errors',
-                'action'     => 'show401'
-            ]);
-
-            return false;
+        switch (true) {
+            case $exception instanceof SessionExpiredException:
+                $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
+            break;
+            case $exception instanceof NotFoundException || $isDispatchError:
+                $this->forwardErrorView($dispatcher, 'show404');
+            break;
+            case $exception instanceof ObjectNotFoundException:
+                $this->forwardErrorView($dispatcher, 'show404object', [$exception->getObject()]);
+            break;
+            case $exception instanceof UnauthorizedException:
+                $this->response->setStatusCode(401);
+                $this->forwardErrorView($dispatcher, 'show401');
+            break;
+            default:
+                return true;
+            break;
         }
 
         // prevent unused parameter warning
         $event->setType($event->getType());
 
-        return true;
+        return false;
+    }
+
+    /**
+     * @param MvcDispatcher $dispatcher
+     * @param string $view
+     * @param array $params
+     */
+    private function forwardErrorView(MvcDispatcher $dispatcher, string $view, array $params = [])
+    {
+        $dispatcher->forward([
+            'namespace'  => KikCMSConfig::NAMESPACE_PATH_CMS_CONTROLLERS,
+            'controller' => 'errors',
+            'action'     => $view,
+            'params'     => $params,
+        ]);
     }
 }
