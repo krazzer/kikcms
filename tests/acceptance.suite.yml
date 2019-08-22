@@ -10,4 +10,8 @@ modules:
         - PhpBrowser:
             url: https://kikcmstest.dev
         - \Helper\Acceptance
-    step_decorators: ~        
+        - Db:
+           dsn: 'mysql:host=mysql;dbname=test'
+           user: 'root'
+           password: 'adminkik12'
+    step_decorators: ~
