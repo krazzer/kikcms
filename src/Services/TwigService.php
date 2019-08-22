@@ -63,7 +63,7 @@ class TwigService extends Injectable
             return '';
         }
 
-        return $configGroup->get($string[1]);
+        return (string) $configGroup->get($string[1]);
     }
 
     /**
