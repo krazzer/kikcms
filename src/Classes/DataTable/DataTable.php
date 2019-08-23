@@ -672,7 +672,7 @@ abstract class DataTable extends Renderable
      */
     public function renderWindow(string $renderedForm)
     {
-        $template = $this->getFilters()->getEditId() ? 'add' : 'edit';
+        $template = $this->getFilters()->getEditId() ? 'edit' : 'add';
 
         return $this->renderView($template, [
             'tabs'            => $this->form->getTabs(),

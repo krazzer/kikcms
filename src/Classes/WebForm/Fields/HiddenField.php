@@ -10,9 +10,9 @@ class HiddenField extends Field
 {
     /**
      * @param string $key
-     * @param string|null $defaultValue
+     * @param mixed $defaultValue
      */
-    public function __construct(string $key, string $defaultValue = null)
+    public function __construct(string $key, $defaultValue = null)
     {
         $element = (new Hidden($key))
             ->setDefault($defaultValue)
