@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace KikCMS\Util;
+namespace KikCMS\Services\Util;
 
 
-class ByteUtil
+class ByteService
 {
     /**
      * Converts php's human readable byte format to actual bytes, e.g. 32K becomes 32768 (32 * 1024)
@@ -11,7 +11,7 @@ class ByteUtil
      * @param string $val
      * @return int
      */
-    public static function stringToBytes(string $val): int
+    public function stringToBytes(string $val): int
     {
         $sizes = ['b', 'k', 'm', 'g', 't', 'p', 'e', 'z', 'y'];
         $val   = trim($val);
@@ -38,7 +38,7 @@ class ByteUtil
      *
      * @return string
      */
-    public static function bytesToString(int $bytes, int $decimals = 0): string
+    public function bytesToString(int $bytes, int $decimals = 0): string
     {
         $size   = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $factor = (int) floor((strlen((string)$bytes) - 1) / 3);

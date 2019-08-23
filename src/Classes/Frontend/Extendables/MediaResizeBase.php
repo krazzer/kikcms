@@ -4,11 +4,13 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
-use KikCMS\Util\StringUtil;
+use KikCMS\Services\Util\StringService;
 use Phalcon\Image\Adapter;
 
 /**
  * Contains methods to resize thumbnails in predefined formats
+ *
+ * @property StringService $stringService
  */
 class MediaResizeBase extends WebsiteExtendable
 {
@@ -119,6 +121,6 @@ class MediaResizeBase extends WebsiteExtendable
      */
     private function getMethod($type): string
     {
-        return 'resize' . StringUtil::dashesToCamelCase($type, true);
+        return 'resize' . $this->stringService->dashesToCamelCase($type, true);
     }
 }

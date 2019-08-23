@@ -8,7 +8,7 @@ use KikCMS\Models\Page;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
-use KikCMS\Util\AdjacencyToNestedSet;
+use KikCMS\Classes\Page\AdjacencyToNestedSet;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -174,7 +174,8 @@ class PageRearrangeService extends Injectable
         ");
 
         foreach ($relations as $parentId => $childIds) {
-            $relations[$parentId] = $childIds ? explode(',', $childIds) : [];
+            $childIds = $childIds ? explode(',', $childIds) : [];
+            $relations[$parentId] = array_map(function ($id){ return (int) $id; }, $childIds);
         }
 
         return $relations;

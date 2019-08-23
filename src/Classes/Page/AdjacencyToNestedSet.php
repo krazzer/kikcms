@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace KikCMS\Util;
+namespace KikCMS\Classes\Page;
 
 /**
  * Convert an array containing parent child to an array with nested set

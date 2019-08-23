@@ -5,7 +5,7 @@ namespace KikCMS\Controllers;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Translator;
 use KikCMS\Services\LanguageService;
-use KikCMS\Util\ByteUtil;
+use KikCMS\Services\Util\ByteService;
 use Phalcon\Config;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Url;
@@ -13,6 +13,7 @@ use Phalcon\Validation;
 use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 /**
+ * @property ByteService $byteService
  * @property Config $config
  * @property LanguageService $languageService
  * @property Translator $translator
@@ -32,10 +33,10 @@ class BaseController extends Controller
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
         $maxFileUploads    = ini_get('max_file_uploads') ?: 20;
-        $maxFileSizeServer = ByteUtil::stringToBytes(ini_get('upload_max_filesize'));
-        $maxFileSizeConfig = ByteUtil::stringToBytes($this->config->media->maxFileSize);
+        $maxFileSizeServer = $this->byteService->stringToBytes(ini_get('upload_max_filesize'));
+        $maxFileSizeConfig = $this->byteService->stringToBytes($this->config->media->maxFileSize);
         $maxFileSize       = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
-        $maxFileSizeString = ByteUtil::bytesToString($maxFileSize);
+        $maxFileSizeString = $this->byteService->bytesToString($maxFileSize);
 
         $jsTranslations = [
             'system.langCode',

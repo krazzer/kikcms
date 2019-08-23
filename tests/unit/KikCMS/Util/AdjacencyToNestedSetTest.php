@@ -3,6 +3,7 @@
 namespace KikCMS\Util;
 
 
+use KikCMS\Classes\Page\AdjacencyToNestedSet;
 use PHPUnit\Framework\TestCase;
 
 class AdjacencyToNestedSetTest extends TestCase

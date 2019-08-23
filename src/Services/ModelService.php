@@ -6,7 +6,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Models\TranslationKey;
-use KikCMS\Util\StringUtil;
+use KikCMS\Services\Util\StringService;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
@@ -15,6 +15,7 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * @property DbService $dbService
+ * @property StringService $stringService
  */
 class ModelService extends Injectable
 {
@@ -25,7 +26,7 @@ class ModelService extends Injectable
      */
     public function addTranslationRelation(Model $model, string $field)
     {
-        $alias = StringUtil::underscoresToCamelCase($field) . 'Key';
+        $alias = $this->stringService->underscoresToCamelCase($field) . 'Key';
         $model->belongsTo($field, TranslationKey::class, TranslationKey::FIELD_ID, ['alias' => $alias]);
     }
 

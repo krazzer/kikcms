@@ -7,13 +7,14 @@ namespace KikCMS\Controllers;
 use DateTime;
 use KikCMS\Config\MenuConfig;
 use KikCMS\Services\CacheService;
-use KikCMS\Util\ByteUtil;
+use KikCMS\Services\Util\ByteService;
 use Phalcon\Cache\Backend;
 use Phalcon\Http\ResponseInterface;
 
 /**
  * @property CacheService $cacheService
  * @property Backend $cache
+ * @property ByteService $byteService
  */
 class CacheController extends BaseCmsController
 {
@@ -28,9 +29,9 @@ class CacheController extends BaseCmsController
         $this->view->title            = 'Cache beheer';
         $this->view->cacheInfo        = $cacheInfo;
         $this->view->uptime           = $startTime->diff(new DateTime());
-        $this->view->memorySize       = ByteUtil::bytesToString((int)$cacheInfo['mem_size']);
-        $this->view->selectedMenuItem = MenuConfig::MENU_ITEM_SETTINGS;
+        $this->view->memorySize       = $this->byteService->bytesToString((int) $cacheInfo['mem_size']);
         $this->view->cacheNodeMap     = $this->cacheService->getCacheNodeMap();
+        $this->view->selectedMenuItem = MenuConfig::MENU_ITEM_SETTINGS;
 
         $this->view->pick('cms/cacheManager');
     }
