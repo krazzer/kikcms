@@ -41,7 +41,7 @@ class CacheController extends BaseCmsController
      */
     public function emptyByKeyAction(): ResponseInterface
     {
-        $key = $this->request->get('key');
+        $key = (string) $this->request->get('key');
 
         $this->cacheService->clear($key);
 
