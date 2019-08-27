@@ -125,7 +125,7 @@ class GeneratorService extends Injectable
 
         $printer = new PsrPrinter();
 
-        return file_put_contents($filePath, "<?php declare(strict_types=1);\n\n" . $printer->printNamespace($namespace));
+        return (bool) file_put_contents($filePath, "<?php declare(strict_types=1);\n\n" . $printer->printNamespace($namespace));
     }
 
     /**
