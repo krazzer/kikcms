@@ -199,7 +199,7 @@ abstract class DataTable extends Renderable
         }
 
         $langCode = $this->getFilters()->getLanguageCode();
-        $object   = $this->modelService->getObject($this->getModel(), $id);
+        $object   = $this->modelService->getObject($this->getModel(), (int) $id);
 
         if ($this->relationKeyService->isRelationKey($column)) {
             $this->relationKeyService->set($object, $column, $checked, $langCode);
