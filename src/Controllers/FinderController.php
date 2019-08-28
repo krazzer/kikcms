@@ -214,7 +214,7 @@ class FinderController extends RenderableController
     {
         $finder          = $this->getRenderable();
         $uploadedFiles   = $this->request->getUploadedFiles();
-        $overwriteFileId = $this->request->getPost('overwriteFileId', 'int', null);
+        $overwriteFileId = (int) $this->request->getPost('overwriteFileId', 'int', null);
 
         $folderId = $finder->getFilters()->getFolderId();
 
