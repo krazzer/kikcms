@@ -23,12 +23,14 @@ class AcceptanceTester extends \Codeception\Actor
     use _generated\AcceptanceTesterActions;
 
     const TEST_USERNAME = 'test@test.com';
+    const TEST_PASS     = 'TestUserPass';
 
     /**
      * @param string $username
      * @param string $password
+     * @param null $remember
      */
-    public function login(string $username = self::TEST_USERNAME, $password = 'TestUserPass')
+    public function login(string $username = self::TEST_USERNAME, $password = self::TEST_PASS, $remember = null)
     {
         $I = $this;
 
@@ -38,14 +40,22 @@ class AcceptanceTester extends \Codeception\Actor
         $I->submitForm('#login-form form', [
             'username' => $username,
             'password' => $password,
-            'remember' => null,
+            'remember' => $remember,
         ]);
+    }
+
+    /**
+     * Login with remeberme checked
+     */
+    public function loginAndRemember()
+    {
+        $this->login(self::TEST_USERNAME, self::TEST_PASS, 1);
     }
 
     /**
      * Add a user to the DB
      */
-    private function addUser()
+    public function addUser()
     {
         $this->haveInDatabase(User::TABLE, [
             User::FIELD_PASSWORD => '$2y$10$I1eyBL8OVtc8QP6YaiMC5uAkUyH7LMJmUlrzUTOC5vvX/kXJrk1.y',
