@@ -87,8 +87,13 @@ class MailService extends Injectable
             ->setFrom($from)
             ->setTo($to)
             ->setSubject($subject)
-            ->setBody($htmlBody, 'text/html')
-            ->addPart(strip_tags($body), 'text/plain');
+            ->setBody($htmlBody, 'text/html');
+
+        if($plainTextBody = $parameters['plainTextBody'] ?? null){
+            $message->addPart($plainTextBody, 'text/plain');
+        } else {
+            $message->addPart(strip_tags($body), 'text/plain');
+        }
 
         foreach ($attachments as $attachment) {
             $message->attach(Swift_Attachment::fromPath($attachment));

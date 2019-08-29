@@ -204,8 +204,9 @@ class UserService extends Injectable
 
         $resetUrl = $this->getResetUrl($user);
 
-        $parameters['buttons'] = [
-            'reset' => ['url' => $resetUrl, 'label' => $buttonLabel]
+        $parameters = [
+            'buttons'       => ['reset' => ['url' => $resetUrl, 'label' => $buttonLabel]],
+            'plainTextBody' => $body . "\n\n" . $resetUrl,
         ];
 
         if ($this->getRole() == Permission::CLIENT) {
