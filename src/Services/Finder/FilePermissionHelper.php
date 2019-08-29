@@ -48,7 +48,7 @@ class FilePermissionHelper extends Injectable
                     continue;
                 }
 
-                $permission = $this->createPermissionByData($fileId, $key, $values);
+                $permission = $this->createPermissionByData((int) $fileId, $key, $values);
                 $list->add($permission);
             }
         }

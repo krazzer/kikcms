@@ -71,13 +71,13 @@ class PagesDataTableService extends Injectable
     public function getValue($value, array $rowData): string
     {
         if ($rowData[Page::FIELD_TYPE] == Page::TYPE_MENU) {
-            return $rowData['default_language_name'];
+            return (string) $rowData['default_language_name'];
         }
 
         if ( ! $value && $rowData['default_language_name']) {
             return '<span class="defaultLanguagePlaceHolder">' . $rowData['default_language_name'] . '</span>';
         }
 
-        return $value;
+        return (string) $value;
     }
 }
