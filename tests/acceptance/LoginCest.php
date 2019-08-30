@@ -1,9 +1,8 @@
 <?php
 
-use Codeception\PHPUnit\TestCase;
 use GuzzleHttp\Client;
 
-class LoginCest extends TestCase
+class LoginCest
 {
     public function _before(AcceptanceTester $I)
     {
@@ -17,12 +16,14 @@ class LoginCest extends TestCase
 
     public function loginWorks(AcceptanceTester $I)
     {
+        $I->addUser();
         $I->login();
         $I->seeElement('#menu');
     }
 
     public function loginWrongPassWorks(AcceptanceTester $I)
     {
+        $I->addUser();
         $I->login(AcceptanceTester::TEST_USERNAME, 'wrongPass');
         $I->seeElement('#login');
         $I->seeElement('.alert');
@@ -44,16 +45,38 @@ class LoginCest extends TestCase
             'email' => $I::TEST_USERNAME,
         ]);
 
-        $mailCatcher = new Client(['base_uri' => 'http://mail:8025']);
+        $resetPassUrl = $this->getResetPasswordUrlFromEmail();
 
-        $message = json_decode($mailCatcher->get('api/v2/search?query=Password&kind=containing&limit=1')->getBody());
+        $I->amOnPage($resetPassUrl);
 
-        $this->assertContains('Password reset / activation', $message->items[0]->Content->Body);
+        $I->seeElement('#webFormId_KikCMSFormsPasswordResetForm');
+
+        $I->submitForm('#login-form form', [
+            'password'        => 'myNewPassword1',
+            'password_repeat' => 'myNewPassword1',
+        ]);
+
+        $I->login($I::TEST_USERNAME, 'myNewPassword1');
+
+        $I->seeElement('#menu');
     }
 
     public function rememberMeWorks(AcceptanceTester $I)
     {
         $I->amOnPage('/cms/login');
         $I->loginAndRemember();
+    }
+
+    /**
+     * @return string
+     */
+    private function getResetPasswordUrlFromEmail(): string
+    {
+        $mailCatcher = new Client(['base_uri' => 'http://mail:8025']);
+
+        $message  = json_decode($mailCatcher->get('api/v2/search?query=Password&kind=containing&limit=1')->getBody());
+        $mailBody = quoted_printable_decode($message->items[0]->MIME->Parts[1]->Body);
+
+        return explode("\r\n\r\n", $mailBody)[1];
     }
 }
