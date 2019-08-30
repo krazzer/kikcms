@@ -19,6 +19,9 @@ class LoginCest
         $I->addUser();
         $I->login();
         $I->seeElement('#menu');
+
+        $I->amOnPage('/cms/logout');
+        $I->dontSeeElement('#menu');
     }
 
     public function loginWrongPassWorks(AcceptanceTester $I)
