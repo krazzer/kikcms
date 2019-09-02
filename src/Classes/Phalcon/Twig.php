@@ -115,6 +115,10 @@ class Twig extends Engine implements EngineInterface
 
         // add date filter
         $this->twig->addFilter(new \Twig_SimpleFilter('date', function ($dateTime, string $format = null) use ($di) {
+            if( ! $dateTime){
+                return '';
+            }
+
             if ( ! $dateTime instanceOf DateTime) {
                 $dateTime = new DateTime($dateTime);
             }
