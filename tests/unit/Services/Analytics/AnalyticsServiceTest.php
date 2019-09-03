@@ -5,6 +5,7 @@ namespace Services\Analytics;
 
 use Codeception\Test\Unit;
 use Helpers\TestHelper;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use KikCMS\Services\Analytics\AnalyticsService;
@@ -126,6 +127,47 @@ class AnalyticsServiceTest extends Unit
         $result = $analyticsService->getVisitorData($start, $end);
 
         $this->assertCount(25, $result['location']);
+
+        $analyticsService->dbService->truncate(GaVisitData::class);
+        $analyticsService->dbService->truncate(GaDayVisit::class);
+    }
+
+    public function testRequiresUpdate()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $analyticsService = new AnalyticsService();
+        $analyticsService->setDI($di);
+
+        $analyticsService->dbService->truncate(GaVisitData::class);
+        $analyticsService->dbService->truncate(GaDayVisit::class);
+
+        // cache says we don't need to update
+        $analyticsService->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false);
+        $this->assertFalse($analyticsService->requiresUpdate());
+
+        // empty db, we need update
+        $analyticsService->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, true);
+        $this->assertTrue($analyticsService->requiresUpdate());
+
+
+        // today exists, but types are empty, we need update
+        $analyticsService->dbService->insert(GaDayVisit::class, ['date' => date('Y-m-d'), 'visits' => 1, 'unique_visits' => 1]);
+        $this->assertTrue($analyticsService->requiresUpdate());
+
+        // has visit data, but not today
+        $analyticsService->dbService->insert(GaVisitData::class, [
+            "date" => '2019-01-01', "type" => "os", "value" => "x", "visits" => 1
+        ]);
+
+        $this->assertTrue($analyticsService->requiresUpdate());
+
+        // has visit data, also of today, so we dont need an update
+        $analyticsService->dbService->insert(GaVisitData::class, [
+            "date" => date('Y-m-d'), "type" => "os", "value" => "x", "visits" => 1
+        ]);
+
+        $this->assertFalse($analyticsService->requiresUpdate());
 
         $analyticsService->dbService->truncate(GaVisitData::class);
         $analyticsService->dbService->truncate(GaDayVisit::class);

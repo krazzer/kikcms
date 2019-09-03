@@ -214,7 +214,7 @@ class AnalyticsService extends Injectable
         $maxDate = $this->getMaxDate();
 
         // if there are 0 zero stats, or today isn't present yet
-        if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+        if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime)->format('dmY')) {
             return true;
         }
 
@@ -225,7 +225,7 @@ class AnalyticsService extends Injectable
 
         // if there are no visitor data stats for today
         foreach ($typeMaxDates as $type => $maxDate) {
-            if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime())->format('dmY')) {
+            if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime)->format('dmY')) {
                 return true;
             }
         }
