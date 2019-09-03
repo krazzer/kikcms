@@ -94,14 +94,7 @@ abstract class WebForm extends Renderable
     {
         parent::__construct($filters);
 
-        $this->form = new Form();
-        $this->form->setValidation($this->validation);
-
         $this->fieldMap = new FieldMap();
-
-        if ( ! $this->sendButtonLabel) {
-            $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
-        }
     }
 
     /**
@@ -130,7 +123,7 @@ abstract class WebForm extends Renderable
         $this->fieldMap->add($field, $field->getKey());
 
         if ($field->getElement()) {
-            $this->form->add($field->getElement());
+            $this->getForm()->add($field->getElement());
         }
 
         if ($tab) {
@@ -173,11 +166,11 @@ abstract class WebForm extends Renderable
      */
     public function getElement(string $fieldKey): ?ElementInterface
     {
-        if ( ! $this->form->has($fieldKey)) {
+        if ( ! $this->getForm()->has($fieldKey)) {
             return null;
         }
 
-        return $this->form->get($fieldKey);
+        return $this->getForm()->get($fieldKey);
     }
 
     /**
@@ -283,6 +276,10 @@ abstract class WebForm extends Renderable
      */
     public function getSendButtonLabel(): string
     {
+        if ( ! $this->sendButtonLabel) {
+            $this->sendButtonLabel = $this->translator->tl('webform.defaultSendLabel');
+        }
+
         return $this->sendButtonLabel;
     }
 
@@ -447,7 +444,7 @@ abstract class WebForm extends Renderable
             'requestUri'             => $this->request->getServer('REQUEST_URI'),
             'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
             'security'               => $this->security,
-            'form'                   => $this->form,
+            'form'                   => $this->getForm(),
             'fields'                 => $this->fieldMap,
             'tabs'                   => $this->tabs,
             'filters'                => $this->filters,
@@ -498,13 +495,13 @@ abstract class WebForm extends Renderable
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
 
-        if ($this->form->isValid($this->getInput()) && $errorContainer->isEmpty()) {
+        if ($this->getForm()->isValid($this->getInput()) && $errorContainer->isEmpty()) {
             return $errorContainer;
         }
 
-        foreach ($this->form->getElements() as $formElement) {
+        foreach ($this->getForm()->getElements() as $formElement) {
             $elementName     = $formElement->getName();
-            $elementMessages = $this->form->getMessagesFor($elementName);
+            $elementMessages = $this->getForm()->getMessagesFor($elementName);
 
             if ( ! $elementMessages) {
                 continue;
@@ -637,5 +634,18 @@ abstract class WebForm extends Renderable
                 $field->setDefault($instance);
             }
         }
+    }
+
+    /**
+     * @return Form
+     */
+    private function getForm(): Form
+    {
+        if( ! $this->form){
+            $this->form = new Form();
+            $this->form->setValidation($this->validation);
+        }
+
+        return $this->form;
     }
 }
