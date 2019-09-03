@@ -7,6 +7,7 @@ use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\StatusCodes;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Website\FrontendHelper;
@@ -32,6 +33,12 @@ use Phalcon\Http\ResponseInterface;
  */
 class FrontendController extends BaseController
 {
+    public function resourcesExceededAction(): ResponseInterface
+    {
+        $this->response->setStatusCode(StatusCodes::SERVICE_UNAVAILABLE);
+        return $this->response->setContent(StatusCodes::SERVICE_UNAVAILABLE_MESSAGE);
+    }
+
     /**
      * @return ResponseInterface
      */

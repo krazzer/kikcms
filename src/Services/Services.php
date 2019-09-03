@@ -2,6 +2,7 @@
 
 namespace KikCMS\Services;
 
+use Exception;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Finder\FileService;
@@ -22,6 +23,8 @@ use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Services\Website\WebsiteService;
+use KikCmsCore\Config\DbConfig;
+use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
 use Monolog\Handler\DeduplicationHandler;
@@ -183,7 +186,16 @@ class Services extends BaseServices
         $dbClass = Pdo::class . '\\' . $config['adapter'];
         unset($config['adapter']);
 
-        $databaseAdapter = new $dbClass($config);
+        try{
+            $databaseAdapter = new $dbClass($config);
+        } catch(Exception $exception){
+            if($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS){
+                $this->get('logger')->log(Logger::WARNING, $exception);
+                throw new ResourcesExceededException();
+            } else {
+                throw $exception;
+            }
+        }
 
         return $databaseAdapter;
     }

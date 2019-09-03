@@ -5,6 +5,7 @@ namespace KikCMS\Plugins;
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCmsCore\Exceptions\ResourcesExceededException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\User\Plugin;
@@ -27,6 +28,16 @@ class FrontendNotFoundPlugin extends Plugin
      */
     public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
     {
+        if ($exception instanceof ResourcesExceededException) {
+            $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
+                'controller' => 'frontend',
+                'action'     => 'resourcesExceeded',
+            ]);
+
+            return false;
+        }
+
         if ($exception instanceof NotFoundException) {
             $dispatcher->forward([
                 'namespace'  => "KikCMS\\Controllers",

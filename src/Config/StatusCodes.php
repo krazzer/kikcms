@@ -14,4 +14,8 @@ class StatusCodes
     /** Session expired */
     const SESSION_EXPIRED         = 440;
     const SESSION_EXPIRED_MESSAGE = 'Session expired';
+
+    /** Service Unavailable */
+    const SERVICE_UNAVAILABLE         = 503;
+    const SERVICE_UNAVAILABLE_MESSAGE = 'Your request could not be completed due to insufficient resources. Please try again later.';
 }
