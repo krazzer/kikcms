@@ -25,12 +25,11 @@ class WebFormController extends RenderableController
     }
 
     /**
+     * @param File $file
      * @return string
      */
-    public function getFilePreviewAction()
+    public function getFilePreviewAction(File $file)
     {
-        $fileId = $this->request->getPost('fileId');
-        $file   = File::getById($fileId);
         $finder = new Finder();
 
         return json_encode([

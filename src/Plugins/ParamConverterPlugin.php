@@ -95,10 +95,12 @@ class ParamConverterPlugin extends Plugin
         $obParamName = $this->getParamName($parameter);
         $idParamName = $this->getIdParamName($parameter);
 
-        $object = $this->modelService->getObject($class->getName(), (int) $paramValueMap[$idParamName]);
+        $objectId = (int) $paramValueMap[$idParamName];
+
+        $object = $this->modelService->getObject($class->getName(), $objectId);
 
         if ( ! $object && ! $parameter->allowsNull()) {
-            throw new ObjectNotFoundException($obParamName);
+            throw new ObjectNotFoundException($obParamName . $objectId);
         }
 
         $paramValueMap = array_change_key($paramValueMap, $idParamName, $obParamName);

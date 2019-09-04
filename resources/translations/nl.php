@@ -169,7 +169,7 @@ return [
 
         '404object' => [
             'title'       => 'Object niet gevonden',
-            'description' => "Het opgevraagde object (:object) is niet gevonden.",
+            'description' => "Het opgevraagde object (:object) kon niet worden gevonden.",
         ],
 
         '440' => [

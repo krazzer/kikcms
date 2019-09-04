@@ -93,6 +93,8 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
+        $backend->add('/webform/filepreview/{fileId:[0-9]+}', "Webform::getFilePreview")->setName('webformFilePreview');
+
         $backend->add('/file/url/{fileId:[0-9]+}', "Finder::url")->setName('fileUrl');
         $backend->add("/file/{fileId:[0-9]+}", "Finder::file")->setName('file');
         $backend->add("/file/key/{key:[0-9a-z\-]+}", "Finder::key");

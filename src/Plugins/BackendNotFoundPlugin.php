@@ -47,11 +47,11 @@ class BackendNotFoundPlugin extends Plugin
             case $exception instanceof SessionExpiredException:
                 $this->response->setStatusCode(StatusCodes::SESSION_EXPIRED, StatusCodes::SESSION_EXPIRED_MESSAGE);
             break;
-            case $exception instanceof NotFoundException || $isDispatchError:
-                $this->forwardErrorView($dispatcher, 'show404');
-            break;
             case $exception instanceof ObjectNotFoundException:
                 $this->forwardErrorView($dispatcher, 'show404object', [$exception->getObject()]);
+            break;
+            case $exception instanceof NotFoundException || $isDispatchError:
+                $this->forwardErrorView($dispatcher, 'show404');
             break;
             case $exception instanceof UnauthorizedException:
                 $this->response->setStatusCode(401);

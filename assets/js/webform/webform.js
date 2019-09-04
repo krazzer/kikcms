@@ -99,7 +99,7 @@ var WebForm = Class.extend({
     actionPickFile: function ($field, fileId, onComplete) {
         var self = this;
 
-        KikCMS.action('/cms/webform/getFilePreview', {fileId: fileId}, function (result) {
+        KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {
             self.actionPreview($field, fileId, result, onComplete);
         });
     },
