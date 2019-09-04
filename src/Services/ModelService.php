@@ -8,6 +8,7 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Services\Util\StringService;
 use KikCmsCore\Classes\Model;
+use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -63,6 +64,23 @@ class ModelService extends Injectable
         $model = $this->getModelByClassName($className);
 
         return $model::getById($id);
+    }
+
+    /**
+     * @param Model $object
+     * @return null|string
+     */
+    public function getObjectName(Model $object): ?string
+    {
+        if (method_exists($object, 'getName')) {
+            return $object->getName();
+        }
+
+        if (property_exists($object, DbConfig::NAME_FIELD)) {
+            return (string) $object->name;
+        }
+
+        return null;
     }
 
     /**

@@ -6,6 +6,7 @@ namespace KikCMS\Classes\DataTable;
 use Exception;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Services\TwigService;
+use KikCMS\Services\WebForm\DataFormService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\DataTable\Filter\Filter;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
@@ -29,6 +30,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property AccessControl $acl
  * @property DbService $dbService
  * @property DataTableFilterService $dataTableFilterService
+ * @property DataFormService $dataFormService
  * @property KeyValue $keyValue
  * @property LanguageService $languageService
  * @property QueryService $queryService
@@ -672,7 +674,8 @@ abstract class DataTable extends Renderable
      */
     public function renderWindow(string $renderedForm)
     {
-        $template = $this->getFilters()->getEditId() ? 'edit' : 'add';
+        $template   = $this->getFilters()->getEditId() ? 'edit' : 'add';
+        $objectName = $this->dataFormService->getObjectName($this->form);
 
         return $this->renderView($template, [
             'tabs'            => $this->form->getTabs(),
@@ -684,6 +687,7 @@ abstract class DataTable extends Renderable
             'canEdit'         => $this->canEdit($this->form->getFilters()->getEditId()),
             'languages'       => $this->languageService->getLanguages(),
             'form'            => $renderedForm,
+            'objectName'      => $objectName,
         ]);
     }
 
