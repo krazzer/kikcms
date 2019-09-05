@@ -46,6 +46,17 @@ class FilePermissionService extends Injectable
         $fileId = $file->getId();
         $userId = $this->userService->getUserId();
 
+        return $this->createAll($roles, $fileId, $userId);
+    }
+
+    /**
+     * @param array $roles
+     * @param int $fileId
+     * @param int $userId
+     * @return bool
+     */
+    public function createAll(array $roles, int $fileId, int $userId): bool
+    {
         $this->db->begin();
 
         try {
