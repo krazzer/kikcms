@@ -86,7 +86,7 @@ class AnalyticsGoogleService extends Injectable
             }
         }
 
-        return $this->requestToArray($request);
+        return $this->reportRequestToArray($request);
     }
 
     /**
@@ -95,7 +95,7 @@ class AnalyticsGoogleService extends Injectable
      * @param \Google_Service_AnalyticsReporting_ReportRequest $request
      * @return array
      */
-    private function requestToArray(\Google_Service_AnalyticsReporting_ReportRequest $request): array
+    private function reportRequestToArray(\Google_Service_AnalyticsReporting_ReportRequest $request): array
     {
         $results = [];
 
@@ -114,32 +114,41 @@ class AnalyticsGoogleService extends Injectable
             $rows             = $report->getData()->getRows();
 
             for ($rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
-                $resultRow = [];
-
-                /** @var \Google_Service_AnalyticsReporting_ReportRow $row */
-                $row        = $rows[$rowIndex];
-                $dimensions = $row->getDimensions();
-                $metrics    = $row->getMetrics();
-
-                for ($i = 0; $i < count($dimensionHeaders) && $i < count($dimensions); $i++) {
-                    $resultRow[$dimensionHeaders[$i]] = $dimensions[$i];
-                }
-
-                for ($j = 0; $j < count($metrics); $j++) {
-                    /** @var \Google_Service_AnalyticsReporting_DateRangeValues $metric */
-                    $metric = $metrics[$j];
-                    $values = $metric->getValues();
-                    for ($k = 0; $k < count($values); $k++) {
-                        /** @var \Google_Service_AnalyticsReporting_MetricHeaderEntry $entry */
-                        $entry                        = $metricHeaders[$k];
-                        $resultRow[$entry->getName()] = $values[$k];
-                    }
-                }
-
-                $results[] = $resultRow;
+                $results[] = $this->reportRowToArray($rows[$rowIndex], $metricHeaders, $dimensionHeaders);
             }
         }
 
         return $results;
+    }
+
+    /**
+     * @param \Google_Service_AnalyticsReporting_ReportRow $reportRow
+     * @param \Google_Service_AnalyticsReporting_MetricHeaderEntry $metricHeaders
+     * @param array $dimensionHeaders
+     * @return array
+     */
+    private function reportRowToArray($reportRow, $metricHeaders, array $dimensionHeaders): array
+    {
+        $resultRow = [];
+
+        $dimensions = $reportRow->getDimensions();
+        $metrics    = $reportRow->getMetrics();
+
+        for ($i = 0; $i < count($dimensionHeaders) && $i < count($dimensions); $i++) {
+            $resultRow[$dimensionHeaders[$i]] = $dimensions[$i];
+        }
+
+        for ($j = 0; $j < count($metrics); $j++) {
+            /** @var \Google_Service_AnalyticsReporting_DateRangeValues $metric */
+            $metric = $metrics[$j];
+            $values = $metric->getValues();
+            for ($k = 0; $k < count($values); $k++) {
+                /** @var \Google_Service_AnalyticsReporting_MetricHeaderEntry $entry */
+                $entry                        = $metricHeaders[$k];
+                $resultRow[$entry->getName()] = $values[$k];
+            }
+        }
+
+        return $resultRow;
     }
 }
