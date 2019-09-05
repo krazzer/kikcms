@@ -234,4 +234,21 @@ class PageService extends Injectable
 
         return $this->dbService->getObjectMap($query, PageMap::class);
     }
+
+    /**
+     * @param mixed $menuKeyOrId
+     * @return int|null
+     */
+    public function getIdByKeyOrId($menuKeyOrId): ?int
+    {
+        if (is_numeric($menuKeyOrId)) {
+            return (int) $menuKeyOrId;
+        }
+
+        if( ! $page = $this->getByKey($menuKeyOrId)) {
+            return null;
+        }
+
+        return $page->getId();
+    }
 }

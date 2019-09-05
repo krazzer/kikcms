@@ -77,29 +77,21 @@ class FrontendHelper extends Injectable
     /**
      * Build a multi-level ul li structured menu
      *
-     * @param int|string $menuId can be either the id or the key of the menu
+     * @param int|string $menuKeyOrId can be either the id or the key of the menu
      * @param int|null $maxLevel
      * @param string|null $template
      * @param null|string $templateKey
      * @param bool $cache
      * @return string
      */
-    public function menu($menuId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
+    public function menu($menuKeyOrId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
     {
-        if ( ! $menuId) {
+        if ( ! $menuKeyOrId) {
             return '';
         }
 
-        if ( ! is_numeric($menuId)) {
-            $page = $this->pageService->getByKey($menuId);
-
-            if ( ! $page) {
-                return '';
-            }
-
-            $menuId = $page->getId();
-        } else {
-            $menuId = (int) $menuId;
+        if( ! $menuId = $this->pageService->getIdByKeyOrId($menuKeyOrId)){
+            return '';
         }
 
         // disable cache on dev
@@ -208,20 +200,7 @@ class FrontendHelper extends Injectable
                 continue;
             }
 
-            if ($menu->getMaxLevel() !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $menu->getMaxLevel()) {
-                $subMenuOutput = '';
-            } else {
-                $subMenuOutput = $this->buildMenu($pageId, $menu);
-            }
-
-            $relativeLevel = $fullPage->getLevel() - $initialLevel;
-            $pageKey       = $fullPage->getPage()->key;
-            $pageKeyAttr   = $pageKey ? ' data-key="' . $pageKey . '"' : '';
-
-            $menuOutput .= '<li class="s' . $pageId . '" data-id="' . $pageId . '"' . $pageKeyAttr . '>';
-            $menuOutput .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel);
-            $menuOutput .= $subMenuOutput;
-            $menuOutput .= '</li>';
+            $menuOutput .= $this->buildMenuItem($menu, $fullPage, $initialLevel);
         }
 
         if ( ! $menuOutput) {
@@ -229,6 +208,34 @@ class FrontendHelper extends Injectable
         }
 
         return '<ul>' . $menuOutput . '</ul>';
+    }
+
+    /**
+     * @param Menu $menu
+     * @param FullPage $fullPage
+     * @param int $initialLevel
+     * @return string
+     */
+    private function buildMenuItem(Menu $menu, FullPage $fullPage, int $initialLevel): string
+    {
+        $pageId = $fullPage->getPageId();
+
+        if ($menu->getMaxLevel() !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $menu->getMaxLevel()) {
+            $subMenuOutput = '';
+        } else {
+            $subMenuOutput = $this->buildMenu($pageId, $menu);
+        }
+
+        $relativeLevel = $fullPage->getLevel() - $initialLevel;
+        $pageKey       = $fullPage->getPage()->key;
+        $pageKeyAttr   = $pageKey ? ' data-key="' . $pageKey . '"' : '';
+
+        $output = '<li class="s' . $pageId . '" data-id="' . $pageId . '"' . $pageKeyAttr . '>';
+        $output .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel);
+        $output .= $subMenuOutput;
+        $output .= '</li>';
+
+        return $output;
     }
 
     /**
