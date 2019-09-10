@@ -13,7 +13,7 @@ class DataFormCest
 
         //TestUserPass
         $I->amOnPage('/cms/test/personform');
-        $I->seeElement('#webFormId_WebsiteFormsPersonForm');
+        $I->seeElement('#webFormId_WebsiteFormsTestPersonForm');
 
         $I->cleanDb();
     }

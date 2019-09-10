@@ -4,7 +4,7 @@
 namespace Website\Controllers;
 
 
-use Website\Forms\PersonForm;
+use Website\Forms\TestPersonForm;
 use KikCMS\Controllers\BaseCmsController;
 use Website\DataTables\DataTableTestObjects;
 
@@ -21,7 +21,7 @@ class ModuleController extends BaseCmsController
 
     public function personFormAction()
     {
-        $this->view->object           = (new PersonForm)->render();
+        $this->view->object           = (new TestPersonForm)->render();
         $this->view->selectedMenuItem = 'personform';
         $this->view->title            = 'Person Form';
 

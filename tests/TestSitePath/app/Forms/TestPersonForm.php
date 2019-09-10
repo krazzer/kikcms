@@ -6,9 +6,9 @@ namespace Website\Forms;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Phalcon\Validation\Validator\PresenceOf;
-use Website\Models\Person;
+use Website\Models\TestPerson;
 
-class PersonForm extends DataForm
+class TestPersonForm extends DataForm
 {
 
     /**
@@ -16,7 +16,7 @@ class PersonForm extends DataForm
      */
     public function getModel(): string
     {
-        return Person::class;
+        return TestPerson::class;
     }
 
     /**
@@ -24,6 +24,6 @@ class PersonForm extends DataForm
      */
     protected function initialize()
     {
-        $this->addTextField(Person::FIELD_NAME, 'Name', [new PresenceOf]);
+        $this->addTextField(TestPerson::FIELD_NAME, 'Name', [new PresenceOf]);
     }
 }

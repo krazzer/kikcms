@@ -7,7 +7,7 @@ namespace Website\Models;
 use KikCmsCore\Classes\Model;
 
 /**
- * @property Person $person
+ * @property TestPerson $person
  */
 class PersonInterest extends Model
 {
@@ -25,6 +25,6 @@ class PersonInterest extends Model
     {
         parent::initialize();
 
-        $this->belongsTo(self::FIELD_PERSON_ID, Person::class, Person::FIELD_ID, ['alias' => 'person']);
+        $this->belongsTo(self::FIELD_PERSON_ID, TestPerson::class, TestPerson::FIELD_ID, ['alias' => 'person']);
     }
 }

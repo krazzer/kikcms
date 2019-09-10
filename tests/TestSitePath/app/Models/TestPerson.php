@@ -10,7 +10,7 @@ use Phalcon\Mvc\Model\Resultset\Simple;
 /**
  * @property Company|Simple $company
  */
-class Person extends Model
+class TestPerson extends Model
 {
     const TABLE = 'test_person';
     const ALIAS = 'p';
