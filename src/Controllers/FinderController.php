@@ -102,7 +102,7 @@ class FinderController extends RenderableController
     public function editFileNameAction()
     {
         $finder   = $this->getRenderable();
-        $fileId   = $this->request->getPost('fileId');
+        $fileId   = (int) $this->request->getPost('fileId', 'int');
         $fileName = $this->request->getPost('fileName');
 
         if ( ! $this->filePermissionService->canEditId($fileId)) {
