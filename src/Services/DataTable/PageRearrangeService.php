@@ -118,7 +118,7 @@ class PageRearrangeService extends Injectable
 
         foreach ($parentPageMap as $parentPage) {
             $children     = $this->pageService->getChildren($parentPage);
-            $displayOrder = 1;
+            $displayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
 
             // loop through all children and set a new display_order
             foreach ($children as $page) {
