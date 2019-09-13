@@ -26,7 +26,18 @@ backend.
 I estimate that the framework can be used for any project where your client would pay you 
 between $1.000 and $100.000. In cases lower than 1.000 Wordpress might be a better choice,
 and in cases above 100.000 a lower-level framework might be a better choice for more flexibility.
-But who knows, I myself haven't reached the upper limit of it's capabilities yet.  
+But who knows, I myself haven't reached the upper limit of it's capabilities yet. 
+
+When to use KikCMS:
+ * You care about performance
+ * You want the best user experience for your clients
+ * You want to build your own templates (or use standalone templates)
+ * You want to be able to build a custom back-end quickly
+ * You know how to code
+ 
+ When not to use the KikCMS:
+ * You just want to pick some template
+ * You don't want to code yourself 
 
 # Required knowledge
 
