@@ -27,7 +27,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
      * @param $data
      * @return mixed
      */
-    private function removeConfig($data)
+    public function removeConfig($data)
     {
         if($data instanceof Injectable){
             unset($data->config);
