@@ -12,6 +12,7 @@ use KikCMS\Classes\Renderable\Renderable;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\FileInputField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
@@ -458,6 +459,7 @@ abstract class WebForm extends Renderable
             'instance'               => $this->getInstance(),
             'jsData'                 => $this->getJsData(),
             'mayFlash'               => $this->mayFlash(),
+            'encType'                => $this->getEncType(),
             'errorContainer'         => $errorContainer,
             'webForm'                => $this,
         ]);
@@ -485,6 +487,20 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * @return string
+     */
+    private function getEncType(): string
+    {
+        foreach ($this->getFieldMap() as $field){
+            if($field instanceof FileInputField){
+                return 'multipart/form-data';
+            }
+        }
+
+        return 'application/x-www-form-urlencoded';
+    }
+
+    /**
      * @return ErrorContainer
      */
     private function getErrors(): ErrorContainer
@@ -495,7 +511,7 @@ abstract class WebForm extends Renderable
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
 
-        if ($this->getForm()->isValid($this->getInput()) && $errorContainer->isEmpty()) {
+        if ($this->getForm()->isValid($this->getInput() + $_FILES) && $errorContainer->isEmpty()) {
             return $errorContainer;
         }
 
@@ -641,7 +657,7 @@ abstract class WebForm extends Renderable
      */
     private function getForm(): Form
     {
-        if( ! $this->form){
+        if ( ! $this->form) {
             $this->form = new Form();
             $this->form->setValidation($this->validation);
         }

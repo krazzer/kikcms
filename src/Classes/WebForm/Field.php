@@ -31,6 +31,7 @@ abstract class Field
     const TYPE_PASSWORD          = 'password';
     const TYPE_SECTION           = 'section';
     const TYPE_HEADER            = 'header';
+    const TYPE_FILE_INPUT        = 'fileInput';
 
     /** @var WebForm|DataForm */
     protected $form;
