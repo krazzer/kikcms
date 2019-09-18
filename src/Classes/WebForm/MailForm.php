@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use KikCMS\Classes\WebForm\Fields\CheckboxField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
@@ -46,7 +47,7 @@ abstract class MailForm extends WebForm
         $contents = $this->toMailOutput($input);
         $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents, $params);
 
-        if( ! $mailSend){
+        if ( ! $mailSend) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
             return false;
         }
@@ -64,32 +65,35 @@ abstract class MailForm extends WebForm
     {
         $contents = '';
 
-        foreach ($this->getFieldMap() as $key => $field)
-        {
-            if($key == $this->getFormId()){
+        foreach ($this->getFieldMap() as $key => $field) {
+            if ($key == $this->getFormId()) {
                 continue;
             }
 
-            if( ! array_key_exists($key, $input)){
+            if ($field instanceof CheckboxField) {
+                $input[$key] = array_key_exists($key, $input) ? '✔︎' : '-';
+            }
+
+            if ( ! array_key_exists($key, $input)) {
                 continue;
             }
 
-            if($field instanceof SelectField){
+            if ($field instanceof SelectField) {
                 $input[$key] = $field->getElement()->getOptions()[$input[$key]];
             }
 
-            if(is_array($input[$key])){
+            if (is_array($input[$key])) {
                 $input[$key] = implode("\n", $input[$key]);
             }
 
             $value = nl2br($input[$key]);
             $value = str_replace("\n", '', $value);
 
-            if( ! $value){
+            if ( ! $value) {
                 $value = '-';
             }
 
-            if( ! $field->getElement()){
+            if ( ! $field->getElement()) {
                 continue;
             }
 

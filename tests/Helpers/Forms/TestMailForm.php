@@ -18,5 +18,6 @@ class TestMailForm extends MailForm
         $this->addTextField('text2', 'Text2');
         $this->addTextField('text3', 'Text3');
         $this->addHtmlField('html', 'Html', 'Content');
+        $this->addCheckboxField('check', 'Check');
     }
 }
