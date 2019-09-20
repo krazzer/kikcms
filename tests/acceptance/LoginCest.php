@@ -62,6 +62,9 @@ class LoginCest
         $I->login($I::TEST_USERNAME, 'myNewPassword1');
 
         $I->seeElement('#menu');
+
+        // delete all emails
+        (new Client(['base_uri' => 'http://mailtest:8025']))->delete('api/v1/messages');
     }
 
     public function rememberMeWorks(AcceptanceTester $I)
@@ -75,7 +78,7 @@ class LoginCest
      */
     private function getResetPasswordUrlFromEmail(): string
     {
-        $mailCatcher = new Client(['base_uri' => 'http://mail:8025']);
+        $mailCatcher = new Client(['base_uri' => 'http://mailtest:8025']);
 
         $message  = json_decode($mailCatcher->get('api/v2/search?query=Password&kind=containing&limit=1')->getBody());
         $mailBody = quoted_printable_decode($message->items[0]->MIME->Parts[1]->Body);

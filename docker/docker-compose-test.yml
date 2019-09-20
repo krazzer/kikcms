@@ -19,6 +19,17 @@ services:
     environment:
       XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "8026:8025"
+      - "1026:1025"
+    networks:
+      kikdev:
+        aliases:
+          - mailtest
+
 networks:
   kikdev:
     external:
