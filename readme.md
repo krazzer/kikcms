@@ -1,6 +1,6 @@
-The video below shows how you can create a functional multi-level CRUD system (DataTable) inside the CMS in about 10 minutes.
+This video will show you the general UX used for the KikCMS and DataTables created inside the CMS.
 
-[![KikCMS DataTable Tutorial](https://i.ytimg.com/vi/gZmVBre4c2c/maxresdefault.jpg)](https://www.youtube.com/watch?v=gZmVBre4c2c "KikCMS DataTable Tutorial")
+[![KikCMS UX overview](https://i.ytimg.com/vi/QC54n2KOSfs/maxresdefault.jpg)](https://www.youtube.com/watch?v=QC54n2KOSfs "KikCMS UX overview")
 
 Check out the docs at: https://kikcms.com
 
