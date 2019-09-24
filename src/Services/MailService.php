@@ -168,6 +168,10 @@ class MailService extends Injectable
      */
     private function getDefaultFrom()
     {
+        if ($defaultFromEmail = $this->config->application->get('defaultFromEmail')) {
+            return $defaultFromEmail;
+        }
+
         if ( ! $domain = $this->config->application->get('domain')) {
             if ( ! @$this->request) {
                 throw new Exception('Domain to send from is unknown. Please set the application.domain setting');
