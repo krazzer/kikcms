@@ -41,35 +41,26 @@ class GeneratorService extends Injectable
     {
         $className = $this->getClassName($table);
 
-        $modelClassName      = $className;
-        $formClassName       = $className . 'Form';
-        $dataTableClassName  = $className . 's';
-        $objectListClassName = $className . 'List';
-        $objectMapClassName  = $className . 'Map';
-        $serviceClassName    = $className . 'Service';
+        $formClass        = $className . 'Form';
+        $dataTableClass   = $className . 's';
+        $objectListClass  = $className . 'List';
+        $objectMapClass   = $className . 'Map';
+        $serviceClassName = $className . 'Service';
 
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_MODELS . $modelClassName)) {
-            $this->classesGeneratorService->createModelClass($modelClassName, $table);
-        }
+        $classesToGenerate = [
+            [KikCMSConfig::NAMESPACE_PATH_MODELS, 'model', [$className, $table]],
+            [KikCMSConfig::NAMESPACE_PATH_FORMS, 'form', [$formClass, $className]],
+            [KikCMSConfig::NAMESPACE_PATH_DATATABLES, 'dataTable', [$dataTableClass, $table, $className, $formClass]],
+            [KikCMSConfig::NAMESPACE_PATH_OBJECTLIST, 'objectList', [$objectListClass, $className, ObjectList::class]],
+            [KikCMSConfig::NAMESPACE_PATH_OBJECTLIST, 'objectList', [$objectMapClass, $className, ObjectMap::class]],
+            [KikCMSConfig::NAMESPACE_PATH_SERVICES, 'service', [$serviceClassName]],
+        ];
 
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_FORMS . $formClassName)) {
-            $this->classesGeneratorService->createFormClass($formClassName, $modelClassName);
-        }
-
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_DATATABLES . $dataTableClassName)) {
-            $this->classesGeneratorService->createDataTableClass($dataTableClassName, $table, $modelClassName, $formClassName);
-        }
-
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_OBJECTLIST . $objectListClassName)) {
-            $this->classesGeneratorService->createObjectListClass($objectListClassName, $modelClassName, ObjectList::class);
-        }
-
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_OBJECTLIST . $objectMapClassName)) {
-            $this->classesGeneratorService->createObjectListClass($objectMapClassName, $modelClassName, ObjectMap::class);
-        }
-
-        if ( ! class_exists(KikCMSConfig::NAMESPACE_PATH_SERVICES . $serviceClassName)) {
-            $this->classesGeneratorService->createServiceClass($serviceClassName);
+        foreach ($classesToGenerate as list($namespace, $method, $parameters)) {
+            if ( ! class_exists($namespace . $parameters[0])) {
+                $method = 'create' . ucfirst($method) . 'Class';
+                call_user_func_array([$this->classesGeneratorService, $method], $parameters);
+            }
         }
     }
 
@@ -119,7 +110,7 @@ class GeneratorService extends Injectable
         $fileDir  = $this->loader->getWebsiteSrcPath() . $directory . '/';
         $filePath = $fileDir . $className . '.php';
 
-        if( ! file_exists($fileDir)){
+        if ( ! file_exists($fileDir)) {
             mkdir($fileDir);
         }
 
