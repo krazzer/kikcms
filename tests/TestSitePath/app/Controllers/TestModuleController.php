@@ -8,7 +8,7 @@ use Website\Forms\TestPersonForm;
 use KikCMS\Controllers\BaseCmsController;
 use Website\DataTables\DataTableTestObjects;
 
-class ModuleController extends BaseCmsController
+class TestModuleController extends BaseCmsController
 {
     public function testDataTableAction()
     {

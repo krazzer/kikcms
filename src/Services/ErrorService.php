@@ -7,6 +7,7 @@ namespace KikCMS\Services;
 use KikCMS\Config\KikCMSConfig;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
+use stdClass;
 
 /**
  * @property Config config
@@ -14,32 +15,44 @@ use Phalcon\Di\Injectable;
 class ErrorService extends Injectable
 {
     /**
-     * @param mixed $error
+     * @param $error
+     * @param bool $isProduction
+     * @return string|null
      */
-    public function handleError($error)
+    public function getErrorView($error, bool $isProduction): ?string
     {
         if ( ! $error) {
-            return;
+            return null;
         }
 
-        $isProduction       = $this->config->application->env === KikCMSConfig::ENV_PROD;
         $isRecoverableError = $this->isRecoverableError($error);
 
         // don't show recoverable errors in production
         if ($isProduction && $isRecoverableError) {
-            return;
+            return null;
         }
 
         http_response_code(500);
 
         if ($this->isAjaxRequest() && ! $isProduction) {
-            echo $this->view->getRender('errors', 'error500content', ['error' => $error]);
+            return 'error500content';
+        }
+
+        return 'show500';
+    }
+
+    /**
+     * @param mixed $error
+     */
+    public function handleError($error)
+    {
+        $isProduction = $this->config->application->env === KikCMSConfig::ENV_PROD;
+
+        if( ! $errorView = $this->getErrorView($error, $isProduction)){
             return;
         }
 
-        echo $this->view->getRender('errors', 'show500', [
-            'error' => $isProduction ? null : $error,
-        ]);
+        echo $this->view->getRender('errors', $errorView, ['error' => $isProduction ? null : $error]);
     }
 
     /**
@@ -53,7 +66,7 @@ class ErrorService extends Injectable
     }
 
     /**
-     * @param \stdClass|array $error
+     * @param stdClass|array $error
      * @return null|int
      */
     private function getErrorType($error): ?int
@@ -66,7 +79,7 @@ class ErrorService extends Injectable
     }
 
     /**
-     * @param \stdClass|array $error
+     * @param stdClass|array $error
      * @return bool
      */
     private function isRecoverableError($error): bool

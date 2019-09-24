@@ -14,6 +14,7 @@ use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
+use KikCMS\Services\AssetService;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\TableDataService;
@@ -186,6 +187,7 @@ class TestHelper extends TestCase
         $di->set('flash', new Session);
         $di->set('filePermissionService', new FilePermissionService);
         $di->set('userService', new UserService);
+        $di->set('assetService', new AssetService);
 
         $di->get('session')->set('role', Permission::ADMIN);
 
