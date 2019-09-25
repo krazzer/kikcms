@@ -50,7 +50,7 @@ class LoginCest
 
         $resetPassUrl = $this->getResetPasswordUrlFromEmail();
 
-        $I->amOnPage($resetPassUrl);
+        $I->amOnUrl($resetPassUrl);
 
         $I->seeElement('#webFormId_KikCMSFormsPasswordResetForm');
 

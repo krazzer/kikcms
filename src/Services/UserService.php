@@ -55,7 +55,7 @@ class UserService extends Injectable
     public function getResetUrl(User $user): string
     {
         $time = date('U');
-        $hash = $this->security->hash($user->id . $time);
+        $hash = base64_encode($this->security->hash($user->id . $time));
 
         return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $hash . '/' . $time;
     }

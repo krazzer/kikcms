@@ -1,5 +1,6 @@
 <?php
 
+use Codeception\Actor;
 use KikCMS\Models\User;
 
 
@@ -18,7 +19,7 @@ use KikCMS\Models\User;
  *
  * @SuppressWarnings(PHPMD)
  */
-class AcceptanceTester extends \Codeception\Actor
+class AcceptanceTester extends Actor
 {
     use _generated\AcceptanceTesterActions;
 

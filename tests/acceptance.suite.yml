@@ -7,8 +7,10 @@
 actor: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser:
+        - WebDriver:
             url: https://kikcmstest.dev
+            browser: chrome
+            host: kikdev-selenium
         - \Helper\Acceptance
         - Db:
            dsn: 'mysql:host=mysql;dbname=test'

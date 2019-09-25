@@ -98,7 +98,7 @@ class LoginController extends BaseController
      */
     public function resetPasswordAction(User $user, string $hash, int $time): ResponseInterface
     {
-        if ( ! $this->security->checkHash($user->id . $time, $hash)) {
+        if ( ! $this->security->checkHash($user->id . $time, base64_decode($hash))) {
             $errorMessage = $this->translator->tl('login.reset.password.hashError');
             $this->flash->error($errorMessage);
             return $this->response->redirect('cms/login');
