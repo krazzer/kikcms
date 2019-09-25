@@ -77,7 +77,7 @@ class FinderController extends RenderableController
         $files = File::getByIdList($fileIds);
 
         foreach ($files as $file) {
-            if ($errorMessage = $this->fileRemoveService->getDeleteErrorMessage($file)) {
+            if ($errorMessage = $this->fileRemoveService->getDeleteErrorMessageForFile($file)) {
                 $errorMessages[] = $errorMessage;
             } else {
                 $idsToRemove[] = $file->getId();

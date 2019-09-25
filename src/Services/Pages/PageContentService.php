@@ -29,7 +29,7 @@ class PageContentService extends Injectable
      * @param File $file
      * @return PageLanguageMap
      */
-    public function fileIsLinked(File $file): PageLanguageMap
+    public function getLinkedPageLanguageMap(File $file): PageLanguageMap
     {
         $languageCode     = $this->translator->getLanguageCode();
         $fileFieldKeys    = $this->templateService->getFileFieldKeys();

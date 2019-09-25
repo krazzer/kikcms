@@ -40,4 +40,18 @@ class PageLanguageMap extends ObjectMap
     {
         return parent::current();
     }
+
+    /**
+     * @return string[]
+     */
+    public function getNameMap(): array
+    {
+        $nameMap = [];
+
+        foreach ($this as $pageLanguage){
+            $nameMap[] = $pageLanguage->getName();
+        }
+
+        return $nameMap;
+    }
 }

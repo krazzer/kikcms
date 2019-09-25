@@ -26,8 +26,10 @@ class File extends Model
     const FIELD_KEY       = 'key';
     const FIELD_HASH      = 'hash';
 
-
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+    /** @var string|null */
+    public $key;
 
     /**
      * @inheritdoc
@@ -181,5 +183,25 @@ class File extends Model
     public function secondsUpdated(): int
     {
         return $this->getUpdated()->getTimestamp() - $this->getCreated()->getTimestamp();
+    }
+
+    /**
+     * @param string|null $key
+     * @return File
+     */
+    public function setKey(?string $key): File
+    {
+        $this->key = $key;
+        return $this;
+    }
+
+    /**
+     * @param string|null $name
+     * @return File
+     */
+    public function setName(?string $name): File
+    {
+        $this->name = $name;
+        return $this;
     }
 }

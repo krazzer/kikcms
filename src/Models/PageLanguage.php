@@ -160,7 +160,6 @@ class PageLanguage extends Model
     public function setSlug(?string $slug): PageLanguage
     {
         $this->slug = $slug;
-
         return $this;
     }
 
@@ -170,5 +169,15 @@ class PageLanguage extends Model
     private function getUrlService(): UrlService
     {
         return $this->getDI()->get('urlService');
+    }
+
+    /**
+     * @param string|null $name
+     * @return PageLanguage
+     */
+    public function setName(?string $name): PageLanguage
+    {
+        $this->name = $name;
+        return $this;
     }
 }

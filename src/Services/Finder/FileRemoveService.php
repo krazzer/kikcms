@@ -8,6 +8,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Models\File;
+use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
@@ -52,22 +53,20 @@ class FileRemoveService extends Injectable
     }
 
     /**
-     * Check if the file can be deleted. If not, return the corresponding error message
-     *
      * @param File $file
-     * @return null|string
+     * @param bool $canBeEdited
+     * @param PageLanguageMap $pageLangMap
+     * @return string|null
      */
-    public function getDeleteErrorMessage(File $file): ?string
+    public function getDeleteErrorMessage(File $file, bool $canBeEdited, PageLanguageMap $pageLangMap): ?string
     {
         if ($file->key) {
             return $this->translator->tl('media.deleteErrorLocked');
         }
 
-        if ( ! $this->filePermissionService->canEdit($file)) {
+        if ( ! $canBeEdited) {
             return $this->translator->tl('media.errorCantEdit');
         }
-
-        $pageLangMap = $this->pageContentService->fileIsLinked($file);
 
         if ($pageLangMap->isEmpty()) {
             return null;
@@ -80,16 +79,24 @@ class FileRemoveService extends Injectable
             ]);
         }
 
-        $pageNameMap = [];
-
-        foreach ($pageLangMap as $pageLang) {
-            $pageNameMap[] = $pageLang->getName();
-        }
-
         return $this->translator->tl('media.deleteErrorLinkedPages', [
             'image'     => $file->getName(),
-            'pageNames' => implode(', ', $pageNameMap)
+            'pageNames' => implode(', ', $pageLangMap->getNameMap())
         ]);
+    }
+
+    /**
+     * Check if the file can be deleted. If not, return the corresponding error message
+     *
+     * @param File $file
+     * @return null|string
+     */
+    public function getDeleteErrorMessageForFile(File $file): ?string
+    {
+        $canBeEdited = $this->filePermissionService->canEdit($file);
+        $pageLangMap = $this->pageContentService->getLinkedPageLanguageMap($file);
+
+        return $this->getDeleteErrorMessage($file, $canBeEdited, $pageLangMap);
     }
 
     /**

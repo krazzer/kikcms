@@ -5,10 +5,45 @@ namespace KikCMS\Services\Finder;
 
 use Helpers\TestHelper;
 use KikCMS\Models\File;
+use KikCMS\Models\PageLanguage;
+use KikCMS\ObjectLists\PageLanguageMap;
 use PHPUnit\Framework\TestCase;
 
 class FileRemoveServiceTest extends TestCase
 {
+    public function testGetDeleteErrorMessage()
+    {
+        $di = (new TestHelper)->getTestDi();
+
+        $fileRemoveService = new FileRemoveService();
+        $fileRemoveService->setDI($di);
+
+        // file has key: can't delete
+        $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setKey('k'), true, new PageLanguageMap);
+        $this->assertStringContainsString('omdat deze nodig is voor het correct werken van de website', $errorMessage);
+
+        // can't edit file
+        $errorMessage = $fileRemoveService->getDeleteErrorMessage(new File, false, new PageLanguageMap);
+        $this->assertStringContainsString('omdat u deze niet mag bewerken', $errorMessage);
+
+        // no linked pages
+        $this->assertNull($fileRemoveService->getDeleteErrorMessage(new File, true, new PageLanguageMap));
+
+        // one linked page
+        $pageLanguageMap = (new PageLanguageMap)->add((new PageLanguage)->setName('x'), 1);
+
+        $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setName('x'), true, $pageLanguageMap);
+        $this->assertStringContainsString("omdat deze gebruikt wordt in de pagina 'x'", $errorMessage);
+
+        // multiple linked pages
+        $pageLanguageMap = (new PageLanguageMap)
+            ->add((new PageLanguage)->setName('x'), 1)
+            ->add((new PageLanguage)->setName('x2'), 2);
+
+        $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setName('x'), true, $pageLanguageMap);
+        $this->assertStringContainsString("wordt in de volgende pagina's: x, x2", $errorMessage);
+    }
+
     public function testRemoveThumbNails()
     {
         $di       = (new TestHelper)->getTestDi();
