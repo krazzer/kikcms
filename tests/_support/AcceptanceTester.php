@@ -48,7 +48,7 @@ class AcceptanceTester extends Actor
      */
     public function loginAndRemember()
     {
-        $this->login(self::TEST_USERNAME, self::TEST_PASS, 1);
+        $this->login(self::TEST_USERNAME, self::TEST_PASS, true);
     }
 
     /**
