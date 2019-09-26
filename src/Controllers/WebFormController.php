@@ -60,7 +60,7 @@ class WebFormController extends RenderableController
         $finder = new Finder();
 
         if ($folderId = $this->request->getPost('folderId')) {
-            $finder->getFilters()->setFolderId($folderId);
+            $finder->getFilters()->setFolderId((int)$folderId);
         }
 
         $uploadedFiles = $this->request->getUploadedFiles();
