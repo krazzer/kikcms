@@ -18,6 +18,13 @@ class DataTableSelectTest extends TestCase
     {
         $testDi = (new TestHelper)->getTestDi();
 
+        $form = new PersonDataTableSelectForm();
+        $form->setDI($testDi);
+
+        $form->db->delete(PersonInterest::TABLE);
+        $form->db->delete(Interest::TABLE);
+        $form->db->delete(Person::TABLE);
+
         $interest       = new Interest;
         $interest->id   = 1;
         $interest->name = 'Cars';
@@ -27,9 +34,6 @@ class DataTableSelectTest extends TestCase
         $interest->id   = 2;
         $interest->name = 'Rockets';
         $interest->save();
-
-        $form = new PersonDataTableSelectForm();
-        $form->setDI($testDi);
 
         $_POST = [
             $form->getFormId()             => $form->getFormId(),

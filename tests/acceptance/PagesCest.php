@@ -14,35 +14,31 @@ class PagesCest
         $I->login();
         $I->amOnPage('/cms/pages');
 
+        // click add page
         $I->click('.btn.add');
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
         $I->seeElement('input[name="pageLanguage*:name"]');
 
-//        $I->click('.saveAndClose');
-//        $I->waitForElement('.alert');
-//        $I->canSee('Not all fields are correctly filled. Please walk through the form to check for errors.');
+        // save and close, fail because fields aren't filled
+        $I->click('.saveAndClose');
+        $I->waitForElement('.alert');
+        $I->canSee('Not all fields are correctly filled. Please walk through the form to check for errors.');
 
+        // save page
         $I->fillField(['name' => 'pageLanguage*:name'], 'test');
-
-//        $I->executeJS('tinyMCE.activeEditor.setContent("test");');
-
-//        $I->fillField(['name' => 'content*:value'], 'test');
-//
-//        $I->executeJS('$("input[name=\'content*:value\']").val("test")');
-        $I->fillTinyMceEditorByName('content*:value', '<p>test</p>');
-//        $I->executeJS('tinyMCE.activeEditor.setContent("test");');
-
-//        $I->switchToIFrame('.type-wysiwyg iframe');
-//        $I->executeJS('document.getElementById("tinymce").innerHTML = "<p>Test</p>";');
-
-        $I->wait(1);
+        $I->executeJS('$("textarea[name=\'content*:value\']").val("test")');
 
         $I->click('.saveAndClose');
 
-        $I->wait(6);
+        $I->waitForElement('.table tr:nth-child(5)');
 
-        $I->makeScreenshot('xxx');
+        // remove page
+        $I->click('.table tr:nth-child(5)');
+        $I->click('.btn.delete');
+        $I->acceptPopup();
 
-//        $I->notS('#webFormId_KikCMSFormsPageForm');
+        $I->waitForJS("return $.active == 0;", 5);
+
+        $I->dontSeeElement('.table tr:nth-child(5)');
     }
 }
