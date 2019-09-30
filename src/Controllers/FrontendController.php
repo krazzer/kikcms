@@ -15,12 +15,14 @@ use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\Website\FrontendService;
 use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
  * @property FrontendHelper $frontendHelper
+ * @property FrontendService $frontendService
  * @property PageContentService $pageContentService
  * @property PageLanguageService $pageLanguageService
  * @property PageService $pageService
@@ -63,13 +65,7 @@ class FrontendController extends BaseController
      */
     public function pageAction(string $urlPath = null)
     {
-        if ($urlPath && $urlPath !== '/') {
-            $pageLanguage = $this->urlService->getPageLanguageByUrlPath($urlPath);
-        } else {
-            $pageLanguage = $this->pageLanguageService->getDefault();
-        }
-
-        if ( ! $pageLanguage || ! $pageLanguage->page || ( ! $pageLanguage->active && ! $this->userService->isLoggedIn())) {
+        if( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)){
             throw new NotFoundException();
         }
 
