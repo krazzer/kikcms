@@ -29,15 +29,15 @@ class PagesCest
         $I->executeJS('$("textarea[name=\'content*:value\']").val("test")');
 
         $I->click('.saveAndClose');
-
         $I->waitForElement('.table tr:nth-child(5)');
+        $I->wait(1);
 
         // remove page
         $I->click('.table tr:nth-child(5)');
         $I->click('.btn.delete');
         $I->acceptPopup();
 
-        $I->waitForJS("return $.active == 0;", 5);
+        $I->waitForJS("return $.active == 0;", 10);
 
         $I->dontSeeElement('.table tr:nth-child(5)');
     }

@@ -30,6 +30,16 @@ services:
         aliases:
           - mailtest
 
+  selenium:
+    image: selenium/standalone-chrome
+    restart: always
+    ports:
+      - "4444:4444"
+    networks:
+      kikdev:
+        aliases:
+          - kikdev-selenium
+
 networks:
   kikdev:
     external:
