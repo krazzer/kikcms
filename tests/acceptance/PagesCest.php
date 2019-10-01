@@ -41,4 +41,23 @@ class PagesCest
 
         $I->dontSeeElement('.table tr:nth-child(5)');
     }
+
+    public function switchTemplateWorks(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+        $I->amOnPage('/cms/pages');
+
+        $I->doubleClick('.table tr:nth-child(2)');
+        $I->waitForElement('#webFormId_KikCMSFormsPageForm');
+
+        $I->click('div[data-tab=advanced]');
+        $I->selectOption('form #template', 'home');
+        $I->waitForJS("return $.active == 0;", 10);
+
+        $I->click('div[data-tab="0"]');
+        $I->dontSeeElement('.type-wysiwyg');
+
+        $I->makeScreenshot('1');
+    }
 }
