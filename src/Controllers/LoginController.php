@@ -3,7 +3,9 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\PassResetConfig;
 use KikCMS\Forms\LoginForm;
 use KikCMS\Forms\PasswordResetForm;
 use KikCMS\Forms\PasswordResetLinkActivateForm;
@@ -18,10 +20,11 @@ use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AssetService $assetService
- * @property Translator $translator
- * @property MailService $mailService
- * @property UserService $userService
  * @property Config $applicationConfig
+ * @property KeyValue $keyValue
+ * @property MailService $mailService
+ * @property Translator $translator
+ * @property UserService $userService
  * @property WebsiteSettingsBase $websiteSettings
  */
 class LoginController extends BaseController
@@ -35,7 +38,7 @@ class LoginController extends BaseController
 
         $this->assetService->addCss('cmsassets/css/login.css');
 
-        if($customCss = $this->websiteSettings->getCustomCss()){
+        if ($customCss = $this->websiteSettings->getCustomCss()) {
             $this->assetService->addCss($customCss);
         }
     }
@@ -45,7 +48,7 @@ class LoginController extends BaseController
      */
     public function initializeLanguage()
     {
-        if(isset($this->config->application->defaultCmsLanguage)){
+        if (isset($this->config->application->defaultCmsLanguage)) {
             $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
         } else {
             $this->translator->setLanguageCode($this->config->application->defaultLanguage);
@@ -92,22 +95,21 @@ class LoginController extends BaseController
     /**
      * Displays the form to reset your password
      * @param User $user
-     * @param string $hash
-     * @param int $time
+     * @param string $token
      * @return ResponseInterface
      */
-    public function resetPasswordAction(User $user, string $hash, int $time): ResponseInterface
+    public function resetPasswordAction(User $user, string $token): ResponseInterface
     {
-        if ( ! $this->security->checkHash($user->id . $time, base64_decode($hash))) {
-            $errorMessage = $this->translator->tl('login.reset.password.hashError');
-            $this->flash->error($errorMessage);
-            return $this->response->redirect('cms/login');
-        }
-
-        if ( ! $time || $time + 7200 < date('U')) {
+        if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId(), PassResetConfig::LIFETIME)) {
             $errorMessage = $this->translator->tl('login.reset.password.expired');
             $this->flash->error($errorMessage);
             return $this->response->redirect('cms/login/reset');
+        }
+
+        if ( ! $this->security->checkHash($token, $hashedToken)) {
+            $errorMessage = $this->translator->tl('login.reset.password.tokenError');
+            $this->flash->error($errorMessage);
+            return $this->response->redirect('cms/login');
         }
 
         $passwordForm = (new PasswordResetForm())->setUser($user)->render();

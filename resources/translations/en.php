@@ -247,7 +247,7 @@ return [
             ],
 
             'password' => [
-                'hashError'   => 'Invalid url',
+                'tokenError'  => 'Invalid token',
                 'formMessage' => 'Enter your desired password',
                 'expired'     => 'The URL validity has expired.',
                 'space'       => 'Spaces are not allowed',

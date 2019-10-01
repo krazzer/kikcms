@@ -2,7 +2,9 @@
 
 namespace KikCMS\Forms;
 
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Config\PassResetConfig;
 use KikCMS\Models\User;
 use KikCMS\Services\UserService;
 use Phalcon\Validation\Validator\Identical;
@@ -11,6 +13,7 @@ use Phalcon\Validation\Validator\StringLength;
 
 /**
  * @property UserService $userService
+ * @property KeyValue $keyValue
  */
 class PasswordResetForm extends WebForm
 {
@@ -57,6 +60,7 @@ class PasswordResetForm extends WebForm
     {
         $succesMessage = $this->getSuccessMessage();
 
+        $this->keyValue->delete(PassResetConfig::PREFIX . $this->user->getId());
         $this->userService->storePassword($this->user, $input['password']);
         $this->flash->success($succesMessage);
 

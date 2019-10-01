@@ -10,8 +10,8 @@ return [
             'hitsAndMisses' => 'Hits / misses',
             'empty'         => 'Volledige cache legen',
         ],
-        'loading'      => 'Bezig met laden...',
-        'roles'        => [
+        'loading'         => 'Bezig met laden...',
+        'roles'           => [
             'developer' => 'Developer',
             'admin'     => 'Administrator',
             'user'      => 'Gebruiker',
@@ -253,7 +253,7 @@ return [
             ],
 
             'password' => [
-                'hashError'   => 'Ongeldige url',
+                'tokenError'  => 'Ongeldige token',
                 'formMessage' => 'Voer het door u gewenste wachtwoord in',
                 'expired'     => 'De geldigheid van de link is verlopen.',
                 'space'       => 'Spaties zijn niet toegestaan',

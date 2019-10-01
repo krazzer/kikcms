@@ -5,9 +5,12 @@ namespace KikCMS\Services;
 
 use Exception;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Config\PassResetConfig;
 use KikCMS\ObjectLists\UserMap;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
+use KikCMS\Services\Util\StringService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
@@ -22,10 +25,12 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property DbService $dbService
  * @property Config $applicationConfig
  * @property CmsService $cmsService
+ * @property KeyValue $keyValue
  * @property Translator $translator
  * @property MailService $mailService
  * @property Permission $permission
  * @property RememberMeService $rememberMeService
+ * @property StringService $stringService
  */
 class UserService extends Injectable
 {
@@ -54,10 +59,12 @@ class UserService extends Injectable
      */
     public function getResetUrl(User $user): string
     {
-        $time = date('U');
-        $hash = base64_encode($this->security->hash($user->id . $time));
+        $token       = $this->stringService->createRandomString();
+        $hashedToken = $this->security->hash($token);
 
-        return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $hash . '/' . $time;
+        $this->keyValue->save(PassResetConfig::PREFIX . $user->getId(), $hashedToken, PassResetConfig::LIFETIME);
+
+        return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $token;
     }
 
     /**
