@@ -3,7 +3,6 @@
 namespace KikCMS\Services\Finder;
 
 
-use ImagickException;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
@@ -36,6 +35,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * @property FileHashService $fileHashService
  * @property FilePermissionService $filePermissionService
  * @property FileRemoveService $fileRemoveService
+ * @property FileResizeService $fileResizeService
  * @property FileCacheService $fileCacheService
  * @property MediaResizeBase $mediaResize
  * @property UserService $userService
@@ -87,7 +87,7 @@ class FileService extends Injectable
         $this->filePermissionService->createForFile($file);
 
         $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id);
-        $this->resizeWithinBoundaries($file);
+        $this->fileResizeService->resizeWithinBoundaries($file);
         $this->fileHashService->updateHash($file);
 
         return (int) $file->id;
@@ -526,7 +526,7 @@ class FileService extends Injectable
         }
 
         $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id, true);
-        $this->resizeWithinBoundaries($file);
+        $this->fileResizeService->resizeWithinBoundaries($file);
         $this->fileRemoveService->removeThumbNails($file);
         $this->fileCacheService->removeUrlCache($file);
         $this->fileHashService->updateHash($file);
@@ -626,51 +626,6 @@ class FileService extends Injectable
         }
 
         return implode('/', $relPath);
-    }
-
-    /**
-     * @param File $file
-     */
-    private function resizeWithinBoundaries(File $file)
-    {
-        // is no image, so do nothing
-        if ( ! $file->isImage()) {
-            return;
-        }
-
-        $dimensions = $this->getImageDimensions($file);
-        $filePath   = $this->getFilePath($file);
-
-        $image      = $this->imageHandler->create($filePath);
-        $jpgQuality = $this->config->media->jpgQuality;
-
-        // could not fetch dimensions, so do nothing
-        if ( ! $dimensions) {
-            $image->save($filePath, $jpgQuality);
-            return;
-        }
-
-        $maxWidth  = $this->config->media->maxWidth;
-        $maxHeight = $this->config->media->maxHeight;
-
-        // smaller than required, so do nothing
-        if ($dimensions[0] <= $maxWidth && $dimensions[1] <= $maxHeight) {
-            try {
-                $image->save($filePath, $jpgQuality);
-            } catch (ImagickException $exception) {
-                // suppress exception with code 410
-                if ($exception->getCode() !== 410) {
-                    throw $exception;
-                }
-            }
-
-            return;
-        }
-
-        // resize
-        $image = $this->imageHandler->create($filePath);
-        $image->resize($maxWidth, $maxHeight);
-        $image->save($filePath, $jpgQuality);
     }
 
     /**
