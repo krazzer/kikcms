@@ -48,7 +48,7 @@ class PagesCest
         $I->login();
         $I->amOnPage('/cms/pages');
 
-        $I->doubleClick('.table tr:nth-child(2)');
+        $I->doubleClick('.table tr:nth-child(3)');
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
 
         $I->click('div[data-tab=advanced]');
@@ -59,7 +59,7 @@ class PagesCest
         $I->dontSeeElement('.type-wysiwyg');
     }
 
-    public function switchLanguage(AcceptanceTester $I)
+    public function switchLanguageWorks(AcceptanceTester $I)
     {
         $I->addUser();
         $I->login();
@@ -71,5 +71,34 @@ class PagesCest
         $I->waitForJS("return $.active == 0;", 10);
 
         $I->see('Pagina 2');
+    }
+
+    public function editMenuWorks(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+        $I->amOnPage('/cms/pages');
+
+        $I->click('.table tr:nth-child(1) .edit');
+        $I->waitForElement('#webFormId_KikCMSFormsMenuForm');
+        $I->click('.saveAndClose');
+        $I->waitForElement('.table tr:nth-child(1).edited');
+    }
+
+    public function collapseExpandWorks(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+        $I->amOnPage('/cms/pages');
+
+        $I->canSeeNumberOfElements('.table tr', 5);
+
+        $I->click('.table tr:nth-child(1) .arrow');
+
+        $I->canSeeNumberOfElements('.table tr', 3);
+
+        $I->click('.table tr:nth-child(1) .arrow');
+
+        $I->canSeeNumberOfElements('.table tr', 5);
     }
 }
