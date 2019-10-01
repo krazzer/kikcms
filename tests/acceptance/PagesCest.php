@@ -58,4 +58,18 @@ class PagesCest
         $I->click('div[data-tab="0"]');
         $I->dontSeeElement('.type-wysiwyg');
     }
+
+    public function switchLanguage(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+        $I->amOnPage('/cms/pages');
+
+        $I->dontSee('Pagina 2');
+
+        $I->selectOption('select[name="language"]', 'nl');
+        $I->waitForJS("return $.active == 0;", 10);
+
+        $I->see('Pagina 2');
+    }
 }
