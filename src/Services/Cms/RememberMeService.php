@@ -93,7 +93,11 @@ class RememberMeService extends Injectable
      */
     private function getForCurrentUser(): RememberMeHashList
     {
-        return $this->getByUser($this->userService->getUser());
+        if( ! $user = $this->userService->getUser()){
+            return new RememberMeHashList();
+        }
+
+        return $this->getByUser($user);
     }
 
     /**
@@ -101,7 +105,9 @@ class RememberMeService extends Injectable
      */
     private function store(RememberMeHashList $hashList)
     {
-        $user = $this->userService->getUser();
+        if( ! $user = $this->userService->getUser()){
+            return;
+        }
 
         $this->cleanUpExpiredTokens($hashList);
 

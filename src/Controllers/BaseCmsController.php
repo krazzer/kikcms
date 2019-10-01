@@ -39,7 +39,7 @@ class BaseCmsController extends BaseController
             $this->assetService->addCss($customCss);
         }
 
-        $this->view->userEmail    = $this->userService->getUser()->email;
+        $this->view->userEmail    = $this->userService->getUser()->email ?? null;
         $this->view->menuGroupMap = $menuGroupMap;
 
         $this->highlightMenuItem($this->dispatcher->getActionName());
