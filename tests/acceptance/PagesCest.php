@@ -57,7 +57,5 @@ class PagesCest
 
         $I->click('div[data-tab="0"]');
         $I->dontSeeElement('.type-wysiwyg');
-
-        $I->makeScreenshot('1');
     }
 }
