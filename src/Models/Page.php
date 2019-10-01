@@ -51,13 +51,7 @@ class Page extends Model
      */
     public function beforeSave()
     {
-        // no parent, so do nothing
-        if ( ! $this->getParentId()) {
-            return;
-        }
-
-        // lft and rgt are already set, so do nothing
-        if (isset($this->lft) && $this->lft && isset($this->rgt) && $this->rgt) {
+        if ( ! $this->getPageService()->requiresNesting($this)) {
             return;
         }
 

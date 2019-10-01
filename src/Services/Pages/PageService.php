@@ -146,7 +146,7 @@ class PageService extends Injectable
      * @param int $level
      * @return array
      */
-    public function getSelect($parentId = 0, PageMap $pageMap, PageLanguageMap $pageLangMap = null, $level = 0): array
+    public function getSelect($parentId, PageMap $pageMap, PageLanguageMap $pageLangMap = null, $level = 0): array
     {
         if ( ! $pageLangMap) {
             $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap, null, false);
@@ -250,5 +250,26 @@ class PageService extends Injectable
         }
 
         return $page->getId();
+    }
+
+    /**
+     * Checks if a Page needs the required nested set properties set
+     *
+     * @param Page $page
+     * @return bool
+     */
+    public function requiresNesting(Page $page): bool
+    {
+        // no parent, doesn't need nesting
+        if ( ! $page->getParentId()) {
+            return false;
+        }
+
+        // lft and rgt are already set, so no need to nest
+        if (isset($page->lft) && $page->lft && isset($page->rgt) && $page->rgt) {
+            return false;
+        }
+
+        return true;
     }
 }
