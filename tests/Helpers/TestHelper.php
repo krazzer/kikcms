@@ -5,6 +5,7 @@ namespace Helpers;
 
 
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
+use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\File;
@@ -188,6 +189,7 @@ class TestHelper extends TestCase
         $di->set('filePermissionService', new FilePermissionService);
         $di->set('userService', new UserService);
         $di->set('assetService', new AssetService);
+        $di->set('templateFields', new TemplateFieldsBase);
 
         $di->get('session')->set('role', Permission::ADMIN);
 
