@@ -87,6 +87,9 @@ class BackendNotFoundPlugin extends Plugin
             case $exception instanceof UnauthorizedException:
                 return ['show401', 401, false];
             break;
+            case $exception instanceof Exception:
+                return ['show500', 500, false];
+            break;
             default:
                 return [null, null, true];
             break;

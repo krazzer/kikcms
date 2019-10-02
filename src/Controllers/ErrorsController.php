@@ -3,7 +3,6 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Config\KikCMSConfig;
 use Phalcon\Http\ResponseInterface;
 
 class ErrorsController extends BaseCmsController
@@ -66,7 +65,7 @@ class ErrorsController extends BaseCmsController
      */
     private function getResponse(string $errorType, array $parameters = []): ResponseInterface
     {
-        if ($this->request->isAjax() && $this->config->application->env !== KikCMSConfig::ENV_DEV) {
+        if ($this->request->isAjax() && $this->config->isProd()) {
             return $this->response->setJsonContent([
                 'title'       => $this->translator->tl('error.' . $errorType . '.title'),
                 'description' => $this->translator->tl('error.' . $errorType . '.description', $parameters),
