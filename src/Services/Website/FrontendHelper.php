@@ -5,29 +5,11 @@ namespace KikCMS\Services\Website;
 
 use KikCMS\Classes\Frontend\FullPage;
 use KikCMS\Classes\Frontend\Menu;
-use KikCMS\Classes\Translator;
-use KikCMS\Config\KikCMSConfig;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\ObjectLists\PageLanguageMap;
-use KikCMS\Services\CacheService;
-use KikCMS\Services\Pages\FullPageService;
-use KikCMS\Services\Pages\PageLanguageService;
-use KikCMS\Services\Pages\PageService;
-use KikCMS\Services\Pages\UrlService;
-use Phalcon\Cache\Backend;
-use Phalcon\Di\Injectable;
 
-/**
- * @property UrlService $urlService
- * @property PageService $pageService
- * @property PageLanguageService $pageLanguageService
- * @property CacheService $cacheService
- * @property Backend $cache
- * @property Translator $translator
- * @property FullPageService $fullPageService
- * @property MenuService $menuService
- */
 class FrontendHelper extends Injectable
 {
     /** @var string */
@@ -95,7 +77,7 @@ class FrontendHelper extends Injectable
         }
 
         // disable cache on dev
-        if ($this->config->application->env === KikCMSConfig::ENV_DEV) {
+        if ($this->config->isDev()) {
             $cache = false;
         }
 
@@ -244,7 +226,7 @@ class FrontendHelper extends Injectable
      * @param int $relativeLevel
      * @return string
      */
-    private function getMenuItemOutput(FullPage $fullPage, string $template = null, int $relativeLevel): string
+    private function getMenuItemOutput(FullPage $fullPage, ?string $template, int $relativeLevel): string
     {
         if ($template) {
             return $this->view->getPartial('@kikcms/frontend/menu', [

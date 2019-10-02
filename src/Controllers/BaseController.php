@@ -3,23 +3,9 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
-use KikCMS\Classes\Translator;
-use KikCMS\Services\LanguageService;
-use KikCMS\Services\Util\ByteService;
-use Phalcon\Config;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\Url;
-use Phalcon\Validation;
+use KikCMS\Classes\Phalcon\Controller;
 use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
-/**
- * @property ByteService $byteService
- * @property Config $config
- * @property LanguageService $languageService
- * @property Translator $translator
- * @property Validation $validation
- * @property Url $url
- */
 class BaseController extends Controller
 {
     /**
@@ -47,7 +33,7 @@ class BaseController extends Controller
         ];
 
         $jsSettings = [
-            'isDev'             => $this->config->application->env == 'dev',
+            'isDev'             => $this->config->isDev(),
             'baseUri'           => $this->url->getBaseUri(),
             'maxFileUploads'    => $maxFileUploads,
             'maxFileSize'       => $maxFileSize,

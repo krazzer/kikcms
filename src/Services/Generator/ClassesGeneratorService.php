@@ -5,16 +5,13 @@ namespace KikCMS\Services\Generator;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Services\DbService;
 use Nette\PhpGenerator\PhpNamespace;
-use Phalcon\Di\Injectable;
 
-/**
- * @property GeneratorService $generatorService
- */
 class ClassesGeneratorService extends Injectable
 {
     /**
@@ -30,7 +27,6 @@ class ClassesGeneratorService extends Injectable
         $class = $namespace->addClass($className);
 
         $class->setExtends(Injectable::class);
-        $class->addComment('@property DbService $dbService');
 
         $this->generatorService->createFile('Services', $className, $namespace);
     }

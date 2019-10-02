@@ -1,9 +1,9 @@
 <?php
 
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\Services;
-use Phalcon\Config\Adapter\Ini;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Di\FactoryDefault\Cli;
 
@@ -24,9 +24,9 @@ if ( ! is_readable($configEnvFile)) {
     throw new Exception('No env config file found! Should be present at ' . $configEnvFile);
 }
 
-$config     = new Ini($configFile);
-$configSite = new Ini($configSiteFile);
-$configEnv  = new Ini($configEnvFile);
+$config     = new IniConfig($configFile);
+$configSite = new IniConfig($configSiteFile);
+$configEnv  = new IniConfig($configEnvFile);
 
 $config->merge($configSite);
 $config->merge($configEnv);

@@ -6,6 +6,7 @@ namespace KikCMS\Services\Finder;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FilePermission;
@@ -19,7 +20,6 @@ use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Models\Folder;
 use KikCMS\Models\File;
 use KikCMS\Services\Website\WebsiteService;
-use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File as UploadedFile;
 use Phalcon\Mvc\Model\Query\Builder;
@@ -28,7 +28,7 @@ use Phalcon\Mvc\Model\Query\Builder;
  * Handles Files
  *
  * @property AccessControl $acl
- * @property Config $config
+ * @property IniConfig $config
  * @property DbService $dbService
  * @property ImageHandler $imageHandler
  * @property FileStorage $fileStorage

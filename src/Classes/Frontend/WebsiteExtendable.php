@@ -3,7 +3,8 @@
 namespace KikCMS\Classes\Frontend;
 
 
-use Phalcon\Di\Injectable;
+use Exception;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Represents a Class that can be extended by the Website
@@ -12,10 +13,10 @@ class WebsiteExtendable extends Injectable
 {
     /**
      * @param string $methodName
-     * @throws \Exception
+     * @throws Exception
      */
     protected function throwMethodDoesNotExistException(string $methodName)
     {
-        throw new \Exception('Method ' . get_class($this) . '::' . $methodName . ' not found');
+        throw new Exception('Method ' . get_class($this) . '::' . $methodName . ' not found');
     }
 }

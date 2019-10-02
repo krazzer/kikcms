@@ -4,20 +4,13 @@
 namespace KikCMS\Services\Generator;
 
 
-use KikCMS\Classes\Phalcon\Loader;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Classes\ObjectMap;
-use KikCmsCore\Services\DbService;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
-use Phalcon\Di\Injectable;
 
-/**
- * @property ClassesGeneratorService $classesGeneratorService
- * @property DbService $dbService
- * @property Loader $loader
- */
 class GeneratorService extends Injectable
 {
     /**

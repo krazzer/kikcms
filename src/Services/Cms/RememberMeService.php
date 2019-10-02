@@ -6,16 +6,11 @@ namespace KikCMS\Services\Cms;
 
 use DateInterval;
 use DateTime;
-use KikCMS\Config\KikCMSConfig;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\User;
 use KikCMS\ObjectLists\RememberMeHashList;
 use KikCMS\Objects\RememberMeHash;
-use KikCMS\Services\UserService;
-use Phalcon\Di\Injectable;
 
-/**
- * @property UserService $userService
- */
 class RememberMeService extends Injectable
 {
     const COOKIE_KEY = 'remember-me';
@@ -160,7 +155,7 @@ class RememberMeService extends Injectable
     private function getKey(): string
     {
         // Add port to cookie in dev, so different ports can be used
-        if($this->config->application->env == KikCMSConfig::ENV_DEV){
+        if($this->config->isDev()){
             return self::COOKIE_KEY . '-' . $this->request->getPort();
         }
 

@@ -5,14 +5,14 @@ namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\ImageHandler\ImageHandler;
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Models\File;
-use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
 /**
  * @property ImageHandler $imageHandler
  * @property FileService $fileService
- * @property Config $config
+ * @property IniConfig $config
  */
 class FileResizeService extends Injectable
 {

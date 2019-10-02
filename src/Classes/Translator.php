@@ -3,31 +3,14 @@
 namespace KikCMS\Classes;
 
 
-use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
-use KikCMS\Services\CacheService;
-use KikCMS\Services\LanguageService;
-use KikCMS\Services\TranslationService;
-use KikCmsCore\Services\DbService;
 use Monolog\Logger;
-use Phalcon\Cache\Backend;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Validation;
 
-/**
- * @property Backend $cache
- * @property CacheService $cacheService
- * @property DbService $dbService
- * @property LanguageService $languageService
- * @property Logger $logger
- * @property TranslationService $translationService
- * @property Validation $validation
- * @property WebsiteSettingsBase $websiteSettings
- */
 class Translator extends Injectable
 {
     /** @var null|string */

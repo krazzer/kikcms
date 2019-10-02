@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use Exception;
+use KikCMS\Classes\Phalcon\IniConfig;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Swift_Attachment;
@@ -14,7 +15,7 @@ use Swift_Mime_MimePart;
 /**
  * Service for sending various mails
  *
- * @property Config $config
+ * @property IniConfig $config
  * @property PlaceholderService $placeholderService
  */
 class MailService extends Injectable

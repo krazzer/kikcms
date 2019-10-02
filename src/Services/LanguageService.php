@@ -3,16 +3,16 @@
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Language;
-use Phalcon\Config;
 use Phalcon\Di\Injectable;
 
 /**
  * Service for managing different languages for the website, and also for configuring these in the CMS
  *
- * @property Config $config
+ * @property IniConfig $config
  * @property CacheService $cacheService
  * @property DbService $dbService
  */

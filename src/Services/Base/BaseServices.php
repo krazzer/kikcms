@@ -1,10 +1,12 @@
-<?php declare(strict_types=1); /** @noinspection PhpUndefinedClassInspection */
+<?php /** @noinspection PhpUndefinedClassInspection */
+declare(strict_types=1);
 
 namespace KikCMS\Services\Base;
 
 use ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
@@ -13,6 +15,7 @@ use KikCMS\Classes\Phalcon\Loader;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Files;
+use ReflectionObject;
 
 class BaseServices extends ApplicationServices
 {
@@ -94,7 +97,7 @@ class BaseServices extends ApplicationServices
         }
 
         // initialize models meta data only in production
-        if ($this->getAppConfig()->env === KikCMSConfig::ENV_PROD) {
+        if ($this->getIniConfig()->isProd()) {
             $this->set('modelsMetadata', function () {
                 return new Files([
                     "lifetime"    => 86400,
@@ -112,6 +115,14 @@ class BaseServices extends ApplicationServices
 
             $this->set($name, $callable);
         }
+    }
+
+    /**
+     * @return IniConfig
+     */
+    protected function getIniConfig(): IniConfig
+    {
+        return $this->get('config');
     }
 
     /**
@@ -219,7 +230,7 @@ class BaseServices extends ApplicationServices
      */
     private function bindMethodServices()
     {
-        $reflection = new \ReflectionObject($this);
+        $reflection = new ReflectionObject($this);
         $methods    = $reflection->getMethods();
 
         foreach ($methods as $method) {

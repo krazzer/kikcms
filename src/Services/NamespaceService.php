@@ -5,17 +5,17 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\Phalcon\Cache;
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
-use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 /**
  * @property Cache cache
- * @property Config config
+ * @property IniConfig config
  * @property Loader loader
  */
 class NamespaceService extends Injectable
@@ -54,7 +54,7 @@ class NamespaceService extends Injectable
         }
 
         // only cache on production, to prevent errors when creating new services
-        if($this->cache && $this->config->application->env === KikCMSConfig::ENV_PROD){
+        if($this->cache && $this->config->isProd()){
             $this->cache->save($cacheKey, $services, CacheConfig::ONE_YEAR);
         }
 

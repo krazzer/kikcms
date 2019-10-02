@@ -3,6 +3,8 @@
 namespace KikCMS\Services;
 
 use Exception;
+use Google_Client;
+use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Finder\FileService;
@@ -123,7 +125,7 @@ class Services extends BaseServices
     }
 
     /**
-     * @return \Google_Service_AnalyticsReporting
+     * @return Google_Service_AnalyticsReporting
      */
     protected function initAnalytics()
     {
@@ -135,11 +137,11 @@ class Services extends BaseServices
         }
 
         // Create and configure a new client object.
-        $client = new \Google_Client();
+        $client = new Google_Client();
         $client->setApplicationName("Analytics");
         $client->setAuthConfig($keyFileLocation);
         $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $analytics = new \Google_Service_AnalyticsReporting($client);
+        $analytics = new Google_Service_AnalyticsReporting($client);
 
         return $analytics;
     }
@@ -156,7 +158,7 @@ class Services extends BaseServices
         $options = null;
 
         // set the current domain as prefix to prevent caching overlap
-        if ($this->getAppConfig()->env == KikCMSConfig::ENV_DEV) {
+        if ($this->getIniConfig()->isDev()) {
             $options = ["prefix" => explode('.', $_SERVER['SERVER_NAME'])[0] . ':'];
         }
 
@@ -433,7 +435,7 @@ class Services extends BaseServices
         $view->setNamespaces($namespaces);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                $isDev = $this->getAppConfig()->env == KikCMSConfig::ENV_DEV;
+                $isDev = $this->getIniConfig()->isDev();
                 $cache = $isDev ? false : $this->getAppConfig()->path . 'cache/twig/';
 
                 return new Twig($view, $di, [

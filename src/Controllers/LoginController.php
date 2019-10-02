@@ -14,13 +14,11 @@ use KikCMS\Models\User;
 use KikCMS\Services\AssetService;
 use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
-use Phalcon\Config;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AssetService $assetService
- * @property Config $applicationConfig
  * @property KeyValue $keyValue
  * @property MailService $mailService
  * @property Translator $translator

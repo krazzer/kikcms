@@ -4,14 +4,9 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
-use KikCMS\Config\KikCMSConfig;
-use Phalcon\Config;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use stdClass;
 
-/**
- * @property Config config
- */
 class ErrorService extends Injectable
 {
     /**
@@ -46,7 +41,7 @@ class ErrorService extends Injectable
      */
     public function handleError($error)
     {
-        $isProduction = $this->config->application->env === KikCMSConfig::ENV_PROD;
+        $isProduction = $this->config->isProd();
 
         if( ! $errorView = $this->getErrorView($error, $isProduction)){
             return;
