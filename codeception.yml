@@ -1,16 +1,18 @@
 paths:
-    tests: tests
-    output: tests/_output
-    data: tests/_data
-    support: tests/_support
-    envs: tests/_envs
+  tests: tests
+  output: tests/_output
+  data: tests/_data
+  support: tests/_support
+  envs: tests/_envs
 actor_suffix: Tester
 extensions:
-    enabled:
-        - Codeception\Extension\RunFailed
+  enabled:
+    - Codeception\Extension\RunFailed
 coverage:
   include:
     - src/*
+  exclude:
+    - src/Views/*
   remote: false
   show_only_summary: true
   enabled: true

@@ -26,5 +26,6 @@ class PersonForm extends DataForm
     {
         $this->addTextField(Person::FIELD_NAME, 'Name', [new PresenceOf]);
         $this->addDataTableField('personInterests', PersonInterests::class, 'Person interests');
+        $this->addDateField('created', 'Date created', [new PresenceOf]);
     }
 }

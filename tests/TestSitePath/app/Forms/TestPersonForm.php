@@ -25,5 +25,6 @@ class TestPersonForm extends DataForm
     protected function initialize()
     {
         $this->addTextField(TestPerson::FIELD_NAME, 'Name', [new PresenceOf]);
+        $this->addDateField(TestPerson::FIELD_CREATED, 'Created', [new PresenceOf])->setFormat('d-m-Y');
     }
 }

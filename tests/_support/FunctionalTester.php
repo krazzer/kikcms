@@ -1,7 +1,9 @@
 <?php
 
+use Codeception\Actor;
 use KikCMS\Models\User;
 use KikCmsCore\Services\DbService;
+use Website\Models\TestPerson;
 
 
 /**
@@ -19,7 +21,7 @@ use KikCmsCore\Services\DbService;
  *
  * @SuppressWarnings(PHPMD)
  */
-class FunctionalTester extends \Codeception\Actor
+class FunctionalTester extends Actor
 {
     use _generated\FunctionalTesterActions;
 
@@ -64,5 +66,6 @@ class FunctionalTester extends \Codeception\Actor
     public function cleanDb()
     {
         $this->getDbService()->truncate(User::class);
+        $this->getDbService()->truncate(TestPerson::class);
     }
 }

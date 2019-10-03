@@ -15,7 +15,7 @@ class BackendNotFoundPluginTest extends Unit
     {
         $backendNotFoundPlugin = new BackendNotFoundPlugin();
 
-        $this->assertEquals([null, null, true], $backendNotFoundPlugin->getActionForException(new Exception));
+        $this->assertEquals(['show500', 500, false], $backendNotFoundPlugin->getActionForException(new Exception));
         $this->assertEquals([null, 440, false], $backendNotFoundPlugin->getActionForException(new SessionExpiredException));
         $this->assertEquals(['show404object', null, false], $backendNotFoundPlugin->getActionForException(new ObjectNotFoundException));
         $this->assertEquals(['show404', null, false], $backendNotFoundPlugin->getActionForException(new NotFoundException));

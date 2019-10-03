@@ -13,3 +13,4 @@ modules:
         cleanup: true
         savepoints: true
     - \Helper\Functional
+    - Asserts
