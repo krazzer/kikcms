@@ -17,6 +17,7 @@ use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\AssetService;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\TableDataService;
 use KikCMS\Services\Finder\FilePermissionService;
@@ -190,6 +191,7 @@ class TestHelper extends TestCase
         $di->set('userService', new UserService);
         $di->set('assetService', new AssetService);
         $di->set('templateFields', new TemplateFieldsBase);
+        $di->set('cmsService', new CmsService);
 
         $di->get('session')->set('role', Permission::ADMIN);
 

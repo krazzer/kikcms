@@ -14,3 +14,4 @@ modules:
         savepoints: true
     - \Helper\Functional
     - Asserts
+    - Cli
