@@ -150,6 +150,10 @@ class CmsService extends Injectable
      */
     private function removeUnsavedTemporaryRecords(SubDataTableNewIdsCache $cache)
     {
+        if( ! class_exists($cache->getModel())) {
+            return;
+        }
+
         $column  = $cache->getColumn();
         $objects = $this->modelService->getObjects($cache->getModel(), $cache->getIds());
 

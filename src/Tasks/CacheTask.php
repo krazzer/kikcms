@@ -2,9 +2,9 @@
 
 namespace KikCMS\Tasks;
 
+use KikCMS\Classes\Phalcon\Task;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Cms\CmsService;
-use Phalcon\Cli\Task;
 
 /**
  * @property CacheService $cacheService
@@ -27,15 +27,12 @@ class CacheTask extends Task
     {
         $url = $this->url->getBaseUri() . 'cache/clear/' . $this->cmsService->createSecurityToken();
 
-        $contextOptions = ["ssl" => [
-            "verify_peer"      => false,
-            "verify_peer_name" => false,
-        ]];
-
-        $response = json_decode(file_get_contents($url, false, stream_context_create($contextOptions)), true);
+        $response = $this->jsonService->getByUrl($url);
 
         if ( ! isset($response['success']) || ! $response['success']) {
             echo 'Cache clear failed!' . PHP_EOL;
+        } else {
+            echo 'Cache cleared succesfully!' . PHP_EOL;
         }
     }
 }

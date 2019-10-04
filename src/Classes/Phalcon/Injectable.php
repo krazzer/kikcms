@@ -53,6 +53,7 @@ use KikCMS\Services\TwigService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\ByteService;
 use KikCMS\Services\Util\DateTimeService;
+use KikCMS\Services\Util\JsonService;
 use KikCMS\Services\Util\NumberService;
 use KikCMS\Services\Util\PaginateListService;
 use KikCMS\Services\Util\QueryService;
@@ -102,6 +103,7 @@ use Phalcon\Validation;
  * @property FullPageService fullPageService
  * @property GeneratorService generatorService
  * @property ImageHandler imageHandler
+ * @property JsonService jsonService
  * @property KeyValue $keyValue
  * @property LanguageService languageService
  * @property Logger $logger
