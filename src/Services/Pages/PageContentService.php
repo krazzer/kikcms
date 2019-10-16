@@ -53,11 +53,10 @@ class PageContentService extends Injectable
             return $pageLangMap;
         }
 
-        $searchParams = ['public' => '%/media/files/' . $file->getId() . '%'];
-
-        if($file->getHash()){
-            $searchParams['private'] = '%/media/files/' . $file->getHash() . '%';
-        }
+        $searchParams = [
+            'public'  => '%/media/files/' . $file->getId() . '%',
+            'private' => '%/media/files/' . $file->getHash() . '%',
+        ];
 
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
