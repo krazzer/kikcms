@@ -224,7 +224,9 @@ class Services extends BaseServices
         });
 
         register_shutdown_function(function () {
-            $this->get('errorService')->handleError(error_get_last());
+            if( ! $this->get('errorService')->isRecoverableError(error_get_last())) {
+                $this->get('errorService')->handleError(error_get_last());
+            }
         });
 
         $errorHandler->registerExceptionHandler();

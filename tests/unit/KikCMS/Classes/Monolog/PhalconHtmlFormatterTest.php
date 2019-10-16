@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use Codeception\Test\Unit;
+use Helpers\PhalconHtmlFormatterTestTestClass;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 
-class PhalconHtmlFormatterTest extends \Codeception\Test\Unit
+class PhalconHtmlFormatterTest extends Unit
 {
     public function testRemoveConfig()
     {
@@ -31,9 +33,4 @@ class PhalconHtmlFormatterTest extends \Codeception\Test\Unit
 
         $this->assertEquals($result, $expected);
     }
-}
-
-class PhalconHtmlFormatterTestTestClass extends \Phalcon\Di\Injectable
-{
-
 }

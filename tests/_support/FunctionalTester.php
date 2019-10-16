@@ -34,6 +34,7 @@ class FunctionalTester extends Actor
         $this->addUser();
 
         $I->amOnPage('/cms');
+
         $I->submitForm('#login-form form', [
             'username' => $username,
             'password' => $password,
@@ -41,6 +42,15 @@ class FunctionalTester extends Actor
         ]);
 
         $I->seeElement('#menu');
+    }
+
+    /**
+     * @param $name
+     * @return object
+     */
+    public function getService($name): object
+    {
+        return $this->getApplication()->di->get($name);
     }
 
     /**

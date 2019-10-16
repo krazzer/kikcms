@@ -51,6 +51,19 @@ class ErrorService extends Injectable
     }
 
     /**
+     * @param stdClass|array $error
+     * @return bool
+     */
+    public function isRecoverableError($error): bool
+    {
+        if ( ! $errorType = $this->getErrorType($error)) {
+            return false;
+        }
+
+        return ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR]);
+    }
+
+    /**
      * @return bool
      */
     private function isAjaxRequest(): bool
@@ -71,18 +84,5 @@ class ErrorService extends Injectable
         }
 
         return $error['type'] ?? null;
-    }
-
-    /**
-     * @param stdClass|array $error
-     * @return bool
-     */
-    private function isRecoverableError($error): bool
-    {
-        if ( ! $errorType = $this->getErrorType($error)) {
-            return false;
-        }
-
-        return ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR]);
     }
 }
