@@ -48,7 +48,11 @@ class BackendNotFoundPlugin extends Plugin
         }
 
         if ($forwardView) {
-            $params = $exception instanceof ObjectNotFoundException ? ['object' => $exception->getObject()] : [];
+            $params = ['error' => $exception];
+
+            if ($exception instanceof ObjectNotFoundException) {
+                $params['object'] = $exception->getObject();
+            }
 
             $dispatcher->forward([
                 'namespace'  => KikCMSConfig::NAMESPACE_PATH_CMS_CONTROLLERS,
