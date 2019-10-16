@@ -56,7 +56,7 @@ class ErrorsController extends BaseCmsController
     public function show500Action($error = null): ResponseInterface
     {
         $this->response->setStatusCode(500);
-        return $this->getResponse('500', ['error' => $error]);
+        return $this->getResponse('500', ['error' => $this->config->isProd() ? null : $error]);
     }
 
     /**
