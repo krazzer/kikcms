@@ -30,10 +30,15 @@ class AcceptanceTester extends Actor
      * @param string $username
      * @param string $password
      * @param null $remember
+     * @param bool $useSnapshot
      */
-    public function login(string $username = self::TEST_USERNAME, $password = self::TEST_PASS, $remember = null)
+    public function login(string $username = self::TEST_USERNAME, $password = self::TEST_PASS, $remember = null, $useSnapshot = true)
     {
         $I = $this;
+
+        if ($useSnapshot && $I->loadSessionSnapshot('login')) {
+            return;
+        }
 
         $I->amOnPage('/cms');
         $I->submitForm('#login-form form', [
@@ -41,6 +46,10 @@ class AcceptanceTester extends Actor
             'password' => $password,
             'remember' => $remember,
         ]);
+
+        if($useSnapshot){
+            $I->saveSessionSnapshot('login');
+        }
     }
 
     /**
@@ -48,7 +57,7 @@ class AcceptanceTester extends Actor
      */
     public function loginAndRemember()
     {
-        $this->login(self::TEST_USERNAME, self::TEST_PASS, true);
+        $this->login(self::TEST_USERNAME, self::TEST_PASS, true, false);
     }
 
     /**

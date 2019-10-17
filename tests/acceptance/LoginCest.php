@@ -27,7 +27,7 @@ class LoginCest
     public function loginWrongPassWorks(AcceptanceTester $I)
     {
         $I->addUser();
-        $I->login(AcceptanceTester::TEST_USERNAME, 'wrongPass');
+        $I->login(AcceptanceTester::TEST_USERNAME, 'wrongPass', null, false);
         $I->seeElement('#login');
         $I->seeElement('.alert');
         $I->dontSeeElement('#menu');
@@ -59,7 +59,7 @@ class LoginCest
             'password_repeat' => 'myNewPassword1',
         ]);
 
-        $I->login($I::TEST_USERNAME, 'myNewPassword1');
+        $I->login($I::TEST_USERNAME, 'myNewPassword1', null, false);
 
         $I->seeElement('#menu');
 
