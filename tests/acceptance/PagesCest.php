@@ -5,9 +5,7 @@ namespace acceptance;
 
 
 use AcceptanceTester;
-use Facebook\WebDriver\Remote\DriverCommand;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\WebDriverBy;
 
 class PagesCest
 {
@@ -112,26 +110,20 @@ class PagesCest
         $I->amOnPage('/cms/pages');
 
         $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
-            $element = $webDriver->findElement(WebDriverBy::cssSelector('tr[data-id="6"] span.name'));
-//            $webDriver->execute(DriverCommand::MOVE_TO, [$element->getCoordinates(), 0, 0]);
-
-//            $webDriver->action()->moveToElement($element, 10, 10);
-//            $webDriver->execute(DriverCommand::MOUSE_DOWN);
-
-            $webDriver->action()->clickAndHold($element);
-            $webDriver->action()->moveByOffset(0, -100);
-            $webDriver->execute(DriverCommand::MOUSE_UP);
-
+            $webDriver->action()
+                ->moveByOffset(340, 340)
+                ->clickAndHold()
+                ->moveByOffset(10, 10)
+                ->moveByOffset(-10, -100)->perform();
         });
 
         $I->wait(1);
 
-        $I->makeScreenshot(1);
+        $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
+            $webDriver->action()->release()->perform();
+        });
 
-//        $I->dragAndDrop('tr[data-id="6"] span.name', 'tr[data-id="3"]');
-//        $I->makeScreenshot(1);
-//
-//        $I->moveMouseOver();
-//        $I->performOn();
+        $I->wait(2);
+        $I->makeScreenshot(1);
     }
 }

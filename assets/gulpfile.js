@@ -2,16 +2,16 @@
 // Gulp tasks
 //////////////////////////////
 
-let gulp = require('gulp');
-let sourcemaps = require('gulp-sourcemaps');
-let sass       = require('gulp-sass');
-let postcss    = require('gulp-postcss');
-let uglify     = require('gulp-uglify');
-let concat     = require('gulp-concat');
-let plumber    = require('gulp-plumber');
+var gulp       = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
+var sass       = require('gulp-sass');
+var postcss    = require('gulp-postcss');
+var uglify     = require('gulp-uglify');
+var concat     = require('gulp-concat');
+var plumber    = require('gulp-plumber');
 
 // Root folder
-let rootFolder = '../resources/';
+var rootFolder = '../resources/';
 
 // Styles
 gulp.task('styles', function () {
