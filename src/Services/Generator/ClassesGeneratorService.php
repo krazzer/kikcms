@@ -9,7 +9,6 @@ use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\Model;
-use KikCmsCore\Services\DbService;
 use Nette\PhpGenerator\PhpNamespace;
 
 class ClassesGeneratorService extends Injectable
@@ -21,7 +20,6 @@ class ClassesGeneratorService extends Injectable
     {
         $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_SERVICES, '\\'));
 
-        $namespace->addUse(DbService::class);
         $namespace->addUse(Injectable::class);
 
         $class = $namespace->addClass($className);

@@ -49,6 +49,8 @@ class AcceptanceTester extends Actor
 
         if($useSnapshot){
             $I->saveSessionSnapshot('login');
+        } else {
+            $I->deleteSessionSnapshot('login');
         }
     }
 
