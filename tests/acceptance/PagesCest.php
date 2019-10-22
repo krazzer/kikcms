@@ -109,6 +109,8 @@ class PagesCest
         $I->login();
         $I->amOnPage('/cms/pages');
 
+        $I->cantSeeElement('tr[data-id="6"][data-level="1"]');
+
         $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
             $webDriver->action()
                 ->moveByOffset(340, 340)
@@ -123,7 +125,8 @@ class PagesCest
             $webDriver->action()->release()->perform();
         });
 
-        $I->wait(2);
-        $I->makeScreenshot(1);
+        $I->waitForJS("return $.active == 0;", 10);
+        $I->canSeeElement('tr[data-id="6"][data-level="1"]');
+        $I->updateInDatabase('cms_page', ['lft' => null, 'rgt' => null, 'parent_id' => null, 'level' => 0,], ['id' => 6]);
     }
 }
