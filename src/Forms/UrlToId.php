@@ -36,7 +36,7 @@ class UrlToId extends FieldTransformer
      */
     public function toStorage($value)
     {
-        if($pageLanguage = $this->urlService->getPageLanguageByUrlPath($value)){
+        if ($pageLanguage = $this->urlService->getPageLanguageByUrlPath($value)) {
             return $pageLanguage->getPageId();
         }
 
@@ -49,8 +49,8 @@ class UrlToId extends FieldTransformer
      */
     public function toDisplay($value)
     {
-        if(is_numeric($value)){
-            return $this->urlService->getUrlByPageId($value, $this->languageCode);
+        if (is_numeric($value)) {
+            return $this->urlService->getUrlByPageId((int) $value, $this->languageCode);
         }
 
         return $value;
