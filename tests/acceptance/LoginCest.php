@@ -67,12 +67,6 @@ class LoginCest
         (new Client(['base_uri' => 'http://mailtest:8025']))->delete('api/v1/messages');
     }
 
-    public function rememberMeWorks(AcceptanceTester $I)
-    {
-        $I->amOnPage('/cms/login');
-        $I->loginAndRemember();
-    }
-
     /**
      * @return string
      */
