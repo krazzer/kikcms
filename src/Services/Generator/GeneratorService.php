@@ -20,17 +20,24 @@ class GeneratorService extends Injectable
     {
         $tables = $this->getTables();
 
-        foreach ($tables as $table) {
-            $this->generateForTable($table);
+        $files = 0;
+
+        foreach ($tables as $i => $table) {
+            $files += $this->generateForTable($table, count($tables), $i);
         }
+
+        echo "\033[0;33m" . $files . " files generated\033[0m" . PHP_EOL;
 
         return true;
     }
 
     /**
      * @param string $table
+     * @param int $total
+     * @param int $index
+     * @return int
      */
-    public function generateForTable(string $table)
+    public function generateForTable(string $table, int $total = 1, int $index = 0): int
     {
         $className = $this->getClassName($table);
 
@@ -39,6 +46,8 @@ class GeneratorService extends Injectable
         $objectListClass  = $className . 'List';
         $objectMapClass   = $className . 'Map';
         $serviceClassName = $className . 'Service';
+
+        $filesGenerated = 0;
 
         $classesToGenerate = [
             [KikCMSConfig::NAMESPACE_PATH_MODELS, 'model', [$className, $table]],
@@ -49,12 +58,22 @@ class GeneratorService extends Injectable
             [KikCMSConfig::NAMESPACE_PATH_SERVICES, 'service', [$serviceClassName]],
         ];
 
-        foreach ($classesToGenerate as list($namespace, $method, $parameters)) {
+        foreach ($classesToGenerate as $i => list($namespace, $method, $parameters)) {
             if ( ! class_exists($namespace . $parameters[0])) {
                 $method = 'create' . ucfirst($method) . 'Class';
                 call_user_func_array([$this->classesGeneratorService, $method], $parameters);
+                $filesGenerated++;
             }
+
+            $part = 100 / $total;
+
+            $tablePercentage = $part * $index;
+            $objectPercentage = $part / 6 * $i;
+
+            echo round($tablePercentage + $objectPercentage) . "%\r";
         }
+
+        return $filesGenerated;
     }
 
     /**
@@ -89,7 +108,7 @@ class GeneratorService extends Injectable
             }
         }
 
-        return $tables;
+        return array_values($tables);
     }
 
     /**
