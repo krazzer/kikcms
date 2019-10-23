@@ -97,6 +97,7 @@ class PageService extends Injectable
             ->from(['p' => $this->websiteSettings->getPageClass()])
             ->leftJoin(Page::class, 'p.lft < cp.lft AND p.rgt > cp.rgt', 'cp')
             ->inWhere('p.id', $pageIds)
+            ->andWhere('cp.id IS NOT NULL')
             ->groupBy('p.id');
 
         $offspringIdMap = $this->dbService->getAssoc($query);
