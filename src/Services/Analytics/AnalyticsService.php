@@ -5,6 +5,8 @@ namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
+use Exception;
+use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\Phalcon\Cache;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
@@ -19,7 +21,7 @@ use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
- * @property \Google_Service_AnalyticsReporting $analytics
+ * @property Google_Service_AnalyticsReporting $analytics
  * @property AnalyticsImportService $analyticsImportService
  * @property AnalyticsGoogleService $analyticsGoogleService
  * @property DbService $dbService
@@ -62,11 +64,15 @@ class AnalyticsService extends Injectable
             if ( ! $requireUpdate) {
                 $this->stopUpdatingForSixHours();
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
             $this->keyValue->delete(CacheConfig::STATS_UPDATE_IN_PROGRESS);
-            $this->cache->delete(CacheConfig::STATS_REQUIRE_UPDATE);
+
+            if ($this->cache) {
+                $this->cache->delete(CacheConfig::STATS_REQUIRE_UPDATE);
+            }
+
             return false;
         }
 
@@ -383,6 +389,10 @@ class AnalyticsService extends Injectable
      */
     private function stopUpdatingForSixHours()
     {
+        if( ! $this->cache){
+            return;
+        }
+
         $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
     }
 }
