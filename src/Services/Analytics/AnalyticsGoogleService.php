@@ -5,6 +5,16 @@ namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
+use Google_Service_AnalyticsReporting_ColumnHeader;
+use Google_Service_AnalyticsReporting_DateRange;
+use Google_Service_AnalyticsReporting_DateRangeValues;
+use Google_Service_AnalyticsReporting_Dimension;
+use Google_Service_AnalyticsReporting_GetReportsRequest;
+use Google_Service_AnalyticsReporting_Metric;
+use Google_Service_AnalyticsReporting_MetricHeaderEntry;
+use Google_Service_AnalyticsReporting_Report;
+use Google_Service_AnalyticsReporting_ReportRequest;
+use Google_Service_AnalyticsReporting_ReportRow;
 use KikCMS\Config\StatisticsConfig;
 use Phalcon\Config;
 use Phalcon\Di\Injectable;
@@ -36,44 +46,44 @@ class AnalyticsGoogleService extends Injectable
 
         $viewId = (string) $this->config->analytics->viewId;
 
-        $dateRange = new \Google_Service_AnalyticsReporting_DateRange();
+        $dateRange = new Google_Service_AnalyticsReporting_DateRange();
         $dateRange->setStartDate($fromDate->format('Y-m-d'));
         $dateRange->setEndDate("today");
 
-        $sessions = new \Google_Service_AnalyticsReporting_Metric();
+        $sessions = new Google_Service_AnalyticsReporting_Metric();
         $sessions->setExpression("ga:visits");
         $sessions->setAlias("visits");
 
         $metrics = [$sessions];
 
         foreach ($addMetrics as $metricName => $alias) {
-            $metric = new \Google_Service_AnalyticsReporting_Metric();
+            $metric = new Google_Service_AnalyticsReporting_Metric();
             $metric->setExpression($metricName);
             $metric->setAlias($alias);
 
             $metrics[] = $metric;
         }
 
-        $year = new \Google_Service_AnalyticsReporting_Dimension();
+        $year = new Google_Service_AnalyticsReporting_Dimension();
         $year->setName("ga:year");
 
-        $month = new \Google_Service_AnalyticsReporting_Dimension();
+        $month = new Google_Service_AnalyticsReporting_Dimension();
         $month->setName("ga:month");
 
-        $day = new \Google_Service_AnalyticsReporting_Dimension();
+        $day = new Google_Service_AnalyticsReporting_Dimension();
         $day->setName("ga:day");
 
         $dimensions = [$year, $month, $day];
 
         if ($dimensionName) {
-            $dimension = new \Google_Service_AnalyticsReporting_Dimension();
+            $dimension = new Google_Service_AnalyticsReporting_Dimension();
             $dimension->setName($dimensionName);
 
             $dimensions[] = $dimension;
         }
 
         // Create the ReportRequest object.
-        $request = new \Google_Service_AnalyticsReporting_ReportRequest();
+        $request = new Google_Service_AnalyticsReporting_ReportRequest();
         $request->setViewId($viewId);
         $request->setDateRanges($dateRange);
         $request->setMetrics($metrics);
@@ -92,22 +102,22 @@ class AnalyticsGoogleService extends Injectable
     /**
      * Request the data from the given google request and convert it to an array
      *
-     * @param \Google_Service_AnalyticsReporting_ReportRequest $request
+     * @param Google_Service_AnalyticsReporting_ReportRequest $request
      * @return array
      */
-    private function reportRequestToArray(\Google_Service_AnalyticsReporting_ReportRequest $request): array
+    private function reportRequestToArray(Google_Service_AnalyticsReporting_ReportRequest $request): array
     {
         $results = [];
 
-        $body = new \Google_Service_AnalyticsReporting_GetReportsRequest();
+        $body = new Google_Service_AnalyticsReporting_GetReportsRequest();
         $body->setReportRequests(array($request));
         $reports = $this->analytics->reports->batchGet($body);
 
         for ($reportIndex = 0; $reportIndex < count($reports); $reportIndex++) {
-            /** @var \Google_Service_AnalyticsReporting_Report $report */
+            /** @var Google_Service_AnalyticsReporting_Report $report */
             $report = $reports[$reportIndex];
 
-            /** @var \Google_Service_AnalyticsReporting_ColumnHeader $header */
+            /** @var Google_Service_AnalyticsReporting_ColumnHeader $header */
             $header           = $report->getColumnHeader();
             $dimensionHeaders = $header->getDimensions();
             $metricHeaders    = $header->getMetricHeader()->getMetricHeaderEntries();
@@ -122,8 +132,8 @@ class AnalyticsGoogleService extends Injectable
     }
 
     /**
-     * @param \Google_Service_AnalyticsReporting_ReportRow $reportRow
-     * @param \Google_Service_AnalyticsReporting_MetricHeaderEntry $metricHeaders
+     * @param Google_Service_AnalyticsReporting_ReportRow $reportRow
+     * @param Google_Service_AnalyticsReporting_MetricHeaderEntry $metricHeaders
      * @param array $dimensionHeaders
      * @return array
      */
@@ -139,11 +149,11 @@ class AnalyticsGoogleService extends Injectable
         }
 
         for ($j = 0; $j < count($metrics); $j++) {
-            /** @var \Google_Service_AnalyticsReporting_DateRangeValues $metric */
+            /** @var Google_Service_AnalyticsReporting_DateRangeValues $metric */
             $metric = $metrics[$j];
             $values = $metric->getValues();
             for ($k = 0; $k < count($values); $k++) {
-                /** @var \Google_Service_AnalyticsReporting_MetricHeaderEntry $entry */
+                /** @var Google_Service_AnalyticsReporting_MetricHeaderEntry $entry */
                 $entry                        = $metricHeaders[$k];
                 $resultRow[$entry->getName()] = $values[$k];
             }
