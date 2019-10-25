@@ -2,6 +2,7 @@
 
 namespace KikCMS\Services;
 
+use ErrorException;
 use Exception;
 use Google_Client;
 use Google_Service_AnalyticsReporting;
@@ -223,11 +224,12 @@ class Services extends BaseServices
             $this->get('errorService')->handleError($error);
         });
 
-        register_shutdown_function(function () {
-            if( ! $this->get('errorService')->isRecoverableError(error_get_last())) {
-                $this->get('errorService')->handleError(error_get_last());
-            }
-        });
+        // handle warnings and notices as exceptions on development
+        if($this->getIniConfig()->isDev()){
+            set_error_handler(function ($severity, $message, $file, $line){
+                throw new ErrorException($message, $severity, $severity, $file, $line);
+            });
+        }
 
         $errorHandler->registerExceptionHandler();
         $errorHandler->registerErrorHandler();
@@ -437,12 +439,9 @@ class Services extends BaseServices
         $view->setNamespaces($namespaces);
         $view->registerEngines([
             Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                $isDev = $this->getIniConfig()->isDev();
-                $cache = $isDev ? false : $this->getAppConfig()->path . 'cache/twig/';
-
                 return new Twig($view, $di, [
-                    'cache' => $cache,
-                    'debug' => $isDev,
+                    'cache' => $this->getIniConfig()->isDev() ? false : $this->getAppConfig()->path . 'cache/twig/',
+                    'debug' => $this->getIniConfig()->isDev(),
                 ], $view->getNamespaces());
             }
         ]);
