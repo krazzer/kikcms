@@ -1,6 +1,6 @@
 <?php
 
-namespace Website\Classes;
+namespace Website\TestClasses;
 
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;

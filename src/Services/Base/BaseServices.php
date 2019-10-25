@@ -7,7 +7,6 @@ use ApplicationServices;
 use KikCMS\Classes\CmsPlugin;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Phalcon\IniConfig;
-use KikCMS\Config\KikCMSConfig;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
 use KikCMS\Services\Website\WebsiteService;
@@ -51,7 +50,7 @@ class BaseServices extends ApplicationServices
         $this->setShared('applicationConfig', $config->get('application'));
         $this->setShared('databaseConfig', $config->get('database'));
         $this->setShared('loader', $loader);
-        $this->setShared('namespaceService', function (){
+        $this->setShared('namespaceService', function () {
             return new NamespaceService();
         });
 
@@ -165,7 +164,8 @@ class BaseServices extends ApplicationServices
         foreach ($this->getExtendableServices() as $service) {
             $serviceName        = lcfirst(last(explode('\\', $service)));
             $serviceWebsiteName = substr($serviceName, 0, -4);
-            $classNameWebsite   = KikCMSConfig::NAMESPACE_PATH_CLASSES . ucfirst($serviceWebsiteName);
+            $namespace          = $this->getIniConfig()->application->extendableClassesNamespace;
+            $classNameWebsite   = $namespace . ucfirst($serviceWebsiteName);
 
             $this->set($serviceWebsiteName, function () use ($service, $classNameWebsite) {
                 if (class_exists($classNameWebsite)) {

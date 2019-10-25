@@ -28,6 +28,8 @@ class PageContentServiceTest extends Unit
         $pageContentService = new PageContentService();
         $pageContentService->setDI($di);
 
+        Di::setDefault($di);
+
         $pageContentService->db->createTable('cms_page_content', null, [
             'columns'    => [
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),

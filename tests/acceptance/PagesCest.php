@@ -9,6 +9,34 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 
 class PagesCest
 {
+    public function dragAndDropWorks(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+        $I->amOnPage('/cms/pages');
+
+        $I->cantSeeElement('tr[data-id="6"][data-level="1"]');
+
+        $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
+            $webDriver->action()
+                ->moveByOffset(340, 340)
+                ->clickAndHold()
+                ->moveByOffset(10, 10)
+                ->moveByOffset(-10, -100)->perform();
+        });
+
+        $I->wait(1);
+
+        $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
+            $webDriver->action()->release()->perform();
+        });
+
+        $I->waitForJS("return $.active == 0;", 10);
+        $I->wait(1);
+        $I->canSeeElement('tr[data-id="6"][data-level="1"]');
+        $I->updateInDatabase('cms_page', ['lft' => null, 'rgt' => null, 'parent_id' => null, 'level' => 0,], ['id' => 6]);
+    }
+
     public function addPageWorks(AcceptanceTester $I)
     {
         $I->addUser();
@@ -72,6 +100,9 @@ class PagesCest
         $I->waitForJS("return $.active == 0;", 10);
 
         $I->see('Pagina 2');
+
+        $I->selectOption('select[name="language"]', 'en');
+        $I->waitForJS("return $.active == 0;", 10);
     }
 
     public function editMenuWorks(AcceptanceTester $I)
@@ -101,32 +132,5 @@ class PagesCest
         $I->click('.table tr:nth-child(1) .arrow');
 
         $I->canSeeNumberOfElements('.table tr', 5);
-    }
-
-    public function dragAndDropWorks(AcceptanceTester $I)
-    {
-        $I->addUser();
-        $I->login();
-        $I->amOnPage('/cms/pages');
-
-        $I->cantSeeElement('tr[data-id="6"][data-level="1"]');
-
-        $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
-            $webDriver->action()
-                ->moveByOffset(340, 340)
-                ->clickAndHold()
-                ->moveByOffset(10, 10)
-                ->moveByOffset(-10, -100)->perform();
-        });
-
-        $I->wait(1);
-
-        $I->executeInSelenium(function (RemoteWebDriver $webDriver) {
-            $webDriver->action()->release()->perform();
-        });
-
-        $I->waitForJS("return $.active == 0;", 10);
-        $I->canSeeElement('tr[data-id="6"][data-level="1"]');
-        $I->updateInDatabase('cms_page', ['lft' => null, 'rgt' => null, 'parent_id' => null, 'level' => 0,], ['id' => 6]);
     }
 }
