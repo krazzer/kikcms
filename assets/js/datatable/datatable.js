@@ -58,6 +58,10 @@ var DataTable = Class.extend({
         var $addButton    = this.getDataTable().find('.toolbar .btn.add');
 
         $deleteButton.click(function () {
+            if($(this).attr('disabled') == 'disabled'){
+                return;
+            }
+
             var selectedIds = self.getSelectedIds();
 
             if (selectedIds) {
@@ -107,7 +111,7 @@ var DataTable = Class.extend({
                 positionThumb(e);
 
                 $thumbHoverContainer.show();
-                $thumbHoverContainer.html('<img src="' + $thumb.attr('data-thumb-url') + '" />');
+                $thumbHoverContainer.html('<img alt="thumb" src="' + $thumb.attr('data-thumb-url') + '" />');
             }, function () {
                 self.getThumbHoverContainer().hide();
             });
@@ -277,9 +281,11 @@ var DataTable = Class.extend({
             var column       = $column.attr('data-column');
             var curDirection = $column.attr('data-sort');
 
+            var direction = null;
+
             switch (curDirection) {
                 case 'asc':
-                    var direction = 'desc';
+                    direction = 'desc';
                     break;
                 case 'desc':
                     direction = '';
@@ -894,9 +900,9 @@ var DataTable = Class.extend({
         var $deleteButton = this.getDataTable().find('.toolbar .btn.delete');
 
         if ($selectedRows.length > 0) {
-            $deleteButton.fadeIn();
+            $deleteButton.removeAttr('disabled');
         } else {
-            $deleteButton.fadeOut();
+            $deleteButton.attr('disabled', 'disabled');
         }
     },
 

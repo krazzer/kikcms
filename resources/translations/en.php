@@ -68,6 +68,7 @@ return [
             'label'      => 'Delete :itemSingular',
             'confirmOne' => 'Delete :itemSingular?',
             'confirm'    => 'Are you sure you want to remove these :amount :itemPlural?',
+            'title'      => 'Remove selected rows',
         ],
 
         'deleteErrorLinked' => 'This item cannot be removed, because it is used elsewhere in the system.',

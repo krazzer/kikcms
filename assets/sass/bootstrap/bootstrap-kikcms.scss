@@ -23,9 +23,15 @@ textarea.form-control {
     font-weight: 300;
     border-radius: $defaultBorderRadius;
     padding: 7px 15px;
+    opacity: 1;
+    transition: opacity .3s;
 
     .glyphicon ~ .lbl {
         margin-left: 8px;
+    }
+
+    &[disabled]{
+        opacity: .45;
     }
 }
 

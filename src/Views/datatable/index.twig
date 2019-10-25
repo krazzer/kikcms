@@ -20,7 +20,7 @@
 
         {% if canDelete %}
             {% block buttonDelete %}
-                <div class="btn btn-default delete" style="display: none;">
+                <div class="btn btn-default delete" disabled="disabled" title="{{ tl('dataTable.delete.title') }}">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                     <span class="lbl">{{ tl('global.delete') }}</span>
                 </div>
