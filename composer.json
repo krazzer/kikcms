@@ -21,7 +21,8 @@
   },
   "require-dev": {
     "codeception/codeception": "3.0.x-dev",
-    "codeception/c3": "2.*"
+    "codeception/c3": "2.*",
+    "donatj/mock-webserver": "dev-master"
   },
   "minimum-stability": "dev"
 }

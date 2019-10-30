@@ -142,7 +142,7 @@ class Services extends BaseServices
         $client->setApplicationName("Analytics");
         $client->setAuthConfig($keyFileLocation);
         $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $analytics = new Google_Service_AnalyticsReporting($client);
+        $analytics = new Google_Service_AnalyticsReporting($client, $this->getIniConfig()->analytics->url ?? null);
 
         return $analytics;
     }

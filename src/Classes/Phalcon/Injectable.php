@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace KikCMS\Classes\Phalcon;
 
+use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
@@ -76,6 +77,7 @@ use Phalcon\Validation;
  * @property AnalyticsGoogleService analyticsGoogleService
  * @property AnalyticsImportService analyticsImportService
  * @property AnalyticsService analyticsService
+ * @property Google_Service_AnalyticsReporting analytics
  * @property AssetService assetService
  * @property BaseServices baseServices
  * @property ByteService byteService

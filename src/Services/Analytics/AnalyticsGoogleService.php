@@ -15,9 +15,9 @@ use Google_Service_AnalyticsReporting_MetricHeaderEntry;
 use Google_Service_AnalyticsReporting_Report;
 use Google_Service_AnalyticsReporting_ReportRequest;
 use Google_Service_AnalyticsReporting_ReportRow;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\StatisticsConfig;
 use Phalcon\Config;
-use Phalcon\Di\Injectable;
 
 /**
  * @property Config $config
