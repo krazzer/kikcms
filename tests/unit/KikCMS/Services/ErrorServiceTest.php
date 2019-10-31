@@ -13,6 +13,8 @@ class ErrorServiceTest extends Unit
     {
         $errorService = new ErrorService();
 
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+
         // no error
         $this->assertNull($errorService->getErrorView(null, true));
 
