@@ -189,10 +189,10 @@ class Services extends BaseServices
         $dbClass = Pdo::class . '\\' . $config['adapter'];
         unset($config['adapter']);
 
-        try{
+        try {
             $databaseAdapter = new $dbClass($config);
-        } catch(Exception $exception){
-            if($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS){
+        } catch (Exception $exception) {
+            if ($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS) {
                 $this->get('logger')->log(Logger::WARNING, $exception);
                 throw new ResourcesExceededException();
             } else {
@@ -225,11 +225,11 @@ class Services extends BaseServices
         });
 
         // handle warnings and notices as exceptions on development
-        if($this->getIniConfig()->isDev()){
-            set_error_handler(function ($severity, $message, $file, $line){
+        set_error_handler(function ($severity, $message, $file, $line) {
+            if ($this->getIniConfig()->isDev()) {
                 throw new ErrorException($message, $severity, $severity, $file, $line);
-            });
-        }
+            }
+        });
 
         $errorHandler->registerExceptionHandler();
         $errorHandler->registerErrorHandler();
@@ -285,11 +285,9 @@ class Services extends BaseServices
      */
     protected function initLogger()
     {
-        $isProduction = $this->getAppConfig()->env == KikCMSConfig::ENV_PROD;
-
         $logger = new Logger('logger');
 
-        if ($isProduction && $developerEmail = $this->getAppConfig()->developerEmail) {
+        if ($this->getIniConfig()->isProd() && $developerEmail = $this->getAppConfig()->developerEmail) {
             $errorFromMail = 'error@' . $_SERVER['HTTP_HOST'];
 
             $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);

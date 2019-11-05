@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Http\ResponseInterface;
 use stdClass;
 
 class ErrorService extends Injectable
@@ -29,11 +30,28 @@ class ErrorService extends Injectable
 
         http_response_code(500);
 
-        if ($this->isAjaxRequest() && ! $isProduction) {
-            return 'error500content';
+        if ($this->request->isAjax() && ! $isProduction) {
+            return '500content';
         }
 
-        return 'show500';
+        return '500';
+    }
+
+    /**
+     * @param string $errorType
+     * @param array $parameters
+     * @return ResponseInterface
+     */
+    public function getResponse(string $errorType, array $parameters = []): ResponseInterface
+    {
+        if ($this->request->isAjax() && $this->config->isProd()) {
+            return $this->response->setJsonContent([
+                'title'       => $this->translator->tl('error.' . $errorType . '.title'),
+                'description' => $this->translator->tl('error.' . $errorType . '.description', $parameters),
+            ]);
+        } else {
+            return $this->response->setContent($this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters));
+        }
     }
 
     /**
@@ -47,7 +65,7 @@ class ErrorService extends Injectable
             return;
         }
 
-        echo $this->view->getRender('errors', $errorView, ['error' => $isProduction ? null : $error]);
+        echo $this->getResponse($errorView, ['error' => $isProduction ? null : $error])->getContent();
     }
 
     /**
@@ -61,16 +79,6 @@ class ErrorService extends Injectable
         }
 
         return ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR]);
-    }
-
-    /**
-     * @return bool
-     */
-    private function isAjaxRequest(): bool
-    {
-        $ajaxHeader = 'HTTP_X_REQUESTED_WITH';
-
-        return ! empty($_SERVER[$ajaxHeader]) && strtolower($_SERVER[$ajaxHeader]) == 'xmlhttprequest';
     }
 
     /**

@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 use Codeception\Test\Unit;
 use Error;
+use Phalcon\Http\Request;
 use stdClass;
 
 class ErrorServiceTest extends Unit
@@ -13,7 +14,10 @@ class ErrorServiceTest extends Unit
     {
         $errorService = new ErrorService();
 
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->method('isAjax')->willReturn(false);
+
+        $errorService->request = $requestMock;
 
         // no error
         $this->assertNull($errorService->getErrorView(null, true));
@@ -28,16 +32,20 @@ class ErrorServiceTest extends Unit
         $this->assertNull($errorService->getErrorView($error, true));
 
         // is not recoverable and dev: show error
-        $this->assertEquals('show500', $errorService->getErrorView(new Error, false));
+        $this->assertEquals('500', $errorService->getErrorView(new Error, false));
 
         // is not recoverable and production: show error
-        $this->assertEquals('show500', $errorService->getErrorView(new Error, true));
+        $this->assertEquals('500', $errorService->getErrorView(new Error, true));
+
+        $requestMock = $this->createMock(Request::class);
+        $requestMock->method('isAjax')->willReturn(true);
+
+        $errorService->request = $requestMock;
 
         // is not recoverable and dev and ajax: only show content
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
-        $this->assertEquals('error500content', $errorService->getErrorView(new Error, false));
+        $this->assertEquals('500content', $errorService->getErrorView(new Error, false));
 
         // is not recoverable and production and ajax: show error message only
-        $this->assertEquals('show500', $errorService->getErrorView(new Error, true));
+        $this->assertEquals('500', $errorService->getErrorView(new Error, true));
     }
 }

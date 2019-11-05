@@ -24,7 +24,7 @@ class ErrorsController extends BaseCmsController
     public function show404Action(): ResponseInterface
     {
         $this->response->setStatusCode(404);
-        return $this->getResponse('404');
+        return $this->errorService->getResponse('404');
     }
 
     /**
@@ -35,7 +35,7 @@ class ErrorsController extends BaseCmsController
     {
         $this->response->setStatusCode(404);
 
-        return $this->getResponse('404object', [
+        return $this->errorService->getResponse('404object', [
             'object' => $object,
         ]);
     }
@@ -46,7 +46,7 @@ class ErrorsController extends BaseCmsController
     public function show401Action(): ResponseInterface
     {
         $this->response->setStatusCode(401);
-        return $this->getResponse('401');
+        return $this->errorService->getResponse('401');
     }
 
     /**
@@ -56,23 +56,6 @@ class ErrorsController extends BaseCmsController
     public function show500Action($error = null): ResponseInterface
     {
         $this->response->setStatusCode(500);
-        return $this->getResponse('500', ['error' => $this->config->isProd() ? null : $error]);
-    }
-
-    /**
-     * @param string $errorType
-     * @param array $parameters
-     * @return ResponseInterface
-     */
-    private function getResponse(string $errorType, array $parameters = []): ResponseInterface
-    {
-        if ($this->request->isAjax() && $this->config->isProd()) {
-            return $this->response->setJsonContent([
-                'title'       => $this->translator->tl('error.' . $errorType . '.title'),
-                'description' => $this->translator->tl('error.' . $errorType . '.description', $parameters),
-            ]);
-        } else {
-            return $this->response->setContent($this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters));
-        }
+        return $this->errorService->getResponse('500', ['error' => $this->config->isProd() ? null : $error]);
     }
 }
