@@ -46,7 +46,7 @@ class LoginForm extends WebForm
 
         $this->userService->setLoggedIn($user->getId());
 
-        if (isset($input[self::FIELD_REMEMBER])) {
+        if ($input[self::FIELD_REMEMBER]) {
             $this->rememberMeService->addToken();
         }
 

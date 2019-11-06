@@ -71,7 +71,7 @@ abstract class MailForm extends WebForm
             }
 
             if ($field instanceof CheckboxField) {
-                $input[$key] = array_key_exists($key, $input) ? '✔︎' : '-';
+                $input[$key] = $input[$key] ? '✔︎' : '-';
             }
 
             if ( ! array_key_exists($key, $input)) {

@@ -207,6 +207,30 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * Get the form's input but checkbox values will be booleans instead of non-present or 'on'
+     *
+     * @return array
+     */
+    public function getInputBooleanCheckbox(): array
+    {
+        $input = $this->getInput();
+
+        foreach ($this->getFieldMap() as $key => $field){
+            // in case of a checkbox, set the value by its existence
+            if ($field->getType() == Field::TYPE_CHECKBOX) {
+                $input[$key] = isset($input[$key]);
+            }
+
+            // in case of a multicheckbox, and nothing is present, set value as an empty array
+            if ( ! array_key_exists($key, $input) && Field::TYPE_MULTI_CHECKBOX) {
+                $input[$key] = [];
+            }
+        }
+
+        return $input;
+    }
+
+    /**
      * @return Tab[]
      */
     public function getTabs()
@@ -240,7 +264,7 @@ abstract class WebForm extends Renderable
             $this->updateFieldsByPostData();
 
             if ($errorContainer->isEmpty()) {
-                $result = $this->successAction($this->getInput());
+                $result = $this->successAction($this->getInputBooleanCheckbox());
 
                 if (is_string($result) || $result instanceof Response) {
                     return $result;

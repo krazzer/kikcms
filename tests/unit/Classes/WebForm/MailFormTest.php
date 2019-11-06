@@ -29,6 +29,7 @@ class MailFormTest extends Unit
             'text' => 'TextValue',
             'text2' => [1,2,3],
             'text3' => '',
+            'check' => false,
         ];
 
         $expected = '<b>Select:</b><br>value1<br><br>';
@@ -47,7 +48,7 @@ class MailFormTest extends Unit
             'text' => 'TextValue',
             'text2' => [1,2,3],
             'text3' => '',
-            'check' => 'on',
+            'check' => true,
         ];
 
         $expected = '<b>Select:</b><br>value1<br><br>';
