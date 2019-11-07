@@ -5,6 +5,7 @@ namespace acceptance;
 
 
 use AcceptanceTester;
+use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 
 class PagesCest
@@ -45,11 +46,13 @@ class PagesCest
 
         // click add page
         $I->click('.btn.add');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
         $I->seeElement('input[name="pageLanguage*:name"]');
 
         // save and close, fail because fields aren't filled
         $I->click('.saveAndClose');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('.alert');
         $I->canSee('Not all fields are correctly filled. Please walk through the form to check for errors.');
 
@@ -58,16 +61,21 @@ class PagesCest
         $I->executeJS('$("textarea[name=\'content*:value\']").val("test")');
 
         $I->click('.saveAndClose');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('.table tr:nth-child(5)');
         $I->wait(1);
 
         // remove page
         $I->click('.table tr:nth-child(5)');
-        $I->click('.btn.delete');
-        $I->acceptPopup();
 
-        $I->waitForJS("return $.active == 0;", 10);
+        try {
+            $I->click('.btn.delete');
+            $I->acceptPopup();
+        } catch (WebDriverException $e) {
+            // ignore "unexpected alert open"
+        }
 
+        $I->waitForJS("return $.active == 0;", 30);
         $I->dontSeeElement('.table tr:nth-child(5)');
     }
 

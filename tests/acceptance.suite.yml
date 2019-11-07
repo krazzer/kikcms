@@ -11,6 +11,8 @@ modules:
             url: https://kikcmstest.dev
             browser: chrome
             host: kikdev-selenium
+            capabilities:
+              unexpectedAlertBehaviour: 'accept'
         - \Helper\Acceptance
         - Db:
            dsn: 'mysql:host=mysql;dbname=test'
