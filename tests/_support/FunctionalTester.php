@@ -27,11 +27,13 @@ class FunctionalTester extends Actor
 
     const TEST_USERNAME = 'test@test.com';
 
-    public function login(string $username = self::TEST_USERNAME, $password = 'TestUserPass')
+    public function login(string $username = self::TEST_USERNAME, $password = 'TestUserPass', bool $addUser = true)
     {
         $I = $this;
 
-        $this->addUser();
+        if($addUser){
+            $this->addUser();
+        }
 
         $I->amOnPage('/cms');
 
@@ -40,8 +42,6 @@ class FunctionalTester extends Actor
             'password' => $password,
             'remember' => null,
         ]);
-
-        $I->seeElement('#menu');
     }
 
     /**
@@ -61,7 +61,7 @@ class FunctionalTester extends Actor
         return $this->getApplication()->di->get('dbService');
     }
 
-    private function addUser()
+    public function addUser()
     {
         $this->getDbService()->truncate(User::class);
 
