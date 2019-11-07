@@ -93,6 +93,12 @@ class Routing extends Injectable
             "action"     => 1
         ]);
 
+        $backend->add("/error/:action", [
+            "controller" => "errors",
+            "action"     => 1
+        ]);
+
+        $backend->add('/error/show404Object/{object:[a-z0-9]+}', "Errors::show404ObjectWorks");
         $backend->add('/webform/filepreview/{fileId:[0-9]+}', "WebForm::getFilePreview")->setName('webformFilePreview');
 
         $backend->add('/file/url/{fileId:[0-9]+}', "Finder::url")->setName('fileUrl');
