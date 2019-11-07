@@ -23,13 +23,18 @@ class CacheController extends BaseCmsController
      */
     public function managerAction()
     {
-        $cacheInfo = apcu_cache_info();
-        $startTime = (new DateTime())->setTimestamp($cacheInfo['start_time']);
+        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+            $cacheInfo = apcu_cache_info();
+        } else {
+            $cacheInfo = [];
+        }
+
+        $startTime = isset($cacheInfo['start_time']) ? (new DateTime())->setTimestamp($cacheInfo['start_time']) : new DateTime;
 
         $this->view->title            = 'Cache beheer';
         $this->view->cacheInfo        = $cacheInfo;
         $this->view->uptime           = $startTime->diff(new DateTime());
-        $this->view->memorySize       = $this->byteService->bytesToString((int) $cacheInfo['mem_size']);
+        $this->view->memorySize       = $this->byteService->bytesToString((int) ($cacheInfo['mem_size'] ?? 0));
         $this->view->cacheNodeMap     = $this->cacheService->getCacheNodeMap();
         $this->view->selectedMenuItem = MenuConfig::MENU_ITEM_SETTINGS;
 
