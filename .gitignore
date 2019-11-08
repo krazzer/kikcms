@@ -5,3 +5,4 @@ assets/node_modules
 /tests/TestSitePath/storage/keyvalue/
 /tests/TestSitePath/cache/*
 /tests/TestSitePath/env/
+/tests/TestSitePath/publuc_html/media/

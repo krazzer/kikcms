@@ -47,7 +47,7 @@ class PlaceholderService extends Injectable
      */
     public function replaceAll(string $content): string
     {
-        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:-]+)\]\]\]/', $content, $output)) {
+        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:-]+)]]]/', $content, $output)) {
             return $content;
         }
 
@@ -109,7 +109,9 @@ class PlaceholderService extends Injectable
 
             $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
 
-            $this->cache->save($key, $thumbUrl, CacheConfig::ONE_YEAR);
+            if($this->cache){
+                $this->cache->save($key, $thumbUrl, CacheConfig::ONE_YEAR);
+            }
         }
 
         return $replaceMap;
