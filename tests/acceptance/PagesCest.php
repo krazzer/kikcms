@@ -86,11 +86,12 @@ class PagesCest
         $I->amOnPage('/cms/pages');
 
         $I->doubleClick('.table tr:nth-child(3)');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
 
         $I->click('div[data-tab=advanced]');
         $I->selectOption('form #template', 'home');
-        $I->waitForJS("return $.active == 0;", 10);
+        $I->waitForJS("return $.active == 0;", 30);
 
         $I->click('div[data-tab="0"]');
         $I->dontSeeElement('.type-wysiwyg');
@@ -105,12 +106,12 @@ class PagesCest
         $I->dontSee('Pagina 2');
 
         $I->selectOption('select[name="language"]', 'nl');
-        $I->waitForJS("return $.active == 0;", 10);
+        $I->waitForJS("return $.active == 0;", 30);
 
         $I->see('Pagina 2');
 
         $I->selectOption('select[name="language"]', 'en');
-        $I->waitForJS("return $.active == 0;", 10);
+        $I->waitForJS("return $.active == 0;", 30);
     }
 
     public function editMenuWorks(AcceptanceTester $I)
@@ -120,8 +121,10 @@ class PagesCest
         $I->amOnPage('/cms/pages');
 
         $I->click('.table tr:nth-child(1) .edit');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('#webFormId_KikCMSFormsMenuForm');
         $I->click('.saveAndClose');
+        $I->waitForJS("return $.active == 0;", 30);
         $I->waitForElement('.table tr:nth-child(1).edited');
     }
 
