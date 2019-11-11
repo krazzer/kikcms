@@ -218,7 +218,7 @@ abstract class WebForm extends Renderable
         foreach ($this->getFieldMap() as $key => $field){
             // in case of a checkbox, set the value by its existence
             if ($field->getType() == Field::TYPE_CHECKBOX) {
-                $input[$key] = isset($input[$key]);
+                $input[$key] = isset($input[$key]) ? 1 : 0;
             }
 
             // in case of a multicheckbox, and nothing is present, set value as an empty array
