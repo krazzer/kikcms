@@ -51,6 +51,8 @@ class FinderCest
 
     public function fileWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc']);
+
         $I->amOnPage('/cms/file/1');
         $I->seeInCurrentUrl('/media/files/abc/testfile');
     }

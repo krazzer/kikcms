@@ -33,13 +33,12 @@ use Monolog\ErrorHandler;
 use Monolog\Handler\DeduplicationHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
-use Phalcon\Cache\Backend\Apcu;
+use Phalcon\Cache\Backend\Factory;
 use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
-use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Filter;
@@ -152,18 +151,26 @@ class Services extends BaseServices
      */
     protected function initCache(): ?BackendInterface
     {
-        if ($this instanceof Cli || isset($_GET['nocache'])) {
+        if( ! $config = (array) $this->getIniConfig()->cache ?? null){
             return null;
         }
 
-        $options = null;
-
-        // set the current domain as prefix to prevent caching overlap
-        if ($this->getIniConfig()->isDev()) {
-            $options = ["prefix" => explode('.', $_SERVER['SERVER_NAME'])[0] . ':'];
+        if (isset($_GET['nocache'])) {
+            return null;
         }
 
-        return new Apcu(new Data(), $options);
+        if(isset($config['cacheDir'])){
+            $config['cacheDir'] = $this->getIniConfig()->application->path . $config['cacheDir'];
+        }
+
+        // set the current domain as prefix to prevent caching overlap
+        if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_NAME'])) {
+            $config["prefix"] = explode('.', $_SERVER['SERVER_NAME'])[0] . ':' . $config["prefix"];
+        }
+
+        $config["frontend"] = new Data();
+
+        return Factory::load($config);
     }
 
     /**
@@ -302,7 +309,7 @@ class Services extends BaseServices
         $logger->pushProcessor(function ($record) {
             $record['extra'] = [
                 'Post Data' => $_POST,
-                'URL'       => $_SERVER['REQUEST_URI'],
+                'URL'       => $_SERVER['REQUEST_URI'] ?? null,
             ];
 
             return $record;

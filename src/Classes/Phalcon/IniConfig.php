@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Phalcon;
 
 
 use KikCMS\Classes\Phalcon\ConfigGroups\ApplicationConfig;
+use KikCMS\Classes\Phalcon\ConfigGroups\CacheConfig;
 use KikCMS\Classes\Phalcon\ConfigGroups\DatabaseConfig;
 use KikCMS\Classes\Phalcon\ConfigGroups\DeveloperConfig;
 use KikCMS\Classes\Phalcon\ConfigGroups\MediaConfig;
@@ -16,6 +17,7 @@ use Phalcon\Config\Adapter\Ini;
  * @property DeveloperConfig $developer
  * @property DatabaseConfig $database
  * @property MediaConfig $media
+ * @property CacheConfig $cache
  */
 class IniConfig extends Ini
 {

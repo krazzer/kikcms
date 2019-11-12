@@ -7,9 +7,10 @@ namespace KikCMS\Config;
  */
 class CacheConfig
 {
-    const ONE_HOUR = 3600;
-    const ONE_DAY  = self::ONE_HOUR * 24;
-    const ONE_YEAR = self::ONE_DAY * 365;
+    const ONE_MINUTE = 60;
+    const ONE_HOUR   = 3600;
+    const ONE_DAY    = self::ONE_HOUR * 24;
+    const ONE_YEAR   = self::ONE_DAY * 365;
 
     const LANGUAGES         = 'languages';
     const TRANSLATION       = 'translation';

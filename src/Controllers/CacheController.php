@@ -5,6 +5,7 @@ namespace KikCMS\Controllers;
 
 
 use DateTime;
+use Exception;
 use KikCMS\Config\MenuConfig;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Util\ByteService;
@@ -23,9 +24,9 @@ class CacheController extends BaseCmsController
      */
     public function managerAction()
     {
-        if (extension_loaded('apc') && ini_get('apc.enabled')) {
+        try{
             $cacheInfo = apcu_cache_info();
-        } else {
+        } catch(Exception $e){
             $cacheInfo = [];
         }
 
