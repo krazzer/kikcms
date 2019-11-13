@@ -20,6 +20,8 @@ class WebsiteSettings extends WebsiteSettingsBase
      */
     public function addFrontendRoutes(Group $frontend)
     {
+        $frontend->add('/test/resourcesexceeded', 'TestWebsite::resourcesExceeded');
+        $frontend->add('/test/unauthorized', 'TestWebsite::unauthorized');
     }
 
     /**
