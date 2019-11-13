@@ -9,9 +9,7 @@ class CacheClearCest
 {
     public function clearWorks(FunctionalTester $I)
     {
-        $cacheFilePath = dirname(__DIR__) . '/TestSitePath/cache/cache/test:cacheTestKey';
-
-        $I->getService('cache')->save('cacheTestKey', 'testValX', 5);
+        $I->getCache()->save('cacheTestKey', 'testValX', 5);
 
         $token = $I->getService('cmsService')->createSecurityToken();
 
@@ -19,12 +17,12 @@ class CacheClearCest
         $I->amOnPage('/cache/clear/xxx');
         $I->dontSee('{"success":true}');
 
-        $I->assertTrue(file_exists($cacheFilePath));
+        $I->assertTrue($I->getCache()->exists('cacheTestKey'));
 
         // cache should be cleared now
         $I->amOnPage('/cache/clear/' . $token);
         $I->see('{"success":true}');
 
-        $I->assertFalse(file_exists($cacheFilePath));
+        $I->assertFalse($I->getCache()->exists('cacheTestKey'));
     }
 }

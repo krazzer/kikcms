@@ -139,10 +139,14 @@ class CacheService extends Injectable
      */
     public function getKeys(string $prefix = ''): array
     {
-        // fix inconsistency of phalcon caching, see https://github.com/phalcon/cphalcon/issues/14503
-        $mainPrefix = $this->cache instanceof Backend\File ? '' : $this->getMainPrefix();
+        $mainPrefix = $this->getMainPrefix();
 
-        $keys = $this->cache->queryKeys($mainPrefix . preg_quote($prefix, '/'));
+        // fix inconsistency of phalcon caching, see https://github.com/phalcon/cphalcon/issues/14503
+        if($this->cache instanceof Backend\File){
+            $keys = $this->cache->queryKeys(preg_quote($prefix, '/'));
+        } else {
+            $keys = $this->cache->queryKeys($mainPrefix . preg_quote($prefix, '/'));
+        }
 
         if ( ! $mainPrefix) {
             return $keys;
