@@ -165,7 +165,7 @@ class Services extends BaseServices
 
         // set the current domain as prefix to prevent caching overlap
         if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_NAME'])) {
-            $config["prefix"] = explode('.', $_SERVER['SERVER_NAME'])[0] . ':' . $config["prefix"];
+            $config["prefix"] = explode('.', $_SERVER['SERVER_NAME'])[0] . ':' . ($config["prefix"] ?? '');
         }
 
         $config["frontend"] = new Data();
