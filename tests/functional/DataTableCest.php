@@ -77,7 +77,7 @@ class DataTableCest
 
     public function sortWorks(FunctionalTester $I)
     {
-        $I->sendAjaxPostRequest('/cms/datatable/search', [
+        $I->sendAjaxPostRequest('/cms/datatable/sort', [
             'renderableInstance' => 'dataTable5dc40ab26a399',
             'renderableClass'    => 'KikCMS\DataTables\Languages',
             'activeLangCode'     => 'nl',
@@ -90,7 +90,7 @@ class DataTableCest
 
     public function pageWorks(FunctionalTester $I)
     {
-        $I->sendAjaxPostRequest('/cms/datatable/search', [
+        $I->sendAjaxPostRequest('/cms/datatable/page', [
             'renderableInstance' => 'dataTable5dc40ab26a399',
             'renderableClass'    => 'KikCMS\DataTables\Languages',
             'activeLangCode'     => 'nl',
