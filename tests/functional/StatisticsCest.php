@@ -4,13 +4,50 @@ declare(strict_types=1);
 namespace functional;
 
 
+use DateInterval;
+use DateTime;
 use donatj\MockWebServer\MockWebServer;
 use donatj\MockWebServer\Response;
 use donatj\MockWebServer\ResponseStack;
 use FunctionalTester;
+use KikCMS\Models\Analytics\GaDayVisit;
 
 class StatisticsCest
 {
+    public function _before(FunctionalTester $I)
+    {
+        $I->login();
+    }
+
+    public function getVisitorsWorks(FunctionalTester $I)
+    {
+        $currentDate = new DateTime('2019-01-01');
+
+        $insertData = [];
+
+        for ($i = 0; $i < 100; $i++) {
+            $currentDate = $currentDate->add(new DateInterval('P1D'));
+
+            $insertData[] = [
+                'date'          => $currentDate->format('Y-m-d'),
+                'visits'        => 1,
+                'unique_visits' => $i%2 ? 1 : 0,
+            ];
+        }
+
+        $I->getDbService()->insertBulk(GaDayVisit::class, $insertData);
+
+        $I->sendAjaxPostRequest('/cms/stats/getVisitors');
+        $I->see('{"visitorsData":{"cols":[{"label":"","type":"string"},{"label":"Visitors","type":"number"},{"label":"Unique visitors","type":"number"}],"rows":[{"c":[{"v":"Jan 2019"},{"v":"30"},{"v":"15"}]},{"c":[{"v":"Feb 2019"},{"v":"28"},{"v":"14"}]},{"c":[{"v":"Mar 2019"},{"v":"31"},{"v":"15"}]},{"c":[{"v":"Apr 2019"},{"v":"11"},{"v":"6"}]}]},"visitorData":[],"overviewData":{"Total visitors":100,"Total unique visitors":50,"Average visitors per day":1,"Average visitors per month":30},"requiresUpdate":true}');
+
+        $I->makeHtmlSnapshot(1);
+
+        $I->sendAjaxPostRequest('/cms/stats/getVisitors', ['interval' => 'daily']);
+        $I->see('{"visitorsData":{"cols":[{"label":"","type":"string"},{"label":"Visitors","type":"number"},{"label":"Unique visitors","type":"number"}],"rows":[{"c":[{"v":"Jan  2 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan  3 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan  4 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan  5 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan  6 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan  7 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan  8 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan  9 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 10 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 11 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 12 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 13 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 14 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 15 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 16 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 17 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 18 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 19 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 20 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 21 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 22 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 23 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 24 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 25 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 26 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 27 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 28 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 29 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Jan 30 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Jan 31 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb  1 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb  2 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb  3 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb  4 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb  5 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb  6 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb  7 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb  8 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb  9 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 10 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 11 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 12 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 13 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 14 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 15 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 16 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 17 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 18 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 19 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 20 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 21 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 22 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 23 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 24 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 25 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 26 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Feb 27 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Feb 28 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar  1 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar  2 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar  3 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar  4 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar  5 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar  6 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar  7 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar  8 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar  9 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 10 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 11 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 12 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 13 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 14 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 15 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 16 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 17 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 18 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 19 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 20 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 21 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 22 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 23 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 24 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 25 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 26 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 27 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 28 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 29 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Mar 30 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Mar 31 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr  1 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Apr  2 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr  3 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Apr  4 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr  5 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Apr  6 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr  7 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Apr  8 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr  9 2019"},{"v":"1"},{"v":"1"}]},{"c":[{"v":"Apr 10 2019"},{"v":"1"},{"v":"0"}]},{"c":[{"v":"Apr 11 2019"},{"v":"1"},{"v":"1"}]}]},"visitorData":[],"overviewData":{"Total visitors":100,"Total unique visitors":50,"Average visitors per day":1,"Average visitors per month":30},"requiresUpdate":true}');
+
+        $I->makeHtmlSnapshot(2);
+    }
+
     public function updateStatsWorks(FunctionalTester $I)
     {
         $server = new MockWebServer(8001);
@@ -31,8 +68,6 @@ class StatisticsCest
         ));
 
         $token = $I->getService('cmsService')->createSecurityToken();
-
-        $I->login();
 
         $I->sendAjaxPostRequest('/cms/stats/update', ['token' => $token]);
         $I->see('{"success":true,"maxDate":null}');
