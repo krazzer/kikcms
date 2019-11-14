@@ -192,7 +192,7 @@ class Translator extends Injectable
                 ]);
 
             return $this->dbService->getAssoc($query);
-        });
+        }) ?: [];
     }
 
     /**

@@ -17,12 +17,12 @@ class CacheClearCest
         $I->amOnPage('/cache/clear/xxx');
         $I->dontSee('{"success":true}');
 
-        $I->assertTrue($I->getCache()->exists('cacheTestKey'));
+        $I->assertTrue($I->getCache()->exists('cacheTestKey', 5));
 
         // cache should be cleared now
         $I->amOnPage('/cache/clear/' . $token);
         $I->see('{"success":true}');
 
-        $I->assertFalse($I->getCache()->exists('cacheTestKey'));
+        $I->assertFalse($I->getCache()->exists('cacheTestKey', 5));
     }
 }
