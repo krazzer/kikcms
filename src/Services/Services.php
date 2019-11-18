@@ -39,6 +39,7 @@ use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
 use Phalcon\Db;
+use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\DiInterface;
 use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Filter;
@@ -152,6 +153,10 @@ class Services extends BaseServices
     protected function initCache(): ?BackendInterface
     {
         if( ! $config = (array) $this->getIniConfig()->cache ?? null){
+            return null;
+        }
+
+        if($this instanceof Cli && $config['adapter'] == 'apcu'){
             return null;
         }
 
