@@ -32,7 +32,7 @@ class PagesCest
             $webDriver->action()->release()->perform();
         });
 
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 60);
         $I->wait(1);
         $I->canSeeElement('tr[data-id="6"][data-level="1"]');
         $I->updateInDatabase('cms_page', ['lft' => null, 'rgt' => null, 'parent_id' => null, 'level' => 0,], ['id' => 6]);
