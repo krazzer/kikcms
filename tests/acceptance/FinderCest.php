@@ -5,6 +5,7 @@ namespace acceptance;
 
 
 use AcceptanceTester;
+use Facebook\WebDriver\Exception\WebDriverException;
 
 class FinderCest
 {
@@ -21,8 +22,13 @@ class FinderCest
         $I->canSeeNumberOfElements('.files-container .file', 1);
 
         $I->click('.files-container .file');
-        $I->click('.btn.delete');
-        $I->acceptPopup();
+
+        try {
+            $I->click('.btn.delete');
+            $I->acceptPopup();
+        } catch (WebDriverException $e) {
+            // ignore "unexpected alert open"
+        }
 
         $I->waitForJS("return $.active == 0;", 30);
         $I->dontSeeElement('.files-container .file');
@@ -51,8 +57,13 @@ class FinderCest
         $I->amOnPage('/cms/media');
 
         $I->click('.files-container .file');
-        $I->click('.btn.delete');
-        $I->acceptPopup();
+
+        try {
+            $I->click('.btn.delete');
+            $I->acceptPopup();
+        } catch (WebDriverException $e) {
+            // ignore "unexpected alert open"
+        }
 
         $I->waitForJS("return $.active == 0;", 30);
         $I->dontSeeElement('.files-container .file');
