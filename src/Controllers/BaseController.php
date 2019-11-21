@@ -121,22 +121,6 @@ class BaseController extends Controller
     }
 
     /**
-     * Initialize validation default messages
-     */
-    protected function initializeValidation()
-    {
-        $webFormMessagesKeys = $this->translator->getCmsTranslationGroupKeys('webform.messages');
-
-        $defaultMessages = [];
-
-        foreach ($webFormMessagesKeys as $key) {
-            $defaultMessages[last(explode('.', $key))] = $this->translator->tl($key);
-        }
-
-        $this->validation->setDefaultMessages($defaultMessages);
-    }
-
-    /**
      * Set Content Security Policy headers
      */
     private function initializeCpsHeaders()
