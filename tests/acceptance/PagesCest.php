@@ -32,9 +32,10 @@ class PagesCest
             $webDriver->action()->release()->perform();
         });
 
-        $I->waitForJS("return $.active == 0;", 60);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->wait(1);
-        $I->canSeeElement('tr[data-id="6"][data-level="1"]');
+        $I->canSeeNumberOfElements('.table tr', 5);
+//        $I->canSeeElement('tr[data-id="6"][data-level="1"]');
         $I->updateInDatabase('cms_page', ['lft' => null, 'rgt' => null, 'parent_id' => null, 'level' => 0,], ['id' => 6]);
     }
 
@@ -46,13 +47,13 @@ class PagesCest
 
         // click add page
         $I->click('.btn.add');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
         $I->seeElement('input[name="pageLanguage*:name"]');
 
         // save and close, fail because fields aren't filled
         $I->click('.saveAndClose');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('.alert');
         $I->canSee('Not all fields are correctly filled. Please walk through the form to check for errors.');
 
@@ -61,7 +62,7 @@ class PagesCest
         $I->executeJS('$("textarea[name=\'content*:value\']").val("test")');
 
         $I->click('.saveAndClose');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('.table tr:nth-child(5)');
         $I->wait(1);
 
@@ -75,7 +76,7 @@ class PagesCest
             // ignore "unexpected alert open"
         }
 
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->dontSeeElement('.table tr:nth-child(5)');
     }
 
@@ -86,12 +87,12 @@ class PagesCest
         $I->amOnPage('/cms/pages');
 
         $I->doubleClick('.table tr:nth-child(3)');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('#webFormId_KikCMSFormsPageForm');
 
         $I->click('div[data-tab=advanced]');
         $I->selectOption('form #template', 'home');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
 
         $I->click('div[data-tab="0"]');
         $I->dontSeeElement('.type-wysiwyg');
@@ -106,12 +107,12 @@ class PagesCest
         $I->dontSee('Pagina 2');
 
         $I->selectOption('select[name="language"]', 'nl');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
 
         $I->see('Pagina 2');
 
         $I->selectOption('select[name="language"]', 'en');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
     }
 
     public function editMenuWorks(AcceptanceTester $I)
@@ -121,10 +122,10 @@ class PagesCest
         $I->amOnPage('/cms/pages');
 
         $I->click('.table tr:nth-child(1) .edit');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('#webFormId_KikCMSFormsMenuForm');
         $I->click('.saveAndClose');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('.table tr:nth-child(1).edited');
     }
 

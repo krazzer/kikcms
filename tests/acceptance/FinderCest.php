@@ -16,7 +16,7 @@ class FinderCest
         $I->amOnPage('/cms/media');
 
         $I->attachFile('input[type="file"]', 'test-upload-file.png');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
 
         $I->see('test-upload-file.png');
         $I->canSeeNumberOfElements('.files-container .file', 1);
@@ -30,7 +30,7 @@ class FinderCest
             // ignore "unexpected alert open"
         }
 
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->dontSeeElement('.files-container .file');
     }
 
@@ -41,13 +41,13 @@ class FinderCest
 
         $I->amOnPage('/cms/test/personform');
         $I->attachFile('input[type="file"]', 'test-upload-file.png');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
 
         $I->seeElement('.type-file .thumb img');
         $I->see('(test-upload-file.png)');
 
         $I->click('.type-file .thumb');
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->wait(1);
 
         $I->see('test-upload-file.png');
@@ -65,7 +65,7 @@ class FinderCest
             // ignore "unexpected alert open"
         }
 
-        $I->waitForJS("return $.active == 0;", 30);
+        $I->waitForJS("return $.active == 0;", 300);
         $I->dontSeeElement('.files-container .file');
     }
 }
