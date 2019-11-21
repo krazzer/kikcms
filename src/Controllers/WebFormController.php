@@ -5,8 +5,6 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Services\Finder\FileService;
-use KikCMS\Classes\Renderable\Renderable;
-use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\File;
 
 /**
@@ -81,14 +79,5 @@ class WebFormController extends RenderableController
         }
 
         return json_encode($result);
-    }
-
-    /**
-     * @inheritdoc
-     * @return Renderable|Webform
-     */
-    protected function getRenderable(): Renderable
-    {
-        return parent::getRenderable();
     }
 }

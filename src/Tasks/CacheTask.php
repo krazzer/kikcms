@@ -13,14 +13,6 @@ use KikCMS\Services\Cms\CmsService;
 class CacheTask extends Task
 {
     /**
-     * Called by: php kikcms cache
-     */
-    public function mainAction()
-    {
-        echo "Possible actions: clear" . PHP_EOL;
-    }
-
-    /**
      * Called by: php kikcms cache clear
      */
     public function clearAction()
