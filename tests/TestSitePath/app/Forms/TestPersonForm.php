@@ -26,5 +26,6 @@ class TestPersonForm extends DataForm
     {
         $this->addTextField(TestPerson::FIELD_NAME, 'Name', [new PresenceOf]);
         $this->addDateField(TestPerson::FIELD_CREATED, 'Created', [new PresenceOf])->setFormat('d-m-Y');
+        $this->addFileField(TestPerson::FIELD_IMAGE_ID, 'Afbeelding');
     }
 }

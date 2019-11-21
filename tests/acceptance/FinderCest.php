@@ -27,4 +27,34 @@ class FinderCest
         $I->waitForJS("return $.active == 0;", 30);
         $I->dontSeeElement('.files-container .file');
     }
+
+    public function webFormUploadWorks(AcceptanceTester $I)
+    {
+        $I->addUser();
+        $I->login();
+
+        $I->amOnPage('/cms/test/personform');
+        $I->attachFile('input[type="file"]', 'test-upload-file.png');
+        $I->waitForJS("return $.active == 0;", 30);
+
+        $I->seeElement('.type-file .thumb img');
+        $I->see('(test-upload-file.png)');
+
+        $I->click('.type-file .thumb');
+        $I->waitForJS("return $.active == 0;", 30);
+        $I->wait(1);
+
+        $I->see('test-upload-file.png');
+        $I->canSeeNumberOfElements('.files-container .file', 1);
+
+        // remove
+        $I->amOnPage('/cms/media');
+
+        $I->click('.files-container .file');
+        $I->click('.btn.delete');
+        $I->acceptPopup();
+
+        $I->waitForJS("return $.active == 0;", 30);
+        $I->dontSeeElement('.files-container .file');
+    }
 }

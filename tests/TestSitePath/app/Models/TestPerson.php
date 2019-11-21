@@ -18,6 +18,7 @@ class TestPerson extends Model
     const FIELD_ID         = 'id';
     const FIELD_NAME       = 'name';
     const FIELD_COMPANY_ID = 'company_id';
+    const FIELD_IMAGE_ID   = 'image_id';
     const FIELD_CREATED    = 'created';
 
     /**
