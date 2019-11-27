@@ -64,8 +64,13 @@ CREATE TABLE `test_person` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `display_order` (`display_order`),
   KEY `company_id` (`company_id`),
+
   CONSTRAINT `test_person_ibfk_1` FOREIGN KEY (`company_id`) REFERENCES `test_company` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=444 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE `test_person`
+    ADD COLUMN `image_id` int(0) NULL AFTER `company_id`,
+    ADD FOREIGN KEY (`image_id`) REFERENCES `cms_file` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- ----------------------------
 -- Table structure for test_person_interest

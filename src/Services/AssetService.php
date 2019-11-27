@@ -42,11 +42,12 @@ class AssetService extends Injectable
 
     /**
      * @param string $file
+     * @param bool $local
      */
-    public function addJs(string $file)
+    public function addJs(string $file, bool $local = true)
     {
         $file = $this->addVersion($file);
 
-        $this->view->assets->addJs($file);
+        $this->view->assets->addJs($file, $local);
     }
 }
