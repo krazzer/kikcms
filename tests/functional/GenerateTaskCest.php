@@ -9,12 +9,12 @@ use Phalcon\Db\Column;
 class GenerateTaskCest
 {
     const FILES = [
-        __DIR__ . '/../TestSitePath/app/Models/GenerateTest.php',
-        __DIR__ . '/../TestSitePath/app/Forms/GenerateTestForm.php',
-        __DIR__ . '/../TestSitePath/app/ObjectList/GenerateTestList.php',
-        __DIR__ . '/../TestSitePath/app/ObjectList/GenerateTestMap.php',
-        __DIR__ . '/../TestSitePath/app/DataTables/GenerateTests.php',
-        __DIR__ . '/../TestSitePath/app/Services/GenerateTestService.php',
+        '/opt/project/tests/TestSitePath/app/Models/GenerateTest.php',
+        '/opt/project/tests/TestSitePath/app/Forms/GenerateTestForm.php',
+        '/opt/project/tests/TestSitePath/app/ObjectList/GenerateTestList.php',
+        '/opt/project/tests/TestSitePath/app/ObjectList/GenerateTestMap.php',
+        '/opt/project/tests/TestSitePath/app/DataTables/GenerateTests.php',
+        '/opt/project/tests/TestSitePath/app/Services/GenerateTestService.php',
     ];
 
     public function modelsWorks(FunctionalTester $I)
@@ -24,7 +24,7 @@ class GenerateTaskCest
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 
-        $I->runShellCommand('php tests/TestSitePath/kikcms generate models');
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms generate models');
 
         $I->getDbService()->db->dropTable('test_generate_test');
 
@@ -42,7 +42,7 @@ class GenerateTaskCest
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 
-        $I->runShellCommand('php tests/TestSitePath/kikcms generate model test_generate_test');
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms generate model test_generate_test');
 
         $I->getDbService()->db->dropTable('test_generate_test');
 

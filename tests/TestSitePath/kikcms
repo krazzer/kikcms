@@ -3,4 +3,4 @@
 include 'autoloader.php';
 
 $sitePath = __DIR__ . '/';
-include '/kikcms/boot/cli.php';
+include '/opt/project/boot/cli.php';
