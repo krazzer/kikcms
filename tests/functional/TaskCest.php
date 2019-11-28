@@ -6,7 +6,7 @@ namespace functional;
 use FunctionalTester;
 use Phalcon\Db\Column;
 
-class GenerateTaskCest
+class TaskCest
 {
     const FILES = [
         '/opt/project/tests/TestSitePath/app/Models/GenerateTest.php',
@@ -51,6 +51,30 @@ class GenerateTaskCest
         }
 
         $this->_deleteFiles();
+    }
+
+    public function mainWorks(FunctionalTester $I)
+    {
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main');
+        $I->seeInShellOutput('This is the default task and the default action');
+    }
+
+    public function updateNestedSetWorks(FunctionalTester $I)
+    {
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main updateNestedSet');
+        $I->seeShellOutputMatches('//');
+    }
+
+    public function updateMissingFileHashesWorks(FunctionalTester $I)
+    {
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main updateMissingFileHashes');
+        $I->seeShellOutputMatches('//');
+    }
+
+    public function cleanUpVendorWorks(FunctionalTester $I)
+    {
+        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main cleanUpVendor');
+        $I->seeShellOutputMatches('//');
     }
 
     private function _deleteFiles()
