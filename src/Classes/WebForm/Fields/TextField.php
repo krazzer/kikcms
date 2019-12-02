@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Text;
+use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\Numericality;
 
 class TextField extends Field
@@ -27,6 +28,10 @@ class TextField extends Field
 
     public function getInput($value)
     {
+        if($this->hasEmailValidator()){
+            $value = trim($value);
+        }
+
         if($this->isNumeric()){
             return str_replace(',', '.', $value);
         }
@@ -41,6 +46,20 @@ class TextField extends Field
     {
         foreach ($this->getElement()->getValidators() as $validator){
             if($validator instanceof Numericality){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasEmailValidator(): bool
+    {
+        foreach ($this->getElement()->getValidators() as $validator){
+            if($validator instanceof Email){
                 return true;
             }
         }

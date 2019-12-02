@@ -2,7 +2,6 @@
 
 namespace KikCMS\Models;
 
-use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Classes\Model;
 
@@ -35,10 +34,7 @@ class PageLanguage extends Model
      */
     public function beforeDelete()
     {
-        /** @var PageLanguageService $pageLanguageService */
-        $pageLanguageService = $this->getDI()->get('pageLanguageService');
-
-        $pageLanguageService->removeCache($this);
+        $this->getDI()->get('pageLanguageService')->removeCache($this);
     }
 
     /**
