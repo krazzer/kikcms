@@ -57,6 +57,84 @@ class FinderCest
         $I->seeInCurrentUrl('/media/files/abc/testfile');
     }
 
+    public function keyWorks(FunctionalTester $I)
+    {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png', 'key' => 'test']);
+
+        $I->amOnPage('/cms/file/key/test');
+        $I->seeInCurrentUrl('/media/files/abc/testfile');
+    }
+
+    public function openFolderWorks(FunctionalTester $I)
+    {
+        $folderId = $this->_createFolder($I, 'test');
+
+        $I->sendAjaxPostRequest('/cms/finder/openFolder', [
+            'renderableInstance' => 'Finder5dc515ba1b715',
+            'renderableClass'    => 'KikCMS\Classes\Finder\Finder',
+            'folderId'           => $folderId,
+        ]);
+
+        $I->see('{"files":');
+
+        $I->canSeeResponseCodeIs(200);
+    }
+
+    public function pasteWorks(FunctionalTester $I)
+    {
+        $folderId = $this->_createFolder($I, 'test');
+
+        $I->getDbService()->insert(File::class, [
+            'id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png', 'folder_id' => $folderId
+        ]);
+
+        $I->sendAjaxPostRequest('/cms/finder/paste', [
+            'renderableInstance' => 'Finder5dc515ba1b715',
+            'renderableClass'    => 'KikCMS\Classes\Finder\Finder',
+            'fileIds'            => [1],
+            'folderId'           => $folderId,
+        ]);
+
+        $I->sendAjaxPostRequest('/cms/finder/openFolder', [
+            'renderableInstance' => 'Finder5dc515ba1b715',
+            'renderableClass'    => 'KikCMS\Classes\Finder\Finder',
+            'folderId'           => $folderId,
+        ]);
+
+        $I->assertContains('<div class="file file-1"', json_decode($I->grabPageSource())->files);
+        $I->canSeeResponseCodeIs(200);
+    }
+
+    public function searchWorks(FunctionalTester $I)
+    {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+        $I->getDbService()->insert(File::class, ['id' => 2, 'name' => 'searchfile', 'hash' => 'abc', 'extension' => 'png']);
+
+        $I->sendAjaxPostRequest('/cms/finder/search', [
+            'renderableInstance' => 'Finder5dc515ba1b715',
+            'renderableClass'    => 'KikCMS\Classes\Finder\Finder',
+            'search'             => 'searchfile',
+        ]);
+
+        $filesHtml = json_decode($I->grabPageSource())->files;
+
+        $I->assertContains('<div class="file file-2"', $filesHtml);
+        $I->assertNotContains('<div class="file file-1"', $filesHtml);
+
+        $I->canSeeResponseCodeIs(200);
+    }
+
+    public function urlWorks(FunctionalTester $I)
+    {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+
+        $I->amOnPage('/cms/file/url/1');
+
+        $I->see('{"url":"https://kikcmstest.dev/media/files/1.png"}');
+
+        $I->canSeeResponseCodeIs(200);
+    }
+
     /**
      * @param string $folderName
      * @return Builder

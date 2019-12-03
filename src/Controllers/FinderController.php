@@ -138,14 +138,13 @@ class FinderController extends RenderableController
      */
     public function keyAction(string $fileKey)
     {
-        $file     = $this->fileService->getByKey($fileKey);
-        $filePath = $this->fileService->getFilePath($file);
+        $file = $this->fileService->getByKey($fileKey);
 
         if ( ! $this->filePermissionService->canRead($file)) {
             throw new UnauthorizedException();
         }
 
-        return $this->outputFile($filePath, $file->getOutputMimeType(), $file->getName());
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
     }
 
     /**

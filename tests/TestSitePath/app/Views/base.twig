@@ -1,1 +1,9 @@
-{% block content '' %}
+{# @var helper \KikCMS\Services\Website\FrontendHelper #}
+
+<nav>
+    {{ helper.menu('main', null, null, null, false)|raw }}
+</nav>
+
+<main>
+    {% block content '' %}
+</main>
