@@ -108,6 +108,8 @@ class TaskCest
 
     public function createUrlsWorks(FunctionalTester $I)
     {
+        $I->getDbService()->query('UPDATE cms_page_language SET slug = NULL WHERE id = 9');
+
         $di = $I->getApplication()->getDI();
 
         $urlTask = new UrlTask();

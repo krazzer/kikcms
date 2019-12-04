@@ -18,7 +18,7 @@ class UrlTask extends Task
         $pageIds = $this->urlService->getPageIdsWithoutUrl();
 
         foreach ($pageIds as $pageId) {
-            $this->urlService->createUrlsForPageId($pageId);
+            $this->urlService->createUrlsForPageId((int) $pageId);
         }
     }
 }
