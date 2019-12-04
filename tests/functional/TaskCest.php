@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace functional;
 
 use FunctionalTester;
+use KikCMS\Tasks\GenerateTask;
+use KikCMS\Tasks\MainTask;
+use KikCMS\Tasks\UrlTask;
 use Phalcon\Db\Column;
 
 class TaskCest
@@ -24,7 +27,12 @@ class TaskCest
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms generate models');
+        $di = $I->getApplication()->getDI();
+
+        $generateTask = new GenerateTask();
+        $generateTask->setDI($di);
+
+        $generateTask->modelsAction();
 
         $I->getDbService()->db->dropTable('test_generate_test');
 
@@ -42,7 +50,12 @@ class TaskCest
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms generate model test_generate_test');
+        $di = $I->getApplication()->getDI();
+
+        $generateTask = new GenerateTask();
+        $generateTask->setDI($di);
+
+        $generateTask->modelAction(['test_generate_test']);
 
         $I->getDbService()->db->dropTable('test_generate_test');
 
@@ -55,26 +68,52 @@ class TaskCest
 
     public function mainWorks(FunctionalTester $I)
     {
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main');
-        $I->seeInShellOutput('This is the default task and the default action');
+        $di = $I->getApplication()->getDI();
+
+        $mainTask = new MainTask();
+        $mainTask->setDI($di);
+
+        $mainTask->mainAction();
     }
 
     public function updateNestedSetWorks(FunctionalTester $I)
     {
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main updateNestedSet');
-        $I->seeShellOutputMatches('//');
+        $di = $I->getApplication()->getDI();
+
+        $mainTask = new MainTask();
+        $mainTask->setDI($di);
+
+        $mainTask->updateNestedSetAction();
     }
 
     public function updateMissingFileHashesWorks(FunctionalTester $I)
     {
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main updateMissingFileHashes');
-        $I->seeShellOutputMatches('//');
+        $di = $I->getApplication()->getDI();
+
+        $mainTask = new MainTask();
+        $mainTask->setDI($di);
+
+        $mainTask->updateMissingFileHashesAction();
     }
 
     public function cleanUpVendorWorks(FunctionalTester $I)
     {
-        $I->runShellCommand('php /opt/project/tests/TestSitePath/kikcms main cleanUpVendor');
-        $I->seeShellOutputMatches('//');
+        $di = $I->getApplication()->getDI();
+
+        $mainTask = new MainTask();
+        $mainTask->setDI($di);
+
+        $mainTask->cleanUpVendorAction();
+    }
+
+    public function createUrlsWorks(FunctionalTester $I)
+    {
+        $di = $I->getApplication()->getDI();
+
+        $urlTask = new UrlTask();
+        $urlTask->setDI($di);
+
+        $urlTask->createUrlsAction();
     }
 
     private function _deleteFiles()
