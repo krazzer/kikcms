@@ -5,6 +5,7 @@ namespace functional;
 
 use FunctionalTester;
 use KikCMS\Models\File;
+use KikCMS\Models\FilePermission;
 use Phalcon\Mvc\Model\Query\Builder;
 
 class FinderCest
@@ -52,6 +53,7 @@ class FinderCest
     public function fileWorks(FunctionalTester $I)
     {
         $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+        $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/1');
         $I->seeInCurrentUrl('/media/files/abc/testfile');
@@ -60,6 +62,7 @@ class FinderCest
     public function keyWorks(FunctionalTester $I)
     {
         $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png', 'key' => 'test']);
+        $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/key/test');
         $I->seeInCurrentUrl('/media/files/abc/testfile');
@@ -109,6 +112,9 @@ class FinderCest
     {
         $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
         $I->getDbService()->insert(File::class, ['id' => 2, 'name' => 'searchfile', 'hash' => 'abc', 'extension' => 'png']);
+
+        $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
+        $I->getDbService()->insert(FilePermission::class, ['id' => 2, 'user_id' => 1, 'file_id' => 2, 'right' => 2]);
 
         $I->sendAjaxPostRequest('/cms/finder/search', [
             'renderableInstance' => 'Finder5dc515ba1b715',
