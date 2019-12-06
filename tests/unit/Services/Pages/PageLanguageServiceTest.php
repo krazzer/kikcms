@@ -15,44 +15,26 @@ class PageLanguageServiceTest extends Unit
         $pageLanguageService = new PageLanguageService();
         $pageLanguageService->setDI($this->getDbDi());
 
-        $pageLanguage = new PageLanguage();
-        $pageLanguage->setSlug('slug');
-
         // has slug, so does nothing
+        $pageLanguage = $this->createPageLanguage('slug');
         $result = $pageLanguageService->checkAndUpdateSlug($pageLanguage);
 
         $this->assertNull($result);
 
         // page is menu, so do nothing
-        $page = new Page();
-        $page->type = Page::TYPE_MENU;
-
-        $pageLanguage = new PageLanguage();
-        $pageLanguage->page = $page;
-
+        $pageLanguage = $this->createPageLanguage(null, Page::TYPE_MENU);
         $result = $pageLanguageService->checkAndUpdateSlug($pageLanguage);
 
         $this->assertNull($result);
 
         // page is link, so do nothing
-        $page = new Page();
-        $page->type = Page::TYPE_LINK;
-
-        $pageLanguage = new PageLanguage();
-        $pageLanguage->page = $page;
-
+        $pageLanguage = $this->createPageLanguage(null, Page::TYPE_LINK);
         $result = $pageLanguageService->checkAndUpdateSlug($pageLanguage);
 
         $this->assertNull($result);
 
         // no slug, needs to be updated
-        $page = new Page();
-        $page->type = Page::TYPE_PAGE;
-
-        $pageLanguage = new PageLanguage();
-        $pageLanguage->page = $page;
-        $pageLanguage->name = 'test';
-        $pageLanguage->language_code = 'en';
+        $pageLanguage = $this->createPageLanguage();
 
         $urlService = $this->createMock(UrlService::class);
         $urlService->method('toSlug')->willReturn($pageLanguage->getName());
@@ -64,17 +46,15 @@ class PageLanguageServiceTest extends Unit
         $this->assertEquals('test', $pageLanguage->getSlug());
 
         // url path exists
-        $page = new Page();
-        $page->type = Page::TYPE_PAGE;
-
         $parentPageLanguage = new PageLanguage();
         $parentPageLanguage->setSlug('parent');
 
-        $pageLanguage = $this->createMock(PageLanguage::class);
-        $pageLanguage->method('getParentWithSlug')->willReturn($parentPageLanguage);
-        $pageLanguage->initialize();
+        $page = $this->createMock(Page::class);
+        $page->type = Page::TYPE_PAGE;
+        $page->method('getParentPageLanguageWithSlugByLangCode')->willReturn($parentPageLanguage);
+
+        $pageLanguage = $this->createPageLanguage();
         $pageLanguage->page = $page;
-//        $pageLanguage->page = $page;
 
         $urlService = $this->createMock(UrlService::class);
         $urlService->method('toSlug')->willReturn($pageLanguage->getName());
@@ -86,5 +66,24 @@ class PageLanguageServiceTest extends Unit
         $pageLanguageService->checkAndUpdateSlug($pageLanguage);
 
         $this->assertEquals('test', $pageLanguage->getSlug());
+    }
+
+    /**
+     * @param string|null $slug
+     * @param string $pageType
+     * @return PageLanguage
+     */
+    private function createPageLanguage(string $slug = null, string $pageType = Page::TYPE_PAGE): PageLanguage
+    {
+        $page = new Page();
+        $page->type = $pageType;
+
+        $pageLanguage = new PageLanguage();
+        $pageLanguage->page = $page;
+        $pageLanguage->setSlug($slug);
+        $pageLanguage->name = 'test';
+        $pageLanguage->language_code = 'en';
+
+        return $pageLanguage;
     }
 }
