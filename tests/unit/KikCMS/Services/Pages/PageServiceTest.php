@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace KikCMS\Services\Pages;
 
-use Codeception\Test\Unit;
 use Helpers\TestHelper;
+use Helpers\Unit;
 use KikCMS\Models\Page;
 
 class PageServiceTest extends Unit
@@ -31,5 +31,26 @@ class PageServiceTest extends Unit
         $page->rgt = 2;
 
         $this->assertFalse($pageService->requiresNesting($page));
+    }
+
+    public function testGetChildren()
+    {
+        $pageService = new PageService();
+        $pageService->setDI($this->getDbDi());
+
+        $page = new Page();
+        $page->id = 1;
+        $page->lft = 1;
+        $page->rgt = 2;
+        $page->save();
+
+        $page2 = new Page();
+        $page2->id = 2;
+        $page2->parent_id = 1;
+        $page2->save();
+
+        $pageMap = $pageService->getChildren($page);
+
+        $this->assertEquals([2], $pageMap->keys());
     }
 }
