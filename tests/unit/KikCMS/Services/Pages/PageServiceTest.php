@@ -53,4 +53,22 @@ class PageServiceTest extends Unit
 
         $this->assertEquals([2], $pageMap->keys());
     }
+
+    public function testGetByIdList()
+    {
+        $pageService = new PageService();
+        $pageService->setDI($this->getDbDi());
+
+        $page = new Page();
+        $page->id = 1;
+        $page->save();
+
+        $page2 = new Page();
+        $page2->id = 2;
+        $page2->save();
+
+        $pageMap = $pageService->getByIdList([1,2]);
+
+        $this->assertEquals([1,2], $pageMap->keys());
+    }
 }
