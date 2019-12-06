@@ -42,25 +42,7 @@ class PageLanguage extends Model
      */
     public function beforeSave()
     {
-        // url is set, so do nothing
-        if ($this->slug) {
-            return;
-        }
-
-        // menu's and links don't require urls
-        if (in_array($this->page->type, [Page::TYPE_MENU, Page::TYPE_LINK])) {
-            return;
-        }
-
-        $this->slug = $urlPath = $this->getUrlService()->toSlug($this->getName());
-
-        if ($parent = $this->getParentWithSlug()) {
-            $urlPath = $this->getUrlService()->getUrlByPageLanguage($parent) . '/' . $urlPath;
-        }
-
-        if ($this->getUrlService()->urlPathExists($urlPath, $this)) {
-            $this->getUrlService()->deduplicateUrl($this);
-        }
+        $this->getDI()->get('pageLanguageService')->checkAndUpdateSlug($this);
     }
 
     /**

@@ -9,6 +9,7 @@ use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\PageService;
+use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;

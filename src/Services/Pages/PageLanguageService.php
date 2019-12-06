@@ -2,9 +2,8 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\CacheConfig;
-use KikCMS\Services\CacheService;
-use KikCmsCore\Services\DbService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\Page;
@@ -13,21 +12,41 @@ use KikCMS\Models\PageLanguage;
 use KikCMS\Models\PageLanguageContent;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\ObjectLists\PageMap;
-use KikCMS\Services\LanguageService;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Service for handling Page Model objects
- *
- * @property DbService $dbService
- * @property LanguageService $languageService
- * @property PageService $pageService
- * @property UrlService $urlService
- * @property CacheService $cacheService
  */
 class PageLanguageService extends Injectable
 {
+    /**
+     * @param PageLanguage $pageLanguage
+     */
+    public function checkAndUpdateSlug(PageLanguage $pageLanguage)
+    {
+        // url is set, so do nothing
+        if ($pageLanguage->getSlug()) {
+            return;
+        }
+
+        // menu's and links don't require urls
+        if (in_array($pageLanguage->page->type, [Page::TYPE_MENU, Page::TYPE_LINK])) {
+            return;
+        }
+
+        $urlPath = $this->urlService->toSlug($pageLanguage->getName());
+
+        $pageLanguage->setSlug($urlPath);
+
+        if ($parent = $pageLanguage->getParentWithSlug()) {
+            $urlPath = $this->urlService->getUrlByPageLanguage($parent) . '/' . $urlPath;
+        }
+
+        if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
+            $this->urlService->deduplicateUrl($pageLanguage);
+        }
+    }
+
     /**
      * Create PageLanguages for the alias
      *
