@@ -11,6 +11,7 @@ use KikCMS\Models\User;
 use KikCMS\ObjectLists\RememberMeHashList;
 use KikCMS\Objects\RememberMeHash;
 use KikCMS\Services\Cms\RememberMeService;
+use KikCMS\Services\UserService;
 use Phalcon\Http\Cookie;
 use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
@@ -22,29 +23,13 @@ class RememberMeServiceTest extends Unit
         $rememberMeService = new RememberMeService();
         $rememberMeService->setDI($this->getDbDi());
 
-        $cookie = new Cookie('rememberMeToken', '1.token');
-
-        $cookieMock = $this->createMock(Cookie::class);
-        $cookieMock->method('getValue')->willReturn(null);
-
-        $cookies = $this->createMock(Cookies::class);
-        $cookies->method('get')->willReturn($cookieMock);
-
-        $config = $this->createMock(IniConfig::class);
-        $config->method('isDev')->willReturn(false);
-
-        $rememberMeService->cookies = $cookies;
-        $rememberMeService->config  = $config;
+        $this->setGetCookieWillReturn($rememberMeService, null);
 
         // no cookie
         $this->assertEquals(null, $rememberMeService->getUserIdByCookie());
 
-        $cookies = $this->createMock(Cookies::class);
-        $cookies->method('get')->willReturn($cookie);
-
-        $rememberMeService->cookies = $cookies;
-
         // no user
+        $this->setGetCookieWillReturn($rememberMeService, '1.token');
         $this->assertEquals(null, $rememberMeService->getUserIdByCookie());
 
         $user = $this->createAndSaveTestUser();
@@ -63,6 +48,33 @@ class RememberMeServiceTest extends Unit
         // valid
         $this->createAndSaveHashList($rememberMeService->security, $user, false, '1.token');
         $this->assertEquals(1, $rememberMeService->getUserIdByCookie());
+    }
+
+    public function testRemoveToken()
+    {
+        $rememberMeService = new RememberMeService();
+        $rememberMeService->setDI($this->getDbDi());
+
+        $this->setGetCookieWillReturn($rememberMeService, null);
+
+        // no cookie
+        $this->assertNull($rememberMeService->removeToken());
+
+        // remove
+        $user = $this->createAndSaveTestUser();
+        $this->setGetCookieWillReturn($rememberMeService, '1.token');
+        $this->createAndSaveHashList($rememberMeService->security, $user, true, '1.token');
+
+        $userService = $this->createMock(UserService::class);
+        $userService->method('getUser')->willReturn($user);
+
+        $rememberMeService->userService = $userService;
+
+        $this->assertCount(1, unserialize($user->getRememberMe()));
+
+        $rememberMeService->removeToken();
+
+        $this->assertNull($user->getRememberMe());
     }
 
     /**
@@ -84,5 +96,24 @@ class RememberMeServiceTest extends Unit
 
         $user->setRememberMe(serialize($hashList));
         $user->save();
+    }
+
+    /**
+     * @param RememberMeService $rememberMeService
+     * @param string|null $value
+     */
+    private function setGetCookieWillReturn(RememberMeService $rememberMeService, ?string $value)
+    {
+        $cookieMock = $this->createMock(Cookie::class);
+        $cookieMock->method('getValue')->willReturn($value);
+
+        $cookies = $this->createMock(Cookies::class);
+        $cookies->method('get')->willReturn($cookieMock);
+
+        $config = $this->createMock(IniConfig::class);
+        $config->method('isDev')->willReturn(false);
+
+        $rememberMeService->config  = $config;
+        $rememberMeService->cookies = $cookies;
     }
 }
