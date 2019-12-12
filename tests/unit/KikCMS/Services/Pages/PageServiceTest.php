@@ -75,6 +75,25 @@ class PageServiceTest extends Unit
         $this->assertEquals([1, 2], $pageMap->keys());
     }
 
+    public function testGetDisplayOrderMissing()
+    {
+        $pageService = new PageService();
+        $pageService->setDI($this->getDbDi());
+
+        $this->addDefaultLanguage();
+
+        // test empty
+        $this->assertEquals([], $pageService->getDisplayOrderMissing()->keys());
+
+        // test with empty child
+        $this->createPage('page1', 1, 0);
+        $this->createPage('page2', 2, 1);
+
+        $pageService->dbService->update(Page::class, [Page::FIELD_DISPLAY_ORDER => null], [Page::FIELD_ID => 2]);
+
+        $this->assertEquals([1], $pageService->getDisplayOrderMissing()->keys());
+    }
+
     public function testGetSelect()
     {
         $pageService = new PageService();
