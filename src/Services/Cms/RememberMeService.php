@@ -6,6 +6,7 @@ namespace KikCMS\Services\Cms;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\User;
 use KikCMS\ObjectLists\RememberMeHashList;
@@ -134,7 +135,7 @@ class RememberMeService extends Injectable
 
     /**
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     private function generateToken(): string
     {

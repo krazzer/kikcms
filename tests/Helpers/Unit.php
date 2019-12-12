@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Helpers;
 
 
+use Exception;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\Language;
+use KikCMS\Models\User;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
@@ -22,6 +25,7 @@ use Phalcon\Db\Reference;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Security;
 use Phalcon\Validation;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
@@ -69,6 +73,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('db', $db);
         $di->set('config', $config);
         $di->set('dbService', new DbService);
+        $di->set('security', new Security);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
         $di->set('languageService', new LanguageService);
@@ -242,8 +247,47 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
+        $db->createTable('cms_user', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('email', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => true]),
+                new Column('password', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
+                new Column('blocked', ['type' => Column::TYPE_INTEGER, 'size' => 1, 'notNull' => true]),
+                new Column('created_at', ['type' => Column::TYPE_DATETIME, 'notNull' => true, 'default' => 'NOW()']),
+                new Column('role', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
+                new Column('remember_me', ['type' => Column::TYPE_BLOB]),
+                new Column('settings', ['type' => Column::TYPE_BLOB]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+                new Index('role', ['role']),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
         $this->cachedDbDi = $di;
 
         return $di;
+    }
+
+    /**
+     * @return User
+     * @throws Exception
+     */
+    public function createAndSaveTestUser(): User
+    {
+        $user = new User();
+        $user->id = 1;
+        $user->email = 'test@test.com';
+        $user->blocked = 0;
+        $user->role = Permission::ADMIN;
+
+        $user->save();
+
+        return $user;
     }
 }
