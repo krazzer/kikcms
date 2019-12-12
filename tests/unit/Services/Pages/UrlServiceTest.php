@@ -30,16 +30,32 @@ class UrlServiceTest extends Unit
         $this->assertEquals('other-test', $pageLanguage->getSlug());
     }
 
+    public function testGetUrlPathByPageKey()
+    {
+        $urlService = new UrlService();
+        $urlService->setDI($this->getDbDi());
+
+        // page doesnt exist, no it creates a dummy url
+        $this->assertEquals('/page/en/default', $urlService->getUrlPathByPageKey('default'));
+
+        $pageLanguage = $this->createPageLanguage('some-slug', 'some-key');
+        $pageLanguage->save();
+
+        // page exist, so get actual url
+        $this->assertEquals('/some-slug', $urlService->getUrlPathByPageKey('some-key'));
+    }
+
     /**
      * @param string $slug
+     * @param string|null $key
      * @return PageLanguage
      */
-    public function createPageLanguage(string $slug): PageLanguage
+    private function createPageLanguage(string $slug, string $key = null): PageLanguage
     {
         $page = new Page();
 
         $page->type = Page::TYPE_PAGE;
-        $page->key  = null;
+        $page->key  = $key;
         $page->lft  = null;
         $page->rgt  = null;
 

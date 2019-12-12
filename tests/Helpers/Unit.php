@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Helpers;
 
 
+use KikCMS\Classes\Translator;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
@@ -11,6 +12,7 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCmsCore\Services\DbService;
+use Phalcon\Config;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
@@ -18,6 +20,7 @@ use Phalcon\Db\Reference;
 use Phalcon\Di;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Validation;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
 
@@ -42,7 +45,18 @@ class Unit extends \Codeception\Test\Unit
 
         $db = new Sqlite(["dbname" => ":memory:"]);
 
+        $validation = new Validation;
+
+        $translator = new Translator();
+        $translator->validation = $validation;
+        $translator->setLanguageCode('en');
+
+        $config = new Config();
+        $config->application = new Config();
+        $config->application->defaultLanguage = 'en';
+
         $di->set('db', $db);
+        $di->set('config', $config);
         $di->set('dbService', new DbService);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
@@ -54,6 +68,8 @@ class Unit extends \Codeception\Test\Unit
         $di->set('pageRearrangeService', new PageRearrangeService);
         $di->set('websiteSettings', new WebsiteSettings);
         $di->set('pageLanguageService', new PageLanguageService);
+        $di->set('validation', $validation);
+        $di->set('translator', $translator);
         $di->set('cache', function (){ return null; });
 
         Di::setDefault($di);
