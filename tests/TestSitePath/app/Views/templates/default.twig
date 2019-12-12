@@ -2,4 +2,64 @@
 
 {% block content %}
     {{ content|raw }}
+
+    <div id="twig-functions">
+        <div>
+            Finder allowed: {{ allowed('AccessFinder') ? 'yes' : 'no' }}
+        </div>
+        <div>
+            Config: {{ config('application.developerEmail') }}
+        </div>
+        <div>
+            Config not found: {{ config('x') }}
+        </div>
+        <div>
+            CSS: {{ css('/cmsassets/css/frontend.css') }}
+        </div>
+        <div>
+            {{ form() }}{{ endForm() }}
+        </div>
+        <div>
+            mediaFile empty: {{ mediaFile('') }}
+        </div>
+        <div>
+            mediaFile empty: {{ mediaFile(1) }}
+        </div>
+        <div>
+            mediaFile thumb: {{ mediaFile(1, 'example') }}
+        </div>
+        <div>
+            mediaFileBg: {{ mediaFileBg(1) }}
+        </div>
+        <div>
+            url: {{ pageUrl(4) }}
+        </div>
+        <div>
+            url straight: {{ pageUrl('/some-url') }}
+        </div>
+        <div>
+            url by key: {{ pageUrl('default') }}
+        </div>
+        <div>
+            js: {{ js('/cmsassets/js/frontend/base.js') }}
+        </div>
+        <div>
+            button: {{ submitButton('test') }}
+        </div>
+        <div>
+            svg: {{ svg('circle') }}
+        </div>
+        <div>
+            svg numeric & fail: {{ svg(100) }}
+        </div>
+        <div>
+            tl: {{ tl('cms.roles.developer') }}
+        </div>
+        <div>
+            ucfirst: {{ ucfirst('cheese') }}
+        </div>
+        <div>
+            url: {{ url('test-url') }}
+        </div>
+    </div>
 {% endblock %}

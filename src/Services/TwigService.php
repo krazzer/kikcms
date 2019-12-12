@@ -165,7 +165,7 @@ class TwigService extends Injectable
      * @param array $parameters
      * @return string
      */
-    public function submitButton(string $value, array $parameters): string
+    public function submitButton(string $value, array $parameters = []): string
     {
         return Tag::submitButton(['value' => $value] + $parameters);
     }

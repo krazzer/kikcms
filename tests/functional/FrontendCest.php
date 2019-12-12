@@ -30,6 +30,27 @@ class FrontendCest
         $I->amOnPage('/');
         $I->see('Home');
 
+        $I->see('
+            Finder allowed: no
+            Config: test@test.dev
+            Config not found:
+            CSS:
+            mediaFile empty:
+            mediaFile empty: https://kikcmstest.dev/media/files/1.png
+            mediaFile thumb: https://kikcmstest.dev/media/thumbs/example/1.png
+            mediaFileBg: background-image: url(\'https://kikcmstest.dev/media/files/1.png\');
+            url: /default
+            url straight: /some-url
+            url by key: /
+            js:
+            button: 
+            svg: 
+            svg numeric & fail: ?
+            tl: Developer
+            ucfirst: Cheese
+            url: https://kikcmstest.dev/test-url
+        ');
+
         $I->amOnPage('/nonexistingpage');
         $I->see('Page not found');
     }
