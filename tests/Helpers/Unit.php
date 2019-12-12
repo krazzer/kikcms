@@ -8,8 +8,8 @@ use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\LanguageService;
+use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
-use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;
@@ -53,6 +53,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('nestedSetService', new NestedSetService);
         $di->set('pageRearrangeService', new PageRearrangeService);
         $di->set('websiteSettings', new WebsiteSettings);
+        $di->set('pageLanguageService', new PageLanguageService);
         $di->set('cache', function (){ return null; });
 
         Di::setDefault($di);
@@ -69,6 +70,42 @@ class Unit extends \Codeception\Test\Unit
             ],
             'references' => [
                 new Reference('cms_page_content_ibfk_1', [
+                    'referencedTable'   => 'cms_page',
+                    'columns'           => ['page_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('cms_page_language', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'notNull' => true]),
+                new Column('active', ['type' => Column::TYPE_INTEGER, 'default' => 1]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR]),
+                new Column('slug', ['type' => Column::TYPE_VARCHAR]),
+                new Column('seo_title', ['type' => Column::TYPE_VARCHAR]),
+                new Column('seo_description', ['type' => Column::TYPE_VARCHAR]),
+                new Column('seo_keywords', ['type' => Column::TYPE_VARCHAR]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+                new Index('page_id', ['page_id', 'language_code'], 'UNIQUE'),
+                new Index('language_code', ['language_code']),
+            ],
+            'references' => [
+                new Reference('cms_page_language_ibfk_1', [
+                    'referencedTable'   => 'cms_language',
+                    'columns'           => ['language_code'],
+                    'referencedColumns' => ['code'],
+                ]),
+                new Reference('cms_page_language_ibfk_2', [
                     'referencedTable'   => 'cms_page',
                     'columns'           => ['page_id'],
                     'referencedColumns' => ['id'],
