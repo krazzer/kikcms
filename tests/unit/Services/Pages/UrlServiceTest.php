@@ -45,23 +45,45 @@ class UrlServiceTest extends Unit
         $this->assertEquals('/some-slug', $urlService->getUrlPathByPageKey('some-key'));
     }
 
+    public function testCreateUrlPathByPageLanguage()
+    {
+        $urlService = new UrlService();
+        $urlService->setDI($this->getDbDi());
+
+        // default page
+        $pageLanguage = $this->createPageLanguage('slug', 'default');
+        $this->assertEquals('/', $urlService->createUrlPathByPageLanguage($pageLanguage));
+
+        // linked page
+        $pageLanguage = $this->createPageLanguage('slug', null, Page::TYPE_LINK);
+        $this->assertEquals('', $urlService->createUrlPathByPageLanguage($pageLanguage));
+
+        // saved page
+        $pageLanguage = $this->createPageLanguage('slug');
+        $pageLanguage->save();
+
+        $this->assertEquals('/slug', $urlService->createUrlPathByPageLanguage($pageLanguage));
+    }
+
     /**
      * @param string $slug
      * @param string|null $key
+     * @param string $type
      * @return PageLanguage
      */
-    private function createPageLanguage(string $slug, string $key = null): PageLanguage
+    private function createPageLanguage(string $slug, string $key = null, string $type = Page::TYPE_PAGE): PageLanguage
     {
         $page = new Page();
 
-        $page->type = Page::TYPE_PAGE;
+        $page->type = $type;
         $page->key  = $key;
         $page->lft  = null;
         $page->rgt  = null;
+        $page->link = null;
 
         $pageLanguage = new PageLanguage();
         $pageLanguage->setSlug($slug);
-        $pageLanguage->page = $page;
+        $pageLanguage->page          = $page;
         $pageLanguage->language_code = 'en';
 
         return $pageLanguage;
