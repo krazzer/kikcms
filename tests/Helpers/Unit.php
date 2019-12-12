@@ -5,12 +5,14 @@ namespace Helpers;
 
 
 use KikCMS\Classes\Translator;
+use KikCMS\Models\Language;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
+use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Config;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
@@ -28,6 +30,15 @@ class Unit extends \Codeception\Test\Unit
 {
     /** @var Di */
     private $cachedDbDi;
+
+    public function addDefaultLanguage()
+    {
+        $language = new Language();
+
+        $language->code   = 'en';
+        $language->active = 1;
+        $language->save();
+    }
 
     /**
      * Get a Di with a Db class that contains a Sqlite version of the KikCMS's dedb structure
@@ -68,6 +79,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('pageRearrangeService', new PageRearrangeService);
         $di->set('websiteSettings', new WebsiteSettings);
         $di->set('pageLanguageService', new PageLanguageService);
+        $di->set('urlService', new UrlService);
         $di->set('validation', $validation);
         $di->set('translator', $translator);
         $di->set('cache', function (){ return null; });
@@ -88,6 +100,37 @@ class Unit extends \Codeception\Test\Unit
                 new Reference('cms_page_content_ibfk_1', [
                     'referencedTable'   => 'cms_page',
                     'columns'           => ['page_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('cms_page_language_content', null, [
+            'columns'    => [
+                new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'notNull' => true]),
+                new Column('field', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
+                new Column('value', ['type' => Column::TYPE_LONGBLOB]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['page_id', 'language_code', 'field']),
+                new Index('language_code', ['language_code']),
+                new Index('field', ['field']),
+            ],
+            'references' => [
+                new Reference('cms_page_content_ibfk_1', [
+                    'referencedTable'   => 'cms_page',
+                    'columns'           => ['page_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+                new Reference('cms_page_content_ibfk_2', [
+                    'referencedTable'   => 'cms_language',
+                    'columns'           => ['language_code'],
                     'referencedColumns' => ['id'],
                 ]),
             ],
