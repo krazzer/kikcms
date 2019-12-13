@@ -269,6 +269,73 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
+        $db->createTable('test_company', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('test_person', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
+                new Column('company_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('image_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('display_order', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+                new Index('company_id', ['company_id']),
+                new Index('image_id', ['image_id']),
+                new Index('display_order', ['display_order'], 'UNIQUE'),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('test_person_interest', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('person_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('interest_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('grade', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+                new Index('interest_id', ['interest_id']),
+                new Index('person_id_interest_id', ['person_id', 'interest_id'], 'UNIQUE'),
+            ],
+            'references' => [
+                new Reference('test_person_interest_ibfk_1', [
+                    'referencedTable'   => 'test_person',
+                    'columns'           => ['person_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+                new Reference('test_person_interest_ibfk_2', [
+                    'referencedTable'   => 'test_interest',
+                    'columns'           => ['interest_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
         $this->cachedDbDi = $di;
 
         return $di;

@@ -17,6 +17,7 @@ class PersonInterest extends Model
     const FIELD_ID          = 'id';
     const FIELD_PERSON_ID   = 'person_id';
     const FIELD_INTEREST_ID = 'interest_id';
+    const FIELD_GRADE       = 'grade';
 
     /**
      * @inheritdoc

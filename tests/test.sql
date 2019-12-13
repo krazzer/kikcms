@@ -80,6 +80,7 @@ CREATE TABLE `test_person_interest` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `person_id` int(11) DEFAULT NULL,
   `interest_id` int(11) DEFAULT NULL,
+  `grade` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `person_id` (`person_id`,`interest_id`),
   KEY `interest_id` (`interest_id`),

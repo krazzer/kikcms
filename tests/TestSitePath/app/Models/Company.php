@@ -13,4 +13,14 @@ class Company extends Model
 
     const FIELD_ID   = 'id';
     const FIELD_NAME = 'name';
+
+    /**
+     * @inheritdoc
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->hasOne(self::FIELD_ID, Person::class, Person::FIELD_COMPANY_ID, ['alias' => 'person']);
+    }
 }

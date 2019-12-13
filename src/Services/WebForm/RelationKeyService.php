@@ -110,7 +110,6 @@ class RelationKeyService extends Injectable
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
                 return @$model->$part1->$part2->$part3->$part4->$part5;
-            break;
         }
 
         return null;
