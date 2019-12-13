@@ -52,6 +52,7 @@ class FinderCest
 
     public function fileWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
         $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/1');
@@ -60,6 +61,7 @@ class FinderCest
 
     public function keyWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png', 'key' => 'test']);
         $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/key/test');
@@ -85,6 +87,10 @@ class FinderCest
     {
         $folderId = $this->_createFolder($I, 'test');
 
+        $I->getDbService()->insert(File::class, [
+            'id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png', 'folder_id' => $folderId
+        ]);
+
         $I->sendAjaxPostRequest('/cms/finder/paste', [
             'renderableInstance' => 'Finder5dc515ba1b715',
             'renderableClass'    => 'KikCMS\Classes\Finder\Finder',
@@ -104,6 +110,7 @@ class FinderCest
 
     public function searchWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
         $I->getDbService()->insert(File::class, ['id' => 2, 'name' => 'searchfile', 'hash' => 'abc', 'extension' => 'png']);
 
         $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
@@ -125,6 +132,8 @@ class FinderCest
 
     public function urlWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+
         $I->amOnPage('/cms/file/url/1');
 
         $I->see('{"url":"https://kikcmstest.dev/media/files/1.png"}');

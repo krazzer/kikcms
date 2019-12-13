@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace functional;
 
 use FunctionalTester;
+use KikCMS\Models\File;
 
 class FrontendCest
 {
@@ -27,6 +28,8 @@ class FrontendCest
 
     public function pageWorks(FunctionalTester $I)
     {
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+
         $I->amOnPage('/');
         $I->see('Home');
 
