@@ -6,23 +6,28 @@ namespace Helpers;
 
 use Exception;
 use KikCMS\Classes\Permission;
-use KikCMS\Classes\Translator;
 use KikCMS\Models\Language;
 use KikCMS\Models\User;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\LanguageService;
+use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\WebForm\RelationKeyService;
+use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
+use Phalcon\Cache\Frontend\Data;
 use Phalcon\Config;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
 use Phalcon\Di;
+use Phalcon\Escaper;
+use Phalcon\Flash\Direct;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Security;
@@ -57,14 +62,9 @@ class Unit extends \Codeception\Test\Unit
         }
 
         $di = new Di();
-
         $db = new Sqlite(["dbname" => ":memory:"]);
 
-        $validation = new Validation;
-
-        $translator = new Translator();
-        $translator->validation = $validation;
-        $translator->setLanguageCode('en');
+        $translator = (new TestHelper)->getTranslator();
 
         $config = new Config();
         $config->application = new Config();
@@ -72,12 +72,12 @@ class Unit extends \Codeception\Test\Unit
 
         $di->set('db', $db);
         $di->set('config', $config);
+        $di->set('cacheService', new CacheService);
         $di->set('dbService', new DbService);
         $di->set('security', new Security);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
         $di->set('languageService', new LanguageService);
-        $di->set('cacheService', new CacheService);
         $di->set('templateFields', new TemplateFields);
         $di->set('pageService', new PageService);
         $di->set('nestedSetService', new NestedSetService);
@@ -85,9 +85,14 @@ class Unit extends \Codeception\Test\Unit
         $di->set('websiteSettings', new WebsiteSettings);
         $di->set('pageLanguageService', new PageLanguageService);
         $di->set('urlService', new UrlService);
-        $di->set('validation', $validation);
+        $di->set('validation', new Validation);
+        $di->set('storageService', new StorageService);
+        $di->set('relationKeyService', new RelationKeyService);
+        $di->set('flash', new Direct);
+        $di->set('escaper', new Escaper);
+        $di->set('modelService', new ModelService);
+        $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('translator', $translator);
-        $di->set('cache', function (){ return null; });
 
         Di::setDefault($di);
 
@@ -328,6 +333,52 @@ class Unit extends \Codeception\Test\Unit
                     'columns'           => ['interest_id'],
                     'referencedColumns' => ['id'],
                 ]),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('cms_translation_value', null, [
+            'columns'    => [
+                new Column('key_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),
+                new Column('value', ['type' => Column::TYPE_LONGBLOB]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['key_id']),
+                new Index('language_code', ['language_code']),
+            ],
+            'references' => [
+                new Reference('test_person_interest_ibfk_1', [
+                    'referencedTable'   => 'cms_language',
+                    'columns'           => ['language_code'],
+                    'referencedColumns' => ['code'],
+                ]),
+                new Reference('test_person_interest_ibfk_2', [
+                    'referencedTable'   => 'cms_translation_key',
+                    'columns'           => ['key_id'],
+                    'referencedColumns' => ['id'],
+                ]),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
+        $db->createTable('cms_translation_key', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('key', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),
+                new Column('db', ['type' => Column::TYPE_INTEGER, 'size' => 1]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+                new Index('key', ['key']),
             ],
             'options'    => [
                 'ENGINE'          => 'InnoDB',

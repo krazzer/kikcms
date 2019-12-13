@@ -55,7 +55,7 @@ class CacheService extends Injectable
     /**
      * @param string $cacheKey
      * @param callable $function
-     * @param int $ttl
+     * @param float|int $ttl
      *
      * @return mixed|null
      */

@@ -108,7 +108,7 @@ class TestHelper extends TestCase
         $translatorMock->websiteSettings = $websiteSettingsMock;
         $translatorMock->validation      = $validationMock;
 
-        $translatorMock->setLanguageCode('nl');
+        $translatorMock->setLanguageCode('en');
 
         return $translatorMock;
     }

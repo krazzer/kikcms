@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\Renderable;
 
 
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Http\Response;
 
 /**
