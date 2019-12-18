@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 
 namespace Classes\Frontend;
 
@@ -15,18 +15,26 @@ class FullPageTest extends Unit
 
         $page = new Page();
         $page->key = 'testKey';
+        $page->link = 1;
+        $page->created_at = '2020-01-01';
         $pageLanguage = new PageLanguage();
         $pageLanguage->page_id = 1;
+        $pageLanguage->language_code = 'en';
         $page->pageLanguageEn = $pageLanguage;
 
-        $fullPage = new FullPage($page, $pageLanguage, ['field' => 'value'], '/url');
+        $fullPage = new FullPage($page, $pageLanguage, ['field' => 'value'], 'url');
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->assertEquals('value', $fullPage->getField());
-
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->assertNull($fullPage->getNonExistingField());
-
         $this->assertEquals('testKey', $fullPage->getKey());
+        $this->assertEquals('en', $fullPage->getLanguageCode());
+        $this->assertEquals(1, $fullPage->getLink());
+        $this->assertEquals(['field' => 'value'], $fullPage->getContent());
+        $this->assertEquals('2020-01-01', $fullPage->getCreatedDate()->format('Y-m-d'));
+
+        $fullPage->setContent([]);
+        $fullPage->setPage($page);
+        $fullPage->setPageLanguage($pageLanguage);
+        $fullPage->setUrl('url');
     }
 }
