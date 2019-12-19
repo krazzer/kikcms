@@ -66,7 +66,6 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\FrontendService;
 use KikCMS\Services\Website\MenuService;
-use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Cache\Backend;
@@ -144,7 +143,6 @@ use Phalcon\Validation;
  * @property UserSettingsService userSettingsService
  * @property Validation $validation
  * @property VendorCleanUpService vendorCleanUpService
- * @property WebsiteService websiteService
  * @property WebsiteSettingsBase websiteSettings
  */
 class Injectable extends \Phalcon\Di\Injectable

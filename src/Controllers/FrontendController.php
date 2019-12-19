@@ -16,7 +16,6 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\FrontendService;
-use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
@@ -30,7 +29,6 @@ use Phalcon\Http\ResponseInterface;
  * @property Translator $translator
  * @property UrlService $urlService
  * @property UserService $userService
- * @property WebsiteService $websiteService
  * @property WebsiteSettingsBase $websiteSettings
  */
 class FrontendController extends BaseController
@@ -153,7 +151,6 @@ class FrontendController extends BaseController
         }
 
         $variables = array_merge($fieldVariables, $websiteVariables, $templateVariables);
-        $variables = $this->websiteService->getForms($variables);
 
         // in case a form has been send, it might want to redirect
         if ($variables instanceof Response) {

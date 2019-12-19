@@ -9,7 +9,6 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
-use KikCMS\Services\Website\WebsiteService;
 use KikCMS\Classes\Phalcon\Loader;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
@@ -144,14 +143,6 @@ class BaseServices extends ApplicationServices
      * @return WebsiteSettingsBase
      */
     protected function getWebsiteSettings(): WebsiteSettingsBase
-    {
-        return $this->get('websiteSettings');
-    }
-
-    /**
-     * @return WebsiteService
-     */
-    protected function getWebsiteService(): WebsiteService
     {
         return $this->get('websiteSettings');
     }

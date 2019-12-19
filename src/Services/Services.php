@@ -25,7 +25,6 @@ use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Base\BaseServices;
-use KikCMS\Services\Website\WebsiteService;
 use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
@@ -459,14 +458,6 @@ class Services extends BaseServices
         $view->assets = new Manager();
 
         return $view;
-    }
-
-    /**
-     * @return WebsiteService
-     */
-    protected function initWebsiteService()
-    {
-        return new WebsiteService();
     }
 
     /**

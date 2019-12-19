@@ -5,42 +5,18 @@ namespace KikCMS\Services\Finder;
 
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
-use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Classes\Phalcon\IniConfig;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FilePermission;
 use KikCMS\ObjectLists\FileMap;
-use KikCMS\Services\Pages\UrlService;
-use KikCMS\Services\UserService;
-use KikCmsCore\Services\DbService;
-use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
-use KikCMS\Classes\ImageHandler\ImageHandler;
-use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Models\Folder;
 use KikCMS\Models\File;
-use KikCMS\Services\Website\WebsiteService;
-use Phalcon\Di\Injectable;
 use Phalcon\Http\Request\File as UploadedFile;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Handles Files
- *
- * @property AccessControl $acl
- * @property IniConfig $config
- * @property DbService $dbService
- * @property ImageHandler $imageHandler
- * @property FileStorage $fileStorage
- * @property FileHashService $fileHashService
- * @property FilePermissionService $filePermissionService
- * @property FileRemoveService $fileRemoveService
- * @property FileResizeService $fileResizeService
- * @property FileCacheService $fileCacheService
- * @property MediaResizeBase $mediaResize
- * @property UserService $userService
- * @property UrlService $urlService
- * @property WebsiteService $websiteService
  */
 class FileService extends Injectable
 {

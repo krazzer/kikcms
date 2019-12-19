@@ -21,7 +21,6 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
-use KikCMS\Services\Website\WebsiteService;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\StringLength;
@@ -31,7 +30,6 @@ use Phalcon\Validation\Validator\StringLength;
  * @property PageLanguageService $pageLanguageService
  * @property UrlService $urlService
  * @property CacheService $cacheService
- * @property WebsiteService $websiteService
  * @property TemplateFieldsBase $templateFields
  * @property AccessControl $acl
  * @property PagesDataTableService $pagesDataTableService

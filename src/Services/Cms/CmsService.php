@@ -20,7 +20,6 @@ use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Objects\CmsMenuGroup;
 use KikCMS\Objects\CmsMenuItem;
 use KikCMS\Services\ModelService;
-use KikCMS\Services\Website\WebsiteService;
 use Monolog\Logger;
 use Phalcon\Di\Injectable;
 
@@ -28,7 +27,6 @@ use Phalcon\Di\Injectable;
  * Contains some generic CMS functions
  *
  * @property Translator $translator
- * @property WebsiteService $websiteService
  * @property WebsiteSettingsBase $websiteSettings
  * @property AccessControl $acl
  * @property KeyValue $keyValue
