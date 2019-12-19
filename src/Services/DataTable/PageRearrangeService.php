@@ -203,25 +203,18 @@ class PageRearrangeService extends Injectable
      */
     private function placeBeforeOrAfter(Page $page, Page $targetPage, bool $placeAfter)
     {
-        $targetParentId     = $targetPage->getParentId();
-        $targetDisplayOrder = $targetPage->display_order;
-        $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
+        $this->dbService->transaction(function () use ($page, $targetPage, $placeAfter){
+            $targetParentId     = $targetPage->getParentId();
+            $targetDisplayOrder = $targetPage->display_order;
+            $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
 
-        $oldDisplayOrder = $page->getDisplayOrder();
-        $oldParentId     = $page->getParentId();
+            $oldDisplayOrder = $page->getDisplayOrder();
+            $oldParentId     = $page->getParentId();
 
-        $this->db->begin();
-
-        try {
             $this->updateSiblingOrder($targetPage, $placeAfter);
             $this->updatePage($page, $targetParentId, $newDisplayOrder);
             $this->updateLeftSiblingsOrder($oldParentId, $oldDisplayOrder);
-        } catch (Exception $exception) {
-            $this->db->rollback();
-            throw $exception;
-        }
-
-        $this->db->commit();
+        });
     }
 
     /**
