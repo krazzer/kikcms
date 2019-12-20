@@ -20,11 +20,11 @@ class FileRemoveServiceTest extends TestCase
 
         // file has key: can't delete
         $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setKey('k'), true, new PageLanguageMap);
-        $this->assertStringContainsString('omdat deze nodig is voor het correct werken van de website', $errorMessage);
+        $this->assertStringContainsString('At least one of the selected files hasn\'t been removed', $errorMessage);
 
         // can't edit file
         $errorMessage = $fileRemoveService->getDeleteErrorMessage(new File, false, new PageLanguageMap);
-        $this->assertStringContainsString('omdat u deze niet mag bewerken', $errorMessage);
+        $this->assertStringContainsString('insuffient rights', $errorMessage);
 
         // no linked pages
         $this->assertNull($fileRemoveService->getDeleteErrorMessage(new File, true, new PageLanguageMap));
@@ -33,7 +33,7 @@ class FileRemoveServiceTest extends TestCase
         $pageLanguageMap = (new PageLanguageMap)->add((new PageLanguage)->setName('x'), 1);
 
         $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setName('x'), true, $pageLanguageMap);
-        $this->assertStringContainsString("omdat deze gebruikt wordt in de pagina 'x'", $errorMessage);
+        $this->assertStringContainsString("because it is used in the page 'x'", $errorMessage);
 
         // multiple linked pages
         $pageLanguageMap = (new PageLanguageMap)
@@ -41,7 +41,7 @@ class FileRemoveServiceTest extends TestCase
             ->add((new PageLanguage)->setName('x2'), 2);
 
         $errorMessage = $fileRemoveService->getDeleteErrorMessage((new File)->setName('x'), true, $pageLanguageMap);
-        $this->assertStringContainsString("wordt in de volgende pagina's: x, x2", $errorMessage);
+        $this->assertStringContainsString("because it is used in the following pages: x, x2", $errorMessage);
     }
 
     public function testRemoveThumbNails()

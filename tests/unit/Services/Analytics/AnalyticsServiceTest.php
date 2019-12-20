@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Services\Analytics;
 
 use Codeception\Test\Unit;
+use DateTime;
 use Helpers\TestHelper;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
@@ -19,8 +20,8 @@ class AnalyticsServiceTest extends Unit
         $analyticsService = new AnalyticsService();
         $analyticsService->setDI($di);
 
-        $start = new \DateTime('2020-01-01');
-        $end   = new \DateTime('2020-01-10');
+        $start = new DateTime('2020-01-01');
+        $end   = new DateTime('2020-01-10');
 
         $analyticsService->dbService->truncate(GaDayVisit::class);
 
@@ -28,10 +29,10 @@ class AnalyticsServiceTest extends Unit
         $result = $analyticsService->getOverviewData($start, $end);
 
         $expected = [
-            'Aantal bezoeken'            => 0,
-            'Aantal unieke bezoeken'     => 0,
-            'Gemiddeld bezoek per dag'   => 0,
-            'Gemiddeld bezoek per maand' => 0,
+            'Total visitors'             => 0,
+            'Total unique visitors'      => 0,
+            'Average visitors per day'   => 0,
+            'Average visitors per month' => 0,
         ];
 
         $this->assertEquals($expected, $result);
@@ -53,10 +54,10 @@ class AnalyticsServiceTest extends Unit
         $result = $analyticsService->getOverviewData($start, $end);
 
         $expected = [
-            'Aantal bezoeken'            => 20,
-            'Aantal unieke bezoeken'     => 10,
-            'Gemiddeld bezoek per dag'   => 2,
-            'Gemiddeld bezoek per maand' => 61,
+            'Total visitors'             => 20,
+            'Total unique visitors'      => 10,
+            'Average visitors per day'   => 2,
+            'Average visitors per month' => 61,
         ];
 
         $this->assertEquals($expected, $result);
@@ -74,8 +75,8 @@ class AnalyticsServiceTest extends Unit
         $analyticsService->dbService->truncate(GaVisitData::class);
         $analyticsService->dbService->truncate(GaDayVisit::class);
 
-        $start = new \DateTime('2013-02-01');
-        $end   = new \DateTime('2013-03-01');
+        $start = new DateTime('2013-02-01');
+        $end   = new DateTime('2013-03-01');
 
         // test empty db
         $expected = [];
@@ -247,7 +248,7 @@ class AnalyticsServiceTest extends Unit
     {
         $visitorDataInsert = [];
 
-        for($i=1; $i<=50; $i++){
+        for ($i = 1; $i <= 50; $i++) {
             $visitorDataInsert[] = ["date" => "2013-2-10", "type" => "location", "value" => "L" . $i, "visits" => 1];
         }
 
