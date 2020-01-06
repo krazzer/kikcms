@@ -551,7 +551,7 @@ abstract class WebForm extends Renderable
                 $message = $message->getMessage();
 
                 if($formElement->getLabel()){
-                    $message = str_replace(':label', "'" . strip_tags((string) $formElement->getLabel()) . "'", $message);
+                    $message = str_replace(':label', "'" . strip_tags($formElement->getLabel()) . "'", $message);
                 }
 
                 $errorContainer->addFieldError($elementName, $message);
