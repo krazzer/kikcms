@@ -549,7 +549,10 @@ abstract class WebForm extends Renderable
 
             foreach ($elementMessages as $message) {
                 $message = $message->getMessage();
-                $message = str_replace(':label', "'" . strip_tags((string) $formElement->getLabel()) . "'", $message);
+
+                if($formElement->getLabel()){
+                    $message = str_replace(':label', "'" . strip_tags((string) $formElement->getLabel()) . "'", $message);
+                }
 
                 $errorContainer->addFieldError($elementName, $message);
             }
