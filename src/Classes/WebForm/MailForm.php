@@ -86,7 +86,7 @@ abstract class MailForm extends WebForm
                 $input[$key] = implode("\n", $input[$key]);
             }
 
-            $value = nl2br($input[$key]);
+            $value = nl2br((string) $input[$key]);
             $value = str_replace("\n", '', $value);
 
             if ( ! $value) {
