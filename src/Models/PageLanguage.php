@@ -2,7 +2,6 @@
 
 namespace KikCMS\Models;
 
-use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Classes\Model;
 
 /**
@@ -52,7 +51,9 @@ class PageLanguage extends Model
     {
         parent::initialize();
 
-        $this->belongsTo("page_id", Page::class, "id", ["alias" => "page"]);
+        $pageClass = $this->getDI()->get('websiteSettings')->getPageClass() ?: Page::class;
+
+        $this->belongsTo("page_id", $pageClass, "id", ["alias" => "page"]);
     }
 
     /**
@@ -139,14 +140,6 @@ class PageLanguage extends Model
     {
         $this->slug = $slug;
         return $this;
-    }
-
-    /**
-     * @return UrlService
-     */
-    private function getUrlService(): UrlService
-    {
-        return $this->getDI()->get('urlService');
     }
 
     /**
