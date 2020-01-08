@@ -24,6 +24,7 @@ CREATE TABLE `test_datatable_test` (
   `multicheckbox` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `datatableselect` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `textarea` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `select` int(11) DEFAULT NULL,
   `hidden` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `autocomplete` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,

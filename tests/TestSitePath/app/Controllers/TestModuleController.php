@@ -5,6 +5,7 @@ namespace Website\Controllers;
 
 
 use Helpers\TestHelper;
+use Website\Forms\DataTableTestForm;
 use Website\Forms\TestPersonForm;
 use KikCMS\Controllers\BaseCmsController;
 use Website\DataTables\DataTableTestObjects;
@@ -16,6 +17,15 @@ class TestModuleController extends BaseCmsController
         $this->view->object           = (new DataTableTestObjects)->render();
         $this->view->selectedMenuItem = 'datatabletest';
         $this->view->title            = 'Test DataTable';
+
+        $this->view->pick('cms/default');
+    }
+
+    public function testDataTableFormAction()
+    {
+        $this->view->object           = (new DataTableTestForm)->render();
+        $this->view->selectedMenuItem = 'datatabletestform';
+        $this->view->title            = 'Test DataTable Form';
 
         $this->view->pick('cms/default');
     }

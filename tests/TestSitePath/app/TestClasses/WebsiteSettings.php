@@ -30,6 +30,7 @@ class WebsiteSettings extends WebsiteSettingsBase
     public function addBackendRoutes(Group $backend)
     {
         $backend->add('/test/datatable', 'TestModule::testDataTable');
+        $backend->add('/test/datatableform', 'TestModule::testDataTableForm');
         $backend->add('/test/personform', 'TestModule::personForm');
     }
 

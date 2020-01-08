@@ -19,6 +19,7 @@ class DataTableTest extends Model
     const FIELD_MULTICHECKBOX   = 'multicheckbox';
     const FIELD_DATATABLESELECT = 'datatableselect';
     const FIELD_TEXTAREA        = 'textarea';
+    const FIELD_SELECT          = 'select';
     const FIELD_HIDDEN          = 'hidden';
     const FIELD_AUTOCOMPLETE    = 'autocomplete';
     const FIELD_PASSWORD        = 'password';
