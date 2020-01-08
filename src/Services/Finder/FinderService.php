@@ -5,14 +5,9 @@ namespace KikCMS\Services\Finder;
 
 
 use KikCMS\Classes\Finder\FinderFilters;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\Folder;
-use KikCMS\Services\UserService;
-use Phalcon\Di\Injectable;
 
-/**
- * @property UserService $userService
- * @property FilePermissionService $filePermissionService
- */
 class FinderService extends Injectable
 {
     /**

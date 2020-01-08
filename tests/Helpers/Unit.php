@@ -274,6 +274,31 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
+        $db->createTable('cms_file', null, [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 100]),
+                new Column('extension', ['type' => Column::TYPE_VARCHAR, 'size' => 50]),
+                new Column('mimetype', ['type' => Column::TYPE_VARCHAR, 'size' => 100]),
+                new Column('created', ['type' => Column::TYPE_DATETIME]),
+                new Column('updated', ['type' => Column::TYPE_DATETIME]),
+                new Column('is_folder', ['type' => Column::TYPE_INTEGER]),
+                new Column('folder_id', ['type' => Column::TYPE_INTEGER]),
+                new Column('size', ['type' => Column::TYPE_INTEGER]),
+                new Column('user_id', ['type' => Column::TYPE_INTEGER]),
+                new Column('key', ['type' => Column::TYPE_VARCHAR]),
+                new Column('hash', ['type' => Column::TYPE_VARCHAR]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
         $db->createTable('test_company', null, [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
