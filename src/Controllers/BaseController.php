@@ -4,7 +4,6 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Phalcon\Controller;
-use Phpcsp\Security\ContentSecurityPolicyHeaderBuilder;
 
 class BaseController extends Controller
 {
@@ -14,7 +13,6 @@ class BaseController extends Controller
     public function initialize()
     {
         $this->initializeLanguage();
-        $this->initializeCpsHeaders();
 
         setlocale(LC_ALL, $this->translator->tl('system.locale'));
 
@@ -96,8 +94,8 @@ class BaseController extends Controller
      */
     protected function outputCsv(string $fileName, array $lines, array $headerLines = [])
     {
-        header('Content-Type: application/csv');
-        header('Content-Disposition: attachment; filename="' . $fileName . '.csv";');
+        $this->response->setHeader('Content-Type', 'application/csv');
+        $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '.csv";');
 
         $f = fopen('php://output', 'w');
 
@@ -118,37 +116,5 @@ class BaseController extends Controller
     protected function setDefaultLanguageCode()
     {
         $this->translator->setLanguageCode($this->languageService->getDefaultLanguageCode());
-    }
-
-    /**
-     * Set Content Security Policy headers
-     */
-    private function initializeCpsHeaders()
-    {
-        if ( ! $cspSettings = $this->config->get('csp')) {
-            return;
-        }
-
-        $nonce = uniqid();
-
-        $this->view->cspNonce = $nonce;
-
-        $allowedDomains = [
-            "'self'",
-            'cdn.tinymce.com',
-            'www.gstatic.com',
-        ];
-
-        $policy = (new ContentSecurityPolicyHeaderBuilder);
-        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, implode(' ', $allowedDomains));
-        $policy->addSourceExpression(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_STYLE_SRC, "* 'unsafe-inline'");
-        $policy->addNonce(ContentSecurityPolicyHeaderBuilder::DIRECTIVE_SCRIPT_SRC, $nonce);
-
-        $policy->enforcePolicy(false);
-        $policy->setReportUri($cspSettings['reportUri']);
-
-        foreach ($policy->getHeaders(true) as $header) {
-            header(sprintf('%s: %s', $header['name'], $header['value']));
-        }
     }
 }
