@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Services;
 
 use Helpers\Unit;
+use KikCMS\Classes\Translator;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use KikCMS\Services\TranslationService;
@@ -72,5 +73,21 @@ class TranslationServiceTest extends Unit
         $translationService->setDI($this->getDbDi());
 
         $this->assertIsNumeric($translationService->createNewTranslationKeyId());
+    }
+
+    public function testCreateSiteTranslationKeys()
+    {
+        $translationService = new TranslationService();
+        $translationService->setDI($this->getDbDi());
+
+        $translator = $this->createMock(Translator::class);
+        $translator->method('getWebsiteTranslations')->willReturn(['testKey' => 'testValue']);
+
+        $translationService->translator = $translator;
+        $translationService->createSiteTranslationKeys();
+
+        $result = $translationService->dbService->queryRow("SELECT * FROM cms_translation_key");
+
+        $this->assertEquals('testKey', $result['key']);
     }
 }
