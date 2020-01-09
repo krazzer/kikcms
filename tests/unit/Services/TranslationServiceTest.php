@@ -65,6 +65,12 @@ class TranslationServiceTest extends Unit
         $translationService->saveValue('x', 1, 'en');
 
         $this->assertEquals('x', $translationKey->valueEn->value);
+
+        $translationService->saveValue('xx', 1, 'en');
+
+        $translationKey = TranslationKey::getById(1);
+
+        $this->assertEquals('xx', $translationKey->valueEn->value);
     }
 
     public function testCreateNewTranslationKeyId()
