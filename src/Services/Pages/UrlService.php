@@ -357,7 +357,7 @@ class UrlService extends Injectable
      * @param $pageLanguage
      * @return string
      */
-    private function getUrlForLinkedPage(PageLanguage $pageLanguage): string
+    public function getUrlForLinkedPage(PageLanguage $pageLanguage): string
     {
         $link = $pageLanguage->page->link;
 

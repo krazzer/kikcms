@@ -65,6 +65,45 @@ class UrlServiceTest extends Unit
         $this->assertEquals('/slug', $urlService->createUrlPathByPageLanguage($pageLanguage));
     }
 
+    public function testGetUrlForLinkedPage()
+    {
+        $urlService = new UrlService();
+        $urlService->setDI($this->getDbDi());
+
+        $pageLanguage = new PageLanguage();
+
+        $page = new Page();
+        $page->link = null;
+
+        $pageLanguage->language_code = 'en';
+        $pageLanguage->page = $page;
+
+        $urlService->dbService->insert(Page::class, ['id' => 1, 'type' => 'link']);
+        $urlService->dbService->insert(PageLanguage::class, ['page_id' => 1, 'language_code' => 'en']);
+
+        //no link
+        $this->assertEquals('', $urlService->getUrlForLinkedPage($pageLanguage));
+
+        //textual link with /
+        $pageLanguage->page->link = '/somelink';
+        $this->assertEquals('/somelink', $urlService->getUrlForLinkedPage($pageLanguage));
+
+        //textual link without /
+        $pageLanguage->page->link = 'somelink';
+        $this->assertEquals('/somelink', $urlService->getUrlForLinkedPage($pageLanguage));
+
+        //links to a link
+        $pageLanguage->page->link = 1;
+        $this->assertEquals('', $urlService->getUrlForLinkedPage($pageLanguage));
+
+        //links to a link
+        $page = Page::getById(1);
+        $page->type = 'page';
+        $page->save();
+
+        $this->assertEquals('/', $urlService->getUrlForLinkedPage($pageLanguage));
+    }
+
     /**
      * @param string $slug
      * @param string|null $key
