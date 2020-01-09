@@ -6,11 +6,8 @@ namespace KikCMS\Services\Cms;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
-use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Permission;
-use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Classes\Phalcon\KeyValue;
-use KikCMS\Classes\Translator;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
@@ -19,19 +16,9 @@ use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Objects\CmsMenuGroup;
 use KikCMS\Objects\CmsMenuItem;
-use KikCMS\Services\ModelService;
-use Monolog\Logger;
-use Phalcon\Di\Injectable;
 
 /**
  * Contains some generic CMS functions
- *
- * @property Translator $translator
- * @property WebsiteSettingsBase $websiteSettings
- * @property AccessControl $acl
- * @property KeyValue $keyValue
- * @property Logger $logger
- * @property ModelService $modelService
  */
 class CmsService extends Injectable
 {
@@ -189,5 +176,30 @@ class CmsService extends Injectable
         }
 
         $this->keyValue->delete($token);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBaseUri(): ?string
+    {
+        if ($baseUri = $this->config->application->baseUri) {
+            return $baseUri;
+        }
+
+        if ($httpHost = $this->request->getServer('HTTP_HOST')) {
+            return "https://" . $httpHost . '/';
+        }
+
+        $pathParts = explode('/', $this->config->application->path);
+
+        // walk through the path to see if the domain name can be retrieved
+        foreach ($pathParts as $part) {
+            if (strstr($part, '.')) {
+                return "https://" . $part . '/';
+            }
+        }
+
+        return null;
     }
 }

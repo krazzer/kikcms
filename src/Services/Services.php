@@ -408,7 +408,7 @@ class Services extends BaseServices
      */
     protected function initUrl()
     {
-        $baseUri = $this->getBaseUri();
+        $baseUri = $this->get('cmsService')->getBaseUri();
 
         $url = new Url();
         $url->setBaseUri($baseUri);
@@ -480,30 +480,5 @@ class Services extends BaseServices
         }
 
         return $namespaces;
-    }
-
-    /**
-     * @return string|null
-     */
-    private function getBaseUri(): ?string
-    {
-        if ($baseUri = $this->getAppConfig()->get('baseUri')) {
-            return $baseUri;
-        }
-
-        if (isset($_SERVER['HTTP_HOST'])) {
-            return "https://" . $_SERVER['HTTP_HOST'] . '/';
-        }
-
-        $pathParts = explode('/', $this->getAppConfig()->path);
-
-        // walk through the path to see if the domain name can be retrieved
-        foreach ($pathParts as $part) {
-            if (strstr($part, '.')) {
-                return "https://" . $part . '/';
-            }
-        }
-
-        return null;
     }
 }
