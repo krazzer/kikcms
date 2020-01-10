@@ -30,6 +30,7 @@ class MailFormTest extends Unit
             'text2' => [1,2,3],
             'text3' => '',
             'check' => false,
+            'html' => 'x',
         ];
 
         $expected = '<b>Select:</b><br>value1<br><br>';
