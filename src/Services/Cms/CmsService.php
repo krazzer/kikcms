@@ -181,7 +181,7 @@ class CmsService extends Injectable
      */
     public function getBaseUri(): ?string
     {
-        if ($baseUri = $this->config->application->baseUri) {
+        if ($baseUri = $this->config->application->get('baseUri')) {
             return $baseUri;
         }
 
