@@ -68,6 +68,39 @@ class PageLanguageServiceTest extends Unit
         $this->assertEquals('test', $pageLanguage->getSlug());
     }
 
+    public function testCreateForAlias()
+    {
+        $pageLanguageService = new PageLanguageService();
+        $pageLanguageService->setDI($this->getDbDi());
+
+        // no alias
+        $page = new Page();
+        $page->alias = null;
+
+        $pageLanguageService->createForAlias($page);
+
+        // no alias
+        $aliasPage = new Page();
+        $aliasPage->id = 1;
+        $aliasPage->save();
+
+        $aliasPageLanguage = new PageLanguage();
+        $aliasPageLanguage->page_id = 1;
+        $aliasPageLanguage->language_code = 'en';
+        $aliasPageLanguage->name = 'test';
+        $aliasPageLanguage->save();
+
+        $page->alias = 1;
+        $page->id = 2;
+        $page->save();
+
+        $pageLanguageService->createForAlias($page);
+
+        $pageLanguages = PageLanguage::find(['page_id = 2']);
+
+        $this->assertCount(1, $pageLanguages);
+    }
+
     /**
      * @param string|null $slug
      * @param string $pageType
