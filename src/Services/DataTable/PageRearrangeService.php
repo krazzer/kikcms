@@ -28,6 +28,31 @@ class PageRearrangeService extends Injectable
     const REARRANGE_INTO   = 'into';
 
     /**
+     * Check if there are pages where displayOrder is not set, if so, set them
+     */
+    public function checkOrderIntegrity()
+    {
+        if ( ! $this->hasPagesWithoutDisplayOrder()) {
+            return;
+        }
+
+        $parentPageMap = $this->pageService->getDisplayOrderMissing();
+
+        foreach ($parentPageMap as $parentPage) {
+            $children     = $this->pageService->getChildren($parentPage);
+            $displayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
+
+            // loop through all children and set a new display_order
+            foreach ($children as $page) {
+                $page->display_order = $displayOrder;
+                $displayOrder++;
+
+                $page->save();
+            }
+        }
+    }
+
+    /**
      * @param Page $parentPage
      * @return int
      */
@@ -103,31 +128,6 @@ class PageRearrangeService extends Injectable
         $nestedSetStructure = $converter->getResult();
 
         $this->saveStructure($nestedSetStructure);
-    }
-
-    /**
-     * Check if there are pages where displayOrder is not set, if so, set them
-     */
-    private function checkOrderIntegrity()
-    {
-        if ( ! $this->hasPagesWithoutDisplayOrder()) {
-            return;
-        }
-
-        $parentPageMap = $this->pageService->getDisplayOrderMissing();
-
-        foreach ($parentPageMap as $parentPage) {
-            $children     = $this->pageService->getChildren($parentPage);
-            $displayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
-
-            // loop through all children and set a new display_order
-            foreach ($children as $page) {
-                $page->display_order = $displayOrder;
-                $displayOrder++;
-
-                $page->save();
-            }
-        }
     }
 
     /**
