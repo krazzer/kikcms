@@ -31,14 +31,12 @@ class CmsService extends Injectable
         $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
 
         foreach ($cacheFiles as $fileName) {
-            // file must be younger than 1 day
-            if (filemtime($diskCacheFolder . $fileName) + CacheConfig::ONE_DAY > time()) {
-                continue;
+            // file must be older than 1 day
+            if (filemtime($diskCacheFolder . $fileName) - CacheConfig::ONE_DAY > time()) {
+                $newIdsCache = unserialize($this->keyValue->get($fileName));
+                $this->removeUnsavedTemporaryRecords($newIdsCache);
+                unlink($diskCacheFolder . $fileName);
             }
-
-            $newIdsCache = unserialize($this->keyValue->get($fileName));
-
-            $this->removeUnsavedTemporaryRecords($newIdsCache);
         }
     }
 

@@ -19,7 +19,9 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
+use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\Frontend\Data;
+use Phalcon\Cache\Frontend\Json;
 use Phalcon\Config;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;
@@ -70,6 +72,9 @@ class Unit extends \Codeception\Test\Unit
         $config->application = new Config();
         $config->application->defaultLanguage = 'en';
 
+        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
+        $keyValue = new File($frontend, ['cacheDir' => (new TestHelper)->getSitePath() . 'storage/keyvalue/']);
+
         $di->set('db', $db);
         $di->set('config', $config);
         $di->set('cacheService', new CacheService);
@@ -93,6 +98,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('modelService', new ModelService);
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('translator', $translator);
+        $di->set('keyValue', $keyValue);
 
         Di::setDefault($di);
 
