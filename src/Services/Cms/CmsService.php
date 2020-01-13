@@ -133,7 +133,7 @@ class CmsService extends Injectable
      */
     private function removeUnsavedTemporaryRecords(SubDataTableNewIdsCache $cache)
     {
-        if( ! class_exists($cache->getModel())) {
+        if ( ! class_exists($cache->getModel())) {
             return;
         }
 
@@ -185,8 +185,10 @@ class CmsService extends Injectable
             return $baseUri;
         }
 
-        if ($this->request && $httpHost = $this->request->getServer('HTTP_HOST')) {
-            return "https://" . $httpHost . '/';
+        if (property_exists($this, 'request') && $this->request) {
+            if ($this->request && $httpHost = $this->request->getServer('HTTP_HOST')) {
+                return "https://" . $httpHost . '/';
+            }
         }
 
         $pathParts = explode('/', $this->config->application->path);
