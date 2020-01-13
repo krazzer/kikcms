@@ -185,10 +185,8 @@ class CmsService extends Injectable
             return $baseUri;
         }
 
-        if (property_exists($this, 'request') && $this->request) {
-            if ($this->request && $httpHost = $this->request->getServer('HTTP_HOST')) {
-                return "https://" . $httpHost . '/';
-            }
+        if (@$this->request && $httpHost = $this->request->getServer('HTTP_HOST')) {
+            return "https://" . $httpHost . '/';
         }
 
         $pathParts = explode('/', $this->config->application->path);
