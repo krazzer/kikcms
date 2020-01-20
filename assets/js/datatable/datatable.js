@@ -607,36 +607,19 @@ var DataTable = Class.extend({
     },
 
     closeWindow: function () {
-        var $window  = this.getWindow();
-        var $overlay = this.getOverlayContainer();
+        var self = this;
 
         this.restore.stopPolling();
 
-        var level = parseInt($window.attr('data-level'));
+        KikCMS.windowManager.closeWindow(this.getWindow(), function () {
+            $('.datatableThumbHoverContainer').remove();
 
-        if (level == 0) {
-            $('body').removeClass('datatableBlur');
+            if (typeof (tinymce) !== 'undefined') {
+                tinymce.remove(self.getWysiwygSelector());
+            }
 
-            // fix weird tinymce issue, where menu cannot have position: fixed
-            $('body > #menu').css('top', '0');
-            $overlay.css('z-index', 3);
-        } else {
-            $('.dataTableWindow.level' + (level - 1)).removeClass('blur');
-            $overlay.css('z-index', level + 2);
-        }
-
-        $('.dataTableWindow.level' + (level + 1)).remove();
-
-        $window.fadeOut();
-        $window.find('.windowContent').html('');
-
-        $('.datatableThumbHoverContainer').remove();
-
-        if (typeof (tinymce) !== 'undefined') {
-            tinymce.remove(this.getWysiwygSelector());
-        }
-
-        this.currentFormInput = null;
+            this.currentFormInput = null;
+        });
     },
 
     /**
@@ -657,22 +640,7 @@ var DataTable = Class.extend({
     },
 
     showWindow: function () {
-        var $window  = this.getWindow();
-        var $overlay = this.getOverlayContainer();
-
-        var level = parseInt($window.attr('data-level'));
-
-        if (level == 0) {
-            $('body').addClass('datatableBlur');
-
-            // fix weird tinymce issue, where menu cannot have position: fixed
-            $('body > #menu').css('top', $(window).scrollTop());
-        } else {
-            $('.dataTableWindow.level' + (level - 1)).addClass('blur');
-            $overlay.css('z-index', level + 3);
-        }
-
-        $window.fadeIn();
+        KikCMS.windowManager.showWindow(this.getWindow());
     },
 
     setEdited: function (rowId) {
@@ -806,28 +774,6 @@ var DataTable = Class.extend({
         return this.getDataTable().find('.toolbar .language select').val();
     },
 
-    getNotFadingContainer: function () {
-        var $bodyNotFading = $('body > #notFading');
-
-        if (!$bodyNotFading.length) {
-            $bodyNotFading = $('<div id="notFading"></div>');
-            $('body').append($bodyNotFading);
-        }
-
-        return $bodyNotFading;
-    },
-
-    getOverlayContainer: function () {
-        var $overlay = $('body > #overlay');
-
-        if (!$overlay.length) {
-            $overlay = $('<div id="overlay"></div>');
-            $('body').prepend($overlay);
-        }
-
-        return $overlay;
-    },
-
     getWindowLanguageCode: function () {
         return this.getWindow().find('.header select[name=language]').val();
     },
@@ -847,32 +793,7 @@ var DataTable = Class.extend({
     },
 
     getWindow: function () {
-        var windowId       = this.renderableInstance + 'Window';
-        var $bodyNotFading = this.getNotFadingContainer();
-
-        var parentWindowLevel = this.getDataTable().parentsUntil('.dataTableWindow').parent().attr('data-level');
-        var level             = 0;
-
-        if (parentWindowLevel) {
-            level = parseInt(parentWindowLevel) + 1;
-            windowId += 'Level' + level;
-        }
-
-        var $window      = $bodyNotFading.find(' > #' + windowId);
-        var $closeButton = $window.find('.closeButton');
-
-        if (!$window.length) {
-            $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
-                '<div class="closeButton"></div><div class="windowContent"></div></div>';
-
-            $bodyNotFading.prepend($window);
-        } else {
-            $closeButton.unbind("click");
-        }
-
-        $closeButton.click(this.attemptToCloseWindow.bind(this));
-
-        return $('#' + windowId);
+        return KikCMS.windowManager.getWindow(this.renderableInstance, this.getDataTable(), this.attemptToCloseWindow.bind(this));
     },
 
     getWysiwygSelector: function () {

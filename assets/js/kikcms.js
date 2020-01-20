@@ -6,6 +6,7 @@ var KikCmsClass = Class.extend({
     maxFileUploads: null,
     maxFileSize: null,
     maxFileSizeString: null,
+    windowManager: null,
     renderables: {},
 
     init: function () {
@@ -24,6 +25,11 @@ var KikCmsClass = Class.extend({
             $('.tt-suggestion').removeClass('tt-cursor');
             $(this).addClass('tt-cursor');
         });
+
+        // initialize windowmanager, if class exists
+        if(typeof WindowManager !== 'undefined'){
+            this.windowManager = new WindowManager();
+        }
     },
 
     initRenderables: function (parentClass) {

@@ -104,7 +104,8 @@ gulp.task('scriptsCms', function () {
         'js/webform/*.js',
         'js/datatables/*.js',
         'js/modules/*.js',
-        'js/cms.js'
+        'js/cms.js',
+        'js/windowManager.js'
     ])
         .pipe(plumber())
         .pipe(concat('cms.js'))

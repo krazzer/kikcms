@@ -5,13 +5,27 @@ var WebForm = Class.extend({
 
     actionGetFinder: function ($field) {
         var self              = this;
-        var $filePicker       = $field.find('.file-picker');
+
         var $uploadButton     = $field.find('.btn.upload');
+        var $filePickerWindow = KikCMS.windowManager.getWindow('finder', this.getWebForm());
+        var $filePicker       = $filePickerWindow.find('.windowContent');
         var $finderPickButton = $filePicker.find('.pick-file');
 
+        var closeWindow = function($file){
+            KikCMS.windowManager.closeWindow($filePickerWindow, function () {
+                $file.removeClass('selected');
+                $finderPickButton.addClass('disabled');
+            });
+        };
+
         KikCMS.action('/cms/webform/getFinder', {}, function (result) {
-            $filePicker.find('.finder-container').html(result.finder);
-            $filePicker.slideDown();
+
+            $filePicker.html('<div class="header">XXX</div>' + result.finder);
+
+            KikCMS.windowManager.showWindow($filePickerWindow);
+
+            // $filePicker.find('.finder-container').html(result.finder);
+            // $filePicker.slideDown();
 
             $filePicker.on("pick", '.file', function (e, onComplete) {
                 var $file          = $(this);
@@ -19,10 +33,7 @@ var WebForm = Class.extend({
 
                 self.actionPickFile($field, selectedFileId, onComplete);
 
-                $filePicker.slideUp(function () {
-                    $file.removeClass('selected');
-                    $finderPickButton.addClass('disabled');
-                });
+                closeWindow($file);
 
                 $uploadButton.removeClass('disabled');
             });
@@ -45,10 +56,7 @@ var WebForm = Class.extend({
 
                 self.actionPickFile($field, selectedFileId);
 
-                $filePicker.slideUp(function () {
-                    $file.removeClass('selected');
-                    $finderPickButton.addClass('disabled');
-                });
+                closeWindow($file);
 
                 $uploadButton.removeClass('disabled');
             });
