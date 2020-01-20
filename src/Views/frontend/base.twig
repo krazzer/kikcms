@@ -39,11 +39,13 @@
     {{ js('cmsassets/js/frontend/base.js') }}
 {% endblock %}
 {{ assets.outputJs() }}
+{% block frontendJsInit %}
 <data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>
 <script nonce="{{ cspNonce }}">
     {% for key in jsTranslations %}
     KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
     {% endfor %}
 </script>
+{% endblock %}
 </body>
 </html>
