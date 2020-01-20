@@ -58,7 +58,7 @@ var DataTable = Class.extend({
         var $addButton    = this.getDataTable().find('.toolbar .btn.add');
 
         $deleteButton.click(function () {
-            if($(this).attr('disabled') == 'disabled'){
+            if ($(this).attr('disabled') == 'disabled') {
                 return;
             }
 
@@ -131,7 +131,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if ( ! self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
+                if (!self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
                     return true;
                 }
 
@@ -143,7 +143,7 @@ var DataTable = Class.extend({
 
         var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
-                if ( ! self.windowIsActive() || !self.getForm().length) {
+                if (!self.windowIsActive() || !self.getForm().length) {
                     return true;
                 }
 
@@ -361,7 +361,7 @@ var DataTable = Class.extend({
         });
     },
 
-    initRestore: function(){
+    initRestore: function () {
         this.restore = new DataTableRestore(this);
     },
 
@@ -414,11 +414,11 @@ var DataTable = Class.extend({
         KikCMS.action(this.actionPath + action, parameters, onSuccess, onError, null, this);
     },
 
-    actionAdd: function (extraParams) {
+    actionAdd: function (extraParams, onReload) {
         var self   = this;
         var params = this.getFilters();
 
-        if (typeof(extraParams) !== 'undefined') {
+        if (typeof (extraParams) !== 'undefined') {
             for (var key in extraParams) {
                 params[key] = extraParams[key];
             }
@@ -427,7 +427,7 @@ var DataTable = Class.extend({
         this.showWindow();
 
         this.action('add', params, function (result) {
-            self.setWindowContent(result.window);
+            self.setWindowContent(result.window, onReload);
         }, function () {
             self.closeWindow();
         });
@@ -458,7 +458,7 @@ var DataTable = Class.extend({
         });
     },
 
-    actionEdit: function (id) {
+    actionEdit: function (id, onReload) {
         var self    = this;
         var filters = this.getFilters();
 
@@ -467,19 +467,19 @@ var DataTable = Class.extend({
         filters.editId = id;
 
         this.action('edit', filters, function (result) {
-            self.setWindowContent(result.window);
+            self.setWindowContent(result.window, onReload);
         }, function () {
             self.closeWindow();
         });
     },
 
-    actionReloadWindow: function () {
+    actionReloadWindow: function (onReload) {
         var editId = this.getFormEditId();
 
         if (editId) {
-            this.actionEdit(editId);
+            this.actionEdit(editId, onReload);
         } else {
-            this.actionAdd();
+            this.actionAdd(onReload);
         }
     },
 
@@ -597,7 +597,7 @@ var DataTable = Class.extend({
             return;
         }
 
-        if (this.currentFormInput != this.getFormSerialized()) {
+        if (this.contentHasChanged()) {
             if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
                 return;
             }
@@ -630,12 +630,19 @@ var DataTable = Class.extend({
 
         $('.datatableThumbHoverContainer').remove();
 
-        if (typeof(tinymce) !== 'undefined') {
+        if (typeof (tinymce) !== 'undefined') {
             tinymce.remove(this.getWysiwygSelector());
         }
 
         this.currentFormInput = null;
         this.restore.stopPolling();
+    },
+
+    /**
+     * @return {boolean}
+     */
+    contentHasChanged: function() {
+        return this.currentFormInput != this.getFormSerialized();
     },
 
     onRowClick: function ($row) {
@@ -720,16 +727,24 @@ var DataTable = Class.extend({
         this.setEdited(editedId);
     },
 
-    setWindowContent: function (contents) {
+    /**
+     * @param contents
+     * @param onReload
+     */
+    setWindowContent: function (contents, onReload) {
         this.getWindow().find('.windowContent').html(contents);
+
+        if (typeof onReload !== 'undefined') {
+            onReload();
+        }
+
         this.initWindow();
     },
 
     /**
      * @return string
      */
-    getClassWithoutSlashes: function()
-    {
+    getClassWithoutSlashes: function () {
         return this.renderableClass.replace(/\\/g, '');
     },
 
@@ -874,21 +889,26 @@ var DataTable = Class.extend({
      * Execute given onChange event on given field, but warn the user if the form's input has changed
      *
      * @param $field
+     * @param warning
      * @param onChange
      */
-    onChange: function ($field, onChange) {
+    onChange: function ($field, warning, onChange) {
         var self = this;
 
         var currentValue;
         var formSerialized;
 
+        warning = typeof warning === 'undefined' ? true : warning;
+
         $field.focus(function () {
             currentValue   = $field.val();
             formSerialized = self.getFormSerialized();
         }).change(function () {
-            if (self.currentFormInput != formSerialized && !confirm(KikCMS.tl('dataTable.switchWarning'))) {
-                $field.val(currentValue);
-                return;
+            if (warning) {
+                if (self.currentFormInput != formSerialized && !confirm(KikCMS.tl('dataTable.switchWarning'))) {
+                    $field.val(currentValue);
+                    return;
+                }
             }
 
             onChange();
@@ -910,6 +930,6 @@ var DataTable = Class.extend({
      * @return {boolean}
      */
     windowIsActive: function () {
-        return ! this.getWindow().hasClass('blur');
+        return !this.getWindow().hasClass('blur');
     }
 });

@@ -1,6 +1,28 @@
 var PagesDataTable = DataTable.extend({
     actionPath: '/cms/datatable/pages/',
     closedPageIdsCacheKey: "kikcms.closedPageIds",
+    cachedFieldValues: {},
+
+    /**
+     * @inheritDoc
+     */
+    contentHasChanged: function () {
+        var contentHasChanged = this.$.contentHasChanged.call(this);
+
+        if(contentHasChanged){
+            return true;
+        }
+
+        return ! $.isEmptyObject(this.cachedFieldValues);
+    },
+
+    /**
+     * @inheritDoc
+     */
+    closeWindow: function () {
+        this.$.closeWindow.call(this);
+        this.cachedFieldValues = {};
+    },
 
     init: function () {
         this.$.init.call(this);
@@ -8,8 +30,27 @@ var PagesDataTable = DataTable.extend({
     },
 
     initWindow: function () {
+        var self = this;
         this.$.initWindow.call(this);
-        this.onChange(this.getTemplateField(), this.actionReloadWindow.bind(this));
+
+        this.onChange(this.getTemplateField(), false, function () {
+            var fieldValues = self.getFormGroups().serializeObject();
+
+            $.each(fieldValues, function (index, value) {
+                self.cachedFieldValues[index] = value;
+            });
+
+            self.actionReloadWindow(function () {
+                self.getFormGroups().each(function () {
+                    var $field = $(this);
+                    var name = $field.attr('name');
+
+                    if(name in self.cachedFieldValues && $field.val() != fieldValues[name]){
+                        $field.val(self.cachedFieldValues[name]);
+                    }
+                });
+            });
+        });
     },
 
     initPageTypeMenu: function () {
