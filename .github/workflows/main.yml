@@ -17,5 +17,9 @@ jobs:
         echo test, and deploy your project.
     - name: Composer install
       run: composer install
+    - name: Create Docker network
+      run: docker network create kikdev
+    - name: Setup services
+      run: PASS=adminkik12 docker-compose -f vendor/kiksaus/kikcms/docker/docker-compose-services.yml up -d
     - name: Run tests
-      run: docker network create kikdev && docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
+      run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
