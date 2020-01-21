@@ -16,4 +16,4 @@ jobs:
         echo Add other actions to build,
         echo test, and deploy your project.
     - name: Test
-      run: docker ps
+      run: docker run --net="kikdev" -v ./:/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
