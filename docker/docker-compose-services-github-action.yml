@@ -1,0 +1,29 @@
+version: "3"
+services:
+  mysql:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${PASS}
+    volumes:
+      - ~/.docker-kikdev/mysql/:/var/lib/mysql
+    networks:
+      kikdev:
+        aliases:
+          - mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      kikdev:
+        aliases:
+          - mail
+
+networks:
+  kikdev:
+    external:
+      name: kikdev
