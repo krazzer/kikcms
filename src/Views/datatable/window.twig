@@ -45,6 +45,14 @@
 
 {% if canEdit %}
     <div class="footer">
+        <div class="dropup restore pull-left">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="lbl">{{ tl('dataTable.restore') }}</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu"></ul>
+        </div>
+
         <button type="button" class="btn btn-default save">{{ tl('dataTable.save') }}</button>
         <button type="button" class="btn btn-primary saveAndClose">{{ tl('dataTable.saveAndClose') }}</button>
     </div>

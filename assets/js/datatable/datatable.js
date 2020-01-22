@@ -610,6 +610,8 @@ var DataTable = Class.extend({
         var $window  = this.getWindow();
         var $overlay = this.getOverlayContainer();
 
+        this.restore.stopPolling();
+
         var level = parseInt($window.attr('data-level'));
 
         if (level == 0) {
@@ -635,7 +637,6 @@ var DataTable = Class.extend({
         }
 
         this.currentFormInput = null;
-        this.restore.stopPolling();
     },
 
     /**

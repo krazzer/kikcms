@@ -58,6 +58,8 @@ return [
         'pickFile'          => 'Pick file',
         'sort'              => 'Rearrange',
         'showAll'           => 'Show all',
+        'restore'           => 'Restore lost data',
+        'restoreConfirm'    => 'Do you want to overwrite the form\'s current data with the saved restore data of :date?',
 
         'pages' => [
             'total'         => 'Total',

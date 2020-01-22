@@ -58,6 +58,8 @@ return [
         'pickFile'          => 'Bestand kiezen',
         'sort'              => 'Volgorde slepen',
         'showAll'           => 'Toon alles',
+        'restore'           => 'Herstel verloren data',
+        'restoreConfirm'    => 'Wil je de data van het huidige formulier overschrijven met de opgeslagen herstel data van :date?',
 
         'pages' => [
             'total'         => 'Totaal',
@@ -82,7 +84,7 @@ return [
 
         'products' => [
             'singular' => "product",
-            'plural'   => "products",
+            'plural'   => "producten",
         ],
 
         'pages' => [

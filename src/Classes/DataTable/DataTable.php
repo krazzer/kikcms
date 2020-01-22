@@ -54,6 +54,7 @@ abstract class DataTable extends Renderable
         'dataTable.delete.confirm',
         'dataTable.closeWarning',
         'dataTable.switchWarning',
+        'dataTable.restoreConfirm',
     ];
 
     /** @var DataForm */

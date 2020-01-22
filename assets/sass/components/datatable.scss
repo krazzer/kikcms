@@ -238,6 +238,14 @@ body {
             width: 100%;
             text-align: right;
 
+            .restore{
+                display: none;
+
+                ul a{
+                    cursor: pointer;
+                }
+            }
+
             button {
                 margin-left: 5px;
                 padding: 10px 35px;
