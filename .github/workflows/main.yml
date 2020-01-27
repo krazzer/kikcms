@@ -9,12 +9,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
-      run: echo YES
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
     - name: Composer install
       run: composer install
     - name: Create Docker network
@@ -22,8 +16,8 @@ jobs:
     - name: Setup services
       run: PASS=adminkik12 docker-compose -f docker/docker-compose-services-github-action.yml up -d
     - name: Create test DB
-      run: docker exec -i docker_mysql_1 mysql -uroot -h mysql -padminkik12 -e "CREATE DATABASE test"
+      run: docker exec -i docker_mysql_1 mysql -uroot -h localhost -padminkik12 -e "CREATE DATABASE test"
     - name: Fill test DB
-      run: docker exec -i docker_mysql_1 mysql -uroot -h mysql -ppadminkik12 test < tests/test.sql
+      run: docker exec -i docker_mysql_1 mysql -uroot -h localhost -ppadminkik12 test < tests/test.sql
     - name: Run tests
       run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
