@@ -479,7 +479,7 @@ var DataTable = Class.extend({
         if (editId) {
             this.actionEdit(editId, onReload);
         } else {
-            this.actionAdd(onReload);
+            this.actionAdd({}, onReload);
         }
     },
 
