@@ -18,8 +18,8 @@ jobs:
     - name: Setup services
       run: PASS=adminkik12 docker-compose -f docker/docker-compose-services.yml up -d
     - name: Create test DB
-      run: docker exec -i docker_mysql_1 mysql -uroot -padminkik12 -e "CREATE DATABASE test"
+      run: docker exec -i docker_mysql_1 mysql -uroot -h 127.0.0.1 -padminkik12 -e "CREATE DATABASE test"
     - name: Fill test DB
-      run: docker exec -i docker_mysql_1 mysql -uroot -ppadminkik12 test < tests/test.sql
+      run: docker exec -i docker_mysql_1 mysql -uroot -h 127.0.0.1 -ppadminkik12 test < tests/test.sql
     - name: Run tests
       run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
