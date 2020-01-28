@@ -19,6 +19,13 @@ jobs:
       run: docker-compose -f docker/docker-compose-services.yml up -d
       env:
         PASS: adminkik12
+    - name: Setup test services
+      run: |
+        ln -s ../../vendor tests/TestSitePath/vendor
+        docker-compose -f docker/docker-compose-test.yml -p kikcms_test up -d
+      env:
+        SITE_ALIAS: kikcmstest.dev
+        SITE_PORT: 9901
     - name: Sleep for 10 seconds
       uses: jakejarvis/wait-action@master
       with:
