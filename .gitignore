@@ -2,7 +2,6 @@ vendor
 .idea
 assets/bower_components
 assets/node_modules
-/tests/TestSitePath/storage/keyvalue/
+/tests/TestSitePath/storage/keyvalue/*
 /tests/TestSitePath/cache/*
-/tests/TestSitePath/env/
-/tests/TestSitePath/public_html/media/
+/tests/TestSitePath/public_html/media/*
