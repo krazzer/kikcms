@@ -20,9 +20,9 @@ jobs:
       env:
         PASS: adminkik12
     - name: Sleep for 10 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '10s'
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '10s'
     - name: Create test DB
       run: docker exec -i docker_mysql_1 mysql -uroot -padminkik12 -e "CREATE DATABASE test"
     - name: Fill test DB
