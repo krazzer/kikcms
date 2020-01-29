@@ -625,7 +625,7 @@ var DataTable = Class.extend({
     /**
      * @return {boolean}
      */
-    contentHasChanged: function () {
+    contentHasChanged: function() {
         return this.currentFormInput != this.getFormSerialized();
     },
 

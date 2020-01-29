@@ -46,7 +46,9 @@ class WebFormController extends RenderableController
         $finder->setPickingMode(true);
 
         return json_encode([
-            'finder' => $finder->render()
+            'finder' => $this->view->getPartial('webform/finder', [
+                'finder' => $finder->render()
+            ])
         ]);
     }
 

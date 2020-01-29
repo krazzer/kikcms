@@ -9,23 +9,27 @@ var WebForm = Class.extend({
         var $uploadButton     = $field.find('.btn.upload');
         var $filePickerWindow = KikCMS.windowManager.getWindow('finder', this.getWebForm());
         var $filePicker       = $filePickerWindow.find('.windowContent');
-        var $finderPickButton = $filePicker.find('.pick-file');
 
-        var closeWindow = function($file){
+        var closeWindow = function(){
             KikCMS.windowManager.closeWindow($filePickerWindow, function () {
-                $file.removeClass('selected');
-                $finderPickButton.addClass('disabled');
+                $uploadButton.removeClass('disabled');
             });
         };
 
-        KikCMS.action('/cms/webform/getFinder', {}, function (result) {
+        $filePickerWindow.on('click', '.buttons .cancel', function () {
+            closeWindow();
+        });
 
-            $filePicker.html('<div class="header">XXX</div>' + result.finder);
+        KikCMS.action('/cms/webform/getFinder', {}, function (result) {
+            $filePicker.html(result.finder);
+
+            var $finderPickButton = $filePicker.find('.pick-file');
+
+            $finderPickButton.addClass('disabled');
 
             KikCMS.windowManager.showWindow($filePickerWindow);
 
-            // $filePicker.find('.finder-container').html(result.finder);
-            // $filePicker.slideDown();
+            $filePicker.unbind('pick').unbind('selectionChange');
 
             $filePicker.on("pick", '.file', function (e, onComplete) {
                 var $file          = $(this);
@@ -33,7 +37,9 @@ var WebForm = Class.extend({
 
                 self.actionPickFile($field, selectedFileId, onComplete);
 
-                closeWindow($file);
+                $file.removeClass('selected');
+
+                closeWindow();
 
                 $uploadButton.removeClass('disabled');
             });
@@ -56,7 +62,9 @@ var WebForm = Class.extend({
 
                 self.actionPickFile($field, selectedFileId);
 
-                closeWindow($file);
+                $file.removeClass('selected');
+
+                closeWindow();
 
                 $uploadButton.removeClass('disabled');
             });
@@ -199,11 +207,6 @@ var WebForm = Class.extend({
             var $pickAbles     = $field.find('.btn.pick, .btn.preview');
 
             self.initUploader($field);
-
-            $filePicker.find('.buttons .cancel').click(function () {
-                $filePicker.slideUp();
-                $uploadButton.removeClass('disabled');
-            });
 
             $deleteButton.click(function () {
                 $field.find('.filename').html('');
