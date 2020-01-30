@@ -281,7 +281,7 @@ var DataTable = Class.extend({
             var column       = $column.attr('data-column');
             var curDirection = $column.attr('data-sort');
 
-            var direction = null;
+            var direction;
 
             switch (curDirection) {
                 case 'asc':
@@ -642,7 +642,7 @@ var DataTable = Class.extend({
     /**
      * @return {boolean}
      */
-    contentHasChanged: function() {
+    contentHasChanged: function () {
         return this.currentFormInput != this.getFormSerialized();
     },
 
@@ -858,7 +858,8 @@ var DataTable = Class.extend({
             windowId += 'Level' + level;
         }
 
-        var $window = $bodyNotFading.find(' > #' + windowId);
+        var $window      = $bodyNotFading.find(' > #' + windowId);
+        var $closeButton = $window.find('.closeButton');
 
         if (!$window.length) {
             $window = '<div class="dataTableWindow level' + level + '" data-level="' + level + '" id="' + windowId + '">' +
@@ -866,10 +867,10 @@ var DataTable = Class.extend({
 
             $bodyNotFading.prepend($window);
         } else {
-            $bodyNotFading.find(' > #' + windowId).find('.closeButton').unbind("click");
+            $closeButton.unbind("click");
         }
 
-        $bodyNotFading.find(' > #' + windowId).find('.closeButton').click(this.attemptToCloseWindow.bind(this));
+        $closeButton.click(this.attemptToCloseWindow.bind(this));
 
         return $('#' + windowId);
     },

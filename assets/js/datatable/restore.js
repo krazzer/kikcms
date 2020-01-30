@@ -5,6 +5,7 @@ var DataTableRestore = Class.extend({
     dataTable: null,
     interval: null,
     storageIndex: null,
+    pollInterval: 10000,
 
     /**
      * @param dataTable
@@ -20,9 +21,9 @@ var DataTableRestore = Class.extend({
         var content = JSON.parse(localStorage.getItem(this.getStorageKey()));
 
         if (content) {
-            this.storageIndex = Object.keys(content).length;
+            this.storageIndex = Math.max(Object.keys(content)) + 1;
         } else {
-            this.storageIndex = 0;
+            this.storageIndex = 1;
         }
     },
 
@@ -40,6 +41,13 @@ var DataTableRestore = Class.extend({
     getFormattedDateByRestoreObject: function (restoreObject) {
         var dateString = restoreObject.date;
         return moment(dateString).format('dddd D MMMM YYYY, HH:mm');
+    },
+
+    /**
+     * @return {*}
+     */
+    getRestoreButton: function () {
+        return this.dataTable.getWindow().find('.footer > .restore');
     },
 
     /**
@@ -66,10 +74,10 @@ var DataTableRestore = Class.extend({
     /**
      * Remove from local storage
      */
-    remove: function () {
+    remove: function (index) {
         var content = this.getStorageContent();
 
-        delete content[this.storageIndex];
+        delete content[index];
 
         if (Object.keys(content).length == 0) {
             localStorage.removeItem(this.getStorageKey());
@@ -79,10 +87,50 @@ var DataTableRestore = Class.extend({
     },
 
     /**
+     * @param restoreIndex
+     */
+    restore: function (restoreIndex) {
+        var self          = this;
+        var restoreObject = this.getStorageContent()[restoreIndex];
+        var date          = this.getFormattedDateByRestoreObject(restoreObject);
+
+        if (confirm(KikCMS.tl('dataTable.restoreConfirm', {date: date}))) {
+            $.each(restoreObject.content, function (key, value) {
+                self.restoreField(key, value);
+            });
+        }
+
+        this.remove(restoreIndex);
+        this.getRestoreButton().find('[data-id=' + restoreIndex + ']').parent().remove();
+
+        if (!this.getRestoreButton().find('li').length) {
+            this.getRestoreButton().hide();
+        }
+    },
+
+    /**
+     * @param key
+     * @param value
+     */
+    restoreField: function (key, value) {
+        var $field        = this.dataTable.getForm().find('[name=' + key + ']');
+        var previousValue = $field.val();
+
+        $field.val(value);
+
+        // restore a DataTable field
+        if (previousValue in KikCMS.renderables) {
+            $('#' + previousValue).attr('id', value);
+            KikCMS.renderables[previousValue].renderableInstance = value;
+            KikCMS.renderables[previousValue].actionPage(1);
+        }
+    },
+
+    /**
      * Display the button to restore data
      */
     showButton: function () {
-        var $restoreButton = this.dataTable.getWindow().find('.footer > .restore');
+        var $restoreButton = this.getRestoreButton();
         var content        = this.getStorageContent();
         var self           = this;
 
@@ -94,28 +142,21 @@ var DataTableRestore = Class.extend({
         });
 
         $restoreButton.find('ul li a').click(function () {
-            var restoreIndex  = $(this).data('id');
-            var restoreObject = content[restoreIndex];
-            var date          = self.getFormattedDateByRestoreObject(restoreObject);
-
-            if (confirm(KikCMS.tl('dataTable.restoreConfirm', {date: date}))) {
-                $.each(restoreObject.content, function (key, value) {
-                    self.dataTable.getForm().find('[name=' + key + ']').val(value);
-                });
-            }
-        })
+            self.restore($(this).data('id'));
+        });
     },
 
     /**
      * Start storing the datatable windows' content every 10s
      */
     startPolling: function () {
-        var self    = this;
-        var content = this.getContent();
+        var self          = this;
+        var content       = this.getContent();
+        var storedContent = this.getStorageContent();
 
         this.determineStorageIndex();
 
-        if (this.storageIndex > 0) {
+        if (Object.keys(storedContent).length !== 0) {
             this.showButton();
         }
 
@@ -125,19 +166,19 @@ var DataTableRestore = Class.extend({
             }
 
             if (JSON.stringify(content) === JSON.stringify(self.getContent())) {
-                self.remove();
+                self.remove(self.storageIndex);
                 return;
             }
 
             self.store();
-        }, 10000);
+        }, this.pollInterval);
     },
 
     /**
      * Stop storing the datatable windows' content and remove content
      */
     stopPolling: function () {
-        this.remove();
+        this.remove(this.storageIndex);
         clearInterval(this.interval);
     },
 
