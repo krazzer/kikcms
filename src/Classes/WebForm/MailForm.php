@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
+use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
@@ -25,7 +26,13 @@ abstract class MailForm extends WebForm
      */
     protected function getSubject(): string
     {
-        return $this->translator->translateDefaultLanguage('mailForm.subject');
+        $subject = $this->translator->translateDefaultLanguage('mailForm.subject');
+
+        if($this->isSpam()){
+            return '*** SPAM *** ' . $subject;
+        }
+
+        return $subject;
     }
 
     /**
@@ -70,6 +77,10 @@ abstract class MailForm extends WebForm
                 continue;
             }
 
+            if ($field instanceof ReCaptchaField) {
+                continue;
+            }
+
             if ($field instanceof CheckboxField) {
                 $input[$key] = $input[$key] ? '✔︎' : '-';
             }
@@ -102,5 +113,23 @@ abstract class MailForm extends WebForm
         }
 
         return $contents;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSpam(): bool
+    {
+        foreach ($this->getFieldMap() as $field){
+            if($field instanceof ReCaptchaField && $field->getVersion() == 3){
+                $response = $this->reCaptcha->verify($this->getInput()[$field->getKey()], $_SERVER['REMOTE_ADDR']);
+
+                if($response->getScore() <= 0.5){
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

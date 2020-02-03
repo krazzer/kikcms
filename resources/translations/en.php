@@ -431,6 +431,7 @@ return [
             'fieldErrors'      => 'Not all fields are correctly filled. Please walk through the form to check for errors.',
             'slug'             => "The field :label may only contain lowercase letters, numbers and the '-' symbol",
             'reCaptcha'        => 'Execute the ReCaptcha to prove you are not a robot',
+            'reCaptchaV3Error' => 'Something went wrong determining whether you are a bot',
         ],
 
         'defaultSendLabel'       => 'Send',

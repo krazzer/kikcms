@@ -70,6 +70,7 @@ use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Cache\Backend;
 use Phalcon\Validation;
+use ReCaptcha\ReCaptcha;
 
 /**
  * @property AccessControl $acl
@@ -124,6 +125,7 @@ use Phalcon\Validation;
  * @property PlaceholderService placeholderService
  * @property QueryService queryService
  * @property RearrangeService rearrangeService
+ * @property ReCaptcha reCaptcha
  * @property RelationKeyService relationKeyService
  * @property RememberMeService rememberMeService
  * @property Routing routing

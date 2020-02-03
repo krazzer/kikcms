@@ -182,16 +182,19 @@ trait FieldShortcuts
 
     /**
      * @param string $label
+     * @param int $version (2 or 3)
      * @return Field|ReCaptchaField
      */
-    public function addRecaptchaField(string $label = null): Field
+    public function addRecaptchaField(string $label = null, int $version = 2): Field
     {
-        $this->view->assets->addJs('https://www.google.com/recaptcha/api.js');
-        $this->view->reCaptchaSiteKey = $this->config->recaptcha->siteKey;
+        $siteKey = $this->config->recaptcha->siteKey;
 
-        $validators = [new ReCaptcha];
+        $this->view->assets->addJs('https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+        $this->view->reCaptchaSiteKey = $siteKey;
 
-        return $this->addField(new ReCaptchaField($label, $validators));
+        $validators = $version == 2 ? [new ReCaptcha] : [];
+
+        return $this->addField(new ReCaptchaField($label, $version, $validators));
     }
 
     /**
