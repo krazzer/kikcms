@@ -13,6 +13,8 @@ modules:
             host: kikdev-selenium
             capabilities:
               unexpectedAlertBehaviour: 'accept'
+              acceptSslCerts: true
+              acceptInsecureCerts: true
         - \Helper\Acceptance
         - Db:
            dsn: 'mysql:host=mysql;dbname=test'
