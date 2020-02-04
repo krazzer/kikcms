@@ -72,7 +72,7 @@ class FrontendHelper extends Injectable
             return '';
         }
 
-        if( ! $menuId = $this->pageService->getIdByKeyOrId($menuKeyOrId)){
+        if ( ! $menuId = $this->pageService->getIdByKeyOrId($menuKeyOrId)) {
             return '';
         }
 
@@ -213,7 +213,7 @@ class FrontendHelper extends Injectable
         $pageKeyAttr   = $pageKey ? ' data-key="' . $pageKey . '"' : '';
 
         $output = '<li class="s' . $pageId . '" data-id="' . $pageId . '"' . $pageKeyAttr . '>';
-        $output .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel);
+        $output .= $this->getMenuItemOutput($fullPage, $menu->getTemplate(), $relativeLevel, ! empty($subMenuOutput));
         $output .= $subMenuOutput;
         $output .= '</li>';
 
@@ -224,15 +224,17 @@ class FrontendHelper extends Injectable
      * @param FullPage $fullPage
      * @param string|null $template
      * @param int $relativeLevel
+     * @param bool $hasChildren
      * @return string
      */
-    private function getMenuItemOutput(FullPage $fullPage, ?string $template, int $relativeLevel): string
+    private function getMenuItemOutput(FullPage $fullPage, ?string $template, int $relativeLevel, bool $hasChildren): string
     {
         if ($template) {
             return $this->view->getPartial('@kikcms/frontend/menu', [
                 'menuBlock'     => 'menu' . ucfirst($template),
                 'page'          => $fullPage,
                 'relativeLevel' => $relativeLevel,
+                'hasChildren'   => $hasChildren,
             ]);
         }
 
