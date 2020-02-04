@@ -69,11 +69,12 @@ class ModelService extends Injectable
     /**
      * @param Model $object
      * @return null|string
+     * @noinspection PhpPossiblePolymorphicInvocationInspection
      */
     public function getObjectName(Model $object): ?string
     {
         if (method_exists($object, 'getName')) {
-            return $object->getName();
+            return (string) $object->getName();
         }
 
         if (property_exists($object, DbConfig::NAME_FIELD)) {
