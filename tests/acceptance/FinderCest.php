@@ -11,6 +11,12 @@ class FinderCest
 {
     public function uploadWorks(AcceptanceTester $I)
     {
+        $I->amOnPage('/cms/login');
+
+        $I->makeHtmlSnapshot(1);
+
+        var_dump(file_get_contents(__DIR__ . '/../_output/debug/1.html'));
+
         $I->addUser();
         $I->login();
         $I->amOnPage('/cms/media');

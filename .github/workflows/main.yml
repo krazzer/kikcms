@@ -39,9 +39,5 @@ jobs:
       run: |
         docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < tests/test.sql
         docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < install.sql
-    - name: Sleep for 60 seconds
-      uses: jakejarvis/wait-action@master
-      with:
-        time: '60s'
     - name: Run tests
       run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
