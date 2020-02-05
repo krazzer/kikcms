@@ -1,8 +1,9 @@
 @import "../../includes/variables";
 @import "../../includes/mixins";
 
-.dataTableWindow .windowContent .files-container{
+.dataTableWindow .windowContent .finder .files .files-container{
     overflow: auto;
+    min-height: 0;
 }
 
 .finder {

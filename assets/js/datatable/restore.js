@@ -113,7 +113,7 @@ var DataTableRestore = Class.extend({
      * @param value
      */
     restoreField: function (key, value) {
-        var $field        = this.dataTable.getForm().find('[name=' + key + ']');
+        var $field        = this.dataTable.getForm().find('[name="' + key + '"]');
         var previousValue = $field.val();
 
         $field.val(value);
