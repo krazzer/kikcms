@@ -1,6 +1,10 @@
 @import "../../includes/variables";
 @import "../../includes/mixins";
 
+.dataTableWindow .windowContent .files-container{
+    overflow: auto;
+}
+
 .finder {
 
     .files {

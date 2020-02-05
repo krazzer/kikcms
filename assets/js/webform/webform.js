@@ -219,6 +219,9 @@ var WebForm = Class.extend({
 
         KikCMS.windowManager.showWindow($window);
 
+        this.initFilePickerWindowSize();
+        $(window).resize(this.initFilePickerWindowSize.bind(this));
+
         $filePicker.on("pick", '.file', function (e, onComplete) {
             self.onPickFile($(this), $field, onComplete);
         });
@@ -236,6 +239,22 @@ var WebForm = Class.extend({
                 self.onPickFile($filePicker.find('.file.selected'), $field);
             }
         });
+    },
+
+    /**
+     * Set file-picker container height
+     */
+    initFilePickerWindowSize: function(){
+        var $window = this.getFilePickerWindow();
+
+        var $footer = $window.find('.windowContent > .footer');
+        var $header = $window.find('.windowContent > .header');
+
+        var windowHeight = $window.height();
+        var headerHeight = $header.outerHeight();
+        var footerHeight = $footer.outerHeight();
+
+        $window.find('.files-container').css('height', windowHeight - headerHeight - footerHeight - 132);
     },
 
     /**
