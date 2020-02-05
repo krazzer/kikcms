@@ -124,6 +124,12 @@ var DataTableRestore = Class.extend({
             KikCMS.renderables[previousValue].renderableInstance = value;
             KikCMS.renderables[previousValue].actionPage(1);
         }
+
+        // restore file field
+        if($field.parent().hasClass('type-file')) {
+            var webForm = KikCMS.renderables[this.dataTable.getForm().parent().data('instance')];
+            webForm.actionPickFile($field.parent(), value);
+        }
     },
 
     /**
