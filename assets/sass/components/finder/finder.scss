@@ -1,9 +1,12 @@
 @import "../../includes/variables";
 @import "../../includes/mixins";
 
-.dataTableWindow .windowContent .finder .files .files-container{
+.dataTableWindow .windowContent .finder .files {
     overflow: auto;
-    min-height: 0;
+
+    .files-container {
+        min-height: 0;
+    }
 }
 
 .finder {
@@ -46,10 +49,10 @@
                 height: 156px;
                 margin: 10px 0 0 10px;
 
-                .thumb{
+                .thumb {
                     position: relative;
 
-                    .icon-locked{
+                    .icon-locked {
                         position: absolute;
                         width: 16px;
                         height: 15px;

@@ -254,7 +254,7 @@ var WebForm = Class.extend({
         var headerHeight = $header.outerHeight();
         var footerHeight = $footer.outerHeight();
 
-        $window.find('.files-container').css('height', windowHeight - headerHeight - footerHeight - 132);
+        $window.find('.files').css('height', windowHeight - headerHeight - footerHeight - 132);
     },
 
     /**
