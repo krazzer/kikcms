@@ -3,73 +3,20 @@ var WebForm = Class.extend({
     renderableClass: null,
     parent: null,
 
-    actionGetFinder: function ($field) {
+    /**
+     * Load a File selection window
+     * @param $field
+     */
+    openFilePickerWindow: function ($field) {
         var self              = this;
-
-        var $uploadButton     = $field.find('.btn.upload');
-        var $filePickerWindow = KikCMS.windowManager.getWindow('finder', this.getWebForm());
-        var $filePicker       = $filePickerWindow.find('.windowContent');
-
-        var closeWindow = function(){
-            KikCMS.windowManager.closeWindow($filePickerWindow, function () {
-                $uploadButton.removeClass('disabled');
-            });
-        };
+        var $filePickerWindow = this.getFilePickerWindow();
 
         $filePickerWindow.on('click', '.buttons .cancel', function () {
-            closeWindow();
+            self.closeFilePickerWindow($field);
         });
 
         KikCMS.action('/cms/webform/getFinder', {}, function (result) {
-            $filePicker.html(result.finder);
-
-            var $finderPickButton = $filePicker.find('.pick-file');
-
-            $finderPickButton.addClass('disabled');
-
-            KikCMS.windowManager.showWindow($filePickerWindow);
-
-            $filePicker.unbind('pick').unbind('selectionChange');
-
-            $filePicker.on("pick", '.file', function (e, onComplete) {
-                var $file          = $(this);
-                var selectedFileId = $file.attr('data-id');
-
-                self.actionPickFile($field, selectedFileId, onComplete);
-
-                $file.removeClass('selected');
-
-                closeWindow();
-
-                $uploadButton.removeClass('disabled');
-            });
-
-            $filePicker.on("selectionChange", '.file', function () {
-                if ($filePicker.find('.file.selected:not(.folder)').length >= 1) {
-                    $finderPickButton.removeClass('disabled');
-                } else {
-                    $finderPickButton.addClass('disabled');
-                }
-            });
-
-            $finderPickButton.click(function () {
-                if ($finderPickButton.hasClass('disabled')) {
-                    return;
-                }
-
-                var $file          = $filePicker.find('.file.selected');
-                var selectedFileId = $file.attr('data-id');
-
-                self.actionPickFile($field, selectedFileId);
-
-                $file.removeClass('selected');
-
-                closeWindow();
-
-                $uploadButton.removeClass('disabled');
-            });
-
-            $uploadButton.addClass('disabled');
+            self.initFilePickerWindow(result.finder, $field);
         });
     },
 
@@ -120,10 +67,22 @@ var WebForm = Class.extend({
         });
     },
 
-    getWebForm: function () {
-        return $('[data-instance=' + this.renderableInstance + ']');
+    /**
+     * Close the filePicker window
+     * @param $field
+     */
+    closeFilePickerWindow: function ($field) {
+        var $uploadButton     = this.getUploadButtonForFileField($field);
+        var $filePickerWindow = this.getFilePickerWindow();
+
+        KikCMS.windowManager.closeWindow($filePickerWindow, function () {
+            $uploadButton.removeClass('disabled');
+        });
     },
 
+    /**
+     * Initialize the WebForm
+     */
     init: function () {
         this.initAutocompleteFields();
         this.initDateFields();
@@ -132,6 +91,9 @@ var WebForm = Class.extend({
         this.initPopovers();
     },
 
+    /**
+     * Initialize autocomplete fields
+     */
     initAutocompleteFields: function () {
         var self     = this;
         var $webForm = this.getWebForm();
@@ -169,6 +131,9 @@ var WebForm = Class.extend({
         });
     },
 
+    /**
+     * Initialize date fields
+     */
     initDateFields: function () {
         this.getWebForm().find('.type-date input').each(function () {
             var $field = $(this);
@@ -194,6 +159,9 @@ var WebForm = Class.extend({
         });
     },
 
+    /**
+     * Initialize file fields
+     */
     initFileFields: function () {
         var self = this;
 
@@ -229,11 +197,50 @@ var WebForm = Class.extend({
                     return;
                 }
 
-                self.actionGetFinder($field);
+                self.openFilePickerWindow($field);
             });
         });
     },
 
+    /**
+     * Initialize the file picker window
+     */
+    initFilePickerWindow: function (finderContent, $field) {
+        var self    = this;
+        var $window = this.getFilePickerWindow();
+
+        var $filePicker = $window.find('.windowContent');
+
+        $filePicker.html(finderContent);
+        $filePicker.unbind('pick');
+        $filePicker.unbind('selectionChange');
+
+        var $finderPickButton = $window.find('.pick-file');
+
+        KikCMS.windowManager.showWindow($window);
+
+        $filePicker.on("pick", '.file', function (e, onComplete) {
+            self.onPickFile($(this), $field, onComplete);
+        });
+
+        $filePicker.on("selectionChange", '.file', function () {
+            if ($filePicker.find('.file.selected:not(.folder)').length >= 1) {
+                $finderPickButton.removeClass('disabled');
+            } else {
+                $finderPickButton.addClass('disabled');
+            }
+        });
+
+        $finderPickButton.click(function () {
+            if (!$finderPickButton.hasClass('disabled')) {
+                self.onPickFile($filePicker.find('.file.selected'), $field);
+            }
+        });
+    },
+
+    /**
+     * Initialize popovers
+     */
     initPopovers: function () {
         this.getWebForm().find('[data-toggle="popover"]').each(function () {
             var content = $(this).attr('data-content');
@@ -247,6 +254,9 @@ var WebForm = Class.extend({
         });
     },
 
+    /**
+     * Initialize TinyMCE
+     */
     initTinyMCE: function () {
         var self = this;
 
@@ -277,6 +287,10 @@ var WebForm = Class.extend({
         });
     },
 
+    /**
+     * Init uploader for direct upload file fields
+     * @param $field
+     */
     initUploader: function ($field) {
         var self = this;
 
@@ -299,6 +313,9 @@ var WebForm = Class.extend({
         uploader.init();
     },
 
+    /**
+     * Init TinyMCE fields
+     */
     initWysiwyg: function () {
         var self = this;
 
@@ -319,6 +336,10 @@ var WebForm = Class.extend({
         }
     },
 
+    /**
+     * Get the filepicker for TinyMCE
+     * @param callback
+     */
     getFilePicker: function (callback) {
         var callBackAction = function ($file) {
             var fileId = $file.attr('data-id');
@@ -368,6 +389,17 @@ var WebForm = Class.extend({
         });
     },
 
+    /**
+     * @return {jQuery|HTMLElement}
+     */
+    getFilePickerWindow: function () {
+        return KikCMS.windowManager.getWindow('finder', this.getWebForm());
+    },
+
+    /**
+     * Get URL for TinyMCE links
+     * @return {string}
+     */
     getLinkListUrl: function () {
         var linkListUrl = '/cms/getTinyMceLinks/';
 
@@ -385,28 +417,62 @@ var WebForm = Class.extend({
     },
 
     /**
+     * Get WebForm jQuery object
+     * @return {jQuery|HTMLElement}
+     */
+    getWebForm: function () {
+        return $('[data-instance=' + this.renderableInstance + ']');
+    },
+
+    /**
+     * Get window height
      * @return int
      */
     getWindowHeight: function () {
         return $(window).height();
     },
 
+    /**
+     * Get query for Wysiwyg fields
+     * @return {string}
+     */
     getWysiwygSelector: function () {
         var webformId = this.getWebForm().attr("id");
         return '#' + webformId + ' textarea.wysiwyg';
     },
 
+    /**
+     * @param $field
+     * @return {*}
+     */
+    getUploadButtonForFileField: function ($field) {
+        return $field.find('.btn.upload');
+    },
+
+    /**
+     * Remove extention from a filename
+     *
+     * @param filename
+     * @return {*}
+     */
     removeExtension: function (filename) {
         return filename.replace(/\.[^/.]+$/, "");
     },
 
-    tl: function (key, params) {
-        var translation = this.translations[key];
+    /**
+     * Action when a file is picked
+     * @param $file
+     * @param $field
+     * @param onComplete
+     */
+    onPickFile: function ($file, $field, onComplete) {
+        var selectedFileId = $file.attr('data-id');
+        var $uploadButton  = this.getUploadButtonForFileField($field);
 
-        $.each(params, function (key, value) {
-            translation = translation.replace(new RegExp(':' + key, 'g'), value);
-        });
+        $file.removeClass('selected');
+        $uploadButton.removeClass('disabled');
 
-        return translation;
+        this.actionPickFile($field, selectedFileId, onComplete);
+        this.closeFilePickerWindow($field);
     }
 });
