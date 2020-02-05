@@ -1,28 +1,34 @@
 {
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/krazzer/kikcms-core.git"
-    }
-  ],
-  "name": "kiksaus/kikcms",
-  "require": {
-    "twig/twig": "~1.0",
-    "google/apiclient": "^2.0",
-    "nette/php-generator": "^3.1",
-    "martijnc/php-csp": "^1.0",
-    "google/recaptcha": "^1.2",
-    "kiksaus/kikcms-core": "dev-master"
-  },
-  "autoload": {
-    "psr-4": {
-      "KikCMS\\": "src"
-    }
-  },
-  "require-dev": {
-    "codeception/codeception": "3.0.x-dev",
-    "codeception/c3": "2.*",
-    "donatj/mock-webserver": "dev-master"
-  },
-  "minimum-stability": "dev"
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/krazzer/kikcms-core.git"
+        }
+    ],
+    "name": "kiksaus/kikcms",
+    "require": {
+        "twig/twig": "~1.0",
+        "google/apiclient": "^2.0",
+        "nette/php-generator": "^3.1",
+        "martijnc/php-csp": "^1.0",
+        "google/recaptcha": "^1.2",
+        "kiksaus/kikcms-core": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "KikCMS\\": "src"
+        }
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.0",
+        "codeception/c3": "2.*",
+        "donatj/mock-webserver": "dev-master",
+        "codeception/module-webdriver": "^1.0.0",
+        "codeception/module-db": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0",
+        "codeception/module-filesystem": "^1.0.0",
+        "codeception/module-phalcon": "^1.0.0",
+        "codeception/module-cli": "^1.0.0"
+    },
+    "minimum-stability": "dev"
 }

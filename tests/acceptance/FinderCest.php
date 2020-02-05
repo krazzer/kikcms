@@ -5,7 +5,6 @@ namespace acceptance;
 
 
 use AcceptanceTester;
-use Facebook\WebDriver\Exception\WebDriverException;
 
 class FinderCest
 {
@@ -22,15 +21,12 @@ class FinderCest
         $I->canSeeNumberOfElements('.files-container .file', 1);
 
         $I->click('.files-container .file');
-
-        try {
-            $I->click('.btn.delete');
-            $I->acceptPopup();
-        } catch (WebDriverException $e) {
-            // ignore "unexpected alert open"
-        }
+        $I->wait(1);
+        $I->click('.btn.delete');
+        $I->acceptPopup();
 
         $I->waitForJS("return $.active == 0;", 300);
+
         $I->dontSeeElement('.files-container .file');
     }
 
@@ -38,8 +34,8 @@ class FinderCest
     {
         $I->addUser();
         $I->login();
-
         $I->amOnPage('/cms/test/personform');
+
         $I->attachFile('input[type="file"]', 'test-upload-file.png');
         $I->waitForJS("return $.active == 0;", 300);
 
@@ -57,15 +53,12 @@ class FinderCest
         $I->amOnPage('/cms/media');
 
         $I->click('.files-container .file');
-
-        try {
-            $I->click('.btn.delete');
-            $I->acceptPopup();
-        } catch (WebDriverException $e) {
-            // ignore "unexpected alert open"
-        }
+        $I->wait(1);
+        $I->click('.btn.delete');
+        $I->acceptPopup();
 
         $I->waitForJS("return $.active == 0;", 300);
-        $I->dontSeeElement('.files-container .file');
+
+        $I->canSeeNumberOfElements('.files-container .file', 0);
     }
 }
