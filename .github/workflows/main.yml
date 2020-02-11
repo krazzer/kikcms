@@ -26,15 +26,9 @@ jobs:
         mkdir tests/TestSitePath/cache
         mkdir tests/TestSitePath/cache/cache
         mkdir tests/TestSitePath/storage/keyvalue
-        mkdir tests/TestSitePath/storage/media
-        mkdir tests/TestSitePath/storage/media/files
-        mkdir tests/TestSitePath/storage/media/thumbs
         sudo chmod 777 tests/TestSitePath/cache
         sudo chmod 777 tests/TestSitePath/cache/cache
         sudo chmod 777 tests/TestSitePath/storage/keyvalue
-        sudo chmod 777 tests/TestSitePath/storage/media
-        sudo chmod 777 tests/TestSitePath/storage/media/files
-        sudo chmod 777 tests/TestSitePath/storage/media/thumbs
       env:
         SITE_ALIAS: kikcmstest.dev
         SITE_PORT: 9901
