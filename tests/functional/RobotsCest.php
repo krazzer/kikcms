@@ -10,7 +10,7 @@ class RobotsCest
     public function sitemapWorks(FunctionalTester $I)
     {
         $I->amOnPage('/sitemap.xml');
-        $I->see('https://kikcmstest.dev/home');
+        $I->see('https://kikcmstest.dev/pagina-2');
     }
 
     public function robotsWorks(FunctionalTester $I)

@@ -42,7 +42,7 @@ class FrontendCest
             mediaFile empty: https://kikcmstest.dev/media/files/1.png
             mediaFile thumb: https://kikcmstest.dev/media/thumbs/example/1.png
             mediaFileBg: background-image: url(\'https://kikcmstest.dev/media/files/1.png\');
-            url: /default
+            url: /pagina-2
             url straight: /some-url
             url by key: /
             js:
@@ -60,21 +60,21 @@ class FrontendCest
 
     public function pageByIdWorks(FunctionalTester $I)
     {
-        $I->amOnPage('/page/nl/3');
-        $I->seeInCurrentUrl('/home');
+        $I->amOnPage('/page/en/4');
+        $I->seeInCurrentUrl('/');
         $I->see('Lorem ipsum');
 
-        $I->amOnPage('/page/nl/999');
-        $I->see('Helaas! De door uw opgevraagde pagina kon niet worden gevonden.');
+        $I->amOnPage('/page/en/999');
+        $I->see('Page not found');
     }
 
     public function pageByKeyWorks(FunctionalTester $I)
     {
-        $I->amOnPage('/page/nl/default');
-        $I->seeInCurrentUrl('/home');
-        $I->see('Lorem ipsum');
+        $I->amOnPage('/page/en/default');
+        $I->seeInCurrentUrl('/');
+        $I->see('HomePagina 2 Finder allowed');
 
-        $I->amOnPage('/page/nl/nonexistingkey');
-        $I->see('Helaas! De door uw opgevraagde pagina kon niet worden gevonden.');
+        $I->amOnPage('/page/en/nonexistingkey');
+        $I->see('Page not found');
     }
 }

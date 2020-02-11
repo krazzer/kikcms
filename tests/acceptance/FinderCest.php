@@ -21,11 +21,13 @@ class FinderCest
         $I->canSeeNumberOfElements('.files-container .file', 1);
 
         $I->click('.files-container .file');
-        $I->wait(1);
+        $I->wait(5);
+
         $I->click('.btn.delete');
         $I->acceptPopup();
 
         $I->waitForJS("return $.active == 0;", 300);
+        $I->wait(1);
 
         $I->dontSeeElement('.files-container .file');
     }
@@ -44,7 +46,7 @@ class FinderCest
 
         $I->click('.type-file .thumb');
         $I->waitForJS("return $.active == 0;", 300);
-        $I->wait(1);
+        $I->wait(3);
 
         $I->see('test-upload-file.png');
         $I->canSeeNumberOfElements('.files-container .file', 1);
@@ -53,11 +55,12 @@ class FinderCest
         $I->amOnPage('/cms/media');
 
         $I->click('.files-container .file');
-        $I->wait(1);
+        $I->wait(5);
         $I->click('.btn.delete');
         $I->acceptPopup();
 
         $I->waitForJS("return $.active == 0;", 300);
+        $I->wait(1);
 
         $I->canSeeNumberOfElements('.files-container .file', 0);
     }

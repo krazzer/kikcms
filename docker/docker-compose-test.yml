@@ -31,7 +31,7 @@ services:
           - mailtest
 
   selenium:
-    image: selenium/standalone-chrome
+    image: selenium/standalone-chrome:3.141.59-mercury
     restart: always
     ports:
       - "4444:4444"

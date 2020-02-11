@@ -5,12 +5,29 @@ namespace functional;
 
 
 use FunctionalTester;
+use Website\Models\DataTableTest;
 
 class DataTableCest
 {
     public function _before(FunctionalTester $I)
     {
         $I->login();
+
+        $I->getDbService()->insert(DataTableTest::class, [
+            'id'              => 4,
+            'text'            => '',
+            'file_id'         => null,
+            'checkbox'        => 0,
+            'date'            => '2020-01-01',
+            'multicheckbox'   => '',
+            'datatableselect' => '',
+            'textarea'        => '',
+            'select'          => null,
+            'hidden'          => '',
+            'autocomplete'    => '',
+            'password'        => '',
+            'wysiwyg'         => '',
+        ]);
     }
 
     public function addWorks(FunctionalTester $I)

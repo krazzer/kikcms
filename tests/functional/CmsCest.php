@@ -44,7 +44,7 @@ class CmsCest
 
     public function previewWorks(FunctionalTester $I)
     {
-        $I->amOnPage('/cms/preview/3');
+        $I->amOnPage('/cms/preview/4');
         $I->see('Lorem ipsum dolor sit amet');
     }
 
@@ -57,13 +57,13 @@ class CmsCest
     public function getTranslationsForKeyWorks(FunctionalTester $I)
     {
         $I->sendAjaxPostRequest('/cms/getTranslationsForKey', ['key' => 'cms.roles']);
-        $I->see('{"nl":"cms.roles"');
+        $I->see('{"en":"cms.roles"');
     }
 
     public function getUrlsWorks(FunctionalTester $I)
     {
-        $I->amOnPage('/cms/get-urls/nl');
-        $I->see('["\/home","\/page-not-found","\/pagina-2"]');
+        $I->amOnPage('/cms/get-urls/en');
+        $I->see('["\/","\/page-not-found","\/pagina-2"]');
     }
 
     public function generateSecurityTokenWorks(FunctionalTester $I)
