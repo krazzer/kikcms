@@ -5,19 +5,13 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\TranslationKey;
-use KikCMS\Services\Util\StringService;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Config\DbConfig;
-use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
 
-/**
- * @property DbService $dbService
- * @property StringService $stringService
- */
 class ModelService extends Injectable
 {
     /**
@@ -75,6 +69,10 @@ class ModelService extends Injectable
     {
         if (method_exists($object, 'getName')) {
             return (string) $object->getName();
+        }
+
+        if (isset($object->nameKey)) {
+            return $this->translator->tl($object->name);
         }
 
         if (property_exists($object, DbConfig::NAME_FIELD)) {
