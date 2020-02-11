@@ -31,6 +31,8 @@ jobs:
         sudo chmod 777 tests/TestSitePath/storage/keyvalue
         sudo chmod 777 tests/TestSitePath/storage/media
         sudo chmod 777 tests/TestSitePath/storage/media/1.png
+        sudo chmod 777 tests/TestSitePath/public_html/media/files
+        sudo chmod 777 tests/TestSitePath/public_html/media/thumbs
       env:
         SITE_ALIAS: kikcmstest.dev
         SITE_PORT: 9901
