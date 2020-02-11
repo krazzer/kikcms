@@ -264,7 +264,7 @@ class Page extends Model
     private function addPageContentRelations()
     {
         $templateFieldKeys = $this->getTemplateFieldMap();
-        $languages         = $this->getDI()->get('languageService')->getLanguages();
+        $languages         = $this->getDI()->getShared('languageService')->getLanguages();
 
         foreach ($templateFieldKeys as $key => $field) {
             // skip fields that aren't content fields

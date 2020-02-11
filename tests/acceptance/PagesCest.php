@@ -104,12 +104,12 @@ class PagesCest
         $I->login();
         $I->amOnPage('/cms/pages');
 
-        $I->dontSee('Pagina 2');
+        $I->dontSee('Pagina 2 NL');
 
         $I->selectOption('select[name="language"]', 'nl');
         $I->waitForJS("return $.active == 0;", 300);
 
-        $I->see('Pagina 2');
+        $I->see('Pagina 2 NL');
 
         $I->selectOption('select[name="language"]', 'en');
         $I->waitForJS("return $.active == 0;", 300);

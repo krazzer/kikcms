@@ -19,6 +19,7 @@ CREATE TABLE `cms_language` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `cms_language` VALUES ('1', 'en', 'English', '1');
+INSERT INTO `cms_language` VALUES ('2', 'nl', 'Nederlands', '1');
 COMMIT;
 
 -- ----------------------------
@@ -89,7 +90,11 @@ CREATE TABLE `cms_page_language` (
 --  Records of `cms_page_language`
 -- ----------------------------
 BEGIN;
-INSERT INTO `cms_page_language` VALUES ('3', '3', 'en', '1', 'Home', 'home', null, null, null), ('4', '4', 'en', '1', 'Pagina 2', 'pagina-2', null, null, null), ('5', '5', 'en', '1', 'Hoofdmenu', null, null, null, null);
+INSERT INTO `cms_page_language` VALUES ('3', '3', 'en', '1', 'Home', 'home', null, null, null),
+                                       ('4', '4', 'en', '1', 'Pagina 2', 'pagina-2', null, null, null),
+                                       ('5', '5', 'en', '1', 'Hoofdmenu', null, null, null, null),
+                                       ('7', '4', 'nl', '1', 'Pagina 2 NL', 'pagina-2-nl', null, null, null),
+                                       ('8', '5', 'nl', '1', 'Hoofdmenu', null, null, null, null);
 COMMIT;
 
 -- ----------------------------
@@ -108,6 +113,13 @@ CREATE TABLE `cms_page_language_content` (
   CONSTRAINT `cms_page_language_content_ibfk_1` FOREIGN KEY (`language_code`) REFERENCES `cms_language` (`code`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `cms_page_language_content_ibfk_2` FOREIGN KEY (`page_id`) REFERENCES `cms_page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+--  Records of `cms_page_language_content`
+-- ----------------------------
+BEGIN;
+INSERT INTO `cms_page_language_content` VALUES ('4', 'en', 'content', '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec aliquet lobortis lorem, eu rutrum leo aliquam in. Nullam dapibus posuere ornare. Nunc feugiat volutpat magna non elementum. Vivamus tristique facilisis elit quis imperdiet. Pellentesque gravida eros nec lectus eleifend tempor. Maecenas sed pellentesque sem. Quisque pharetra lacus vitae tortor rhoncus lacinia. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur ultrices, nisi ac consequat gravida, nisi urna ultricies velit, ut tempus elit lectus eu libero. Integer volutpat aliquet tristique. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer blandit massa odio, non gravida elit fermentum a. Etiam vitae mattis ante. Vivamus vitae metus viverra, tristique est id, fringilla purus. Suspendisse nec dapibus elit. Sed vestibulum lacus vitae rutrum pulvinar.</p>\r\n<p>Suspendisse vitae mattis mi, mattis ullamcorper orci. Cras tempor nisl ac lorem tristique maximus. In vulputate, tellus et euismod vehicula, diam ante varius enim, at facilisis elit eros eget nisi. Proin scelerisque pharetra lectus vitae faucibus. Vivamus iaculis, ante ut euismod sodales, nibh leo eleifend mauris, vel ultrices dolor est quis dui. Nunc vestibulum malesuada tellus et aliquet. Integer interdum ante leo, consectetur rhoncus nisl commodo eu. Vivamus efficitur est eu faucibus tempus. Nulla tincidunt ut dolor porttitor eleifend. Aenean aliquet sit amet lectus sed gravida. Donec volutpat, nisi at venenatis venenatis, leo est tempus magna, eget ultricies mi est sed nisl. Etiam hendrerit, erat nec mattis lobortis, leo orci rhoncus elit, vitae posuere ante est quis nisl. Aliquam pharetra euismod rhoncus. Proin odio metus, tincidunt tempus justo quis, luctus placerat metus. Nam sit amet nisi et massa viverra tincidunt. Cras sit amet felis aliquet, tincidunt mi sit amet, hendrerit mi.</p>\r\n<p>Fusce non pellentesque eros. Vestibulum vitae arcu auctor, convallis ex eget, porta nulla. In fringilla efficitur massa. Aliquam laoreet malesuada aliquam. Vivamus ligula felis, sagittis vel pretium ut, maximus et est. Curabitur vel ipsum nunc. In vestibulum eu elit nec scelerisque. Suspendisse hendrerit finibus tellus accumsan sagittis. Praesent et libero gravida, commodo ante consequat, ultrices urna. Praesent a sapien sed odio imperdiet elementum non eu ante. Donec id dui ut ligula tincidunt auctor sit amet non ante.</p>');
+COMMIT;
 
 -- ----------------------------
 --  Table structure for `cms_translation_key`

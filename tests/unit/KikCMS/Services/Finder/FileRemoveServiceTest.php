@@ -63,8 +63,13 @@ class FileRemoveServiceTest extends TestCase
         $file1 = $dir1 . '1.png';
         $file2 = $dir2 . '1.png';
 
-        mkdir($dir1);
-        mkdir($dir2);
+        if ( ! file_exists($dir1)) {
+            mkdir($dir1);
+        }
+
+        if ( ! file_exists($dir2)) {
+            mkdir($dir2);
+        }
 
         copy($sitePath . 'storage/media/1.png', $file1);
         copy($sitePath . 'storage/media/1.png', $file2);
