@@ -104,7 +104,7 @@ class FinderCest
             'folderId'           => $folderId,
         ]);
 
-        $I->assertContains('<div class="file file-1"', json_decode($I->grabPageSource())->files);
+        $I->assertStringContainsString('<div class="file file-1"', json_decode($I->grabPageSource())->files);
         $I->canSeeResponseCodeIs(200);
     }
 
@@ -124,8 +124,8 @@ class FinderCest
 
         $filesHtml = json_decode($I->grabPageSource())->files;
 
-        $I->assertContains('<div class="file file-2"', $filesHtml);
-        $I->assertNotContains('<div class="file file-1"', $filesHtml);
+        $I->assertStringContainsString('<div class="file file-2"', $filesHtml);
+        $I->assertStringNotContainsString('<div class="file file-1"', $filesHtml);
 
         $I->canSeeResponseCodeIs(200);
     }
