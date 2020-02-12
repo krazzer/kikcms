@@ -1,8 +1,8 @@
 {
   "name": "kikcms",
-  "version": "1.0.0",
+  "version": "cbc1154e",
   "description": "KikCMS assets",
-  "repository": "KikCMS",
+  "repository": "git://github.com:krazzer/kikcms.git",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
