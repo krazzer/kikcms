@@ -24,6 +24,6 @@ class WebFormCest
     public function testGetFinderAction(FunctionalTester $I)
     {
         $I->sendAjaxPostRequest('/cms/webform/getFinder');
-        $I->assertContains('id="Finder', json_decode($I->grabPageSource())->finder);
+        $I->assertStringContainsString('id="Finder', json_decode($I->grabPageSource())->finder);
     }
 }
