@@ -1,6 +1,6 @@
 {
   "name": "kikcms",
-  "version": "cbc1154e",
+  "version": "1.0.0",
   "description": "KikCMS assets",
   "repository": "git://github.com:krazzer/kikcms.git",
   "main": "index.js",
