@@ -1,3 +1,5 @@
+[![Tests](https://github.com/krazzer/kikcms/workflows/Tests/badge.svg)](https://github.com/krazzer/kikcms/actions?query=workflow%3ATests)
+
 This video will show you the general UX used for the KikCMS and DataTables created inside the CMS.
 
 [![KikCMS UX overview](https://i.ytimg.com/vi/QC54n2KOSfs/maxresdefault.jpg)](https://www.youtube.com/watch?v=QC54n2KOSfs "KikCMS UX overview")
