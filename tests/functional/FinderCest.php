@@ -136,7 +136,9 @@ class FinderCest
 
         $I->amOnPage('/cms/file/url/1');
 
-        $I->see('{"url":"https://kikcmstest.dev/media/files/1.png"}');
+        $url = json_decode($I->grabPageSource())->url;
+
+        $I->assertStringContainsString('https://kikcmstest.dev/media/files/1.png', $url);
 
         $I->canSeeResponseCodeIs(200);
     }
