@@ -9,6 +9,7 @@ var postcss    = require('gulp-postcss');
 var uglify     = require('gulp-uglify');
 var concat     = require('gulp-concat');
 var plumber    = require('gulp-plumber');
+var mode       = require('gulp-mode')();
 
 // Root folder
 var rootFolder = '../resources/';
@@ -24,11 +25,11 @@ gulp.task('styles', function () {
         'sass/tinymce/editor.scss'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(mode.development(sourcemaps.init()))
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss({zindex: false}))
         .pipe(concat('cms.css'))
-        .pipe(sourcemaps.write('.'))
+        .pipe(mode.development(sourcemaps.write('.')))
         .pipe(gulp.dest(rootFolder + 'css/'));
 });
 
@@ -38,11 +39,11 @@ gulp.task('stylesLogin', function () {
         'sass/login/*.scss'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(mode.development(sourcemaps.init()))
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss({zindex: false}))
         .pipe(concat('login.css'))
-        .pipe(sourcemaps.write('.'))
+        .pipe(mode.development(sourcemaps.write('.')))
         .pipe(gulp.dest(rootFolder + 'css/'));
 });
 
@@ -51,12 +52,12 @@ gulp.task('tinyMceContentStyle', function () {
         'sass/tinymce/content.scss'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
+        .pipe(mode.development(sourcemaps.init()))
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss({zindex: false}))
-        .pipe(concat('content.css'))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(rootFolder + 'css/tinymce'));
+        .pipe(concat('tinymce_content.css'))
+        .pipe(mode.development(sourcemaps.write('.')))
+        .pipe(gulp.dest(rootFolder + 'css'));
 });
 
 // Vendors styles
@@ -88,7 +89,6 @@ gulp.task('stylesFrontend', function () {
 gulp.task('scriptsFrontend', function () {
     return gulp.src([])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
         .pipe(concat('frontend.js'))
         .pipe(uglify())
         .pipe(gulp.dest(rootFolder + 'js/'));
@@ -121,7 +121,6 @@ gulp.task('scriptsFrontend', function () {
         'js/webform/webform.js'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
         .pipe(concat('frontend/base.js'))
         .pipe(uglify())
         .pipe(gulp.dest(rootFolder + 'js/'));
@@ -135,7 +134,6 @@ gulp.task('vendorsScriptsFrontend', function () {
         'bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
         .pipe(concat('frontend/vendor.js'))
         .pipe(uglify())
         .pipe(gulp.dest(rootFolder + 'js/'));
@@ -161,7 +159,6 @@ gulp.task('vendorsScriptsCms', function () {
         'bower_components/typeahead.js/dist/typeahead.bundle.js'
     ])
         .pipe(plumber())
-        .pipe(sourcemaps.init())
         .pipe(concat('vendor.js'))
         .pipe(uglify())
         .pipe(gulp.dest(rootFolder + 'js/'));
@@ -172,3 +169,9 @@ gulp.task('watch', gulp.series('styles', 'scriptsCms', function () {
     gulp.watch('sass/**/*.scss', gulp.series('styles', 'stylesLogin', 'tinyMceContentStyle'));
     gulp.watch('js/**/*.js', gulp.series('scriptsCms', 'scriptsFrontend'));
 }));
+
+// Build everything
+gulp.task('default', gulp.parallel(
+    'styles', 'stylesLogin', 'tinyMceContentStyle', 'vendorsStyles', 'stylesFrontend', 'scriptsFrontend', 'scriptsCms',
+    'scriptsFrontend', 'vendorsScriptsFrontend', 'vendorsScriptsCms'
+));

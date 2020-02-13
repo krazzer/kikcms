@@ -286,7 +286,7 @@ var WebForm = Class.extend({
                     tinymce.triggerSave();
                 });
             },
-            language_url: '/cmsassets/js/tinymce/' + KikCMS.tl('system.langCode') + '.js',
+            language_url: '/cmsassets/tinymce/' + KikCMS.tl('system.langCode') + '.js',
             language: KikCMS.tl('system.langCode'),
             theme: 'modern',
             relative_urls: false,
@@ -298,7 +298,7 @@ var WebForm = Class.extend({
                 'textcolor colorpicker textpattern codesample toc'
             ],
             image_advtab: true,
-            content_css: ['/cmsassets/css/tinymce/content.css'],
+            content_css: ['/cmsassets/css/tinymce_content.css'],
             link_list: this.getLinkListUrl(),
             file_picker_callback: function (callback) {
                 self.getFilePicker(callback);

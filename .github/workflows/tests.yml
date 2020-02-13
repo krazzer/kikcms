@@ -36,15 +36,17 @@ jobs:
       env:
         SITE_ALIAS: kikcmstest.dev
         SITE_PORT: 9901
-    - name: Sleep for 10 seconds
+    - name: Sleep for 5 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '10s'
+        time: '5s'
     - name: Create test DB
       run: docker exec -i docker_mysql_1 mysql -uroot -padminkik12 -e "CREATE DATABASE test"
     - name: Fill test DB
       run: |
         docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < install.sql
         docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < tests/test.sql
+    - name: Build Js & CSS
+      run: cd assets && gulp && cd ..
     - name: Run tests
       run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
