@@ -50,8 +50,7 @@ jobs:
       run: |
         cd assets
         npm install
-        npm install bower
-        bower install
+        npm run bower install
         gulp
         cd ..
     - name: Run tests

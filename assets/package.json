@@ -5,7 +5,8 @@
   "repository": "git://github.com:krazzer/kikcms.git",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bower": "bower"
   },
   "author": "Kaz van Wel",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "@vue/cli-service": "^4.1.0",
     "axios": "^0.19.2",
     "babel-eslint": "^10.0.3",
+    "bower": "^1.8.8",
     "browser-sync": "^2.26.7",
     "cssnano": "^4.1.10",
     "eslint": "^5.16.0",
