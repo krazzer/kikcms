@@ -50,6 +50,7 @@ jobs:
       run: |
         cd assets
         npm install
+        npm install -g bower
         bower install
         gulp
         cd ..
