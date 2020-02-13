@@ -7,7 +7,7 @@ on:
       - workflow-test
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 

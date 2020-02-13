@@ -10,7 +10,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+#    needs: tests
+
     steps:
+    - name: Build production version
       run: |
         git checkout production
         cd assets
