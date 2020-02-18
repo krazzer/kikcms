@@ -437,6 +437,7 @@ return [
         'defaultSendLabel'       => 'Send',
         'detachFile'             => 'Detach file',
         'requiredMessage'        => 'Fields with a * are mandatory',
-        'selectPlaceHolderLabel' => 'Choose and option...'
+        'selectPlaceHolderLabel' => 'Choose and option...',
+        'altOption'              => 'Different, namely'
     ],
 ];

@@ -11,6 +11,9 @@ class MultiCheckboxField extends Field
     /** @var array */
     private $options = [];
 
+    /** @var bool allow a different value to be entered */
+    private $different = false;
+
     /**
      * @param string $key
      * @param string $label
@@ -70,5 +73,23 @@ class MultiCheckboxField extends Field
     public function getFormFormat($value)
     {
         return is_string($value) ? json_decode($value) : $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function allowsDifferent(): bool
+    {
+        return $this->different;
+    }
+
+    /**
+     * @param bool $different
+     * @return MultiCheckboxField
+     */
+    public function allowDifferent(bool $different = true): MultiCheckboxField
+    {
+        $this->different = $different;
+        return $this;
     }
 }

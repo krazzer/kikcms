@@ -138,7 +138,7 @@
     {# @var field \KikCMS\Classes\WebForm\Fields\MultiCheckboxField #}
     <div{{ fieldContainterAttributes|raw }}>
         {{ block('fieldLabel') }}
-        {% for key, label  in field.options %}
+        {% for key, label in field.options %}
             {% set checked = field.isset(key) ? ' checked="checked"' : '' %}
             <div class="checkbox">
                 <label>
@@ -146,6 +146,10 @@
                 </label>
             </div>
         {% endfor %}
+        {% if field.allowsDifferent %}
+            {{ tl('webform.altOption') }}:
+            <input class="form-control" type="text" name="{{ element.name }}[alt]" value="{{ element.value.alt }}">
+        {% endif %}
     </div>
 {% endblock %}
 

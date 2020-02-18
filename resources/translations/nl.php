@@ -445,6 +445,7 @@ return [
         'defaultSendLabel'       => 'Versturen',
         'detachFile'             => 'Bestand loskoppelen',
         'requiredMessage'        => 'Velden met een * zijn verplicht',
-        'selectPlaceHolderLabel' => 'Kies een optie...'
+        'selectPlaceHolderLabel' => 'Kies een optie...',
+        'altOption'              => 'Anders, namelijk'
     ],
 ];
