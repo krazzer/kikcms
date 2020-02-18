@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Services\WebForm;
 
+use Helpers\Models\PersonInterest;
 use Helpers\Unit;
 use KikCMS\Services\WebForm\RelationKeyService;
 use Website\Models\Company;
@@ -55,6 +56,13 @@ class RelationKeyServiceTest extends Unit
         $person->id = 1;
         $person->name = 'personX';
         $person->company_id = 1;
+
+        $personInterest = new PersonInterest();
+        $personInterest->interest_id = 5;
+        $personInterest->grade = 10;
+
+        $person->personInterests = [$personInterest];
+
         $person->save();
 
         $relationKeyService->get($person, 'company');
@@ -63,6 +71,7 @@ class RelationKeyServiceTest extends Unit
         $relationKeyService->get($person, 'company:person:company:person');
         $relationKeyService->get($person, 'company:person:company:person:company');
         $relationKeyService->get($person, 'company:person:company:person:company:person');
-        $relationKeyService->get($person, 'personInterests:interest_id,grade');
+
+        $this->assertEquals([5 => 10], $relationKeyService->get($person, 'personInterests:interest_id,grade'));
     }
 }

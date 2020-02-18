@@ -46,7 +46,7 @@
         {%- block fieldDefaultInputAndField -%}
             {% if(placeHolderAsLabel == false) %}
                 {%- block fieldLabel -%}
-                    {{ form.label(element.name)|raw }}
+                    {{ form.label(element.name)|raw|nl2br }}
                     {%- block helpText -%}
                         {% if field.helpText %}
                             <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
