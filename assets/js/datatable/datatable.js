@@ -381,7 +381,7 @@ var DataTable = Class.extend({
             self.actionSave(false);
         });
 
-        this.onChange($langSelect, function () {
+        this.onChange($langSelect, true, function () {
             self.actionReloadWindow();
         });
 
