@@ -38,7 +38,7 @@ class Translations extends DataTable
     {
         return parent::getDefaultQuery()
             ->leftJoin(TranslationValue::class, 'tv.key_id = tk.id', 'tv')
-            ->where('tk.db = 0 AND (tv.language_code IS NULL OR tv.language_code = :languageCode:)', [
+            ->where('tk.db = 0 AND tk.key IS NOT NULL AND (tv.language_code IS NULL OR tv.language_code = :languageCode:)', [
                 'languageCode' => $this->languageService->getDefaultLanguageCode()
             ])->columns(['tk.id', 'tk.key', 'tv.value'])
             ->orderBy('tk.key');
