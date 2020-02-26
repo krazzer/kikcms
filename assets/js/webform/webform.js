@@ -215,6 +215,8 @@ var WebForm = Class.extend({
         $filePicker.unbind('pick');
         $filePicker.unbind('selectionChange');
 
+        $(window).unbind('keypress.' + this.renderableInstance);
+
         var $finderPickButton = $window.find('.pick-file');
 
         KikCMS.windowManager.showWindow($window);
@@ -239,6 +241,14 @@ var WebForm = Class.extend({
                 self.onPickFile($filePicker.find('.file.selected'), $field);
             }
         });
+
+        var keyPressEvent = function (e) {
+            if (e.keyCode == keyCode.ESCAPE && $window.is(':visible')) {
+                KikCMS.windowManager.closeWindow($window);
+            }
+        };
+
+        $(window).bind('keypress.' + this.renderableInstance, keyPressEvent);
     },
 
     /**

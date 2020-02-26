@@ -5,7 +5,7 @@ var DataTableRestore = Class.extend({
     dataTable: null,
     interval: null,
     storageIndex: null,
-    pollInterval: 1000,
+    pollInterval: 10000,
     isPolling: false,
 
     /**
