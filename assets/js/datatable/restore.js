@@ -5,7 +5,8 @@ var DataTableRestore = Class.extend({
     dataTable: null,
     interval: null,
     storageIndex: null,
-    pollInterval: 10000,
+    pollInterval: 1000,
+    isPolling: false,
 
     /**
      * @param dataTable
@@ -94,11 +95,13 @@ var DataTableRestore = Class.extend({
         var restoreObject = this.getStorageContent()[restoreIndex];
         var date          = this.getFormattedDateByRestoreObject(restoreObject);
 
-        if (confirm(KikCMS.tl('dataTable.restoreConfirm', {date: date}))) {
-            $.each(restoreObject.content, function (key, value) {
-                self.restoreField(key, value);
-            });
+        if ( ! confirm(KikCMS.tl('dataTable.restoreConfirm', {date: date}))) {
+            return false;
         }
+
+        $.each(restoreObject.content, function (key, value) {
+            self.restoreField(key, value);
+        });
 
         this.remove(restoreIndex);
         this.getRestoreButton().find('[data-id=' + restoreIndex + ']').parent().remove();
@@ -160,6 +163,11 @@ var DataTableRestore = Class.extend({
         var content       = this.getContent();
         var storedContent = this.getStorageContent();
 
+        if(this.isPolling){
+            return false;
+        }
+
+        this.isPolling = true;
         this.determineStorageIndex();
 
         if (Object.keys(storedContent).length !== 0) {
@@ -184,6 +192,7 @@ var DataTableRestore = Class.extend({
      * Stop storing the datatable windows' content and remove content
      */
     stopPolling: function () {
+        this.isPolling = false;
         this.remove(this.storageIndex);
         clearInterval(this.interval);
     },
