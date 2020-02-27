@@ -25,6 +25,7 @@ use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\TranslationService;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\PaginateListService;
@@ -103,10 +104,11 @@ class TestHelper extends TestCase
             TranslatorConfig::LANGUAGE_EN => dirname(dirname(__DIR__)) . '/resources/translations/en.php',
         ]);
 
-        $translatorMock->cache           = null;
-        $translatorMock->cacheService    = $cacheServiceMock;
-        $translatorMock->websiteSettings = $websiteSettingsMock;
-        $translatorMock->validation      = $validationMock;
+        $translatorMock->cache              = null;
+        $translatorMock->cacheService       = $cacheServiceMock;
+        $translatorMock->websiteSettings    = $websiteSettingsMock;
+        $translatorMock->validation         = $validationMock;
+        $translatorMock->translationService = new TranslationService();
 
         $translatorMock->setLanguageCode('en');
 
