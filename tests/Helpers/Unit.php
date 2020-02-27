@@ -16,6 +16,7 @@ use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
+use KikCMS\Services\TranslationService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
@@ -96,6 +97,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('flash', new Direct);
         $di->set('escaper', new Escaper);
         $di->set('modelService', new ModelService);
+        $di->set('translationService', new TranslationService);
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('translator', $translator);
         $di->set('keyValue', $keyValue);

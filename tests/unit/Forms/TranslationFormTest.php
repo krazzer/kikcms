@@ -28,6 +28,5 @@ class TranslationFormTest extends Unit
         $this->assertGreaterThan(1, $translationForm->getFieldMap()->count());
 
         $translationForm->successAction(['key' => 1]);
-
     }
 }
