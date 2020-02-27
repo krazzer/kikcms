@@ -222,7 +222,7 @@ abstract class WebForm extends Renderable
             }
 
             // in case of a multicheckbox, and nothing is present, set value as an empty array
-            if ( ! array_key_exists($key, $input) && Field::TYPE_MULTI_CHECKBOX) {
+            if ( ! array_key_exists($key, $input) && $field->getType() == Field::TYPE_MULTI_CHECKBOX) {
                 $input[$key] = [];
             }
         }
