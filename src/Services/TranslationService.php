@@ -61,31 +61,6 @@ class TranslationService extends Injectable
     }
 
     /**
-     * @param $value
-     * @param int $translationKeyId
-     * @param string $languageCode
-     */
-    public function saveValue($value, int $translationKeyId, string $languageCode)
-    {
-        if ($this->valueExists($translationKeyId, $languageCode)) {
-            $this->dbService->update(TranslationValue::class, [
-                TranslationValue::FIELD_VALUE => $value
-            ], [
-                TranslationValue::FIELD_LANGUAGE_CODE => $languageCode,
-                TranslationValue::FIELD_KEY_ID        => $translationKeyId,
-            ]);
-        } else {
-            $this->dbService->insert(TranslationValue::class, [
-                TranslationValue::FIELD_VALUE         => $value,
-                TranslationValue::FIELD_LANGUAGE_CODE => $languageCode,
-                TranslationValue::FIELD_KEY_ID        => $translationKeyId,
-            ]);
-        }
-
-        $this->cacheService->clear(CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId);
-    }
-
-    /**
      * Creates a new TranslationKey and returns it's id
      *
      * @return int

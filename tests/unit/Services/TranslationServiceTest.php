@@ -50,29 +50,6 @@ class TranslationServiceTest extends Unit
         $this->assertTrue($translationService->valueExists(1, 'en'));
     }
 
-    public function testSaveValue()
-    {
-        $translationService = new TranslationService();
-        $translationService->setDI($this->getDbDi());
-
-        $this->addDefaultLanguage();
-
-        $translationKey = new TranslationKey();
-        $translationKey->id = 1;
-
-        $translationKey->save();
-
-        $translationService->saveValue('x', 1, 'en');
-
-        $this->assertEquals('x', $translationKey->valueEn->value);
-
-        $translationService->saveValue('xx', 1, 'en');
-
-        $translationKey = TranslationKey::getById(1);
-
-        $this->assertEquals('xx', $translationKey->valueEn->value);
-    }
-
     public function testCreateNewTranslationKeyId()
     {
         $translationService = new TranslationService();
