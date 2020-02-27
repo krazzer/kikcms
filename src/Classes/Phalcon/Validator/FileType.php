@@ -27,7 +27,12 @@ class FileType extends Validator
         $value = $validator->getValue($field);
 
         if ( ! $value) {
-            return true;
+            if($this->getOption('allowEmpty')){
+                return true;
+            } else {
+                $validator->appendMessage(new Message($validator->getDefaultMessage('FileEmpty'), $field));
+                return false;
+            }
         }
 
         $allowedFileTypes = $this->getAllowedFileTypes();

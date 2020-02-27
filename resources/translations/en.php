@@ -411,7 +411,7 @@ return [
             'FileMaxResolution' => "File :label must not exceed :max resolution",
             'FileMinResolution' => "File :label must be at least :min resolution",
             'FileSize'          => "File :label exceeds the size of :max",
-            'FileType'          => "File :label must be of type: :types",
+            'FileType'          => "File :label must be one of following types: :types",
             'FileValid'         => "Field :label is not valid",
             'Identical'         => "Field :label does not have the expected value",
             'InclusionIn'       => "Field :label must be a part of list: :domain",

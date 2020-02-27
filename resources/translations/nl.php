@@ -419,7 +419,7 @@ return [
             'FileMaxResolution' => 'Het bestand :label mag geen hogere resolutie hebben dan :max',
             'FileMinResolution' => 'Het bestand :label moet tenminste een resolutie van :min hebben',
             'FileSize'          => 'Het bestand :label mag niet groter zijn dan :max',
-            'FileType'          => 'Het bestand :label mag alleen van de types :types zijn',
+            'FileType'          => 'Het bestand :label moet één van de volgende types zijn: :types',
             'FileValid'         => 'Het veld :label is niet geldig',
             'Identical'         => 'Het veld :label heeft niet de verwachte waarde',
             'InclusionIn'       => 'Het veld :label moet onderdeel zijn van: :domain',

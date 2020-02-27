@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm;
 
 
 use KikCMS\Classes\DataTable\SelectDataTable;
+use KikCMS\Classes\Phalcon\Validator\ImageFileType;
 use KikCMS\Classes\Phalcon\Validator\ReCaptcha;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
@@ -132,6 +133,19 @@ trait FieldShortcuts
     public function addHtmlField(string $key, ?string $label, string $content): Field
     {
         return $this->addField(new HtmlField($key, $label, $content));
+    }
+
+    /**
+     * Add a file field that only allows images
+     *
+     * @param string $key
+     * @param string $label
+     * @param bool $allowEmpty
+     * @return Field|HtmlField
+     */
+    public function addImageField(string $key, ?string $label, bool $allowEmpty = false): Field
+    {
+        return $this->addFileField($key, $label, [new ImageFileType(['allowEmpty' => $allowEmpty])]);
     }
 
     /**
