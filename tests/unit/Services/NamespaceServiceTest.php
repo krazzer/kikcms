@@ -23,6 +23,8 @@ class NamespaceServiceTest extends Unit
 
         $result = $namespaceService->getClassNamesByNamespace('test');
 
+        sort($result);
+
         $this->assertEquals(['testSubFolder\SubClass', 'testTestClass'], $result);
     }
 }
