@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Services;
 
+use Helpers\Unit;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Services\NamespaceService;
 
-class NamespaceServiceTest extends \Codeception\Test\Unit
+class NamespaceServiceTest extends Unit
 {
     public function testGetClassNamesByNamespace()
     {
@@ -22,6 +23,6 @@ class NamespaceServiceTest extends \Codeception\Test\Unit
 
         $result = $namespaceService->getClassNamesByNamespace('test');
 
-        $this->assertEquals(['testTestClass'], $result);
+        $this->assertEquals(['testSubFolder\SubClass', 'testTestClass'], $result);
     }
 }

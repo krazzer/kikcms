@@ -20,6 +20,7 @@ class KikCMSConfig
     const NAMESPACE_PATH_FORMS       = '\\Website\\Forms\\';
     const NAMESPACE_PATH_DATATABLES  = '\\Website\\DataTables\\';
     const NAMESPACE_PATH_OBJECTLIST  = '\\Website\\ObjectList\\';
+    const NAMESPACE_PATH_OBJECTS     = '\\Website\\Objects\\';
     const NAMESPACE_PATH_SERVICES    = '\\Website\\Services\\';
     const NAMESPACE_PATH_TASKS       = '\\Website\\Tasks\\';
     const NAMESPACE_PATH_CONTROLLERS = '\\Website\\Controllers\\';

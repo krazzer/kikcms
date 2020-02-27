@@ -69,7 +69,10 @@ class Services extends BaseServices
             Translator::class,
         ];
 
-        $cmsServices = $this->get('namespaceService')->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
+        /** @var NamespaceService $namespaceService */
+        $namespaceService = $this->get('namespaceService');
+
+        $cmsServices = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
 
         return array_merge($services, $cmsServices, $this->getWebsiteSimpleServices());
     }
@@ -92,15 +95,19 @@ class Services extends BaseServices
      */
     protected function getWebsiteSimpleServices(): array
     {
-        $services        = $this->getWebsiteSettings()->getServices();
-        $websiteServices = $this->get('namespaceService')->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
+        /** @var NamespaceService $namespaceService */
+        $namespaceService = $this->get('namespaceService');
 
-        $services = array_merge($services, $websiteServices);
+        $services        = $this->getWebsiteSettings()->getServices();
+        $websiteServices = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
+        $objectServices  = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_OBJECTS);
+
+        $services = array_merge($services, $websiteServices, $objectServices);
 
         $simpleServices = [];
 
         foreach ($services as $service) {
-            if (is_string($service)) {
+            if (is_string($service) && substr($service, -7) == 'Service') {
                 $simpleServices[] = $service;
             }
         }
@@ -151,11 +158,11 @@ class Services extends BaseServices
      */
     protected function initCache(): ?BackendInterface
     {
-        if( ! $config = (array) $this->getIniConfig()->cache ?? null){
+        if ( ! $config = (array) $this->getIniConfig()->cache ?? null) {
             return null;
         }
 
-        if($this instanceof Cli && $config['adapter'] == 'apcu'){
+        if ($this instanceof Cli && $config['adapter'] == 'apcu') {
             return null;
         }
 
@@ -163,7 +170,7 @@ class Services extends BaseServices
             return null;
         }
 
-        if(isset($config['cacheDir'])){
+        if (isset($config['cacheDir'])) {
             $config['cacheDir'] = $this->getIniConfig()->application->path . $config['cacheDir'];
         }
 
