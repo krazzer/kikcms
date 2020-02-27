@@ -66,6 +66,9 @@ abstract class DataTable extends Renderable
     /** @var Filter[] */
     protected $customFilters = [];
 
+    /** @var false|string if set, the datatable will let you select or upload a file directly, using the set field */
+    protected $directImageField = false;
+
     /** @var string */
     protected $instancePrefix = self::INSTANCE_PREFIX;
 
@@ -504,6 +507,7 @@ abstract class DataTable extends Renderable
             'languages'           => $this->languageService->getLanguages(),
             'sortLabel'           => $this->translator->tl('dataTable.sort'),
             'fieldFormatting'     => $this->fieldFormatting,
+            'directImageField'    => $this->directImageField,
             'showDeleteRowButton' => $this->showDeleteRowButton && $this->canDelete(),
             'canAdd'              => $this->canAdd(),
             'canEdit'             => $this->canEdit(),
@@ -714,6 +718,14 @@ abstract class DataTable extends Renderable
     protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false)
     {
         $this->tableButtons[] = new TableButton($icon, $title, $class, $url, $blank);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getDirectImageField()
+    {
+        return $this->directImageField;
     }
 
     /**

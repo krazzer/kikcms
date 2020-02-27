@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 
+use KikCMS\Classes\WebForm\DataForm\StorageData;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\DataTableService;
 use KikCMS\Services\DataTable\RearrangeService;
@@ -15,6 +16,7 @@ use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Renderable;
 use Monolog\Logger;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property AccessControl $acl
@@ -51,6 +53,37 @@ class DataTableController extends RenderableController
         return json_encode([
             'window' => $dataTable->renderWindow($dataTable->renderAddForm())
         ]);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function addImageAction(): ResponseInterface
+    {
+        $fileId = $this->request->getPost('fileId', 'int');
+
+        $model      = $this->getRenderable()->getModel();
+        $imageField = $this->getRenderable()->getDirectImageField();
+        $object     = $this->modelService->getObject($model);
+
+        $storageData = new StorageData();
+
+        $storageData->addFormInputValue($imageField, $fileId);
+
+        $storageData->setTable($model);
+        $storageData->setObject($object);
+
+        $this->storageService->setStorageData($storageData);
+
+        $success = $this->storageService->store();
+
+        if ($success) {
+            $editId = $storageData->getEditId();
+        } else {
+            $editId = null;
+        }
+
+        return $this->response->setJsonContent(['editId' => $editId]);
     }
 
     /**

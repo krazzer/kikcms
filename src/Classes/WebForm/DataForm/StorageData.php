@@ -37,7 +37,7 @@ class StorageData
     private $table;
 
     /** @var array */
-    private $events;
+    private $events = [];
 
     /** @var Model */
     private $object;

@@ -4,16 +4,27 @@
 
 <div class="datatable toolbarComponent" id="{{ self.instance }}" data-renderable="{{ jsData|json_encode }}">
     <div class="toolbar">
-
         {% if canAdd %}
-            {% block buttonAdd %}
-                <div class="btn btn-default add">
+            {% if directImageField %}
+                <div class="btn btn-default pick-image">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    <span class="lbl">
-                    {{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}
-                </span>
+                    <span class="lbl">{{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}</span>
                 </div>
-            {% endblock %}
+                <label class="btn btn-default upload" title="{{ tl('media.button.uploadTitle') }}">
+                    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                    <span class="lbl">
+                        {{ tl('media.button.upload') }}
+                        <input type="file" name="files[]" multiple/>
+                    </span>
+                </label>
+            {% else %}
+                {% block buttonAdd %}
+                    <div class="btn btn-default add">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="lbl">{{ tl('dataTable.add', {itemSingular: self.labels[0]})|capitalize }}</span>
+                    </div>
+                {% endblock %}
+            {% endif %}
         {% endif %}
 
         {% block additionalButtons '' %}
