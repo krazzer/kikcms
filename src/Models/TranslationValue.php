@@ -2,8 +2,8 @@
 
 namespace KikCMS\Models;
 
-use KikCMS\Config\CacheConfig;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\TranslationService;
 use KikCmsCore\Classes\Model;
 
 class TranslationValue extends Model
@@ -19,7 +19,15 @@ class TranslationValue extends Model
      */
     public function afterUpdate()
     {
-        $this->getCacheService()->clear(CacheConfig::TRANSLATION . ':' . $this->language_code . ':' . $this->key_id);
+        $this->getCacheService()->clear($this->getCacheKey());
+    }
+
+    /**
+     * @return string
+     */
+    public function getCacheKey(): string
+    {
+        return $this->getTranslationService()->getValueCacheKey((string) $this->language_code, $this->key_id);
     }
 
     /**
@@ -28,5 +36,13 @@ class TranslationValue extends Model
     private function getCacheService(): CacheService
     {
         return $this->getDI()->get('cacheService');
+    }
+
+    /**
+     * @return TranslationService
+     */
+    private function getTranslationService(): TranslationService
+    {
+        return $this->getDI()->get('translationService');
     }
 }

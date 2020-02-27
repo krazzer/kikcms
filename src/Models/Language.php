@@ -12,4 +12,12 @@ class Language extends Model
     const FIELD_NAME   = 'name';
     const FIELD_CODE   = 'code';
     const FIELD_ACTIVE = 'active';
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return (string) $this->code;
+    }
 }

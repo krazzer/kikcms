@@ -9,6 +9,7 @@ use KikCMS\Models\Language;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
+use KikCmsCore\Classes\Model;
 
 /**
  * @property CacheService $cacheService
@@ -22,6 +23,15 @@ class TranslationForm extends DataForm
     public function getModel(): string
     {
         return TranslationKey::class;
+    }
+
+    /**
+     * @inheritdoc
+     * @return TranslationKey|null
+     */
+    public function getObject(): ?Model
+    {
+        return parent::getObject();
     }
 
     /**
@@ -68,6 +78,6 @@ class TranslationForm extends DataForm
      */
     private function getCacheKey(Language $language): string
     {
-        return CacheConfig::TRANSLATION . ':' . $language->code . ':' . $this->getObject()->key;
+        return $this->translationService->getValueCacheKey($language->getCode(), $this->getObject()->key);
     }
 }

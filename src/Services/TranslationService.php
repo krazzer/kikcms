@@ -19,16 +19,16 @@ use Phalcon\Mvc\Model\Query\Builder;
 class TranslationService extends Injectable
 {
     /**
-     * @param int $translationKeyId
+     * @param int $keyId
      * @param string $languageCode
      * @return null|string
      */
-    public function getTranslationValue(int $translationKeyId, string $languageCode): ?string
+    public function getTranslationValue(int $keyId, string $languageCode): ?string
     {
-        $cacheKey = CacheConfig::TRANSLATION . ':' . $languageCode . ':' . $translationKeyId;
+        $cacheKey = $this->getValueCacheKey($languageCode, $keyId);
 
-        return $this->cacheService->cache($cacheKey, function() use ($translationKeyId, $languageCode){
-            $query = $this->getTranslationValueQuery($translationKeyId, $languageCode);
+        return $this->cacheService->cache($cacheKey, function () use ($keyId, $languageCode) {
+            $query = $this->getTranslationValueQuery($keyId, $languageCode);
             return $this->dbService->getValue($query);
         });
     }
@@ -90,11 +90,21 @@ class TranslationService extends Injectable
         $presentKeys = $this->dbService->getValues($query);
         $missingKeys = array_diff($keys, $presentKeys);
 
-        foreach ($missingKeys as $key){
-            $translationKey = new TranslationKey();
+        foreach ($missingKeys as $key) {
+            $translationKey      = new TranslationKey();
             $translationKey->key = $key;
 
             $translationKey->save();
         }
+    }
+
+    /**
+     * @param string $languageCode
+     * @param int|string $keyId
+     * @return string
+     */
+    public function getValueCacheKey(string $languageCode, $keyId): string
+    {
+        return CacheConfig::TRANSLATION . CacheConfig::SEPARATOR . $languageCode . CacheConfig::SEPARATOR . $keyId;
     }
 }
