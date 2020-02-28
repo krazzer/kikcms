@@ -5,6 +5,7 @@ namespace acceptance;
 
 
 use AcceptanceTester;
+use Facebook\WebDriver\Exception\WebDriverException;
 
 class FinderCest
 {
@@ -23,8 +24,12 @@ class FinderCest
         $I->click('.files-container .file');
         $I->wait(5);
 
-        $I->click('.btn.delete');
-        $I->acceptPopup();
+        try {
+            $I->click('.btn.delete');
+            $I->acceptPopup();
+        } catch (WebDriverException $e) {
+            // ignore "unexpected alert open"
+        }
 
         $I->waitForJS("return $.active == 0;", 300);
         $I->wait(1);
@@ -56,8 +61,13 @@ class FinderCest
 
         $I->click('.files-container .file');
         $I->wait(5);
-        $I->click('.btn.delete');
-        $I->acceptPopup();
+
+        try {
+            $I->click('.btn.delete');
+            $I->acceptPopup();
+        } catch (WebDriverException $e) {
+            // ignore "unexpected alert open"
+        }
 
         $I->waitForJS("return $.active == 0;", 300);
         $I->wait(1);

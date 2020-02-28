@@ -1,7 +1,7 @@
-name: Tests
+name: Coverage
 on: [push]
 jobs:
-  tests:
+  coverage:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -30,6 +30,7 @@ jobs:
           sudo chmod 777 tests/TestSitePath/storage/media/1.png
           sudo chmod 777 tests/TestSitePath/public_html/media/files
           sudo chmod 777 tests/TestSitePath/public_html/media/thumbs
+          sudo chmod 777 tests/_output
         env:
           SITE_ALIAS: kikcmstest.dev
           SITE_PORT: 9901
@@ -51,4 +52,9 @@ jobs:
           gulp
           cd ..
       - name: Run tests
-        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
+        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev-debug:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml --coverage-xml
+      - name: Upload report to codecov.io
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./tests/_output/coverage.xml
