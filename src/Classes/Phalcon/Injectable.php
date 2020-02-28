@@ -34,7 +34,6 @@ use KikCMS\Services\Finder\FileRemoveService;
 use KikCMS\Services\Finder\FileResizeService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\Finder\FinderService;
-use KikCMS\Services\Generator\ClassesGeneratorService;
 use KikCMS\Services\Generator\GeneratorService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\MailService;
@@ -84,7 +83,6 @@ use ReCaptcha\ReCaptcha;
  * @property Backend cache
  * @property CacheService cacheService
  * @property IniConfig config
- * @property ClassesGeneratorService classesGeneratorService
  * @property CmsService cmsService
  * @property DataFormService dataFormService
  * @property DataTableFilterService dataTableFilterService

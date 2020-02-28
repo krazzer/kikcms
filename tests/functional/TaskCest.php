@@ -12,12 +12,12 @@ use Phalcon\Db\Column;
 class TaskCest
 {
     const FILES = [
-        '/opt/project/tests/TestSitePath/app/Models/GenerateTest.php',
-        '/opt/project/tests/TestSitePath/app/Forms/GenerateTestForm.php',
-        '/opt/project/tests/TestSitePath/app/ObjectList/GenerateTestList.php',
-        '/opt/project/tests/TestSitePath/app/ObjectList/GenerateTestMap.php',
-        '/opt/project/tests/TestSitePath/app/DataTables/GenerateTests.php',
-        '/opt/project/tests/TestSitePath/app/Services/GenerateTestService.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTest.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTestForm.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTestList.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTestMap.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTests.php',
+        '/opt/project/tests/TestSitePath/app/Objects/GenerateTest/GenerateTestService.php',
     ];
 
     public function modelsWorks(FunctionalTester $I)
@@ -131,5 +131,7 @@ class TaskCest
         foreach (self::FILES as $file){
             unlink($file);
         }
+
+        rmdir(dirname(self::FILES[0]));
     }
 }

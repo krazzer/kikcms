@@ -11,14 +11,27 @@ use KikCMS\Config\KikCMSConfig;
 use KikCmsCore\Classes\Model;
 use Nette\PhpGenerator\PhpNamespace;
 
-class ClassesGeneratorService extends Injectable
+class ClassesGenerator extends Injectable
 {
+    /** @var string */
+    private $objectName;
+
+    /**
+     * ClassesGenerator constructor.
+     * @param string $objectName
+     */
+    public function __construct(string $objectName)
+    {
+        $this->objectName = $objectName;
+    }
+
     /**
      * @param string $className
+     * @return bool
      */
-    public function createServiceClass(string $className)
+    public function createServiceClass(string $className): bool
     {
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_SERVICES, '\\'));
+        $namespace = $this->createNamespace();
 
         $namespace->addUse(Injectable::class);
 
@@ -26,18 +39,19 @@ class ClassesGeneratorService extends Injectable
 
         $class->setExtends(Injectable::class);
 
-        $this->generatorService->createFile('Services', $className, $namespace);
+        return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
     }
 
     /**
      * @param string $className
      * @param string $table
+     * @return bool
      */
-    public function createModelClass(string $className, string $table)
+    public function createModelClass(string $className, string $table): bool
     {
         $alias = $this->generatorService->getTableAlias($table);
 
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_MODELS, '\\'));
+        $namespace = $this->createNamespace();
 
         $namespace->addUse(Model::class);
 
@@ -57,7 +71,7 @@ class ClassesGeneratorService extends Injectable
             ->addComment('@inheritdoc')
             ->addBody('parent::initialize();');
 
-        $this->generatorService->createFile('Models', $className, $namespace);
+        return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
     }
 
     /**
@@ -65,14 +79,13 @@ class ClassesGeneratorService extends Injectable
      * @param string $table
      * @param string $modelClassName
      * @param string $formClassName
+     * @return bool
      */
-    public function createDataTableClass(string $className, string $table, string $modelClassName, string $formClassName)
+    public function createDataTableClass(string $className, string $table, string $modelClassName, string $formClassName): bool
     {
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_DATATABLES, '\\'));
+        $namespace = $this->createNamespace();
 
         $namespace->addUse(DataTable::class);
-        $namespace->addUse(KikCMSConfig::NAMESPACE_PATH_MODELS . $modelClassName);
-        $namespace->addUse(KikCMSConfig::NAMESPACE_PATH_FORMS . $formClassName);
 
         $class = $namespace->addClass($className);
 
@@ -110,19 +123,19 @@ class ClassesGeneratorService extends Injectable
 
         $tableFieldMapMethod->addBody('];');
 
-        $this->generatorService->createFile('DataTables', $className, $namespace);
+        return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
     }
 
     /**
      * @param string $className
      * @param string $modelClassName
+     * @return bool
      */
-    public function createFormClass(string $className, string $modelClassName)
+    public function createFormClass(string $className, string $modelClassName): bool
     {
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_FORMS, '\\'));
+        $namespace = $this->createNamespace();
 
         $namespace->addUse(DataForm::class);
-        $namespace->addUse(KikCMSConfig::NAMESPACE_PATH_MODELS . $modelClassName);
 
         $class = $namespace->addClass($className);
 
@@ -138,20 +151,20 @@ class ClassesGeneratorService extends Injectable
             ->setVisibility('protected')
             ->setBody('// add form code...');
 
-        $this->generatorService->createFile('Forms', $className, $namespace);
+        return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
     }
 
     /**
      * @param string $className
      * @param string $modelClassName
      * @param string $typeClass
+     * @return bool
      */
-    public function createObjectListClass(string $className, string $modelClassName, string $typeClass)
+    public function createObjectListClass(string $className, string $modelClassName, string $typeClass): bool
     {
-        $namespace = new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_OBJECTLIST, '\\'));
+        $namespace = $this->createNamespace();
 
         $namespace->addUse($typeClass);
-        $namespace->addUse(KikCMSConfig::NAMESPACE_PATH_MODELS . $modelClassName);
 
         $class = $namespace->addClass($className)
             ->setExtends($typeClass);
@@ -181,6 +194,22 @@ class ClassesGeneratorService extends Injectable
             ->addComment('@return ' . $modelClassName . '|false')
             ->setBody('return parent::getLast();');
 
-        $this->generatorService->createFile('ObjectList', $className, $namespace);
+        return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
+    }
+
+    /**
+     * @return PhpNamespace
+     */
+    private function createNamespace(): PhpNamespace
+    {
+        return new PhpNamespace(trim(KikCMSConfig::NAMESPACE_PATH_OBJECTS . $this->objectName, '\\'));
+    }
+
+    /**
+     * @return string
+     */
+    private function getDirectory(): string
+    {
+        return 'Objects/' . $this->objectName;
     }
 }

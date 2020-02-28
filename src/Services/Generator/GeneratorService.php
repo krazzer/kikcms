@@ -49,20 +49,25 @@ class GeneratorService extends Injectable
 
         $filesGenerated = 0;
 
+        $namespace = KikCMSConfig::NAMESPACE_PATH_OBJECTS . $className . '\\';
+
         $classesToGenerate = [
-            [KikCMSConfig::NAMESPACE_PATH_MODELS, 'model', [$className, $table]],
-            [KikCMSConfig::NAMESPACE_PATH_FORMS, 'form', [$formClass, $className]],
-            [KikCMSConfig::NAMESPACE_PATH_DATATABLES, 'dataTable', [$dataTableClass, $table, $className, $formClass]],
-            [KikCMSConfig::NAMESPACE_PATH_OBJECTLIST, 'objectList', [$objectListClass, $className, ObjectList::class]],
-            [KikCMSConfig::NAMESPACE_PATH_OBJECTLIST, 'objectList', [$objectMapClass, $className, ObjectMap::class]],
-            [KikCMSConfig::NAMESPACE_PATH_SERVICES, 'service', [$serviceClassName]],
+            ['model', [$className, $table]],
+            ['form', [$formClass, $className]],
+            ['dataTable', [$dataTableClass, $table, $className, $formClass]],
+            ['objectList', [$objectListClass, $className, ObjectList::class]],
+            ['objectList', [$objectMapClass, $className, ObjectMap::class]],
+            ['service', [$serviceClassName]],
         ];
 
-        foreach ($classesToGenerate as $i => list($namespace, $method, $parameters)) {
+        $classesGenerator = new ClassesGenerator($className);
+
+        foreach ($classesToGenerate as $i => list($method, $parameters)) {
             if ( ! class_exists($namespace . $parameters[0])) {
                 $method = 'create' . ucfirst($method) . 'Class';
-                call_user_func_array([$this->classesGeneratorService, $method], $parameters);
-                $filesGenerated++;
+                if(call_user_func_array([$classesGenerator, $method], $parameters)){
+                    $filesGenerated++;
+                }
             }
 
             $part = 100 / $total;
@@ -86,11 +91,9 @@ class GeneratorService extends Injectable
 
         array_shift($parts);
 
-        $className = implode('', array_map(function ($p) {
+        return implode('', array_map(function ($p) {
             return ucfirst($p);
         }, $parts));
-
-        return $className;
     }
 
     /**
