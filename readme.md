@@ -1,6 +1,7 @@
 # KikCMS
 [![Build](https://github.com/krazzer/kikcms/workflows/Build/badge.svg?branch=master)](https://github.com/krazzer/kikcms/actions?query=workflow%3ABuild)
 [![Tests](https://github.com/krazzer/kikcms/workflows/Tests/badge.svg?branch=master)](https://github.com/krazzer/kikcms/actions?query=workflow%3ATests)
+[![codecov](https://codecov.io/gh/krazzer/kikcms/branch/master/graph/badge.svg)](https://codecov.io/gh/krazzer/kikcms)
 
 This video will show you the general UX used for the KikCMS and DataTables created inside the CMS.
 
