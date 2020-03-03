@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use Exception;
+use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\PassResetConfig;
 use KikCMS\ObjectLists\UserMap;
@@ -156,6 +157,9 @@ class UserService extends Injectable
         }
 
         $user = User::getById($id);
+
+        $user->last_login = (new Now);
+        $user->save();
 
         $this->session->set('loggedIn', true);
         $this->session->set('userId', $id);
