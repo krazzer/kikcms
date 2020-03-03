@@ -160,6 +160,7 @@ CREATE TABLE `cms_user` (
   `role` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
   `remember_me` blob DEFAULT NULL,
   `settings` blob DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `role` (`role`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
