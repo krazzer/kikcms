@@ -31,7 +31,7 @@ class MimeConfig
         'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
         'ppt'  => ['application/vnd.ms-powerpoint'],
         'pptx' => ['application/vnd.openxmlformats-officedocument.presentationml.presentation'],
-        'svg'  => ['image/svg+xml', 'text/plain'],
+        'svg'  => ['image/svg+xml', 'image/svg', 'text/plain'],
     ];
 
     /** @const array default mimeTypes allowed to upload using the Finder */
