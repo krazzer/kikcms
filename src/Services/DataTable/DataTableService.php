@@ -32,6 +32,37 @@ class DataTableService extends Injectable
     }
 
     /**
+     * @param int $fileId
+     * @param DataTable $dataTable
+     * @return int|null
+     */
+    public function addImageDirectly(int $fileId, DataTable $dataTable): ?int
+    {
+        $model      = $dataTable->getModel();
+        $imageField = $dataTable->getDirectImageField();
+        $object     = $this->modelService->getObject($model);
+
+        $storageData = (new StorageData)
+            ->addFormInputValue($imageField, $fileId)
+            ->setTable($model)
+            ->setObject($object);
+
+        if ($dataTable->isSortable()) {
+            $this->dataTableService->addDisplayOrderToStorageData($dataTable, $storageData);
+        }
+
+        $this->storageService->setStorageData($storageData);
+
+        $success = $this->storageService->store();
+
+        if ($success) {
+            return $storageData->getEditId();
+        }
+
+        return null;
+    }
+
+    /**
      * @param DataTable $dataTable
      * @param int $id
      * @return int

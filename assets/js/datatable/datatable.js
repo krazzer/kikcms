@@ -61,6 +61,7 @@ var DataTable = Class.extend({
         var $deleteButton    = this.getDataTable().find('.toolbar .btn.delete');
         var $addButton       = this.getDataTable().find('.toolbar .btn.add');
         var $pickImageButton = this.getDataTable().find('.toolbar .btn.pick-image');
+        var $uploadButton    = this.getDataTable().find('.toolbar .btn.upload');
 
         $deleteButton.click(function () {
             if ($(this).attr('disabled') == 'disabled') {
@@ -86,6 +87,28 @@ var DataTable = Class.extend({
         $addButton.click(function () {
             self.actionAdd();
         });
+
+        var uploader = new FileUploader({
+            $container: $uploadButton,
+            $uploadButton: $uploadButton,
+            action: '/cms/datatable/uploadImage',
+            addParametersBeforeUpload: function (formData) {
+                formData.append('renderableInstance', self.renderableInstance);
+                formData.append('renderableClass', self.renderableClass);
+                return formData;
+            },
+            onSuccess: function (result) {
+                if(result.errors){
+                    alert(result.errors.join("\n\n"));
+                    return;
+                }
+
+                self.setTableContent(result.table, result.editedId);
+                self.setPagesContent(result.pagination);
+            }
+        });
+
+        uploader.init();
     },
 
     initFilters: function () {
@@ -660,8 +683,14 @@ var DataTable = Class.extend({
         var self   = this;
         var fileId = $file.attr('data-id');
 
-        this.action('addImage', {fileId: fileId}, function () {
-            self.actionPage(self.getCurrentPage());
+        this.action('addImage', {fileId: fileId}, function (result) {
+            if(result.errors){
+                alert(result.errors.join("\n\n"));
+                return;
+            }
+
+            self.setTableContent(result.table, result.editedId);
+            self.setPagesContent(result.pagination);
         });
     },
 

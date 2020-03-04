@@ -3,7 +3,7 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\WebForm\DataForm\StorageData;
+use KikCMS\Classes\Finder\Finder;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\DataTableService;
 use KikCMS\Services\DataTable\RearrangeService;
@@ -62,31 +62,13 @@ class DataTableController extends RenderableController
     {
         $dataTable = $this->getRenderable();
         $fileId    = $this->request->getPost('fileId', 'int');
+        $editId    = $this->dataTableService->addImageDirectly((int) $fileId, $dataTable);
 
-        $model      = $dataTable->getModel();
-        $imageField = $dataTable->getDirectImageField();
-        $object     = $this->modelService->getObject($model);
-
-        $storageData = (new StorageData)
-            ->addFormInputValue($imageField, $fileId)
-            ->setTable($model)
-            ->setObject($object);
-
-        if($dataTable->isSortable()) {
-            $this->dataTableService->addDisplayOrderToStorageData($dataTable, $storageData);
-        }
-
-        $this->storageService->setStorageData($storageData);
-
-        $success = $this->storageService->store();
-
-        if ($success) {
-            $editId = $storageData->getEditId();
-        } else {
-            $editId = null;
-        }
-
-        return $this->response->setJsonContent(['editId' => $editId]);
+        return $this->response->setJsonContent([
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
+            'editedId'   => $editId,
+        ]);
     }
 
     /**
@@ -226,6 +208,35 @@ class DataTableController extends RenderableController
         return json_encode([
             'table'      => $dataTable->renderTable(),
             'pagination' => $dataTable->renderPagination(),
+        ]);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function uploadImageAction(): ResponseInterface
+    {
+        $finder    = new Finder();
+        $dataTable = $this->getRenderable();
+
+        $uploadedFiles = $this->request->getUploadedFiles();
+        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
+
+        if ($errors = $uploadStatus->getErrors()) {
+            return $this->response->setJsonContent(['errors' => $errors]);
+        }
+
+        $fileIds = $uploadStatus->getFileIds();
+        $editIds = [];
+
+        foreach ($fileIds as $fileId){
+            $editIds[] = $this->dataTableService->addImageDirectly($fileId, $dataTable);
+        }
+
+        return $this->response->setJsonContent([
+            'table'      => $dataTable->renderTable(),
+            'pagination' => $dataTable->renderPagination(),
+            'editedId'   => $editIds,
         ]);
     }
 
