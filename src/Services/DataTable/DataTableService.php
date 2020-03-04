@@ -6,15 +6,31 @@ namespace KikCMS\Services\DataTable;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\WebForm\DataForm\StorageData;
 use KikCMS\Services\Util\QueryService;
 use Monolog\Logger;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property QueryService $queryService
  */
 class DataTableService extends Injectable
 {
+    /**
+     * @param DataTable $dataTable
+     * @param StorageData $storageData
+     */
+    public function addDisplayOrderToStorageData(DataTable $dataTable, StorageData $storageData)
+    {
+        if ($dataTable->isSortableNewFirst()) {
+            $storageData->addAdditionalInputValue($dataTable->getSortableField(), 1);
+            $this->rearrangeService->makeRoomForFirst($dataTable->getModel());
+        } else {
+            $newValue = $this->rearrangeService->getMax($dataTable->getModel()) + 1;
+            $storageData->addAdditionalInputValue($dataTable->getSortableField(), $newValue);
+        }
+    }
+
     /**
      * @param DataTable $dataTable
      * @param int $id

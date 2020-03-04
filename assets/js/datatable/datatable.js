@@ -507,7 +507,7 @@ var DataTable = Class.extend({
     /**
      * Pick an image directly to add as a row to the DataTable
      */
-    actionPickImage: function(){
+    actionPickImage: function () {
         var self = this;
 
         var onPickFile = function ($file) {
@@ -648,7 +648,7 @@ var DataTable = Class.extend({
     /**
      * @return {boolean}
      */
-    contentHasChanged: function() {
+    contentHasChanged: function () {
         return this.currentFormInput != this.getFormSerialized();
     },
 
@@ -657,10 +657,11 @@ var DataTable = Class.extend({
      * @param $file
      */
     onPickFile: function ($file) {
+        var self   = this;
         var fileId = $file.attr('data-id');
 
-        this.action('addImage', {fileId: fileId}, function (response) {
-            console.log(response);
+        this.action('addImage', {fileId: fileId}, function () {
+            self.actionPage(self.getCurrentPage());
         });
     },
 

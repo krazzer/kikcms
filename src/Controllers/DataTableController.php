@@ -60,18 +60,21 @@ class DataTableController extends RenderableController
      */
     public function addImageAction(): ResponseInterface
     {
-        $fileId = $this->request->getPost('fileId', 'int');
+        $dataTable = $this->getRenderable();
+        $fileId    = $this->request->getPost('fileId', 'int');
 
-        $model      = $this->getRenderable()->getModel();
-        $imageField = $this->getRenderable()->getDirectImageField();
+        $model      = $dataTable->getModel();
+        $imageField = $dataTable->getDirectImageField();
         $object     = $this->modelService->getObject($model);
 
-        $storageData = new StorageData();
+        $storageData = (new StorageData)
+            ->addFormInputValue($imageField, $fileId)
+            ->setTable($model)
+            ->setObject($object);
 
-        $storageData->addFormInputValue($imageField, $fileId);
-
-        $storageData->setTable($model);
-        $storageData->setObject($object);
+        if($dataTable->isSortable()) {
+            $this->dataTableService->addDisplayOrderToStorageData($dataTable, $storageData);
+        }
 
         $this->storageService->setStorageData($storageData);
 

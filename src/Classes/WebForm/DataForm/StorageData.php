@@ -3,7 +3,6 @@
 namespace KikCMS\Classes\WebForm\DataForm;
 
 
-use KikCMS\Classes\WebForm\Field;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
@@ -103,9 +102,12 @@ class StorageData
      */
     public function getMainInput(): array
     {
+        if ( ! $this->fieldMap) {
+            return $this->getFormInput() + $this->additionalInput;
+        }
+
         $mainInput = [];
 
-        /** @var Field $field */
         foreach ($this->fieldMap as $key => $field) {
             if ($field->isDontStore() || $field instanceof DataTableField || $field instanceof ButtonField ||
                 $field instanceof HtmlField) {
@@ -119,9 +121,7 @@ class StorageData
             $mainInput[$key] = $this->formInput[$key];
         }
 
-        $mainInput += $this->additionalInput;
-
-        return $mainInput;
+        return $mainInput + $this->additionalInput;
     }
 
     /**
@@ -162,14 +162,6 @@ class StorageData
     {
         $this->additionalInput[$column] = $value;
         return $this;
-    }
-
-    /**
-     * @return FieldMap
-     */
-    public function getFieldMap(): FieldMap
-    {
-        return $this->fieldMap;
     }
 
     /**
@@ -260,9 +252,11 @@ class StorageData
     {
         $dataTableFields = [];
 
-        foreach ($this->fieldMap as $key => $field) {
-            if ($field instanceof DataTableField) {
-                $dataTableFields[$key] = $field;
+        if ($this->fieldMap) {
+            foreach ($this->fieldMap as $key => $field) {
+                if ($field instanceof DataTableField) {
+                    $dataTableFields[$key] = $field;
+                }
             }
         }
 
