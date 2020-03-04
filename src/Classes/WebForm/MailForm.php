@@ -28,8 +28,8 @@ abstract class MailForm extends WebForm
     {
         $subject = $this->translator->translateDefaultLanguage('mailForm.subject');
 
-        if($this->isSpam()){
-            return '*** SPAM *** ' . $subject;
+        if($spamScore = $this->getSpamScore()){
+            return $subject . ' (spamscore: ' . $spamScore . ')';
         }
 
         return $subject;
@@ -116,20 +116,17 @@ abstract class MailForm extends WebForm
     }
 
     /**
-     * @return bool
+     * @return float|null
      */
-    private function isSpam(): bool
+    private function getSpamScore(): ?float
     {
         foreach ($this->getFieldMap() as $field){
             if($field instanceof ReCaptchaField && $field->getVersion() == 3){
                 $response = $this->reCaptcha->verify($this->getInput()[$field->getKey()], $_SERVER['REMOTE_ADDR']);
-
-                if($response->getScore() <= 0.5){
-                    return true;
-                }
+                return $response->getScore();
             }
         }
 
-        return false;
+        return null;
     }
 }
