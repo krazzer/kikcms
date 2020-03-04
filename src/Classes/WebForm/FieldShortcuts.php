@@ -6,7 +6,9 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Phalcon\Validator\ImageFileType;
 use KikCMS\Classes\Phalcon\Validator\ReCaptcha;
+use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
+use KikCMS\Classes\WebForm\DataForm\DataFormFilters;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
@@ -149,6 +151,21 @@ trait FieldShortcuts
     }
 
     /**
+     * Add a field where you can choose a CMS pagw with
+     *
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field|HtmlField
+     */
+    public function addPagepickerField(string $key, ?string $label, array $validators = []): Field
+    {
+        $urlsRoute = '/cms/get-urls/' . $this->getFilters()->getLanguageCode();
+
+        return $this->addAutoCompleteField($key, $label, $urlsRoute, $validators);
+    }
+
+    /**
      * @param string $key
      * @param string $label
      * @param array $validators
@@ -274,5 +291,14 @@ trait FieldShortcuts
     public function addHiddenField(string $key, $defaultValue = null): Field
     {
         return $this->addField(new HiddenField($key, $defaultValue));
+    }
+
+    /**
+     * @inheritDoc
+     * @return Filters|DataFormFilters
+     */
+    public function getFilters(): Filters
+    {
+        return parent::getFilters();
     }
 }
