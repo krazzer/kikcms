@@ -4,23 +4,6 @@ var WebForm = Class.extend({
     parent: null,
 
     /**
-     * Load a File selection window
-     * @param $field
-     */
-    openFilePickerWindow: function ($field) {
-        var self              = this;
-        var $filePickerWindow = this.getFilePickerWindow();
-
-        $filePickerWindow.on('click', '.buttons .cancel', function () {
-            self.closeFilePickerWindow($field);
-        });
-
-        KikCMS.action('/cms/webform/getFinder', {}, function (result) {
-            self.initFilePickerWindow(result.finder, $field);
-        });
-    },
-
-    /**
      * @param $field
      * @param fileId
      * @param result
@@ -56,28 +39,15 @@ var WebForm = Class.extend({
 
     /**
      * @param $field
-     * @param fileId
-     * @param onComplete
      */
-    actionPickFile: function ($field, fileId, onComplete) {
+    createFilePicker: function ($field) {
         var self = this;
 
-        KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {
-            self.actionPreview($field, fileId, result, onComplete);
-        });
-    },
+        var onPickFile = function ($file) {
+            self.onPickFile($file, $field);
+        };
 
-    /**
-     * Close the filePicker window
-     * @param $field
-     */
-    closeFilePickerWindow: function ($field) {
-        var $uploadButton     = this.getUploadButtonForFileField($field);
-        var $filePickerWindow = this.getFilePickerWindow();
-
-        KikCMS.windowManager.closeWindow($filePickerWindow, function () {
-            $uploadButton.removeClass('disabled');
-        });
+        return new FilePicker(this.renderableInstance, this.getWebForm(), onPickFile);
     },
 
     /**
@@ -197,74 +167,10 @@ var WebForm = Class.extend({
                     return;
                 }
 
-                self.openFilePickerWindow($field);
+                self.filePicker = self.createFilePicker($field);
+                self.filePicker.open();
             });
         });
-    },
-
-    /**
-     * Initialize the file picker window
-     */
-    initFilePickerWindow: function (finderContent, $field) {
-        var self    = this;
-        var $window = this.getFilePickerWindow();
-
-        var $filePicker = $window.find('.windowContent');
-
-        $filePicker.html(finderContent);
-        $filePicker.unbind('pick');
-        $filePicker.unbind('selectionChange');
-
-        $(window).unbind('keypress.' + this.renderableInstance);
-
-        var $finderPickButton = $window.find('.pick-file');
-
-        KikCMS.windowManager.showWindow($window);
-
-        this.initFilePickerWindowSize();
-        $(window).resize(this.initFilePickerWindowSize.bind(this));
-
-        $filePicker.on("pick", '.file', function (e, onComplete) {
-            self.onPickFile($(this), $field, onComplete);
-        });
-
-        $filePicker.on("selectionChange", '.file', function () {
-            if ($filePicker.find('.file.selected:not(.folder)').length >= 1) {
-                $finderPickButton.removeClass('disabled');
-            } else {
-                $finderPickButton.addClass('disabled');
-            }
-        });
-
-        $finderPickButton.click(function () {
-            if (!$finderPickButton.hasClass('disabled')) {
-                self.onPickFile($filePicker.find('.file.selected'), $field);
-            }
-        });
-
-        var keyPressEvent = function (e) {
-            if (e.keyCode == keyCode.ESCAPE && $window.is(':visible')) {
-                KikCMS.windowManager.closeWindow($window);
-            }
-        };
-
-        $(window).bind('keypress.' + this.renderableInstance, keyPressEvent);
-    },
-
-    /**
-     * Set file-picker container height
-     */
-    initFilePickerWindowSize: function(){
-        var $window = this.getFilePickerWindow();
-
-        var $footer = $window.find('.windowContent > .footer');
-        var $header = $window.find('.windowContent > .header');
-
-        var windowHeight = $window.height();
-        var headerHeight = $header.outerHeight();
-        var footerHeight = $footer.outerHeight();
-
-        $window.find('.files').css('height', windowHeight - headerHeight - footerHeight - 132);
     },
 
     /**
@@ -419,13 +325,6 @@ var WebForm = Class.extend({
     },
 
     /**
-     * @return {jQuery|HTMLElement}
-     */
-    getFilePickerWindow: function () {
-        return KikCMS.windowManager.getWindow('finder', this.getWebForm());
-    },
-
-    /**
      * Get URL for TinyMCE links
      * @return {string}
      */
@@ -479,6 +378,24 @@ var WebForm = Class.extend({
     },
 
     /**
+     * Action when a file is picked
+     * @param $file
+     * @param $field
+     */
+    onPickFile: function ($file, $field) {
+        var self          = this;
+        var fileId        = $file.attr('data-id');
+        var $uploadButton = this.getUploadButtonForFileField($field);
+
+        $file.removeClass('selected');
+        $uploadButton.removeClass('disabled');
+
+        KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {
+            self.actionPreview($field, fileId, result);
+        });
+    },
+
+    /**
      * Remove extention from a filename
      *
      * @param filename
@@ -486,22 +403,5 @@ var WebForm = Class.extend({
      */
     removeExtension: function (filename) {
         return filename.replace(/\.[^/.]+$/, "");
-    },
-
-    /**
-     * Action when a file is picked
-     * @param $file
-     * @param $field
-     * @param onComplete
-     */
-    onPickFile: function ($file, $field, onComplete) {
-        var selectedFileId = $file.attr('data-id');
-        var $uploadButton  = this.getUploadButtonForFileField($field);
-
-        $file.removeClass('selected');
-        $uploadButton.removeClass('disabled');
-
-        this.actionPickFile($field, selectedFileId, onComplete);
-        this.closeFilePickerWindow($field);
     }
 });

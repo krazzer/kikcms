@@ -11,6 +11,7 @@ var DataTable = Class.extend({
     sortDirection: null,
     sortColumn: null,
     restore: null,
+    filePicker: null,
     $table: null,
 
     getDeleteConfirmMessage: function (amount) {
@@ -503,143 +504,19 @@ var DataTable = Class.extend({
         });
     },
 
-/************************************************
-* must be refactored to separate class from here
-*************************************************/
-
-
     /**
      * Pick an image directly to add as a row to the DataTable
      */
     actionPickImage: function(){
-        var self              = this;
-        var $filePickerWindow = this.getFilePickerWindow();
-
-        $filePickerWindow.on('click', '.buttons .cancel', function () {
-            self.closeFilePickerWindow();
-        });
-
-        KikCMS.action('/cms/webform/getFinder', {}, function (result) {
-            self.initFilePickerWindow(result.finder);
-        });
-    },
-
-    /**
-     * Get the filePicker window
-     */
-    getFilePickerWindow: function () {
-        return KikCMS.windowManager.getWindow(this.instance + 'FilePicker', this.getDataTable());
-    },
-
-    /**
-     * Close the filePicker window
-     */
-    closeFilePickerWindow: function () {
-        var $filePickerWindow = this.getFilePickerWindow();
-
-        KikCMS.windowManager.closeWindow($filePickerWindow);
-    },
-
-    /**
-     * Initialize the file picker window
-     */
-    initFilePickerWindow: function (finderContent) {
-        var self    = this;
-        var $window = this.getFilePickerWindow();
-
-        var $filePicker = $window.find('.windowContent');
-
-        $filePicker.html(finderContent);
-        $filePicker.unbind('pick');
-        $filePicker.unbind('selectionChange');
-
-        $(window).unbind('keypress.' + this.renderableInstance);
-
-        var $finderPickButton = $window.find('.pick-file');
-
-        KikCMS.windowManager.showWindow($window);
-
-        this.initFilePickerWindowSize();
-        $(window).resize(this.initFilePickerWindowSize.bind(this));
-
-        $filePicker.on("pick", '.file', function (e, onComplete) {
-            self.onPickFile($(this), null, onComplete);
-        });
-
-        $filePicker.on("selectionChange", '.file', function () {
-            if ($filePicker.find('.file.selected:not(.folder)').length >= 1) {
-                $finderPickButton.removeClass('disabled');
-            } else {
-                $finderPickButton.addClass('disabled');
-            }
-        });
-
-        $finderPickButton.click(function () {
-            if (!$finderPickButton.hasClass('disabled')) {
-                self.onPickFile($filePicker.find('.file.selected'));
-            }
-        });
-
-        var keyPressEvent = function (e) {
-            if (e.keyCode == keyCode.ESCAPE && $window.is(':visible')) {
-                KikCMS.windowManager.closeWindow($window);
-            }
-        };
-
-        $(window).bind('keypress.' + this.renderableInstance, keyPressEvent);
-    },
-
-    /**
-     * Set file-picker container height
-     */
-    initFilePickerWindowSize: function(){
-        var $window = this.getFilePickerWindow();
-
-        var $footer = $window.find('.windowContent > .footer');
-        var $header = $window.find('.windowContent > .header');
-
-        var windowHeight = $window.height();
-        var headerHeight = $header.outerHeight();
-        var footerHeight = $footer.outerHeight();
-
-        $window.find('.files').css('height', windowHeight - headerHeight - footerHeight - 132);
-    },
-
-    /**
-     * Action when a file is picked
-     * @param $file
-     * @param $field
-     * @param onComplete
-     */
-    onPickFile: function ($file, $field, onComplete) {
-        var selectedFileId = $file.attr('data-id');
-
-        $file.removeClass('selected');
-
-        this.actionPickFile($field, selectedFileId, onComplete);
-        this.closeFilePickerWindow($field);
-    },
-
-    /**
-     * @param $field
-     * @param fileId
-     * @param onComplete
-     */
-    actionPickFile: function ($field, fileId, onComplete) {
         var self = this;
 
-        this.action('addImage', {fileId: fileId}, function (response) {
-            console.log(response);
-        });
+        var onPickFile = function ($file) {
+            self.onPickFile($file)
+        };
 
-        // KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {
-        //     self.actionPreview($field, fileId, result, onComplete);
-        // });
+        this.filePicker = new FilePicker(this.renderableInstance, this.getDataTable(), onPickFile);
+        this.filePicker.open();
     },
-
-/************************************************
-* till HERE
-*************************************************/
 
     actionReload: function (onSuccess) {
         var self    = this;
@@ -773,6 +650,18 @@ var DataTable = Class.extend({
      */
     contentHasChanged: function() {
         return this.currentFormInput != this.getFormSerialized();
+    },
+
+    /**
+     * Action when a file is picked
+     * @param $file
+     */
+    onPickFile: function ($file) {
+        var fileId = $file.attr('data-id');
+
+        this.action('addImage', {fileId: fileId}, function (response) {
+            console.log(response);
+        });
     },
 
     onRowClick: function ($row) {
