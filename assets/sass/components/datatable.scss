@@ -45,6 +45,10 @@ body {
             border-radius: $defaultBorderRadius;
             border: 1px solid $lightGray;
         }
+
+        &.svg{
+            width: 96px;
+        }
     }
 
     &.noSelect {

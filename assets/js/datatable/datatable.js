@@ -98,7 +98,7 @@ var DataTable = Class.extend({
                 return formData;
             },
             onSuccess: function (result) {
-                if(result.errors){
+                if (result.errors) {
                     alert(result.errors.join("\n\n"));
                     return;
                 }
@@ -142,8 +142,12 @@ var DataTable = Class.extend({
 
                 positionThumb(e);
 
+                var thumbUrl = $thumb.attr('data-thumb-url');
+                var isSvg    = thumbUrl.split("?")[0].endsWith('.svg');
+
+                $thumbHoverContainer.toggleClass('svg', isSvg);
                 $thumbHoverContainer.show();
-                $thumbHoverContainer.html('<img alt="thumb" src="' + $thumb.attr('data-thumb-url') + '" />');
+                $thumbHoverContainer.html('<img alt="thumb" src="' + thumbUrl + '" />');
             }, function () {
                 self.getThumbHoverContainer().hide();
             });
@@ -684,7 +688,7 @@ var DataTable = Class.extend({
         var fileId = $file.attr('data-id');
 
         this.action('addImage', {fileId: fileId}, function (result) {
-            if(result.errors){
+            if (result.errors) {
                 alert(result.errors.join("\n\n"));
                 return;
             }
