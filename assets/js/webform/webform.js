@@ -74,30 +74,34 @@ var WebForm = Class.extend({
             var route    = $field.attr('data-route');
 
             KikCMS.action(route, {
-                field: fieldKey,
-                renderableInstance: self.renderableInstance,
-                renderableClass: self.renderableClass
-            }, function (data) {
-                var substringMatcher = function (strs) {
-                    return function findMatches(q, cb) {
-                        var matches     = [];
-                        var substrRegex = new RegExp(q, 'i');
+                field: fieldKey, renderableInstance: self.renderableInstance, renderableClass: self.renderableClass
+            }, self.initAutocompleteFields(data, $field));
+        });
+    },
 
-                        $.each(strs, function (i, str) {
-                            if (substrRegex.test(str)) {
-                                matches.push(str);
-                            }
-                        });
+    /**
+     * @param data
+     * @param $field
+     */
+    initAutocompleteData: function (data, $field) {
+        var substringMatcher = function (strs) {
+            return function findMatches(q, cb) {
+                var matches     = [];
+                var substrRegex = new RegExp(q, 'i');
 
-                        cb(matches);
-                    };
-                };
-
-                $field.typeahead({hint: true, highlight: true}, {
-                    limit: 10,
-                    source: substringMatcher(data)
+                $.each(strs, function (i, str) {
+                    if (substrRegex.test(str)) {
+                        matches.push(str);
+                    }
                 });
-            });
+
+                cb(matches);
+            };
+        };
+
+        $field.typeahead({hint: true, highlight: true}, {
+            limit: 10,
+            source: substringMatcher(data)
         });
     },
 
