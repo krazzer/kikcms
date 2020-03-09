@@ -73,9 +73,15 @@ var WebForm = Class.extend({
             var fieldKey = $field.attr('data-field-key');
             var route    = $field.attr('data-route');
 
-            KikCMS.action(route, {
-                field: fieldKey, renderableInstance: self.renderableInstance, renderableClass: self.renderableClass
-            }, self.initAutocompleteFields(data, $field));
+            var params = {
+                field: fieldKey,
+                renderableInstance: self.renderableInstance,
+                renderableClass: self.renderableClass
+            };
+
+            KikCMS.action(route, params, function (data) {
+                self.initAutocompleteData(data, $field);
+            });
         });
     },
 
@@ -126,7 +132,7 @@ var WebForm = Class.extend({
                 $field.datetimepicker('defaultDate', defaultDate);
 
                 // setting the default date also sets the value, so clear if it was empty before
-                if (!value) {
+                if ( ! value) {
                     $field.val('');
                 }
             }
@@ -303,7 +309,7 @@ var WebForm = Class.extend({
 
                     var $file = $filePicker.find('.file.selected');
 
-                    if (!$file.length) {
+                    if ( ! $file.length) {
                         return false;
                     }
 
@@ -335,13 +341,13 @@ var WebForm = Class.extend({
     getLinkListUrl: function () {
         var linkListUrl = '/cms/getTinyMceLinks/';
 
-        if (!this.parent) {
+        if ( ! this.parent) {
             return linkListUrl;
         }
 
         var languageCode = this.parent.getWindowLanguageCode();
 
-        if (!languageCode) {
+        if ( ! languageCode) {
             return linkListUrl;
         }
 
