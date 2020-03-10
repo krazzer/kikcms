@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Tab;
 use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\WebForm\RelationKeyService;
@@ -61,6 +62,20 @@ abstract class DataForm extends WebForm
      * @return string
      */
     public abstract function getModel(): string;
+
+    /**
+     * @inheritDoc
+     */
+    public function addField(Field $field, Tab $tab = null): Field
+    {
+        $field = parent::addField($field, $tab);
+
+        foreach ($field->getTransformers() as $transformer){
+            $this->addFieldTransformer($transformer);
+        }
+
+        return $field;
+    }
 
     /**
      * @param FieldTransformer $fieldTransformer

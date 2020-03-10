@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm;
 
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
+use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\Section;
 use Phalcon\Forms\Element;
 use Phalcon\Forms\ElementInterface;
@@ -44,6 +45,9 @@ abstract class Field
 
     /** @var array */
     private $cssClasses = [];
+
+    /** @var FieldTransformer[] */
+    private $transformers = [];
 
     /** @var Tab */
     private $tab;
@@ -333,5 +337,23 @@ abstract class Field
         $this->dontStore = true;
 
         return $this;
+    }
+
+    /**
+     * @param string $className
+     * @return Field
+     */
+    public function addTransformer(string $className): Field
+    {
+        $this->transformers[] = new $className($this);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTransformers(): array
+    {
+        return $this->transformers;
     }
 }
