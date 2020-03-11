@@ -3,8 +3,10 @@
 namespace KikCMS\Services\Finder;
 
 
+use Exception;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
+use KikCMS\Classes\Finder\UploadStatus;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
@@ -602,6 +604,78 @@ class FileService extends Injectable
         }
 
         return implode('/', $relPath);
+    }
+
+    /**
+     * @param UploadedFile $uploadedFile
+     * @return bool
+     */
+    public function mimeTypeAllowed(UploadedFile $uploadedFile): bool
+    {
+        $allowedMimes = MimeConfig::UPLOAD_ALLOW_DEFAULT;
+        $fileMimeType = $uploadedFile->getRealType();
+        $extension    = $uploadedFile->getExtension();
+        $extension    = strtolower($extension);
+
+        // check if the extension is allowed
+        if ( ! in_array($extension, $allowedMimes)) {
+            return false;
+        }
+
+        // check if the file's mime matches it's extension
+        return in_array($fileMimeType, MimeConfig::ALL_MIME_TYPES[$extension]);
+    }
+
+    /**
+     * @param UploadedFile[] $files
+     * @param int|null $folderId
+     * @param int|null $overwriteFileId
+     * @return UploadStatus
+     */
+    public function uploadFiles(array $files, int $folderId = null, int $overwriteFileId = null): UploadStatus
+    {
+        $uploadStatus = new UploadStatus();
+
+        if ($overwriteFileId && count($files) !== 1) {
+            throw new Exception('When overwriting, only 1 file is allowed to upload');
+        }
+
+        foreach ($files as $index => $file) {
+            if ($file->getError()) {
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
+            if ( ! $this->mimeTypeAllowed($file)) {
+                $message = $this->translator->tl('media.upload.error.mime', [
+                    'extension' => $file->getExtension(),
+                    'fileName'  => $file->getName()
+                ]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
+            if ($overwriteFileId) {
+                if ($this->fileService->overwrite($file, $overwriteFileId)) {
+                    $newFileId = $overwriteFileId;
+                } else {
+                    $newFileId = false;
+                }
+            } else {
+                $newFileId = $this->fileService->create($file, $folderId);
+            }
+
+            if ( ! $newFileId) {
+                $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
+            $uploadStatus->addFileId($newFileId);
+        }
+
+        return $uploadStatus;
     }
 
     /**

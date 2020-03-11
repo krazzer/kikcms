@@ -45,7 +45,7 @@ class WebFormController extends RenderableController
         $finder = new Finder();
         $finder->setPickingMode(true);
 
-        if($this->request->getPost('multi')){
+        if ($this->request->getPost('multi')) {
             $finder->setMultiPick(true);
         }
 
@@ -61,14 +61,9 @@ class WebFormController extends RenderableController
      */
     public function uploadAndPreviewAction()
     {
-        $finder = new Finder();
-
-        if ($folderId = $this->request->getPost('folderId')) {
-            $finder->getFilters()->setFolderId((int)$folderId);
-        }
-
+        $folderId      = $this->request->getPost('folderId', 'int') ?: null;
         $uploadedFiles = $this->request->getUploadedFiles();
-        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
+        $uploadStatus  = $this->fileService->uploadFiles($uploadedFiles, $folderId);
         $fileIds       = $uploadStatus->getFileIds();
 
         $fileId = isset($fileIds[0]) ? $fileIds[0] : null;
@@ -79,7 +74,7 @@ class WebFormController extends RenderableController
         ];
 
         if ($file = File::getById($fileId)) {
-            $result['preview']    = $finder->renderFilePreview($file);
+            $result['preview']    = (new Finder)->renderFilePreview($file);
             $result['dimensions'] = $this->fileService->getThumbDimensions($file);
             $result['name']       = $file->getName();
         }

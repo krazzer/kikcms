@@ -3,7 +3,6 @@
 namespace KikCMS\Controllers;
 
 
-use KikCMS\Classes\Finder\Finder;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\DataTableService;
 use KikCMS\Services\DataTable\RearrangeService;
@@ -228,11 +227,10 @@ class DataTableController extends RenderableController
      */
     public function uploadImagesAction(): ResponseInterface
     {
-        $finder    = new Finder();
         $dataTable = $this->getRenderable();
 
         $uploadedFiles = $this->request->getUploadedFiles();
-        $uploadStatus  = $finder->uploadFiles($uploadedFiles);
+        $uploadStatus  = $this->fileService->uploadFiles($uploadedFiles);
 
         if ($errors = $uploadStatus->getErrors()) {
             return $this->response->setJsonContent(['errors' => $errors]);

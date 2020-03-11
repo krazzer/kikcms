@@ -2,35 +2,13 @@
 
 namespace KikCMS\Controllers;
 
-use KikCMS\Services\Finder\FileRemoveService;
-use KikCMS\Classes\Phalcon\AccessControl;
-use KikCMS\Services\Finder\FilePermissionService;
-use KikCMS\Services\Pages\PageContentService;
-use KikCMS\Services\TwigService;
-use KikCMS\Services\UserService;
-use KikCmsCore\Services\DbService;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
-use KikCMS\Services\Finder\FileService;
-use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Renderable\Renderable;
-use KikCMS\Classes\Translator;
 use KikCMS\Models\File;
 use Phalcon\Http\ResponseInterface;
 
-/**
- * @property AccessControl $acl
- * @property DbService $dbService
- * @property FileService $fileService
- * @property FileRemoveService $fileRemoveService
- * @property Translator $translator
- * @property MediaResizeBase $mediaResize
- * @property UserService $userService
- * @property FilePermissionService $filePermissionService
- * @property PageContentService $pageContentService
- * @property TwigService $twigService
- */
 class FinderController extends RenderableController
 {
     /**
@@ -221,7 +199,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        $uploadStatus = $finder->uploadFiles($uploadedFiles, $overwriteFileId);
+        $uploadStatus = $this->fileService->uploadFiles($uploadedFiles, $folderId, $overwriteFileId);
 
         return json_encode([
             'files'   => $finder->renderFiles(),
