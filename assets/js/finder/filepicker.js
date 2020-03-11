@@ -2,16 +2,19 @@ var FilePicker = Class.extend({
     instance: null,
     $element: null,
     onPickFile: null,
+    multi: false,
 
     /**
      * @param instance
      * @param $element
      * @param onPickFile
+     * @param multi
      */
-    construct: function (instance, $element, onPickFile) {
+    construct: function (instance, $element, onPickFile, multi) {
         this.instance   = instance;
         this.onPickFile = onPickFile;
         this.$element   = $element;
+        this.multi      = multi;
     },
 
     /**
@@ -48,15 +51,23 @@ var FilePicker = Class.extend({
         });
 
         $windowContent.on("selectionChange", '.file', function () {
-            if ($windowContent.find('.file.selected:not(.folder)').length >= 1) {
+            var selectedAmount = $windowContent.find('.file.selected:not(.folder)').length;
+
+            if (selectedAmount >= 1) {
                 $pickButton.removeClass('disabled');
             } else {
                 $pickButton.addClass('disabled');
             }
+
+            if(selectedAmount > 1){
+                $pickButton.find('.amount').html(' (' + selectedAmount + ')');
+            } else {
+                $pickButton.find('.amount').html('');
+            }
         });
 
         $pickButton.click(function () {
-            if (!$pickButton.hasClass('disabled')) {
+            if ( ! $pickButton.hasClass('disabled')) {
                 self.pickFile($windowContent.find('.file.selected'));
             }
         });
@@ -98,7 +109,7 @@ var FilePicker = Class.extend({
             self.close();
         });
 
-        KikCMS.action('/cms/webform/getFinder', {}, function (result) {
+        KikCMS.action('/cms/webform/getFinder', {multi: this.multi}, function (result) {
             self.initWindow(result.finder);
         });
     },
@@ -106,7 +117,7 @@ var FilePicker = Class.extend({
     /**
      * @param $file
      */
-    pickFile: function($file){
+    pickFile: function ($file) {
         $file.removeClass('selected');
 
         this.onPickFile($file);

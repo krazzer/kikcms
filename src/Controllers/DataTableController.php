@@ -64,18 +64,22 @@ class DataTableController extends RenderableController
 
         $dataTable->initializeDatatable();
 
-        $fileId = (int) $this->request->getPost('fileId', 'int');
+        $fileIds = (array) $this->request->getPost('fileIds', 'int');
 
-        if ($errors = $this->dataTableService->validateDirectImage($dataTable)) {
+        if ($errors = $this->dataTableService->validateDirectImage($fileIds, $dataTable)) {
             return $this->response->setJsonContent(['errors' => $errors]);
         }
 
-        $editId = $this->dataTableService->addImageDirectly($fileId, $dataTable);
+        $editIds = [];
+
+        foreach ($fileIds as $fileId) {
+            $fileIds[] = $this->dataTableService->addImageDirectly((int) $fileId, $dataTable);
+        }
 
         return $this->response->setJsonContent([
             'table'      => $dataTable->renderTable(),
             'pagination' => $dataTable->renderPagination(),
-            'editedId'   => $editId,
+            'editedIds'  => $editIds,
         ]);
     }
 

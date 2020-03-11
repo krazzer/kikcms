@@ -3,6 +3,7 @@ var Finder = Class.extend({
     renderableClass: null,
     shiftKeyPressed: false,
     pickingMode: false,
+    multiPick: false,
     cutFileIds: [],
     permission: null,
 
@@ -184,7 +185,7 @@ var Finder = Class.extend({
 
             // select a file
             $fileSelectables.click(function (e) {
-                if (!self.shiftKeyPressed || self.pickingMode) {
+                if (!self.shiftKeyPressed || (self.pickingMode && !self.multiPick)) {
                     $fileContainer.find('.file.selected').removeClass('selected');
                 }
 

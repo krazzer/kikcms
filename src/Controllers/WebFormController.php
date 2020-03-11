@@ -45,6 +45,10 @@ class WebFormController extends RenderableController
         $finder = new Finder();
         $finder->setPickingMode(true);
 
+        if($this->request->getPost('multi')){
+            $finder->setMultiPick(true);
+        }
+
         return json_encode([
             'finder' => $this->view->getPartial('webform/finder', [
                 'finder' => $finder->render()

@@ -123,21 +123,24 @@ class DataTableService extends Injectable
     }
 
     /**
+     * @param array $fileIds
      * @param DataTable $dataTable
      * @return array
      */
-    public function validateDirectImage(DataTable $dataTable): array
+    public function validateDirectImage(array $fileIds, DataTable $dataTable): array
     {
-        foreach ($dataTable->getDirectImageValidators() as $validator) {
-            $this->validation->add('fileId', $validator);
-        }
-
         $messageArray = [];
 
-        $messages = $this->validation->validate($this->request->getPost());
+        foreach ($fileIds as $fileId){
+            foreach ($dataTable->getDirectImageValidators() as $validator) {
+                $this->validation->add('fileId', $validator);
+            }
 
-        foreach ($messages as $message){
-            $messageArray[] = str_replace(':label ', '', $message->getMessage());
+            $messages = $this->validation->validate(['fileId' => $fileId]);
+
+            foreach ($messages as $message){
+                $messageArray[] = str_replace(':label ', '', $message->getMessage());
+            }
         }
 
         return $messageArray;

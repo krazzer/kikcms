@@ -167,7 +167,7 @@ var DataTable = Class.extend({
 
         var keyDownEvent = function (e) {
             if ((e.metaKey || e.ctrlKey) && e.keyCode == keyCode.S) {
-                if (!self.windowIsActive() || !self.getForm().length || !self.getWindow().find('.saveAndClose').length) {
+                if ( ! self.windowIsActive() || ! self.getForm().length || ! self.getWindow().find('.saveAndClose').length) {
                     return true;
                 }
 
@@ -179,7 +179,7 @@ var DataTable = Class.extend({
 
         var keyPressEvent = function (e) {
             if (e.keyCode == keyCode.ESCAPE) {
-                if (!self.windowIsActive() || !self.getForm().length) {
+                if ( ! self.windowIsActive() || ! self.getForm().length) {
                     return true;
                 }
 
@@ -541,7 +541,7 @@ var DataTable = Class.extend({
             self.onPickFile($file)
         };
 
-        this.filePicker = new FilePicker(this.renderableInstance, this.getDataTable(), onPickFile);
+        this.filePicker = new FilePicker(this.renderableInstance, this.getDataTable(), onPickFile, true);
         this.filePicker.open();
     },
 
@@ -648,7 +648,7 @@ var DataTable = Class.extend({
         }
 
         if (this.contentHasChanged()) {
-            if (!confirm(KikCMS.tl('dataTable.closeWarning'))) {
+            if ( ! confirm(KikCMS.tl('dataTable.closeWarning'))) {
                 return;
             }
         }
@@ -680,20 +680,23 @@ var DataTable = Class.extend({
     },
 
     /**
-     * Action when a file is picked
-     * @param $file
+     * Action when files are picked
+     * @param $files
      */
-    onPickFile: function ($file) {
-        var self   = this;
-        var fileId = $file.attr('data-id');
+    onPickFile: function ($files) {
+        var self = this;
 
-        this.action('addImage', {fileId: fileId}, function (result) {
+        var fileIds = $files.map(function () {
+            return $(this).data('id');
+        }).get();
+
+        this.action('addImage', {fileIds: fileIds}, function (result) {
             if (result.errors) {
                 alert(result.errors.join("\n\n"));
                 return;
             }
 
-            self.setTableContent(result.table, result.editedId);
+            self.setTableContent(result.table, result.editedIds);
             self.setPagesContent(result.pagination);
         });
     },
@@ -715,7 +718,7 @@ var DataTable = Class.extend({
     setEdited: function (rowId) {
         var self = this;
 
-        if(Array.isArray(rowId)){
+        if (Array.isArray(rowId)) {
             $.each(rowId, function (i, subRowId) {
                 var $editedRow = self.getDataTable().find("table tr[data-id=" + subRowId + "]");
                 $editedRow.addClass('edited');
@@ -736,7 +739,7 @@ var DataTable = Class.extend({
             }, 500);
         }, 5000);
 
-        if (!$editedRow.length) {
+        if ( ! $editedRow.length) {
             return;
         }
 
@@ -769,7 +772,7 @@ var DataTable = Class.extend({
 
         this.initTable();
 
-        if (!editedId) {
+        if ( ! editedId) {
             return;
         }
 
@@ -800,7 +803,7 @@ var DataTable = Class.extend({
     getCurrentPage: function () {
         var currentPage = this.getDataTable().find('.pagination .active a').attr('data-page');
 
-        if (!currentPage) {
+        if ( ! currentPage) {
             return 1;
         }
 
@@ -908,7 +911,7 @@ var DataTable = Class.extend({
             formSerialized = self.getFormSerialized();
         }).change(function () {
             if (warning) {
-                if (self.currentFormInput != formSerialized && !confirm(KikCMS.tl('dataTable.switchWarning'))) {
+                if (self.currentFormInput != formSerialized && ! confirm(KikCMS.tl('dataTable.switchWarning'))) {
                     $field.val(currentValue);
                     return;
                 }
@@ -933,6 +936,6 @@ var DataTable = Class.extend({
      * @return {boolean}
      */
     windowIsActive: function () {
-        return !this.getWindow().hasClass('blur');
+        return ! this.getWindow().hasClass('blur');
     }
 });

@@ -50,6 +50,9 @@ class Finder extends Renderable
     /** @var bool */
     private $pickingMode = false;
 
+    /** @var bool */
+    private $multiPick = false;
+
     /**
      * Adds html/css required for finder
      */
@@ -63,7 +66,7 @@ class Finder extends Renderable
      */
     public function allowedInCurrentFolder(): bool
     {
-        if( ! $folderId = $this->getFilters()->getFolderId()){
+        if ( ! $folderId = $this->getFilters()->getFolderId()) {
             return true;
         }
 
@@ -247,6 +250,22 @@ class Finder extends Renderable
     }
 
     /**
+     * @return bool
+     */
+    public function isMultiPick(): bool
+    {
+        return $this->multiPick;
+    }
+
+    /**
+     * @param bool $multiPick
+     */
+    public function setMultiPick(bool $multiPick): void
+    {
+        $this->multiPick = $multiPick;
+    }
+
+    /**
      * This method may contain logic that will influence the output when rendered
      */
     protected function initialize()
@@ -258,6 +277,9 @@ class Finder extends Renderable
      */
     protected function getJsProperties(): array
     {
-        return ['pickingMode' => $this->pickingMode];
+        return [
+            'pickingMode' => $this->pickingMode,
+            'multiPick'   => $this->isMultiPick(),
+        ];
     }
 }
