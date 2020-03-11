@@ -121,4 +121,25 @@ class DataTableService extends Injectable
             $dataTable->cacheNewId($editId);
         }
     }
+
+    /**
+     * @param DataTable $dataTable
+     * @return array
+     */
+    public function validateDirectImage(DataTable $dataTable): array
+    {
+        foreach ($dataTable->getDirectImageValidators() as $validator) {
+            $this->validation->add('fileId', $validator);
+        }
+
+        $messageArray = [];
+
+        $messages = $this->validation->validate($this->request->getPost());
+
+        foreach ($messages as $message){
+            $messageArray[] = str_replace(':label ', '', $message->getMessage());
+        }
+
+        return $messageArray;
+    }
 }

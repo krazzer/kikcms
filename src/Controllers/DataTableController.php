@@ -61,8 +61,16 @@ class DataTableController extends RenderableController
     public function addImageAction(): ResponseInterface
     {
         $dataTable = $this->getRenderable();
-        $fileId    = $this->request->getPost('fileId', 'int');
-        $editId    = $this->dataTableService->addImageDirectly((int) $fileId, $dataTable);
+
+        $dataTable->initializeDatatable();
+
+        $fileId = (int) $this->request->getPost('fileId', 'int');
+
+        if($errors = $this->dataTableService->validateDirectImage($dataTable)){
+            return $this->response->setJsonContent(['errors' => $errors]);
+        }
+
+        $editId = $this->dataTableService->addImageDirectly($fileId, $dataTable);
 
         return $this->response->setJsonContent([
             'table'      => $dataTable->renderTable(),
@@ -229,7 +237,7 @@ class DataTableController extends RenderableController
         $fileIds = $uploadStatus->getFileIds();
         $editIds = [];
 
-        foreach ($fileIds as $fileId){
+        foreach ($fileIds as $fileId) {
             $editIds[] = $this->dataTableService->addImageDirectly($fileId, $dataTable);
         }
 

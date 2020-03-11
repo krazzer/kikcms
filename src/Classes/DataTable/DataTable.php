@@ -25,6 +25,7 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Validation\Validator;
 
 /**
  * @property AccessControl $acl
@@ -68,6 +69,9 @@ abstract class DataTable extends Renderable
 
     /** @var false|string if set, the datatable will let you select or upload a file directly, using the set field */
     protected $directImageField = false;
+
+    /** @var Validator[] */
+    protected $directImageValidators = [];
 
     /** @var string */
     protected $instancePrefix = self::INSTANCE_PREFIX;
@@ -726,6 +730,14 @@ abstract class DataTable extends Renderable
     public function getDirectImageField()
     {
         return $this->directImageField;
+    }
+
+    /**
+     * @return Validator[]
+     */
+    public function getDirectImageValidators(): array
+    {
+        return $this->directImageValidators;
     }
 
     /**
