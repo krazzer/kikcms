@@ -91,7 +91,7 @@ var DataTable = Class.extend({
         var uploader = new FileUploader({
             $container: $uploadButton,
             $uploadButton: $uploadButton,
-            action: '/cms/datatable/uploadImage',
+            action: '/cms/datatable/uploadImages',
             addParametersBeforeUpload: function (formData) {
                 formData.append('renderableInstance', self.renderableInstance);
                 formData.append('renderableClass', self.renderableClass);
@@ -103,7 +103,7 @@ var DataTable = Class.extend({
                     return;
                 }
 
-                self.setTableContent(result.table, result.editedId);
+                self.setTableContent(result.table, result.editedIds);
                 self.setPagesContent(result.pagination);
             }
         });
@@ -713,8 +713,19 @@ var DataTable = Class.extend({
     },
 
     setEdited: function (rowId) {
-        var $editedRow = this.getDataTable().find("table tr[data-id=" + rowId + "]");
-        $editedRow.addClass('edited');
+        var self = this;
+
+        if(Array.isArray(rowId)){
+            $.each(rowId, function (i, subRowId) {
+                var $editedRow = self.getDataTable().find("table tr[data-id=" + subRowId + "]");
+                $editedRow.addClass('edited');
+            });
+
+            $editedRow = self.getDataTable().find("table tr[data-id=" + rowId[0] + "]");
+        } else {
+            var $editedRow = this.getDataTable().find("table tr[data-id=" + rowId + "]");
+            $editedRow.addClass('edited');
+        }
 
         setTimeout(function () {
             $editedRow.addClass('easeOutBgColor');

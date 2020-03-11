@@ -66,7 +66,7 @@ class DataTableController extends RenderableController
 
         $fileId = (int) $this->request->getPost('fileId', 'int');
 
-        if($errors = $this->dataTableService->validateDirectImage($dataTable)){
+        if ($errors = $this->dataTableService->validateDirectImage($dataTable)) {
             return $this->response->setJsonContent(['errors' => $errors]);
         }
 
@@ -222,7 +222,7 @@ class DataTableController extends RenderableController
     /**
      * @return ResponseInterface
      */
-    public function uploadImageAction(): ResponseInterface
+    public function uploadImagesAction(): ResponseInterface
     {
         $finder    = new Finder();
         $dataTable = $this->getRenderable();
@@ -244,7 +244,7 @@ class DataTableController extends RenderableController
         return $this->response->setJsonContent([
             'table'      => $dataTable->renderTable(),
             'pagination' => $dataTable->renderPagination(),
-            'editedId'   => $editIds,
+            'editedIds'  => $editIds,
         ]);
     }
 
