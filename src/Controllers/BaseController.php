@@ -23,12 +23,18 @@ class BaseController extends Controller
         $maxFileSizeString = $this->byteService->bytesToString($maxFileSize);
 
         $jsTranslations = [
-            'system.langCode',
-            'pages.warningTemplateChange',
-            'media.uploadMaxFilesWarning',
-            'media.uploadMaxFileSizeWarning',
-            'media.fileTypeWarning',
+            'system.langCode', 'pages.warningTemplateChange', 'media.uploadMaxFilesWarning',
+            'media.uploadMaxFileSizeWarning', 'media.fileTypeWarning', 'media.deleteConfirm', 'media.deleteConfirmOne',
+            'media.createFolder', 'media.defaultFolderName', 'media.editFileName','dataTable.delete.confirmOne',
+            'dataTable.delete.confirm', 'dataTable.closeWarning', 'dataTable.switchWarning', 'dataTable.restoreConfirm',
+            'statistics.fetchingNewData', 'statistics.fetchingFailed', 'statistics.fetchNewData', 'statistics.visitors',
         ];
+
+        $translations = [];
+
+        foreach ($jsTranslations as $translation) {
+            $translations[$translation] = $this->translator->tl($translation);
+        }
 
         $jsSettings = [
             'isDev'             => $this->config->isDev(),
@@ -36,14 +42,13 @@ class BaseController extends Controller
             'maxFileUploads'    => $maxFileUploads,
             'maxFileSize'       => $maxFileSize,
             'maxFileSizeString' => $maxFileSizeString,
+            'translations'      => $translations,
         ];
 
         $this->view->setVar("flash", $this->flash);
         $this->view->setVar("baseUri", $this->url->getBaseUri());
         $this->view->setVar("langCode", $this->translator->tl('system.langCode'));
         $this->view->setVar("cmsTitlePrefix", $this->config->application->cmsTitlePrefix);
-        $this->view->setVar("jsTranslations", $jsTranslations);
-        $this->view->setVar("jsSettings", $jsSettings);
         $this->view->setVar("jsSettings", $jsSettings);
     }
 

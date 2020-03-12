@@ -135,13 +135,6 @@ class CmsController extends BaseCmsController
             $startDate = null;
         }
 
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, [
-            'statistics.fetchingNewData',
-            'statistics.fetchingFailed',
-            'statistics.fetchNewData',
-            'statistics.visitors',
-        ]);
-
         $this->view->settings = [
             'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
             'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,

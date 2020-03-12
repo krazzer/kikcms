@@ -91,10 +91,6 @@ abstract class DataTable extends Renderable
     /** @var bool */
     protected $multiLingual = false;
 
-    /** @var bool if you're fairly certain the user will use a wysiwyg editor, set this to true to preload the js
-     * note that if you don't the editor will be loaded dynamically, but will load a bit slower */
-    protected $preLoadWysiwygJs = false;
-
     /** @var bool */
     protected $sortable = false;
 
@@ -500,7 +496,6 @@ abstract class DataTable extends Renderable
 
         $this->checkValidKey();
         $this->initializeDatatable();
-        $this->addAssets();
 
         return $this->view->getPartial($this->indexView, [
             'tableData'           => $this->getTableData(),
@@ -698,18 +693,6 @@ abstract class DataTable extends Renderable
             'form'            => $renderedForm,
             'objectName'      => $objectName,
         ]);
-    }
-
-    /**
-     * Sets the js & css assets required
-     */
-    protected function addAssets()
-    {
-        if ($this->preLoadWysiwygJs) {
-            $this->view->assets->addJs('//cdn.tinymce.com/4/tinymce.min.js');
-        }
-
-        $this->view->jsTranslations = array_merge((array) $this->view->jsTranslations, DataTable::JS_TRANSLATIONS);
     }
 
     /**

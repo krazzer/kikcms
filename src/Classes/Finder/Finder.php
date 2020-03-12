@@ -27,14 +27,6 @@ use KikCMS\Services\UserService;
  */
 class Finder extends Renderable
 {
-    const JS_TRANSLATIONS = [
-        'media.deleteConfirm',
-        'media.deleteConfirmOne',
-        'media.createFolder',
-        'media.defaultFolderName',
-        'media.editFileName',
-    ];
-
     /** @inheritdoc */
     protected $viewDirectory = 'finder';
 
@@ -49,14 +41,6 @@ class Finder extends Renderable
 
     /** @var bool */
     private $multiPick = false;
-
-    /**
-     * Adds html/css required for finder
-     */
-    public function addAssets()
-    {
-        $this->view->jsTranslations = array_merge($this->view->jsTranslations, self::JS_TRANSLATIONS);
-    }
 
     /**
      * @return bool
@@ -98,8 +82,6 @@ class Finder extends Renderable
         if ( ! $this->allowedInCurrentFolder()) {
             throw new UnauthorizedException();
         }
-
-        $this->addAssets();
 
         $files = $this->fileService->getByFilters($this->getFilters());
 

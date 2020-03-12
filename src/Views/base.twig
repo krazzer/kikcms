@@ -20,12 +20,7 @@
 {% block content %}{% endblock %}
 {{ js('cmsassets/js/vendor.js') }}
 {{ js('cmsassets/js/cms.js') }}
-<data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>
-<script nonce="{{ cspNonce }}">
-    {% for key in jsTranslations %}
-    KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
-    {% endfor %}
-</script>
+<data id="kikCmsJsSettings" value='settings'>{{ jsSettings|json_encode|raw }}</data>
 {{ assets.outputJs() }}
 </body>
 </html>

@@ -14,7 +14,7 @@ var KikCmsClass = Class.extend({
             moment.locale($('html').attr('lang'));
         }
 
-        var settings = JSON.parse($('#kikCmsJsSettings').val());
+        var settings = JSON.parse($('#kikCmsJsSettings').text());
 
         for(var i in settings){
             this[i] = settings[i];

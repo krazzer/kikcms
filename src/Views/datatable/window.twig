@@ -3,11 +3,6 @@
 <div class="assets">
     {{ assets.outputCss() }}
     {{ assets.outputJs() }}
-    <script>
-        {% for key in jsTranslations %}
-        KikCMS.translations['{{ key }}'] = {{ tl(key)|json_encode|raw }};
-        {% endfor %}
-    </script>
 </div>
 
 <div class="header {{ multiLingual ? 'has-filters' }}">

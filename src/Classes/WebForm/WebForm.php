@@ -4,7 +4,6 @@ namespace KikCMS\Classes\WebForm;
 
 use Exception;
 use InvalidArgumentException;
-use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Renderable\Filters;
@@ -96,16 +95,6 @@ abstract class WebForm extends Renderable
         parent::__construct($filters);
 
         $this->fieldMap = new FieldMap();
-    }
-
-    /**
-     * Adds required assets
-     */
-    public function addAssets()
-    {
-        if ($this->hasFieldWithType(Field::TYPE_FILE)) {
-            (new Finder())->addAssets();
-        }
     }
 
     /**
@@ -256,7 +245,6 @@ abstract class WebForm extends Renderable
         $errorContainer = new ErrorContainer();
 
         $this->initializeForm();
-        $this->addAssets();
 
         if ($this->isPosted()) {
             $this->reUseDataTableInstances();
@@ -587,21 +575,6 @@ abstract class WebForm extends Renderable
         }
 
         return $fieldsWithoutContainer;
-    }
-
-    /**
-     * @param string $type
-     * @return bool
-     */
-    private function hasFieldWithType(string $type): bool
-    {
-        foreach ($this->fieldMap as $field) {
-            if ($field->getType() == $type) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
