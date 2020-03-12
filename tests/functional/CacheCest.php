@@ -20,7 +20,7 @@ class CacheCest
 
     public function emptyByKeyWorks(FunctionalTester $I)
     {
-        $I->getCache()->save('test');
+        $I->getCache()->save('test', 'test', 1000);
 
         $I->assertTrue($I->getCache()->exists('test'));
 
