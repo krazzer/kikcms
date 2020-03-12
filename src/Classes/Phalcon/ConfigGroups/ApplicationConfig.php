@@ -14,6 +14,7 @@ use Phalcon\Config;
  * @property string cmsTitlePrefix
  * @property string baseUri
  * @property string path
+ * @property string showCliOutput
  */
 class ApplicationConfig extends Config
 {

@@ -2,16 +2,8 @@
 
 namespace KikCMS\Tasks;
 
-use KikCMS\Services\DataTable\PageRearrangeService;
-use KikCMS\Services\Finder\FileHashService;
-use KikCMS\Services\VendorCleanUpService;
-use Phalcon\Cli\Task;
+use KikCMS\Classes\Phalcon\Task;
 
-/**
- * @property FileHashService $fileHashService
- * @property PageRearrangeService $pageRearrangeService
- * @property VendorCleanUpService $vendorCleanUpService
- */
 class MainTask extends Task
 {
     /**
@@ -19,7 +11,7 @@ class MainTask extends Task
      */
     public function mainAction()
     {
-        echo "This is the default task and the default action" . PHP_EOL;
+        $this->cliService->outputLine("This is the default task and the default action");
     }
 
     /**

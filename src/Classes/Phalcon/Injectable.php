@@ -14,6 +14,7 @@ use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\AssetService;
 use KikCMS\Services\Base\BaseServices;
 use KikCMS\Services\CacheService;
+use KikCMS\Services\CliService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\Cms\UserSettingsService;
@@ -76,6 +77,7 @@ use ReCaptcha\ReCaptcha;
  * @property AnalyticsGoogleService analyticsGoogleService
  * @property AnalyticsImportService analyticsImportService
  * @property AnalyticsService analyticsService
+ * @property CliService cliService
  * @property Google_Service_AnalyticsReporting analytics
  * @property AssetService assetService
  * @property BaseServices baseServices

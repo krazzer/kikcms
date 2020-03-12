@@ -14,30 +14,26 @@ use Nette\PhpGenerator\PsrPrinter;
 class GeneratorService extends Injectable
 {
     /**
-     * @return bool
+     * @return int
      */
-    public function generate(): bool
+    public function generate(): int
     {
         $tables = $this->getTables();
 
         $files = 0;
 
-        foreach ($tables as $i => $table) {
-            $files += $this->generateForTable($table, count($tables), $i);
+        foreach ($tables as $table) {
+            $files += $this->generateForTable($table);
         }
 
-        echo "\033[0;33m" . $files . " files generated\033[0m" . PHP_EOL;
-
-        return true;
+        return $files;
     }
 
     /**
      * @param string $table
-     * @param int $total
-     * @param int $index
      * @return int
      */
-    public function generateForTable(string $table, int $total = 1, int $index = 0): int
+    public function generateForTable(string $table): int
     {
         $className = $this->getClassName($table);
 
@@ -69,13 +65,6 @@ class GeneratorService extends Injectable
                     $filesGenerated++;
                 }
             }
-
-            $part = 100 / $total;
-
-            $tablePercentage = $part * $index;
-            $objectPercentage = $part / 6 * $i;
-
-            echo round($tablePercentage + $objectPercentage) . "%\r";
         }
 
         return $filesGenerated;

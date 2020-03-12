@@ -2,13 +2,10 @@
 
 namespace KikCMS\Tasks;
 
-use KikCMS\Services\Generator\GeneratorService;
-use Phalcon\Cli\Task;
+use KikCMS\Classes\Phalcon\Task;
 
 /**
  * Task used for code generation
- *
- * @property GeneratorService $generatorService
  */
 class GenerateTask extends Task
 {
@@ -17,7 +14,8 @@ class GenerateTask extends Task
      */
     public function modelsAction()
     {
-        $this->generatorService->generate();
+        $filesGeneratedCount = $this->generatorService->generate();
+        $this->cliService->outputLine($filesGeneratedCount . " files generated");
     }
 
     /**
