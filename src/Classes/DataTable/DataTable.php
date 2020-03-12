@@ -741,6 +741,16 @@ abstract class DataTable extends Renderable
     }
 
     /**
+     * @param bool $sortableNewFirst
+     * @return DataTable
+     */
+    public function setSortableNewFirst(bool $sortableNewFirst): DataTable
+    {
+        $this->sortableNewFirst = $sortableNewFirst;
+        return $this;
+    }
+
+    /**
      * @inheritdoc
      */
     protected function getJsProperties(): array

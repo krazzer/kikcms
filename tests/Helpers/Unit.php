@@ -11,6 +11,7 @@ use KikCMS\Models\User;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
+use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -98,6 +99,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('escaper', new Escaper);
         $di->set('modelService', new ModelService);
         $di->set('translationService', new TranslationService);
+        $di->set('rearrangeService', new RearrangeService);
         $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
         $di->set('translator', $translator);
         $di->set('keyValue', $keyValue);
