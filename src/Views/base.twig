@@ -20,7 +20,7 @@
 {% block content %}{% endblock %}
 {{ js('cmsassets/js/vendor.js') }}
 {{ js('cmsassets/js/cms.js') }}
-<data id="kikCmsJsSettings" value='settings'>{{ jsSettings|json_encode|raw }}</data>
+<data id="kikCmsJsSettings" value='settings' style="display: none;">{{ jsSettings|json_encode|raw }}</data>
 {{ assets.outputJs() }}
 </body>
 </html>
