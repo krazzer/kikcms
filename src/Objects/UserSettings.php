@@ -4,7 +4,9 @@
 namespace KikCMS\Objects;
 
 
-class UserSettings
+use Serializable;
+
+class UserSettings implements Serializable
 {
     /** @var array [className => [pageIds]] */
     private $closedPageIdMap = [];
@@ -36,7 +38,7 @@ class UserSettings
             return null;
         }
 
-        return serialize($this);
+        return serialize($this->closedPageIdMap);
     }
 
     /**
@@ -45,5 +47,14 @@ class UserSettings
     private function isEmpty(): bool
     {
         return ! $this->closedPageIdMap;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unserialize($serialized): UserSettings
+    {
+        $this->closedPageIdMap = (array) unserialize($serialized);
+        return $this;
     }
 }
