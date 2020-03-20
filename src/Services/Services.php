@@ -107,7 +107,7 @@ class Services extends BaseServices
         $simpleServices = [];
 
         foreach ($services as $service) {
-            if (is_string($service) && substr($service, -7) == 'Service') {
+            if (is_string($service) && (substr($service, -7) == 'Service' || substr($service, -6) == 'Helper')) {
                 $simpleServices[] = $service;
             }
         }
