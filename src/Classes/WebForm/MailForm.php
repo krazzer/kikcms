@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\WebForm;
 
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
+use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
@@ -108,7 +109,13 @@ abstract class MailForm extends WebForm
                 continue;
             }
 
-            $contents .= '<b>' . $field->getElement()->getLabel() . ':</b><br>';
+            if($field instanceof HiddenField){
+                $label = ucfirst($field->getKey());
+            } else {
+                $label = $field->getElement()->getLabel();
+            }
+
+            $contents .= '<b>' . $label . ':</b><br>';
             $contents .= $value . '<br><br>';
         }
 
