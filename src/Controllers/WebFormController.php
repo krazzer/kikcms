@@ -61,7 +61,7 @@ class WebFormController extends RenderableController
      */
     public function uploadAndPreviewAction()
     {
-        $folderId      = $this->request->getPost('folderId', 'int') ?: null;
+        $folderId      = ((int) $this->request->getPost('folderId', 'int')) ?: null;
         $uploadedFiles = $this->request->getUploadedFiles();
         $uploadStatus  = $this->fileService->uploadFiles($uploadedFiles, $folderId);
         $fileIds       = $uploadStatus->getFileIds();
