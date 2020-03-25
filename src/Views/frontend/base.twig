@@ -40,7 +40,7 @@
 {% endblock %}
 {{ assets.outputJs() }}
 {% block frontendJsInit %}
-<data id="kikCmsJsSettings" value='{{ jsSettings|json_encode|raw }}'></data>
+<data id="kikCmsJsSettings" value='settings' style="display: none;">{{ jsSettings|json_encode|raw }}</data>
 {% endblock %}
 </body>
 </html>

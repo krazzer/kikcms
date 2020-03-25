@@ -38,6 +38,7 @@ use Phalcon\Security;
 use Phalcon\Validation;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
+use KikCMS\Classes\Phalcon\PdoDialect\Sqlite as SqliteDialect;
 
 class Unit extends \Codeception\Test\Unit
 {
@@ -66,7 +67,10 @@ class Unit extends \Codeception\Test\Unit
         }
 
         $di = new Di();
-        $db = new Sqlite(["dbname" => ":memory:"]);
+        $db = new Sqlite([
+            "dbname"       => ":memory:",
+            'dialectClass' => SqliteDialect::class
+        ]);
 
         $translator = (new TestHelper)->getTranslator();
 

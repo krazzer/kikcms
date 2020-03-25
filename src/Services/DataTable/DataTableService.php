@@ -45,7 +45,12 @@ class DataTableService extends Injectable
         $storageData = (new StorageData)
             ->addFormInputValue($imageField, $fileId)
             ->setTable($model)
-            ->setObject($object);
+            ->setObject($object)
+            ->setParentEditId($dataTable->getFilters()->getParentEditId());
+
+        if ($parentRelationKey = $dataTable->getParentRelationKey()) {
+            $storageData->addFormInputValue($parentRelationKey, $dataTable->getParentRelationValue());
+        }
 
         if ($dataTable->isSortable()) {
             $this->dataTableService->addDisplayOrderToStorageData($dataTable, $storageData);
@@ -54,12 +59,14 @@ class DataTableService extends Injectable
         $this->storageService->setStorageData($storageData);
 
         $success = $this->storageService->store();
+        $editId  = $storageData->getEditId();
 
-        if ($success) {
-            return $storageData->getEditId();
+        // if the datatable has a unsaved parent, cache the new id
+        if ($parentRelationKey && $dataTable->getFilters()->hasTempParentEditId()) {
+            $dataTable->cacheNewId($editId);
         }
 
-        return null;
+        return $success ? $editId : null;
     }
 
     /**
@@ -131,14 +138,14 @@ class DataTableService extends Injectable
     {
         $messageArray = [];
 
-        foreach ($fileIds as $fileId){
+        foreach ($fileIds as $fileId) {
             foreach ($dataTable->getDirectImageValidators() as $validator) {
                 $this->validation->add('fileId', $validator);
             }
 
             $messages = $this->validation->validate(['fileId' => $fileId]);
 
-            foreach ($messages as $message){
+            foreach ($messages as $message) {
                 $messageArray[] = str_replace(':label ', '', $message->getMessage());
             }
         }
