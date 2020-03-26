@@ -29,6 +29,5 @@
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-phalcon": "^1.0.0",
         "codeception/module-cli": "^1.0.0"
-    },
-    "minimum-stability": "dev"
+    }
 }
