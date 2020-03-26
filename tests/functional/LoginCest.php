@@ -6,6 +6,7 @@ namespace functional;
 use AcceptanceTester;
 use FunctionalTester;
 use GuzzleHttp\Client;
+use KikCMS\Models\User;
 
 class LoginCest
 {
@@ -64,6 +65,32 @@ class LoginCest
 
         // delete all emails
         (new Client(['base_uri' => 'http://mailtest:8025']))->delete('api/v1/messages');
+    }
+
+    public function loginNotActivatedWorks(FunctionalTester $I)
+    {
+        $I->getDbService()->insert(User::class, [
+            User::FIELD_EMAIL    => 'noact',
+            User::FIELD_ROLE     => 'developer',
+            User::FIELD_ID       => 2,
+        ]);
+
+        $I->amOnPage('/cms/login');
+
+        $I->login('noact', '', false);
+
+        $I->see('Your account is not active yet');
+    }
+
+    public function loginBlockedWorks(FunctionalTester $I)
+    {
+        $I->addUser(true);
+
+        $I->amOnPage('/cms/login');
+
+        $I->login($I::TEST_USERNAME, $I::TEST_PASS, false);
+
+        $I->see('your account has been blocked');
     }
 
     /**

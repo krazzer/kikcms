@@ -27,12 +27,13 @@ class FunctionalTester extends Actor
     use _generated\FunctionalTesterActions;
 
     const TEST_USERNAME = 'test@test.com';
+    const TEST_PASS     = 'TestUserPass';
 
-    public function login(string $username = self::TEST_USERNAME, $password = 'TestUserPass', bool $addUser = true)
+    public function login(string $username = self::TEST_USERNAME, $password = self::TEST_PASS, bool $addUser = true)
     {
         $I = $this;
 
-        if($addUser){
+        if ($addUser) {
             $this->addUser();
         }
 
@@ -70,7 +71,10 @@ class FunctionalTester extends Actor
         return $this->getApplication()->di->get('dbService');
     }
 
-    public function addUser()
+    /**
+     * @param bool $blocked
+     */
+    public function addUser(bool $blocked = false)
     {
         $this->getDbService()->truncate(User::class);
 
@@ -79,6 +83,7 @@ class FunctionalTester extends Actor
             User::FIELD_EMAIL    => self::TEST_USERNAME,
             User::FIELD_ROLE     => 'developer',
             User::FIELD_ID       => 1,
+            User::FIELD_BLOCKED  => $blocked,
         ]);
     }
 
