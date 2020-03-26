@@ -83,7 +83,7 @@ class FunctionalTester extends Actor
             User::FIELD_EMAIL    => self::TEST_USERNAME,
             User::FIELD_ROLE     => 'developer',
             User::FIELD_ID       => 1,
-            User::FIELD_BLOCKED  => $blocked,
+            User::FIELD_BLOCKED  => (int) $blocked,
         ]);
     }
 
