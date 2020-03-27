@@ -152,7 +152,6 @@ class Pages extends DataTable
             break;
             case Page::TYPE_LINK:
                 return LinkForm::class;
-            break;
         }
 
         if ($template = $this->pagesDataTableService->getTemplate($this)) {
