@@ -177,4 +177,28 @@ class PagesTest extends Unit
 
         $this->assertEquals('value', $method->invoke($pages, 'value', []));
     }
+
+    public function testGetClosedPageIdMap()
+    {
+        $property = new ReflectionProperty(Pages::class, 'closedPageIdMapCache');
+        $property->setAccessible(true);
+
+        $pages = new Pages();
+
+        $property->setValue($pages, [1 => [1]]);
+
+        $this->assertEquals([1 => [1]], $pages->getClosedPageIdMap());
+    }
+
+    public function testGetIconTitleMap()
+    {
+        $method = new ReflectionMethod(Pages::class, 'getIconTitleMap');
+        $method->setAccessible(true);
+
+        $pages = new Pages();
+
+        $this->assertEquals(['link' => null, 'lock' => null], $method->invoke($pages, ['type' => 'link', 'key' => 1]));
+        $this->assertEquals(['share-alt' => null], $method->invoke($pages, ['type' => 'alias', 'key' => null]));
+        $this->assertEquals(['eye-close' => null], $method->invoke($pages, ['type' => 'page', 'key' => null, 'active' => null]));
+    }
 }
