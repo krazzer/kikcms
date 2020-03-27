@@ -157,4 +157,24 @@ class PagesTest extends Unit
 
         $this->assertNotNull($method->invoke($pages));
     }
+
+    public function testFormatName()
+    {
+        $method = new ReflectionMethod(Pages::class, 'formatName');
+        $method->setAccessible(true);
+
+        $filters = (new PagesDataTableFilters)
+            ->setLanguageCode('en')
+            ->setSearch('search');
+
+        $pagesDataTableService = $this->createMock(PagesDataTableService::class);
+        $pagesDataTableService->method('getValue')->willReturn('value');
+
+        $pages = new Pages();
+        $pages->setFilters($filters);
+
+        $pages->pagesDataTableService = $pagesDataTableService;
+
+        $this->assertEquals('value', $method->invoke($pages, 'value', []));
+    }
 }
