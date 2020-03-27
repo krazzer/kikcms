@@ -15,6 +15,7 @@ use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableService;
+use ReflectionProperty;
 
 class PagesTest extends Unit
 {
@@ -97,5 +98,31 @@ class PagesTest extends Unit
 
         $pages->getFilters()->setPageType('link');
         $this->assertEquals(LinkForm::class, $pages->getFormClass());
+    }
+
+    public function testIsHidden()
+    {
+        $property = new ReflectionProperty(Pages::class, 'closedPageIdMapCache');
+        $property->setAccessible(true);
+
+        $filters = (new PagesDataTableFilters)
+            ->setLanguageCode('en')
+            ->setSearch('search');
+
+        $pages = new Pages();
+
+        $property->setValue($pages, [1 => [1]]);
+
+        $pages->setFilters($filters);
+
+        $this->assertFalse($pages->isHidden(1));
+
+        $pages->setFilters(new PagesDataTableFilters);
+
+        $this->assertTrue($pages->isHidden(1));
+
+        $property->setValue($pages, [0 => [0]]);
+
+        $this->assertFalse($pages->isHidden(1));
     }
 }
