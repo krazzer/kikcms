@@ -15,7 +15,11 @@ use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\DataTable\PagesDataTableService;
+use KikCMS\Services\LanguageService;
+use KikCMS\Services\Pages\TemplateService;
+use ReflectionMethod;
 use ReflectionProperty;
+use Website\TestClasses\WebsiteSettings;
 
 class PagesTest extends Unit
 {
@@ -124,5 +128,33 @@ class PagesTest extends Unit
         $property->setValue($pages, [0 => [0]]);
 
         $this->assertFalse($pages->isHidden(1));
+    }
+
+    public function testGetDefaultQuery()
+    {
+        $method = new ReflectionMethod(Pages::class, 'getDefaultQuery');
+        $method->setAccessible(true);
+
+        $filters = (new PagesDataTableFilters)
+            ->setLanguageCode('en')
+            ->setSearch('search');
+
+        $languageService = $this->createMock(LanguageService::class);
+        $languageService->method('getDefaultLanguageCode')->willReturn('en');
+
+        $websiteSettings = $this->createMock(WebsiteSettings::class);
+        $websiteSettings->method('getPageClass')->willReturn(Page::class);
+
+        $templateService = $this->createMock(TemplateService::class);
+        $templateService->method('getAllowedKeys')->willReturn([]);
+
+        $pages = new Pages();
+        $pages->setFilters($filters);
+
+        $pages->languageService = $languageService;
+        $pages->websiteSettings = $websiteSettings;
+        $pages->templateService = $templateService;
+
+        $this->assertNotNull($method->invoke($pages));
     }
 }
