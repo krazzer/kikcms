@@ -100,3 +100,23 @@ CREATE TABLE `test_simple_object` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 ALTER TABLE cms_file AUTO_INCREMENT=100;
+
+-- ----------------------------
+-- Table structure for test_person_image
+-- ----------------------------
+CREATE TABLE `test_person_image`
+(
+    `id`            int(11) NOT NULL AUTO_INCREMENT,
+    `image_id`      int(11) DEFAULT NULL,
+    `person_id`     int(11) DEFAULT NULL,
+    `display_order` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `display_order` (`display_order`),
+    KEY `image_id` (`image_id`),
+    KEY `person_id` (`person_id`),
+    CONSTRAINT `test_person_image_ibfk_1` FOREIGN KEY (`image_id`) REFERENCES `cms_file` (`id`) ON UPDATE CASCADE,
+    CONSTRAINT `test_person_image_ibfk_2` FOREIGN KEY (`person_id`) REFERENCES `test_person` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 9
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;

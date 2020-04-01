@@ -25,5 +25,6 @@ class Person extends Model
 
         $this->belongsTo(self::FIELD_COMPANY_ID, Company::class, Company::FIELD_ID, ['alias' => 'company']);
         $this->hasMany(self::FIELD_ID, PersonInterest::class, PersonInterest::FIELD_PERSON_ID, ['alias' => 'personInterests']);
+        $this->hasMany(self::FIELD_ID, PersonImage::class, PersonImage::FIELD_PERSON_ID, ['alias' => 'personImages']);
     }
 }

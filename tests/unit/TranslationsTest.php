@@ -12,7 +12,6 @@ use KikCMS\Services\Util\StringService;
 
 class TranslationsTest extends Unit
 {
-
     public function testDelete()
     {
         $translations = new Translations();
