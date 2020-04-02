@@ -19,6 +19,9 @@ class ButtonField extends Field
     /** @var string */
     private $label;
 
+    /** @var bool */
+    private $targetBlank = false;
+
     /**
      * @param string $key
      * @param string $label
@@ -113,6 +116,24 @@ class ButtonField extends Field
     public function setLabel(string $label): ButtonField
     {
         $this->label = $label;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTargetBlank(): bool
+    {
+        return $this->targetBlank;
+    }
+
+    /**
+     * @param bool $targetBlank
+     * @return ButtonField
+     */
+    public function setTargetBlank(bool $targetBlank = true): ButtonField
+    {
+        $this->targetBlank = $targetBlank;
         return $this;
     }
 }

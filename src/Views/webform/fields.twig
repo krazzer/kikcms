@@ -13,12 +13,14 @@
 {%- endblock -%}
 
 {%- block fieldButton %}
-    {# @var field \KikCMS\Classes\WebForm\Fields\Button #}
+    {# @var field \KikCMS\Classes\WebForm\Fields\ButtonField #}
     <div{{ fieldContainterAttributes|raw }}>
         <label>{{ field.label|raw }}</label>
         <div class="field">
             <div class="info">{{ field.info }}</div>
-            <a class="btn btn-primary" href="{{ field.route }}">{{ field.buttonLabel }}</a>
+            <a class="btn btn-primary" href="{{ field.route }}" target="{{ field.targetBlank ? '_blank' }}">
+                {{ field.buttonLabel }}
+            </a>
         </div>
     </div>
 {%- endblock -%}
