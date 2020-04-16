@@ -8,6 +8,7 @@ use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
+use ReCaptcha\Response as ReCaptchaResponse;
 
 /**
  * @property MailService $mailService
@@ -127,10 +128,40 @@ abstract class MailForm extends WebForm
      */
     private function getSpamScore(): ?float
     {
+        if( ! $reCaptchaField = $this->getReCaptchaField()){
+            return null;
+        }
+
+        $response = $this->getReCaptchaResponse($reCaptchaField);
+
+        return $response->getScore();
+    }
+
+    /**
+     * @return ReCaptchaField|null
+     */
+    private function getReCaptchaField(): ?ReCaptchaField
+    {
         foreach ($this->getFieldMap() as $field){
             if($field instanceof ReCaptchaField && $field->getVersion() == 3){
-                $response = $this->reCaptcha->verify($this->getInput()[$field->getKey()], $_SERVER['REMOTE_ADDR']);
-                return $response->getScore();
+                return $field;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param ReCaptchaField|null $reCaptchaField
+     * @return ReCaptchaResponse
+     */
+    private function getReCaptchaResponse(?ReCaptchaField $reCaptchaField): ReCaptchaResponse
+    {
+        $validators = $this->validation->getValidators();
+
+        foreach ($validators as $validator){
+            if($validator[0] == $reCaptchaField->getKey()){
+                return $validator[1]->getOption('response');
             }
         }
 

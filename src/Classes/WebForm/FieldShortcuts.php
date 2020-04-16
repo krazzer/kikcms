@@ -6,6 +6,7 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\DataTable\SelectDataTable;
 use KikCMS\Classes\Phalcon\Validator\ImageFileType;
 use KikCMS\Classes\Phalcon\Validator\ReCaptcha;
+use KikCMS\Classes\Phalcon\Validator\ReCaptchaV3;
 use KikCMS\Classes\Renderable\Filters;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataFormFilters;
@@ -223,7 +224,7 @@ trait FieldShortcuts
         $this->view->assets->addJs('https://www.google.com/recaptcha/api.js?render=' . $siteKey);
         $this->view->reCaptchaSiteKey = $siteKey;
 
-        $validators = $version == 2 ? [new ReCaptcha] : [];
+        $validators = $version == 2 ? [new ReCaptcha] : [new ReCaptchaV3];
 
         return $this->addField(new ReCaptchaField($label, $version, $validators));
     }
