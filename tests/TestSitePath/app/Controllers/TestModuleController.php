@@ -5,6 +5,7 @@ namespace Website\Controllers;
 
 
 use Helpers\TestHelper;
+use Website\DataTables\PersonImages;
 use Website\Forms\DataTableTestForm;
 use Website\Forms\TestPersonForm;
 use KikCMS\Controllers\BaseCmsController;
@@ -35,6 +36,15 @@ class TestModuleController extends BaseCmsController
         $this->view->object           = (new TestPersonForm)->render();
         $this->view->selectedMenuItem = 'personform';
         $this->view->title            = 'Person Form';
+
+        $this->view->pick('cms/default');
+    }
+
+    public function personImagesAction()
+    {
+        $this->view->object           = (new PersonImages)->render();
+        $this->view->selectedMenuItem = 'personimages';
+        $this->view->title            = 'Person images';
 
         $this->view->pick('cms/default');
     }

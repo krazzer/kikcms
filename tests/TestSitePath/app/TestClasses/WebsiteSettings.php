@@ -32,6 +32,7 @@ class WebsiteSettings extends WebsiteSettingsBase
         $backend->add('/test/datatable', 'TestModule::testDataTable');
         $backend->add('/test/datatableform', 'TestModule::testDataTableForm');
         $backend->add('/test/personform', 'TestModule::personForm');
+        $backend->add('/test/personimages', 'TestModule::personImages');
     }
 
     /**
@@ -41,7 +42,8 @@ class WebsiteSettings extends WebsiteSettingsBase
     {
         $testMenuGroup = (new CmsMenuGroup('test', 'Test'))
             ->add(new CmsMenuItem('datatabletest', 'DataTable test', '/cms/test/datatable'))
-            ->add(new CmsMenuItem('personform', 'Person form', '/cms/test/personform'));
+            ->add(new CmsMenuItem('personform', 'Person form', '/cms/test/personform'))
+            ->add(new CmsMenuItem('personimages', 'Person images', '/cms/test/personimages'));
 
         return $menuGroupMap->addAfter($testMenuGroup, 'test', MenuConfig::MENU_GROUP_CONTENT);
     }

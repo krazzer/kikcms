@@ -76,8 +76,8 @@ class FileRemoveServiceTest extends TestCase
 
         $fileRemoveService->removeThumbNails($file);
 
-        $this->assertFileNotExists($file1);
-        $this->assertFileNotExists($file2);
+        $this->assertFalse(file_exists($file1));
+        $this->assertFalse(file_exists($file2));
 
         // clean up
         if (file_exists($file1)) {
