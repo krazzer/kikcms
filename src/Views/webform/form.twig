@@ -42,13 +42,13 @@
             {{ block('fields') }}
         {% endif %}
 
+        <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
+
         {% if(displaySendButton) %}
             <div class="form-group">
                 {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
             </div>
         {% endif %}
-
-        <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 
         {% if webForm.showRequiredMessage %}
             <div class="required-message">{{ tl('webform.requiredMessage') }}</div>

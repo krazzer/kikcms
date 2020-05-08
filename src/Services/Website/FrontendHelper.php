@@ -257,4 +257,14 @@ class FrontendHelper extends Injectable
 
         return $menu;
     }
+
+    /**
+     * Get variables stored in the db for the current page
+     *
+     * @return array
+     */
+    public function getCurrentPageVariables(): array
+    {
+        return $this->pageContentService->getVariablesByPageLanguage($this->getCurrentPageLanguage());
+    }
 }
