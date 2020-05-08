@@ -245,4 +245,6 @@ INSERT INTO `cms_page_language_content` (page_id, language_code, field, value) V
 INSERT INTO `cms_page_language` (page_id, language_code, active, name, slug) VALUES (6, 'en', 1, 'Pagina niet gevonden', 'page-not-found');
 COMMIT;
 
+INSERT INTO `cms_user` (id, email, `password`, role) VALUES (99, 'info@kiksaus.nl', '$2y$10$esIZuoDYxmlc6AhvtJc3h.72HWdnUs5XHa6uDuTT8XyI6fTm0YHoK', 'developer');
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -34,7 +34,7 @@ jobs:
         env:
           SITE_ALIAS: kikcmstest.dev
           SITE_PORT: 9901
-      - name: Sleep for 5 seconds
+      - name: Sleep for 10 seconds
         uses: jakejarvis/wait-action@master
         with:
           time: '5s'
