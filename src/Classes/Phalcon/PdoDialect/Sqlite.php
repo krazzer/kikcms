@@ -15,6 +15,24 @@ class Sqlite extends PhalconSqlite
     public function __construct()
     {
         $this->registerCustomFunction('CONCAT_WS', [$this, 'concatWs']);
+        $this->registerCustomFunction('CONCAT', [$this, 'concat']);
+    }
+
+    /**
+     * @param Dialect|null $dialect
+     * @param $expression
+     * @return string
+     * @throws Exception
+     */
+    public function concat(Dialect $dialect, $expression)
+    {
+        $arguments = [];
+
+        foreach ($expression['arguments'] as $argument) {
+            $arguments[] = $dialect->getSqlExpression($argument);
+        }
+
+        return implode(' || ', $arguments);
     }
 
     /**
