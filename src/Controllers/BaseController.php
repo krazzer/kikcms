@@ -57,7 +57,9 @@ class BaseController extends Controller
      */
     protected function initializeLanguage()
     {
-        if ($langCode = $this->request->getPost('activeLangCode')) {
+        $langCode = $this->request->getPost('activeLangCode');
+
+        if ($langCode && $this->translator->languageExists($langCode)) {
             $this->translator->setLanguageCode($langCode);
         } else {
             $this->setDefaultLanguageCode();

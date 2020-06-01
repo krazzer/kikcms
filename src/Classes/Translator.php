@@ -221,6 +221,15 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string $langCode
+     * @return bool
+     */
+    public function languageExists(string $langCode): bool
+    {
+        return array_key_exists($langCode, $this->siteFiles) || array_key_exists($langCode, $this->cmsFiles);
+    }
+
+    /**
      * @param int $id
      * @param string|null $langCode
      * @return string
