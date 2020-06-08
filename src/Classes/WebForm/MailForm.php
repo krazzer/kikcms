@@ -30,8 +30,10 @@ abstract class MailForm extends WebForm
     {
         $subject = $this->translator->translateDefaultLanguage('mailForm.subject');
 
-        if($spamScore = $this->getSpamScore()){
-            return $subject . ' (spamscore: ' . $spamScore . ')';
+        if ($spamScore = $this->getSpamScore()) {
+            if ($spamScore < 0.9) {
+                return $subject . ' (spamscore: ' . $spamScore . ')';
+            }
         }
 
         return $subject;
@@ -53,6 +55,11 @@ abstract class MailForm extends WebForm
     {
         $params = [];
 
+        if ($this->getSpamScore() && $this->getSpamScore() <= 0.3) {
+            $this->flash->error($this->translator->tl('mailForm.sendFail'));
+            return false;
+        }
+
         $contents = $this->toMailOutput($input);
         $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents, $params);
 
@@ -63,6 +70,7 @@ abstract class MailForm extends WebForm
 
         $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
+
         return $this->response->redirect(trim($this->router->getRewriteUri(), '/'));
     }
 
@@ -110,7 +118,7 @@ abstract class MailForm extends WebForm
                 continue;
             }
 
-            if($field instanceof HiddenField){
+            if ($field instanceof HiddenField) {
                 $label = ucfirst($field->getKey());
             } else {
                 $label = $field->getElement()->getLabel();
@@ -128,7 +136,7 @@ abstract class MailForm extends WebForm
      */
     private function getSpamScore(): ?float
     {
-        if( ! $reCaptchaField = $this->getReCaptchaField()){
+        if ( ! $reCaptchaField = $this->getReCaptchaField()) {
             return null;
         }
 
@@ -142,8 +150,8 @@ abstract class MailForm extends WebForm
      */
     private function getReCaptchaField(): ?ReCaptchaField
     {
-        foreach ($this->getFieldMap() as $field){
-            if($field instanceof ReCaptchaField && $field->getVersion() == 3){
+        foreach ($this->getFieldMap() as $field) {
+            if ($field instanceof ReCaptchaField && $field->getVersion() == 3) {
                 return $field;
             }
         }
@@ -159,8 +167,8 @@ abstract class MailForm extends WebForm
     {
         $validators = $this->validation->getValidators();
 
-        foreach ($validators as $validator){
-            if($validator[0] == $reCaptchaField->getKey()){
+        foreach ($validators as $validator) {
+            if ($validator[0] == $reCaptchaField->getKey()) {
                 return $validator[1]->getOption('response');
             }
         }
