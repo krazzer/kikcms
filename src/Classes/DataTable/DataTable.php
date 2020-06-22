@@ -91,6 +91,9 @@ abstract class DataTable extends Renderable
     /** @var bool */
     protected $multiLingual = false;
 
+    /** @var int amount of rows shown on one page */
+    protected $limit = 100;
+
     /** @var bool */
     protected $sortable = false;
 
@@ -114,9 +117,6 @@ abstract class DataTable extends Renderable
 
     /** @var TableData */
     private $tableData;
-
-    /** @var int amount of rows shown on one page */
-    private $limit = 100;
 
     /**
      * Tracks whether the function 'initializeDatatable' has been run yet

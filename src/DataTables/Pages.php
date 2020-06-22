@@ -50,6 +50,9 @@ class Pages extends DataTable
     protected $multiLingual = true;
 
     /** @inheritdoc */
+    protected $limit = 1000;
+
+    /** @inheritdoc */
     public $indexView = 'datatables/page/index';
 
     /** @inheritdoc */
