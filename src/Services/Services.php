@@ -148,9 +148,8 @@ class Services extends BaseServices
         $client->setApplicationName("Analytics");
         $client->setAuthConfig($keyFileLocation);
         $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-        $analytics = new Google_Service_AnalyticsReporting($client, $this->getIniConfig()->analytics->url ?? null);
 
-        return $analytics;
+        return new Google_Service_AnalyticsReporting($client, $this->getIniConfig()->analytics->url ?? null);
     }
 
     /**
@@ -272,9 +271,7 @@ class Services extends BaseServices
      */
     protected function initFilter(): Filter
     {
-        $filter = new Filter();
-
-        return $filter;
+        return new Filter();
     }
 
     /**
@@ -387,15 +384,13 @@ class Services extends BaseServices
      */
     protected function initTranslator(): Translator
     {
-        $translator = new Translator([
+        return new Translator([
             TranslatorConfig::LANGUAGE_NL => $this->getAppConfig()->cmsPath . 'resources/translations/nl.php',
             TranslatorConfig::LANGUAGE_EN => $this->getAppConfig()->cmsPath . 'resources/translations/en.php',
         ], [
             TranslatorConfig::LANGUAGE_NL => $this->getAppConfig()->path . 'resources/translations/nl.php',
             TranslatorConfig::LANGUAGE_EN => $this->getAppConfig()->path . 'resources/translations/en.php',
         ]);
-
-        return $translator;
     }
 
     /**

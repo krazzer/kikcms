@@ -3,11 +3,17 @@
 namespace KikCMS\Classes\Phalcon;
 
 use DateTime;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\TwigService;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\View\EngineInterface;
 use Phalcon\Mvc\ViewBaseInterface;
+use Twig_Environment;
+use Twig_Extension_Debug;
+use Twig_Loader_Filesystem;
+use Twig_SimpleFilter;
+use Twig_SimpleFunction;
 
 /**
  * Class Twig
@@ -18,13 +24,13 @@ class Twig extends Engine implements EngineInterface
     const DEFAULT_EXTENSION = '.twig';
 
     /**
-     * @var \Twig_Environment
+     * @var Twig_Environment
      */
     protected $twig;
 
     /**
-     * @param mixed|\Phalcon\Mvc\ViewBaseInterface $view
-     * @param mixed|\Phalcon\DiInterface $di
+     * @param mixed|ViewBaseInterface $view
+     * @param mixed|DiInterface $di
      * @param array $options
      * @param array $paths
      */
@@ -32,16 +38,16 @@ class Twig extends Engine implements EngineInterface
     {
         parent::__construct($view, $di);
 
-        $loader = new \Twig_Loader_Filesystem($this->getView()->getViewsDir());
+        $loader = new Twig_Loader_Filesystem($this->getView()->getViewsDir());
 
         foreach ($paths as $namespace => $path) {
             $loader->addPath($path, $namespace);
         }
 
-        $this->twig = new \Twig_Environment($loader, $options);
+        $this->twig = new Twig_Environment($loader, $options);
 
         if ($this->twig->isDebug()) {
-            $this->twig->addExtension(new \Twig_Extension_Debug());
+            $this->twig->addExtension(new Twig_Extension_Debug());
         }
 
         $this->registryFunctions($di);
@@ -85,7 +91,7 @@ class Twig extends Engine implements EngineInterface
     /**
      * Registers common function in Twig
      *
-     * @param \Phalcon\DiInterface $di
+     * @param DiInterface $di
      */
     protected function registryFunctions(DiInterface $di)
     {
@@ -100,24 +106,24 @@ class Twig extends Engine implements EngineInterface
         $twigService = $di->get('twigService');
 
         foreach ($functions as $function) {
-            $this->twig->addFunction(new \Twig_SimpleFunction($function, [$twigService, $function], $options));
+            $this->twig->addFunction(new Twig_SimpleFunction($function, [$twigService, $function], $options));
         }
 
         // add truncate filter
-        $this->twig->addFilter(new \Twig_SimpleFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
+        $this->twig->addFilter(new Twig_SimpleFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
             return $di->getShared("stringService")->truncate((string) $string, $maxLength);
         }));
 
         // add ucfirst filter
-        $this->twig->addFilter(new \Twig_SimpleFilter('ucfirst', 'ucfirst'));
+        $this->twig->addFilter(new Twig_SimpleFilter('ucfirst', 'ucfirst'));
 
         // add price filter
-        $this->twig->addFilter(new \Twig_SimpleFilter('price', function ($price) use ($di) {
+        $this->twig->addFilter(new Twig_SimpleFilter('price', function ($price) use ($di) {
             return $di->getShared("numberService")->getPriceFormat((float) $price);
         }));
 
         // add date filter
-        $this->twig->addFilter(new \Twig_SimpleFilter('date', function ($dateTime, string $format = null) use ($di) {
+        $this->twig->addFilter(new Twig_SimpleFilter('date', function ($dateTime, string $format = null) use ($di) {
             if( ! $dateTime){
                 return '';
             }
@@ -129,5 +135,10 @@ class Twig extends Engine implements EngineInterface
             $format = $format ?: $di->getShared('translator')->tl('system.dateDisplayFormat');
             return strftime($format, $dateTime->getTimestamp());
         }));
+
+        /** @var WebsiteSettingsBase $siteSettings */
+        $siteSettings = $di->getShared('websiteSettings');
+
+        $siteSettings->addTwigFunctions($this->twig);
     }
 }
