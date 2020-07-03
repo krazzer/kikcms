@@ -28,7 +28,7 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba($colorBlack, 0.1);
+        background-color: rgba(200,200,200,.6);
         opacity: 0;
         z-index: $zIndexWindowLevel0;
         transition: opacity 0.3s;
@@ -67,7 +67,6 @@ body {
         @include blur(6);
         @include noTextSelect();
         pointer-events: none;
-        opacity: 0.5;
     }
 
     > #menu {
