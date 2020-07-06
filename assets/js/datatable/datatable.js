@@ -12,6 +12,7 @@ var DataTable = Class.extend({
     sortColumn: null,
     restore: null,
     filePicker: null,
+    lastSelectedRow: null,
     $table: null,
 
     getDeleteConfirmMessage: function (amount) {
@@ -279,14 +280,14 @@ var DataTable = Class.extend({
             e.stopPropagation();
         });
 
-        $rows.find('td:not(.action)').click(function () {
+        $rows.find('td:not(.action)').click(function (e) {
             var $row = $(this).parent();
 
             if ($row.attr('data-prevent-click')) {
                 return;
             }
 
-            self.onRowClick($row);
+            self.onRowClick($row, e);
         });
 
         $rows.find('td.edit').click(function () {
@@ -701,8 +702,30 @@ var DataTable = Class.extend({
         });
     },
 
-    onRowClick: function ($row) {
-        $row.toggleClass('selected');
+    /**
+     * @param $row
+     * @param e
+     */
+    onRowClick: function ($row, e) {
+        if (e.shiftKey) {
+            if ( ! this.lastSelectedRow) {
+                $row.toggleClass('selected');
+            } else {
+                var indexCurrent = this.getRows().index($row);
+                var indexLast    = this.getRows().index(this.lastSelectedRow);
+
+                if(indexCurrent > indexLast){
+                    this.lastSelectedRow.nextUntil($row).add($row).addClass('selected');
+                } else {
+                    $row.nextUntil(this.lastSelectedRow).add($row).addClass('selected');
+                }
+            }
+        } else {
+            $row.toggleClass('selected');
+        }
+
+        this.lastSelectedRow = $row;
+
         this.updateToolbar();
     },
 
@@ -771,6 +794,8 @@ var DataTable = Class.extend({
         $table.html(tableContent);
 
         this.initTable();
+
+        this.lastSelectedRow = null;
 
         if ( ! editedId) {
             return;
@@ -855,6 +880,10 @@ var DataTable = Class.extend({
 
     getLanguageCode: function () {
         return this.getDataTable().find('.toolbar .language select').val();
+    },
+
+    getRows: function () {
+        return this.getDataTable().find('table tr');
     },
 
     getWindowLanguageCode: function () {
