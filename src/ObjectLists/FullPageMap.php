@@ -39,4 +39,13 @@ class FullPageMap extends ObjectMap
     {
         return parent::reverse();
     }
+
+    /**
+     * @inheritDoc
+     * @return FullPage[]|Object[]
+     */
+    public function getObjects()
+    {
+        return parent::getObjects();
+    }
 }
