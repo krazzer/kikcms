@@ -78,7 +78,7 @@
     .filters{
         @include clearFix();
         background-color: $superLightGray;
-        padding: $dataTableCellPadding;
+        padding: 12px 15px;
         border-radius: $defaultBorderRadius;
         margin-bottom: 18px;
 
