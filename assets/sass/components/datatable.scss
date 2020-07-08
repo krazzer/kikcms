@@ -266,7 +266,7 @@ body {
     .pages {
         @include noTextSelect();
         float: right;
-        max-height: 36px;
+        max-height: 35px;
         overflow: hidden;
 
         .pagination {
