@@ -5,6 +5,8 @@
             "url": "https://github.com/krazzer/kikcms-core.git"
         }
     ],
+    "homepage": "https://kikcms.com",
+    "license": "MIT",
     "name": "kiksaus/kikcms",
     "description": "A CMS based on the Phalcon Framework",
     "require": {
