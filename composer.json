@@ -8,6 +8,11 @@
     "homepage": "https://kikcms.com",
     "license": "MIT",
     "name": "kiksaus/kikcms",
+    "config": {
+        "platform": {
+            "php": "7.2"
+        }
+    },
     "description": "A CMS based on the Phalcon Framework",
     "require": {
         "twig/twig": "~1.0",
