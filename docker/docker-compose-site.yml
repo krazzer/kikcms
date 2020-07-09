@@ -4,15 +4,16 @@ services:
     image: kiksaus/kikdev
     restart: always
     ports:
-        - "${SITE_PORT}:443"
+      - "${SITE_PORT}:443"
     volumes:
-        - ../../../../public_html/:/var/www/html:cached
-        - ../../../../:/var/www:cached
-        - ../../:/var/www/vendor/kiksaus:cached
-        - ~/.docker-kikdev/logs:/var/log/apache2/:cached
-        - /var/www/assets/
-        - /var/www/.git/
-        - /var/www/vendor/kiksaus/kikcms/assets/
+      - ../../../../public_html/:/var/www/html:cached
+      - ../../../../:/var/www:cached
+      - ../../:/var/www/vendor/kiksaus:cached
+      - ~/.docker-kikdev/logs:/var/log/apache2/:cached
+      #the following dirs are excluded for speed and stability
+      - /var/www/assets/
+      - /var/www/.git/
+      - /var/www/vendor/kiksaus/kikcms/assets/
     networks:
       kikdev:
         aliases:

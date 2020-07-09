@@ -6,6 +6,7 @@
         }
     ],
     "name": "kiksaus/kikcms",
+    "description": "A CMS based on the Phalcon Framework",
     "require": {
         "twig/twig": "~1.0",
         "google/apiclient": "^2.0",
