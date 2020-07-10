@@ -53,16 +53,6 @@ jobs:
           cd ..
       - name: Run tests
         run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev-cov:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml --coverage-xml
-      - name: Create artefact
-        uses: actions/upload-artifact@v2
-        with:
-          name: login-page.png
-          path: tests/_output/debug/login-page.png
-      - name: Create artefact 2
-        uses: actions/upload-artifact@v2
-        with:
-          name: Text.php
-          path: vendor/phpunit/php-code-coverage/src/Report/Text.php
       - name: Upload report to codecov.io
         uses: codecov/codecov-action@v1
         with:

@@ -41,7 +41,6 @@ class AcceptanceTester extends Actor
         }
 
         $I->amOnPage('/cms');
-        $I->makeScreenshot('login-page');
         $I->submitForm('#login-form form', [
             'username' => $username,
             'password' => $password,
