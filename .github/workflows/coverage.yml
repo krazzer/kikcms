@@ -52,7 +52,6 @@ jobs:
           gulp
           cd ..
       - name: Run tests
-        continue-on-error: true
         run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev-cov:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml --coverage-xml
       - name: Upload report to codecov.io
         uses: codecov/codecov-action@v1
