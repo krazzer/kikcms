@@ -38,29 +38,19 @@ class FullPageService extends Injectable
      */
     public function getByPageMap(PageMap $pageMap, string $langCode = null, bool $activeOnly = true): FullPageMap
     {
-        $langCode = $langCode ?: $this->translator->getLanguageCode();
-
+        $langCode    = $langCode ?: $this->translator->getLanguageCode();
         $fullPageMap = new FullPageMap();
 
         $pageLangMap    = $this->pageLanguageService->getByPageMap($pageMap, $langCode, $activeOnly);
         $pageFieldTable = $this->pageLanguageService->getPageFieldTable($pageMap, $langCode);
 
-        foreach ($pageMap as $pageId => $page) {
-            if ( ! $pageLangMap->has($pageId)) {
-                continue;
+        foreach ($pageMap as $page) {
+            if ($pageLang = $pageLangMap->get($page->getRealId())) {
+                $content = $pageFieldTable[$page->getRealId()] ?? [];
+                $url     = $this->urlService->getUrlByPageLanguage($pageLang);
+
+                $fullPageMap->add(new FullPage($page, $pageLang, $content, $url));
             }
-
-            if (array_key_exists($pageId, $pageFieldTable)) {
-                $content = $pageFieldTable[$pageId];
-            } else {
-                $content = [];
-            }
-
-            $pageLang = $pageLangMap->get($pageId);
-
-            $url = $this->urlService->getUrlByPageLanguage($pageLang);
-
-            $fullPageMap->add(new FullPage($page, $pageLang, $content, $url));
         }
 
         return $fullPageMap;
@@ -77,7 +67,7 @@ class FullPageService extends Injectable
 
         $fullPageMap = $this->getByPageMap($pageMap, $langCode, false);
 
-        if($fullPageMap->isEmpty()){
+        if ($fullPageMap->isEmpty()) {
             return null;
         }
 

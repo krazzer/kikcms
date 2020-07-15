@@ -126,26 +126,26 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageMap $pageMap
-     * @param string $languageCode
+     * @param string $langCode
      * @param bool $activeOnly
      * @return PageLanguageMap
      */
-    public function getByPageMap(PageMap $pageMap, string $languageCode = null, bool $activeOnly = true): PageLanguageMap
+    public function getByPageMap(PageMap $pageMap, string $langCode = null, bool $activeOnly = true): PageLanguageMap
     {
         if ($pageMap->isEmpty()) {
             return new PageLanguageMap;
         }
 
-        $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
+        $langCode = $langCode ?: $this->languageService->getDefaultLanguageCode();
 
         $query = (new Builder)
-            ->from(PageLanguage::class)
-            ->where('page_id IN ({ids:array}) AND language_code = :langCode:', [
-                'ids' => $pageMap->keys(), 'langCode' => $languageCode
-            ]);
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'pl.page_id = IFNULL(p.alias, p.id)', 'p')
+            ->inWhere('p.id', $pageMap->keys())
+            ->andWhere('pl.language_code = :c:', ['c' => $langCode]);
 
         if ($activeOnly) {
-            $query->andWhere('active = 1');
+            $query->andWhere('pl.active = 1');
         }
 
         return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
@@ -196,14 +196,15 @@ class PageLanguageService extends Injectable
 
         $queryPageContent = (new Builder)
             ->from(['p' => Page::class])
-            ->join(PageContent::class, 'pc.page_id = p.id', 'pc')
+            ->join(PageContent::class, 'pc.page_id = IFNULL(p.alias, p.id)', 'pc')
             ->inWhere('p.id', $pageMap->keys())
             ->columns(['pc.page_id AS pageId', 'pc.value', 'pc.field']);
 
         $queryPageLanguageContent = (new Builder)
             ->from(['p' => Page::class])
-            ->join(PageLanguageContent::class, 'plc.page_id = p.id AND plc.language_code = "' . $langCode . '"', 'plc')
+            ->join(PageLanguageContent::class, 'plc.page_id = IFNULL(p.alias, p.id)', 'plc')
             ->inWhere('p.id', $pageMap->keys())
+            ->andWhere('plc.language_code = :c:', ['c' => $langCode])
             ->columns(['plc.page_id AS pageId', 'plc.value', 'plc.field']);
 
         $rows = array_merge(
@@ -239,19 +240,9 @@ class PageLanguageService extends Injectable
         $rgt = $pageLanguageAlias->page->rgt;
 
         if ( ! $lft || ! $rgt) {
-            $pageLanguageMap = (new PageLanguageMap())->add($pageLanguageAlias, $pageLanguageAlias->page_id);
+            $pageLanguageMap = (new PageLanguageMap)->add($pageLanguageAlias, $pageLanguageAlias->page_id);
         } else {
-            $query = (new Builder)
-                ->from(['pl' => PageLanguage::class])
-                ->join(Page::class, 'p.id = pl.page_id', 'p')
-                ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu" AND pl.language_code = :langCode:', [
-                    'lft'      => $pageLanguageAlias->page->lft,
-                    'rgt'      => $pageLanguageAlias->page->rgt,
-                    'langCode' => $pageLanguage->getLanguageCode(),
-                ])->orderBy('lft ASC');
-
-            /** @var PageLanguageMap $pageLanguageMap */
-            $pageLanguageMap = $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
+            $pageLanguageMap = $this->getPathMap($pageLanguage, $pageLanguageAlias);
         }
 
         if ($pageLanguageAlias->getPageId() !== $pageLanguage->getPageId()) {
@@ -287,5 +278,24 @@ class PageLanguageService extends Injectable
 
         $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath);
         $this->cacheService->clear(CacheConfig::URL . CacheConfig::SEPARATOR . $pageLanguage->id);
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @param PageLanguage $pageLanguageAlias
+     * @return PageLanguageMap
+     */
+    private function getPathMap(PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias): PageLanguageMap
+    {
+        $query = (new Builder)
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'p.id = pl.page_id', 'p')
+            ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu" AND pl.language_code = :langCode:', [
+                'lft'      => $pageLanguageAlias->page->lft,
+                'rgt'      => $pageLanguageAlias->page->rgt,
+                'langCode' => $pageLanguage->getLanguageCode(),
+            ])->orderBy('lft ASC');
+
+        return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
     }
 }

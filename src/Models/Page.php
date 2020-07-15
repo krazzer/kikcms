@@ -231,7 +231,7 @@ class Page extends Model
      */
     public function getAliasId(): ?int
     {
-        if ( ! $this->alias) {
+        if ( ! property_exists($this, 'alias') || ! $this->alias) {
             return null;
         }
 
@@ -256,6 +256,15 @@ class Page extends Model
         }
 
         return (int) $this->link;
+    }
+
+    /**
+     * If this is an alias, return the id of the alias if not just this id
+     * @return int
+     */
+    public function getRealId(): int
+    {
+        return $this->getAliasId() ?: $this->getId();
     }
 
     /**
