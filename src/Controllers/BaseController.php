@@ -4,6 +4,7 @@ namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Phalcon\Controller;
+use KikCMS\Config\MimeConfig;
 
 class BaseController extends Controller
 {
@@ -25,7 +26,7 @@ class BaseController extends Controller
         $jsTranslations = [
             'system.langCode', 'pages.warningTemplateChange', 'media.uploadMaxFilesWarning',
             'media.uploadMaxFileSizeWarning', 'media.fileTypeWarning', 'media.deleteConfirm', 'media.deleteConfirmOne',
-            'media.createFolder', 'media.defaultFolderName', 'media.editFileName','dataTable.delete.confirmOne',
+            'media.createFolder', 'media.defaultFolderName', 'media.editFileName', 'dataTable.delete.confirmOne',
             'dataTable.delete.confirm', 'dataTable.closeWarning', 'dataTable.switchWarning', 'dataTable.restoreConfirm',
             'statistics.fetchingNewData', 'statistics.fetchingFailed', 'statistics.fetchNewData', 'statistics.visitors',
         ];
@@ -43,6 +44,7 @@ class BaseController extends Controller
             'maxFileSize'       => $maxFileSize,
             'maxFileSizeString' => $maxFileSizeString,
             'translations'      => $translations,
+            'allowedExt'        => MimeConfig::UPLOAD_ALLOW_DEFAULT
         ];
 
         $this->view->setVar("flash", $this->flash);
