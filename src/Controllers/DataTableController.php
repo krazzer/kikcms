@@ -188,6 +188,8 @@ class DataTableController extends RenderableController
 
         $model = $this->modelService->getModelByClassName($dataTable->getModel());
 
+        $this->rearrangeService->checkOrderIntegrity($dataTable->getModel(), $dataTable->getSortableField());
+
         $source = $model::getById($id);
         $target = $model::getById($targetId);
 

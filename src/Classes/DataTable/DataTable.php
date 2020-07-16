@@ -503,6 +503,10 @@ abstract class DataTable extends Renderable
         $this->checkValidKey();
         $this->initializeDatatable();
 
+        if($this->isSortable()){
+            $this->rearrangeService->checkOrderIntegrity($this->getModel(), $this->getSortableField());
+        }
+
         return $this->view->getPartial($this->indexView, [
             'tableData'           => $this->getTableData(),
             'jsData'              => $this->getJsData(),

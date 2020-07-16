@@ -3,6 +3,7 @@
 namespace KikCMS\Services\DataTable;
 
 use Exception;
+use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Services\DbService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Services\Pages\PageService;
@@ -22,6 +23,29 @@ class RearrangeService extends Injectable
     const REARRANGE_AFTER  = 'after';
 
     const SORTABLE_FIELD = 'display_order';
+
+    /**
+     * Check whether the target and source displayOrder values are set, if not do so
+     *
+     * @param $className
+     * @param string $orderField
+     */
+    public function checkOrderIntegrity($className, string $orderField = self::SORTABLE_FIELD)
+    {
+        $objectListWithoutDisplayOrder = $this->getObjectListWithoutDisplayOrder($className, $orderField);
+
+        if( ! $objectListWithoutDisplayOrder->count()){
+            return;
+        }
+
+        $newOrderValue = $this->getMax($className, $orderField);
+
+        foreach ($objectListWithoutDisplayOrder as $object){
+            $newOrderValue++;
+            $object->$orderField = $newOrderValue;
+            $object->save();
+        }
+    }
 
     /**
      * Get the maximum order value
@@ -59,7 +83,7 @@ class RearrangeService extends Injectable
      */
     public function rearrange(Model $source, Model $target, string $rearrange, string $orderField = self::SORTABLE_FIELD)
     {
-        $this->checkOrderIntegrity($source, $target, $orderField);
+        $this->checkOrderValues($source, $target, $orderField);
 
         switch ($rearrange) {
             case self::REARRANGE_BEFORE:
@@ -69,6 +93,20 @@ class RearrangeService extends Injectable
                 $this->placeBeforeOrAfter($source, $target, true, $orderField);
             break;
         }
+    }
+
+    /**
+     * @param string $className
+     * @param string $field
+     * @return ObjectList
+     */
+    private function getObjectListWithoutDisplayOrder(string $className, string $field = self::SORTABLE_FIELD): ObjectList
+    {
+        $query = (new Builder)
+            ->from($className)
+            ->where($field . ' IS NULL');
+
+        return $this->dbService->getObjectList($query);
     }
 
     /**
@@ -87,9 +125,8 @@ class RearrangeService extends Injectable
      * @param Model $source
      * @param Model $target
      * @param string $orderField
-     * @throws Exception
      */
-    private function checkOrderIntegrity(Model $source, Model $target, string $orderField = self::SORTABLE_FIELD)
+    private function checkOrderValues(Model $source, Model $target, string $orderField = self::SORTABLE_FIELD)
     {
         if ( ! $source->$orderField) {
             $source->$orderField = $this->getMax($source->getClassName(), $orderField) + 1;
@@ -105,23 +142,23 @@ class RearrangeService extends Injectable
     /**
      * @param Model $source
      * @param Model $target
-     * @param bool $placeAfter
+     * @param bool $after
      *
-     * @param string $orderField
+     * @param string $field
      * @throws Exception
      */
-    private function placeBeforeOrAfter(Model $source, Model $target, bool $placeAfter, string $orderField = self::SORTABLE_FIELD)
+    private function placeBeforeOrAfter(Model $source, Model $target, bool $after, string $field = self::SORTABLE_FIELD)
     {
-        $targetDisplayOrder = $target->$orderField;
-        $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
+        $targetDisplayOrder = $target->$field;
+        $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($after ? 1 : 0) : null;
         $oldSource          = clone $source;
 
         $this->db->begin();
 
         try {
-            $this->updateSiblingOrder($target, $placeAfter, $orderField);
-            $this->updateItem($source, $newDisplayOrder, $orderField);
-            $this->updateLeftSiblingsOrder($oldSource, $orderField);
+            $this->updateSiblingOrder($target, $after, $field);
+            $this->updateItem($source, $newDisplayOrder, $field);
+            $this->updateLeftSiblingsOrder($oldSource, $field);
         } catch (Exception $exception) {
             $this->db->rollback();
             throw $exception;
