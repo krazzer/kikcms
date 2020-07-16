@@ -9,7 +9,7 @@ var PagesDataTable = DataTable.extend({
     contentHasChanged: function () {
         var contentHasChanged = this.$.contentHasChanged.call(this);
 
-        if(contentHasChanged){
+        if (contentHasChanged) {
             return true;
         }
 
@@ -43,9 +43,9 @@ var PagesDataTable = DataTable.extend({
             self.actionReloadWindow(function () {
                 self.getFormGroups().each(function () {
                     var $field = $(this);
-                    var name = $field.attr('name');
+                    var name   = $field.attr('name');
 
-                    if(name in self.cachedFieldValues && $field.val() != fieldValues[name]){
+                    if (name in self.cachedFieldValues && $field.val() != fieldValues[name]) {
                         $field.val(self.cachedFieldValues[name]);
                     }
                 });
@@ -124,7 +124,7 @@ var PagesDataTable = DataTable.extend({
 
         if (type != 'link') {
             this.getForm().find('input[name="pageLanguage*:slug"]').each(function () {
-                if (!$(this).val()) {
+                if ( ! $(this).val()) {
                     $(this).val(KikCMS.toSlug(pageName));
                 }
             });
@@ -164,7 +164,7 @@ var PagesDataTable = DataTable.extend({
      * @param $row
      * @param level
      */
-    onCollapseArrowClick: function(e, $arrow, $row, level) {
+    onCollapseArrowClick: function (e, $arrow, $row, level) {
         e.stopPropagation();
 
         $arrow.toggleClass('closed');
@@ -182,7 +182,7 @@ var PagesDataTable = DataTable.extend({
             skipLevel = null;
 
             // if this row is a parent which is closed, mark its children to skip
-            if (!$arrow.hasClass('closed') && $nextRow.find('.arrow').hasClass('closed')) {
+            if ( ! $arrow.hasClass('closed') && $nextRow.find('.arrow').hasClass('closed')) {
                 skipLevel = nextRowLevel + 1;
             }
 
@@ -198,17 +198,17 @@ var PagesDataTable = DataTable.extend({
     },
 
     /**
-     * @param pageId
-     * @param targetPageId
+     * @param id
+     * @param targetId
      * @param position
      */
-    onPageDrop: function (pageId, targetPageId, position) {
+    onPageDrop: function (id, targetId, position) {
         var self       = this;
         var parameters = this.getFilters();
 
-        parameters.pageId       = pageId;
-        parameters.targetPageId = targetPageId;
-        parameters.position     = position;
+        parameters.id       = id;
+        parameters.targetId = targetId;
+        parameters.position = position;
 
         parameters = this.addActionParameters(parameters);
 
@@ -241,7 +241,7 @@ var PagesDataTable = DataTable.extend({
             ids: closedIds,
             className: this.renderableClass
         }, function (response) {
-            if (!response.success) {
+            if ( ! response.success) {
                 console.error('Failed storing closedPageIds');
             }
         });

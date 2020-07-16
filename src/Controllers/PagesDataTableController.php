@@ -32,18 +32,26 @@ class PagesDataTableController extends DataTableController
     }
 
     /**
+     * @inheritDoc
+     */
+    public function rearrangeAction()
+    {
+        return $this->treeOrderAction();
+    }
+
+    /**
      * @return string
      */
     public function treeOrderAction()
     {
-        $pageId       = $this->request->getPost('pageId');
-        $targetPageId = $this->request->getPost('targetPageId');
+        $pageId       = $this->request->getPost('id');
+        $targetPageId = $this->request->getPost('targetId');
         $rearrange    = $this->request->getPost('position');
 
         $page       = Page::getById($pageId);
         $targetPage = Page::getById($targetPageId);
 
-        if($this->acl->allowed(Permission::PAGE_MENU) || $page->type != Page::TYPE_MENU){
+        if ($this->acl->allowed(Permission::PAGE_MENU) || $page->type != Page::TYPE_MENU) {
             $this->pageRearrangeService->rearrange($page, $targetPage, $rearrange);
         }
 
@@ -62,7 +70,7 @@ class PagesDataTableController extends DataTableController
 
         if ($pageId = $dataTable->getFilters()->getEditId()) {
             $page = Page::getById($pageId);
-            $dataTable->getFilters()->setPageType((string)$page->type);
+            $dataTable->getFilters()->setPageType((string) $page->type);
         }
 
         return $dataTable;

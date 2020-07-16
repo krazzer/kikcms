@@ -124,8 +124,14 @@ abstract class DataTable extends Renderable
      */
     private $initialized;
 
+    /**
+     * @return string
+     */
     public abstract function getModel(): string;
 
+    /**
+     * @return string
+     */
     public abstract function getFormClass(): string;
 
     /**
