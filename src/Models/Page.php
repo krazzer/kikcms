@@ -11,10 +11,12 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
+use Website\Classes\WebsiteSettings;
 
 /**
  * @property Page $parent
  * @property Page $linkedPage
+ * @property Page $aliasPage
  * @property PageLanguage $pageLanguage
  * @property Page[] $aliases
  * @property Simple|PageLanguage[] $pageLanguages
@@ -93,9 +95,15 @@ class Page extends Model
     {
         parent::initialize();
 
+        /** @var WebsiteSettings $websiteSettings */
+        $websiteSettings = $this->getDI()->getShared('websiteSettings');
+
+        $pageClass = $websiteSettings->getPageClass();
+
         $this->belongsTo(self::FIELD_PARENT_ID, Page::class, Page::FIELD_ID, ["alias" => "parent"]);
         $this->belongsTo(self::FIELD_LINK, Page::class, Page::FIELD_ID, ["alias" => "linkedPage"]);
         $this->hasOne(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguage"]);
+        $this->hasOne(self::FIELD_ALIAS, $pageClass, Page::FIELD_ID, ["alias" => "aliasPage"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_ALIAS, ["alias" => "aliases"]);
         $this->hasMany(self::FIELD_ID, Page::class, Page::FIELD_PARENT_ID, ["alias" => "children"]);
         $this->hasMany(self::FIELD_ID, PageLanguage::class, PageLanguage::FIELD_PAGE_ID, ["alias" => "pageLanguages"]);
@@ -156,6 +164,10 @@ class Page extends Model
      */
     public function getName(): ?string
     {
+        if($this->alias){
+            return (string) $this->aliasPage->pageLanguage->name;
+        }
+
         return (string) $this->pageLanguage->name;
     }
 

@@ -19,9 +19,9 @@ abstract class PagesFlat extends DataTable
     protected $jsClass = 'PagesFlatDataTable';
 
     /**
-     * @return string
+     * @return string|null
      */
-    abstract function getTemplate(): string;
+    abstract function getTemplate(): ?string;
 
     /**
      * @inheritdoc
@@ -30,9 +30,15 @@ abstract class PagesFlat extends DataTable
     {
         $langCode = $this->getFilters()->getLanguageCode();
 
-        return parent::getDefaultQuery()
-            ->leftJoin(PageLanguage::class, 'IF(p.type = "alias", p.alias, p.id) = pl.page_id AND pl.language_code = "' . $langCode . '"', 'pl')
-            ->andWhere(Page::FIELD_TEMPLATE . ' = :template:', ['template' => $this->getTemplate()]);
+        $pageLangJoin = 'IF(p.type = "alias", p.alias, p.id) = pl.page_id AND pl.language_code = "' . $langCode . '"';
+
+        $query = parent::getDefaultQuery()->leftJoin(PageLanguage::class, $pageLangJoin, 'pl');
+
+        if($template = $this->getTemplate()){
+            $query->andWhere(Page::FIELD_TEMPLATE . ' = :t:', ['t' => $template]);
+        }
+
+        return $query;
     }
 
     /**
@@ -50,7 +56,9 @@ abstract class PagesFlat extends DataTable
     {
         $jsData = parent::getJsData();
 
-        $jsData['properties']['template'] = $this->getTemplate();
+        if($this->getTemplate()) {
+            $jsData['properties']['template'] = $this->getTemplate();
+        }
 
         return $jsData;
     }

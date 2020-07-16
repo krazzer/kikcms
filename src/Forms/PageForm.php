@@ -44,6 +44,11 @@ class PageForm extends DataForm
      */
     protected function initialize()
     {
+        if($this->getObject() && $this->getObject()->alias){
+            $this->addHtmlField('alias', null, 'Aliases cannot be edited');
+            return;
+        }
+
         $this->addTab('Pagina', [
             $this->addTextField('pageLanguage*:name', $this->translator->tl('fields.name'), [new PresenceOf()]),
             $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_PAGE),
@@ -58,10 +63,11 @@ class PageForm extends DataForm
 
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
-        if ($this->getDataTable() instanceof PagesFlat) {
+        if ($this->getDataTable() instanceof PagesFlat && $this->getDataTable()->getTemplate()) {
             $templateField = $this->addHiddenField(Page::FIELD_TEMPLATE, $this->getTemplate()->getKey());
         } else {
-            $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'), $this->templateService->getNameMap());
+            $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'),
+                $this->templateService->getNameMap());
             $templateField->getElement()->setDefault($this->getTemplate()->getKey());
         }
 
@@ -168,6 +174,11 @@ class PageForm extends DataForm
         foreach ($fields as $field) {
             switch (true) {
                 case $field instanceof Field:
+                    // if the current page is an alias, prefix the relationKey
+                    if($this->getObject() && $this->getObject()->alias){
+                        $field->setKey('aliasPage:' . $field->getKey());
+                    }
+
                     $this->addField($field, $this->tabs[0]);
                 break;
 
