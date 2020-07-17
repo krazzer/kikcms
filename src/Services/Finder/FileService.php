@@ -227,7 +227,8 @@ class FileService extends Injectable
      */
     public function getMediaStorageDir(): string
     {
-        return $this->config->application->path . $this->config->application->publicFolder . '/' . FinderConfig::MEDIA_DIR . '/';
+        return $this->config->application->path . $this->config->application->publicFolder . '/' .
+            FinderConfig::MEDIA_DIR . '/';
     }
 
     /**
@@ -281,10 +282,10 @@ class FileService extends Injectable
     public function getUrl(File $file, bool $private = false): string
     {
         if ( ! $private) {
-            return $this->getMediaFilesUrl() . $file->getFileName();
+            return $this->getMediaFilesUrl() . $this->getMediaFileName($file);
         }
 
-        return $this->getMediaFilesUrl() . $file->getHash() . DIRECTORY_SEPARATOR . $this->getUrlFriendlyFileName($file);
+        return $this->getMediaFilesUrl() . $file->getHash() . DIRECTORY_SEPARATOR . $this->getMediaFileName($file);
     }
 
     /**
@@ -293,7 +294,8 @@ class FileService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function getMediaThumbPath(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false): string
+    public function getMediaThumbPath(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE,
+                                      bool $private = false): string
     {
         $dirPath = $this->getMediaThumbDir() . $type . DIRECTORY_SEPARATOR;
 
@@ -314,10 +316,10 @@ class FileService extends Injectable
         $filesDir = $this->getMediaStorageDir() . FinderConfig::FILES_DIR . DIRECTORY_SEPARATOR;
 
         if ( ! $private) {
-            return $filesDir . $file->getFileName();
+            return $filesDir . $this->getMediaFileName($file);
         }
 
-        return $filesDir . $file->getHash() . DIRECTORY_SEPARATOR . $this->getUrlFriendlyFileName($file);
+        return $filesDir . $file->getHash() . DIRECTORY_SEPARATOR . $this->getMediaFileName($file);
     }
 
     /**
@@ -692,5 +694,14 @@ class FileService extends Injectable
         }
 
         return $this->userService->getUser()->folder->getId();
+    }
+
+    /**
+     * @param File $file
+     * @return string
+     */
+    private function getMediaFileName(File $file): string
+    {
+        return $file->getId() . '-' . $this->getUrlFriendlyFileName($file);
     }
 }
