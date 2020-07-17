@@ -161,9 +161,9 @@ abstract class MailForm extends WebForm
 
     /**
      * @param ReCaptchaField|null $reCaptchaField
-     * @return ReCaptchaResponse
+     * @return ReCaptchaResponse|null
      */
-    private function getReCaptchaResponse(?ReCaptchaField $reCaptchaField): ReCaptchaResponse
+    private function getReCaptchaResponse(?ReCaptchaField $reCaptchaField): ?ReCaptchaResponse
     {
         $validators = $this->validation->getValidators();
 
