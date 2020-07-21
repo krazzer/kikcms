@@ -160,9 +160,11 @@ class PageService extends Injectable
                 continue;
             }
 
-            $prefix = str_repeat('&nbsp;', $level * 5) . ($level % 2 ? 'ο' : '•') . ' ';
+            $prefix = str_repeat('&nbsp;', $level * 10) . ($level % 2 ? 'ο' : '•') . ' ';
 
-            $selectArray[$pageId] = $prefix . $pageLangMap->get($pageId)->getName();
+            if($pageLang = $pageLangMap->get($pageId)) {
+                $selectArray[$pageId] = $prefix . $pageLang->getName();
+            }
 
             $subArray    = $this->getSelect($pageId, clone $pageMap, $pageLangMap, $level + 1);
             $selectArray = $selectArray + $subArray;
