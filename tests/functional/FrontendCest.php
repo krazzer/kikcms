@@ -28,7 +28,7 @@ class FrontendCest
 
     public function pageWorks(FunctionalTester $I)
     {
-        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile.png', 'hash' => 'abc', 'extension' => 'png']);
 
         $I->amOnPage('/');
         $I->see('Home');
@@ -39,9 +39,9 @@ class FrontendCest
             Config not found:
             CSS:
             mediaFile empty:
-            mediaFile empty: https://kikcmstest.dev/media/files/1.png
+            mediaFile empty: https://kikcmstest.dev/media/files/1-testfile.png
             mediaFile thumb: https://kikcmstest.dev/media/thumbs/example/1.png
-            mediaFileBg: background-image: url(\'https://kikcmstest.dev/media/files/1.png\');
+            mediaFileBg: background-image: url(\'https://kikcmstest.dev/media/files/1-testfile.png\');
             url: /pagina-2
             url straight: /some-url
             url by key: /

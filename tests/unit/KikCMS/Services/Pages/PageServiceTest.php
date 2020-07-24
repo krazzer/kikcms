@@ -112,8 +112,8 @@ class PageServiceTest extends Unit
 
         $expected = [
             1 => "• page1",
-            3 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage1",
-            4 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage2",
+            3 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage1",
+            4 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage2",
             2 => "• page2"
         ];
 

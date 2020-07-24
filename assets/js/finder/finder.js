@@ -300,8 +300,7 @@ var Finder = Class.extend({
                 formData.append('renderableInstance', self.renderableInstance);
                 formData.append('renderableClass', self.renderableClass);
                 return formData;
-            },
-            fileTypes: KikCMS.allowedExt
+            }
         };
 
         var uploader = new FileUploader(uploaderOptions);

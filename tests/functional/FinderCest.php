@@ -56,7 +56,7 @@ class FinderCest
         $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/1');
-        $I->seeInCurrentUrl('/media/files/abc/testfile');
+        $I->seeInCurrentUrl('/media/files/abc/1-testfile');
     }
 
     public function keyWorks(FunctionalTester $I)
@@ -65,7 +65,7 @@ class FinderCest
         $I->getDbService()->insert(FilePermission::class, ['id' => 1, 'user_id' => 1, 'file_id' => 1, 'right' => 2]);
 
         $I->amOnPage('/cms/file/key/test');
-        $I->seeInCurrentUrl('/media/files/abc/testfile');
+        $I->seeInCurrentUrl('/media/files/abc/1-testfile');
     }
 
     public function openFolderWorks(FunctionalTester $I)
@@ -132,13 +132,13 @@ class FinderCest
 
     public function urlWorks(FunctionalTester $I)
     {
-        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile', 'hash' => 'abc', 'extension' => 'png']);
+        $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile.png', 'hash' => 'abc', 'extension' => 'png']);
 
         $I->amOnPage('/cms/file/url/1');
 
         $url = json_decode($I->grabPageSource())->url;
 
-        $I->assertStringContainsString('https://kikcmstest.dev/media/files/1.png', $url);
+        $I->assertStringContainsString('https://kikcmstest.dev/media/files/1-testfile.png', $url);
 
         $I->canSeeResponseCodeIs(200);
     }

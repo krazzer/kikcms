@@ -93,6 +93,7 @@ var DataTable = Class.extend({
             $container: $uploadButton,
             $uploadButton: $uploadButton,
             action: '/cms/datatable/uploadImages',
+            fileTypes: KikCMS.allowedExt,
             addParametersBeforeUpload: function (formData) {
                 formData.append('renderableInstance', self.renderableInstance);
                 formData.append('renderableClass', self.renderableClass);

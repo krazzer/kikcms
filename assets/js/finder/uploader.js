@@ -3,7 +3,7 @@ var FileUploader = function (options) {
     this.$container    = options.$container;
     this.$uploadButton = options.$uploadButton ? options.$uploadButton : this.$container.find('.upload');
     this.action        = options.action ? options.action : '/cms/finder/upload';
-    this.fileTypes     = options.fileTypes ? options.fileTypes : [];
+    this.fileTypes     = options.fileTypes ? options.fileTypes : KikCMS.allowedExt;
 
     if (options.addParametersBeforeUpload) {
         this.addParametersBeforeUpload = options.addParametersBeforeUpload;

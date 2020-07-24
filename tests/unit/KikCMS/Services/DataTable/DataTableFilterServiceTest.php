@@ -7,6 +7,7 @@ use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use KikCMS\Models\User;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Config\DbConfig;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
@@ -116,9 +117,9 @@ class DataTableFilterServiceTest extends TestCase
         // test nothing
         $this->assertNull($query->getWhere());
 
-        $dataTableFilterServiceMock = $this->getMock(['hasParent', 'getParentRelationKey', 'getParentRelationValue']);
+        $dataTableFilterServiceMock = $this->getMock(['hasParent', 'getParentRelationField', 'getParentRelationValue']);
         $dataTableFilterServiceMock->method('hasParent')->willReturn(true);
-        $dataTableFilterServiceMock->method('getParentRelationKey')->willReturn('key');
+        $dataTableFilterServiceMock->method('getParentRelationField')->willReturn('key');
         $dataTableFilterServiceMock->method('getParentRelationValue')->willReturn('value');
 
         $dataTableFilterServiceMock->addSubDataTableFilter($query, $filters, [], 'id');
@@ -163,12 +164,14 @@ class DataTableFilterServiceTest extends TestCase
         $dataTableFilterService->getParentRelationValue($filters);
     }
 
-    public function testGetParentRelationKey()
+    public function testGetParentRelationField()
     {
         $dataTableFilterService = new DataTableFilterService();
         $filters                = new DataTableFilters;
 
-        $this->assertNull($dataTableFilterService->getParentRelationKey($filters));
+        $dataTableFilterService->relationKeyService = new RelationKeyService();
+
+        $this->assertNull($dataTableFilterService->getParentRelationField($filters));
 
         $filters->setParentModel(User::class);
         $filters->setParentRelationKey('relationKey');
@@ -178,7 +181,7 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterService->modelService = $modelServiceMock;
 
-        $this->assertNull($dataTableFilterService->getParentRelationKey($filters));
+        $this->assertNull($dataTableFilterService->getParentRelationField($filters));
 
         $relation = new Relation(Relation::HAS_ONE, User::class, [], []);
 
@@ -187,7 +190,7 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterService->modelService = $modelServiceMock;
 
-        $this->assertNull($dataTableFilterService->getParentRelationKey($filters));
+        $this->assertNull($dataTableFilterService->getParentRelationField($filters));
 
         $relation = new Relation(Relation::HAS_MANY, User::class, 'field', []);
 
@@ -196,7 +199,7 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterService->modelService = $modelServiceMock;
 
-        $this->assertNull($dataTableFilterService->getParentRelationKey($filters));
+        $this->assertNull($dataTableFilterService->getParentRelationField($filters));
 
         $relation = new Relation(Relation::HAS_MANY, User::class, 'field', 'fieldRef');
 
@@ -205,7 +208,7 @@ class DataTableFilterServiceTest extends TestCase
 
         $dataTableFilterService->modelService = $modelServiceMock;
 
-        $this->assertEquals('fieldRef', $dataTableFilterService->getParentRelationKey($filters));
+        $this->assertEquals('fieldRef', $dataTableFilterService->getParentRelationField($filters));
     }
 
     public function testHasParent()
@@ -215,9 +218,9 @@ class DataTableFilterServiceTest extends TestCase
 
         $this->assertFalse($dataTableFilterService->hasParent($filters));
 
-        $dataTableFilterServiceMock = $this->getMock(['getParentRelationKey']);
+        $dataTableFilterServiceMock = $this->getMock(['getParentRelationField']);
 
-        $dataTableFilterServiceMock->method('getParentRelationKey')->willReturn('key');
+        $dataTableFilterServiceMock->method('getParentRelationField')->willReturn('key');
 
         $this->assertTrue($dataTableFilterServiceMock->hasParent($filters));
     }

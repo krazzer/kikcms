@@ -34,8 +34,8 @@ class PlaceholderServiceTest extends TestCase
         $expectedResult = "
             /media/thumbs/default/1.png
             /media/thumbs/default/hash.png
-            /media/files/1.png
-            /media/files/hash/test.png
+            /media/files/1-test.png
+            /media/files/hash/1-test.png
         ";
 
         $placeholderService->db->delete(File::TABLE);
@@ -44,8 +44,8 @@ class PlaceholderServiceTest extends TestCase
         $this->assertEquals($expectedResult, $placeholderService->replaceAll($content));
 
         $createdFiles = [
-            $sitePath . 'public_html/media/files/1.png',
-            $sitePath . 'public_html/media/files/hash/test.png',
+            $sitePath . 'public_html/media/files/1-test.png',
+            $sitePath . 'public_html/media/files/hash/1-test.png',
             $sitePath . 'public_html/media/thumbs/default/1.png',
             $sitePath . 'public_html/media/thumbs/default/hash.png',
         ];

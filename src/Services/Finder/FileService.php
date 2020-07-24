@@ -564,7 +564,7 @@ class FileService extends Injectable
     {
         $fileNameParts = explode('.', $file->getName());
 
-        if (count($fileNameParts) == 1) {
+        if (count($fileNameParts) === 1) {
             return $this->urlService->toSlug($file->getName());
         }
 
