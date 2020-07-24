@@ -402,9 +402,9 @@ abstract class DataTable extends Renderable
     /**
      * @return null|string
      */
-    public function getParentRelationKey(): ?string
+    public function getParentRelationField(): ?string
     {
-        return $this->dataTableFilterService->getParentRelationKey($this->getFilters());
+        return $this->dataTableFilterService->getParentRelationField($this->getFilters());
     }
 
     /**
@@ -532,8 +532,8 @@ abstract class DataTable extends Renderable
     {
         $this->initializeDatatable(true);
 
-        if ($this->getParentRelationKey() && $this->filters->getParentEditId() !== null) {
-            $this->form->addHiddenField($this->getParentRelationKey(), $this->getParentRelationValue());
+        if ($this->getParentRelationField() && $this->filters->getParentEditId() !== null) {
+            $this->form->addHiddenField($this->getParentRelationField(), $this->getParentRelationValue());
         }
 
         return $this->form->render();
@@ -650,7 +650,7 @@ abstract class DataTable extends Renderable
         } else {
             $newIdsCache = (new SubDataTableNewIdsCache)
                 ->setModel($this->getModel())
-                ->setColumn($this->getParentRelationKey());
+                ->setColumn($this->getParentRelationField());
         }
 
         $newIdsCache->addId($editId);

@@ -48,7 +48,7 @@ class DataTableService extends Injectable
             ->setObject($object)
             ->setParentEditId($dataTable->getFilters()->getParentEditId());
 
-        if ($parentRelationKey = $dataTable->getParentRelationKey()) {
+        if ($parentRelationKey = $dataTable->getParentRelationField()) {
             $storageData->addFormInputValue($parentRelationKey, $dataTable->getParentRelationValue());
         }
 

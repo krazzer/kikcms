@@ -125,7 +125,6 @@ class TemplateService extends Injectable
         $templates   = $this->templateFields->getTemplates();
         $allowedKeys = [];
 
-        /** @var Template $template */
         foreach ($templates as $template) {
             if ( ! $template->isHidden()) {
                 $allowedKeys[] = $template->getKey();

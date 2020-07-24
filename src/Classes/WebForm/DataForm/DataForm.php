@@ -6,6 +6,7 @@ use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Tab;
 use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
@@ -162,11 +163,11 @@ abstract class DataForm extends WebForm
             return;
         }
 
-        $defaultLangCode = $this->languageService->getDefaultLanguageCode();
-        $currentLangCode = $this->getFilters()->getLanguageCode();
+        $defLangCode = $this->languageService->getDefaultLanguageCode();
+        $curLangCode = $this->getFilters()->getLanguageCode();
 
         $editData        = $this->getEditData();
-        $defaultLangData = $this->getRelatedData($defaultLangCode);
+        $defaultLangData = $this->getRelatedData($defLangCode);
         $defaultLangData = $this->transformDataForDisplay($defaultLangData);
 
         /** @var Field $field */
@@ -175,7 +176,7 @@ abstract class DataForm extends WebForm
                 $field->setDefault($editData[$key]);
             }
 
-            if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key] && $currentLangCode != $defaultLangCode) {
+            if (array_key_exists($key, $defaultLangData) && $defaultLangData[$key] && $curLangCode != $defLangCode) {
                 if (is_string($defaultLangData[$key])) {
                     $field->setPlaceholder($defaultLangData[$key]);
                 }
@@ -414,6 +415,10 @@ abstract class DataForm extends WebForm
         $object = $this->getObject();
 
         foreach ($this->getFieldMap() as $key => $field) {
+            if($field instanceOf DataTableField || $field instanceof SelectDataTableField){
+                continue;
+            }
+
             if ($this->relationKeyService->isRelationKey($key)) {
                 $data[$key] = $this->relationKeyService->get($object, $key, $langCode);
             }

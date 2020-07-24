@@ -116,6 +116,55 @@ class RelationKeyService extends Injectable
     }
 
     /**
+     * @param string $model
+     * @param string $relationKey
+     * @return array [string model, string relationKey]
+     */
+    public function getLastModelAndKey(string $model, string $relationKey): array
+    {
+        if ( ! $this->hasMultipleRelations($relationKey)) {
+            return [$model, $relationKey];
+        }
+
+        $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
+
+        $lastModel = $model;
+        $lastKey   = $relationKey;
+
+        foreach ($parts as $alias) {
+            $relation  = $this->modelsManager->getRelationByAlias($lastModel, $alias);
+            $lastModel = $relation->getReferencedModel();
+            $lastKey   = $alias;
+        }
+
+        return [$lastModel, $lastKey];
+    }
+
+    /**
+     * @param Model $object
+     * @param string $relationKey
+     * @return Model
+     */
+    public function getLastRelatedObject(Model $object, string $relationKey): Model
+    {
+        if ( ! $this->hasMultipleRelations($relationKey)) {
+            return $object;
+        }
+
+        $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
+
+        array_pop($parts);
+
+        $lastObject = $object;
+
+        foreach ($parts as $alias) {
+            $lastObject = $lastObject->$alias;
+        }
+
+        return $lastObject;
+    }
+
+    /**
      * Check if any relation objects are missing, and create them
      *
      * @param Model $model
@@ -123,7 +172,6 @@ class RelationKeyService extends Injectable
      */
     private function createMissingRelations(Model $model, array $parts)
     {
-        /** @var Model $currentModel */
         $currentModel = $model;
 
         foreach ($parts as $index => $part) {
@@ -224,7 +272,7 @@ class RelationKeyService extends Injectable
             if (strstr($field, DataFormConfig::RELATION_KEY_FIELD_SEPARATOR)) {
                 list($keyField, $valueField) = explode(DataFormConfig::RELATION_KEY_FIELD_SEPARATOR, $field);
 
-                if( ! $valueValue){
+                if ( ! $valueValue) {
                     continue;
                 }
 
@@ -239,5 +287,14 @@ class RelationKeyService extends Injectable
 
         $model->$relationField->delete();
         $model->$relationField = $relatedObjects;
+    }
+
+    /**
+     * @param string $relationKey
+     * @return bool
+     */
+    private function hasMultipleRelations(string $relationKey): bool
+    {
+        return strpos($relationKey, DataFormConfig::RELATION_KEY_SEPARATOR) !== false;
     }
 }

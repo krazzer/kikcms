@@ -6,9 +6,9 @@ namespace KikCMS\Services\DataTable;
 
 use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Classes\DataTable\Filter\Filter;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Config\DbConfig;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
 
@@ -100,13 +100,14 @@ class DataTableFilterService extends Injectable
      * @param array $cachedNewIds
      * @param string $aliasedTableKey
      */
-    public function addSubDataTableFilter(Builder $query, DataTableFilters $filters, array $cachedNewIds, string $aliasedTableKey)
+    public function addSubDataTableFilter(Builder $query, DataTableFilters $filters, array $cachedNewIds,
+                                          string $aliasedTableKey)
     {
         if ( ! $this->hasParent($filters)) {
             return;
         }
 
-        $key   = $this->getParentRelationKey($filters);
+        $key   = $this->getParentRelationField($filters);
         $value = $this->getParentRelationValue($filters);
 
         $query->andWhere($key . ' = ' . $value);
@@ -120,7 +121,7 @@ class DataTableFilterService extends Injectable
      * @param DataTableFilters $filters
      * @return null|string
      */
-    public function getParentRelationKey(DataTableFilters $filters): ?string
+    public function getParentRelationField(DataTableFilters $filters): ?string
     {
         $model       = $filters->getParentModel();
         $relationKey = $filters->getParentRelationKey();
@@ -128,6 +129,8 @@ class DataTableFilterService extends Injectable
         if ( ! $model || ! $relationKey) {
             return null;
         }
+
+        list($model, $relationKey) = $this->relationKeyService->getLastModelAndKey($model, $relationKey);
 
         if ( ! $relation = $this->modelService->getRelation($model, $relationKey)) {
             return null;
@@ -158,12 +161,15 @@ class DataTableFilterService extends Injectable
             return 0;
         }
 
-        $relation     = $this->modelService->getRelation($model, $relationKey);
-        $parentObject = $this->modelService->getObject($model, $editId);
+        $parentObject  = $this->modelService->getObject($model, $editId);
+        $relatedObject = $this->relationKeyService->getLastRelatedObject($parentObject, $relationKey);
 
-        $field = $relation->getFields();
+        list($model, $relationKey) = $this->relationKeyService->getLastModelAndKey($model, $relationKey);
 
-        return $parentObject->$field;
+        $relation = $this->modelService->getRelation($model, $relationKey);
+        $field    = $relation->getFields();
+
+        return $relatedObject->$field;
     }
 
     /**
@@ -172,6 +178,6 @@ class DataTableFilterService extends Injectable
      */
     public function hasParent(DataTableFilters $filters): bool
     {
-        return $this->getParentRelationKey($filters) != null;
+        return $this->getParentRelationField($filters) != null;
     }
 }
