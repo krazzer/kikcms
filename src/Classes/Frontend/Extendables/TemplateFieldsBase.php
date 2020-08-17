@@ -29,4 +29,14 @@ class TemplateFieldsBase extends WebsiteExtendable
     {
         return [];
     }
+
+    /**
+     * Get an array of field display conditions. If the callable returns false, the field is not shown. A field is shown by default
+     *
+     * @return array [key => Callable returning true or false]
+     */
+    public function getFieldDisplayConditions(): array
+    {
+        return [];
+    }
 }

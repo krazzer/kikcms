@@ -29,7 +29,6 @@ class TemplateService extends Injectable
     {
         $templates = $this->templateFields->getTemplates();
 
-        /** @var Template $template */
         foreach ($templates as $template) {
             if ($template->getKey() == $templateKey) {
                 return $template;
@@ -94,7 +93,6 @@ class TemplateService extends Injectable
 
         $nameMap = [];
 
-        /** @var Template $template */
         foreach ($templates as $template) {
             $nameMap[$template->getKey()] = $template->getName();
         }

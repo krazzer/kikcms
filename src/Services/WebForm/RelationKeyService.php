@@ -4,16 +4,13 @@
 namespace KikCMS\Services\WebForm;
 
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\DataFormConfig;
 use KikCmsCore\Classes\Model;
-use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Relation;
 
 /**
  * Handles DataForm fields that have relations in their keys like: "person:name", called 'RelationKeys'
- *
- * @property DbService $dbService
  */
 class RelationKeyService extends Injectable
 {
@@ -118,7 +115,7 @@ class RelationKeyService extends Injectable
     /**
      * @param string $model
      * @param string $relationKey
-     * @return array [string model, string relationKey]
+     * @return array [string|null model, string relationKey]
      */
     public function getLastModelAndKey(string $model, string $relationKey): array
     {
@@ -132,6 +129,9 @@ class RelationKeyService extends Injectable
         $lastKey   = $relationKey;
 
         foreach ($parts as $alias) {
+            // initialize the model so aliases can be fetched
+            new $lastModel();
+
             $relation  = $this->modelsManager->getRelationByAlias($lastModel, $alias);
             $lastModel = $relation->getReferencedModel();
             $lastKey   = $alias;
@@ -143,9 +143,9 @@ class RelationKeyService extends Injectable
     /**
      * @param Model $object
      * @param string $relationKey
-     * @return Model
+     * @return Model|null
      */
-    public function getLastRelatedObject(Model $object, string $relationKey): Model
+    public function getLastRelatedObject(Model $object, string $relationKey): ?Model
     {
         if ( ! $this->hasMultipleRelations($relationKey)) {
             return $object;

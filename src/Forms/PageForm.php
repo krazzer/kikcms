@@ -44,7 +44,7 @@ class PageForm extends DataForm
      */
     protected function initialize()
     {
-        if($this->getObject() && $this->getObject()->alias){
+        if ($this->getObject() && $this->getObject()->alias) {
             $this->addHtmlField('alias', null, 'Aliases cannot be edited');
             return;
         }
@@ -168,14 +168,19 @@ class PageForm extends DataForm
      */
     protected function addFieldsForCurrentTemplate()
     {
-        $template = $this->getTemplate();
-        $fields   = $this->templateService->getFieldsByTemplate($template);
+        $template          = $this->getTemplate();
+        $fields            = $this->templateService->getFieldsByTemplate($template);
+        $displayConditions = $this->templateFields->getFieldDisplayConditions();
 
-        foreach ($fields as $field) {
+        foreach ($fields as $key => $field) {
+            if (array_key_exists($key, $displayConditions) && ! $displayConditions[$key]($this->getObject())) {
+                continue;
+            }
+
             switch (true) {
                 case $field instanceof Field:
                     // if the current page is an alias, prefix the relationKey
-                    if($this->getObject() && $this->getObject()->alias){
+                    if ($this->getObject() && $this->getObject()->alias) {
                         $field->setKey('aliasPage:' . $field->getKey());
                     }
 
