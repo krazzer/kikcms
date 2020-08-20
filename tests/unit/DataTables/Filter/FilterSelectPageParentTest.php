@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DataTables\Filter;
+namespace unit\DataTables\Filter;
 
 use Helpers\Unit;
 use KikCMS\DataTables\Filter\FilterSelectPageParent;

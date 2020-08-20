@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services;
+namespace unit\Services;
 
 use Helpers\Unit;
 use KikCMS\Classes\Phalcon\Loader;

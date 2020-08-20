@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\DataTable;
+namespace unit\Services\DataTable;
 
+use Codeception\Test\Unit;
 use KikCMS\Services\DataTable\PagesDataTableService;
 
-class PagesDataTableServiceTest extends \Codeception\Test\Unit
+class PagesDataTableServiceTest extends Unit
 {
     public function testFormatName()
     {

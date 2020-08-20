@@ -1,9 +1,10 @@
 <?php
 
 
-namespace KikCMS\Classes\DataTable\Filter;
+namespace unit\Classes\DataTable\Filter;
 
 
+use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\TestCase;
 

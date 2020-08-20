@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Integration\DataForm;
+namespace unit\DataForm;
 
 
 use Helpers\Forms\PersonDataTableSelectForm;

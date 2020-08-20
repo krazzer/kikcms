@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Classes\Phalcon\Validator;
+namespace unit\Classes\Phalcon\Validator;
 
 use Codeception\Test\Unit;
 use Helpers\TestHelper;

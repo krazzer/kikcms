@@ -1,7 +1,7 @@
 <?php
 
 
-namespace KikCMS\Classes\DataTable;
+namespace unit\Classes\DataTable;
 
 
 use Helpers\EditableDataTable;
@@ -10,6 +10,8 @@ use Helpers\NonEditableDataTable;
 use Helpers\Tag;
 use Helpers\TestableDataTable;
 use Helpers\TestHelper;
+use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\DataTable\DataTableFilters;
 use KikCMS\Classes\DataTable\Filter\FilterSelect;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Url;

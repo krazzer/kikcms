@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\Analytics;
+namespace unit\Services\Analytics;
 
 use Codeception\Test\Unit;
 use DateTime;

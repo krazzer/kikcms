@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Classes;
+namespace unit\Classes;
 
 use Helpers\Unit;
 use KikCMS\ObjectLists\CacheNodeMap;

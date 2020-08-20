@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\Cms;
+namespace unit\Services\Cms;
 
 use Helpers\TestHelper;
 use Helpers\Unit;

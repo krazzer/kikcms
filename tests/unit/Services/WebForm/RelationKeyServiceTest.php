@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\WebForm;
+namespace unit\Services\WebForm;
 
 use Helpers\Models\PersonInterest;
 use Helpers\Unit;

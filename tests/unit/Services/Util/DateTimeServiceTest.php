@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\Util;
+namespace unit\Services\Util;
 
 use Helpers\Unit;
 use KikCMS\Services\Util\DateTimeService;

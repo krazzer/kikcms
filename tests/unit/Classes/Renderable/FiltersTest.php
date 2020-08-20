@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes\Renderable\Filters;
+namespace unit\Classes\Renderable;
 
 use Codeception\Test\Unit;
 use KikCMS\Classes\WebForm\DataForm\DataFormFilters;

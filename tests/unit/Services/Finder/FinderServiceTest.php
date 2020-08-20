@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\Finder;
+namespace unit\Services\Finder;
 
 use Helpers\Unit;
 use KikCMS\Classes\Finder\FinderFilters;

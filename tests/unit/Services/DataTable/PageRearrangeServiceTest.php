@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Services\DataTable;
+namespace unit\Services\DataTable;
 
 use Helpers\Unit;
 use KikCMS\Models\Page;

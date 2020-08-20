@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DataTables;
+namespace unit\DataTables;
 
 use Helpers\TestHelper;
 use Helpers\Unit;

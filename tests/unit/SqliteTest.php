@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+namespace unit;
+
+use Exception;
 use Helpers\Unit;
 use KikCMS\Models\User;
 use KikCmsCore\Services\DbService;

@@ -1,8 +1,9 @@
 <?php
 
-namespace KikCMS\Classes\DataTable;
+namespace unit\Classes\DataTable;
 
 
+use KikCMS\Classes\DataTable\TableData;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 

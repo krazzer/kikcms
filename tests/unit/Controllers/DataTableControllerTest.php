@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace unit\Controllers;
+
 use Helpers\Unit;
 use KikCMS\Classes\Finder\UploadStatus;
 use KikCMS\Classes\Phalcon\AccessControl;

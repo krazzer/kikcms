@@ -1,10 +1,11 @@
 <?php
 
-namespace KikCMS\Classes\DataTable;
+namespace unit\Classes\DataTable;
 
 
 use Exception;
 use Helpers\DataTables\TestSelectDataTable;
+use KikCMS\Classes\DataTable\SelectDataTableFilters;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +22,7 @@ class SelectDataTableTest extends TestCase
 
         $selectDataTable->setQueryToShowSelectionFirst($query);
 
-        $this->assertEquals($query->getColumns()[1], '0 AS dataTableSelectIds');
+        $this->assertEquals('0 AS dataTableSelectIds', $query->getColumns()[1]);
 
         // test selected values
         $selectDataTable->getFilters()->setSelectedValues([1]);
@@ -30,7 +31,7 @@ class SelectDataTableTest extends TestCase
 
         $selectDataTable->setQueryToShowSelectionFirst($query);
 
-        $this->assertEquals($query->getColumns()[1], 'IF(a.id IN(1), 1, 0) AS dataTableSelectIds');
+        $this->assertEquals('IF(a.id IN(1), 1, 0) AS dataTableSelectIds', $query->getColumns()[1]);
 
         // test order by
         $query->orderBy('col1 ASC');

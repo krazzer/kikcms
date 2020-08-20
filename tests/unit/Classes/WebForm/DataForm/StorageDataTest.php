@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Classes\WebForm\DataForm\StorageData;
+namespace unit\Classes\WebForm\DataForm;
 
 use Codeception\Test\Unit;
 use KikCMS\Classes\WebForm\DataForm\StorageData;

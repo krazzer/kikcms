@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Classes\Phalcon\Validator;
+namespace unit\Classes\Phalcon\Validator;
 
 use Helpers\Unit;
 use KikCMS\Classes\Phalcon\Validator\NewUniqueness;

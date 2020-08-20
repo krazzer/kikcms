@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Util;
+namespace unit\Services\Util;
 
 use KikCMS\Services\Util\QueryService;
 use Phalcon\Mvc\Model\Query\Builder;

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace unit;
+
 use Codeception\Test\Unit;
 use KikCMS\Classes\Translator;
 use KikCMS\DataTables\Translations;
@@ -9,6 +11,7 @@ use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Util\StringService;
+use ReflectionMethod;
 
 class TranslationsTest extends Unit
 {

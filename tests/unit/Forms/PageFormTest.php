@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Forms;
+namespace unit\Forms;
 
 use Helpers\DataTables\PagesFlat;
 use Helpers\Unit;

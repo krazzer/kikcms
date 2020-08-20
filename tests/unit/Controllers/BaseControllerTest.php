@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Controllers;
+namespace unit\Controllers;
 
 use Helpers\Unit;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;

@@ -1,14 +1,17 @@
 <?php
 declare(strict_types=1);
 
+namespace unit;
+
 use Codeception\Test\Unit;
+use DateTime;
 use KikCMS\Objects\RememberMeHash;
 
 class RememberMeHashTest extends Unit
 {
     public function testSetExpire()
     {
-        $rememberMeHash = new RememberMeHash(new DateTime(), 'hash');
+        $rememberMeHash = new RememberMeHash(new DateTime, 'hash');
 
         $rememberMeHash->setExpire(new DateTime('2020-01-01'));
 

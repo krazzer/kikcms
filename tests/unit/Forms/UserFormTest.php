@@ -1,12 +1,15 @@
 <?php
 declare(strict_types=1);
 
+namespace unit\Forms;
+
 use Helpers\TestHelper;
 use Helpers\Unit;
 use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
 use KikCMS\Services\Cms\CmsService;
 use Phalcon\Validation;
+use ReflectionMethod;
 
 class UserFormTest extends Unit
 {

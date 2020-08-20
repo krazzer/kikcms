@@ -1,7 +1,8 @@
 <?php
 
-namespace KikCMS\Classes\Database;
+namespace unit\Classes\Database;
 
+use KikCMS\Classes\Database\Now;
 use PHPUnit\Framework\TestCase;
 
 class NowTest extends TestCase

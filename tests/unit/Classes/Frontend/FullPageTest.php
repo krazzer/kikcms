@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUndefinedMethodInspection */
 
-namespace Classes\Frontend;
+namespace unit\Classes\Frontend;
 
 use Helpers\Unit;
 use KikCMS\Classes\Frontend\FullPage;

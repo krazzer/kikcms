@@ -1,11 +1,13 @@
 <?php
 
 
-namespace KikCMS\Classes\Cache;
+namespace unit\Classes\Cache;
 
 
+use KikCMS\Classes\Cache\CacheNode;
 use KikCMS\ObjectLists\CacheNodeMap;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class CacheNodeTest extends TestCase
 {
@@ -48,7 +50,7 @@ class CacheNodeTest extends TestCase
         $this->assertEquals(serialize($array), $cacheNode->getValueOutput());
 
         // test object
-        $object        = new \stdClass();
+        $object        = new stdClass();
         $object->value = 'test';
 
         $cacheNode = (new CacheNode)->setValue($object);

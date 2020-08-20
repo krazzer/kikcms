@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\Pages;
+namespace unit\Services\Pages;
 
 use Helpers\Unit;
 use KikCMS\Models\Page;

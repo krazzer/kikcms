@@ -1,6 +1,6 @@
 <?php
 
-namespace KikCMS\Classes\WebForm;
+namespace unit\Classes\WebForm;
 
 use Codeception\Test\Unit;
 use Helpers\Forms\TestMailForm;
