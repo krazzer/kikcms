@@ -4,8 +4,8 @@
 {% block fields %}
     {% for field in fields %}
         {% set element = field.element %}
-        {% set errorMessages = errorContainer.alertErrorMessagesForField(field) %}
-        {% set titleErrorMessages = errorContainer.titleErrorMessagesForField(field) %}
+        {% set errorMessages = errorContainer.alertErrorMessagesForField(field, element.value) %}
+        {% set titleErrorMessages = errorContainer.titleErrorMessagesForField(field, element.value) %}
         {% set hasError = errorContainer.fieldHasError(field) %}
         {% set type = field.type ?: 'default' %}
         {% set classes = 'form-group type-' ~ type ~ (hasError ? ' has-error has-feedback') %}
