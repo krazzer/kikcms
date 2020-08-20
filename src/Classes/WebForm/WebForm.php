@@ -23,6 +23,8 @@ use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Date;
+use Phalcon\Validation\Validator\PresenceOf;
+use ReflectionClass;
 
 /**
  * @property AccessControl $acl
@@ -204,7 +206,7 @@ abstract class WebForm extends Renderable
     {
         $input = $this->getInput();
 
-        foreach ($this->getFieldMap() as $key => $field){
+        foreach ($this->getFieldMap() as $key => $field) {
             // in case of a checkbox, set the value by its existence
             if ($field->getType() == Field::TYPE_CHECKBOX) {
                 $input[$key] = isset($input[$key]) ? 1 : 0;
@@ -363,7 +365,7 @@ abstract class WebForm extends Renderable
 
         // add select field placeholders
         foreach ($this->fieldMap as $key => $field) {
-            if ($field instanceOf SelectField && $field->getAddPlaceholder()) {
+            if ($field instanceof SelectField && $field->getAddPlaceholder()) {
                 $placeHolderLabel = $this->translator->tl('webform.selectPlaceHolderLabel');
                 $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
             }
@@ -503,8 +505,8 @@ abstract class WebForm extends Renderable
      */
     private function getEncType(): string
     {
-        foreach ($this->getFieldMap() as $field){
-            if($field instanceof FileInputField){
+        foreach ($this->getFieldMap() as $field) {
+            if ($field instanceof FileInputField) {
                 return 'multipart/form-data';
             }
         }
@@ -518,7 +520,7 @@ abstract class WebForm extends Renderable
     private function getErrors(): ErrorContainer
     {
         $errorContainer = $this->validate($this->getInput());
-
+        dlog($errorContainer);
         if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
@@ -536,13 +538,14 @@ abstract class WebForm extends Renderable
             }
 
             foreach ($elementMessages as $message) {
+                $alert   = $message->getType() != (new ReflectionClass(PresenceOf::class))->getShortName();
                 $message = $message->getMessage();
 
-                if($formElement->getLabel()){
+                if ($formElement->getLabel()) {
                     $message = str_replace(':label', "'" . strip_tags($formElement->getLabel()) . "'", $message);
                 }
 
-                $errorContainer->addFieldError($elementName, $message);
+                $errorContainer->addFieldError(new FieldError($elementName, $message, $alert));
             }
 
             $class = $formElement->getAttribute('class');
@@ -644,7 +647,7 @@ abstract class WebForm extends Renderable
     private function reUseDataTableInstances()
     {
         foreach ($this->fieldMap as $key => $field) {
-            if ($field instanceOf DataTableField && $this->request->hasPost($key)) {
+            if ($field instanceof DataTableField && $this->request->hasPost($key)) {
                 $instance = $this->request->getPost($key);
                 $field->getDataTable()->setInstance($instance);
                 $field->setDefault($instance);

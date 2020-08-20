@@ -12,6 +12,7 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\ErrorContainer;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\FieldError;
 use KikCMS\Classes\WebForm\Tab;
 use KikCMS\DataTables\PagesFlat;
 use KikCMS\Models\Page;
@@ -149,7 +150,7 @@ class PageForm extends DataForm
         }
 
         if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
-            $errorContainer->addFieldError(self::FIELD_SLUG, $this->translator->tl('dataTables.pages.slugExists'));
+            $errorContainer->addFieldError(new FieldError(self::FIELD_SLUG, $this->translator->tl('dataTables.pages.slugExists')));
         }
 
         return $errorContainer;

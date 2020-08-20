@@ -10,29 +10,30 @@ class ErrorContainer
     /** @var array Errors that where relevant to the complete form input, not a single field */
     private $formErrors = [];
 
-    /** @var array [fieldName => string[]] */
+    /** @var array [field => FieldError[]] */
     private $fieldErrors = [];
 
     /** @var array all fields that have an error */
     private $fieldsWithErrors = [];
 
     /**
-     * @param string $message
-     * @param string $field
+     * @param FieldError $fieldError
      * @param bool $addToGlobal set this true if you also want this to be shown as form error
      * @return ErrorContainer
      */
-    public function addFieldError(string $field, string $message, $addToGlobal = false): ErrorContainer
+    public function addFieldError(FieldError $fieldError, $addToGlobal = false): ErrorContainer
     {
+        $field = $fieldError->getField();
+
         if( ! array_key_exists($field, $this->fieldErrors)){
             $this->fieldErrors[$field] = [];
         }
 
-        $this->fieldErrors[$field][] = $message;
+        $this->fieldErrors[$field][] = $fieldError;
         $this->setFieldHasError($field);
 
         if($addToGlobal){
-            $this->addFormError($message);
+            $this->addFormError($fieldError->getMessage());
         }
 
         return $this;
@@ -65,7 +66,7 @@ class ErrorContainer
 
     /**
      * @param Field $field
-     * @return array
+     * @return FieldError[]
      */
     public function getErrorsForField(Field $field): array
     {
@@ -76,6 +77,44 @@ class ErrorContainer
         }
 
         return $this->fieldErrors[$fieldKey];
+    }
+
+    /**
+     * @param Field $field
+     * @return array
+     */
+    public function getAlertErrorMessagesForField(Field $field): array
+    {
+        $messages = [];
+
+        $errors = $this->getErrorsForField($field);
+
+        foreach ($errors as $error){
+            if($error->isAlert()){
+                $messages[] = $error->getMessage();
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param Field $field
+     * @return array
+     */
+    public function getTitleErrorMessagesForField(Field $field): array
+    {
+        $messages = [];
+
+        $errors = $this->getErrorsForField($field);
+
+        foreach ($errors as $error){
+            if( ! $error->isAlert()){
+                $messages[] = $error->getMessage();
+            }
+        }
+
+        return $messages;
     }
 
     /**

@@ -30,6 +30,7 @@
         <div class="checkbox">
             <label>{{ form.render(element.name)|raw }} {{ element.getLabel|raw }}</label>
         </div>
+        {{ block('errorWarnings') }}
     </div>
 {%- endblock -%}
 
@@ -62,6 +63,7 @@
                 <span class="glyphicon glyphicon-remove form-control-feedback"></span>
             {% endif %}
         {% endblock %}
+        {{ block('errorWarnings') }}
     </div>
 {%- endblock -%}
 
@@ -133,6 +135,7 @@
         <div class="field">
             {{ field.content|raw }}
         </div>
+        {{ block('errorWarnings') }}
     </div>
 {%- endblock -%}
 
@@ -152,12 +155,8 @@
             {{ tl('webform.altOption') }}:
             <input class="form-control" type="text" name="{{ element.name }}[alt]" value="{{ element.value.alt }}">
         {% endif %}
+        {{ block('errorWarnings') }}
     </div>
-{% endblock %}
-
-{% block fieldPassword %}
-    {{ block('fieldDefault') }}
-    {{ block('errorWarnings') }}
 {% endblock %}
 
 {%- block fieldRadioButton %}
@@ -173,6 +172,7 @@
                 </label>
             </div>
         {% endfor %}
+        {{ block('errorWarnings') }}
     </div>
 {% endblock %}
 
@@ -199,8 +199,8 @@
                 });
             </script>
         {% endif %}
+        {{ block('errorWarnings') }}
     </div>
-    {{ block('errorWarnings') }}
 {%- endblock -%}
 
 {% block fieldSection %}
