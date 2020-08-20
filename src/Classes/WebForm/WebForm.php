@@ -520,7 +520,7 @@ abstract class WebForm extends Renderable
     private function getErrors(): ErrorContainer
     {
         $errorContainer = $this->validate($this->getInput());
-        dlog($errorContainer);
+
         if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
