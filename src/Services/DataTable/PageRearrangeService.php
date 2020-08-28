@@ -158,18 +158,24 @@ class PageRearrangeService extends Injectable
     {
         $this->db->query("SET SESSION group_concat_max_len = 99999");
 
+        $allowedNonParentQuery = "(
+            p.parent_id IS NULL 
+            AND (
+                p.type = 'menu' OR 
+                EXISTS(SELECT id FROM cms_page WHERE parent_id = p.id))
+            )";
+
         $relations = $this->dbService->queryAssoc("
             SELECT 0, GROUP_CONCAT(p.id ORDER BY p.display_order ASC) 
             FROM cms_page p 
-            WHERE p.type = 'menu' 
-            AND p.parent_id IS NULL
+            WHERE " . $allowedNonParentQuery . "
             
             UNION
             
             SELECT p.id, GROUP_CONCAT(c.id ORDER BY c.display_order ASC) 
             FROM cms_page p  
             LEFT JOIN cms_page c ON p.id = c.parent_id
-            WHERE ((p.parent_id IS NOT NULL) OR (p.parent_id IS NULL AND p.type = 'menu')) 
+            WHERE p.parent_id IS NOT NULL OR " . $allowedNonParentQuery . " 
             GROUP BY p.id
         ");
 

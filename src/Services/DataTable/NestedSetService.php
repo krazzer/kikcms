@@ -8,6 +8,7 @@ use KikCMS\Models\Page;
 use KikCmsCore\Services\DbService;
 use Phalcon\Db\RawValue;
 use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * @property DbService $dbService
@@ -21,6 +22,10 @@ class NestedSetService extends Injectable
      */
     public function setAndMakeRoomForNewPage(Page $page)
     {
+        if ( ! $page->parent->rgt) {
+            $this->addToNestedSet($page->parent);
+        }
+
         $parentRgt = $page->parent->rgt;
 
         $page->lft = $parentRgt;
@@ -30,5 +35,28 @@ class NestedSetService extends Injectable
 
         $this->db->update(Page::TABLE, [Page::FIELD_RGT], [new RawValue("rgt + 2")], "rgt >= " . $parentRgt);
         $this->db->update(Page::TABLE, [Page::FIELD_LFT], [new RawValue("lft + 2")], "lft >= " . $parentRgt);
+    }
+
+    /**
+     * @param Page $page
+     */
+    public function addToNestedSet(Page $page)
+    {
+        $maxRight = $this->getMaxRightValue();
+
+        $page->lft   = $maxRight + 1;
+        $page->rgt   = $maxRight + 2;
+        $page->level = 0;
+
+        $page->save();
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxRightValue(): int
+    {
+        $query = (new Builder)->columns(['MAX(' . Page::FIELD_RGT . ')'])->from(Page::class);
+        return (int) $this->dbService->getValue($query);
     }
 }
