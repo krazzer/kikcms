@@ -174,8 +174,10 @@ class PageForm extends DataForm
         $displayConditions = $this->templateFields->getFieldDisplayConditions();
 
         foreach ($fields as $key => $field) {
-            if (array_key_exists($key, $displayConditions) && ! $displayConditions[$key]($this->getObject())) {
-                continue;
+            if (array_key_exists($key, $displayConditions)) {
+                if( ! $displayConditions[$key]($this->getObject(), $this)) {
+                    continue;
+                }
             }
 
             switch (true) {
