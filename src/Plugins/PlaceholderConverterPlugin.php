@@ -1,4 +1,4 @@
-<?php declare(strict_types=1); /** @noinspection PhpUnusedParameterInspection */
+<?php declare(strict_types=1);
 
 namespace KikCMS\Plugins;
 
@@ -17,6 +17,7 @@ class PlaceholderConverterPlugin extends Plugin
     /**
      * This action is executed before any response is shown
      *
+     * @noinspection PhpUnusedParameterInspection
      * @param Event $event
      * @param $app
      * @param $response

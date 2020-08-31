@@ -98,11 +98,10 @@ class Services extends BaseServices
         /** @var NamespaceService $namespaceService */
         $namespaceService = $this->get('namespaceService');
 
-        $services        = $this->getWebsiteSettings()->getServices();
         $websiteServices = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_SERVICES);
         $objectServices  = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_OBJECTS);
 
-        $services = array_merge($services, $websiteServices, $objectServices);
+        $services = array_merge($websiteServices, $objectServices);
 
         $simpleServices = [];
 
