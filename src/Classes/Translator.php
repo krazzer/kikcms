@@ -3,18 +3,16 @@
 namespace KikCMS\Classes;
 
 
+use Exception;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
-use KikCMS\Models\TranslationKey;
-use KikCMS\Models\TranslationValue;
 use Monolog\Logger;
-use Phalcon\Mvc\Model\Query\Builder;
 
 class Translator extends Injectable
 {
-    /** @var null|string */
-    private $languageCode = null;
+    /** @var string */
+    private $languageCode;
 
     /** @var array */
     private $siteFiles = [];
@@ -23,13 +21,15 @@ class Translator extends Injectable
     private $cmsFiles = [];
 
     /**
-     * @param array $siteFiles
      * @param array $cmsFiles
+     * @param array $siteFiles
+     * @param string $languageCode
      */
-    public function __construct(array $cmsFiles = [], array $siteFiles = [])
+    public function __construct(string $languageCode, array $cmsFiles = [], array $siteFiles = [])
     {
-        $this->siteFiles = $siteFiles;
-        $this->cmsFiles  = $cmsFiles;
+        $this->siteFiles    = $siteFiles;
+        $this->cmsFiles     = $cmsFiles;
+        $this->languageCode = $languageCode;
     }
 
     /**
@@ -137,9 +137,9 @@ class Translator extends Injectable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getLanguageCode()
+    public function getLanguageCode(): string
     {
         return $this->languageCode;
     }
@@ -174,24 +174,21 @@ class Translator extends Injectable
     }
 
     /**
-     * @param string|null $langCode
+     * @param string $langCode
      * @return array [translationKey => value]
      */
-    public function getUserTranslations(string $langCode = null): array
+    public function getUserTranslations(string $langCode): array
     {
         $langCode = $langCode ?: $this->getLanguageCode();
         $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
 
         return $this->cacheService->cache($cacheKey, function () use ($langCode) {
-            $query = (new Builder())
-                ->columns(['tk.key', 'tv.value'])
-                ->from(['tv' => TranslationValue::class])
-                ->join(TranslationKey::class, 'tk.id = tv.key_id', 'tk')
-                ->where('tk.key IS NOT NULL AND tv.language_code = :languageCode:', [
-                    'languageCode' => $langCode
-                ]);
-
-            return $this->dbService->getAssoc($query);
+            // translations must be available, even without a db connection, hence the try-catch block
+            try {
+                return $this->translationService->getUserTranslations($langCode);
+            } catch(Exception $exception){
+                return [];
+            }
         }) ?: [];
     }
 

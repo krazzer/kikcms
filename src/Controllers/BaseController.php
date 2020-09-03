@@ -63,8 +63,6 @@ class BaseController extends Controller
 
         if ($langCode && $this->translator->languageExists($langCode)) {
             $this->translator->setLanguageCode($langCode);
-        } else {
-            $this->setDefaultLanguageCode();
         }
     }
 
@@ -117,13 +115,5 @@ class BaseController extends Controller
         }
 
         fclose($f);
-    }
-
-    /**
-     * Set the language to default
-     */
-    protected function setDefaultLanguageCode()
-    {
-        $this->translator->setLanguageCode($this->languageService->getDefaultLanguageCode());
     }
 }

@@ -206,7 +206,7 @@ class Services extends BaseServices
         unset($config['adapter']);
 
         try {
-            $databaseAdapter = new $dbClass($config);
+            $db = new $dbClass($config);
         } catch (Exception $exception) {
             if ($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS) {
                 $this->get('logger')->log(Logger::WARNING, $exception);
@@ -216,7 +216,7 @@ class Services extends BaseServices
             }
         }
 
-        return $databaseAdapter;
+        return $db;
     }
 
     /**
@@ -383,7 +383,7 @@ class Services extends BaseServices
      */
     protected function initTranslator(): Translator
     {
-        return new Translator([
+        return new Translator($this->get('config')->application->defaultLanguage, [
             TranslatorConfig::LANGUAGE_NL => $this->getAppConfig()->cmsPath . 'resources/translations/nl.php',
             TranslatorConfig::LANGUAGE_EN => $this->getAppConfig()->cmsPath . 'resources/translations/en.php',
         ], [

@@ -19,48 +19,6 @@ use Phalcon\Mvc\Model\Query\Builder;
 class TranslationService extends Injectable
 {
     /**
-     * @param int $keyId
-     * @param string $languageCode
-     * @return null|string
-     */
-    public function getTranslationValue(int $keyId, string $languageCode): ?string
-    {
-        $cacheKey = $this->getValueCacheKey($languageCode, $keyId);
-
-        return $this->cacheService->cache($cacheKey, function () use ($keyId, $languageCode) {
-            $query = $this->getTranslationValueQuery($keyId, $languageCode);
-            return $this->dbService->getValue($query);
-        });
-    }
-
-    /**
-     * @param int $translationKeyId
-     * @param string $languageCode
-     * @return Builder
-     */
-    public function getTranslationValueQuery(int $translationKeyId, string $languageCode): Builder
-    {
-        return (new Builder())
-            ->from(TranslationValue::class)
-            ->columns([TranslationValue::FIELD_VALUE])
-            ->where('key_id = :keyId: AND language_code = :languageCode:', [
-                'keyId'        => $translationKeyId,
-                'languageCode' => $languageCode,
-            ]);
-    }
-
-    /**
-     * @param int $translationKeyId
-     * @param string $languageCode
-     * @return bool
-     */
-    public function valueExists(int $translationKeyId, string $languageCode): bool
-    {
-        $query = $this->getTranslationValueQuery($translationKeyId, $languageCode);
-        return (bool) $query->getQuery()->execute()->count();
-    }
-
-    /**
      * Creates a new TranslationKey and returns it's id
      *
      * @return int
@@ -99,6 +57,54 @@ class TranslationService extends Injectable
     }
 
     /**
+     * @param int $keyId
+     * @param string $languageCode
+     * @return null|string
+     */
+    public function getTranslationValue(int $keyId, string $languageCode): ?string
+    {
+        $cacheKey = $this->getValueCacheKey($languageCode, $keyId);
+
+        return $this->cacheService->cache($cacheKey, function () use ($keyId, $languageCode) {
+            $query = $this->getTranslationValueQuery($keyId, $languageCode);
+            return $this->dbService->getValue($query);
+        });
+    }
+
+    /**
+     * @param int $translationKeyId
+     * @param string $languageCode
+     * @return Builder
+     */
+    public function getTranslationValueQuery(int $translationKeyId, string $languageCode): Builder
+    {
+        return (new Builder())
+            ->from(TranslationValue::class)
+            ->columns([TranslationValue::FIELD_VALUE])
+            ->where('key_id = :keyId: AND language_code = :languageCode:', [
+                'keyId'        => $translationKeyId,
+                'languageCode' => $languageCode,
+            ]);
+    }
+
+    /**
+     * @param string $langCode
+     * @return array
+     */
+    public function getUserTranslations(string $langCode): array
+    {
+        $query = (new Builder())
+            ->columns(['tk.key', 'tv.value'])
+            ->from(['tv' => TranslationValue::class])
+            ->join(TranslationKey::class, 'tk.id = tv.key_id', 'tk')
+            ->where('tk.key IS NOT NULL AND tv.language_code = :languageCode:', [
+                'languageCode' => $langCode
+            ]);
+
+        return $this->dbService->getAssoc($query);
+    }
+
+    /**
      * @param string $languageCode
      * @param int|string $keyId
      * @return string
@@ -106,5 +112,16 @@ class TranslationService extends Injectable
     public function getValueCacheKey(string $languageCode, $keyId): string
     {
         return CacheConfig::TRANSLATION . CacheConfig::SEPARATOR . $languageCode . CacheConfig::SEPARATOR . $keyId;
+    }
+
+    /**
+     * @param int $translationKeyId
+     * @param string $languageCode
+     * @return bool
+     */
+    public function valueExists(int $translationKeyId, string $languageCode): bool
+    {
+        $query = $this->getTranslationValueQuery($translationKeyId, $languageCode);
+        return (bool) $query->getQuery()->execute()->count();
     }
 }
