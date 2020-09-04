@@ -105,6 +105,7 @@ class FrontendController extends BaseController
     /**
      * @param null|string $languageCode
      * @return string
+     * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function pageNotFoundAction(string $languageCode = null)
     {

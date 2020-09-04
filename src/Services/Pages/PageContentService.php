@@ -2,22 +2,16 @@
 
 namespace KikCMS\Services\Pages;
 
-use KikCMS\Classes\Translator;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Models\File;
 use KikCMS\ObjectLists\PageLanguageMap;
-use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageContent;
 use KikCMS\Models\PageLanguageContent;
 use KikCMS\Models\PageLanguage;
-use Phalcon\Di\Injectable;
+use Monolog\Logger;
 use Phalcon\Mvc\Model\Query\Builder;
 
-/**
- * @property DbService $dbService
- * @property Translator $translator
- * @property TemplateService $templateService
- */
 class PageContentService extends Injectable
 {
     /** @var array */
@@ -102,7 +96,16 @@ class PageContentService extends Injectable
             ])
             ->columns(['plc.field', 'plc.value']);
 
-        $pageVariables = $this->dbService->getAssoc($query) + $this->dbService->getAssoc($queryMultiLingual);
+        $pageContent         = $this->dbService->getAssoc($query);
+        $pageContentLanguage = $this->dbService->getAssoc($queryMultiLingual);
+
+        if ($intersections = array_intersect_key($pageContent, $pageContentLanguage)) {
+            $this->logger->log(Logger::WARNING, 'The following fields have both multilingual and monolingual variables: ' .
+                implode(', ', array_keys($intersections)) . '. Please remove them from the database in either ' .
+                PageContent::TABLE . ' or ' . PageLanguageContent::TABLE);
+        }
+
+        $pageVariables = $pageContent + $pageContentLanguage;
 
         $this->localPageVariablesCache[$pageId . $langCode] = $pageVariables;
 
