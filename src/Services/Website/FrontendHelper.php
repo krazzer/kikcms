@@ -62,11 +62,11 @@ class FrontendHelper extends Injectable
      * @param int|string $menuKeyOrId can be either the id or the key of the menu
      * @param int|null $maxLevel
      * @param string|null $template
-     * @param null|string $templateKey
+     * @param null|string|array $templateKey
      * @param bool $cache
      * @return string
      */
-    public function menu($menuKeyOrId, int $maxLevel = null, string $template = null, string $templateKey = null, $cache = true): string
+    public function menu($menuKeyOrId, int $maxLevel = null, string $template = null, $templateKey = null, $cache = true): string
     {
         if ( ! $menuKeyOrId) {
             return '';
@@ -85,7 +85,7 @@ class FrontendHelper extends Injectable
             ->setMenuId($menuId)
             ->setMaxLevel($maxLevel)
             ->setTemplate($template)
-            ->setRestrictTemplate($templateKey)
+            ->setRestrictTemplates((array) $templateKey)
             ->setLanguageCode($this->languageCode)
             ->setCache($cache);
 

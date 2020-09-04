@@ -25,8 +25,8 @@ class Menu
     /** @var string|null shows the menu item with a specific template, will be rendered by a block @website/menu.twig */
     private $template = null;
 
-    /** @var string|null */
-    private $restrictTemplate = null;
+    /** @var array */
+    private $restrictTemplates = [];
 
     /**
      * @return bool
@@ -119,20 +119,20 @@ class Menu
     }
 
     /**
-     * @return string|null
+     * @return array
      */
-    public function getRestrictTemplate(): ?string
+    public function getRestrictTemplates(): array
     {
-        return $this->restrictTemplate;
+        return $this->restrictTemplates;
     }
 
     /**
-     * @param null|string $restrictTemplateId
+     * @param array $restrictTemplates
      * @return Menu
      */
-    public function setRestrictTemplate(?string $restrictTemplateId)
+    public function setRestrictTemplates(array $restrictTemplates)
     {
-        $this->restrictTemplate = $restrictTemplateId;
+        $this->restrictTemplates = $restrictTemplates;
         return $this;
     }
 
