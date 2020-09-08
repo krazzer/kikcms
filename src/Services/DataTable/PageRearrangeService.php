@@ -3,6 +3,7 @@
 namespace KikCMS\Services\DataTable;
 
 use Exception;
+use KikCMS\Config\CacheConfig;
 use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
 use KikCMS\Services\CacheService;
@@ -93,7 +94,11 @@ class PageRearrangeService extends Injectable
 
         $this->updateNestedSet();
         $this->checkUrls($page);
-        $this->cacheService->clearPageCache();
+
+        // re-fetch page so it's up to date
+        $page = Page::getById($page->getId());
+
+        $this->clearCacheAfterRearrange($page);
     }
 
     /**
@@ -319,5 +324,20 @@ class PageRearrangeService extends Injectable
             AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
             ORDER BY display_order DESC
         ");
+    }
+
+    /**
+     * @param Page $page
+     */
+    private function clearCacheAfterRearrange(Page $page)
+    {
+        $offspring = $this->pageService->getOffspring($page);
+
+        foreach ($offspring as $item){
+            $this->cacheService->clear(CacheConfig::URL . CacheConfig::SEPARATOR . $item->getId());
+        }
+
+        $this->cacheService->clear(CacheConfig::MENU);
+        $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
     }
 }
