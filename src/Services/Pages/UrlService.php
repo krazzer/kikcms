@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\Translator;
 use KikCMS\ObjectLists\PageLanguageList;
 use KikCmsCore\Services\DbService;
@@ -12,7 +13,6 @@ use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\LanguageService;
-use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

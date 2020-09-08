@@ -172,9 +172,9 @@ class Services extends BaseServices
             $config['cacheDir'] = $this->getIniConfig()->application->path . $config['cacheDir'];
         }
 
-        // set the current domain as prefix to prevent caching overlap
-        if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_NAME'])) {
-            $config["prefix"] = explode('.', $_SERVER['SERVER_NAME'])[0] . ':' . ($config["prefix"] ?? '');
+        // set the current port as prefix to prevent caching overlap
+        if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_PORT'])) {
+            $config["prefix"] = $_SERVER['SERVER_PORT']. ':' . ($config["prefix"] ?? '');
         }
 
         $config["frontend"] = new Data();

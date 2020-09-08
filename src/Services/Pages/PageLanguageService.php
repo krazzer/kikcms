@@ -125,14 +125,14 @@ class PageLanguageService extends Injectable
     }
 
     /**
-     * @param PageMap $pageMap
-     * @param string $langCode
+     * @param array $pageIdList
+     * @param string|null $langCode
      * @param bool $activeOnly
      * @return PageLanguageMap
      */
-    public function getByPageMap(PageMap $pageMap, string $langCode = null, bool $activeOnly = true): PageLanguageMap
+    public function getByIdList(array $pageIdList, string $langCode = null, bool $activeOnly = true): PageLanguageMap
     {
-        if ($pageMap->isEmpty()) {
+        if ( ! $pageIdList) {
             return new PageLanguageMap;
         }
 
@@ -141,7 +141,7 @@ class PageLanguageService extends Injectable
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'pl.page_id = IFNULL(p.alias, p.id)', 'p')
-            ->inWhere('p.id', $pageMap->keys())
+            ->inWhere('p.id', $pageIdList)
             ->andWhere('pl.language_code = :c:', ['c' => $langCode]);
 
         if ($activeOnly) {
@@ -149,6 +149,17 @@ class PageLanguageService extends Injectable
         }
 
         return $this->dbService->getObjectMap($query, PageLanguageMap::class, PageLanguage::FIELD_PAGE_ID);
+    }
+
+    /**
+     * @param PageMap $pageMap
+     * @param string $langCode
+     * @param bool $activeOnly
+     * @return PageLanguageMap
+     */
+    public function getByPageMap(PageMap $pageMap, string $langCode = null, bool $activeOnly = true): PageLanguageMap
+    {
+        return $this->getByIdList($pageMap->keys(), $langCode, $activeOnly);
     }
 
     /**
