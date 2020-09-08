@@ -19,20 +19,25 @@ class TableButton
     /** @var string */
     private $url;
 
+    /** @var string|null */
+    private $warning;
+
     /**
      * @param string $icon
      * @param string $title
      * @param string $class
      * @param string|null $url
      * @param bool $blank
+     * @param string|null $warning
      */
-    public function __construct(string $icon, string $title, string $class, string $url = null, bool $blank = false)
+    public function __construct(string $icon, string $title, string $class, string $url = null, bool $blank = false, string $warning = null)
     {
-        $this->icon  = $icon;
-        $this->title = $title;
-        $this->class = $class;
-        $this->url   = $url;
-        $this->blank = $blank;
+        $this->icon    = $icon;
+        $this->title   = $title;
+        $this->class   = $class;
+        $this->url     = $url;
+        $this->blank   = $blank;
+        $this->warning = $warning;
     }
 
     /**
@@ -98,5 +103,13 @@ class TableButton
     {
         $this->blank = $blank;
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWarning(): ?string
+    {
+        return $this->warning;
     }
 }

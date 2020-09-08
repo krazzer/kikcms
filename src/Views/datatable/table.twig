@@ -60,15 +60,17 @@
 
                 {% block tableRowButton %}
                     {% for tableButton in self.tableButtons %}
+                        {% set onclick = tableButton.warning ? 'return confirm(\'' ~ tableButton.warning ~ '\')' %}
                         <td class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
                             {% if tableButton.hasUrl %}
                                 {% if tableButton.icon ends with '.svg' %}
-                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}">
+                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}"
+                                    onclick="{{ onclick }}">
                                         {{ source(tableButton.icon) }}
                                     </a>
                                 {% else %}
                                     <a {{ tableButton.blank ? 'target="_blank"' }}
-                                            href="{{ tableButton.url(row) }}"
+                                            href="{{ tableButton.url(row) }}" onclick="{{ onclick }}"
                                             class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
                                 {% endif %}
                             {% else %}
