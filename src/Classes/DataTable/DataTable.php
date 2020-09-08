@@ -711,10 +711,11 @@ abstract class DataTable extends Renderable
      * @param string $class
      * @param string|null $url
      * @param bool $blank
+     * @param string|null $warning
      */
-    protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false)
+    protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false, string $warning = null)
     {
-        $this->tableButtons[] = new TableButton($icon, $title, $class, $url, $blank);
+        $this->tableButtons[] = new TableButton($icon, $title, $class, $url, $blank, $warning);
     }
 
     /**
