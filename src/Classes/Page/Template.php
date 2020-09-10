@@ -12,13 +12,21 @@ class Template
     private $name;
 
     /** @var array */
-    private $fields = [];
+    private $fields;
 
     /** @var bool */
     private $hidden = false;
 
     /** @var string */
     private $form;
+
+    /**
+     * @var string|null
+     *
+     * If this is set, this template can only be used for a page with the given key
+     * If a page uses this template and key, it will not appear as a choice anymore when adding pages
+     */
+    private $pageKey;
 
     /**
      * @param string $key
@@ -119,6 +127,24 @@ class Template
     public function setForm(string $form): Template
     {
         $this->form = $form;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPageKey(): ?string
+    {
+        return $this->pageKey;
+    }
+
+    /**
+     * @param string|null $pageKey
+     * @return Template
+     */
+    public function setPageKey(?string $pageKey): Template
+    {
+        $this->pageKey = $pageKey;
         return $this;
     }
 }

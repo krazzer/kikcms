@@ -2,6 +2,7 @@
 
 namespace KikCMS\Services\Pages;
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
 use KikCMS\Classes\WebForm\Tab;
@@ -11,7 +12,6 @@ use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Models\Page;
 use KikCMS\ObjectLists\FieldMap;
-use Phalcon\Di\Injectable;
 
 /**
  * Service for handling Templates & Fields defined in TemplateFields
@@ -85,15 +85,24 @@ class TemplateService extends Injectable
     }
 
     /**
+     * @param string|null $currentTemplate
      * @return array [string key => string name]
      */
-    public function getNameMap(): array
+    public function getAvailableNameMap(string $currentTemplate = null): array
     {
-        $templates = $this->templateFields->getTemplates();
+        $templates          = $this->templateFields->getTemplates();
+        $pageKeyTemplateMap = $this->pageService->getKeyTemplateMap();
 
         $nameMap = [];
 
         foreach ($templates as $template) {
+            $templateForPageKey = $pageKeyTemplateMap[$template->getPageKey()] ?? null;
+
+            // a page exists with this key, so remove as an option
+            if ($templateForPageKey == $template->getKey() && $template->getKey() !== $currentTemplate) {
+                continue;
+            }
+
             $nameMap[$template->getKey()] = $template->getName();
         }
 
@@ -143,8 +152,8 @@ class TemplateService extends Injectable
 
         $fieldKeys = [];
 
-        foreach ($fields as $key => $field){
-            if($field instanceof FileField){
+        foreach ($fields as $key => $field) {
+            if ($field instanceof FileField) {
                 $fieldKeys[] = $key;
             }
         }
@@ -163,8 +172,8 @@ class TemplateService extends Injectable
 
         $fieldKeys = [];
 
-        foreach ($fields as $key => $field){
-            if($field instanceof WysiwygField){
+        foreach ($fields as $key => $field) {
+            if ($field instanceof WysiwygField) {
                 $fieldKeys[] = $key;
             }
         }

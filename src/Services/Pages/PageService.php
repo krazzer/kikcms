@@ -256,6 +256,21 @@ class PageService extends Injectable
     }
 
     /**
+     * Get an array with all pages with a key and the template they have
+     *
+     * @return array [key => template]
+     */
+    public function getKeyTemplateMap(): array
+    {
+        $query = (new Builder)
+            ->from(Page::class)
+            ->columns([Page::FIELD_KEY, Page::FIELD_TEMPLATE])
+            ->where(Page::FIELD_KEY . ' IS NOT NULL');
+
+        return $this->dbService->getAssoc($query);
+    }
+
+    /**
      * Checks if a Page needs the required nested set properties set
      *
      * @param Page $page

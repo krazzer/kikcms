@@ -64,16 +64,8 @@ class PageForm extends DataForm
 
         $urlValidation = [new PresenceOf(), $urlPatternValidation, new StringLength(["max" => 255])];
 
-        if ($this->getDataTable() instanceof PagesFlat && $this->getDataTable()->getTemplate()) {
-            $templateField = $this->addHiddenField(Page::FIELD_TEMPLATE, $this->getTemplate()->getKey());
-        } else {
-            $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'),
-                $this->templateService->getNameMap());
-            $templateField->getElement()->setDefault($this->getTemplate()->getKey());
-        }
-
         $tabAdvancedFields = [
-            $templateField,
+            $this->getTemplateField(),
 
             $this->addTextField(self::FIELD_SLUG, $this->translator->tl('fields.slug'), $urlValidation)
                 ->setPlaceholder($this->translator->tl('dataTables.pages.slugPlaceholder'))
@@ -150,7 +142,19 @@ class PageForm extends DataForm
         }
 
         if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
-            $errorContainer->addFieldError(new FieldError(self::FIELD_SLUG, $this->translator->tl('dataTables.pages.slugExists')));
+            $slugExistsMessage = $this->translator->tl('dataTables.pages.slugExists');
+            $errorContainer->addFieldError(new FieldError(self::FIELD_SLUG, $slugExistsMessage));
+        }
+
+        $template = $this->templateService->getByKey($input['template']);
+
+        if ($template->getPageKey() && $template->getPageKey() !== $input['key']) {
+            $templatePageKeyMismatchMessage = $this->translator->tl('dataTables.pages.templatePageKeyMismatch', [
+                'template' => $template->getName(),
+                'key'      => $template->getPageKey(),
+            ]);
+
+            $errorContainer->addFieldError(new FieldError('template', $templatePageKeyMismatchMessage));
         }
 
         return $errorContainer;
@@ -175,7 +179,7 @@ class PageForm extends DataForm
 
         foreach ($fields as $key => $field) {
             if (array_key_exists($key, $displayConditions)) {
-                if( ! $displayConditions[$key]($this->getObject(), $this)) {
+                if ( ! $displayConditions[$key]($this->getObject(), $this)) {
                     continue;
                 }
             }
@@ -228,5 +232,24 @@ class PageForm extends DataForm
         }
 
         return $this->pageLanguageService->getByPageId($pageId, $languageCode);
+    }
+
+    /**
+     * @return Field
+     */
+    private function getTemplateField(): Field
+    {
+        if ($this->getDataTable() instanceof PagesFlat && $this->getDataTable()->getTemplate()) {
+            return $this->addHiddenField(Page::FIELD_TEMPLATE, $this->getTemplate()->getKey());
+        }
+
+        $currentTemplate = $this->getObject()->template ?? null;
+
+        $templateField = $this->addSelectField(Page::FIELD_TEMPLATE, $this->translator->tl('fields.template'),
+            $this->templateService->getAvailableNameMap($currentTemplate));
+
+        $templateField->getElement()->setDefault($this->getTemplate()->getKey());
+
+        return $templateField;
     }
 }
