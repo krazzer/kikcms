@@ -11,7 +11,7 @@ use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Service for handling a DataForms' Storage, using the StorageData object

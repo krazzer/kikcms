@@ -8,7 +8,7 @@ use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property PageLanguageService $pageLanguageService

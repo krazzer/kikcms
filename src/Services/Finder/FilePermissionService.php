@@ -14,7 +14,7 @@ use KikCMS\ObjectLists\UserMap;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -214,7 +214,7 @@ class FilePermissionService extends Injectable
      */
     public function isEnabled(): bool
     {
-        return $this->config->media->filePermissionsEnabled;
+        return (bool) $this->config->media->filePermissionsEnabled;
     }
 
     /**
@@ -325,6 +325,6 @@ class FilePermissionService extends Injectable
      */
     private function publicByDefault(): bool
     {
-        return $this->config->media->filePermissionsDefaultPublic;
+        return (bool) $this->config->media->filePermissionsDefaultPublic;
     }
 }

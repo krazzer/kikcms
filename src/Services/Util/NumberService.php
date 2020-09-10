@@ -4,7 +4,7 @@ namespace KikCMS\Services\Util;
 
 
 use KikCMS\Classes\Translator;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Utility Service for handling numbers

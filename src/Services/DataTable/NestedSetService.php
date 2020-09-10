@@ -7,7 +7,7 @@ namespace KikCMS\Services\DataTable;
 use KikCMS\Models\Page;
 use KikCmsCore\Services\DbService;
 use Phalcon\Db\RawValue;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

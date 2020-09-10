@@ -9,7 +9,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Services\Pages\UrlService;
 use Phalcon\Config;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Tag;
 
 /**

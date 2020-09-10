@@ -8,7 +8,7 @@ use KikCMS\ObjectLists\CacheNodeMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use Phalcon\Cache\Backend;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property DbService $dbService

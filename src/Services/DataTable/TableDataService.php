@@ -7,7 +7,7 @@ namespace KikCMS\Services\DataTable;
 use KikCMS\Classes\DataTable\TableData;
 use KikCMS\Services\Util\PaginateListService;
 use KikCMS\Services\Util\QueryService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Paginator\Adapter\QueryBuilder;
 

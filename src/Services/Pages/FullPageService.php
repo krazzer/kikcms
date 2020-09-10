@@ -9,7 +9,7 @@ use KikCMS\Models\Page;
 use KikCMS\ObjectLists\FullPageMap;
 use KikCMS\ObjectLists\PageMap;
 use KikCMS\Services\LanguageService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property PageService $pageService

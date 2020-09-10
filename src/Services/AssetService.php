@@ -4,7 +4,7 @@
 namespace KikCMS\Services;
 
 
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property AssetService $assetService

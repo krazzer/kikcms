@@ -8,7 +8,7 @@ use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

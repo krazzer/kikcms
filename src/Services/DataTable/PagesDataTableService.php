@@ -12,7 +12,7 @@ use KikCMS\Models\Page;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property PageService $pageService

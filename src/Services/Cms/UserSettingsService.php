@@ -6,7 +6,7 @@ namespace KikCMS\Services\Cms;
 
 use KikCMS\Objects\UserSettings;
 use KikCMS\Services\UserService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property UserService $userService

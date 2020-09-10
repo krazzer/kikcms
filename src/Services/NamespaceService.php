@@ -9,7 +9,7 @@ use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 

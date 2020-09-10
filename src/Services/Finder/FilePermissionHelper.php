@@ -13,7 +13,7 @@ use KikCMS\ObjectLists\FilePermissionList;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\UserService;
 use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

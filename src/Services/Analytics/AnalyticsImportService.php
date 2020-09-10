@@ -9,7 +9,7 @@ use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaVisitData;
 use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

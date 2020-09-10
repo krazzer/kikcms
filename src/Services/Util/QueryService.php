@@ -4,7 +4,7 @@
 namespace KikCMS\Services\Util;
 
 
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

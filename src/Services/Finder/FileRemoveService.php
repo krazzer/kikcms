@@ -12,7 +12,7 @@ use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Handles the removal of Files

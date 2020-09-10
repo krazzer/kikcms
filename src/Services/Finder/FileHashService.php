@@ -7,7 +7,7 @@ namespace KikCMS\Services\Finder;
 use KikCMS\Models\File;
 use KikCMS\ObjectLists\FileMap;
 use KikCmsCore\Services\DbService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

@@ -17,7 +17,7 @@ use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

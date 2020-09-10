@@ -6,7 +6,7 @@ namespace KikCMS\Services\WebForm;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\ModelService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property ModelService $modelService

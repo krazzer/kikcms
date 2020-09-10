@@ -3,7 +3,7 @@
 namespace KikCMS\Classes\WebForm\DataForm;
 
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Can be used to transform the value to its format in storage, and back

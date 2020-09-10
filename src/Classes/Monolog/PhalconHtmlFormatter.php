@@ -3,8 +3,9 @@
 namespace KikCMS\Classes\Monolog;
 
 
+use Exception;
 use Monolog\Formatter\HtmlFormatter;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Filters out the config contents in error output, as it is contained in every Injectable class
@@ -46,7 +47,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
                     $data[$property] = $this->removeConfig($value);
                 }
             }
-        } catch(\Exception $exception){
+        } catch(Exception $exception){
             return $data;
         }
 

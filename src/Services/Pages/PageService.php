@@ -8,7 +8,7 @@ use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Models\Page;
 use KikCMS\ObjectLists\PageLanguageMap;
 use KikCMS\ObjectLists\PageMap;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

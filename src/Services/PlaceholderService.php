@@ -13,7 +13,7 @@ use KikCMS\ObjectLists\PlaceholderFileUrlMap;
 use KikCMS\ObjectLists\PlaceholderTable;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\Pages\UrlService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property Cache $cache

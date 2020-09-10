@@ -13,7 +13,7 @@ use KikCMS\Services\UserService;
 use Phalcon\Acl;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property UserService $userService

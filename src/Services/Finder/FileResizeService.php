@@ -7,7 +7,7 @@ namespace KikCMS\Services\Finder;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Models\File;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property ImageHandler $imageHandler

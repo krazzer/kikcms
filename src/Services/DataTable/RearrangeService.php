@@ -8,7 +8,7 @@ use KikCmsCore\Services\DbService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Services\Pages\PageService;
 use Phalcon\Db\RawValue;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**

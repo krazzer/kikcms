@@ -7,7 +7,7 @@ use KikCMS\Classes\Phalcon\IniConfig;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Language;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * Service for managing different languages for the website, and also for configuring these in the CMS

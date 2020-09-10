@@ -8,7 +8,7 @@ use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Models\File;
 use KikCMS\Services\CacheService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property CacheService $cacheService

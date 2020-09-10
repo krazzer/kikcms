@@ -7,7 +7,7 @@ use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\FullPageService;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 
 /**
  * @property FullPageService $fullPageService

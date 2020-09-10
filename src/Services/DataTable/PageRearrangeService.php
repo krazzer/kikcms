@@ -11,7 +11,7 @@ use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Classes\Page\AdjacencyToNestedSet;
 use Phalcon\Db\RawValue;
-use Phalcon\Di\Injectable;
+use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
