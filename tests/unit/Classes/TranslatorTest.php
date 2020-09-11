@@ -22,10 +22,9 @@ class TranslatorTest extends TestCase
 
     public function testGetUserTranslations()
     {
-        $translator = new Translator();
+        $translator = new Translator('nl');
 
         $translator->setDI((new TestHelper)->getTestDi());
-        $translator->setLanguageCode('nl');
 
         $translator->db->delete(TranslationKey::TABLE);
         $translator->db->delete(TranslationValue::TABLE);
@@ -33,16 +32,14 @@ class TranslatorTest extends TestCase
         $translator->dbService->insert(TranslationKey::class, ['id' => 1, 'key' => 'test']);
         $translator->dbService->insert(TranslationValue::class, ['key_id' => 1, 'language_code' => 'nl', 'value' => 'test']);
 
-        $this->assertEquals(['test' => 'test'], $translator->getUserTranslations());
+        $this->assertEquals(['test' => 'test'], $translator->getUserTranslations('nl'));
     }
 
     public function testGetCmsTranslationGroupKeys()
     {
         $di = (new TestHelper)->getTestDi();
 
-        $translator = new Translator(['nl' => (new TestHelper)->getTestFilesPath() . 'nl.php']);
-
-        $translator->setLanguageCode('nl');
+        $translator = new Translator('nl', ['nl' => (new TestHelper)->getTestFilesPath() . 'nl.php']);
         $translator->setDI($di);
 
         $expected = ['test.subtest.subsubtest'];

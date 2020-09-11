@@ -99,7 +99,7 @@ class TestHelper extends TestCase
         $cacheServiceMock->method('cache')->willReturn([]);
         $websiteSettingsMock->method('getPluginList')->willReturn(new CmsPluginList);
 
-        $translatorMock = new Translator([
+        $translatorMock = new Translator('en', [
             TranslatorConfig::LANGUAGE_NL => dirname(dirname(__DIR__)) . '/resources/translations/nl.php',
             TranslatorConfig::LANGUAGE_EN => dirname(dirname(__DIR__)) . '/resources/translations/en.php',
         ]);
@@ -109,8 +109,6 @@ class TestHelper extends TestCase
         $translatorMock->websiteSettings    = $websiteSettingsMock;
         $translatorMock->validation         = $validationMock;
         $translatorMock->translationService = new TranslationService();
-
-        $translatorMock->setLanguageCode('en');
 
         return $translatorMock;
     }
@@ -194,6 +192,7 @@ class TestHelper extends TestCase
         $di->set('assetService', new AssetService);
         $di->set('templateFields', new TemplateFieldsBase);
         $di->set('cmsService', new CmsService);
+        $di->set('translationService', new TranslationService);
 
         $di->get('session')->set('role', Permission::ADMIN);
 

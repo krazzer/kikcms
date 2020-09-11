@@ -70,13 +70,17 @@ class PageFormTest extends Unit
         $pageLanguageService = $this->createMock(PageLanguageService::class);
         $pageLanguageService->method('getByPageId')->willReturn($pageLanguage);
 
+        $templateService = $this->createMock(TemplateService::class);
+        $templateService->method('getByKey')->willReturn((new Template('x', 'x')));
+
         $pageForm->urlService          = $urlService;
         $pageForm->translator          = $translator;
         $pageForm->pageLanguageService = $pageLanguageService;
+        $pageForm->templateService     = $templateService;
 
         $pageForm->getFilters()->setEditId(1);
 
-        $result = $pageForm->validate(['type' => 'page', 'pageLanguage*:slug' => 'x']);
+        $result = $pageForm->validate(['type' => 'page', 'pageLanguage*:slug' => 'x', 'template' => 'x']);
 
         $this->assertTrue($result->hasFieldErrors());
     }
