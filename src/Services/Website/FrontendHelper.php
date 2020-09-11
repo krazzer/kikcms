@@ -59,20 +59,16 @@ class FrontendHelper extends Injectable
     /**
      * Build a multi-level ul li structured menu
      *
-     * @param int|string $menuKeyOrId can be either the id or the key of the menu
+     * @param int|string $menuKey can be either the id or the key of the menu
      * @param int|null $maxLevel
      * @param string|null $template
      * @param null|string|array $templateKey
      * @param bool $cache
      * @return string
      */
-    public function menu($menuKeyOrId, int $maxLevel = null, string $template = null, $templateKey = null, $cache = true): string
+    public function menu($menuKey, int $maxLevel = null, string $template = null, $templateKey = null, $cache = true): string
     {
-        if ( ! $menuKeyOrId) {
-            return '';
-        }
-
-        if ( ! $menuId = $this->pageService->getIdByKeyOrId($menuKeyOrId)) {
+        if ( ! $menuKey) {
             return '';
         }
 
@@ -82,7 +78,7 @@ class FrontendHelper extends Injectable
         }
 
         $menu = (new Menu())
-            ->setMenuId($menuId)
+            ->setMenuKey($menuKey)
             ->setMaxLevel($maxLevel)
             ->setTemplate($template)
             ->setRestrictTemplates((array) $templateKey)
@@ -100,7 +96,10 @@ class FrontendHelper extends Injectable
     {
         $getMenu = function () use ($menu) {
             $this->menuService->addFullPageMap($menu);
-            return $this->buildMenu($menu->getMenuId(), $menu);
+
+            $parentId = $this->pageService->getIdByKeyOrId($menu->getMenuKey());
+
+            return $this->buildMenu($parentId, $menu);
         };
 
         if ( ! $menu->isCache()) {

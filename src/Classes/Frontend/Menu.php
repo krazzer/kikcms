@@ -16,8 +16,8 @@ class Menu
     /** @var FullPageMap */
     private $fullPageMap;
 
-    /** @var int The Id of the menu (can also be a page) which children should be shown */
-    private $menuId;
+    /** @var int|string The key (can also be the id) of the menu (or a page) which children should be shown */
+    private $menuKey;
 
     /** @var int|null Maximum amount of levels to be shown */
     private $maxLevel = null;
@@ -65,20 +65,20 @@ class Menu
     }
 
     /**
-     * @return int
+     * @return int|string
      */
-    public function getMenuId(): int
+    public function getMenuKey()
     {
-        return $this->menuId;
+        return $this->menuKey;
     }
 
     /**
-     * @param int $menuId
+     * @param int|string $menuKey
      * @return Menu
      */
-    public function setMenuId(int $menuId): Menu
+    public function setMenuKey($menuKey): Menu
     {
-        $this->menuId = $menuId;
+        $this->menuKey = $menuKey;
         return $this;
     }
 

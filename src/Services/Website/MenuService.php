@@ -35,7 +35,7 @@ class MenuService extends Injectable
     public function getCacheKey(Menu $menu, $prefix = CacheConfig::MENU): string
     {
         return $this->cacheService->createKey($prefix,
-            $menu->getMenuId(),
+            $menu->getMenuKey(),
             $menu->getLanguageCode(),
             $menu->getMaxLevel(),
             $menu->getTemplate() ?: 'default',

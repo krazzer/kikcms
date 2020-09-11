@@ -6,6 +6,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Services\Pages\UrlService;
 use Phalcon\Config;
@@ -136,15 +137,19 @@ class TwigService extends Injectable
     {
         $langCode = $this->translator->getLanguageCode();
 
-        if (is_numeric($pageId)) {
-            return $this->urlService->getUrlByPageId((int) $pageId, $langCode);
-        }
-
-        if (strstr($pageId, '/')) {
+        if (is_string($pageId) && strstr($pageId, '/')) {
             return $pageId;
         }
 
-        return $this->urlService->getUrlByPageKey($pageId, $langCode);
+        $cacheKey = implode(CacheConfig::SEPARATOR, [CacheConfig::URL, $langCode, $pageId]);
+
+        return $this->cacheService->cache($cacheKey, function () use ($pageId, $langCode){
+            if (is_numeric($pageId)) {
+                return $this->urlService->getUrlByPageId((int) $pageId, $langCode);
+            }
+
+            return $this->urlService->getUrlByPageKey($pageId, $langCode);
+        });
     }
 
     /**

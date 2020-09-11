@@ -75,15 +75,13 @@ class PageService extends Injectable
      */
     public function getOffspringQuery(Page $page): Builder
     {
-        $query = (new Builder())
+        return (new Builder)
             ->from($this->websiteSettings->getPageClass())
             ->where('lft > :lft: AND rgt < :rgt:', [
                 'lft' => $page->lft,
                 'rgt' => $page->rgt
             ])
             ->orderBy('lft');
-
-        return $query;
     }
 
     /**
@@ -194,7 +192,9 @@ class PageService extends Injectable
      */
     public function getOffspringByMenu(Menu $menu): PageMap
     {
-        if ( ! $menuPage = Page::getById($menu->getMenuId())) {
+        $pageId = $this->pageService->getIdByKeyOrId($menu->getMenuKey());
+
+        if ( ! $menuPage = Page::getById($pageId)) {
             return new PageMap();
         }
 

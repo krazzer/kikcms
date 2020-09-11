@@ -8,6 +8,7 @@ use Google_Client;
 use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
+use KikCMS\Services\Cms\QueryLogService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
@@ -174,7 +175,7 @@ class Services extends BaseServices
 
         // set the current port as prefix to prevent caching overlap
         if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_PORT'])) {
-            $config["prefix"] = $_SERVER['SERVER_PORT']. ':' . ($config["prefix"] ?? '');
+            $config["prefix"] = $_SERVER['SERVER_PORT'] . ':' . ($config["prefix"] ?? '');
         }
 
         $config["frontend"] = new Data();
@@ -196,9 +197,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Db
+     * @return Db\Adapter
      */
-    protected function initDb()
+    protected function initDb(): Db\Adapter
     {
         $config = $this->getDbConfig()->toArray();
 
@@ -214,6 +215,14 @@ class Services extends BaseServices
             } else {
                 throw $exception;
             }
+        }
+
+        $db->setEventsManager($this->get('eventsManager'));
+
+        if($config['logqueries'] ?? false){
+            /** @var QueryLogService $queryLogService */
+            $queryLogService = $this->get('queryLogService');
+            $queryLogService->setup();
         }
 
         return $db;
