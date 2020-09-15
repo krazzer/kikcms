@@ -47,7 +47,7 @@ class FullPageService extends Injectable
         foreach ($pageMap as $page) {
             if ($pageLang = $pageLangMap->get($page->getRealId())) {
                 $content = $pageFieldTable[$page->getRealId()] ?? [];
-                $url     = $this->urlService->getUrlByPageLanguage($pageLang);
+                $url     = $this->urlService->getUrlByPageLanguage($pageLang, $page);
 
                 $fullPageMap->add(new FullPage($page, $pageLang, $content, $url));
             }

@@ -110,7 +110,7 @@ class FullPage extends Identifiable
      */
     public function getPageId(): int
     {
-        return $this->getPageLanguage()->getPageId();
+        return $this->getPage()->getId();
     }
 
     /**

@@ -86,19 +86,37 @@ class UrlService extends Injectable
     public function getPageLanguageByUrlPath(string $urlPath): ?PageLanguage
     {
         $urlPath  = $this->removeLeadingSlash($urlPath);
-        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . ':' . $urlPath;
+        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath;
 
-        return $this->cacheService->cache($cacheKey, function () use ($urlPath) {
+        $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
 
             foreach ($urlMap as $pageLanguageId => $possibleUrl) {
                 if ($possibleUrl == $urlPath) {
-                    return PageLanguage::getById($pageLanguageId);
+                    if (is_string($pageLanguageId) && strstr($pageLanguageId, 'a')) {
+                        $pageLanguageIdParts = explode('a', $pageLanguageId);
+
+                        $pageLanguage = PageLanguage::getById($pageLanguageIdParts[0]);
+                        $aliasPage    = Page::getById($pageLanguageIdParts[1]);
+
+                        return [$pageLanguage, $aliasPage];
+                    } else {
+                        return PageLanguage::getById($pageLanguageId);
+                    }
                 }
             }
 
             return null;
         });
+
+        if( ! $cached || $cached instanceof PageLanguage){
+            return $cached;
+        }
+
+        $pageLanguage = $cached[0];
+        $pageLanguage->setAliasPage($cached[1]);
+
+        return $pageLanguage;
     }
 
     /**
@@ -119,11 +137,13 @@ class UrlService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
+     * @param Page|null $aliasPage
      * @return string
      */
-    public function createUrlPathByPageLanguage(PageLanguage $pageLanguage): string
+    public function createUrlPathByPageLanguage(PageLanguage $pageLanguage, Page $aliasPage = null): string
     {
-        $page = $pageLanguage->page;
+        $page      = $pageLanguage->page;
+        $aliasPage = $aliasPage ?: $page;
 
         if ($page->key == KikCMSConfig::KEY_PAGE_DEFAULT) {
             if ($pageLanguage->getLanguageCode() == $this->languageService->getDefaultLanguageCode()) {
@@ -140,8 +160,8 @@ class UrlService extends Injectable
             ->from(['p' => Page::class])
             ->join(PageLanguage::class, 'pl.page_id = p.id', 'pl')
             ->where('p.lft < :lft: AND p.rgt > :rgt: AND pl.slug IS NOT NULL AND pl.language_code = :code:', [
-                'lft'  => $page->lft,
-                'rgt'  => $page->rgt,
+                'lft'  => $aliasPage->lft,
+                'rgt'  => $aliasPage->rgt,
                 'code' => $pageLanguage->getLanguageCode(),
             ])
             ->orderBy('p.lft');
@@ -151,19 +171,24 @@ class UrlService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
+     * @param Page|null $aliasPage
      * @return string
      */
-    public function getUrlByPageLanguage(PageLanguage $pageLanguage): string
+    public function getUrlByPageLanguage(PageLanguage $pageLanguage, Page $aliasPage = null): string
     {
         // hasn't been stored yet, so can't be cached
         if ( ! isset($pageLanguage->id)) {
-            return $this->createUrlPathByPageLanguage($pageLanguage);
+            return $this->createUrlPathByPageLanguage($pageLanguage, $aliasPage);
         }
 
-        $cacheKey = CacheConfig::URL . ':' . $pageLanguage->id;
+        $cacheKey = CacheConfig::URL . CacheConfig::SEPARATOR . $pageLanguage->id;
 
-        return (string) $this->cacheService->cache($cacheKey, function () use ($pageLanguage) {
-            return $this->createUrlPathByPageLanguage($pageLanguage);
+        if ($aliasPage && $aliasPage->getId() !== $pageLanguage->getPageId()) {
+            $cacheKey .= CacheConfig::ALIAS_PREFIX . $aliasPage->getId();
+        }
+
+        return (string) $this->cacheService->cache($cacheKey, function () use ($pageLanguage, $aliasPage) {
+            return $this->createUrlPathByPageLanguage($pageLanguage, $aliasPage);
         });
     }
 
@@ -329,7 +354,7 @@ class UrlService extends Injectable
 
     /**
      * @param string $url
-     * @return array [pageLanguageId => url]
+     * @return array [pageLanguageId => [url]]
      */
     private function getPossibleUrlMapByUrl(string $url): array
     {
@@ -338,9 +363,9 @@ class UrlService extends Injectable
         $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.slug IS NOT NULL';
 
         $query = (new Builder)
-            ->columns(['pl.id', 'pla.slug'])
+            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("a", p.id), ""))', 'pla.slug'])
             ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
+            ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.lft < p.lft AND pa.rgt > p.rgt', 'pa')
             ->leftJoin(PageLanguage::class, $pageLanguageJoin, 'pla')
             ->where('pl.slug = :slug:', ['slug' => last($slugs)])

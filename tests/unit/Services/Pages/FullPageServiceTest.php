@@ -16,8 +16,10 @@ class FullPageServiceTest extends Unit
         $fullPageService = new FullPageService();
         $fullPageService->setDI($this->getDbDi());
 
-        $page     = new Page();
-        $page->id = 1;
+        $page      = new Page();
+        $page->id  = 1;
+        $page->lft = 1;
+        $page->rgt = 2;
 
         // not found
         $this->assertNull($fullPageService->getByPage($page));
@@ -37,10 +39,10 @@ class FullPageServiceTest extends Unit
         $this->assertEquals(1, $fullPage->getId());
 
         // with content
-        $pageContent                = new PageContent();
-        $pageContent->page_id       = 1;
-        $pageContent->value         = 'val';
-        $pageContent->field         = 'key';
+        $pageContent          = new PageContent();
+        $pageContent->page_id = 1;
+        $pageContent->value   = 'val';
+        $pageContent->field   = 'key';
 
         $pageContent->save();
 

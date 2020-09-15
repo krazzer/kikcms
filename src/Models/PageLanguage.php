@@ -28,6 +28,18 @@ class PageLanguage extends Model
     /** @var string|null */
     private $slug;
 
+    /** @var Page|null */
+    private $aliasPage;
+
+    /**
+     * @inheritDoc
+     * @return PageLanguage
+     */
+    public static function getById($id)
+    {
+        return parent::getById($id);
+    }
+
     /**
      * Remove cache
      */
@@ -54,6 +66,22 @@ class PageLanguage extends Model
         $pageClass = $this->getDI()->get('websiteSettings')->getPageClass() ?: Page::class;
 
         $this->belongsTo("page_id", $pageClass, "id", ["alias" => "page"]);
+    }
+
+    /**
+     * @return Page
+     */
+    public function getAliasPage(): Page
+    {
+        return $this->aliasPage ?: $this->page;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAliasPageId(): int
+    {
+        return $this->aliasPage ? $this->aliasPage->getId() : $this->getPageId();
     }
 
     /**
@@ -149,6 +177,16 @@ class PageLanguage extends Model
     public function setName(?string $name): PageLanguage
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @param Page $page
+     * @return $this
+     */
+    public function setAliasPage(Page $page): PageLanguage
+    {
+        $this->aliasPage = $page;
         return $this;
     }
 }

@@ -18,9 +18,6 @@ class FrontendHelper extends Injectable
     /** @var PageLanguage */
     private $currentPageLanguage;
 
-    /** @var PageLanguage is the same as currentPageLanguage if the page is not an alias */
-    private $currentPageLanguageAlias;
-
     /** @var PageLanguageMap */
     private $currentPathCached;
 
@@ -43,15 +40,13 @@ class FrontendHelper extends Injectable
     /**
      * @param string $languageCode
      * @param PageLanguage $pageLanguage
-     * @param PageLanguage $pageLanguageAlias
      */
-    public function initialize(string $languageCode, PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias)
+    public function initialize(string $languageCode, PageLanguage $pageLanguage)
     {
         $this->languageCode             = $languageCode;
         $this->currentPageLanguage      = $pageLanguage;
-        $this->currentPageLanguageAlias = $pageLanguageAlias;
 
-        if ($pageLanguage->getPageId() !== $pageLanguageAlias->getPageId()) {
+        if ($pageLanguage->getPageId() !== $pageLanguage->getAliasPageId()) {
             $this->aliasUrl = $this->urlService->getUrlByPageLanguage($pageLanguage);
         }
     }
@@ -150,7 +145,7 @@ class FrontendHelper extends Injectable
             return new PageLanguageMap();
         }
 
-        $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage, $this->currentPageLanguageAlias);
+        $this->currentPathCached = $this->pageLanguageService->getPath($this->currentPageLanguage);
 
         return $this->currentPathCached;
     }

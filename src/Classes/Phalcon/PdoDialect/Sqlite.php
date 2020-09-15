@@ -16,6 +16,7 @@ class Sqlite extends PhalconSqlite
     {
         $this->registerCustomFunction('CONCAT_WS', [$this, 'concatWs']);
         $this->registerCustomFunction('CONCAT', [$this, 'concat']);
+        $this->registerCustomFunction('IF', [$this, 'if']);
     }
 
     /**
@@ -66,5 +67,19 @@ class Sqlite extends PhalconSqlite
         }
 
         return $sql;
+    }
+
+    /**
+     * @param Dialect $dialect
+     * @param $expression
+     * @return string
+     */
+    public function if(Dialect $dialect, $expression)
+    {
+        $if   = $dialect->getSqlExpression($expression['arguments'][0]);
+        $then = $dialect->getSqlExpression($expression['arguments'][1]);
+        $else = $dialect->getSqlExpression($expression['arguments'][2]);
+
+        return 'CASE WHEN ' . $if . ' THEN ' . $then . ' ELSE ' . $else . ' END';
     }
 }

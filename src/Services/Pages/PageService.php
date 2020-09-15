@@ -76,7 +76,7 @@ class PageService extends Injectable
     public function getOffspringQuery(Page $page): Builder
     {
         return (new Builder)
-            ->from($this->websiteSettings->getPageClass())
+            ->from(['p' => $this->websiteSettings->getPageClass()])
             ->where('lft > :lft: AND rgt < :rgt:', [
                 'lft' => $page->lft,
                 'rgt' => $page->rgt
@@ -201,7 +201,7 @@ class PageService extends Injectable
         $query = $this->getOffspringQuery($menuPage);
 
         if ($menu->getRestrictTemplates()) {
-            $query->inWhere(Page::FIELD_TEMPLATE, $menu->getRestrictTemplates());
+            $query->inWhere('(SELECT a.template FROM ' . Page::class. ' a WHERE a.id = IFNULL(p.alias, p.id))', $menu->getRestrictTemplates());
         }
 
         if ($menu->getMaxLevel()) {

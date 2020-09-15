@@ -25,4 +25,6 @@ class CacheConfig
     const STATS_UPDATE_IN_PROGRESS = 'statsUpdateInProgress';
 
     const SEPARATOR = ':';
+
+    const ALIAS_PREFIX = 'a';
 }

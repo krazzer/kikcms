@@ -242,25 +242,18 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
-     * @param PageLanguage $pageLanguageAlias
      * @return PageLanguageMap
      */
-    public function getPath(PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias): PageLanguageMap
+    public function getPath(PageLanguage $pageLanguage): PageLanguageMap
     {
-        $lft = $pageLanguageAlias->page->lft;
-        $rgt = $pageLanguageAlias->page->rgt;
+        $lft = $pageLanguage->getAliasPage()->lft;
+        $rgt = $pageLanguage->getAliasPage()->rgt;
 
         if ( ! $lft || ! $rgt) {
-            $pageLanguageMap = (new PageLanguageMap)->add($pageLanguageAlias, $pageLanguageAlias->page_id);
-        } else {
-            $pageLanguageMap = $this->getPathMap($pageLanguage, $pageLanguageAlias);
+            return (new PageLanguageMap)->add($pageLanguage, $pageLanguage->getAliasPageId());
         }
 
-        if ($pageLanguageAlias->getPageId() !== $pageLanguage->getPageId()) {
-            $pageLanguageMap->getLast()->setAliasName($pageLanguage->getName());
-        }
-
-        return $pageLanguageMap;
+        return $this->getPathMap($pageLanguage);
     }
 
     /**
@@ -293,17 +286,16 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageLanguage $pageLanguage
-     * @param PageLanguage $pageLanguageAlias
      * @return PageLanguageMap
      */
-    private function getPathMap(PageLanguage $pageLanguage, PageLanguage $pageLanguageAlias): PageLanguageMap
+    private function getPathMap(PageLanguage $pageLanguage): PageLanguageMap
     {
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'p.id = pl.page_id', 'p')
             ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu" AND pl.language_code = :langCode:', [
-                'lft'      => $pageLanguageAlias->page->lft,
-                'rgt'      => $pageLanguageAlias->page->rgt,
+                'lft'      => $pageLanguage->getAliasPage()->lft,
+                'rgt'      => $pageLanguage->getAliasPage()->rgt,
                 'langCode' => $pageLanguage->getLanguageCode(),
             ])->orderBy('lft ASC');
 
