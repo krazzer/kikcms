@@ -281,7 +281,7 @@ class PageLanguageService extends Injectable
         $urlPath = trim($this->urlService->getUrlByPageLanguage($pageLanguage), '/');
 
         $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath);
-        $this->cacheService->clear(CacheConfig::URL . CacheConfig::SEPARATOR . $pageLanguage->id);
+        $this->cacheService->clear(CacheConfig::getUrlKeyByPageLang($pageLanguage));
     }
 
     /**

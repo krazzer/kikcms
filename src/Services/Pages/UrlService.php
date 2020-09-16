@@ -181,7 +181,7 @@ class UrlService extends Injectable
             return $this->createUrlPathByPageLanguage($pageLanguage, $aliasPage);
         }
 
-        $cacheKey = CacheConfig::URL . CacheConfig::SEPARATOR . $pageLanguage->id;
+        $cacheKey = CacheConfig::getUrlKeyByPageLang($pageLanguage);
 
         if ($aliasPage && $aliasPage->getId() !== $pageLanguage->getPageId()) {
             $cacheKey .= CacheConfig::ALIAS_PREFIX . $aliasPage->getId();

@@ -2,6 +2,8 @@
 
 namespace KikCMS\Config;
 
+use KikCMS\Models\PageLanguage;
+
 /**
  * Contains various constants for globally used cache keys
  */
@@ -17,6 +19,7 @@ class CacheConfig
     const USER_TRANSLATIONS = 'userTranslations';
 
     const PAGE_LANGUAGE_FOR_URL = 'pageLanguageForUrl';
+    const OTHER_LANG_MAP        = 'otherLangMap';
     const URL                   = 'url';
     const MENU                  = 'menu';
     const MENU_PAGES            = 'menuPages';
@@ -27,4 +30,35 @@ class CacheConfig
     const SEPARATOR = ':';
 
     const ALIAS_PREFIX = 'a';
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @return string
+     */
+    public static function getOtherLangMapKey(PageLanguage $pageLanguage): string
+    {
+        $langCode = $pageLanguage->getLanguageCode();
+        $pageId   = $pageLanguage->getPageId();
+
+        return implode(self::SEPARATOR, [self::URL, $pageId, $langCode, self::OTHER_LANG_MAP]);
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @return string
+     */
+    public static function getUrlKeyByPageLang(PageLanguage $pageLanguage): string
+    {
+        return self::getUrlKey($pageLanguage->getPageId(), $pageLanguage->getLanguageCode());
+    }
+
+    /**
+     * @param int|string $pageKey
+     * @param string $langCode
+     * @return string
+     */
+    public static function getUrlKey($pageKey, string $langCode): string
+    {
+        return implode(self::SEPARATOR, [self::URL, $pageKey, $langCode]);
+    }
 }

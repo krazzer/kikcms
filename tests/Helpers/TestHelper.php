@@ -24,6 +24,8 @@ use KikCMS\Services\Finder\FilePermissionService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
+use KikCMS\Services\Pages\PageLanguageService;
+use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TranslationService;
 use KikCMS\Services\TwigService;
@@ -193,6 +195,8 @@ class TestHelper extends TestCase
         $di->set('templateFields', new TemplateFieldsBase);
         $di->set('cmsService', new CmsService);
         $di->set('translationService', new TranslationService);
+        $di->set('pageService', new PageService);
+        $di->set('pageLanguageService', new PageLanguageService);
 
         $di->get('session')->set('role', Permission::ADMIN);
 

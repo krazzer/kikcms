@@ -63,7 +63,7 @@ class FrontendController extends BaseController
      */
     public function pageAction(string $urlPath = null)
     {
-        if( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)){
+        if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {
             throw new NotFoundException();
         }
 
@@ -140,16 +140,17 @@ class FrontendController extends BaseController
         $this->frontendHelper->initialize($languageCode, $pageLanguage);
         $this->translator->setLanguageCode($languageCode);
 
-        $fieldVariables    = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
-        $websiteVariables  = $this->templateVariables->getGlobalVariables();
-        $templateVariables = $this->templateVariables->getTemplateVariables($templateFile);
+        $langSwitchVariables = $this->frontendService->getLangSwitchVariables($pageLanguage);
+        $fieldVariables      = $this->pageContentService->getVariablesByPageLanguage($pageLanguage);
+        $websiteVariables    = $this->templateVariables->getGlobalVariables();
+        $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
         // in case a form has been send, it might want to redirect
         if ($templateVariables instanceof Response) {
             return $templateVariables;
         }
 
-        $variables = array_merge($fieldVariables, $websiteVariables, $templateVariables);
+        $variables = array_merge($langSwitchVariables, $fieldVariables, $websiteVariables, $templateVariables);
 
         // in case a form has been send, it might want to redirect
         if ($variables instanceof Response) {

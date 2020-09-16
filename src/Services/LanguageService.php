@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\Phalcon\IniConfig;
+use KikCMS\ObjectLists\LanguageMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Models\Language;
@@ -40,19 +41,25 @@ class LanguageService extends Injectable
 
     /**
      * @param bool $activeOnly
-     * @return Language[]
+     * @return LanguageMap
      */
-    public function getLanguages(bool $activeOnly = false)
+    public function getLanguages(bool $activeOnly = false): LanguageMap
     {
-        return $this->cacheService->cache(CacheConfig::LANGUAGES, function () use ($activeOnly){
-            if ($activeOnly) {
-                $results = Language::find([Language::FIELD_ACTIVE . ' = 1']);
-            } else {
-                $results = Language::find();
-            }
-
-            return $this->dbService->toMap($results, Language::FIELD_CODE);
+        $languages = $this->cacheService->cache(CacheConfig::LANGUAGES, function () use ($activeOnly){
+            return $this->dbService->toMap(Language::find(), Language::FIELD_CODE);
         });
+
+        $languageMap = new LanguageMap($languages);
+
+        if ($activeOnly) {
+            foreach ($languageMap as $code => $language) {
+                if ( ! $language->active) {
+                    $languageMap->remove($code);
+                }
+            }
+        }
+
+        return $languageMap;
     }
 
     /**

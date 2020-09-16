@@ -4,6 +4,8 @@
 namespace KikCMS\Services\Website;
 
 
+use KikCMS\Config\CacheConfig;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
@@ -34,5 +36,58 @@ class FrontendService extends Injectable
         }
 
         return $pageLanguage;
+    }
+
+    /**
+     * @param PageLanguage $pageLanguage
+     * @return array
+     */
+    public function getLangSwitchVariables(PageLanguage $pageLanguage): array
+    {
+        $pageId   = $pageLanguage->getPageId();
+        $cacheKey = CacheConfig::getOtherLangMapKey($pageLanguage);
+
+        return $this->cacheService->cache($cacheKey, function () use ($pageId, $pageLanguage){
+            $urlMap = $this->getUrlMapByPageId($pageId);
+
+            $return = ['langUrlMap' => $urlMap];
+
+            if (count($urlMap) == 2) {
+                $otherLangMap = $urlMap;
+                unset($otherLangMap[$pageLanguage->getLanguageCode()]);
+
+                $return['otherLangCode'] = first_key($otherLangMap);
+                $return['otherLangUrl']  = first($otherLangMap);
+            }
+
+            return $return;
+        });
+    }
+
+    /**
+     * @param int $pageId
+     * @return array
+     */
+    private function getUrlMapByPageId(int $pageId): array
+    {
+        $activeLanguages = $this->languageService->getLanguages(true);
+
+        if ($activeLanguages->isEmpty()) {
+            return [];
+        }
+
+        $urlMap = [];
+
+        $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
+
+        foreach ($activeLanguages as $code => $language) {
+            if ($pageLanguage = $pageLanguageMap->get($code)) {
+                $urlMap[$code] = $this->urlService->getUrlByPageLanguage($pageLanguage);
+            } else {
+                $urlMap[$code] = $this->urlService->getUrlByPageKey(KikCMSConfig::KEY_PAGE_DEFAULT, $code);
+            }
+        }
+
+        return $urlMap;
     }
 }

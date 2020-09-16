@@ -141,7 +141,7 @@ class TwigService extends Injectable
             return $pageId;
         }
 
-        $cacheKey = implode(CacheConfig::SEPARATOR, [CacheConfig::URL, $langCode, $pageId]);
+        $cacheKey = CacheConfig::getUrlKey($pageId, $langCode);
 
         return $this->cacheService->cache($cacheKey, function () use ($pageId, $langCode){
             if (is_numeric($pageId)) {
