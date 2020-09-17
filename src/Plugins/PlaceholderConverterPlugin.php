@@ -3,16 +3,16 @@
 namespace KikCMS\Plugins;
 
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Services\PlaceholderService;
 use Phalcon\Events\Event;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\Application;
-use Phalcon\Mvc\User\Plugin;
 
 /**
  * @property PlaceholderService $placeholderService
  */
-class PlaceholderConverterPlugin extends Plugin
+class PlaceholderConverterPlugin extends Injectable
 {
     /**
      * This action is executed before any response is shown

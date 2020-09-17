@@ -1,7 +1,7 @@
 version: "3"
 services:
   php:
-    image: kiksaus/kikdev
+    build: ./../../../../../DockerKikDev/DockerfilePhalcon4
     restart: always
     ports:
       - "${SITE_PORT}:443"

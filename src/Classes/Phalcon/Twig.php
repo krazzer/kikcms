@@ -5,9 +5,8 @@ namespace KikCMS\Classes\Phalcon;
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\TwigService;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\View\Engine;
-use Phalcon\Mvc\View\EngineInterface;
 use Phalcon\Mvc\ViewBaseInterface;
 use Twig_Environment;
 use Twig_Extension_Debug;
@@ -19,14 +18,12 @@ use Twig_SimpleFunction;
  * Class Twig
  * @package Phalcon\Mvc\View\Engine
  */
-class Twig extends Engine implements EngineInterface
+class Twig extends Engine\AbstractEngine
 {
     const DEFAULT_EXTENSION = '.twig';
 
-    /**
-     * @var Twig_Environment
-     */
-    protected $twig;
+    /** @var Twig_Environment */
+    protected Twig_Environment $twig;
 
     /**
      * @param mixed|ViewBaseInterface $view
@@ -56,7 +53,7 @@ class Twig extends Engine implements EngineInterface
     /**
      * @return View|ViewBaseInterface
      */
-    public function getView()
+    public function getView(): ViewBaseInterface
     {
         return parent::getView();
     }

@@ -6,17 +6,17 @@ use Exception;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\User\Plugin;
 
 /**
  * NotFoundPlugin
  *
  * Handles not-found controller/actions
  */
-class FrontendNotFoundPlugin extends Plugin
+class FrontendNotFoundPlugin extends Injectable
 {
     /**
      * This action is executed before execute any action in the application

@@ -6,8 +6,7 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\Section;
-use Phalcon\Forms\Element;
-use Phalcon\Forms\ElementInterface;
+use Phalcon\Forms\Element\ElementInterface;
 
 /**
  * Represents a field of a form
@@ -37,32 +36,32 @@ abstract class Field
     /** @var WebForm|DataForm */
     protected $form;
 
-    /** @var Element|null */
-    protected $element;
+    /** @var ElementInterface|null */
+    protected ?ElementInterface $element;
 
     /** @var string unique identifier for the field */
-    protected $key;
+    protected string $key;
 
     /** @var array */
-    private $cssClasses = [];
+    private array $cssClasses = [];
 
     /** @var FieldTransformer[] */
-    private $transformers = [];
+    private array $transformers = [];
 
     /** @var Tab */
-    private $tab;
+    private Tab $tab;
 
     /** @var Section */
-    private $section;
+    private Section $section;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
-    private $required = false;
+    private bool $required = false;
 
     /** @var string|null */
-    private $helpText;
+    private ?string $helpText;
 
     /** @var bool */
-    private $dontStore = false;
+    private bool $dontStore = false;
 
     /**
      * Add a css class to the field wrapper
@@ -131,9 +130,9 @@ abstract class Field
     }
 
     /**
-     * @return null|Element
+     * @return null|ElementInterface
      */
-    public function getElement(): ?Element
+    public function getElement(): ?ElementInterface
     {
         return $this->element;
     }
@@ -160,10 +159,10 @@ abstract class Field
     }
 
     /**
-     * @param Element|ElementInterface $element
+     * @param ElementInterface $element
      * @return $this|Field
      */
-    public function setElement(Element $element): Field
+    public function setElement(ElementInterface $element): Field
     {
         $this->element = $element;
         return $this;

@@ -3,13 +3,13 @@
 namespace KikCMS\Plugins;
 
 
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Classes\Model;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\User\Plugin;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -22,7 +22,7 @@ use ReflectionParameter;
  *
  * @property ModelService $modelService
  */
-class ParamConverterPlugin extends Plugin
+class ParamConverterPlugin extends Injectable
 {
     /**
      * This action is executed before execute any action in the application
