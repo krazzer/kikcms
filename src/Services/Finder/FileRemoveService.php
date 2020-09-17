@@ -141,7 +141,9 @@ class FileRemoveService extends Injectable
 
         if (is_link($privateMediaFilePath)) {
             unlink($privateMediaFilePath);
-            rmdir(dirname($privateMediaFilePath));
+
+            // remove the directory if possible
+            @rmdir(dirname($privateMediaFilePath));
         }
 
         $this->cacheService->clear(PlaceholderConfig::FILE_THUMB_URL . CacheConfig::SEPARATOR . $file->getId());
