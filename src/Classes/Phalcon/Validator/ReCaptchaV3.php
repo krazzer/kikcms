@@ -4,11 +4,11 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
+use Phalcon\Messages\Message;
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 
-class ReCaptchaV3 extends Validator
+class ReCaptchaV3 extends AbstractValidator
 {
     /**
      * Executes the validation

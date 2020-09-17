@@ -4,28 +4,27 @@ namespace KikCMS\Classes\Phalcon;
 
 
 use Exception;
-use Phalcon\Cache\BackendInterface;
 use Phalcon\Mvc\View as PhalconView;
 
 class View extends PhalconView
 {
     /** @var array */
-    private $namespaces = [];
+    private array $namespaces = [];
 
     /**
      * @inheritdoc
      */
-    protected function _engineRender($engines, $viewPath, $silence, $mustClean, BackendInterface $cache = null)
+    protected function engineRender($engines, $viewPath, $silence, $mustClean = true)
     {
         $viewPath = $this->convertNamespace($viewPath);
 
-        return parent::_engineRender($engines, $viewPath, $silence, $mustClean, $cache);
+        return parent::engineRender($engines, $viewPath, $silence, $mustClean);
     }
 
     /**
      * @inheritdoc
      */
-    public function exists($view)
+    public function exists($view): bool
     {
         if( ! $this->isNamespaced($view)){
             return parent::exists($view);
@@ -61,7 +60,7 @@ class View extends PhalconView
      * @return PhalconView
      * @throws Exception
      */
-    public function pick($viewPath)
+    public function pick($viewPath): PhalconView
     {
         if( ! $this->exists($viewPath)){
             throw new Exception('View "' . $viewPath . '" not found.');

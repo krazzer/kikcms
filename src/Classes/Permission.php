@@ -10,8 +10,8 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Translations;
 use KikCMS\DataTables\Users;
 use KikCMS\Services\UserService;
-use Phalcon\Acl;
-use Phalcon\Acl\Resource;
+use Phalcon\Acl\Component;
+use Phalcon\Acl\Enum;
 use Phalcon\Acl\Role;
 use KikCMS\Classes\Phalcon\Injectable;
 
@@ -60,7 +60,7 @@ class Permission extends Injectable
 
         $acl = new AccessControl($this->getCurrentRole());
 
-        $acl->setDefaultAction(Acl::DENY);
+        $acl->setDefaultAction(Enum::DENY);
 
         $acl->addRole(new Role(self::DEVELOPER));
         $acl->addRole(new Role(self::ADMIN));
@@ -109,14 +109,14 @@ class Permission extends Injectable
      */
     private function addDataTablePermissions(AccessControl $acl)
     {
-        $acl->addResource(self::ACCESS_DATATABLES_DEFAULT);
-        $acl->addResource(self::ACCESS_FINDER);
-        $acl->addResource(self::ACCESS_STATISTICS);
+        $acl->addComponent(self::ACCESS_DATATABLES_DEFAULT);
+        $acl->addComponent(self::ACCESS_FINDER);
+        $acl->addComponent(self::ACCESS_STATISTICS);
 
-        $acl->addResource(Languages::class);
-        $acl->addResource(Pages::class);
-        $acl->addResource(Translations::class);
-        $acl->addResource(Users::class);
+        $acl->addComponent(Languages::class);
+        $acl->addComponent(Pages::class);
+        $acl->addComponent(Translations::class);
+        $acl->addComponent(Users::class);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES_DEFAULT);
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES_DEFAULT);
@@ -149,7 +149,7 @@ class Permission extends Injectable
      */
     private function addMenuPermissions(AccessControl $acl)
     {
-        $acl->addResource(new Resource(self::PAGE_MENU), self::ACCESS_ANY);
+        $acl->addComponent(new Component(self::PAGE_MENU), self::ACCESS_ANY);
         $acl->allow(self::DEVELOPER, self::PAGE_MENU, self::ACCESS_ANY);
     }
 
@@ -158,7 +158,7 @@ class Permission extends Injectable
      */
     private function addPagePermissions(AccessControl $acl)
     {
-        $acl->addResource(new Resource(self::PAGE_KEY), self::ACCESS_ANY);
+        $acl->addComponent(new Component(self::PAGE_KEY), self::ACCESS_ANY);
         $acl->allow(self::DEVELOPER, self::PAGE_KEY, self::ACCESS_ANY);
     }
 }

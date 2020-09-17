@@ -10,19 +10,21 @@ use Phalcon\Acl\Adapter\Memory;
 class AccessControl extends Memory
 {
     /** @var string */
-    private $currentRole;
+    private string $currentRole;
 
     /** @var DateTime */
-    private $updated;
+    private DateTime $updated;
 
     /** @var int|null time in seconds when the acl should be updated */
-    private $updateTime;
+    private ?int $updateTime;
 
     /**
      * @param string $role
      */
     public function __construct(string $role)
     {
+        parent::__construct();
+
         $this->currentRole = $role;
         $this->updated     = new DateTime;
     }
@@ -30,15 +32,15 @@ class AccessControl extends Memory
     /**
      * @inheritdoc
      */
-    public function addResource($resourceValue, $accessList = Permission::ACCESS_ANY)
+    public function addComponent($resourceValue, $accessList = Permission::ACCESS_ANY): bool
     {
-        parent::addResource($resourceValue, $accessList);
+        return parent::addComponent($resourceValue, $accessList);
     }
 
     /**
      * @inheritdoc
      */
-    public function allow($roleName, $resourceName, $access = Permission::ACCESS_ANY, $func = null)
+    public function allow(string $roleName, string $resourceName, $access = Permission::ACCESS_ANY, $func = null): void
     {
         parent::allow($roleName, $resourceName, $access, $func);
     }

@@ -69,7 +69,7 @@ use KikCMS\Services\Website\FrontendService;
 use KikCMS\Services\Website\MenuService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
-use Phalcon\Cache\Backend;
+use Phalcon\Cache;
 use Phalcon\Validation;
 use ReCaptcha\ReCaptcha;
 
@@ -83,7 +83,7 @@ use ReCaptcha\ReCaptcha;
  * @property AssetService assetService
  * @property BaseServices baseServices
  * @property ByteService byteService
- * @property Backend cache
+ * @property Cache cache
  * @property CacheService cacheService
  * @property IniConfig config
  * @property CmsService cmsService

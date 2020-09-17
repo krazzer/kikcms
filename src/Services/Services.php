@@ -33,23 +33,17 @@ use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
 use Monolog\Handler\DeduplicationHandler;
-use Nette\PhpGenerator\Factory;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache;
-use Phalcon\Cache\Adapter\AdapterInterface;
+use Phalcon\Db\Adapter\AdapterInterface as PdoAdapterInterface;
 use Phalcon\Cache\AdapterFactory;
-use Phalcon\Cache\Backend\File;
-use Phalcon\Cache\BackendInterface;
-use Phalcon\Cache\Frontend\Data;
-use Phalcon\Cache\Frontend\Json;
-use Phalcon\Db;
+use Phalcon\Db\Adapter\PdoFactory;
 use Phalcon\Di\FactoryDefault\Cli;
-use Phalcon\DiInterface;
-use Phalcon\Db\Adapter\Pdo;
 use Phalcon\Filter;
 use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
+use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
 use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
@@ -58,8 +52,9 @@ use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
+use Phalcon\Session\Manager as SessionManager;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
-use Phalcon\Session\Adapter\Files as SessionAdapter;
+use Phalcon\Session\Adapter\Stream as SessionAdapter;
 use Phalcon\Flash\Session as FlashSession;
 
 class Services extends BaseServices
@@ -185,8 +180,7 @@ class Services extends BaseServices
             $config["prefix"] = $_SERVER['SERVER_PORT'] . ':' . ($config["prefix"] ?? '');
         }
 
-//        $config["frontend"] = new Data();
-        $config['defaultSerializer'] = 'Json';
+        $config['defaultSerializer'] = 'Php';
 
         $serializerFactory = new SerializerFactory();
         $adapterFactory    = new AdapterFactory($serializerFactory);
@@ -210,9 +204,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Db\Adapter
+     * @return PdoAdapterInterface
      */
-    protected function initDb(): Db\Adapter
+    protected function initDb(): PdoAdapterInterface
     {
         $config = $this->getDbConfig()->toArray();
 
@@ -221,7 +215,7 @@ class Services extends BaseServices
         unset($config['adapter']);
 
         try {
-            $db = new $dbClass($config);
+            $db = (new PdoFactory)->load(['adapter' => $config['adapter'], 'options' => $config]);
         } catch (Exception $exception) {
             if ($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS) {
                 $this->get('logger')->log(Logger::WARNING, $exception);
@@ -244,9 +238,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return BackendInterface
+     * @return Cache
      */
-    protected function initKeyValue()
+    protected function initKeyValue(): Cache
     {
         $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
         $keyValue = new KeyValue($frontend, ['cacheDir' => $this->getAppConfig()->path . 'storage/keyvalue/']);
@@ -315,12 +309,16 @@ class Services extends BaseServices
      */
     protected function initFlash(): FlashSession
     {
-        return new FlashSession([
+        $flashSession = new FlashSession();
+
+        $flashSession->setCssClasses([
             'error'   => 'alert alert-danger',
             'success' => 'alert alert-success',
             'notice'  => 'alert alert-info',
             'warning' => 'alert alert-warning'
         ]);
+
+        return $flashSession;
     }
 
     /**
@@ -393,10 +391,19 @@ class Services extends BaseServices
      */
     protected function initSession(): SessionAdapter
     {
-        $session = new SessionAdapter();
-        $session->start();
+        $session = new SessionManager();
+
+        $session->setAdapter(new SessionAdapter(['savePath' => '/tmp']));
 
         return $session;
+    }
+
+    /**
+     * @return Bag
+     */
+    protected function initSessionBag(): Bag
+    {
+        return new Bag("sessionBag");
     }
 
     /**
@@ -477,8 +484,8 @@ class Services extends BaseServices
         $view->setViewsDir($cmsViewDir);
         $view->setNamespaces($namespaces);
         $view->registerEngines([
-            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
-                return new Twig($view, $di, [
+            Twig::DEFAULT_EXTENSION => function (View $view){
+                return new Twig($view, $this, [
                     'cache' => $this->getIniConfig()->isDev() ? false : $this->getAppConfig()->path . 'cache/twig/',
                     'debug' => $this->getIniConfig()->isDev(),
                 ], $view->getNamespaces());
