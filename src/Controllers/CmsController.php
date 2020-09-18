@@ -212,7 +212,7 @@ class CmsController extends BaseCmsController
     public function generateSecurityTokenAction(): ResponseInterface
     {
         if ( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
-            return null;
+            return $this->response->setJsonContent(null);
         }
 
         $token = $this->cmsService->createSecurityToken();

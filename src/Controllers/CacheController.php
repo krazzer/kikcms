@@ -5,7 +5,6 @@ namespace KikCMS\Controllers;
 
 
 use DateTime;
-use Exception;
 use KikCMS\Config\MenuConfig;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Util\ByteService;
@@ -24,11 +23,7 @@ class CacheController extends BaseCmsController
      */
     public function managerAction()
     {
-        try{
-            $cacheInfo = apcu_cache_info();
-        } catch(Exception $e){
-            $cacheInfo = [];
-        }
+        $cacheInfo = @apcu_cache_info() ?: [];
 
         $startTime = isset($cacheInfo['start_time']) ? (new DateTime())->setTimestamp($cacheInfo['start_time']) : new DateTime;
 

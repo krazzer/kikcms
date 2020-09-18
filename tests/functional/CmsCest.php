@@ -56,8 +56,8 @@ class CmsCest
 
     public function getTranslationsForKeyWorks(FunctionalTester $I)
     {
-        $I->sendAjaxPostRequest('/cms/getTranslationsForKey', ['key' => 'cms.roles']);
-        $I->see('{"en":"cms.roles"');
+        $I->sendAjaxPostRequest('/cms/getTranslationsForKey', ['key' => 'cms.roles.admin']);
+        $I->see('{"en":"Administrator","nl":"Administrator"}');
     }
 
     public function getUrlsWorks(FunctionalTester $I)
