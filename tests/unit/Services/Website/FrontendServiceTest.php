@@ -115,7 +115,7 @@ class FrontendServiceTest extends Unit
 
         $pageLanguage->active  = $active;
         $pageLanguage->page    = $page;
-        $pageLanguage->page_id = $page->id;
+        $pageLanguage->page_id = $page->id ?? null;
 
         if ($name) {
             $pageLanguage->setName($name)->setSlug($name);
