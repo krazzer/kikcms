@@ -126,7 +126,7 @@ class CacheService extends Injectable
             }
         }
 
-        foreach ($cacheCategoryMap as $cacheNode){
+        foreach ($cacheCategoryMap as $key => $cacheNode){
             $cacheNode->flattenSingleNodes();
         }
 

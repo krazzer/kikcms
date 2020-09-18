@@ -81,6 +81,7 @@
     background-color: $superLightGray;
     border-radius: $defaultBorderRadius;
     line-height: 18px;
+    font-weight: 300;
 
     .treeLabelInner {
         display: grid;
@@ -146,6 +147,10 @@
 
 label.treeLabel {
     cursor: pointer;
+
+    .key{
+        font-weight: normal;
+    }
 }
 
 /* ————————————————————–

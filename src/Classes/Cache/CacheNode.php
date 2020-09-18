@@ -72,8 +72,8 @@ class CacheNode
      */
     public function getValueOutput(): string
     {
-        // don't show value when it has subnodes
-        if($this->getCacheNodeMap()->count() > 0){
+        // don't show value when it has subnodes and no value
+        if($this->getCacheNodeMap()->count() > 0 && $this->value === null){
             return '';
         }
 
@@ -145,7 +145,8 @@ class CacheNode
      */
     public function flattenSingleNodes()
     {
-        if ($this->getCacheNodeMap()->count() === 1) {
+        // flatten the map if there is only one node
+        if ($this->getCacheNodeMap()->count() === 1 && ! $this->value) {
             $cacheNode = $this->getCacheNodeMap()->getFirst();
             $cacheNode->flattenSingleNodes();
 
