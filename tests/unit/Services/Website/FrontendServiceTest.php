@@ -5,7 +5,6 @@ namespace unit\Services\Website;
 
 use Helpers\TestHelper;
 use Helpers\Unit;
-use KikCMS\Models\Language;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -22,63 +21,20 @@ class FrontendServiceTest extends Unit
 
         $frontendService->setDI($this->getDbDi());
 
-        $page = new Page;
-        $page->id = 1;
-        $page->type = Page::TYPE_PAGE;
-        $page->key = null;
-        $page->lft = 1;
-        $page->rgt = 2;
-        $page->save();
+        $page  = $this->createPage(1, null);
+        $page2 = $this->createPage(2, 'default');
 
-        $page = new Page;
-        $page->id = 2;
-        $page->type = Page::TYPE_PAGE;
-        $page->key = 'default';
-        $page->lft = 3;
-        $page->rgt = 4;
-        $page->save();
-
-        $pageLanguage = new PageLanguage;
-        $pageLanguage->id = 1;
-        $pageLanguage->active = 1;
-        $pageLanguage->language_code = 'en';
-        $pageLanguage->name = 'page-en';
-        $pageLanguage->setSlug('page-en');
-        $pageLanguage->page_id = 1;
+        $pageLanguage = $this->createPageLanguage($page, 1, 'page-en', 'en');
         $pageLanguage->save();
 
-        $pageLanguageNl = new PageLanguage;
-        $pageLanguageNl->id = 3;
-        $pageLanguageNl->active = 1;
-        $pageLanguageNl->language_code = 'en';
-        $pageLanguageNl->name = 'home-en';
-        $pageLanguageNl->setSlug('home-en');
-        $pageLanguageNl->page_id = 2;
-        $pageLanguageNl->save();
-
-        $pageLanguageNl = new PageLanguage;
-        $pageLanguageNl->id = 4;
-        $pageLanguageNl->active = 1;
-        $pageLanguageNl->language_code = 'nl';
-        $pageLanguageNl->name = 'home-nl';
-        $pageLanguageNl->setSlug('home-nl');
-        $pageLanguageNl->page_id = 2;
-        $pageLanguageNl->save();
+        $this->createPageLanguage($page2, 1, 'home-en', 'en')->save();
+        $this->createPageLanguage($page2, 1, 'home-nl', 'nl')->save();
 
         // there are no languages configured, so return nothing
         $this->assertEquals(['langUrlMap' => []], $frontendService->getLangSwitchVariables($pageLanguage));
 
-        $languageEn = new Language();
-
-        $languageEn->code   = 'en';
-        $languageEn->active = 1;
-        $languageEn->save();
-
-        $languageNl = new Language();
-
-        $languageNl->code   = 'nl';
-        $languageNl->active = 1;
-        $languageNl->save();
+        $this->addLanguage('en');
+        $this->addLanguage('nl');
 
         $frontendService->cache->delete('languages');
         $frontendService->cache->delete('url:1:en:otherLangMap');
@@ -91,14 +47,7 @@ class FrontendServiceTest extends Unit
 
         $this->assertEquals($expected, $frontendService->getLangSwitchVariables($pageLanguage));
 
-        $pageLanguageNl = new PageLanguage;
-        $pageLanguageNl->id = 2;
-        $pageLanguageNl->active = 1;
-        $pageLanguageNl->language_code = 'nl';
-        $pageLanguageNl->name = 'page-nl';
-        $pageLanguageNl->setSlug('page-nl');
-        $pageLanguageNl->page_id = 1;
-        $pageLanguageNl->save();
+        $this->createPageLanguage($page, 1, 'page-nl', 'nl')->save();
 
         $frontendService->cache->delete('url:1:en:otherLangMap');
 
@@ -156,14 +105,25 @@ class FrontendServiceTest extends Unit
     /**
      * @param null $page
      * @param int $active
+     * @param string|null $name
+     * @param null $langCode
      * @return PageLanguage
      */
-    private function createPageLanguage($page = null, $active = 1): PageLanguage
+    private function createPageLanguage($page = null, $active = 1, $name = null, $langCode = null): PageLanguage
     {
         $pageLanguage = new PageLanguage();
 
-        $pageLanguage->active = $active;
-        $pageLanguage->page   = $page;
+        $pageLanguage->active  = $active;
+        $pageLanguage->page    = $page;
+        $pageLanguage->page_id = $page->id;
+
+        if ($name) {
+            $pageLanguage->setName($name)->setSlug($name);
+        }
+
+        if ($langCode) {
+            $pageLanguage->language_code = $langCode;
+        }
 
         return $pageLanguage;
     }
@@ -205,5 +165,23 @@ class FrontendServiceTest extends Unit
         $pageLanguageService->expects($this->exactly($timesCalled))->method('getDefault');
 
         return $pageLanguageService;
+    }
+
+    /**
+     * @param int $id
+     * @param string|null $key
+     * @return Page
+     */
+    private function createPage(int $id, string $key = null): Page
+    {
+        $page       = new Page;
+        $page->id   = $id;
+        $page->type = Page::TYPE_PAGE;
+        $page->key  = $key;
+        $page->lft  = $id * 2 - 1;
+        $page->rgt  = $id * 2;
+        $page->save();
+
+        return $page;
     }
 }

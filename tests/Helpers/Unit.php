@@ -50,9 +50,17 @@ class Unit extends \Codeception\Test\Unit
 
     public function addDefaultLanguage()
     {
+        $this->addLanguage();
+    }
+
+    /**
+     * @param string $langCode
+     */
+    public function addLanguage(string $langCode = 'en')
+    {
         $language = new Language();
 
-        $language->code   = 'en';
+        $language->code   = $langCode;
         $language->active = 1;
         $language->save();
     }
