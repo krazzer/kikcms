@@ -181,10 +181,10 @@ class PageLanguage extends Model
     }
 
     /**
-     * @param Page $page
+     * @param Page|null $page
      * @return $this
      */
-    public function setAliasPage(Page $page): PageLanguage
+    public function setAliasPage(?Page $page): PageLanguage
     {
         $this->aliasPage = $page;
         return $this;

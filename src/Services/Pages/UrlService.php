@@ -5,6 +5,7 @@ namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\UrlConfig;
 use KikCMS\ObjectLists\PageLanguageList;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
@@ -91,32 +92,20 @@ class UrlService extends Injectable
         $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
 
-            foreach ($urlMap as $pageLanguageId => $possibleUrl) {
+            foreach ($urlMap as $key => $possibleUrl) {
                 if ($possibleUrl == $urlPath) {
-                    if (is_string($pageLanguageId) && strstr($pageLanguageId, 'a')) {
-                        $pageLanguageIdParts = explode('a', $pageLanguageId);
-
-                        $pageLanguage = PageLanguage::getById($pageLanguageIdParts[0]);
-                        $aliasPage    = Page::getById($pageLanguageIdParts[1]);
-
-                        return [$pageLanguage, $aliasPage];
-                    } else {
-                        return PageLanguage::getById($pageLanguageId);
-                    }
+                    return $this->getPageLangAndAliasByKey($key);
                 }
             }
 
             return null;
         });
 
-        if( ! $cached || $cached instanceof PageLanguage){
-            return $cached;
+        if( ! $cached[0]){
+            return null;
         }
 
-        $pageLanguage = $cached[0];
-        $pageLanguage->setAliasPage($cached[1]);
-
-        return $pageLanguage;
+        return $cached[0]->setAliasPage($cached[1]);
     }
 
     /**
@@ -363,7 +352,7 @@ class UrlService extends Injectable
         $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.slug IS NOT NULL';
 
         $query = (new Builder)
-            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("a", p.id), ""))', 'pla.slug'])
+            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("' . UrlConfig::ALIAS_SEP . '", p.id), ""))', 'pla.slug'])
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.lft < p.lft AND pa.rgt > p.rgt', 'pa')
@@ -419,5 +408,26 @@ class UrlService extends Injectable
         }
 
         return $urlPath;
+    }
+
+    /**
+     * Return the PageLanguage and Page
+     * Page is only filled if the page is an alias and not the PageLanguage's Page
+     *
+     * @param string|int $key the is is either the pageLanguageId, or the pageLanguageId + aliasId concatenated with 'a'
+     * @return array [PageLanguage, ?Page]
+     */
+    private function getPageLangAndAliasByKey($key): array
+    {
+        if (is_string($key) && strstr($key, UrlConfig::ALIAS_SEP)) {
+            $pageLanguageIdParts = explode(UrlConfig::ALIAS_SEP, $key);
+
+            $pageLanguage = PageLanguage::getById($pageLanguageIdParts[0]);
+            $aliasPage    = Page::getById($pageLanguageIdParts[1]);
+
+            return [$pageLanguage, $aliasPage];
+        } else {
+            return [PageLanguage::getById($key), null];
+        }
     }
 }
