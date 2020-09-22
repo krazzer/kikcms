@@ -48,17 +48,17 @@ abstract class Field
     /** @var FieldTransformer[] */
     private array $transformers = [];
 
-    /** @var Tab */
-    private Tab $tab;
+    /** @var Tab|null */
+    private ?Tab $tab = null;
 
-    /** @var Section */
-    private Section $section;
+    /** @var Section|null */
+    private ?Section $section = null;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private bool $required = false;
 
     /** @var string|null */
-    private ?string $helpText;
+    private ?string $helpText = null;
 
     /** @var bool */
     private bool $dontStore = false;

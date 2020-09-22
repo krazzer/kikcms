@@ -3,12 +3,12 @@
 namespace KikCMS\Plugins;
 
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
-use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 
 /**
@@ -17,7 +17,7 @@ use Phalcon\Mvc\Dispatcher;
  * @property Translator $translator
  * @property UserService $userService
  */
-class SecurityPlugin extends Plugin
+class SecurityPlugin extends Injectable
 {
     const CONTROLLER_LOGIN      = 'login';
     const CONTROLLER_STATISTICS = 'statistics';

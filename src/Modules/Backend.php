@@ -5,14 +5,14 @@ namespace KikCMS\Modules;
 use KikCMS\Plugins\BackendNotFoundPlugin;
 use KikCMS\Plugins\ParamConverterPlugin;
 use KikCMS\Plugins\SecurityPlugin;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Events\Manager;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 class Backend implements ModuleDefinitionInterface
 {
-    protected $defaultNamespace = "KikCMS\\Controllers";
+    protected string $defaultNamespace = "KikCMS\\Controllers";
 
     /**
      * @inheritdoc
