@@ -130,4 +130,20 @@ class PageContentService extends Injectable
 
         return $this->dbService->getValue($query);
     }
+
+    /**
+     * @param array $pageIds
+     * @param string $field
+     * @return array [pageId => value]
+     */
+    public function getValueMap(array $pageIds, string $field): array
+    {
+        $query = (new Builder)
+            ->columns([PageContent::FIELD_PAGE_ID, PageContent::FIELD_VALUE])
+            ->from(PageContent::class)
+            ->inWhere(PageContent::FIELD_PAGE_ID, $pageIds)
+            ->andWhere(PageContent::FIELD_FIELD . ' = :field:', ['field' => $field]);
+
+        return $this->dbService->getAssoc($query);
+    }
 }
