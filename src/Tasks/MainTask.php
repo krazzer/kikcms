@@ -31,6 +31,14 @@ class MainTask extends Task
     }
 
     /**
+     * Walk through the public media folder to find and remove broken links
+     */
+    public function cleanUpBrokenLinksAction()
+    {
+        $this->fileRemoveService->cleanUpBrokenSymlinks();
+    }
+
+    /**
      * Clean up the vendor folder to keep only necessary files
      */
     public function cleanUpVendorAction()

@@ -6,6 +6,7 @@ namespace KikCMS\Services\Finder;
 
 use KikCMS\Classes\Translator;
 use KikCMS\Config\CacheConfig;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Models\File;
 use KikCMS\ObjectLists\PageLanguageMap;
@@ -13,6 +14,8 @@ use KikCMS\Services\CacheService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Phalcon\Injectable;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Handles the removal of Files
@@ -26,6 +29,26 @@ use KikCMS\Classes\Phalcon\Injectable;
  */
 class FileRemoveService extends Injectable
 {
+    /**
+     * Walk through the public media folder to find and remove broken links
+     */
+    public function cleanUpBrokenSymlinks()
+    {
+        $filesDir = $this->fileService->getMediaStorageDir() . FinderConfig::FILES_DIR . DIRECTORY_SEPARATOR;
+
+        $objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($filesDir));
+
+        foreach($objects as $filePath => $object){
+            if (is_link($filePath) && ! file_exists($filePath)){
+                if(unlink($filePath)){
+                    echo 'Removed ' . $filePath . PHP_EOL;
+                } else {
+                    echo 'Failed to remove ' . $filePath . PHP_EOL;
+                }
+            }
+        }
+    }
+
     /**
      * @param int[] $fileIds
      */
