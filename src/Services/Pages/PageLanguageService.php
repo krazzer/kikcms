@@ -83,12 +83,20 @@ class PageLanguageService extends Injectable
         $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
 
         $query = (new Builder)
-            ->from(PageLanguage::class)
-            ->where('page_id = :pageId: AND language_code = :langCode:', [
-                'pageId' => $pageId, 'langCode' => $languageCode
-            ]);
+            ->from(['pl' => PageLanguage::class])
+            ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
+            ->where('p.id = :pId: AND pl.language_code = :code:', ['pId' => $pageId, 'code' => $languageCode]);
 
-        return $this->dbService->getObject($query);
+        /** @var PageLanguage $pageLanguage */
+        $pageLanguage = $this->dbService->getObject($query);
+
+        if($page = Page::getById($pageId)){
+            if($page->getAliasId()){
+                $pageLanguage->setAliasPage($page);
+            }
+        }
+
+        return $pageLanguage;
     }
 
     /**
@@ -253,7 +261,13 @@ class PageLanguageService extends Injectable
             return (new PageLanguageMap)->add($pageLanguage, $pageLanguage->getAliasPageId());
         }
 
-        return $this->getPathMap($pageLanguage);
+        $pageLanguageMap = $this->getPathMap($pageLanguage);
+
+        if($pageLanguageMap->getLast()->getAliasPageId() !== $pageLanguage->getAliasPageId()){
+            $pageLanguageMap->getLast()->setAliasPage($pageLanguage->getAliasPage());
+        }
+
+        return $pageLanguageMap;
     }
 
     /**
@@ -292,7 +306,7 @@ class PageLanguageService extends Injectable
     {
         $query = (new Builder)
             ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'p.id = pl.page_id', 'p')
+            ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
             ->where('p.lft <= :lft: AND p.rgt >= :rgt: AND p.type != "menu" AND pl.language_code = :langCode:', [
                 'lft'      => $pageLanguage->getAliasPage()->lft,
                 'rgt'      => $pageLanguage->getAliasPage()->rgt,

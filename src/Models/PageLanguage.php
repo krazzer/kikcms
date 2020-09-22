@@ -23,9 +23,6 @@ class PageLanguage extends Model
     const FIELD_SEO_KEYWORDS    = 'seo_keywords';
 
     /** @var string|null */
-    private $aliasName;
-
-    /** @var string|null */
     private $slug;
 
     /** @var Page|null */
@@ -66,6 +63,14 @@ class PageLanguage extends Model
         $pageClass = $this->getDI()->get('websiteSettings')->getPageClass() ?: Page::class;
 
         $this->belongsTo("page_id", $pageClass, "id", ["alias" => "page"]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasAliasPage(): bool
+    {
+        return $this->aliasPage ? true : false;
     }
 
     /**
@@ -137,19 +142,7 @@ class PageLanguage extends Model
      */
     public function getName(): string
     {
-        if ($this->aliasName && empty($this->name)) {
-            return $this->aliasName;
-        }
-
         return (string) $this->name;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setAliasName(string $name)
-    {
-        $this->aliasName = $name;
     }
 
     /**

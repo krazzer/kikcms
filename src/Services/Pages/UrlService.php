@@ -195,7 +195,9 @@ class UrlService extends Injectable
             return '/page/' . $languageCode . '/' . $pageId;
         }
 
-        return $this->getUrlByPageLanguage($pageLanguage);
+        $aliasPage = $pageLanguage->hasAliasPage() ? $pageLanguage->getAliasPage() : null;
+
+        return $this->getUrlByPageLanguage($pageLanguage, $aliasPage);
     }
 
     /**
