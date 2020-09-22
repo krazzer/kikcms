@@ -23,10 +23,10 @@ use Phalcon\Tag;
 class TwigService extends Injectable
 {
     /** @var string */
-    private $mediaStoragePath;
+    private string $mediaStoragePath;
 
     /** @var string */
-    private $iconStoragePath;
+    private string $iconStoragePath;
 
     /**
      * @param string $mediaStoragePath

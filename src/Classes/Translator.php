@@ -98,7 +98,7 @@ class Translator extends Injectable
                 continue;
             }
 
-            $translation = str_replace(CacheConfig::SEPARATOR . $key, $replace, $translation);
+            $translation = str_replace(':' . $key, $replace, $translation);
         }
 
         return (string) $translation;

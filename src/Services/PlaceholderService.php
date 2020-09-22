@@ -4,7 +4,6 @@
 namespace KikCMS\Services;
 
 
-use KikCMS\Classes\Phalcon\Cache;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\ObjectLists\FileMap;
@@ -14,6 +13,7 @@ use KikCMS\ObjectLists\PlaceholderTable;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Cache;
 
 /**
  * @property Cache $cache
@@ -47,7 +47,7 @@ class PlaceholderService extends Injectable
      */
     public function replaceAll(string $content): string
     {
-        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9:-]+)]]]/', $content, $output)) {
+        if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9.-]+)]]]/', $content, $output)) {
             return $content;
         }
 
@@ -110,7 +110,7 @@ class PlaceholderService extends Injectable
             $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
 
             if($this->cache){
-                $this->cache->save($key, $thumbUrl, CacheConfig::ONE_YEAR);
+                $this->cache->set($key, $thumbUrl, CacheConfig::ONE_YEAR);
             }
         }
 
@@ -141,7 +141,7 @@ class PlaceholderService extends Injectable
 
             $replaceMap[$placeholder->getPlaceholder()] = $url;
 
-            $this->cache->save($key, $url, CacheConfig::ONE_YEAR);
+            $this->cache->set($key, $url, CacheConfig::ONE_YEAR);
         }
 
         return $replaceMap;
