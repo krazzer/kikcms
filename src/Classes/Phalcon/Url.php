@@ -84,4 +84,12 @@ class Url extends \Phalcon\Url
 
         return $uri;
     }
+
+    /**
+     * @return string
+     */
+    public function getRewriteUri(): string
+    {
+        return $_SERVER["REQUEST_URI"];
+    }
 }

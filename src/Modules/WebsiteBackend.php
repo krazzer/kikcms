@@ -4,5 +4,5 @@ namespace KikCMS\Modules;
 
 class WebsiteBackend extends Backend
 {
-    protected $defaultNamespace = "Website\\Controllers";
+    protected string $defaultNamespace = "Website\\Controllers";
 }

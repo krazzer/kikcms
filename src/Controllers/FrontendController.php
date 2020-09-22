@@ -185,9 +185,9 @@ class FrontendController extends BaseController
         $this->view->page         = $page;
         $this->view->pageId       = $pageLanguage->getPageId();
 
-        $this->view->currentUrl = $this->router->getRewriteUri();
+        $this->view->currentUrl = $this->url->getRewriteUri();
         $this->view->baseUrl    = $this->url->getBaseUri();
-        $this->view->fullUrl    = $this->url->getBaseUri() . ltrim($this->router->getRewriteUri(), '/');
+        $this->view->fullUrl    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
 
         $this->view->title   = $pageLanguage->name;
         $this->view->pageKey = $page->key;

@@ -30,7 +30,7 @@ class View extends PhalconView
             return parent::exists($view);
         }
 
-        foreach ($this->_registeredEngines as $extension => $engine) {
+        foreach ($this->registeredEngines as $extension => $engine) {
             if(file_exists($this->convertNamespace($view)) . $extension){
                 return true;
             }
