@@ -69,7 +69,7 @@ class Translator extends Injectable
 
         // cache translation without using the cacheService shortcut for performance
         $cacheKey = $this->translationService->getValueCacheKey($langCode, $key);
-        dlog($cacheKey);
+
         if ( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
 
             // numeric values given indicate it's a translation managed from a DataTable
