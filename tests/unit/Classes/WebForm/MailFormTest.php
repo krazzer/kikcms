@@ -140,10 +140,6 @@ class MailFormTest extends Unit
         $expected .= '<b>Hibben:</b><br>soundsystem<br><br>';
 
         $this->assertEquals($expected, $mailForm->toMailOutput($input));
-
-        $_POST = $input;
-
-        $mailForm->render();
     }
 
     /**
