@@ -568,9 +568,7 @@ class FileService extends Injectable
             return $this->urlService->toSlug($file->getName());
         }
 
-        $extension = last($fileNameParts);
-
-        array_pop($fileNameParts);
+        $extension = array_pop($fileNameParts);
 
         return $this->urlService->toSlug(implode('.', $fileNameParts)) . '.' . $extension;
     }
