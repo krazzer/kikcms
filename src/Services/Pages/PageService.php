@@ -108,20 +108,6 @@ class PageService extends Injectable
     }
 
     /**
-     * @param Page $page
-     * @return int
-     */
-    public function getHighestDisplayOrderChild(Page $page): int
-    {
-        $query = (new Builder)
-            ->from($this->websiteSettings->getPageClass())
-            ->columns('MAX(' . Page::FIELD_DISPLAY_ORDER . ')')
-            ->where('parent_id = :parentId:', ['parentId' => $page->id]);
-
-        return (int) $this->dbService->getValue($query);
-    }
-
-    /**
      * Walks upwards in the page tree until it finds a page that has maxLevel set
      *
      * @param Page $page

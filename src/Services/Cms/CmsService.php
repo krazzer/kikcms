@@ -141,7 +141,7 @@ class CmsService extends Injectable
         $objects = $this->modelService->getObjects($cache->getModel(), $cache->getIds());
 
         foreach ($objects as $object) {
-            if ($object->$column === '0') {
+            if ($object->$column === '0' || $object->$column === 0) {
                 $object->delete();
             }
         }

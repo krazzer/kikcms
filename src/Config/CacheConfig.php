@@ -61,4 +61,13 @@ class CacheConfig
     {
         return implode(self::SEPARATOR, [self::URL, $pageKey, $langCode]);
     }
+
+    /**
+     * @param $pageId
+     * @return string
+     */
+    public static function getUrlKeyForId($pageId): string
+    {
+        return implode(self::SEPARATOR, [self::URL, $pageId]);
+    }
 }

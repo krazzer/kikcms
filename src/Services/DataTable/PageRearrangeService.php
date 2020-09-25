@@ -3,24 +3,15 @@
 namespace KikCMS\Services\DataTable;
 
 use Exception;
-use KikCMS\Config\CacheConfig;
-use KikCmsCore\Services\DbService;
 use KikCMS\Models\Page;
-use KikCMS\Services\CacheService;
-use KikCMS\Services\Pages\PageService;
-use KikCMS\Services\Pages\UrlService;
 use KikCMS\Classes\Page\AdjacencyToNestedSet;
+use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Db\RawValue;
 use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Service for handling Page Model objects
- *
- * @property DbService dbService
- * @property PageService pageService
- * @property UrlService urlService
- * @property CacheService cacheService
  */
 class PageRearrangeService extends Injectable
 {
@@ -44,25 +35,44 @@ class PageRearrangeService extends Injectable
             $displayOrder = $this->getMaxDisplayOrder($parentPage) + 1;
 
             // loop through all children and set a new display_order
-            foreach ($children as $page) {
-                $page->display_order = $displayOrder;
+            foreach ($children as $id => $page) {
+                $this->dbService->update(Page::class, [Page::FIELD_DISPLAY_ORDER => $displayOrder], [Page::FIELD_ID => $id]);
                 $displayOrder++;
-
-                $page->save();
             }
         }
     }
 
     /**
-     * @param Page $parentPage
+     * Checks if the url of the source page is not conflicting in its new target location, if so, change it
+     *
+     * @param Page $page
+     */
+    public function checkUrls(Page $page)
+    {
+        foreach ($page->pageLanguages as $pageLanguage) {
+            // if there's no url, we don't need to check for dupes
+            if ( ! $pageLanguage->getSlug()) {
+                continue;
+            }
+
+            $urlPath = $this->urlService->getUrlByPageLanguage($pageLanguage);
+
+            if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
+                $this->urlService->deduplicateAndStoreNewUrl($pageLanguage);
+            }
+        }
+    }
+
+    /**
+     * @param Page|null $parentPage
      * @return int
      */
-    public function getMaxDisplayOrder(Page $parentPage): int
+    public function getMaxDisplayOrder(?Page $parentPage): int
     {
         $query = (new Builder())
             ->from(Page::class)
             ->columns(["MAX(" . Page::FIELD_DISPLAY_ORDER . ")"])
-            ->where('parent_id = :parentId:', ['parentId' => $parentPage->getId()]);
+            ->where('parent_id = :parentId:', ['parentId' => $parentPage ? $parentPage->getId() : null]);
 
         return (int) $this->dbService->getValue($query);
     }
@@ -91,14 +101,6 @@ class PageRearrangeService extends Injectable
                 $this->placeInto($page, $targetPage);
             break;
         }
-
-        $this->updateNestedSet();
-        $this->checkUrls($page);
-
-        // re-fetch page so it's up to date
-        $page = Page::getById($page->getId());
-
-        $this->clearCacheAfterRearrange($page);
     }
 
     /**
@@ -136,32 +138,13 @@ class PageRearrangeService extends Injectable
     }
 
     /**
-     * Checks if the url of the source page is not conflicting in its new target location, if so, change it
-     *
-     * @param Page $page
-     */
-    private function checkUrls(Page $page)
-    {
-        foreach ($page->pageLanguages as $pageLanguage) {
-            // if there's no url, we don't need to check for dupes
-            if ( ! $pageLanguage->getSlug()) {
-                continue;
-            }
-
-            $urlPath = $this->urlService->getUrlByPageLanguage($pageLanguage);
-
-            if ($this->urlService->urlPathExists($urlPath, $pageLanguage)) {
-                $this->urlService->deduplicateAndStoreNewUrl($pageLanguage);
-            }
-        }
-    }
-
-    /**
      * @return array
      */
     private function getParentChildRelations(): array
     {
-        $this->db->query("SET SESSION group_concat_max_len = 99999");
+        if ($this->db instanceof Mysql) {
+            $this->db->query("SET SESSION group_concat_max_len = 99999");
+        }
 
         $allowedNonParentQuery = "(
             p.parent_id IS NULL 
@@ -185,8 +168,10 @@ class PageRearrangeService extends Injectable
         ");
 
         foreach ($relations as $parentId => $childIds) {
-            $childIds = $childIds ? explode(',', $childIds) : [];
-            $relations[$parentId] = array_map(function ($id){ return (int) $id; }, $childIds);
+            $childIds             = $childIds ? explode(',', $childIds) : [];
+            $relations[$parentId] = array_map(function ($id) {
+                return (int) $id;
+            }, $childIds);
         }
 
         return $relations;
@@ -214,7 +199,7 @@ class PageRearrangeService extends Injectable
      */
     private function placeBeforeOrAfter(Page $page, Page $targetPage, bool $placeAfter)
     {
-        $this->dbService->transaction(function () use ($page, $targetPage, $placeAfter){
+        $this->dbService->transaction(function () use ($page, $targetPage, $placeAfter) {
             $targetParentId     = $targetPage->getParentId();
             $targetDisplayOrder = $targetPage->display_order;
             $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($placeAfter ? 1 : 0) : null;
@@ -251,7 +236,7 @@ class PageRearrangeService extends Injectable
             return;
         }
 
-        $displayOrder = $this->pageService->getHighestDisplayOrderChild($targetPage) + 1;
+        $displayOrder = $this->getMaxDisplayOrder($targetPage) + 1;
 
         $oldDisplayOrder = $page->getDisplayOrder();
         $oldParentId     = $page->getParentId();
@@ -303,10 +288,7 @@ class PageRearrangeService extends Injectable
      */
     private function updatePage(Page $page, int $parentId = null, int $displayOrder = null)
     {
-        $page->parent_id     = $parentId;
-        $page->display_order = $displayOrder;
-
-        $page->save();
+        $page->setParentId($parentId)->setDisplayOrder($displayOrder)->save();
     }
 
     /**
@@ -324,20 +306,5 @@ class PageRearrangeService extends Injectable
             AND parent_id" . ($page->parent_id ? ' = ' . $page->parent_id : ' IS NULL') . "
             ORDER BY display_order DESC
         ");
-    }
-
-    /**
-     * @param Page $page
-     */
-    private function clearCacheAfterRearrange(Page $page)
-    {
-        $offspring = $this->pageService->getOffspring($page);
-
-        foreach ($offspring as $item){
-            $this->cacheService->clear(CacheConfig::URL . CacheConfig::SEPARATOR . $item->getId());
-        }
-
-        $this->cacheService->clear(CacheConfig::MENU);
-        $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
     }
 }

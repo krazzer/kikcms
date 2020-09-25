@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Classes\Cache\CacheNode;
+use KikCMS\Models\Page;
 use KikCMS\ObjectLists\CacheNodeMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
@@ -30,6 +31,22 @@ class CacheService extends Injectable
         foreach ($keys as $cacheKey) {
             $this->cache->delete($cacheKey);
         }
+    }
+
+    /**
+     * @param Page $page
+     */
+    public function clearForPage(Page $page)
+    {
+        $offspring = $this->pageService->getOffspring($page);
+
+        foreach ($offspring as $item){
+            $this->cacheService->clear(CacheConfig::getUrlKeyForId($item->getId()));
+        }
+
+        $this->cacheService->clear(CacheConfig::getUrlKeyForId($page->getId()));
+        $this->cacheService->clear(CacheConfig::MENU);
+        $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
     }
 
     /**

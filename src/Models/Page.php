@@ -3,8 +3,10 @@
 namespace KikCMS\Models;
 
 use DateTime;
+use Exception;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -48,6 +50,18 @@ class Page extends Model
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
 
+    /** @var bool|null this field is needed for afterUpdate since hasChanged doesn't work there */
+    private $parentHasChanged;
+
+    /** @var bool|null whether the display_order field has changed or not */
+    private $displayOrderHasChanged;
+
+    /** @var bool|null whether the display_order has been intentionally set */
+    private $displayOrderHasBeenSet;
+
+    /** @var bool|null set true if the nested set should not be updated */
+    private $preventNestedSetUpdate;
+
     /**
      * Set lft, rgt, level and display_order if empty
      */
@@ -60,7 +74,7 @@ class Page extends Model
         $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
 
         if ( ! $this->getDisplayOrder()) {
-            $this->display_order = $this->getPageRearrangeService()->getMaxDisplayOrder($this->parent) + 1;
+            $this->resetDisplayOrder();
         }
     }
 
@@ -78,6 +92,39 @@ class Page extends Model
         foreach ($offspringAliases as $aliasPage) {
             $aliasPage->delete();
         }
+    }
+
+    /**
+     * Update display order if the parent has changed
+     */
+    public function beforeUpdate()
+    {
+        $this->parentHasChanged = $this->hasChanged(self::FIELD_PARENT_ID);
+
+        // if the parent has changed, and the display order wasn't intentionally changed, it needs to be reset
+        if ($this->parentHasChanged && ! $this->displayOrderHasBeenSet) {
+            $this->resetDisplayOrder();
+        }
+
+        try {
+            $this->displayOrderHasChanged = $this->hasChanged(self::FIELD_DISPLAY_ORDER);
+        } catch (Exception $exception) {
+        }
+    }
+
+    /**
+     * If the display order or parent has changed, update the nested set, check urls and clear page cache
+     */
+    public function afterUpdate()
+    {
+        if (($this->displayOrderHasChanged || $this->parentHasChanged) && ! $this->getPreventNestedSetUpdate()) {
+            $this->getPageRearrangeService()->updateNestedSet();
+            $this->getPageRearrangeService()->checkUrls($this);
+            $this->getCacheService()->clearForPage($this);
+        }
+
+        $this->parentHasChanged       = null;
+        $this->displayOrderHasChanged = null;
     }
 
     /**
@@ -117,6 +164,8 @@ class Page extends Model
 
         $this->addPageLanguageRelations();
         $this->addPageContentRelations();
+
+        $this->keepSnapshots(true);
     }
 
     /**
@@ -164,8 +213,12 @@ class Page extends Model
      */
     public function getName(): ?string
     {
-        if($this->alias){
+        if ($this->alias) {
             return (string) $this->aliasPage->pageLanguage->name;
+        }
+
+        if ( ! $this->pageLanguage) {
+            return '';
         }
 
         return (string) $this->pageLanguage->name;
@@ -280,6 +333,40 @@ class Page extends Model
     }
 
     /**
+     * @return bool|null
+     */
+    public function getParentHasChanged(): ?bool
+    {
+        return $this->parentHasChanged;
+    }
+
+    /**
+     * Set a new display order
+     */
+    public function resetDisplayOrder()
+    {
+        $this->display_order = $this->getPageRearrangeService()->getMaxDisplayOrder($this->parent) + 1;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getPreventNestedSetUpdate(): ?bool
+    {
+        return $this->preventNestedSetUpdate;
+    }
+
+    /**
+     * @param bool|null $preventNestedSetUpdate
+     * @return Page
+     */
+    public function setPreventNestedSetUpdate(?bool $preventNestedSetUpdate): Page
+    {
+        $this->preventNestedSetUpdate = $preventNestedSetUpdate;
+        return $this;
+    }
+
+    /**
      * Add relations for each field, and for each language
      */
     private function addPageContentRelations()
@@ -366,5 +453,34 @@ class Page extends Model
     private function getPageService(): PageService
     {
         return $this->getDI()->get('pageService');
+    }
+
+    /**
+     * @param int|null $parentId
+     * @return $this
+     */
+    public function setParentId(?int $parentId): Page
+    {
+        $this->parent_id = $parentId;
+        return $this;
+    }
+
+    /**
+     * @param int|null $displayOrder
+     * @return $this
+     */
+    public function setDisplayOrder(?int $displayOrder)
+    {
+        $this->displayOrderHasBeenSet = true;
+        $this->display_order          = $displayOrder;
+        return $this;
+    }
+
+    /**
+     * @return CacheService
+     */
+    private function getCacheService(): CacheService
+    {
+        return $this->getDI()->get('cacheService');
     }
 }

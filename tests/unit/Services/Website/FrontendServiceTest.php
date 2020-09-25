@@ -24,11 +24,11 @@ class FrontendServiceTest extends Unit
         $page  = $this->createPage(1, null);
         $page2 = $this->createPage(2, 'default');
 
-        $pageLanguage = $this->createPageLanguage($page, 1, 'page-en', 'en');
+        $pageLanguage = $this->createPageLanguage($page, 1, 'page-en', 'en', false);
         $pageLanguage->save();
 
-        $this->createPageLanguage($page2, 1, 'home-en', 'en')->save();
-        $this->createPageLanguage($page2, 1, 'home-nl', 'nl')->save();
+        $this->createPageLanguage($page2, 1, 'home-en', 'en', false)->save();
+        $this->createPageLanguage($page2, 1, 'home-nl', 'nl', false)->save();
 
         // there are no languages configured, so return nothing
         $this->assertEquals(['langUrlMap' => []], $frontendService->getLangSwitchVariables($pageLanguage));
@@ -47,7 +47,7 @@ class FrontendServiceTest extends Unit
 
         $this->assertEquals($expected, $frontendService->getLangSwitchVariables($pageLanguage));
 
-        $this->createPageLanguage($page, 1, 'page-nl', 'nl')->save();
+        $this->createPageLanguage($page, 1, 'page-nl', 'nl', false)->save();
 
         $frontendService->cache->delete('url:1:en:otherLangMap');
 
@@ -107,14 +107,19 @@ class FrontendServiceTest extends Unit
      * @param int $active
      * @param string|null $name
      * @param null $langCode
+     * @param bool $setPage
      * @return PageLanguage
      */
-    private function createPageLanguage($page = null, $active = 1, $name = null, $langCode = null): PageLanguage
+    private function createPageLanguage($page = null, $active = 1, $name = null, $langCode = null, $setPage = true): PageLanguage
     {
         $pageLanguage = new PageLanguage();
 
-        $pageLanguage->active  = $active;
-        $pageLanguage->page    = $page;
+        $pageLanguage->active = $active;
+
+        if ($setPage) {
+            $pageLanguage->page = $page;
+        }
+
         $pageLanguage->page_id = $page->id ?? null;
 
         if ($name) {
