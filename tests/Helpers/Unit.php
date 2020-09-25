@@ -39,6 +39,7 @@ use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Security;
 use Phalcon\Validation;
+use ReflectionClass;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
 use KikCMS\Classes\Phalcon\PdoDialect\Sqlite as SqliteDialect;
@@ -460,5 +461,20 @@ class Unit extends \Codeception\Test\Unit
         $user->save();
 
         return $user;
+    }
+
+    /**
+     * @param $object
+     * @param $methodName
+     * @param array $parameters
+     * @return mixed
+     */
+    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
 }

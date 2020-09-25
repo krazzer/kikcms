@@ -140,7 +140,9 @@ abstract class MailForm extends WebForm
             return null;
         }
 
-        $response = $this->getReCaptchaResponse($reCaptchaField);
+        if( ! $response = $this->getReCaptchaResponse($reCaptchaField)){
+            return null;
+        }
 
         return $response->getScore();
     }
