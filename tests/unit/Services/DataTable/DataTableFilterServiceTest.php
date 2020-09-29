@@ -63,14 +63,14 @@ class DataTableFilterServiceTest extends TestCase
         $dataTableFilterService->addSearchFilter($query, $filters, ['field']);
 
         // test single search
-        $this->assertEquals('field LIKE "%searchValue%"', $query->getWhere());
+        $this->assertEquals('field LIKE :searchValue0:', $query->getWhere());
 
         $query = (new Builder);
 
         // test multi search
         $dataTableFilterService->addSearchFilter($query, $filters, ['field1', 'field2']);
 
-        $this->assertEquals('field1 LIKE "%searchValue%" OR field2 LIKE "%searchValue%"', $query->getWhere());
+        $this->assertEquals('field1 LIKE :searchValue0: OR field2 LIKE :searchValue1:', $query->getWhere());
     }
 
     public function testAddSortFilter()
