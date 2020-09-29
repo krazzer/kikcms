@@ -53,10 +53,10 @@ class DataTableFilterService extends Injectable
         $searchConditions = [];
 
         foreach ($searchFields as $field) {
-            $searchConditions[] = $field . ' LIKE "%' . $searchValue . '%"';
+            $searchConditions[] = $field . ' LIKE :searchValue:';
         }
 
-        $query->andWhere(implode(' OR ', $searchConditions));
+        $query->andWhere(implode(' OR ', $searchConditions), ['searchValue' => '%' . $searchValue . '%']);
     }
 
     /**
