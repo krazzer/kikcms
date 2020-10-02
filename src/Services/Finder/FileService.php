@@ -141,7 +141,8 @@ class FileService extends Injectable
         $query = (new Builder)
             ->from(['f' => File::class])
             ->where(File::FIELD_NAME . ' LIKE :search:', ['search' => '%' . $filters->getSearch() . '%'])
-            ->orderBy('is_folder DESC, name ASC');
+            ->orderBy('is_folder DESC, name ASC')
+            ->limit(1000);
 
         if ($this->filePermissionService->isEnabled()) {
             $userId = $this->userService->getUserId();
