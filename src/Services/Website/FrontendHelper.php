@@ -246,7 +246,7 @@ class FrontendHelper extends Injectable
         $path = $this->getPath();
 
         foreach ($path as $pageId => $pageLanguage) {
-            $menu = str_replace('class="s' . $pageId . '"', 'class="selected"', $menu);
+            $menu = str_replace('class="s' . $pageLanguage->getAliasPageId() . '"', 'class="selected"', $menu);
         }
 
         return $menu;
