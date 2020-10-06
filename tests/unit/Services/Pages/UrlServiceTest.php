@@ -65,6 +65,30 @@ class UrlServiceTest extends Unit
         $this->assertEquals('/slug', $urlService->createUrlPathByPageLanguage($pageLanguage));
     }
 
+    /**
+     * @uses \KikCMS\Services\Pages\UrlService::getPageLangAndAliasByKey()
+     */
+    public function testGetPageLangAndAliasByKey()
+    {
+        $urlService = new UrlService();
+        $urlService->setDI($this->getDbDi());
+
+        $this->assertEquals([null, null], $this->invokeMethod($urlService, 'getPageLangAndAliasByKey', [1]));
+
+        $pageLanguage = $this->createPageLanguage('test');
+        $pageLanguage->save();
+
+        $result = $this->invokeMethod($urlService, 'getPageLangAndAliasByKey', [1]);
+
+        $this->assertEquals(1, $result[0]->id);
+        $this->assertNull($result[1]);
+
+        $result = $this->invokeMethod($urlService, 'getPageLangAndAliasByKey', ['1a1']);
+
+        $this->assertEquals(1, $result[0]->id);
+        $this->assertEquals(1, $result[1]->id);
+    }
+
     public function testGetUrlForLinkedPage()
     {
         $urlService = new UrlService();
