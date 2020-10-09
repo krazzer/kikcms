@@ -1,0 +1,4 @@
+/resources/css/*    -diff -merge
+/resources/css/*    linguist-generated=true
+/resources/js/*     -diff -merge
+/resources/js/*     linguist-generated=true
