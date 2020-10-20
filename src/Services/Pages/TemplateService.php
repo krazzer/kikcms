@@ -60,7 +60,7 @@ class TemplateService extends Injectable
      */
     public function getDefaultTemplate(): ?Template
     {
-        $templates = $this->templateFields->getTemplates();
+        $templates = $this->getAvailable();
 
         if ( ! isset($templates[0])) {
             return null;
@@ -86,16 +86,16 @@ class TemplateService extends Injectable
 
     /**
      * @param string|null $currentTemplate
-     * @return array [string key => string name]
+     * @return Template[]
      */
-    public function getAvailableNameMap(string $currentTemplate = null): array
+    public function getAvailable(string $currentTemplate = null): array
     {
-        $templates          = $this->templateFields->getTemplates();
+        $allTemplates       = $this->templateFields->getTemplates();
         $pageKeyTemplateMap = $this->pageService->getKeyTemplateMap();
 
-        $nameMap = [];
+        $templates = [];
 
-        foreach ($templates as $template) {
+        foreach ($allTemplates as $template) {
             $templateForPageKey = $pageKeyTemplateMap[$template->getPageKey()] ?? null;
 
             // a page exists with this key, so remove as an option
@@ -103,6 +103,22 @@ class TemplateService extends Injectable
                 continue;
             }
 
+            $templates[] = $template;
+        }
+
+        return $templates;
+    }
+
+    /**
+     * @param string|null $currentTemplate
+     * @return array [string key => string name]
+     */
+    public function getAvailableNameMap(string $currentTemplate = null): array
+    {
+        $templates = $this->getAvailable($currentTemplate);
+        $nameMap   = [];
+
+        foreach ($templates as $template) {
             $nameMap[$template->getKey()] = $template->getName();
         }
 
