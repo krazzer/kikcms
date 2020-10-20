@@ -47,6 +47,7 @@ class PageForm extends DataForm
     {
         if ($this->getObject() && $this->getObject()->alias) {
             $this->addHtmlField('alias', null, 'Aliases cannot be edited');
+            $this->addHiddenField(Page::FIELD_TYPE, Page::TYPE_ALIAS);
             return;
         }
 
