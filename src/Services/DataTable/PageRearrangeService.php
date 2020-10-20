@@ -288,7 +288,7 @@ class PageRearrangeService extends Injectable
      */
     private function updatePage(Page $page, int $parentId = null, int $displayOrder = null)
     {
-        $page->setParentId($parentId)->setDisplayOrder($displayOrder)->save();
+        $page->setParentId($parentId)->setDisplayOrderExplicitly($displayOrder)->save();
     }
 
     /**

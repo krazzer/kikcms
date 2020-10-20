@@ -136,7 +136,7 @@ class Page extends Model
     }
 
     /**
-     * @inheritdoc
+     * Init
      */
     public function initialize()
     {
@@ -469,7 +469,7 @@ class Page extends Model
      * @param int|null $displayOrder
      * @return $this
      */
-    public function setDisplayOrder(?int $displayOrder)
+    public function setDisplayOrderExplicitly(?int $displayOrder)
     {
         $this->displayOrderHasBeenSet = true;
         $this->display_order          = $displayOrder;
