@@ -65,7 +65,7 @@ class MailService extends Injectable
      *
      * @param null $template
      * @param array $parameters
-     * @param array $attachments
+     * @param array|Swift_Attachment $attachments
      *
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
@@ -97,7 +97,11 @@ class MailService extends Injectable
         }
 
         foreach ($attachments as $attachment) {
-            $message->attach(Swift_Attachment::fromPath($attachment));
+            if($attachment instanceof Swift_Attachment){
+                $message->attach($attachment);
+            } else {
+                $message->attach(Swift_Attachment::fromPath($attachment));
+            }
         }
 
         return $this->send($message);

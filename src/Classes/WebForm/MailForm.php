@@ -9,6 +9,9 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Phalcon\Http\Response;
 use ReCaptcha\Response as ReCaptchaResponse;
+use Swift_Attachment;
+use Swift_ByteStream_FileByteStream;
+use Swift_IoException;
 
 /**
  * @property MailService $mailService
@@ -60,8 +63,12 @@ abstract class MailForm extends WebForm
             return false;
         }
 
-        $contents = $this->toMailOutput($input);
-        $mailSend = $this->mailService->sendServiceMail($this->getToAddress(), $this->getSubject(), $contents, $params);
+        $contents    = $this->toMailOutput($input);
+        $attachments = $this->getAttachments();
+        $to          = $this->getToAddress();
+        $subject     = $this->getSubject();
+
+        $mailSend = $this->mailService->sendServiceMail($to, $subject, $contents, $params, $attachments);
 
         if ( ! $mailSend) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
@@ -140,7 +147,7 @@ abstract class MailForm extends WebForm
             return null;
         }
 
-        if( ! $response = $this->getReCaptchaResponse($reCaptchaField)){
+        if ( ! $response = $this->getReCaptchaResponse($reCaptchaField)) {
             return null;
         }
 
@@ -176,5 +183,25 @@ abstract class MailForm extends WebForm
         }
 
         return null;
+    }
+
+    /**
+     * @return Swift_Attachment[]
+     * @throws Swift_IoException
+     */
+    private function getAttachments(): array
+    {
+        $attachments = [];
+
+        $files = $this->request->getUploadedFiles(true);
+
+        foreach ($files as $file) {
+            $data       = new Swift_ByteStream_FileByteStream($file->getTempName());
+            $attachment = new Swift_Attachment($data, $file->getName(), $file->getType());
+
+            $attachments[] = $attachment;
+        }
+
+        return $attachments;
     }
 }
