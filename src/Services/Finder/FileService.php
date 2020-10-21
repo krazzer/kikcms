@@ -201,14 +201,21 @@ class FileService extends Injectable
      */
     public function getFolderPath(?int $folderId, $path = [])
     {
+        // prevent loop
+        if(array_key_exists($folderId, $path)){
+            return $path;
+        }
+
         $homeFolderId = $this->getHomeFolderId();
 
-        if ($folderId == $homeFolderId) {
+        if ($folderId == $homeFolderId || ! $folderId) {
             $path[$homeFolderId] = "Home";
             return $path;
         }
 
-        $folder = Folder::getById($folderId);
+        if( ! $folder = Folder::getById($folderId)){
+            return $path;
+        }
 
         $path[$folderId] = $folder->name;
 
