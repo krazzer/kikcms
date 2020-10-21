@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Services\Finder;
 
 
+use ImagickException;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Models\File;
@@ -36,6 +37,13 @@ class FileResizeService extends Injectable
             $image->resize($maxWidth, $maxHeight);
         }
 
-        $image->save($filePath, $jpgQuality);
+        try {
+            $image->save($filePath, $jpgQuality);
+        } catch(ImagickException $exception){
+            // ignore error gif resize with different sizes
+            if( ! $exception->getCode() === 410){
+                throw $exception;
+            }
+        }
     }
 }
