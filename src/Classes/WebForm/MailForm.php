@@ -193,7 +193,9 @@ abstract class MailForm extends WebForm
     {
         $attachments = [];
 
-        $files = $this->request->getUploadedFiles(true);
+        if( ! $files = $this->request->getUploadedFiles(true)){
+            return [];
+        }
 
         foreach ($files as $file) {
             $data       = new Swift_ByteStream_FileByteStream($file->getTempName());
