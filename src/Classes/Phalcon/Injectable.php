@@ -63,6 +63,7 @@ use KikCMS\Services\VendorCleanUpService;
 use KikCMS\Services\WebForm\DataFormService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
+use KikCMS\Services\WebForm\WebFormService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\FrontendService;
 use KikCMS\Services\Website\MenuService;
@@ -145,6 +146,7 @@ use ReCaptcha\ReCaptcha;
  * @property UserSettingsService userSettingsService
  * @property Validation $validation
  * @property VendorCleanUpService vendorCleanUpService
+ * @property WebFormService webFormService
  * @property WebsiteSettingsBase websiteSettings
  */
 class Injectable extends \Phalcon\Di\Injectable

@@ -23,8 +23,6 @@ use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Date;
-use Phalcon\Validation\Validator\PresenceOf;
-use ReflectionClass;
 
 /**
  * @property AccessControl $acl
@@ -538,7 +536,7 @@ abstract class WebForm extends Renderable
             }
 
             foreach ($elementMessages as $message) {
-                $alert   = $message->getType() != (new ReflectionClass(PresenceOf::class))->getShortName();
+                $alert   = $this->webFormService->messageNeedsAlert($message, $formElement);
                 $message = $message->getMessage();
 
                 if ($formElement->getLabel()) {

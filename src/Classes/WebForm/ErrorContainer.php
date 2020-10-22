@@ -81,17 +81,16 @@ class ErrorContainer
 
     /**
      * @param Field $field
-     * @param $value
      * @return array
      */
-    public function getAlertErrorMessagesForField(Field $field, $value): array
+    public function getAlertErrorMessagesForField(Field $field): array
     {
         $messages = [];
 
         $errors = $this->getErrorsForField($field);
 
         foreach ($errors as $error){
-            if($error->isAlert() && $value){
+            if($error->isAlert()){
                 $messages[] = $error->getMessage();
             }
         }
@@ -101,17 +100,16 @@ class ErrorContainer
 
     /**
      * @param Field $field
-     * @param $value
      * @return array
      */
-    public function getTitleErrorMessagesForField(Field $field, $value): array
+    public function getTitleErrorMessagesForField(Field $field): array
     {
         $messages = [];
 
         $errors = $this->getErrorsForField($field);
 
         foreach ($errors as $error){
-            if( ! $error->isAlert() || ($error->isAlert() && ! $value)){
+            if( ! $error->isAlert()){
                 $messages[] = $error->getMessage();
             }
         }

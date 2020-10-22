@@ -16,7 +16,6 @@ class FieldError
     private $alert;
 
     /**
-     * FieldError constructor.
      * @param string $field
      * @param string $message
      * @param bool $alert
