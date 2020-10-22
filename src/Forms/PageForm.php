@@ -149,7 +149,7 @@ class PageForm extends DataForm
 
         $template = $this->templateService->getByKey($input['template']);
 
-        if ($template->getPageKey() && $template->getPageKey() !== $input['key']) {
+        if (isset($input['key']) && $template->getPageKey() && $template->getPageKey() !== $input['key']) {
             $templatePageKeyMismatchMessage = $this->translator->tl('dataTables.pages.templatePageKeyMismatch', [
                 'template' => $template->getName(),
                 'key'      => $template->getPageKey(),
