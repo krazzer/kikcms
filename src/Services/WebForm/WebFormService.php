@@ -5,11 +5,10 @@ namespace KikCMS\Services\WebForm;
 
 
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Element\Hidden;
-use Phalcon\Forms\ElementInterface;
-use Phalcon\Validation\MessageInterface;
+use Phalcon\Messages\MessageInterface;
 use Phalcon\Validation\Validator\PresenceOf;
-use ReflectionClass;
 
 class WebFormService extends Injectable
 {
@@ -30,6 +29,6 @@ class WebFormService extends Injectable
             return true;
         }
 
-        return $message->getType() != (new ReflectionClass(PresenceOf::class))->getShortName();
+        return $message->getType() != PresenceOf::class;
     }
 }

@@ -27,7 +27,7 @@ class CmsService extends Injectable
      */
     public function cleanUpDiskCache()
     {
-        $cacheFiles      = $this->keyValue->queryKeys(DataTable::INSTANCE_PREFIX);
+        $cacheFiles      = $this->keyValue->getKeys(DataTable::INSTANCE_PREFIX);
         $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
 
         foreach ($cacheFiles as $fileName) {
@@ -156,7 +156,7 @@ class CmsService extends Injectable
     {
         $token = uniqid('securityToken', true);
 
-        $this->keyValue->save($token);
+        $this->keyValue->set($token);
 
         return $token;
     }
@@ -169,7 +169,7 @@ class CmsService extends Injectable
      */
     public function checkSecurityToken(string $token)
     {
-        if ( ! $this->keyValue->exists($token)) {
+        if ( ! $this->keyValue->has($token)) {
             throw new UnauthorizedException();
         }
 

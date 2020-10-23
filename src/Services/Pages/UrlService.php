@@ -87,7 +87,7 @@ class UrlService extends Injectable
     public function getPageLanguageByUrlPath(string $urlPath): ?PageLanguage
     {
         $urlPath  = $this->removeLeadingSlash($urlPath);
-        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath;
+        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . str_replace('/', '_', $urlPath);
 
         $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
@@ -354,7 +354,7 @@ class UrlService extends Injectable
         $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.slug IS NOT NULL';
 
         $query = (new Builder)
-            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("' . UrlConfig::ALIAS_SEP . '", p.id), ""))', 'pla.slug'])
+            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("' . UrlConfig::ALIAS_SEP . '", p.id), ""))', 'pla.slug AS slug'])
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.lft < p.lft AND pa.rgt > p.rgt', 'pa')

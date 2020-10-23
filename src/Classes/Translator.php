@@ -302,8 +302,5 @@ class Translator extends Injectable
         foreach ($webFormMessagesKeys as $key) {
             $defaultMessages[last(explode('.', $key))] = $this->tl($key);
         }
-
-
-//        $this->validation->getMessages($defaultMessages);
     }
 }
