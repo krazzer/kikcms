@@ -217,14 +217,14 @@ class PageLanguageService extends Injectable
             ->from(['p' => Page::class])
             ->join(PageContent::class, 'pc.page_id = IFNULL(p.alias, p.id)', 'pc')
             ->inWhere('p.id', $pageMap->keys())
-            ->columns(['pc.page_id AS pageId', 'pc.value', 'pc.field']);
+            ->columns(['pc.page_id AS pageId', 'pc.value AS value', 'pc.field AS field']);
 
         $queryPageLanguageContent = (new Builder)
             ->from(['p' => Page::class])
             ->join(PageLanguageContent::class, 'plc.page_id = IFNULL(p.alias, p.id)', 'plc')
             ->inWhere('p.id', $pageMap->keys())
             ->andWhere('plc.language_code = :c:', ['c' => $langCode])
-            ->columns(['plc.page_id AS pageId', 'plc.value', 'plc.field']);
+            ->columns(['plc.page_id AS pageId', 'plc.value AS value', 'plc.field AS field']);
 
         $rows = array_merge(
             $this->dbService->getRows($queryPageContent),

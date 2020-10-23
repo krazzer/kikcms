@@ -113,7 +113,7 @@ class AccessControl extends Memory
      */
     public function resourceExists(string $resourceName): bool
     {
-        foreach ($this->getResources() as $resource) {
+        foreach ($this->getComponents() as $resource) {
             if($resource->getName() == $resourceName){
                 return true;
             }

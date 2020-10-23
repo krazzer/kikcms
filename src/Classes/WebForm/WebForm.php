@@ -17,7 +17,7 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Forms\ElementInterface;
+use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
@@ -40,25 +40,25 @@ abstract class WebForm extends Renderable
     const FLASH_KEY      = 'flashForForm';
 
     /** @var FieldMap */
-    protected $fieldMap;
+    protected FieldMap $fieldMap;
 
     /** @var Tab[] */
-    protected $tabs = [];
+    protected array $tabs = [];
 
     /** @var array tracks field key increments */
-    protected $keys = [];
+    protected array $keys = [];
 
     /** @var string */
-    protected $formTemplate = 'form';
+    protected string $formTemplate = 'form';
 
     /** @var bool */
-    protected $showRequiredMessage = false;
+    protected bool $showRequiredMessage = false;
 
     /** @var bool */
-    protected $displaySendButton = true;
+    protected bool $displaySendButton = true;
 
     /** @inheritdoc */
-    protected $instancePrefix = 'webForm';
+    protected string $instancePrefix = 'webForm';
 
     /** @inheritdoc */
     protected $jsClass = 'WebForm';
@@ -73,10 +73,10 @@ abstract class WebForm extends Renderable
     protected $sendButtonClass = 'btn btn-submit btn-primary';
 
     /** @var Form */
-    private $form;
+    private $form = null;
 
     /** @var bool */
-    private $placeHolderAsLabel = false;
+    private bool $placeHolderAsLabel = false;
 
     /** @var callable */
     private $successAction;
@@ -85,7 +85,7 @@ abstract class WebForm extends Renderable
     private $validateAction;
 
     /** @var array|null */
-    private $input = null;
+    private ?array $input = null;
 
     /**
      * @inheritdoc
@@ -518,6 +518,9 @@ abstract class WebForm extends Renderable
     private function getErrors(): ErrorContainer
     {
         $errorContainer = $this->validate($this->getInput());
+
+//        $this->session->set('test', 'val');
+        dlog($this->session->get('test'));
 
         if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));

@@ -25,7 +25,7 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 
 /**
  * @property AccessControl $acl
@@ -59,31 +59,31 @@ abstract class DataTable extends Renderable
     ];
 
     /** @var DataForm */
-    protected $form;
+    protected DataForm $form;
 
-    /** @var DataTableFilters */
-    protected $filters;
+    /** @var Filters|DataTableFilters */
+    protected Filters $filters;
 
     /** @var Filter[] */
-    protected $customFilters = [];
+    protected array $customFilters = [];
 
     /** @var false|string if set, the datatable will let you select or upload a file directly, using the set field */
     protected $directImageField = false;
 
-    /** @var Validator[] */
-    protected $directImageValidators = [];
+    /** @var AbstractValidator[] */
+    protected array $directImageValidators = [];
 
     /** @var array default field values to be set for the child object */
     protected $directImageDefaults = [];
 
     /** @var string */
-    protected $instancePrefix = self::INSTANCE_PREFIX;
+    protected string $instancePrefix = self::INSTANCE_PREFIX;
 
     /** @var array */
     protected $searchableFields = [];
 
     /** @var array assoc column as key, callable as value, that will be used to format a value in the result table */
-    protected $fieldFormatting = [];
+    protected array $fieldFormatting = [];
 
     /** @var string */
     protected $viewDirectory = 'datatable';
@@ -101,19 +101,19 @@ abstract class DataTable extends Renderable
     protected $sortable = false;
 
     /** @var bool if true, newly added items will be added on top */
-    protected $sortableNewFirst = false;
+    protected bool $sortableNewFirst = false;
 
     /** @var bool if true, each row gets a delete button */
-    protected $showDeleteRowButton = false;
+    protected bool $showDeleteRowButton = false;
 
     /** @var string */
-    protected $sortableField = 'display_order';
+    protected string $sortableField = 'display_order';
 
     /** @var string */
     public $indexView = 'datatable/index';
 
     /** @var TableButton[] */
-    public $tableButtons = [];
+    public array $tableButtons = [];
 
     /** @var string */
     public $tableView = 'datatable/table';
@@ -656,7 +656,7 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ($this->keyValue->exists($cacheKey)) {
+        if ($this->keyValue->has($cacheKey)) {
             $newIdsCache = unserialize($this->keyValue->get($cacheKey));
         } else {
             $newIdsCache = (new SubDataTableNewIdsCache)
@@ -666,7 +666,7 @@ abstract class DataTable extends Renderable
 
         $newIdsCache->addId($editId);
 
-        $this->keyValue->save($cacheKey, serialize($newIdsCache));
+        $this->keyValue->set($cacheKey, serialize($newIdsCache));
     }
 
     /**
@@ -676,7 +676,7 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ( ! $this->keyValue->exists($cacheKey)) {
+        if ( ! $this->keyValue->has($cacheKey)) {
             return [];
         }
 
@@ -750,7 +750,7 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Validator[]
+     * @return AbstractValidator[]
      */
     public function getDirectImageValidators(): array
     {

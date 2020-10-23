@@ -53,8 +53,8 @@ use Swift_Mailer;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Phalcon\Session\Manager as SessionManager;
-use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Session\Adapter\Stream as SessionAdapter;
+use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Flash\Session as FlashSession;
 
 class Services extends BaseServices
@@ -248,7 +248,7 @@ class Services extends BaseServices
         $adapterFactory    = new AdapterFactory($serializerFactory);
 
         $adapter = $adapterFactory->newInstance('stream', [
-            'cacheDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
+            'storageDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);
 
         $keyValue = new Cache($adapter);
@@ -395,12 +395,15 @@ class Services extends BaseServices
 
     /**
      * Start the session the first time some component request the session service
+     * @return SessionManager
      */
-    protected function initSession(): SessionAdapter
+    protected function initSession(): SessionManager
     {
         $session = new SessionManager();
+        $files   = new SessionAdapter(['savePath' => '/tmp']);
 
-        $session->setAdapter(new SessionAdapter(['savePath' => '/tmp']));
+        $session->setAdapter($files);
+        $session->start();
 
         return $session;
     }
@@ -491,7 +494,7 @@ class Services extends BaseServices
         $view->setViewsDir($cmsViewDir);
         $view->setNamespaces($namespaces);
         $view->registerEngines([
-            Twig::DEFAULT_EXTENSION => function (View $view){
+            Twig::DEFAULT_EXTENSION => function (View $view) {
                 return new Twig($view, $this, [
                     'cache' => $this->getIniConfig()->isDev() ? false : $this->getAppConfig()->path . 'cache/twig/',
                     'debug' => $this->getIniConfig()->isDev(),
