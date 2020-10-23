@@ -16,10 +16,16 @@ class WebFormService extends Injectable
     /**
      * @param MessageInterface $message
      * @param ElementInterface $element
+     * @param array $input
      * @return bool
      */
-    public function messageNeedsAlert(MessageInterface $message, ElementInterface $element): bool
+    public function messageNeedsAlert(MessageInterface $message, ElementInterface $element, array $input): bool
     {
+        // never alert if the field is empty
+        if(array_key_exists($element->getName(), $input) && ! $input[$element->getName()]){
+            return false;
+        }
+
         if($element instanceof Hidden){
             return true;
         }
