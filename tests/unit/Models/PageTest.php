@@ -8,6 +8,61 @@ use KikCMS\Models\PageLanguage;
 
 class PageTest extends Unit
 {
+    public function testChangingParent()
+    {
+        $this->getDbDi();
+        $this->addDefaultLanguage();
+
+        $page1 = new Page();
+        $page1->id = 1;
+        $page1->display_order = 1;
+        $page1->lft = 1;
+        $page1->rgt = 2;
+        $page1->setPreventNestedSetUpdate(true);
+        $page1->save();
+
+        $page2 = new Page();
+        $page2->id = 2;
+        $page2->lft = 3;
+        $page2->rgt = 4;
+        $page2->display_order = 1;
+        $page2->setPreventNestedSetUpdate(true);
+        $page2->save();
+
+        $subPage1 = new Page();
+        $subPage1->id = 3;
+        $subPage1->display_order = 1;
+        $subPage1->setParentId(1);
+        $subPage1->setPreventNestedSetUpdate(true);
+        $subPage1->save();
+
+        $subPage2 = new Page();
+        $subPage2->id = 4;
+        $subPage2->display_order = 1;
+        $subPage2->setParentId(2);
+        $subPage2->setPreventNestedSetUpdate(true);
+        $subPage2->save();
+
+        $this->assertEquals(1, $subPage2->getDisplayOrder());
+
+        $subPage2 = Page::getById(4);
+        $subPage2->setParentId(1);
+        $subPage2->setPreventNestedSetUpdate(true);
+        $subPage2->save();
+
+        $subPage2 = Page::getById(4);
+
+        // test if display order has been reset, because the parent has changed
+        $this->assertEquals(2, $subPage2->getDisplayOrder());
+
+        $subPage2->setParentId(1);
+        $subPage2->setPreventNestedSetUpdate(true);
+        $subPage2->save();
+
+        // test if display order stays the same, since the parent is the same
+        $this->assertEquals(2, $subPage2->getDisplayOrder());
+    }
+
     public function testGetParentPageLanguageWithSlugByLangCode()
     {
         $this->getDbDi();

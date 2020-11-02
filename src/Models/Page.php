@@ -5,6 +5,7 @@ namespace KikCMS\Models;
 use DateTime;
 use Exception;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
+use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\WebForm\Field;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
@@ -13,7 +14,6 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\PageService;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
-use Website\Classes\WebsiteSettings;
 
 /**
  * @property Page $parent
@@ -101,6 +101,11 @@ class Page extends Model
     {
         $this->parentHasChanged = $this->hasChanged(self::FIELD_PARENT_ID);
 
+        // added extra check because hasChanged is unreliable
+        if((int) $this->_snapshot[self::FIELD_PARENT_ID] === (int) $this->parent_id){
+            $this->parentHasChanged = false;
+        }
+
         // if the parent has changed, and the display order wasn't intentionally changed, it needs to be reset
         if ($this->parentHasChanged && ! $this->displayOrderHasBeenSet) {
             $this->resetDisplayOrder();
@@ -142,7 +147,7 @@ class Page extends Model
     {
         parent::initialize();
 
-        /** @var WebsiteSettings $websiteSettings */
+        /** @var WebsiteSettingsBase $websiteSettings */
         $websiteSettings = $this->getDI()->getShared('websiteSettings');
 
         $pageClass = $websiteSettings->getPageClass();
