@@ -7,7 +7,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
       - name: Composer install
-        run: composer install
+        run: composer install --ignore-platform-reqs
       - name: Create Docker network
         run: docker network create kikdev
       - name: Shutdown default MySQL
