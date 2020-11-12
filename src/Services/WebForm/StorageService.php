@@ -5,8 +5,10 @@ namespace KikCMS\Services\WebForm;
 use Exception;
 use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
 use KikCMS\Services\ModelService;
+use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Services\TranslationService;
@@ -62,8 +64,13 @@ class StorageService extends Injectable
             $this->storeMain();
             $this->executeAfterStoreEvents();
         } catch (Exception $exception) {
-            $this->logger->log(Logger::ERROR, $exception);
             $this->db->rollback();
+
+            if($this->isDuplicateTempKeyError($exception)){
+                throw new DuplicateTemporaryDataTableKeyException;
+            }
+
+            $this->logger->log(Logger::ERROR, $exception);
             return false;
         }
 
@@ -190,5 +197,22 @@ class StorageService extends Injectable
 
             $this->storageData->getObject()->$key = $this->modelService->getObjects($relatedModel, $keysToUpdate);
         }
+    }
+
+    /**
+     * @param Exception $exception
+     * @return bool
+     */
+    private function isDuplicateTempKeyError(Exception $exception): bool
+    {
+        $pattern = '/' . DbConfig::ERROR_CODE_DUPLICATE_ENTRY .'[a-zA-Z ]+\'([0-9\-+]+)\'/';
+
+        if( ! preg_match($pattern, $exception->getMessage(), $matches)) {
+            return false;
+        }
+
+        $keys = explode('-', $matches[1]);
+
+        return in_array(0, $keys);
     }
 }

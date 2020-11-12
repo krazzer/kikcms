@@ -41,8 +41,9 @@ return [
     ],
 
     'dataForm' => [
-        'saveSuccess' => 'De gegevens zijn succesvol opgeslagen',
-        'saveFailure' => 'Er is iets mis gegaan bij het opslaan van de gegevens',
+        'saveSuccess'                  => 'De gegevens zijn succesvol opgeslagen',
+        'saveFailure'                  => 'Er is iets mis gegaan bij het opslaan van de gegevens',
+        'duplicateTemporaryKeyFailure' => 'Probeer eerst het bovenliggende onderdeel op te slaan, en probeer het daarna nog eens',
     ],
 
     'dataTable' => [

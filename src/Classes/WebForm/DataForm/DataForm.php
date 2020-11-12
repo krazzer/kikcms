@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
+use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
@@ -71,7 +72,7 @@ abstract class DataForm extends WebForm
     {
         $field = parent::addField($field, $tab);
 
-        foreach ($field->getTransformers() as $transformer){
+        foreach ($field->getTransformers() as $transformer) {
             $this->addFieldTransformer($transformer);
         }
 
@@ -246,7 +247,14 @@ abstract class DataForm extends WebForm
     {
         $isNew = ! (bool) $this->filters->getEditId();
 
-        $saveSuccess = $this->saveData($input);
+        try {
+            $saveSuccess = $this->saveData($input);
+        } catch (DuplicateTemporaryDataTableKeyException $exception) {
+            $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
+            $this->flash->error($this->translator->tl('dataForm.saveFailure') . '. ' .
+                $this->translator->tl('dataForm.duplicateTemporaryKeyFailure'));
+            return null;
+        }
 
         if ($saveSuccess) {
             return $this->saveSuccessAction($isNew);
@@ -415,7 +423,7 @@ abstract class DataForm extends WebForm
         $object = $this->getObject();
 
         foreach ($this->getFieldMap() as $key => $field) {
-            if($field instanceOf DataTableField || $field instanceof SelectDataTableField){
+            if ($field instanceof DataTableField || $field instanceof SelectDataTableField) {
                 continue;
             }
 

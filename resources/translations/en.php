@@ -41,8 +41,9 @@ return [
     ],
 
     'dataForm' => [
-        'saveSuccess' => 'Data successfully saved',
-        'saveFailure' => 'Something went wrong when trying to save the data',
+        'saveSuccess'                  => 'Data successfully saved',
+        'saveFailure'                  => 'Something went wrong when trying to save the data',
+        'duplicateTemporaryKeyFailure' => 'Try to save the parent object first',
     ],
 
     'dataTable' => [
