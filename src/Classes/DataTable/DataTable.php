@@ -544,6 +544,10 @@ abstract class DataTable extends Renderable
      */
     public function renderEditForm(): string
     {
+        if( ! $this->getFormClass()){
+            return '';
+        }
+
         $this->initializeDatatable(true);
 
         return $this->form->render();
@@ -686,8 +690,12 @@ abstract class DataTable extends Renderable
      * @param string $renderedForm
      * @return string
      */
-    public function renderWindow(string $renderedForm)
+    public function renderWindow(string $renderedForm): string
     {
+        if( ! $this->getFormClass()){
+            return '';
+        }
+
         $template   = $this->getFilters()->getEditId() ? 'edit' : 'add';
         $objectName = $this->dataFormService->getObjectName($this->form);
 
