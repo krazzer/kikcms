@@ -33,4 +33,14 @@ class WysiwygField extends Field
     {
         return Field::TYPE_WYSIWYG;
     }
+
+    /**
+     * @param int $height
+     * @return $this
+     */
+    public function setHeight(int $height): WysiwygField
+    {
+        $this->getElement()->setAttribute('style', 'height: ' . $height . 'px;');
+        return $this;
+    }
 }

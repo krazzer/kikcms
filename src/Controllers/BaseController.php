@@ -106,6 +106,9 @@ class BaseController extends Controller
 
         $f = fopen('php://output', 'w');
 
+        // add UTF-8 BOM for Excel
+        fwrite($f, "\xEF\xBB\xBF");
+
         if ($headerLines) {
             fputcsv($f, $headerLines, ';');
         }
