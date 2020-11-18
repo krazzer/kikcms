@@ -36,7 +36,11 @@ class PagesDataTableController extends DataTableController
      */
     public function rearrangeAction()
     {
-        return $this->treeOrderAction();
+        if($this->getRenderable()->getSortableField() === Page::FIELD_DISPLAY_ORDER){
+            return $this->treeOrderAction();
+        } else {
+            return parent::rearrangeAction();
+        }
     }
 
     /**
