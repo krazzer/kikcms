@@ -36,6 +36,6 @@ class BaseControllerTest extends Unit
 
         $baseController->outputCsvAction();
 
-        $this->expectOutputString("key1;key2\nval1;val2\n");
+        $this->expectOutputString("\xEF\xBB\xBFkey1;key2\nval1;val2\n");
     }
 }
