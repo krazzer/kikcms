@@ -124,11 +124,11 @@ class PageServiceTest extends Unit
     /**
      * @param string $name
      * @param int $id
-     * @param int $parent
+     * @param int|null $parent
      * @return Page
      * @throws Exception
      */
-    private function createPage(string $name, int $id, int $parent = 0): Page
+    private function createPage(string $name, int $id, int $parent = null): Page
     {
         $page            = new Page();
         $page->parent_id = $parent;

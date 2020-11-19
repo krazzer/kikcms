@@ -48,7 +48,6 @@ class NestedSetService extends Injectable
         $page->rgt   = $maxRight + 2;
         $page->level = 0;
 
-        $page->setPreventNestedSetUpdate(true);
         $page->save();
     }
 

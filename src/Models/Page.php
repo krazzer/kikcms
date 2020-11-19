@@ -3,11 +3,9 @@
 namespace KikCMS\Models;
 
 use DateTime;
-use Exception;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\WebForm\Field;
-use KikCMS\Services\CacheService;
 use KikCMS\Services\DataTable\NestedSetService;
 use KikCMS\Services\DataTable\PageRearrangeService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -50,15 +48,6 @@ class Page extends Model
     const TYPE_LINK  = 'link';
     const TYPE_ALIAS = 'alias';
 
-    /** @var bool|null this field is needed for afterUpdate since hasChanged doesn't work there */
-    private $parentHasChanged;
-
-    /** @var bool|null whether the display_order field has changed or not */
-    private $displayOrderHasChanged;
-
-    /** @var bool|null whether the display_order has been intentionally set */
-    private $displayOrderHasBeenSet;
-
     /** @var bool|null set true if the nested set should not be updated */
     private $preventNestedSetUpdate;
 
@@ -67,11 +56,9 @@ class Page extends Model
      */
     public function beforeSave()
     {
-        if ( ! $this->getPageService()->requiresNesting($this)) {
-            return;
+        if ($this->getPageService()->requiresNesting($this)) {
+            $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
         }
-
-        $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
 
         if ( ! $this->getDisplayOrder()) {
             $this->resetDisplayOrder();
@@ -92,44 +79,6 @@ class Page extends Model
         foreach ($offspringAliases as $aliasPage) {
             $aliasPage->delete();
         }
-    }
-
-    /**
-     * Update display order if the parent has changed
-     */
-    public function beforeUpdate()
-    {
-        $this->parentHasChanged = $this->hasChanged(self::FIELD_PARENT_ID);
-
-        // added extra check because hasChanged is unreliable
-        if((int) $this->_snapshot[self::FIELD_PARENT_ID] === (int) $this->parent_id){
-            $this->parentHasChanged = false;
-        }
-
-        // if the parent has changed, and the display order wasn't intentionally changed, it needs to be reset
-        if ($this->parentHasChanged && ! $this->displayOrderHasBeenSet) {
-            $this->resetDisplayOrder();
-        }
-
-        try {
-            $this->displayOrderHasChanged = $this->hasChanged(self::FIELD_DISPLAY_ORDER);
-        } catch (Exception $exception) {
-        }
-    }
-
-    /**
-     * If the display order or parent has changed, update the nested set, check urls and clear page cache
-     */
-    public function afterUpdate()
-    {
-        if (($this->displayOrderHasChanged || $this->parentHasChanged) && ! $this->getPreventNestedSetUpdate()) {
-            $this->getPageRearrangeService()->updateNestedSet();
-            $this->getPageRearrangeService()->checkUrls($this);
-            $this->getCacheService()->clearForPage($this);
-        }
-
-        $this->parentHasChanged       = null;
-        $this->displayOrderHasChanged = null;
     }
 
     /**
@@ -169,8 +118,6 @@ class Page extends Model
 
         $this->addPageLanguageRelations();
         $this->addPageContentRelations();
-
-        $this->keepSnapshots(true);
     }
 
     /**
@@ -338,14 +285,6 @@ class Page extends Model
     }
 
     /**
-     * @return bool|null
-     */
-    public function getParentHasChanged(): ?bool
-    {
-        return $this->parentHasChanged;
-    }
-
-    /**
      * Set a new display order
      */
     public function resetDisplayOrder()
@@ -474,18 +413,9 @@ class Page extends Model
      * @param int|null $displayOrder
      * @return $this
      */
-    public function setDisplayOrderExplicitly(?int $displayOrder)
+    public function setDisplayOrder(?int $displayOrder)
     {
-        $this->displayOrderHasBeenSet = true;
-        $this->display_order          = $displayOrder;
+        $this->display_order = $displayOrder;
         return $this;
-    }
-
-    /**
-     * @return CacheService
-     */
-    private function getCacheService(): CacheService
-    {
-        return $this->getDI()->get('cacheService');
     }
 }

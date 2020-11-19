@@ -93,6 +93,8 @@ class PageForm extends DataForm
 
         $this->addTab('SEO', $tabSeoFields);
         $this->addTab($this->translator->tl('fields.advanced'), $tabAdvancedFields)->setKey('advanced');
+
+        $this->addHiddenField(Page::FIELD_DISPLAY_ORDER);
     }
 
     /**
@@ -218,6 +220,29 @@ class PageForm extends DataForm
     protected function getTemplate(): ?Template
     {
         return $this->pagesDataTableService->getTemplate($this);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function successAction(array $input)
+    {
+        if( ! $page = $this->getObject()) {
+            return parent::successAction($input);
+        }
+
+        if( ! array_key_exists(Page::FIELD_PARENT_ID, $input)) {
+            return parent::successAction($input);
+        }
+
+        if($page->parent_id == $input[Page::FIELD_PARENT_ID]){
+            return parent::successAction($input);
+        }
+
+        // of the parent has changed, reset the display order
+        $input[Page::FIELD_DISPLAY_ORDER] = null;
+
+        return parent::successAction($input);
     }
 
     /**

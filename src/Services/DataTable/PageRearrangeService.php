@@ -101,6 +101,8 @@ class PageRearrangeService extends Injectable
                 $this->placeInto($page, $targetPage);
             break;
         }
+
+        $this->cacheService->clearForPage($page);
     }
 
     /**
@@ -288,7 +290,7 @@ class PageRearrangeService extends Injectable
      */
     private function updatePage(Page $page, int $parentId = null, int $displayOrder = null)
     {
-        $page->setParentId($parentId)->setDisplayOrderExplicitly($displayOrder)->save();
+        $page->setParentId($parentId)->setDisplayOrder($displayOrder)->save();
     }
 
     /**
