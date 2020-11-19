@@ -60,7 +60,7 @@ class Page extends Model
             $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
         }
 
-        if ( ! $this->getDisplayOrder()) {
+        if ( ! $this->getDisplayOrder() && $this->getParentId()) {
             $this->resetDisplayOrder();
         }
     }
