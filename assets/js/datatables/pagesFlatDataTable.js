@@ -8,6 +8,10 @@ var PagesFlatDataTable = PagesDataTable.extend({
 
         filters.template = this.template;
 
+        this.getTemplateField().each(function () {
+            filters.template = $(this).val();
+        });
+
         return filters;
     }
 });
