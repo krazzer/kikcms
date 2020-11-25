@@ -176,6 +176,7 @@ var DataTable = Class.extend({
                 self.actionSave(true);
                 self.getWindow().find('.saveAndClose').addClass('active');
                 e.preventDefault();
+                return false;
             }
         };
 
