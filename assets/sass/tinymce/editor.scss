@@ -2,6 +2,16 @@
 @import "../includes/variables";
 
 body {
+    .tox .tox-statusbar a{
+        color: #ccc;
+        margin-right: 10px;
+    }
+
+    .tox .tox-statusbar{
+        font-size: 9px;
+        height: 14px;
+    }
+
     .mce-top-part:before{
         box-shadow: none;
         -webkit-box-shadow: none;

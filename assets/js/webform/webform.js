@@ -212,16 +212,14 @@ var WebForm = Class.extend({
                     tinymce.triggerSave();
                 });
             },
-            language_url: '/cmsassets/tinymce/' + KikCMS.tl('system.langCode') + '.js',
             language: KikCMS.tl('system.langCode'),
-            theme: 'modern',
             relative_urls: false,
             remove_script_host: true,
             document_base_url: KikCMS.baseUri,
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
-                'visualchars code insertdatetime media nonbreaking save table contextmenu directionality template paste',
-                'textcolor colorpicker textpattern codesample toc'
+                'visualchars code insertdatetime media nonbreaking save table directionality template paste',
+                'textpattern codesample toc'
             ],
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce_content.css'],
@@ -269,9 +267,10 @@ var WebForm = Class.extend({
         }
 
         if (typeof tinymce == 'undefined') {
-            $.getScript('//cdn.tinymce.com/4/tinymce.min.js', function () {
+            var baseUrl = "https://cdn.tiny.cloud/1/jijtnd9gx0m4m78szg3zvmej6ductsblt26vv5g7lfyvtbfz/tinymce/5";
+            $.getScript(baseUrl + '/tinymce.min.js', function () {
                 window.tinymce.dom.Event.domLoaded = true;
-                tinymce.baseURL                    = "//cdn.tinymce.com/4";
+                tinymce.baseURL                    = baseUrl;
                 tinymce.suffix                     = ".min";
 
                 self.initTinyMCE();
