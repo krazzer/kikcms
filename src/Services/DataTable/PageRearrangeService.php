@@ -102,6 +102,7 @@ class PageRearrangeService extends Injectable
             break;
         }
 
+        $this->updateNestedSet();
         $this->cacheService->clearForPage($page);
     }
 
