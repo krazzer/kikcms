@@ -215,6 +215,8 @@ var WebForm = Class.extend({
             language: KikCMS.tl('system.langCode'),
             relative_urls: false,
             remove_script_host: true,
+            branding: false,
+            elementpath: false,
             document_base_url: KikCMS.baseUri,
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',

@@ -112,6 +112,14 @@
         }
     }
 
+    .type-wysiwyg .tinymce-branding a{
+        float: right;
+        color: $lightGrayDark;
+        font-size: 11px;
+        position: relative;
+        top: 5px;
+    }
+
     .required-message{
         color: $gray;
     }

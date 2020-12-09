@@ -214,3 +214,11 @@
 {%- block fieldSelectDataTable -%}
     {{ block('fieldDataTable') }}
 {%- endblock -%}
+
+{%- block fieldWysiwyg -%}
+    <div{{ fieldContainterAttributes|raw }}>
+        <span class="tinymce-branding"><a href="https://www.tiny.cloud" target="_blank">Powered by Tiny</a></span>
+        {{ block('fieldDefaultInputAndField') }}
+        {{ block('errorWarnings') }}
+    </div>
+{%- endblock -%}

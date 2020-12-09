@@ -2,14 +2,38 @@
 @import "../includes/variables";
 
 body {
+    .tox{
+        @include fontDefault();
+    }
+
     .tox .tox-statusbar a{
         color: #ccc;
         margin-right: 10px;
     }
 
+    .tox-tinymce {
+        border: 1px solid $lightGray;
+        border-radius: $defaultBorderRadius;
+    }
+
+    .tox .tox-menubar+.tox-toolbar-overlord .tox-toolbar__primary{
+        border-color: $lightGray;
+    }
+
+    .tox:not([dir=rtl]) .tox-toolbar__group:not(:last-of-type){
+        border-color: $lightGray;
+    }
+
+    .tox .tox-toolbar__primary{
+        background: none;
+        border-bottom: 1px solid $lightGray;
+    }
+
     .tox .tox-statusbar{
         font-size: 9px;
-        height: 14px;
+        height: 0;
+        overflow: visible;
+        border-top: none;
     }
 
     .mce-top-part:before{
