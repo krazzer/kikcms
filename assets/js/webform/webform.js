@@ -267,7 +267,7 @@ var WebForm = Class.extend({
         }
 
         if (typeof tinymce == 'undefined') {
-            var baseUrl = "https://cdn.tiny.cloud/1/jijtnd9gx0m4m78szg3zvmej6ductsblt26vv5g7lfyvtbfz/tinymce/5";
+            var baseUrl = "https://cdn.tiny.cloud/1/" + KikCMS.tinyMceApiKey + "/tinymce/5";
             $.getScript(baseUrl + '/tinymce.min.js', function () {
                 window.tinymce.dom.Event.domLoaded = true;
                 tinymce.baseURL                    = baseUrl;

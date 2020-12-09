@@ -44,7 +44,8 @@ class BaseController extends Controller
             'maxFileSize'       => $maxFileSize,
             'maxFileSizeString' => $maxFileSizeString,
             'translations'      => $translations,
-            'allowedExt'        => MimeConfig::UPLOAD_ALLOW_DEFAULT
+            'allowedExt'        => MimeConfig::UPLOAD_ALLOW_DEFAULT,
+            'tinyMceApiKey'     => $this->config->application->tinyMceApiKey ?? null,
         ];
 
         $this->view->setVar("flash", $this->flash);
