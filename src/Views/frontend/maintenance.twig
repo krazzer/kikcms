@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ tl('maintenance.title') }}</title>
+    <link href="//fonts.googleapis.com/css?family=Lato:400,700" nonce="" rel="stylesheet">
+</head>
+<style>
+    html{
+        height: 100%;
+    }
+
+    body{
+        font-family: "Lato", serif;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        flex-direction: column;
+        vertical-align: center;
+        align-items: center;
+        height: 100%;
+        padding: 10px;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    img{
+        width: 300px;
+        margin-bottom: 50px;
+    }
+
+    .text{
+        max-width: 500px;
+    }
+</style>
+<body>
+<img src="/images/logo.png" alt="{{ tl('maintenance.title') }}" />
+<h1>{{ tl('maintenance.title') }}</h1>
+<div class="text">{{ tl('maintenance.description') }}</div>
+</body>
+</html>

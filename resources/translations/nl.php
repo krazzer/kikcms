@@ -331,6 +331,14 @@ return [
         'subject'     => 'Contactformulier',
     ],
 
+    'maintenance' => [
+        'checkboxLabel' => 'Onderhouds modus inschakelen',
+        'title'         => 'Onderhouds modus',
+        'description'   => 'Er wordt momenteel achter de schermen aan deze website gewerkt. Probeer het later nog eens.',
+        'helpText'      => 'Als onderhouds modus is ingeschakeld, zijn pagina\'s niet meer te bezoeken. Bezoekers ' .
+            'krijgen een melding te zien. Als je bent ingelogd in het CMS kun je de website nog wel bekijken',
+    ],
+
     'menu' => [
         'group' => [
             'content' => 'Content',

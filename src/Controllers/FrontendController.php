@@ -7,6 +7,7 @@ use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\UserService;
@@ -58,11 +59,16 @@ class FrontendController extends BaseController
     }
 
     /**
-     * @param string $urlPath
+     * @param string|null $urlPath
+     * @return Response|ResponseInterface|void
      * @throws NotFoundException
      */
     public function pageAction(string $urlPath = null)
     {
+        if($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
+            return $this->response->setContent($this->view->getPartial('@kikcms/frontend/maintenance'));
+        }
+
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {
             throw new NotFoundException();
         }

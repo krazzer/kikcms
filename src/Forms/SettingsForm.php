@@ -5,6 +5,7 @@ namespace KikCMS\Forms;
 
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Config\KikCMSConfig;
 use KikCMS\DataTables\Languages;
 use KikCMS\DataTables\Translations;
 
@@ -13,8 +14,6 @@ use KikCMS\DataTables\Translations;
  */
 class SettingsForm extends WebForm
 {
-    protected $displaySendButton = false;
-
     /**
      * @inheritdoc
      */
@@ -25,5 +24,25 @@ class SettingsForm extends WebForm
         }
 
         $this->addDataTableField('translations', Translations::class, $this->translator->tl("fields.translations"));
+        $this->addCheckboxField('maintenance', $this->translator->tl("maintenance.checkboxLabel"))
+            ->setDefault($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE))
+            ->setHelpText($this->translator->tl("maintenance.helpText"));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSendButtonLabel(): string
+    {
+        return $this->translator->tl('dataTable.save');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function successAction(array $input)
+    {
+        $this->keyValue->save(KikCMSConfig::SETTING_MAINTENANCE, $input['maintenance']);
+        $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
     }
 }

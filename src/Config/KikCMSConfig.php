@@ -70,4 +70,6 @@ class KikCMSConfig
 
     const KEY_PAGE_DEFAULT   = 'default';
     const KEY_PAGE_NOT_FOUND = 'page-not-found';
+
+    const SETTING_MAINTENANCE = 'maintenanceModeEnabled';
 }

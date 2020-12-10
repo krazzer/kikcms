@@ -324,6 +324,14 @@ return [
         'subject'     => 'Contactform',
     ],
 
+    'maintenance' => [
+        'checkboxLabel' => 'Enable maintenance mode',
+        'title'         => 'Maintenance mode',
+        'description'   => 'Currently this website is worked on behind the scenes. Please check back later.',
+        'helpText'      => 'When maintenance mode is enabled, pages are no longer visible for visitors, as they will see ' .
+            'a message. If you\'re logged in you will still be able to see the pages.',
+    ],
+
     'menu' => [
         'group' => [
             'content' => 'Content',
