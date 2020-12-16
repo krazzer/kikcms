@@ -192,7 +192,13 @@ return [
         'unknown' => [
             'title'       => 'Onbekende fout',
             'description' => 'Er is een onbekende fout opgetreden bij uw verzoek. Probeer het later nog eens.',
-        ]
+        ],
+
+        'database' => [
+            'title'       => 'Geen database verbinding',
+            'description' => 'Er kon geen connectie gemaakt worden met de database. Probeer het later nog eens. ' .
+                'Excuses voor het ongemak.',
+        ],
     ],
 
     'fields' => [

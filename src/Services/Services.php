@@ -27,6 +27,7 @@ use KikCMS\Config\TranslatorConfig;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\Services\Base\BaseServices;
 use KikCmsCore\Config\DbConfig;
+use KikCmsCore\Exceptions\DatabaseConnectionException;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
@@ -118,7 +119,7 @@ class Services extends BaseServices
     /**
      * @return Memory
      */
-    protected function initAcl()
+    protected function initAcl(): Memory
     {
         return $this->get('permission')->getAcl();
     }
@@ -126,7 +127,7 @@ class Services extends BaseServices
     /**
      * @return Permission
      */
-    protected function initPermission()
+    protected function initPermission(): Permission
     {
         return new Permission();
     }
@@ -134,7 +135,7 @@ class Services extends BaseServices
     /**
      * @return Google_Service_AnalyticsReporting
      */
-    protected function initAnalytics()
+    protected function initAnalytics(): Google_Service_AnalyticsReporting
     {
         $keyFileLocation    = $this->getAppConfig()->path . 'config/service-account-credentials.json';
         $keyFileEnvLocation = $this->getAppConfig()->path . 'env/service-account-credentials.json';
@@ -161,6 +162,7 @@ class Services extends BaseServices
             return null;
         }
 
+        /** @noinspection PhpInstanceofIsAlwaysTrueInspection */
         if ($this instanceof Cli && $config['adapter'] == 'apcu') {
             return null;
         }
@@ -204,6 +206,7 @@ class Services extends BaseServices
         $config = $this->getDbConfig()->toArray();
 
         $dbClass = Pdo::class . '\\' . $config['adapter'];
+
         unset($config['adapter']);
 
         try {
@@ -211,9 +214,10 @@ class Services extends BaseServices
         } catch (Exception $exception) {
             if ($exception->getCode() == DbConfig::ERROR_CODE_TOO_MANY_USER_CONNECTIONS) {
                 $this->get('logger')->log(Logger::WARNING, $exception);
-                throw new ResourcesExceededException();
+                throw new ResourcesExceededException;
             } else {
-                throw $exception;
+                $this->get('logger')->log(Logger::WARNING, $exception);
+                throw new DatabaseConnectionException;
             }
         }
 
@@ -241,7 +245,7 @@ class Services extends BaseServices
     /**
      * @return ErrorHandler
      */
-    protected function initErrorHandler()
+    protected function initErrorHandler(): ErrorHandler
     {
         $errorHandler = new ErrorHandler($this->get('logger'));
 
@@ -285,7 +289,7 @@ class Services extends BaseServices
     /**
      * @return FileService
      */
-    protected function initFileService()
+    protected function initFileService(): FileService
     {
         return new FileService('media', 'thumbs');
     }
@@ -293,7 +297,7 @@ class Services extends BaseServices
     /**
      * Register the flash service with custom CSS classes
      */
-    protected function initFlash()
+    protected function initFlash(): FlashSession
     {
         return new FlashSession([
             'error'   => 'alert alert-danger',
@@ -306,7 +310,7 @@ class Services extends BaseServices
     /**
      * @return Logger
      */
-    protected function initLogger()
+    protected function initLogger(): Logger
     {
         $logger = new Logger('logger');
 
@@ -353,7 +357,7 @@ class Services extends BaseServices
     /**
      * @return MailService
      */
-    protected function initMailService()
+    protected function initMailService(): MailService
     {
         return new MailService($this->get('mailer'));
     }
@@ -361,7 +365,7 @@ class Services extends BaseServices
     /**
      * @return ReCaptcha
      */
-    protected function initReCaptcha()
+    protected function initReCaptcha(): ReCaptcha
     {
         $secret = $this->getConfig('recaptcha', 'secret');
 
@@ -371,7 +375,7 @@ class Services extends BaseServices
     /**
      * Start the session the first time some component request the session service
      */
-    protected function initSession()
+    protected function initSession(): SessionAdapter
     {
         $session = new SessionAdapter();
         $session->start();
@@ -416,7 +420,7 @@ class Services extends BaseServices
      * The URL component is used to generate all kind of urls in the application
      * Note that the baseUri is not set in the CLI
      */
-    protected function initUrl()
+    protected function initUrl(): Url
     {
         $baseUri = $this->get('cmsService')->getBaseUri();
 
@@ -437,7 +441,7 @@ class Services extends BaseServices
     /**
      * @return View
      */
-    protected function initView()
+    protected function initView(): View
     {
         $cmsViewDir      = __DIR__ . '/../Views/';
         $cmsResourceDir  = __DIR__ . '/../../resources/';

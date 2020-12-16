@@ -34,10 +34,24 @@ use Phalcon\Http\ResponseInterface;
  */
 class FrontendController extends BaseController
 {
+    /**
+     * @return ResponseInterface
+     */
     public function resourcesExceededAction(): ResponseInterface
     {
         $this->response->setStatusCode(StatusCodes::SERVICE_UNAVAILABLE);
         return $this->response->setContent(StatusCodes::SERVICE_UNAVAILABLE_MESSAGE);
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function databaseConnectionFailureAction(): ResponseInterface
+    {
+        return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
+            'title'       => $this->translator->tl('error.database.title'),
+            'description' => $this->translator->tl('error.database.description'),
+        ]));
     }
 
     /**
@@ -65,8 +79,11 @@ class FrontendController extends BaseController
      */
     public function pageAction(string $urlPath = null)
     {
-        if($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
-            return $this->response->setContent($this->view->getPartial('@kikcms/frontend/maintenance'));
+        if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
+            return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
+                'title'       => $this->translator->tl('maintenance.title'),
+                'description' => $this->translator->tl('maintenance.description'),
+            ]));
         }
 
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {

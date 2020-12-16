@@ -5,6 +5,7 @@ namespace KikCMS\Plugins;
 use Exception;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCmsCore\Exceptions\DatabaseConnectionException;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
@@ -33,6 +34,16 @@ class FrontendNotFoundPlugin extends Plugin
                 'namespace'  => "KikCMS\\Controllers",
                 'controller' => 'frontend',
                 'action'     => 'resourcesExceeded',
+            ]);
+
+            return false;
+        }
+
+        if ($exception instanceof DatabaseConnectionException) {
+            $dispatcher->forward([
+                'namespace'  => "KikCMS\\Controllers",
+                'controller' => 'frontend',
+                'action'     => 'databaseConnectionFailure',
             ]);
 
             return false;
