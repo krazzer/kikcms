@@ -3,9 +3,9 @@
 namespace KikCMS\Plugins;
 
 use Exception;
+use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
-use KikCmsCore\Exceptions\DatabaseConnectionException;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
