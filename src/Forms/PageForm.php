@@ -168,6 +168,7 @@ class PageForm extends DataForm
      */
     protected function onSave()
     {
+        $this->pageRearrangeService->updateNestedSet();
         $this->cacheService->clearPageCache();
     }
 
