@@ -299,13 +299,18 @@ var WebForm = Class.extend({
 
         var windowHeight = this.getWindowHeight() < 768 ? this.getWindowHeight() - 130 : 768;
 
-        var window = tinymce.activeEditor.windowManager.open({
+        var window = tinymce.activeEditor.windowManager.openUrl({
             title: 'Image Picker',
             url: '/cms/filePicker',
             width: 952,
             height: windowHeight,
             buttons: [{
+                type: 'cancel',
+                text: 'Close',
+                onclick: 'close'
+            }, {
                 text: 'Insert',
+                type: 'custom',
                 onclick: function () {
                     var $filePicker = $(window.$el).find('iframe')[0].contentWindow.$('.filePicker');
 
@@ -317,21 +322,16 @@ var WebForm = Class.extend({
 
                     callBackAction($file);
                 }
-            }, {
-                text: 'Close',
-                onclick: 'close'
             }]
         });
 
-        window.on('open', function () {
-            var $iframe = $(window.$el).find('iframe');
+        var $iframe = $('.tox-navobj iframe');
 
-            $iframe.on('load', function () {
-                var $filePicker = this.contentWindow.$('.filePicker');
+        $iframe.on('load', function () {
+            var $filePicker = this.contentWindow.$('.filePicker');
 
-                $filePicker.on("pick", '.file', function () {
-                    callBackAction($(this));
-                });
+            $filePicker.on("pick", '.file', function () {
+                callBackAction($(this));
             });
         });
     },
