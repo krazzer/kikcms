@@ -218,6 +218,7 @@ var WebForm = Class.extend({
             branding: false,
             elementpath: false,
             document_base_url: KikCMS.baseUri,
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist',
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
                 'visualchars code insertdatetime media nonbreaking save table directionality template paste',
