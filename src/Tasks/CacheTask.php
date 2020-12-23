@@ -21,7 +21,7 @@ class CacheTask extends Task
 
         $response = $this->jsonService->getByUrl($url);
 
-        if ( ! isset($response['success']) || ! $response['success']) {
+        if ( ! $response || ! isset($response['success']) || ! $response['success']) {
             echo 'Cache clear failed!' . PHP_EOL;
         } else {
             echo 'Cache cleared succesfully!' . PHP_EOL;

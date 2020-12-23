@@ -19,6 +19,10 @@ class JsonService extends Injectable
             "verify_peer_name" => false,
         ]];
 
-        return json_decode(file_get_contents($url, false, stream_context_create($contextOptions)), true);
+        if( ! $response = file_get_contents($url, false, stream_context_create($contextOptions))){
+            return null;
+        }
+
+        return json_decode($response, true);
     }
 }
