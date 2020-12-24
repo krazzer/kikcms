@@ -192,7 +192,7 @@ return [
         'database' => [
             'title'       => 'Lost database connection',
             'description' => 'A connection to the database could not be established. Please try again later. ' .
-                'We apologise for the inconvenienceCreate.',
+                'We apologise for the inconvenience.',
         ],
     ],
 
