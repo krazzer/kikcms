@@ -86,7 +86,7 @@ class CacheNode
         }
 
         if (is_scalar($this->value)) {
-            return $this->value;
+            return (string) $this->value;
         }
 
         return serialize($this->value);

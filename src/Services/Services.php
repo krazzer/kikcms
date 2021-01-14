@@ -8,6 +8,7 @@ use Google_Client;
 use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
+use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Services\Cms\QueryLogService;
 use KikCMS\Services\Finder\FileService;
@@ -35,7 +36,6 @@ use Monolog\Handler\DeduplicationHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache\Backend\Factory;
-use Phalcon\Cache\Backend\File;
 use Phalcon\Cache\BackendInterface;
 use Phalcon\Cache\Frontend\Data;
 use Phalcon\Cache\Frontend\Json;
@@ -223,7 +223,7 @@ class Services extends BaseServices
 
         $db->setEventsManager($this->get('eventsManager'));
 
-        if($config['logqueries'] ?? false){
+        if ($config['logqueries'] ?? false) {
             /** @var QueryLogService $queryLogService */
             $queryLogService = $this->get('queryLogService');
             $queryLogService->setup();
@@ -238,8 +238,11 @@ class Services extends BaseServices
     protected function initKeyValue()
     {
         $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
+        $keyValue = new KeyValue($frontend, ['cacheDir' => $this->getAppConfig()->path . 'storage/keyvalue/']);
 
-        return new File($frontend, ['cacheDir' => $this->getAppConfig()->path . 'storage/keyvalue/']);
+        $keyValue->setMemoryCache($this->getShared('cache'));
+
+        return $keyValue;
     }
 
     /**
