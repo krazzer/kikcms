@@ -15,7 +15,7 @@ class SecuritySingleToken extends Security
      */
     public function getTokenKey(): string
     {
-        $tokenKey = $this->getDI()->get('session')->get($this->tokenValueSessionId);
+        $tokenKey = $this->getDI()->get('session')->get($this->tokenKeySessionId);
 
         if ($tokenKey) {
             return $tokenKey;
@@ -36,13 +36,5 @@ class SecuritySingleToken extends Security
         }
 
         return parent::getToken();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function checkToken($tokenKey = null, $tokenValue = null, $destroyIfValid = false): bool
-    {
-        return parent::checkToken($tokenKey, $tokenValue, $destroyIfValid);
     }
 }

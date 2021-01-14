@@ -40,7 +40,6 @@ use Phalcon\Db\Adapter\AdapterInterface as PdoAdapterInterface;
 use Phalcon\Cache\AdapterFactory;
 use Phalcon\Db\Adapter\PdoFactory;
 use Phalcon\Di\FactoryDefault\Cli;
-use Phalcon\Filter;
 use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
 use Phalcon\Session\Bag;
@@ -210,10 +209,6 @@ class Services extends BaseServices
     {
         $config = $this->getDbConfig()->toArray();
 
-        $dbClass = Pdo::class . '\\' . $config['adapter'];
-
-        unset($config['adapter']);
-
         try {
             $db = (new PdoFactory)->load(['adapter' => $config['adapter'], 'options' => $config]);
         } catch (Exception $exception) {
@@ -251,7 +246,7 @@ class Services extends BaseServices
             'storageDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);
 
-        $keyValue = new Cache($adapter);
+        $keyValue = new KeyValue($adapter);
         $keyValue->setMemoryCache($this->getShared('cache'));
 
         return $keyValue;
@@ -293,14 +288,6 @@ class Services extends BaseServices
         $fileStorage->setStorageDir($this->getAppConfig()->path . 'storage/');
 
         return $fileStorage;
-    }
-
-    /**
-     * @return Filter
-     */
-    protected function initFilter(): Filter
-    {
-        return new Filter();
     }
 
     /**
