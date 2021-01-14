@@ -1,39 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="message">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
     <link href="//fonts.googleapis.com/css?family=Lato:400,700" nonce="" rel="stylesheet">
+    {{ css('cmsassets/css/cms.css') }}
+    {{ customCss ? css(customCss) }}
 </head>
-<style>
-    html{
-        height: 100%;
-    }
-
-    body{
-        font-family: "Lato", serif;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        flex-direction: column;
-        vertical-align: center;
-        align-items: center;
-        height: 100%;
-        padding: 10px;
-        margin: 0;
-        box-sizing: border-box;
-    }
-
-    img{
-        width: 300px;
-        margin-bottom: 50px;
-    }
-
-    .text{
-        max-width: 500px;
-    }
-</style>
-<body>
+<body class="message">
 <img src="/images/logo.png" alt="" />
 
 <h1>{{ title }}</h1>

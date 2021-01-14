@@ -1,0 +1,26 @@
+html.message{
+    height: 100%;
+}
+
+body.message{
+    font-family: "Lato", serif;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column;
+    vertical-align: center;
+    align-items: center;
+    height: 100%;
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+
+    img{
+        width: 300px;
+        margin-bottom: 50px;
+    }
+
+    .text{
+        max-width: 500px;
+    }
+}

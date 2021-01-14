@@ -48,10 +48,10 @@ class FrontendController extends BaseController
      */
     public function databaseConnectionFailureAction(): ResponseInterface
     {
-        return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
-            'title'       => $this->translator->tl('error.database.title'),
-            'description' => $this->translator->tl('error.database.description'),
-        ]));
+        $title       = $this->translator->tl('error.database.title');
+        $description = $this->translator->tl('error.database.description');
+
+        return $this->message($title, $description);
     }
 
     /**
@@ -80,10 +80,10 @@ class FrontendController extends BaseController
     public function pageAction(string $urlPath = null)
     {
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
-            return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
-                'title'       => $this->translator->tl('maintenance.title'),
-                'description' => $this->translator->tl('maintenance.description'),
-            ]));
+            $title       = $this->translator->tl('maintenance.title');
+            $description = $this->translator->tl('maintenance.description');
+
+            return $this->message($title, $description);
         }
 
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {
@@ -197,5 +197,19 @@ class FrontendController extends BaseController
         $this->view->pick('@website/templates/' . $templateFile);
 
         return null;
+    }
+
+    /**
+     * @param string $title
+     * @param string $description
+     * @return ResponseInterface
+     */
+    private function message(string $title, string $description): ResponseInterface
+    {
+        return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
+            'title'       => $title,
+            'description' => $description,
+            'customCss'   => $this->websiteSettings->getCustomCss(),
+        ]));
     }
 }
