@@ -22,6 +22,7 @@ use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
+use Phalcon\Validation\AbstractValidator;
 use Phalcon\Validation\Validator\Date;
 
 /**
@@ -104,6 +105,15 @@ abstract class WebForm extends Renderable
      */
     public function addField(Field $field, Tab $tab = null): Field
     {
+        if($validators = $field->getElement()->getValidators()){
+
+
+            /** @var AbstractValidator $validator */
+            foreach ($validators as $i => $validator){
+                $field->getElement()->getValidators()[$i]->setTemplates(['messageMinimum' => 'te weinigg!!']);
+            }
+        }
+
         $field->setForm($this);
 
         if ($this->fieldMap->has($field->getKey())) {
@@ -518,9 +528,6 @@ abstract class WebForm extends Renderable
     private function getErrors(): ErrorContainer
     {
         $errorContainer = $this->validate($this->getInput());
-
-//        $this->session->set('test', 'val');
-        dlog($this->session->get('test'));
 
         if ( ! $this->security->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));

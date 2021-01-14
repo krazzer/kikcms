@@ -1,7 +1,7 @@
 version: "3"
 services:
   php:
-    build: ./../../../../../DockerKikDev/DockerfilePhalcon4
+    build: ./../../../../../DockerKikDev/Phalcon4
     restart: always
     ports:
       - "${SITE_PORT}:443"
