@@ -101,7 +101,7 @@ class UrlService extends Injectable
             return null;
         });
 
-        if( ! $cached[0]){
+        if( ! $cached || ! $cached[0]){
             return null;
         }
 

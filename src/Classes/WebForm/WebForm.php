@@ -40,25 +40,25 @@ abstract class WebForm extends Renderable
     const FLASH_KEY      = 'flashForForm';
 
     /** @var FieldMap */
-    protected FieldMap $fieldMap;
+    protected $fieldMap;
 
     /** @var Tab[] */
-    protected array $tabs = [];
+    protected $tabs = [];
 
     /** @var array tracks field key increments */
-    protected array $keys = [];
+    protected $keys = [];
 
     /** @var string */
-    protected string $formTemplate = 'form';
+    protected $formTemplate = 'form';
 
     /** @var bool */
-    protected bool $showRequiredMessage = false;
+    protected $showRequiredMessage = false;
 
     /** @var bool */
-    protected bool $displaySendButton = true;
+    protected $displaySendButton = true;
 
     /** @inheritdoc */
-    protected string $instancePrefix = 'webForm';
+    protected $instancePrefix = 'webForm';
 
     /** @inheritdoc */
     protected $jsClass = 'WebForm';
@@ -67,12 +67,12 @@ abstract class WebForm extends Renderable
     protected $viewDirectory = 'webform';
 
     /** @var string */
-    protected $sendButtonLabel;
+    protected $sendButtonLabel = '';
 
     /** @var string */
     protected $sendButtonClass = 'btn btn-submit btn-primary';
 
-    /** @var Form */
+    /** @var Form|null */
     private $form = null;
 
     /** @var bool */
@@ -85,7 +85,7 @@ abstract class WebForm extends Renderable
     private $validateAction;
 
     /** @var array|null */
-    private ?array $input = null;
+    private $input = null;
 
     /**
      * @inheritdoc

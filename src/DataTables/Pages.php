@@ -43,7 +43,7 @@ class Pages extends DataTable
     /** @inheritdoc */
     protected $searchableFields = ['pl.name'];
 
-    /** @inheritdoc */
+    /** @var bool */
     protected $preLoadWysiwygJs = true;
 
     /** @inheritdoc */
@@ -152,7 +152,6 @@ class Pages extends DataTable
         switch ($this->getFilters()->getPageType()) {
             case Page::TYPE_MENU:
                 return MenuForm::class;
-            break;
             case Page::TYPE_LINK:
                 return LinkForm::class;
         }

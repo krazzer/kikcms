@@ -26,6 +26,11 @@ class CacheService extends Injectable
             return;
         }
 
+        if( ! $prefix){
+            $this->cache->clear();
+            return;
+        }
+
         $keys = $this->getKeys($prefix);
 
         foreach ($keys as $cacheKey) {
@@ -156,9 +161,9 @@ class CacheService extends Injectable
      */
     public function getKeys(string $prefix = ''): array
     {
-        $mainPrefix = $this->getMainPrefix();
+        $mainPrefix = $this->cache->getAdapter()->getPrefix();
 
-        $keys = $this->cache->get(preg_quote($prefix, '/'));
+        $keys = $this->cache->getAdapter()->getKeys(preg_quote($prefix, '/'));
 
         if ( ! $mainPrefix) {
             return $keys;
@@ -173,23 +178,5 @@ class CacheService extends Injectable
         }
 
         return $keys;
-    }
-
-    /**
-     * Get the caches' main prefix
-     *
-     * @return string|null
-     */
-    private function getMainPrefix(): ?string
-    {
-        if ( ! $options = $this->cache->getAdapter()->getOptions()) {
-            return null;
-        }
-
-        if ( ! array_key_exists('prefix', $options)) {
-            return null;
-        }
-
-        return $options['prefix'];
     }
 }

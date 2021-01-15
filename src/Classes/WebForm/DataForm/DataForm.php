@@ -42,7 +42,7 @@ abstract class DataForm extends WebForm
     /** @var array */
     protected $events = [];
 
-    /** @var DataFormFilters */
+    /** @var DataFormFilters|Filters */
     protected $filters;
 
     /** @var FieldTransformer[] */
@@ -54,11 +54,11 @@ abstract class DataForm extends WebForm
     /** @var array local cache for edit data */
     private $cachedEditData = [];
 
-    /** @var DataTable, will be automatically set when this form is initialized by a DataTable */
+    /** @var DataTable|null, will be automatically set when this form is initialized by a DataTable */
     private $dataTable;
 
     /** @var Model|null */
-    private $object;
+    private $object = null;
 
     /**
      * @return string
@@ -257,7 +257,7 @@ abstract class DataForm extends WebForm
         }
 
         if ($saveSuccess) {
-            return $this->saveSuccessAction($isNew);
+            $this->saveSuccessAction($isNew);
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
             $this->flash->error($this->translator->tl('dataForm.saveFailure'));
