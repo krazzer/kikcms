@@ -43,7 +43,7 @@ class Pages extends DataTable
     /** @inheritdoc */
     protected $searchableFields = ['pl.name'];
 
-    /** @inheritdoc */
+    /** @var bool */
     protected $preLoadWysiwygJs = true;
 
     /** @inheritdoc */

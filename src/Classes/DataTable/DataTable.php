@@ -59,31 +59,31 @@ abstract class DataTable extends Renderable
     ];
 
     /** @var DataForm */
-    protected DataForm $form;
+    protected $form;
 
     /** @var Filters|DataTableFilters */
-    protected Filters $filters;
+    protected $filters;
 
     /** @var Filter[] */
-    protected array $customFilters = [];
+    protected $customFilters = [];
 
     /** @var false|string if set, the datatable will let you select or upload a file directly, using the set field */
     protected $directImageField = false;
 
     /** @var AbstractValidator[] */
-    protected array $directImageValidators = [];
+    protected $directImageValidators = [];
 
     /** @var array default field values to be set for the child object */
     protected $directImageDefaults = [];
 
     /** @var string */
-    protected string $instancePrefix = self::INSTANCE_PREFIX;
+    protected $instancePrefix = self::INSTANCE_PREFIX;
 
     /** @var array */
     protected $searchableFields = [];
 
     /** @var array assoc column as key, callable as value, that will be used to format a value in the result table */
-    protected array $fieldFormatting = [];
+    protected $fieldFormatting = [];
 
     /** @var string */
     protected $viewDirectory = 'datatable';
@@ -101,19 +101,19 @@ abstract class DataTable extends Renderable
     protected $sortable = false;
 
     /** @var bool if true, newly added items will be added on top */
-    protected bool $sortableNewFirst = false;
+    protected $sortableNewFirst = false;
 
     /** @var bool if true, each row gets a delete button */
-    protected bool $showDeleteRowButton = false;
+    protected $showDeleteRowButton = false;
 
     /** @var string */
-    protected string $sortableField = 'display_order';
+    protected $sortableField = 'display_order';
 
     /** @var string */
     public $indexView = 'datatable/index';
 
     /** @var TableButton[] */
-    public array $tableButtons = [];
+    public $tableButtons = [];
 
     /** @var string */
     public $tableView = 'datatable/table';

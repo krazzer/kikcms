@@ -10,6 +10,9 @@ use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
+use KikCMS\Classes\Phalcon\Validation;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Services\Cms\QueryLogService;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
@@ -44,7 +47,6 @@ use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
 use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
-use Phalcon\Validation;
 use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
@@ -176,7 +178,7 @@ class Services extends BaseServices
 
         // set the current port as prefix to prevent caching overlap
         if ($this->getIniConfig()->isDev() && isset($_SERVER['SERVER_PORT'])) {
-            $config["prefix"] = $_SERVER['SERVER_PORT'] . ':' . ($config["prefix"] ?? '');
+            $config["prefix"] = $_SERVER['SERVER_PORT'] . CacheConfig::SEPARATOR . ($config["prefix"] ?? '');
         }
 
         $config['defaultSerializer'] = 'Php';
@@ -239,10 +241,7 @@ class Services extends BaseServices
     {
         $config['defaultSerializer'] = 'Json';
 
-        $serializerFactory = new SerializerFactory();
-        $adapterFactory    = new AdapterFactory($serializerFactory);
-
-        $adapter = $adapterFactory->newInstance('stream', [
+        $adapter = new Stream(new SerializerFactory, [
             'storageDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);
 

@@ -27,8 +27,8 @@ class CmsService extends Injectable
      */
     public function cleanUpDiskCache()
     {
-        $cacheFiles      = $this->keyValue->getKeys(DataTable::INSTANCE_PREFIX);
-        $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
+        $cacheFiles      = $this->keyValue->getAdapter()->getKeys(DataTable::INSTANCE_PREFIX);
+        $diskCacheFolder = $this->keyValue->getAdapter()->getStorageDir();
 
         foreach ($cacheFiles as $fileName) {
             // file must be older than 1 day

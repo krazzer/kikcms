@@ -30,6 +30,8 @@ class KikCMSConfig
     const NAMESPACE_PATH_CMS_SERVICES    = '\\KikCMS\\Services\\';
     const NAMESPACE_PATH_CMS_TASKS       = '\\KikCMS\\Tasks\\';
 
+    const NAMESPACE_PATH_PHALCON_VALIDATORS = 'Phalcon\\Validation\\Validator\\';
+
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,
         'textarea'     => self::CONTENT_TYPE_TEXTAREA,

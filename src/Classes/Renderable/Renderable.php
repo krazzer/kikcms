@@ -16,7 +16,7 @@ abstract class Renderable extends Injectable
     const FILTER_CLASS    = 'renderableClass';
 
     /** @var Filters */
-    protected Filters $filters;
+    protected $filters;
 
     /** @var string where views for this object should be stored */
     protected $viewDirectory;
@@ -25,13 +25,13 @@ abstract class Renderable extends Injectable
     protected $indexView = 'index';
 
     /** @var string provide a prefix to easily identify an instance */
-    protected string $instancePrefix;
+    protected $instancePrefix;
 
     /** @var string contains the corresponding js Class for this Renderable */
     protected $jsClass;
 
     /** @var string unique identifier for this instance */
-    private string $instance = '';
+    private $instance = '';
 
     /**
      * Renderable constructor.

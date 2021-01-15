@@ -37,31 +37,31 @@ abstract class Field
     protected $form;
 
     /** @var ElementInterface|null */
-    protected ?ElementInterface $element;
+    protected $element;
 
     /** @var string unique identifier for the field */
-    protected string $key;
+    protected $key;
 
     /** @var array */
-    private array $cssClasses = [];
+    private $cssClasses = [];
 
     /** @var FieldTransformer[] */
-    private array $transformers = [];
+    private $transformers = [];
 
     /** @var Tab|null */
-    private ?Tab $tab = null;
+    private $tab = null;
 
     /** @var Section|null */
-    private ?Section $section = null;
+    private $section = null;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
-    private bool $required = false;
+    private $required = false;
 
     /** @var string|null */
-    private ?string $helpText = null;
+    private $helpText = null;
 
     /** @var bool */
-    private bool $dontStore = false;
+    private $dontStore = false;
 
     /**
      * Add a css class to the field wrapper

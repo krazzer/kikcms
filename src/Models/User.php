@@ -57,7 +57,7 @@ class User extends Model
      * @inheritdoc
      * @return User
      */
-    public static function findFirst($parameters = null)
+    public static function findFirst($parameters = null): ?Model
     {
         /** @var User $user */
         $user = parent::findFirst($parameters);

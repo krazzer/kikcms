@@ -4,6 +4,7 @@
 namespace KikCMS\Classes\Phalcon;
 
 
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use Phalcon\Cache;
 
 /**
@@ -15,6 +16,14 @@ class KeyValue extends Cache
 {
     /** @var Cache|null */
     private ?Cache $memoryCache;
+
+    /**
+     * @return Stream
+     */
+    public function getAdapter(): Stream
+    {
+        return parent::getAdapter();
+    }
 
     /**
      * @inheritDoc

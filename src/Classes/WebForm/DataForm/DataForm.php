@@ -41,7 +41,7 @@ abstract class DataForm extends WebForm
     /** @var array */
     protected $events = [];
 
-    /** @var DataFormFilters */
+    /** @var DataFormFilters|Filters */
     protected $filters;
 
     /** @var FieldTransformer[] */
@@ -53,11 +53,11 @@ abstract class DataForm extends WebForm
     /** @var array local cache for edit data */
     private $cachedEditData = [];
 
-    /** @var DataTable, will be automatically set when this form is initialized by a DataTable */
+    /** @var DataTable|null, will be automatically set when this form is initialized by a DataTable */
     private $dataTable;
 
     /** @var Model|null */
-    private $object;
+    private $object = null;
 
     /**
      * @return string
