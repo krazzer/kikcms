@@ -440,7 +440,7 @@ abstract class DataForm extends WebForm
      *
      * @return array
      */
-    private function getSystemFields()
+    private function getSystemFields(): array
     {
         return [$this->getFormId(), DataTable::PAGE];
     }
