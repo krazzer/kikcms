@@ -12,10 +12,10 @@ class Model extends \KikCmsCore\Classes\Model
     /**
      * @inheritDoc
      */
-    public function save($data = null, $whiteList = null)
+    public function save(): bool
     {
         try{
-            return parent::save($data, $whiteList);
+            return parent::save();
         } catch (Exception $exception){
             $this->getDI()->get('logger')->log(Logger::ERROR, $exception);
             return false;
