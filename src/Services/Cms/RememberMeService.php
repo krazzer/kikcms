@@ -40,9 +40,11 @@ class RememberMeService extends Injectable
     public function getUserIdByCookie(): ?int
     {
         // there is no cookie
-        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
+        if( ! $this->cookies->has($this->getKey())){
             return null;
         }
+
+        $cookieToken = $this->cookies->get($this->getKey())->getValue();
 
         $userId = (int) explode('.', $cookieToken)[0];
 

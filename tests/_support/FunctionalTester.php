@@ -3,7 +3,7 @@
 use Codeception\Actor;
 use KikCMS\Models\User;
 use KikCmsCore\Services\DbService;
-use Phalcon\Cache\Backend;
+use Phalcon\Cache;
 use Website\Models\TestPerson;
 
 
@@ -56,9 +56,9 @@ class FunctionalTester extends Actor
     }
 
     /**
-     * @return Backend
+     * @return Cache
      */
-    public function getCache(): Backend
+    public function getCache(): Cache
     {
         return $this->getApplication()->di->get('cache');
     }

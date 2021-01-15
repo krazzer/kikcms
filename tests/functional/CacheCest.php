@@ -20,13 +20,13 @@ class CacheCest
 
     public function emptyByKeyWorks(FunctionalTester $I)
     {
-        $I->getCache()->save('test', 'test', 1000);
+        $I->getCache()->set('test', 'test', 1000);
 
-        $I->assertTrue($I->getCache()->exists('test'));
+        $I->assertTrue($I->getCache()->has('test'));
 
         $I->sendAjaxPostRequest('/cms/cache/empty', ['key' => 'test']);
         $I->seeInCurrentUrl('/cms/cache');
 
-        $I->assertFalse($I->getCache()->exists('test'));
+        $I->assertFalse($I->getCache()->has('test'));
     }
 }
