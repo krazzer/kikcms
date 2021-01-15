@@ -8,7 +8,7 @@
 actor: FunctionalTester
 modules:
   enabled:
-    - Phalcon:
+    - Phalcon4:
         bootstrap: 'tests/functional/_phalcon_bootstrap.php'
         cleanup: true
         savepoints: true
