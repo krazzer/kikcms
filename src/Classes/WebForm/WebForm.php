@@ -531,7 +531,7 @@ abstract class WebForm extends Renderable
             $elementName     = $formElement->getName();
             $elementMessages = $this->getForm()->getMessagesFor($elementName);
 
-            if ( ! $elementMessages) {
+            if ( ! $elementMessages->count()) {
                 continue;
             }
 
