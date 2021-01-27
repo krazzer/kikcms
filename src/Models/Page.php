@@ -159,6 +159,18 @@ class Page extends Model
     }
 
     /**
+     * @return string|null
+     */
+    public function getType(): ?string
+    {
+        if ( ! property_exists($this, self::FIELD_TYPE)) {
+            return null;
+        }
+
+        return (string) $this->type;
+    }
+
+    /**
      * Retrieves the name of the page, this only works for single-language applications
      *
      * @return null|string

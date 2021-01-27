@@ -36,7 +36,7 @@ class FrontendService extends Injectable
             return null;
         }
 
-        if($pageLanguage->page->type === Page::TYPE_MENU){
+        if($pageLanguage->page->getType() === Page::TYPE_MENU){
             return null;
         }
 
