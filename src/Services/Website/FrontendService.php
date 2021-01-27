@@ -6,6 +6,7 @@ namespace KikCMS\Services\Website;
 
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
+use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
@@ -32,6 +33,10 @@ class FrontendService extends Injectable
         }
 
         if ( ! $pageLanguage || ! $pageLanguage->page || ( ! $pageLanguage->active && ! $this->userService->isLoggedIn())) {
+            return null;
+        }
+
+        if($pageLanguage->page->type === Page::TYPE_MENU){
             return null;
         }
 
