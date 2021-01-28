@@ -253,7 +253,9 @@ class Services extends BaseServices
         $errorHandler = new ErrorHandler($this->get('logger'));
 
         set_exception_handler(function ($error) {
-            $this->get('errorService')->handleError($error);
+            /** @var ErrorService $errorService */
+            $errorService = $this->get('errorService');
+            $errorService->handleError($error);
         });
 
         // handle warnings and notices as exceptions on development

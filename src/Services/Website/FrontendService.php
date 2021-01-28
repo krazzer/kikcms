@@ -12,6 +12,7 @@ use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property PageLanguageService $pageLanguageService
@@ -20,6 +21,23 @@ use KikCMS\Classes\Phalcon\Injectable;
  */
 class FrontendService extends Injectable
 {
+    /**
+     * Return a response with a message. This can be used for error or maintainance messages, where the website is
+     * not functional
+     *
+     * @param string $title
+     * @param string $description
+     * @return ResponseInterface
+     */
+    public function getMessageResponse(string $title, string $description): ResponseInterface
+    {
+        return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
+            'title'       => $title,
+            'description' => $description,
+            'customCss'   => $this->websiteSettings->getCustomCss(),
+        ]));
+    }
+
     /**
      * @param string|null $urlPath
      * @return PageLanguage|null

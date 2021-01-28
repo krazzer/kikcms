@@ -44,13 +44,21 @@ class ErrorService extends Injectable
      */
     public function getResponse(string $errorType, array $parameters = []): ResponseInterface
     {
+        $title       = $this->translator->tl('error.' . $errorType . '.title');
+        $description = $this->translator->tl('error.' . $errorType . '.description', $parameters);
+
         if ($this->request->isAjax() && $this->config->isProd()) {
             return $this->response->setJsonContent([
                 'title'       => $this->translator->tl('error.' . $errorType . '.title'),
                 'description' => $this->translator->tl('error.' . $errorType . '.description', $parameters),
             ]);
         } else {
-            return $this->response->setContent($this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters));
+            if($this->config->isProd()){
+                return $this->frontendService->getMessageResponse($title, $description);
+            } else {
+                $content = $this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
+                return $this->response->setContent($content);
+            }
         }
     }
 
@@ -61,7 +69,7 @@ class ErrorService extends Injectable
     {
         $isProduction = $this->config->isProd();
 
-        if( ! $errorView = $this->getErrorView($error, $isProduction)){
+        if ( ! $errorView = $this->getErrorView($error, $isProduction)) {
             return;
         }
 

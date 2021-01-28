@@ -51,7 +51,7 @@ class FrontendController extends BaseController
         $title       = $this->translator->tl('error.database.title');
         $description = $this->translator->tl('error.database.description');
 
-        return $this->message($title, $description);
+        return $this->frontendService->getMessageResponse($title, $description);
     }
 
     /**
@@ -83,7 +83,7 @@ class FrontendController extends BaseController
             $title       = $this->translator->tl('maintenance.title');
             $description = $this->translator->tl('maintenance.description');
 
-            return $this->message($title, $description);
+            return $this->frontendService->getMessageResponse($title, $description);
         }
 
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {
@@ -197,19 +197,5 @@ class FrontendController extends BaseController
         $this->view->pick('@website/templates/' . $templateFile);
 
         return null;
-    }
-
-    /**
-     * @param string $title
-     * @param string $description
-     * @return ResponseInterface
-     */
-    private function message(string $title, string $description): ResponseInterface
-    {
-        return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
-            'title'       => $title,
-            'description' => $description,
-            'customCss'   => $this->websiteSettings->getCustomCss(),
-        ]));
     }
 }
