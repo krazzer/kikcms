@@ -50,7 +50,7 @@ class ErrorService extends Injectable
         if ($this->request->isAjax() && $this->config->isProd()) {
             return $this->response->setJsonContent(['title' => $title, 'description' => $description]);
         } else {
-            if ($this->config->isProd()) {
+            if($this->config->isProd()){
                 return $this->frontendService->getMessageResponse($title, $description);
             } else {
                 $content = $this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
@@ -66,7 +66,7 @@ class ErrorService extends Injectable
     {
         $isProduction = $this->config->isProd();
 
-        if ( ! $errorView = $this->getErrorView($error, $isProduction)) {
+        if( ! $errorView = $this->getErrorView($error, $isProduction)){
             return;
         }
 
