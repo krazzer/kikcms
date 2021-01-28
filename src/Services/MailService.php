@@ -152,9 +152,11 @@ class MailService extends Injectable
      */
     private function updateParametersWithCompanyData(array $parameters, Config $config): array
     {
+        $addressLine = implode(', ', [$config->name, $config->address, $config->zip, $config->city]);
+
         $parameters = array_merge([
             'logo'    => $config->logoMail,
-            'address' => $config->name . ', ' . $config->address,
+            'address' => $addressLine,
         ], $parameters);
 
         if (isset($config->mainColor)) {
