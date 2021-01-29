@@ -22,7 +22,6 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TranslationService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
@@ -55,9 +54,9 @@ class CmsController extends BaseCmsController
     /**
      * First page to show when the user logs in, to avoid POST reset, redirect.
      *
-     * @return Response
+     * @return ResponseInterface|null
      */
-    public function indexAction()
+    public function indexAction(): ?ResponseInterface
     {
         $menuGroupMap  = $this->cmsService->getMenuGroupMap();
         $firstMenuItem = $menuGroupMap->getFirst()->getMenuItemMap()->getFirst();
@@ -66,12 +65,12 @@ class CmsController extends BaseCmsController
             return $this->response->redirect($firstMenuItem->getRoute());
         }
 
-        $this->view->title  = 'No available item found';
-        $this->view->object = $this->view->title;
+        $this->response->setStatusCode(200);
 
-        $this->view->pick('cms/default');
-
-        return null;
+        return $this->response->setContent($this->view->getPartial('cms/default', [
+            'title' => 'No available item found',
+            'object' => 'No available item found'
+        ]));
     }
 
     /**

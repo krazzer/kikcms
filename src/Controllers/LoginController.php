@@ -71,7 +71,9 @@ class LoginController extends BaseController
 
         $this->view->form = $loginForm;
 
-        return null;
+        $this->response->setStatusCode(200);
+
+        return $this->view->getPartial('login/index', ['form' => $loginForm]);
     }
 
     /**
