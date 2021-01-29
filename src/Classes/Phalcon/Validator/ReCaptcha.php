@@ -4,27 +4,21 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
-use KikCMS\Classes\Translator;
+use Phalcon\Messages\Message;
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 
-class ReCaptcha extends Validator
+class ReCaptcha extends AbstractValidator
 {
     /**
      * Executes the validation
      *
-     * @param Validation $validation
-     * @param string $field
-     * @return bool
+     * @inheritdoc
      */
     public function validate(Validation $validation, $field): bool
     {
         /** @var \ReCaptcha\ReCaptcha $reCaptcha */
         $reCaptcha = $validation->reCaptcha;
-
-        /** @var Translator $translator */
-        $translator = $validation->translator;
 
         $response = $reCaptcha->verify(@$_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
@@ -32,7 +26,7 @@ class ReCaptcha extends Validator
             return true;
         }
 
-        $validation->appendMessage(new Message($translator->tl('webform.messages.reCaptcha'), $field));
+        $validation->appendMessage(new Message($validation->translator->tl('webform.messages.reCaptcha'), $field));
 
         return false;
     }

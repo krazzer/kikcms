@@ -45,7 +45,7 @@ class LanguageService extends Injectable
      */
     public function getLanguages(bool $activeOnly = false): LanguageMap
     {
-        $languages = $this->cacheService->cache(CacheConfig::LANGUAGES, function () use ($activeOnly){
+        $languages = (array) $this->cacheService->cache(CacheConfig::LANGUAGES, function () use ($activeOnly){
             return $this->dbService->toMap(Language::find(), Language::FIELD_CODE);
         });
 

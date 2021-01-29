@@ -13,9 +13,7 @@ class ReCaptchaV3 extends AbstractValidator
     /**
      * Executes the validation
      *
-     * @param Validation $validation
-     * @param string $field
-     * @return bool
+     * @inheritdoc
      */
     public function validate(Validation $validation, $field): bool
     {

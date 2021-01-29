@@ -4,7 +4,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element;
+use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Element\Radio;
 use Phalcon\Forms\Element\Select;
 
@@ -32,9 +32,9 @@ class RadioButtonField extends Field
     }
 
     /**
-     * @return null|Element|Select
+     * @return null|ElementInterface|Select
      */
-    public function getElement(): ?Element
+    public function getElement(): ?ElementInterface
     {
         return parent::getElement();
     }

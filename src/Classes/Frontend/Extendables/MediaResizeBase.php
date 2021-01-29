@@ -5,7 +5,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
 use KikCMS\Services\Util\StringService;
-use Phalcon\Image\Adapter;
+use Phalcon\Image\Adapter\AbstractAdapter;
 
 /**
  * Contains methods to resize thumbnails in predefined formats
@@ -28,11 +28,11 @@ class MediaResizeBase extends WebsiteExtendable
     }
 
     /**
-     * @param Adapter $image
+     * @param AbstractAdapter $image
      * @param $width
      * @param $height
      */
-    public function crop(Adapter $image, $width, $height)
+    public function crop(AbstractAdapter $image, $width, $height)
     {
         $sourceWidth = $image->getWidth();
         $sourceHeight = $image->getHeight();
@@ -63,11 +63,11 @@ class MediaResizeBase extends WebsiteExtendable
     }
 
     /**
-     * @param Adapter $image
+     * @param AbstractAdapter $image
      * @param $width
      * @param $height
      */
-    public function resize(Adapter $image, $width, $height)
+    public function resize(AbstractAdapter $image, $width, $height)
     {
         if ($image->getWidth() < $width && $image->getHeight() < $height) {
             return;
@@ -85,10 +85,10 @@ class MediaResizeBase extends WebsiteExtendable
     }
 
     /**
-     * @param Adapter $image
+     * @param AbstractAdapter $image
      * @param string $type
      */
-    public function resizeByType(Adapter $image, string $type)
+    public function resizeByType(AbstractAdapter $image, string $type)
     {
         if ( ! $this->typeMethodExists($type)) {
             $this->throwMethodDoesNotExistException($this->getMethod($type));
@@ -99,9 +99,9 @@ class MediaResizeBase extends WebsiteExtendable
     }
 
     /**
-     * @param Adapter $image
+     * @param AbstractAdapter $image
      */
-    public function resizeDefault(Adapter $image)
+    public function resizeDefault(AbstractAdapter $image)
     {
         $this->resize($image, 192, 192);
     }
