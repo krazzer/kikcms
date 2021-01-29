@@ -4,33 +4,30 @@ namespace KikCMS\Classes\Phalcon\Validator;
 
 
 use KikCMS\Models\File;
+use Phalcon\Messages\Message;
 use Phalcon\Validation;
-use Phalcon\Validation\Message;
-use Phalcon\Validation\Validator;
+use Phalcon\Validation\AbstractValidator;
 
-class FileType extends Validator
+class FileType extends AbstractValidator
 {
     const OPTION_FILETYPES = 'fileTypes';
 
-    /**
-     * Override to set allowed filetypes
-     *
-     * @var array
-     */
-    protected $fileTypes = [];
+    /** @var array Override to set allowed filetypes */
+    protected array $fileTypes = [];
 
     /**
      * @inheritdoc
      */
-    public function validate(Validation $validator, $field)
+    public function validate(Validation $validation, $field): bool
     {
-        $value = $validator->getValue($field);
+        $value = $validation->getValue($field);
 
         if ( ! $value) {
-            if($this->getOption('allowEmpty')){
+            if ($this->getOption('allowEmpty')) {
                 return true;
             } else {
-                $validator->appendMessage(new Message($validator->getDefaultMessage('FileEmpty'), $field));
+                $message = $validation->translator->tl('webform.messages.FileEmpty');
+                $validation->appendMessage(new Message($message, $field));
                 return false;
             }
         }
@@ -38,27 +35,27 @@ class FileType extends Validator
         $allowedFileTypes = $this->getAllowedFileTypes();
 
         if ( ! $file = File::getById($value)) {
-            return $this->addInvalidFileMessageAndReturnFalse($validator, $field);
+            return $this->addInvalidFileMessageAndReturnFalse($validation, $field);
         }
 
         if (in_array(strtolower($file->getExtension()), $allowedFileTypes)) {
             return true;
         }
 
-        return $this->addInvalidFileMessageAndReturnFalse($validator, $field);
+        return $this->addInvalidFileMessageAndReturnFalse($validation, $field);
     }
 
     /**
-     * @param Validation $validator
+     * @param Validation $validation
      * @param $field
      * @return bool
      */
-    private function addInvalidFileMessageAndReturnFalse(Validation $validator, $field): bool
+    private function addInvalidFileMessageAndReturnFalse(Validation $validation, $field): bool
     {
-        $message = $validator->getDefaultMessage('FileType');
-        $message = str_replace(':types', implode(', ', $this->getAllowedFileTypes()), $message);
+        $types   = implode(', ', $this->getAllowedFileTypes());
+        $message = $validation->translator->tl('webform.messages.FileType', ['types' => $types]);
 
-        $validator->appendMessage(new Message($message, $field));
+        $validation->appendMessage(new Message($message, $field));
 
         return false;
     }
@@ -68,7 +65,7 @@ class FileType extends Validator
      */
     private function getAllowedFileTypes(): array
     {
-        if($fileTypes = $this->getOption(self::OPTION_FILETYPES)){
+        if ($fileTypes = $this->getOption(self::OPTION_FILETYPES)) {
             return $fileTypes;
         }
 

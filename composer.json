@@ -6,7 +6,8 @@
         "platform": {
             "php": "7.2",
             "ext-zip": "master",
-            "ext-sockets": "master"
+            "ext-sockets": "master",
+            "ext-phalcon": "4.0"
         },
         "platform-check": false
     },
@@ -17,7 +18,7 @@
         "nette/php-generator": "^3.1",
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
-        "kiksaus/kikcms-core": "dev-master"
+        "kiksaus/kikcms-core": "dev-phalcon4"
     },
     "autoload": {
         "psr-4": {

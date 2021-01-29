@@ -23,7 +23,7 @@ class TaskCest
     public function modelsWorks(FunctionalTester $I)
     {
         $I->getDbService()->db->dropTable('test_generate_test');
-        $I->getDbService()->db->createTable('test_generate_test', null, [
+        $I->getDbService()->db->createTable('test_generate_test', '', [
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 
@@ -46,7 +46,7 @@ class TaskCest
     public function modelWorks(FunctionalTester $I)
     {
         $I->getDbService()->db->dropTable('test_generate_test');
-        $I->getDbService()->db->createTable('test_generate_test', null, [
+        $I->getDbService()->db->createTable('test_generate_test', '', [
             'columns' => [new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11])],
         ]);
 

@@ -26,10 +26,9 @@ class UserService extends Injectable
 
     /**
      * @param $email
-     *
      * @return User
      */
-    public function getByEmail($email)
+    public function getByEmail($email): ?User
     {
         return User::findFirst('email = ' . $this->dbService->escape($email));
     }
@@ -43,7 +42,7 @@ class UserService extends Injectable
         $token       = $this->stringService->createRandomString();
         $hashedToken = $this->security->hash($token);
 
-        $this->keyValue->save(PassResetConfig::PREFIX . $user->getId(), $hashedToken, PassResetConfig::LIFETIME);
+        $this->keyValue->set(PassResetConfig::PREFIX . $user->getId(), $hashedToken, PassResetConfig::LIFETIME);
 
         return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $token;
     }
@@ -130,7 +129,7 @@ class UserService extends Injectable
     /**
      * @return bool
      */
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         if ($this->session->get('loggedIn', false)) {
             return true;

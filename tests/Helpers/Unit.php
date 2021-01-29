@@ -6,6 +6,8 @@ namespace Helpers;
 
 use Exception;
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Models\Language;
 use KikCMS\Models\User;
 use KikCMS\Services\CacheService;
@@ -23,9 +25,7 @@ use KikCMS\Services\TranslationService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
-use Phalcon\Cache\Backend\File;
-use Phalcon\Cache\Frontend\Data;
-use Phalcon\Cache\Frontend\Json;
+use Phalcon\Cache\Adapter\Memory as MemoryCache;
 use Phalcon\Config;
 use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\Db\Column;
@@ -38,6 +38,7 @@ use Phalcon\Http\Request;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Security;
+use Phalcon\Storage\SerializerFactory;
 use Phalcon\Validation;
 use ReflectionClass;
 use Website\TestClasses\TemplateFields;
@@ -90,8 +91,12 @@ class Unit extends \Codeception\Test\Unit
         $config->application = new Config();
         $config->application->defaultLanguage = 'en';
 
-        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
-        $keyValue = new File($frontend, ['cacheDir' => (new TestHelper)->getSitePath() . 'storage/keyvalue/']);
+        $adapter = new Stream(new SerializerFactory, [
+            'storageDir' => (new TestHelper)->getSitePath() . 'storage/keyvalue/'
+        ]);
+
+        $keyValue = new KeyValue($adapter);
+        $memoryCache = new MemoryCache(new SerializerFactory(), ['defaultSerializer' => 'Json', 'lifetime' => 300]);
 
         $di->set('db', $db);
         $di->set('config', $config);
@@ -119,13 +124,13 @@ class Unit extends \Codeception\Test\Unit
         $di->set('pagesDataTableService', new PagesDataTableService);
         $di->set('templateService', new TemplateService);
         $di->set('request', new Request);
-        $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
+        $di->set('cache', $memoryCache);
         $di->set('translator', $translator);
         $di->set('keyValue', $keyValue);
 
         Di::setDefault($di);
 
-        $db->createTable('cms_page_content', null, [
+        $db->createTable('cms_page_content', '', [
             'columns'    => [
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('field', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
@@ -149,7 +154,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_page_language_content', null, [
+        $db->createTable('cms_page_language_content', '', [
             'columns'    => [
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'notNull' => true]),
@@ -180,7 +185,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_page_language', null, [
+        $db->createTable('cms_page_language', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
@@ -216,7 +221,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_language', null, [
+        $db->createTable('cms_language', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('code', ['type' => Column::TYPE_VARCHAR, 'size' => 3, 'notNull' => false]),
@@ -234,7 +239,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_page', null, [
+        $db->createTable('cms_page', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('parent_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
@@ -281,7 +286,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_user', null, [
+        $db->createTable('cms_user', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('email', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => true]),
@@ -303,7 +308,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_file', null, [
+        $db->createTable('cms_file', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 100]),
@@ -328,7 +333,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('test_company', null, [
+        $db->createTable('test_company', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
@@ -343,7 +348,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('test_person', null, [
+        $db->createTable('test_person', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
@@ -364,7 +369,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('test_person_interest', null, [
+        $db->createTable('test_person_interest', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('person_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
@@ -395,7 +400,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_translation_value', null, [
+        $db->createTable('cms_translation_value', '', [
             'columns'    => [
                 new Column('key_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),
@@ -424,7 +429,7 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
-        $db->createTable('cms_translation_key', null, [
+        $db->createTable('cms_translation_key', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('key', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),

@@ -118,9 +118,11 @@ class RememberMeService extends Injectable
      */
     public function removeToken()
     {
-        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
+        if( ! $this->cookies->has($this->getKey()) ){
             return;
         }
+
+        $cookieToken = $this->cookies->get($this->getKey())->getValue();
 
         $hashList = $this->getForCurrentUser();
 

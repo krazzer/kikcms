@@ -75,7 +75,7 @@ class Permission extends Injectable
 
         $acl->update();
 
-        $this->persistent->acl = $acl;
+//        $this->persistent->acl = $acl;
 
         return $acl;
     }
@@ -101,7 +101,7 @@ class Permission extends Injectable
      */
     public function reset()
     {
-        $this->persistent->destroy();
+        $this->persistent->clear();
     }
 
     /**

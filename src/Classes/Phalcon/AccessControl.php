@@ -32,9 +32,9 @@ class AccessControl extends Memory
     /**
      * @inheritdoc
      */
-    public function addComponent($resourceValue, $accessList = Permission::ACCESS_ANY): bool
+    public function addComponent($componentValue, $accessList = Permission::ACCESS_ANY): bool
     {
-        return parent::addComponent($resourceValue, $accessList);
+        return parent::addComponent($componentValue, $accessList);
     }
 
     /**

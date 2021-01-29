@@ -89,7 +89,7 @@ class DataTableCest
 
         $I->canSeeResponseCodeIs(200);
 
-        $I->getService('acl')->addResource(Pages::class, 'delete');
+        $I->getService('acl')->addComponent(Pages::class, 'delete');
         $I->getService('acl')->deny('developer', Pages::class, 'delete');
 
         $I->sendAjaxPostRequest('/cms/datatable/delete', [
@@ -203,7 +203,7 @@ class DataTableCest
 
     public function unauthorizedSaveWorks(FunctionalTester $I)
     {
-        $I->getService('acl')->addResource(Languages::class, 'edit');
+        $I->getService('acl')->addComponent(Languages::class, 'edit');
         $I->getService('acl')->deny('developer', Languages::class, 'edit');
 
         $I->sendAjaxPostRequest('/cms/datatable/save', [
