@@ -313,6 +313,7 @@ return [
         'defaultFolderName'        => 'New folder',
         'editFileName'             => 'Give a name to the file',
         'pickFile'                 => 'Pick file',
+        'pickFiles'                => 'Pick files',
         'uploadMaxFilesWarning'    => 'You can upload ca maximum of :amount files at the same time',
         'uploadMaxFileSizeWarning' => 'Files cannot be bigger than :max',
         'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',

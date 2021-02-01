@@ -320,6 +320,7 @@ return [
         'defaultFolderName'        => 'Nieuwe map',
         'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
         'pickFile'                 => 'Kies bestand',
+        'pickFiles'                => 'Kies bestanden',
         'uploadMaxFilesWarning'    => 'U kunt maximaal :amount bestanden tegelijk uploaden',
         'uploadMaxFileSizeWarning' => 'Bestanden mogen maximaal :max zijn',
         'fileTypeWarning'          => 'Alleen bestanden met de volgende extensties zijn toegestaan: ',

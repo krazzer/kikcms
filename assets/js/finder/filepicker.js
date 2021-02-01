@@ -60,8 +60,10 @@ var FilePicker = Class.extend({
             }
 
             if(selectedAmount > 1){
+                $pickButton.find('.lbl').text($pickButton.data('multiple'));
                 $pickButton.find('.amount').html(' (' + selectedAmount + ')');
             } else {
+                $pickButton.find('.lbl').text($pickButton.data('single'));
                 $pickButton.find('.amount').html('');
             }
         });
