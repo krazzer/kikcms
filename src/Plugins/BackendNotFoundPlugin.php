@@ -81,19 +81,14 @@ class BackendNotFoundPlugin extends Plugin
         switch (true) {
             case $exception instanceof SessionExpiredException:
                 return [null, StatusCodes::SESSION_EXPIRED, false];
-            break;
             case $exception instanceof ObjectNotFoundException:
                 return ['show404object', null, false];
-            break;
             case $exception instanceof NotFoundException || $isDispatchError:
                 return ['show404', null, false];
-            break;
             case $exception instanceof UnauthorizedException:
                 return ['show401', 401, false];
-            break;
             default:
                 return [null, null, true];
-            break;
         }
     }
 }
