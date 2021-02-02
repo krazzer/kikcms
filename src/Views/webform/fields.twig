@@ -189,14 +189,14 @@
         {% elseif field.version == 3 %}
             {{ form.render(element.name)|raw }}
             <script>
-                $(function () {
+                window.onload = function () {
                     grecaptcha.ready(function () {
                         grecaptcha.execute('{{ config('recaptcha.siteKey') }}', { action: 'contact' }).then(function (token) {
                             var recaptchaResponse = document.getElementById('{{ field.key }}');
                             recaptchaResponse.value = token;
                         });
                     });
-                });
+                };
             </script>
         {% endif %}
         {{ block('errorWarnings') }}
