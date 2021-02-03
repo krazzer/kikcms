@@ -168,6 +168,8 @@ class FrontendController extends BaseController
         $websiteVariables    = $this->templateVariables->getGlobalVariables();
         $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
+        $this->response->setStatusCode(200);
+
         // in case a form has been send, it might want to redirect
         if ($templateVariables instanceof Response) {
             return $templateVariables;

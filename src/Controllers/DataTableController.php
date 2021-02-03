@@ -86,7 +86,7 @@ class DataTableController extends RenderableController
      * @return string
      * @throws UnauthorizedException
      */
-    public function deleteAction()
+    public function deleteAction(): string
     {
         $dataTable = $this->getRenderable();
 

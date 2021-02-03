@@ -122,7 +122,10 @@ class Services extends BaseServices
      */
     protected function initAcl(): Memory
     {
-        return $this->get('permission')->getAcl();
+        /** @var Permission $permission */
+        $permission = $this->get('permission');
+
+        return $permission->getAcl();
     }
 
     /**
