@@ -10,6 +10,8 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\File;
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
@@ -38,17 +40,16 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Phalcon\Cache\Frontend\Data;
-use Phalcon\Cache\Frontend\Json;
 use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Flash\Session;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
-use Phalcon\Mvc\Url;
 use Phalcon\Session\Bag;
+use Phalcon\Storage\SerializerFactory;
+use Phalcon\Url;
 use Phalcon\Validation;
 use PHPUnit\Framework\TestCase;
 
@@ -145,8 +146,14 @@ class TestHelper extends TestCase
         $fileStorage = new File();
         $fileStorage->setStorageDir($this->getSitePath() . 'storage/');
 
-        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
-        $keyValue = new \Phalcon\Cache\Backend\File($frontend, ['cacheDir' => $this->getSitePath() . 'storage/keyvalue/']);
+        $adapter = new Stream(new SerializerFactory, [
+            'storageDir' => $this->getSitePath() . 'storage/keyvalue/'
+        ]);
+
+        $keyValue = new KeyValue($adapter);
+
+        $memoryCache = new \Phalcon\Cache\Adapter\Memory(new SerializerFactory);
+        $session = new \Phalcon\Cache\Adapter\Memory(new SerializerFactory);
 
         $url = new Url();
         $url->setBaseUri('/');
@@ -156,6 +163,7 @@ class TestHelper extends TestCase
         $log = new Logger('name');
         $log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
+        $di->set('session', $session);
         $di->set('languageService', new LanguageService);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
@@ -171,7 +179,7 @@ class TestHelper extends TestCase
         $di->set('urlService', new UrlService);
         $di->set('dataTableFilterService', new DataTableFilterService);
         $di->set('fileService', new FileService('media', 'thumbs'));
-        $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
+        $di->set('cache', $memoryCache);
         $di->set('translator', $this->getTranslator());
         $di->set('db', new Mysql($dbConfig));
         $di->set('config', $config);

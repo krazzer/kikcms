@@ -27,7 +27,7 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Adapter\Memory as MemoryCache;
 use Phalcon\Config;
-use Phalcon\Db\Adapter\Pdo\Sqlite;
+use Phalcon\Db\Adapter\PdoFactory;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
@@ -43,7 +43,6 @@ use Phalcon\Validation;
 use ReflectionClass;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
-use KikCMS\Classes\Phalcon\PdoDialect\Sqlite as SqliteDialect;
 
 class Unit extends \Codeception\Test\Unit
 {
@@ -64,6 +63,7 @@ class Unit extends \Codeception\Test\Unit
 
         $language->code   = $langCode;
         $language->active = 1;
+        $language->name   = 'lang';
         $language->save();
     }
 
@@ -80,10 +80,8 @@ class Unit extends \Codeception\Test\Unit
         }
 
         $di = new Di();
-        $db = new Sqlite([
-            "dbname"       => ":memory:",
-            'dialectClass' => SqliteDialect::class
-        ]);
+
+        $db = (new PdoFactory)->load(['adapter' => 'sqlite', 'options' => ["dbname" => ":memory:"]]);
 
         $translator = (new TestHelper)->getTranslator();
 

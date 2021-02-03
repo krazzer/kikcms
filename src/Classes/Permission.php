@@ -75,7 +75,7 @@ class Permission extends Injectable
 
         $acl->update();
 
-//        $this->persistent->acl = $acl;
+        $this->persistent->acl = $acl;
 
         return $acl;
     }

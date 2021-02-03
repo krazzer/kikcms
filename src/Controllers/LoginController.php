@@ -57,23 +57,19 @@ class LoginController extends BaseController
      * Displays the login form
      * @return null|Response|string
      */
-    public function indexAction()
+    public function indexAction(): ResponseInterface
     {
         if ($this->userService->isLoggedIn()) {
             return $this->response->redirect('cms');
         }
 
-        $loginForm = (new LoginForm())->render();
+        $loginForm = (new LoginForm)->render();
 
         if ($loginForm instanceof Response) {
             return $loginForm;
         }
 
-        $this->view->form = $loginForm;
-
-        $this->response->setStatusCode(200);
-
-        return $this->view->getPartial('login/index', ['form' => $loginForm]);
+        return $this->view('login/index', ['form' => $loginForm], 200);
     }
 
     /**

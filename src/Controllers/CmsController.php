@@ -65,22 +65,21 @@ class CmsController extends BaseCmsController
             return $this->response->redirect($firstMenuItem->getRoute());
         }
 
-        $this->response->setStatusCode(200);
-
-        return $this->response->setContent($this->view->getPartial('cms/default', [
-            'title' => 'No available item found',
+        return $this->view('cms/default', [
+            'title'  => 'No available item found',
             'object' => 'No available item found'
-        ]));
+        ], 200);
     }
 
     /**
      * Manages pages
      */
-    public function pagesAction()
+    public function pagesAction(): ResponseInterface
     {
-        $this->view->title  = $this->translator->tl('menu.item.pages');
-        $this->view->object = (new Pages())->render();
-        $this->view->pick('cms/default');
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.pages'),
+            'object' => (new Pages)->render(),
+        ]);
     }
 
     /**
