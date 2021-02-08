@@ -171,9 +171,9 @@ class CmsController extends BaseCmsController
     /**
      * Get all translations for the given key in json format
      *
-     * @return string
+     * @return ResponseInterface
      */
-    public function getTranslationsForKeyAction()
+    public function getTranslationsForKeyAction(): ResponseInterface
     {
         $key          = $this->request->getPost('key');
         $languages    = $this->languageService->getLanguages();
@@ -184,7 +184,7 @@ class CmsController extends BaseCmsController
             $translations[(string) $language->code] = $this->translator->tl($key);
         }
 
-        return json_encode($translations);
+        return $this->response->setJsonContent($translations);
     }
 
     /**
