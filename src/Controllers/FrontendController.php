@@ -90,7 +90,7 @@ class FrontendController extends BaseController
             throw new NotFoundException();
         }
 
-        $this->loadPage($pageLanguage);
+        return $this->loadPage($pageLanguage);
     }
 
     /**
@@ -148,9 +148,9 @@ class FrontendController extends BaseController
 
     /**
      * @param PageLanguage $pageLanguage
-     * @return null|Response
+     * @return null|ResponseInterface
      */
-    private function loadPage(PageLanguage $pageLanguage): ?Response
+    private function loadPage(PageLanguage $pageLanguage): ?ResponseInterface
     {
         if ($aliasId = $pageLanguage->page->getAliasId()) {
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
@@ -182,22 +182,19 @@ class FrontendController extends BaseController
             return $variables;
         }
 
-        $this->view->languageCode = $languageCode;
-        $this->view->pageLanguage = $pageLanguage;
-        $this->view->page         = $page;
-        $this->view->pageId       = $pageLanguage->getPageId();
+        $variables['languageCode'] = $languageCode;
+        $variables['pageLanguage'] = $pageLanguage;
+        $variables['page']         = $page;
+        $variables['pageId']       = $pageLanguage->getPageId();
 
-        $this->view->currentUrl = $this->url->getRewriteUri();
-        $this->view->baseUrl    = $this->url->getBaseUri();
-        $this->view->fullUrl    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
+        $variables['currentUrl'] = $this->url->getRewriteUri();
+        $variables['baseUrl']    = $this->url->getBaseUri();
+        $variables['fullUrl']    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
 
-        $this->view->title   = $pageLanguage->name;
-        $this->view->pageKey = $page->key;
-        $this->view->helper  = $this->frontendHelper;
+        $variables['title']   = $pageLanguage->name;
+        $variables['pageKey'] = $page->key;
+        $variables['helper']  = $this->frontendHelper;
 
-        $this->view->setVars($variables);
-        $this->view->pick('@website/templates/' . $templateFile);
-
-        return null;
+        return $this->view('@website/templates/' . $templateFile, $variables);
     }
 }

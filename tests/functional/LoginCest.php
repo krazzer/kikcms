@@ -59,6 +59,9 @@ class LoginCest
             'password_repeat' => 'myNewPassword1',
         ]);
 
+        // reset validation to prevent error from old forms
+        $I->getApplication()->validation->setValidators([]);
+
         $I->login($I::TEST_USERNAME, 'myNewPassword1', false);
 
         $I->seeElement('#menu');

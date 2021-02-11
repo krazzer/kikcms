@@ -175,8 +175,8 @@ class Services extends BaseServices
             return null;
         }
 
-        if (isset($config['cacheDir'])) {
-            $config['cacheDir'] = $this->getIniConfig()->application->path . $config['cacheDir'];
+        if (isset($config['storageDir'])) {
+            $config['storageDir'] = $this->getIniConfig()->application->path . $config['storageDir'];
         }
 
         // set the current port as prefix to prevent caching overlap

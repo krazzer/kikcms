@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace unit\Services\Cms;
 
-use Helpers\TestHelper;
+use DateTime;
 use Helpers\Unit;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Models\Page;
@@ -43,17 +43,20 @@ class CmsServiceTest extends Unit
 
         $cmsService->dbService->insert(Page::class, ['id' => 1, 'type' => 'page', 'parent_id' => 0]);
 
-        $file = (new TestHelper)->getSitePath() . 'storage/keyvalue/dataTableTestSubDataTableNewIdsCache';
+        $testKey = 'dataTableTestKey';
 
-        file_put_contents($file, json_encode(serialize($subDataTableNewIdsCache)));
+        $cmsService->keyValue->set($testKey, $subDataTableNewIdsCache);
 
         // too new won't delete
         $cmsService->cleanUpDiskCache();
 
-        $this->assertFileExists($file);
+        $this->assertTrue($cmsService->keyValue->has($testKey));
 
-        // do delete
-        touch($file, time() + (3600 * 48));
+        /** @var SubDataTableNewIdsCache $subDataTableNewIdsCache */
+        $subDataTableNewIdsCache = $cmsService->keyValue->get($testKey);
+        $subDataTableNewIdsCache->setDate((new DateTime)->modify('-2 days'));
+        $cmsService->keyValue->set($testKey, $subDataTableNewIdsCache);
+
         $cmsService->cleanUpDiskCache();
 
         $this->assertNull(Page::getById(1));
@@ -64,14 +67,16 @@ class CmsServiceTest extends Unit
         $subDataTableNewIdsCache->setColumn('id');
         $subDataTableNewIdsCache->setIds([1]);
 
-        $file = (new TestHelper)->getSitePath() . 'storage/keyvalue/dataTableTestSubDataTableNewIdsCache';
+        $cmsService->keyValue->set($testKey, $subDataTableNewIdsCache);
 
-        file_put_contents($file, json_encode(serialize($subDataTableNewIdsCache)));
-        touch($file, time() + (3600 * 48));
+        /** @var SubDataTableNewIdsCache $subDataTableNewIdsCache */
+        $subDataTableNewIdsCache = $cmsService->keyValue->get($testKey);
+        $subDataTableNewIdsCache->setDate((new DateTime)->modify('-2 days'));
+        $cmsService->keyValue->set($testKey, $subDataTableNewIdsCache);
 
         $cmsService->cleanUpDiskCache();
 
-        $this->assertFileNotExists($file);
+        $this->assertFalse($cmsService->keyValue->has($testKey));
     }
 
     /**
