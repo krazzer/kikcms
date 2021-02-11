@@ -74,18 +74,24 @@ class LoginController extends BaseController
 
     /**
      * Displays the form to activate your account
+     * @return ResponseInterface
      */
-    public function activateAction()
+    public function activateAction(): ResponseInterface
     {
-        $this->view->form = (new PasswordResetLinkActivateForm())->render();
+        $form = (new PasswordResetLinkActivateForm())->render();
+
+        return $this->view('login/activate', ['form' => $form]);
     }
 
     /**
      * Displays the form to send you a password reset link
+     * @return ResponseInterface
      */
-    public function resetAction()
+    public function resetAction(): ResponseInterface
     {
-        $this->view->form = (new PasswordResetLinkForm())->render();
+        $form = (new PasswordResetLinkForm())->render();
+
+        return $this->view('login/reset', ['form' => $form], 200);
     }
 
     /**
@@ -108,15 +114,14 @@ class LoginController extends BaseController
             return $this->response->redirect('cms/login');
         }
 
-        $passwordForm = (new PasswordResetForm())->setUser($user)->render();
+        $passwordForm = (new PasswordResetForm)->setUser($user)->render();
 
         if ($passwordForm instanceof Response) {
             return $passwordForm;
         }
 
         $this->flash->notice($this->translator->tl('login.reset.password.formMessage'));
-        $this->view->form = $passwordForm;
 
-        return $this->response->setContent($this->view->getPartial('login/reset'));
+        return $this->view('login/reset', ['form' => $passwordForm], 200);
     }
 }

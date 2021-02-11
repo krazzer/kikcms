@@ -15,7 +15,7 @@ use Phalcon\Cache;
 class KeyValue extends Cache
 {
     /** @var Cache|null */
-    private ?Cache $memoryCache;
+    private ?Cache $memoryCache = null;
 
     /**
      * @return Stream

@@ -44,6 +44,11 @@ class FunctionalTester extends Actor
             'password' => $password,
             'remember' => null,
         ]);
+
+        /** Set role correctly after login, because the acl object is preserved */
+        if($role = $this->getApplication()->session->get('role')) {
+            $this->getApplication()->acl->setCurrentRole($role);
+        }
     }
 
     /**
@@ -52,7 +57,7 @@ class FunctionalTester extends Actor
      */
     public function getService($name): object
     {
-        return $this->getApplication()->di->get($name);
+        return $this->getApplication()->$name;
     }
 
     /**

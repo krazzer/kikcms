@@ -21,7 +21,7 @@ class PagesDataTableController extends DataTableController
     /**
      * @inheritdoc
      */
-    public function deleteAction()
+    public function deleteAction(): string
     {
         try {
             return parent::deleteAction();

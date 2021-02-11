@@ -3,12 +3,12 @@
 namespace KikCMS\Services\Cms;
 
 
+use DateTime;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Injectable;
-use KikCMS\Config\CacheConfig;
 use KikCMS\Config\MenuConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
@@ -27,15 +27,21 @@ class CmsService extends Injectable
      */
     public function cleanUpDiskCache()
     {
-        $cacheFiles      = $this->keyValue->getAdapter()->getKeys(DataTable::INSTANCE_PREFIX);
-        $diskCacheFolder = $this->keyValue->getAdapter()->getStorageDir();
+        $cacheKeys = $this->keyValue->getAdapter()->getKeys(DataTable::INSTANCE_PREFIX);
 
-        foreach ($cacheFiles as $fileName) {
-            // file must be older than 1 day
-            if (filemtime($diskCacheFolder . $fileName) - CacheConfig::ONE_DAY > time()) {
-                $newIdsCache = unserialize($this->keyValue->get($fileName));
+        foreach ($cacheKeys as $cacheKey) {
+            $newIdsCache = $this->keyValue->get($cacheKey);
+
+            // invalid entry, delete and skip
+            if( ! $newIdsCache instanceof SubDataTableNewIdsCache){
+                $this->keyValue->delete($cacheKey);
+                continue;
+            }
+
+            // entry must be older than 1 day
+            if ($newIdsCache->getDate()->modify("+1 day") < new DateTime) {
                 $this->removeUnsavedTemporaryRecords($newIdsCache);
-                unlink($diskCacheFolder . $fileName);
+                $this->keyValue->delete($cacheKey);
             }
         }
     }
