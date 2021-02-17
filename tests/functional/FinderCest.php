@@ -139,7 +139,7 @@ class FinderCest
 
         $url = json_decode($I->grabPageSource())->url;
 
-        $I->assertStringContainsString('https://kikcmstest.dev/media/files/1-testfile', $url);
+        $I->assertStringContainsString('/media/files/1-testfile', $url);
 
         $I->canSeeResponseCodeIs(200);
     }
