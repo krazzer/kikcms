@@ -21,6 +21,7 @@ class FinderService extends Injectable
     /**
      * Determine what folder the user should start in, and set it via the filters
      * @param FinderFilters $filters
+     * @return void|null
      */
     public function setStartingFolder(FinderFilters $filters)
     {
