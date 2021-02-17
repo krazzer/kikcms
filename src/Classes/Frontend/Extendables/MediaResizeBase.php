@@ -67,7 +67,7 @@ class MediaResizeBase extends WebsiteExtendable
      * @param $width
      * @param $height
      */
-    public function resize(AbstractAdapter $image, $width, $height)
+    public function resize(AbstractAdapter $image, int $width, int $height)
     {
         if ($image->getWidth() < $width && $image->getHeight() < $height) {
             return;
@@ -76,9 +76,9 @@ class MediaResizeBase extends WebsiteExtendable
         $ratio = $image->getWidth() / $image->getHeight();
 
         if ($ratio < 1) {
-            $width = $height * $ratio;
+            $width = (int) ($height * $ratio);
         } else {
-            $height = $width / $ratio;
+            $height = (int) ($width / $ratio);
         }
 
         $image->resize($width, $height);

@@ -144,11 +144,11 @@ class AnalyticsServiceTest extends Unit
         $analyticsService->dbService->truncate(GaDayVisit::class);
 
         // cache says we don't need to update
-        $analyticsService->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false);
+        $analyticsService->cache->set(CacheConfig::STATS_REQUIRE_UPDATE, false);
         $this->assertFalse($analyticsService->requiresUpdate());
 
         // empty db, we need update
-        $analyticsService->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, true);
+        $analyticsService->cache->set(CacheConfig::STATS_REQUIRE_UPDATE, true);
         $this->assertTrue($analyticsService->requiresUpdate());
 
 

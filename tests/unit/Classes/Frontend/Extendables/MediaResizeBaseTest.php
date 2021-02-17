@@ -4,7 +4,7 @@ namespace unit\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
-use Phalcon\Image\Adapter;
+use Phalcon\Image\Adapter\AbstractAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -67,11 +67,11 @@ class MediaResizeBaseTest extends TestCase
     /**
      * @param int $width
      * @param int $height
-     * @return MockObject|Adapter
+     * @return MockObject|AbstractAdapter
      */
     private function getImageMock(int $width, int $height): MockObject
     {
-        $imageMock = $this->createMock(Adapter::class);
+        $imageMock = $this->createMock(AbstractAdapter::class);
 
         $imageMock->method('getWidth')->willReturn($width);
         $imageMock->method('getHeight')->willReturn($height);

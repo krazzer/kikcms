@@ -58,6 +58,7 @@ class RememberMeServiceTest extends Unit
         $this->setGetCookieWillReturn($rememberMeService, null);
 
         // no cookie
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         $this->assertNull($rememberMeService->removeToken());
 
         // remove
@@ -109,6 +110,7 @@ class RememberMeServiceTest extends Unit
 
         $cookies = $this->createMock(Cookies::class);
         $cookies->method('get')->willReturn($cookieMock);
+        $cookies->method('has')->willReturn($value ? true : false);
 
         $config = $this->createMock(IniConfig::class);
         $config->method('isDev')->willReturn(false);

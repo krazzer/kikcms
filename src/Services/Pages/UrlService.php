@@ -300,20 +300,20 @@ class UrlService extends Injectable
      * Check whether given urlPath already exists, excluding given PageLanguage
      *
      * @param string $urlPath
-     * @param PageLanguage|null $existingPageLanguage
+     * @param PageLanguage|null $pageLang
      * @return bool
      */
-    public function urlPathExists(string $urlPath, PageLanguage $existingPageLanguage = null): bool
+    public function urlPathExists(string $urlPath, PageLanguage $pageLang = null): bool
     {
-        if ( ! $pageLanguage = $this->getPageLanguageByUrlPath($urlPath)) {
+        if ( ! $existingPageLang = $this->getPageLanguageByUrlPath($urlPath)) {
             return false;
         }
 
-        if ( ! $existingPageLanguage || ! isset($existingPageLanguage->id)) {
+        if ( ! $pageLang || ! isset($pageLang->id) || ! property_exists($pageLang, PageLanguage::FIELD_ID)) {
             return true;
         }
 
-        return $pageLanguage->id !== $existingPageLanguage->id;
+        return $existingPageLang->id !== $pageLang->id;
     }
 
     /**

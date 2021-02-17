@@ -95,15 +95,12 @@ class RelationKeyService extends Injectable
                 }
 
                 return @$model->$part1->$part2;
-            break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
                 return @$model->$part1->$part2->$part3;
-            break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
                 return @$model->$part1->$part2->$part3->$part4;
-            break;
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
                 return @$model->$part1->$part2->$part3->$part4->$part5;
@@ -285,7 +282,11 @@ class RelationKeyService extends Injectable
             $relatedObjects[] = $referencedModel;
         }
 
-        $model->$relationField->delete();
+        // if it's an array the related objects aren't stored yet
+        if( ! is_array($model->$relationField)){
+            $model->$relationField->delete();
+        }
+
         $model->$relationField = $relatedObjects;
     }
 
