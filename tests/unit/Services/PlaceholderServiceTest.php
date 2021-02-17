@@ -26,10 +26,10 @@ class PlaceholderServiceTest extends TestCase
 
         // test with replace
         $content = "
-            [[[fileThumbUrl:1:default:public]]]
-            [[[fileThumbUrl:1:default:private]]]
-            [[[fileUrl:1:public]]]
-            [[[fileUrl:1:private]]]
+            [[[fileThumbUrl.1.default.public]]]
+            [[[fileThumbUrl.1.default.private]]]
+            [[[fileUrl.1.public]]]
+            [[[fileUrl.1.private]]]
         ";
 
         $expectedResult = "

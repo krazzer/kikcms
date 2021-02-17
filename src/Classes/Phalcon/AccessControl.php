@@ -16,7 +16,7 @@ class AccessControl extends Memory
     private DateTime $updated;
 
     /** @var int|null time in seconds when the acl should be updated */
-    private ?int $updateTime;
+    private ?int $updateTime = null;
 
     /**
      * @param string $role

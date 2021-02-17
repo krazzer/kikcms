@@ -11,7 +11,7 @@ use KikCMS\Models\User;
 use KikCMS\Services\Finder\FilePermissionService;
 use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\UserService;
-use Phalcon\Session\Adapter;
+use Phalcon\Session\Manager;
 
 class FinderServiceTest extends Unit
 {
@@ -38,7 +38,7 @@ class FinderServiceTest extends Unit
 
         // no user folder
         $filters = new FinderFilters();
-        $this->assertNull($this->getFinderService(null, true, null)->setStartingFolder($filters));
+        $this->assertNull($this->getFinderService()->setStartingFolder($filters));
         $this->assertNull($filters->getFolderId());
 
         // user folder
@@ -70,7 +70,7 @@ class FinderServiceTest extends Unit
         $userService = $this->createMock(UserService::class);
         $userService->method('getUser')->willReturn($user);
 
-        $session = $this->createMock(Adapter::class);
+        $session = $this->createMock(Manager::class);
         $session->method('__get')->willReturn($sessionFolderId);
 
         $filePermissionService = $this->createMock(FilePermissionService::class);

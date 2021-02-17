@@ -8,7 +8,7 @@ use Helpers\Unit;
 use KikCMS\Forms\PasswordResetLinkForm;
 use KikCMS\Models\User;
 use KikCMS\Services\UserService;
-use Phalcon\Flash;
+use Phalcon\Flash\FlashInterface;
 use ReflectionMethod;
 
 class PasswordResetLinkFormTest extends Unit
@@ -20,7 +20,7 @@ class PasswordResetLinkFormTest extends Unit
         $userService = $this->createMock(UserService::class);
         $userService->method('getByEmail')->willReturn(null);
 
-        $flash = $this->createMock(Flash::class);
+        $flash = $this->createMock(FlashInterface::class);
 
         $passwordResetLinkForm->userService = $userService;
         $passwordResetLinkForm->flash       = $flash;
@@ -37,7 +37,7 @@ class PasswordResetLinkFormTest extends Unit
         $userService->method('getByEmail')->willReturn($user);
         $userService->method('sendResetMail')->willReturn(false);
 
-        $flash = $this->createMock(Flash::class);
+        $flash = $this->createMock(FlashInterface::class);
         $flash->expects($this->once())->method('error');
 
         $passwordResetLinkForm->flash       = $flash;

@@ -626,7 +626,7 @@ abstract class WebForm extends Renderable
     {
         $sessionKey = self::FLASH_KEY;
 
-        if ( ! $this->session->$sessionKey) {
+        if ( ! ($this->session->$sessionKey ?? null)) {
             return true;
         }
 

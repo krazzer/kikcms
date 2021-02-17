@@ -161,6 +161,10 @@ class CacheService extends Injectable
      */
     public function getKeys(string $prefix = ''): array
     {
+        if( ! $this->cache || ! $this->cache->getAdapter()){
+            return [];
+        }
+
         $mainPrefix = $this->cache->getAdapter()->getPrefix();
 
         $keys = $this->cache->getAdapter()->getKeys(preg_quote($prefix, '/'));

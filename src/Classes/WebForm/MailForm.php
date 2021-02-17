@@ -7,7 +7,7 @@ use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
-use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 use ReCaptcha\Response as ReCaptchaResponse;
 use Swift_Attachment;
 use Swift_ByteStream_FileByteStream;
@@ -52,7 +52,7 @@ abstract class MailForm extends WebForm
 
     /**
      * @param array $input
-     * @return bool|Response
+     * @return bool|ResponseInterface
      */
     protected function successAction(array $input)
     {
@@ -78,7 +78,9 @@ abstract class MailForm extends WebForm
         $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
 
-        return $this->response->redirect(trim($this->router->getRewriteUri(), '/'));
+        $baseUrl = $this->request->getServer('REQUEST_URI');
+
+        return $this->response->redirect(trim($baseUrl, '/'));
     }
 
     /**

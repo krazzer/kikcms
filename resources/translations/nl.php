@@ -449,6 +449,7 @@ return [
             'FileSizeEqual'       => "Het bestand :label moet exact :size groot zijn",
             'FileSizeMax'         => "Het bestand :label mag niet groter zijn dan :max",
             'FileSizeMin'         => "Het bestand :label mag niet kleiner zijn dan :size",
+            'FileType'            => 'Het bestand :label moet één van de volgende types zijn: :types',
             'FileMimeType'        => 'Het bestand :label moet één van de volgende types zijn: :types',
             'StringLengthMax'     => "Het veld :label mag niet meer dan :max karakters lang zijn",
             'StringLengthMin'     => "Veld :label moet tenminste :min karakters lang zijn",

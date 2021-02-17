@@ -441,6 +441,7 @@ return [
             'FileSizeEqual'       => "File :label does not have the exact :size file size",
             'FileSizeMax'         => "File :label exceeds the size of :max",
             'FileSizeMin'         => "File :label must have the minimum size of :size",
+            'FileType'            => 'File :label must be of type: :types',
             'FileMimeType'        => 'File :label must be of type: :types',
             'StringLengthMax'     => "Field :label must not exceed :max characters long",
             'StringLengthMin'     => "Field :label must be at least :min characters long",

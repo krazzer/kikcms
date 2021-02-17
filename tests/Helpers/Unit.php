@@ -7,6 +7,7 @@ namespace Helpers;
 use Exception;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\PdoDialect\Sqlite;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Models\Language;
 use KikCMS\Models\User;
@@ -81,7 +82,10 @@ class Unit extends \Codeception\Test\Unit
 
         $di = new Di();
 
-        $db = (new PdoFactory)->load(['adapter' => 'sqlite', 'options' => ["dbname" => ":memory:"]]);
+        $db = (new PdoFactory)->load(['adapter' => 'sqlite', 'options' => [
+            "dbname"       => ":memory:",
+            'dialectClass' => new Sqlite()
+        ]]);
 
         $translator = (new TestHelper)->getTranslator();
 
@@ -94,7 +98,7 @@ class Unit extends \Codeception\Test\Unit
         ]);
 
         $keyValue = new KeyValue($adapter);
-        $memoryCache = new MemoryCache(new SerializerFactory(), ['defaultSerializer' => 'Json', 'lifetime' => 300]);
+        $memoryCache = new MemoryCache(new SerializerFactory(), ['defaultSerializer' => 'Php', 'lifetime' => 300]);
 
         $di->set('db', $db);
         $di->set('config', $config);
@@ -132,7 +136,7 @@ class Unit extends \Codeception\Test\Unit
             'columns'    => [
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('field', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
-                new Column('value', ['type' => Column::TYPE_LONGBLOB]),
+                new Column('value', ['type' => Column::TYPE_LONGBLOB, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['page_id', 'field']),
@@ -157,7 +161,7 @@ class Unit extends \Codeception\Test\Unit
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'notNull' => true]),
                 new Column('field', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
-                new Column('value', ['type' => Column::TYPE_LONGBLOB]),
+                new Column('value', ['type' => Column::TYPE_LONGBLOB, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['page_id', 'language_code', 'field']),
@@ -185,15 +189,15 @@ class Unit extends \Codeception\Test\Unit
 
         $db->createTable('cms_page_language', '', [
             'columns'    => [
-                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true, 'autoIncrement' => true]),
                 new Column('page_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'notNull' => true]),
                 new Column('active', ['type' => Column::TYPE_INTEGER, 'default' => 1]),
-                new Column('name', ['type' => Column::TYPE_VARCHAR]),
-                new Column('slug', ['type' => Column::TYPE_VARCHAR]),
-                new Column('seo_title', ['type' => Column::TYPE_VARCHAR]),
-                new Column('seo_description', ['type' => Column::TYPE_VARCHAR]),
-                new Column('seo_keywords', ['type' => Column::TYPE_VARCHAR]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
+                new Column('slug', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
+                new Column('seo_title', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
+                new Column('seo_description', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
+                new Column('seo_keywords', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -223,7 +227,7 @@ class Unit extends \Codeception\Test\Unit
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('code', ['type' => Column::TYPE_VARCHAR, 'size' => 3, 'notNull' => false]),
-                new Column('name', ['type' => Column::TYPE_LONGBLOB]),
+                new Column('name', ['type' => Column::TYPE_LONGBLOB, 'notNull' => false]),
                 new Column('active', ['type' => Column::TYPE_INTEGER, 'size' => 1, 'notNull' => true, 'default' => 1]),
             ],
             'indexes'    => [
@@ -239,7 +243,7 @@ class Unit extends \Codeception\Test\Unit
 
         $db->createTable('cms_page', '', [
             'columns'    => [
-                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true, 'autoIncrement' => true]),
                 new Column('parent_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
                 new Column('alias', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
                 new Column('template', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => false]),
@@ -288,12 +292,12 @@ class Unit extends \Codeception\Test\Unit
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
                 new Column('email', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => true]),
-                new Column('password', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
+                new Column('password', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => false]),
                 new Column('blocked', ['type' => Column::TYPE_INTEGER, 'size' => 1, 'notNull' => true]),
                 new Column('created_at', ['type' => Column::TYPE_DATETIME, 'notNull' => true, 'default' => 'NOW()']),
                 new Column('role', ['type' => Column::TYPE_VARCHAR, 'size' => 16, 'notNull' => true]),
-                new Column('remember_me', ['type' => Column::TYPE_BLOB]),
-                new Column('settings', ['type' => Column::TYPE_BLOB]),
+                new Column('remember_me', ['type' => Column::TYPE_BLOB, 'notNull' => false]),
+                new Column('settings', ['type' => Column::TYPE_BLOB, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -309,17 +313,17 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('cms_file', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 100]),
-                new Column('extension', ['type' => Column::TYPE_VARCHAR, 'size' => 50]),
-                new Column('mimetype', ['type' => Column::TYPE_VARCHAR, 'size' => 100]),
-                new Column('created', ['type' => Column::TYPE_DATETIME]),
-                new Column('updated', ['type' => Column::TYPE_DATETIME]),
-                new Column('is_folder', ['type' => Column::TYPE_INTEGER]),
-                new Column('folder_id', ['type' => Column::TYPE_INTEGER]),
-                new Column('size', ['type' => Column::TYPE_INTEGER]),
-                new Column('user_id', ['type' => Column::TYPE_INTEGER]),
-                new Column('key', ['type' => Column::TYPE_VARCHAR]),
-                new Column('hash', ['type' => Column::TYPE_VARCHAR]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 100, 'notNull' => false]),
+                new Column('extension', ['type' => Column::TYPE_VARCHAR, 'size' => 50, 'notNull' => false]),
+                new Column('mimetype', ['type' => Column::TYPE_VARCHAR, 'size' => 100, 'notNull' => false]),
+                new Column('created', ['type' => Column::TYPE_DATETIME, 'notNull' => false]),
+                new Column('updated', ['type' => Column::TYPE_DATETIME, 'notNull' => false]),
+                new Column('is_folder', ['type' => Column::TYPE_INTEGER, 'notNull' => false]),
+                new Column('folder_id', ['type' => Column::TYPE_INTEGER, 'notNull' => false]),
+                new Column('size', ['type' => Column::TYPE_INTEGER, 'notNull' => false]),
+                new Column('user_id', ['type' => Column::TYPE_INTEGER, 'notNull' => false]),
+                new Column('key', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
+                new Column('hash', ['type' => Column::TYPE_VARCHAR, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -334,7 +338,7 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('test_company', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -349,10 +353,10 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('test_person', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255]),
-                new Column('company_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
-                new Column('image_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
-                new Column('display_order', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => false]),
+                new Column('company_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
+                new Column('image_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
+                new Column('display_order', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -370,9 +374,9 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('test_person_interest', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('person_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
-                new Column('interest_id', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
-                new Column('grade', ['type' => Column::TYPE_INTEGER, 'size' => 11]),
+                new Column('person_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
+                new Column('interest_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
+                new Column('grade', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),
@@ -401,8 +405,8 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('cms_translation_value', '', [
             'columns'    => [
                 new Column('key_id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),
-                new Column('value', ['type' => Column::TYPE_LONGBLOB]),
+                new Column('language_code', ['type' => Column::TYPE_VARCHAR, 'size' => 3, 'notNull' => false]),
+                new Column('value', ['type' => Column::TYPE_LONGBLOB, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['key_id']),
@@ -430,8 +434,8 @@ class Unit extends \Codeception\Test\Unit
         $db->createTable('cms_translation_key', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
-                new Column('key', ['type' => Column::TYPE_VARCHAR, 'size' => 3]),
-                new Column('db', ['type' => Column::TYPE_INTEGER, 'size' => 1]),
+                new Column('key', ['type' => Column::TYPE_VARCHAR, 'size' => 3, 'notNull' => false]),
+                new Column('db', ['type' => Column::TYPE_INTEGER, 'size' => 1, 'notNull' => false]),
             ],
             'indexes'    => [
                 new Index('PRIMARY', ['id']),

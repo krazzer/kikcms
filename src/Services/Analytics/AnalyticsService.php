@@ -218,7 +218,11 @@ class AnalyticsService extends Injectable
      */
     public function requiresUpdate(): bool
     {
-        if ($this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE) === false) {
+        if ( ! $this->cache->has(CacheConfig::STATS_REQUIRE_UPDATE)) {
+            return false;
+        }
+
+        if ( ! $this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE)) {
             return false;
         }
 

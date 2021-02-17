@@ -21,7 +21,7 @@ class FrontendServiceTest extends Unit
 
         $frontendService->setDI($this->getDbDi());
 
-        $page  = $this->createPage(1, null);
+        $page  = $this->createPage(1);
         $page2 = $this->createPage(2, 'default');
 
         $pageLanguage = $this->createPageLanguage($page, 1, 'page-en', 'en', false);
@@ -33,11 +33,11 @@ class FrontendServiceTest extends Unit
         // there are no languages configured, so return nothing
         $this->assertEquals(['langUrlMap' => []], $frontendService->getLangSwitchVariables($pageLanguage));
 
-        $this->addLanguage('en');
+        $this->addLanguage();
         $this->addLanguage('nl');
 
         $frontendService->cache->delete('languages');
-        $frontendService->cache->delete('url:1:en:otherLangMap');
+        $frontendService->cache->delete('url.1.en.otherLangMap');
 
         $expected = [
             'langUrlMap'    => ['en' => '/page-en', 'nl' => '/home-nl'],
@@ -49,7 +49,7 @@ class FrontendServiceTest extends Unit
 
         $this->createPageLanguage($page, 1, 'page-nl', 'nl', false)->save();
 
-        $frontendService->cache->delete('url:1:en:otherLangMap');
+        $frontendService->cache->delete('url.1.en.otherLangMap');
 
         $expected = [
             'langUrlMap'    => ['en' => '/page-en', 'nl' => '/page-nl'],
@@ -120,7 +120,7 @@ class FrontendServiceTest extends Unit
             $pageLanguage->page = $page;
         }
 
-        $pageLanguage->page_id = $page->id ?? null;
+        $pageLanguage->page_id = property_exists($page, 'id') ? $page->id : null;
 
         if ($name) {
             $pageLanguage->setName($name)->setSlug($name);

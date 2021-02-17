@@ -113,7 +113,7 @@ class CacheNodeTest extends TestCase
 
         $cacheNode->flattenSingleNodes();
 
-        $this->assertEquals('test:sub:subSub', $cacheNode->getKey());
+        $this->assertEquals('test.sub.subSub', $cacheNode->getKey());
     }
 
     public function testGetKey()

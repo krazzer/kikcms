@@ -182,4 +182,12 @@ class PageLanguage extends Model
         $this->aliasPage = $page;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasId(): bool
+    {
+        return property_exists($this, self::FIELD_ID);
+    }
 }

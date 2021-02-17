@@ -14,8 +14,7 @@ use Phalcon\Di;
 use Phalcon\Flash\Direct;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Router;
-use Phalcon\Session\AdapterInterface;
+use Phalcon\Session\Adapter\AbstractAdapter;
 use Phalcon\Validation;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReCaptcha\Response as ReCaptchaResponse;
@@ -34,7 +33,7 @@ class MailFormTest extends Unit
         $mailForm = new TestMailForm();
         $mailForm->view = $view;
         $mailForm->translator = $translator;
-        $mailForm->session = $this->createMock(AdapterInterface::class);
+        $mailForm->session = $this->createMock(AbstractAdapter::class);
         $mailForm->flash = $this->createMock(Direct::class);
         $mailForm->request = $this->createMock(Request::class);
 
@@ -45,20 +44,22 @@ class MailFormTest extends Unit
         $mailForm->config->application = new Config();
         $mailForm->config->application->adminEmail = 'test@test.nl';
 
-        $response = $this->createMock(Response::class);
-        $response->method('redirect')->willReturn('redirect');
+        $redirectResponseMock = $this->createMock(Response::class);
 
-        $router = $this->createMock(Router::class);
-        $router->method('getRewriteUri')->willReturn('');
+        $response = $this->createMock(Response::class);
+        $response->method('redirect')->willReturn($redirectResponseMock);
+
+        $request = $this->createMock(Request::class);
+        $request->method('getServer')->willReturn('');
 
         $mailForm->mailService = $this->getMailService(1);
         $mailForm->response = $response;
-        $mailForm->router = $router;
+        $mailForm->request = $request;
 
         // all ok, will redirect
         $mailForm->validation = $this->getValidation(0.8);
         $mailForm->initializeForm();
-        $this->assertEquals('redirect', $this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertEquals($redirectResponseMock, $this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
 
         // spamscore too low, won't send
         $mailForm->validation = $this->getValidation(0.2);
@@ -151,7 +152,7 @@ class MailFormTest extends Unit
         $reCaptchaResponse = $this->createMock(ReCaptchaResponse::class);
         $reCaptchaResponse->method('getScore')->willReturn($returnScore);
 
-        $validator = $this->createMock(Validation\Validator::class);
+        $validator = $this->createMock(Validation\AbstractValidator::class);
         $validator->method('getOption')->willReturn($reCaptchaResponse);
 
         $validation = $this->createMock(Validation::class);
