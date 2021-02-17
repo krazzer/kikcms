@@ -7,6 +7,6 @@ $sitePath = __DIR__ . '/../TestSitePath/';
 /** @var Application $app */
 $app = include __DIR__ . '/../../boot/app.php';
 
-$this->client->setServerParameter('HTTP_HOST', 'kikcmstest.dev');
+$this->client->setServerParameter('HTTP_HOST', 'kikcmstest-phalcon4.dev');
 
 return $app;

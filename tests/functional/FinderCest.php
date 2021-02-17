@@ -7,6 +7,7 @@ use FunctionalTester;
 use KikCMS\Models\File;
 use KikCMS\Models\FilePermission;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 class FinderCest
 {
@@ -145,9 +146,9 @@ class FinderCest
 
     /**
      * @param string $folderName
-     * @return Builder
+     * @return BuilderInterface
      */
-    private function _getTestFolderQuery(string $folderName = 'test'): Builder
+    private function _getTestFolderQuery(string $folderName = 'test'): BuilderInterface
     {
         return (new Builder)
             ->columns('id')

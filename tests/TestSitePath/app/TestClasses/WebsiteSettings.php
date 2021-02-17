@@ -22,6 +22,8 @@ class WebsiteSettings extends WebsiteSettingsBase
     {
         $frontend->add('/test/resourcesexceeded', 'TestWebsite::resourcesExceeded');
         $frontend->add('/test/unauthorized', 'TestWebsite::unauthorized');
+        $frontend->add('/test/personform', 'TestModule::personForm');
+        $frontend->add('/test/datatableform', 'TestModule::testDataTableForm');
     }
 
     /**
