@@ -8,7 +8,7 @@ actor: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: https://kikcmstest.dev
+            url: https://kikcmstest-phalcon4.dev
             browser: chrome
             host: kikdev-selenium
             capabilities:
