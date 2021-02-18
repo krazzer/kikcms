@@ -62,7 +62,7 @@ var DataTable = Class.extend({
         var $deleteButton    = this.getDataTable().find('.toolbar .btn.delete');
         var $addButton       = this.getDataTable().find('.toolbar .btn.add');
         var $pickImageButton = this.getDataTable().find('.toolbar .btn.pick-image');
-        var $uploadButton    = this.getDataTable().find('.toolbar .btn.upload');
+        var $uploadButton    = this.getDataTable().find('.toolbar .btn.upload.direct-image-upload');
 
         $deleteButton.click(function () {
             if ($(this).attr('disabled') == 'disabled') {
