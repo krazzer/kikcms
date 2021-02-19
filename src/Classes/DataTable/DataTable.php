@@ -25,6 +25,7 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 use Phalcon\Validation\AbstractValidator;
 
 /**
@@ -135,9 +136,9 @@ abstract class DataTable extends Renderable
     public abstract function getFormClass(): string;
 
     /**
-     * @return Builder
+     * @return BuilderInterface
      */
-    protected function getDefaultQuery()
+    protected function getDefaultQuery(): BuilderInterface
     {
         $alias = $this->dbService->getAliasForModel($this->getModel());
 
