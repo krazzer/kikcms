@@ -1,7 +1,7 @@
 version: "3"
 services:
   php:
-    image: kiksaus/kikcms-phalcon4-debug
+    image: kiksaus/kikdev-phalcon4-debug
     restart: always
     ports:
         - "9902:443"
