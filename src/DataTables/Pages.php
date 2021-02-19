@@ -22,6 +22,7 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * @property AccessControl $acl
@@ -197,7 +198,7 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
-    protected function getDefaultQuery()
+    protected function getDefaultQuery(): BuilderInterface
     {
         $langCode        = $this->getFilters()->getLanguageCode();
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();

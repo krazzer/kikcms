@@ -11,6 +11,7 @@ use KikCMS\Models\TranslationKey;
 use KikCMS\Models\TranslationValue;
 use KikCMS\Services\CacheService;
 use KikCMS\Services\Util\StringService;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * @property CacheService $cacheService
@@ -34,7 +35,7 @@ class Translations extends DataTable
     /**
      * @inheritdoc
      */
-    public function getDefaultQuery()
+    public function getDefaultQuery(): BuilderInterface
     {
         return parent::getDefaultQuery()
             ->leftJoin(TranslationValue::class, 'tv.key_id = tk.id', 'tv')
