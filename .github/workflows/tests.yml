@@ -31,7 +31,7 @@ jobs:
           sudo chmod 777 tests/TestSitePath/public_html/media/files
           sudo chmod 777 tests/TestSitePath/public_html/media/thumbs
         env:
-          SITE_ALIAS: kikcmstest.dev
+          SITE_ALIAS: kikcmstest-phalcon4.dev
           SITE_PORT: 9901
       - name: Sleep for 15 seconds
         uses: jakejarvis/wait-action@master

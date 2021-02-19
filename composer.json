@@ -4,7 +4,7 @@
     "name": "kiksaus/kikcms",
     "config": {
         "platform": {
-            "php": "7.2",
+            "php": "7.4",
             "ext-zip": "master",
             "ext-sockets": "master",
             "ext-phalcon": "4.0"
