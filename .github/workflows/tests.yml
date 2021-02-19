@@ -51,4 +51,4 @@ jobs:
           gulp
           cd ..
       - name: Run tests
-        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
+        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev-phalcon4:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
