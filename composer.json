@@ -2,7 +2,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:krazzer/module-phalcon4.git"
+            "url": "https://github.com/krazzer/module-phalcon4.git"
         }
     ],
     "homepage": "https://kikcms.com",
