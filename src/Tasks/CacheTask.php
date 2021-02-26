@@ -16,7 +16,7 @@ class CacheTask extends Task
      * Called by: php kikcms cache clear
      * @param array $params [0 => username, 1 => password]
      */
-    public function clearAction(array $params)
+    public function clearAction(array $params = [])
     {
         $username = $params[0] ?? null;
         $password = $params[1] ?? null;
