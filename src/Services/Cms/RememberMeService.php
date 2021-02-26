@@ -44,7 +44,10 @@ class RememberMeService extends Injectable
             return null;
         }
 
-        $cookieToken = $this->cookies->get($this->getKey())->getValue();
+        // get the cookie value, return null if empty
+        if( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()){
+            return null;
+        }
 
         $userId = (int) explode('.', $cookieToken)[0];
 
