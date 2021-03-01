@@ -152,7 +152,6 @@ class Pages extends DataTable
         switch ($this->getFilters()->getPageType()) {
             case Page::TYPE_MENU:
                 return MenuForm::class;
-            break;
             case Page::TYPE_LINK:
                 return LinkForm::class;
         }
@@ -220,7 +219,7 @@ class Pages extends DataTable
             return $query;
         }
 
-        return $query->where('IFNULL(pali.template, p.template) IS NULL OR IFNULL(pali.template, p.template) IN ({templateKeys:array})', [
+        return $query->where('IFNULL(p.template, pali.template) IS NULL OR IFNULL(p.template, pali.template) IN ({templateKeys:array})', [
             'templateKeys' => $this->getAllowedTemplateKeys()
         ]);
     }
