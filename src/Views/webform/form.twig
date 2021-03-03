@@ -45,7 +45,7 @@
         <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
 
         {% if(displaySendButton) %}
-            <div class="form-group">
+            <div class="form-group webform__submit">
                 {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
             </div>
         {% endif %}
