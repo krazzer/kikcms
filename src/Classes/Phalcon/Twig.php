@@ -117,6 +117,9 @@ class Twig extends Engine implements EngineInterface
         // add ucfirst filter
         $this->twig->addFilter(new Twig_SimpleFilter('ucfirst', 'ucfirst'));
 
+        // add lcfirst filter
+        $this->twig->addFilter(new Twig_SimpleFilter('lcfirst', 'lcfirst'));
+
         // add price filter
         $this->twig->addFilter(new Twig_SimpleFilter('price', function ($price) use ($di) {
             return $di->getShared("numberService")->getPriceFormat((float) $price);
