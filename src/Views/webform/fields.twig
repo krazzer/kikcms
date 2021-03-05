@@ -187,14 +187,16 @@
                 <div class="g-recaptcha" data-sitekey="{{ reCaptchaSiteKey }}"></div>
             </div>
         {% elseif field.version == 3 %}
-            {% set recaptchaId = formId ~ '_Recaptcha' %}
-            {{ form.render(element.name, {id: recaptchaId})|raw }}
+            {{ form.render(element.name)|raw }}
             <script>
                 window.onload = function () {
                     grecaptcha.ready(function () {
                         grecaptcha.execute('{{ config('recaptcha.siteKey') }}', { action: 'contact' }).then(function (token) {
-                            var recaptchaResponse = document.getElementById('{{ recaptchaId }}');
-                            recaptchaResponse.value = token;
+                            var fields = document.getElementsByClassName('webform-field-recaptcha');
+
+                            for(var i in fields){
+                                fields[i].value = token;
+                            }
                         });
                     });
                 };

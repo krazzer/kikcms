@@ -24,6 +24,7 @@ class ReCaptchaField extends Field
         $this->version = $version;
 
         $this->element = (new Hidden($this->key))->addValidators($validators);
+        $this->element->setAttribute('class', 'webform-field-recaptcha');
     }
 
     /**
