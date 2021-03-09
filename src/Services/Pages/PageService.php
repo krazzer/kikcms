@@ -276,4 +276,18 @@ class PageService extends Injectable
 
         return true;
     }
+
+    /**
+     * @param string $template
+     * @return PageMap
+     */
+    public function getByTemplate(string $template): PageMap
+    {
+        $query = (new Builder)
+            ->from($this->websiteSettings->getPageClass())
+            ->where(Page::FIELD_TEMPLATE . ' = :template:', ['template' => $template])
+            ->orderBy(Page::FIELD_DISPLAY_ORDER);
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
+    }
 }

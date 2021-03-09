@@ -73,4 +73,13 @@ class FullPageService extends Injectable
 
         return $fullPageMap->getFirst();
     }
+
+    /**
+     * @param string $template
+     * @return FullPageMap
+     */
+    public function getByTemplate(string $template): FullPageMap
+    {
+        return $this->getByPageMap($this->pageService->getByTemplate($template));
+    }
 }
