@@ -78,9 +78,7 @@ abstract class MailForm extends WebForm
         $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
 
-        $baseUrl = $this->request->getServer('REQUEST_URI');
-
-        return $this->response->redirect(trim($baseUrl, '/'));
+        return $this->response->redirect(trim($this->request->getServer('REQUEST_URI'), '/') ?: '/');
     }
 
     /**

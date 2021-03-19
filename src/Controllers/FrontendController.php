@@ -74,10 +74,10 @@ class FrontendController extends BaseController
 
     /**
      * @param string|null $urlPath
-     * @return Response|ResponseInterface|void
+     * @return ResponseInterface
      * @throws NotFoundException
      */
-    public function pageAction(string $urlPath = null)
+    public function pageAction(string $urlPath = null): ResponseInterface
     {
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
             $title       = $this->translator->tl('maintenance.title');
@@ -168,19 +168,16 @@ class FrontendController extends BaseController
         $websiteVariables    = $this->templateVariables->getGlobalVariables();
         $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
-        $this->response->setStatusCode(200);
-
-        // in case a form has been send, it might want to redirect
-        if ($templateVariables instanceof Response) {
-            return $templateVariables;
-        }
-
         $variables = array_merge($langSwitchVariables, $fieldVariables, $websiteVariables, $templateVariables);
 
         // in case a form has been send, it might want to redirect
-        if ($variables instanceof Response) {
-            return $variables;
+        foreach ($variables as $variable){
+            if(is_object($variable) && $variable instanceof Response){
+                return $variable;
+            }
         }
+
+        $this->response->setStatusCode(200);
 
         $variables['languageCode'] = $languageCode;
         $variables['pageLanguage'] = $pageLanguage;
