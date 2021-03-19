@@ -12,7 +12,7 @@ use KikCMS\Services\Routing;
 use KikCMS\Classes\Phalcon\Loader;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault\Cli;
-use Phalcon\Mvc\Model\MetaData\Files;
+use Phalcon\Mvc\Model\MetaData\Stream;
 use ReflectionObject;
 
 class BaseServices extends ApplicationServices
@@ -87,6 +87,7 @@ class BaseServices extends ApplicationServices
         $this->bindPluginServices();
 
         // initialize the router if we're not in the Cli
+        /** @noinspection PhpInstanceofIsAlwaysTrueInspection */
         if ( ! $this instanceof Cli) {
             $this->set('router', function () {
                 $routing = new Routing();
@@ -97,7 +98,7 @@ class BaseServices extends ApplicationServices
         // initialize models meta data only in production
         if ($this->getIniConfig()->isProd()) {
             $this->set('modelsMetadata', function () {
-                return new Files([
+                return new Stream([
                     "lifetime"    => 86400,
                     "metaDataDir" => $this->getAppConfig()->path . "cache/metadata/"
                 ]);
