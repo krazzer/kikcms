@@ -33,6 +33,18 @@ class Translator extends Injectable
     }
 
     /**
+     * @param string $key
+     * @param string|null $langCode
+     * @return bool
+     */
+    public function exists(string $key, string $langCode = null): bool
+    {
+        $translations = $this->getTranslations($langCode ?: $this->getLanguageCode());
+
+        return array_key_exists($key, $translations);
+    }
+
+    /**
      * @param array $array
      * @param string $prefix
      * @return array
