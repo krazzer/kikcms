@@ -73,6 +73,9 @@ abstract class DataTable extends Renderable
     /** @var Validator[] */
     protected $directImageValidators = [];
 
+    /** @var array default field values to be set for the child object */
+    protected $directImageDefaults = [];
+
     /** @var string */
     protected $instancePrefix = self::INSTANCE_PREFIX;
 
@@ -736,6 +739,14 @@ abstract class DataTable extends Renderable
     public function getDirectImageField()
     {
         return $this->directImageField;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDirectImageDefaults(): array
+    {
+        return $this->directImageDefaults;
     }
 
     /**

@@ -40,6 +40,7 @@ class DataTableService extends Injectable
     {
         $model      = $dataTable->getModel();
         $imageField = $dataTable->getDirectImageField();
+        $defaults   = $dataTable->getDirectImageDefaults();
         $object     = $this->modelService->getObject($model);
 
         $storageData = (new StorageData)
@@ -47,6 +48,10 @@ class DataTableService extends Injectable
             ->setTable($model)
             ->setObject($object)
             ->setParentEditId($dataTable->getFilters()->getParentEditId());
+
+        foreach ($defaults as $key => $value){
+            $storageData->addFormInputValue($key, $value);
+        }
 
         if ($parentRelationKey = $dataTable->getParentRelationField()) {
             $storageData->addFormInputValue($parentRelationKey, $dataTable->getParentRelationValue());
