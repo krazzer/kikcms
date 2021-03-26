@@ -19,8 +19,12 @@ class BaseController extends Controller
 
         $maxFileUploads    = ini_get('max_file_uploads') ?: 20;
         $maxFileSizeServer = $this->byteService->stringToBytes(ini_get('upload_max_filesize'));
+        $maxPostSize       = $this->byteService->stringToBytes(ini_get('post_max_size'));
         $maxFileSizeConfig = $this->byteService->stringToBytes($this->config->media->maxFileSize);
-        $maxFileSize       = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
+
+        $maxFileSize = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
+        $maxFileSize = $maxFileSize > $maxPostSize ? $maxPostSize : $maxFileSize;
+
         $maxFileSizeString = $this->byteService->bytesToString($maxFileSize);
 
         $jsTranslations = [
