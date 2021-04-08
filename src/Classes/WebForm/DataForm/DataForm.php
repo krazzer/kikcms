@@ -7,7 +7,6 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
-use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Tab;
 use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\ModelService;
@@ -257,6 +256,7 @@ abstract class DataForm extends WebForm
         }
 
         if ($saveSuccess) {
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->saveSuccessAction($isNew);
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
@@ -423,7 +423,7 @@ abstract class DataForm extends WebForm
         $object = $this->getObject();
 
         foreach ($this->getFieldMap() as $key => $field) {
-            if ($field instanceof DataTableField || $field instanceof SelectDataTableField) {
+            if ($field instanceof DataTableField) {
                 continue;
             }
 
