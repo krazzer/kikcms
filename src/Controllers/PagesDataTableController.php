@@ -73,8 +73,9 @@ class PagesDataTableController extends DataTableController
         $dataTable = parent::getRenderable();
 
         if ($pageId = $dataTable->getFilters()->getEditId()) {
-            $page = Page::getById($pageId);
-            $dataTable->getFilters()->setPageType((string) $page->type);
+            if($page = Page::getById($pageId)) {
+                $dataTable->getFilters()->setPageType((string) $page->type);
+            }
         }
 
         return $dataTable;
