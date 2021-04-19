@@ -263,7 +263,11 @@ class PageLanguageService extends Injectable
 
         $pageLanguageMap = $this->getPathMap($pageLanguage);
 
-        if($pageLanguageMap->getLast()->getAliasPageId() !== $pageLanguage->getAliasPageId()){
+        if( ! $pageLanguageMap->getLast()) {
+            return $pageLanguageMap;
+        }
+
+        if ($pageLanguageMap->getLast()->getAliasPageId() !== $pageLanguage->getAliasPageId()) {
             $pageLanguageMap->getLast()->setAliasPage($pageLanguage->getAliasPage());
         }
 
