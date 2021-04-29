@@ -39,6 +39,15 @@ class RelationKeyService extends Injectable
 
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
 
+        // if the value is empty and the field is not set, remove the relation
+        if(count($parts) == 2 && $parts[1] === '' && ! $value){
+            if($model->{$parts[0]}) {
+                $model->{$parts[0]}->delete();
+            }
+
+            return;
+        }
+
         $this->createMissingRelations($model, $parts);
 
         switch (count($parts)) {
