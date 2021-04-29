@@ -87,10 +87,12 @@ class DataTableService extends Injectable
             $column = DataTable::TABLE_KEY;
         }
 
-        $idsQuery = (clone $dataTable->getQuery())->columns([$column]);
+        $columns = $dataTable->getQuery()->getColumns();
+
+        $idsQuery = (clone $dataTable->getQuery())->columns(array_merge([$column], $columns));
 
         try {
-            $index = array_search($id, $this->dbService->getValues($idsQuery));
+            $index = array_search($id, $this->dbService->getValues($idsQuery, true));
             $limit = $dataTable->getLimit();
 
             return (($index - ($index % $limit)) / $limit) + 1;
