@@ -37,4 +37,12 @@ class SecuritySingleToken extends Security
 
         return parent::getToken();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkToken($tokenKey = null, $tokenValue = null, bool $destroyIfValid = false): bool
+    {
+        return parent::checkToken($tokenKey, $tokenValue, $destroyIfValid);
+    }
 }
