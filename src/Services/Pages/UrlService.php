@@ -101,7 +101,7 @@ class UrlService extends Injectable
             return null;
         });
 
-        if( ! $cached[0]){
+        if ( ! $cached[0]) {
             return null;
         }
 
@@ -292,16 +292,15 @@ class UrlService extends Injectable
         $text = preg_replace('~[^-\w]+~', '', $text);
         $text = trim($text, '-');
         $text = preg_replace('~-+~', '-', $text);
-        $text = strtolower($text);
 
-        return $text;
+        return strtolower($text);
     }
 
     /**
      * Check whether given urlPath already exists, excluding given PageLanguage
      *
      * @param string $urlPath
-     * @param PageLanguage $existingPageLanguage
+     * @param PageLanguage|null $existingPageLanguage
      * @return bool
      */
     public function urlPathExists(string $urlPath, PageLanguage $existingPageLanguage = null): bool
@@ -370,23 +369,27 @@ class UrlService extends Injectable
     }
 
     /**
-     * @param $pageLanguage
+     * @param PageLanguage $pageLanguage
      * @return string
      */
     public function getUrlForLinkedPage(PageLanguage $pageLanguage): string
     {
-        $link = $pageLanguage->page->link;
+        $link = (string) $pageLanguage->page->link;
 
         if (empty($link)) {
             return '';
         }
 
         if ( ! is_numeric($link)) {
+            if ($this->isExternal($link)) {
+                return $link;
+            }
+
             if (substr($link, 0, 1) !== '/') {
                 return '/' . $link;
             }
 
-            return (string) $link;
+            return $link;
         }
 
         $pageLanguageLink = $this->pageLanguageService->getByPageId((int) $link, $pageLanguage->getLanguageCode());
@@ -431,5 +434,15 @@ class UrlService extends Injectable
         } else {
             return [PageLanguage::getById($key), null];
         }
+    }
+
+    /**
+     * @param string|int $url
+     * @return bool
+     */
+    public function isExternal($url): bool
+    {
+        $components = parse_url($url);
+        return ! empty($components['host']) && strcasecmp($components['host'], $_SERVER['HTTP_HOST']);
     }
 }
