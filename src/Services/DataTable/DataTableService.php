@@ -89,7 +89,9 @@ class DataTableService extends Injectable
 
         $columns = $dataTable->getQuery()->getColumns();
 
-        $idsQuery = (clone $dataTable->getQuery())->columns(array_merge([$column], $columns));
+        $columnsWithId = $columns ? array_merge([$column], $columns) : [$column];
+
+        $idsQuery = (clone $dataTable->getQuery())->columns($columnsWithId);
 
         try {
             $index = array_search($id, $this->dbService->getValues($idsQuery, true));
