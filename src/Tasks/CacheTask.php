@@ -18,15 +18,21 @@ class CacheTask extends Task
      */
     public function clearAction(array $params = [])
     {
-        if(isset($params[0]) && substr($params[0], 0, 8) == 'https://'){
-            $baseUrl = $params[0];
-            unset($params[0]);
-        } else {
-            $baseUrl = null;
-        }
+        $username = $password = $baseUrl = null;
 
-        $username = $params[0] ?? null;
-        $password = $params[1] ?? null;
+        foreach ($params as $i => $param){
+            if(substr($param, 0, 10) == '--username'){
+                $username = $params[$i+1];
+            }
+
+            if(substr($param, 0, 10) == '--password'){
+                $password = $params[$i+1];
+            }
+
+            if(substr($param, 0, 5) == '--url'){
+                $baseUrl = $params[$i+1];
+            }
+        }
 
         $url = ($baseUrl ?: $this->url->getBaseUri()) . 'cache/clear/' . $this->cmsService->createSecurityToken();
 
