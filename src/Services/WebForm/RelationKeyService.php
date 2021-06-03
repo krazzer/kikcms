@@ -40,8 +40,8 @@ class RelationKeyService extends Injectable
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
 
         // if the value is empty and the field is not set, remove the relation
-        if(count($parts) == 2 && $parts[1] === '' && ! $value){
-            if($model->{$parts[0]}) {
+        if (count($parts) == 2 && $parts[1] === '' && ! $value) {
+            if ($model->{$parts[0]}) {
                 $model->{$parts[0]}->delete();
             }
 
@@ -59,7 +59,9 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $model->$part1->$part2 = $this->dbService->toStorage($value);
+                    $subModel         = $model->$part1;
+                    $subModel->$part2 = $this->dbService->toStorage($value);
+                    $model->$part1    = $subModel;
                 }
 
             break;
@@ -292,7 +294,7 @@ class RelationKeyService extends Injectable
         }
 
         // if it's an array the related objects aren't stored yet
-        if( ! is_array($model->$relationField)){
+        if ( ! is_array($model->$relationField)) {
             $model->$relationField->delete();
         }
 
