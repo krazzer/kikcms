@@ -9,7 +9,7 @@ use KikCMS\Models\Page;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\ObjectLists\MenuGroupMap;
 use Phalcon\Mvc\Router\Group;
-use Twig_Environment;
+use Twig\Environment;
 
 /**
  * Contains multiple settings to expand the Cms/Website:
@@ -128,9 +128,9 @@ class WebsiteSettingsBase extends WebsiteExtendable
 
     /**
      * Modify twig envoronment
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      */
-    public function addTwigFunctions(Twig_Environment $twig)
+    public function addTwigFunctions(Environment $twig)
     {
     }
 }
