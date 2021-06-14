@@ -20,7 +20,7 @@ class MultiCheckboxField extends Field
      * @param array $options
      * @param array $validators
      */
-    public function __construct(string $key, string $label, array $options, array $validators)
+    public function __construct(string $key, string $label, array $options, array $validators = [])
     {
         $element = (new Check($key))
             ->setAttribute('type', 'multiCheckbox')
