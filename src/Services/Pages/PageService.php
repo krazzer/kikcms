@@ -184,15 +184,7 @@ class PageService extends Injectable
             return new PageMap();
         }
 
-        $query = $this->getOffspringQuery($menuPage);
-
-        if ($menu->getRestrictTemplates()) {
-            $query->inWhere('(SELECT a.template FROM ' . Page::class. ' a WHERE a.id = IFNULL(p.alias, p.id))', $menu->getRestrictTemplates());
-        }
-
-        if ($menu->getMaxLevel()) {
-            $query->andWhere('level <= ' . (int) ($menuPage->level + $menu->getMaxLevel()));
-        }
+        $query = $this->getOffspringQueryByMenu($menu, $menuPage);
 
         return $this->dbService->getObjectMap($query, PageMap::class);
     }
@@ -289,5 +281,25 @@ class PageService extends Injectable
             ->orderBy(Page::FIELD_DISPLAY_ORDER);
 
         return $this->dbService->getObjectMap($query, PageMap::class);
+    }
+
+    /**
+     * @param Menu $menu
+     * @param Page $menuPage
+     * @return Builder
+     */
+    protected function getOffspringQueryByMenu(Menu $menu, Page $menuPage): Builder
+    {
+        $query = $this->getOffspringQuery($menuPage);
+
+        if ($menu->getRestrictTemplates()) {
+            $query->inWhere('(SELECT a.template FROM ' . Page::class. ' a WHERE a.id = IFNULL(p.alias, p.id))', $menu->getRestrictTemplates());
+        }
+
+        if ($menu->getMaxLevel()) {
+            $query->andWhere('level <= ' . (int) ($menuPage->level + $menu->getMaxLevel()));
+        }
+
+        return $query;
     }
 }
