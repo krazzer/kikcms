@@ -73,9 +73,8 @@ $.fn.highlight = function (pat) {
     }) : this;
 };
 
-$.fn.searchAble = function (onSearch) {
-    var lastInput    = '';
-    var lastSearch   = '';
+$.fn.searchAble = function (onSearch, delay) {
+    var searchIndex  = 0;
     var $searchField = this;
     var $removeIcon  = $searchField.next('.glyphicon-remove');
 
@@ -85,28 +84,27 @@ $.fn.searchAble = function (onSearch) {
     });
 
     $searchField.on('keyup', function (e) {
-        var currentSearch = $searchField.val();
+        searchIndex++;
 
-        if (currentSearch == '') {
+        var search = $searchField.val();
+        var currentSearchIndex = searchIndex;
+
+        if (search == '') {
             $removeIcon.hide();
         } else {
             $removeIcon.show();
         }
 
         if (e.keyCode == keyCode.ENTER) {
-            lastSearch = currentSearch;
-            onSearch(currentSearch);
+            onSearch(search);
             return;
         }
 
-        lastInput = currentSearch;
-
         setTimeout(function () {
-            if (currentSearch == lastInput && currentSearch != lastSearch) {
-                lastSearch = currentSearch;
-                onSearch(currentSearch);
+            if (currentSearchIndex === searchIndex) {
+                onSearch(search);
             }
-        }, 500);
+        }, typeof delay === 'undefined' ? 500 : delay);
     });
 };
 
