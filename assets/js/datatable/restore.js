@@ -128,10 +128,15 @@ var DataTableRestore = Class.extend({
             KikCMS.renderables[previousValue].actionPage(1);
         }
 
+        // restore a TinyMCE field
+        if($field.hasClass('wysiwyg')){
+            tinymce.get($field.attr('id')).setContent(value);
+        }
+
         // restore file field
-        if($field.parent().hasClass('type-file')) {
+        if($field.parent().hasClass('type-file') && value) {
             var webForm = KikCMS.renderables[this.dataTable.getForm().parent().data('instance')];
-            webForm.actionPickFile($field.parent(), value);
+            webForm.pickFile(value, $field.parent());
         }
     },
 

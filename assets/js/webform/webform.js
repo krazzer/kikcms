@@ -395,11 +395,18 @@ var WebForm = Class.extend({
      * @param $field
      */
     onPickFile: function ($file, $field) {
+        $file.removeClass('selected');
+        this.pickFile($file.data('id'), $field);
+    },
+
+    /**
+     * @param fileId
+     * @param $field
+     */
+    pickFile: function (fileId, $field) {
         var self          = this;
-        var fileId        = $file.attr('data-id');
         var $uploadButton = this.getUploadButtonForFileField($field);
 
-        $file.removeClass('selected');
         $uploadButton.removeClass('disabled');
 
         KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {
