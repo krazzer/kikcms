@@ -59,9 +59,6 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    // Temporary fix for phalcon version < 4.1.0
-                    // Revert back to after > 4.1.0
-                    // $model->$part1->$part2 = $this->dbService->toStorage($value);
                     $subModel         = $model->$part1;
                     $subModel->$part2 = $this->dbService->toStorage($value);
                     $model->$part1    = $subModel;
