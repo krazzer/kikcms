@@ -76,8 +76,17 @@ class Services extends BaseServices
         $namespaceService = $this->get('namespaceService');
 
         $cmsServices = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_SERVICES);
+        $cmsObjects  = $namespaceService->getClassNamesByNamespace(KikCMSConfig::NAMESPACE_PATH_CMS_OBJECTS);
 
-        return array_merge($services, $cmsServices, $this->getWebsiteSimpleServices());
+        $cmsObjectServices = [];
+
+        foreach ($cmsObjects as $object) {
+            if (is_string($object) && (substr($object, -7) == 'Service' || substr($object, -6) == 'Helper')) {
+                $cmsObjectServices[] = $object;
+            }
+        }
+
+        return array_merge($services, $cmsServices, $cmsObjectServices, $this->getWebsiteSimpleServices());
     }
 
     /**
@@ -242,8 +251,6 @@ class Services extends BaseServices
      */
     protected function initKeyValue(): Cache
     {
-        $config['defaultSerializer'] = 'Json';
-
         $adapter = new Stream(new SerializerFactory, [
             'storageDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);

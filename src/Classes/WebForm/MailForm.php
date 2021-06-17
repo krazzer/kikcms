@@ -2,11 +2,13 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use Exception;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
+use Monolog\Logger;
 use Phalcon\Http\ResponseInterface;
 use ReCaptcha\Response as ReCaptchaResponse;
 use Swift_Attachment;
@@ -75,6 +77,12 @@ abstract class MailForm extends WebForm
             return false;
         }
 
+        try{
+            $this->mailformSubmissionService->add($subject, $this->getReadableInput($input));
+        } catch (Exception $exception){
+            $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
+        }
+
         $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
 
@@ -83,11 +91,11 @@ abstract class MailForm extends WebForm
 
     /**
      * @param array $input
-     * @return string
+     * @return array [label => value]
      */
-    public function toMailOutput(array $input): string
+    public function getReadableInput(array $input): array
     {
-        $contents = '';
+        $readableInput = [];
 
         foreach ($this->getFieldMap() as $key => $field) {
             if ($key == $this->getFormId()) {
@@ -131,6 +139,23 @@ abstract class MailForm extends WebForm
                 $label = $field->getElement()->getLabel();
             }
 
+            $readableInput[$label] = $value;
+        }
+
+        return $readableInput;
+    }
+
+    /**
+     * @param array $input
+     * @return string
+     */
+    public function toMailOutput(array $input): string
+    {
+        $contents = '';
+
+        $readableInput = $this->getReadableInput($input);
+
+        foreach ($readableInput as $label => $value){
             $contents .= '<b>' . $label . ':</b><br>';
             $contents .= $value . '<br><br>';
         }

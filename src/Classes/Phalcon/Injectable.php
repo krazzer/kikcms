@@ -8,6 +8,7 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
+use KikCMS\Objects\MailformSubmission\MailformSubmissionService;
 use KikCMS\Services\Analytics\AnalyticsGoogleService;
 use KikCMS\Services\Analytics\AnalyticsImportService;
 use KikCMS\Services\Analytics\AnalyticsService;
@@ -110,6 +111,7 @@ use ReCaptcha\ReCaptcha;
  * @property KeyValue $keyValue
  * @property LanguageService languageService
  * @property Logger $logger
+ * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
  * @property MenuService menuService
  * @property ModelService modelService

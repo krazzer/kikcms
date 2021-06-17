@@ -29,6 +29,7 @@ class KikCMSConfig
     const NAMESPACE_PATH_CMS_CONTROLLERS = '\\KikCMS\\Controllers\\';
     const NAMESPACE_PATH_CMS_SERVICES    = '\\KikCMS\\Services\\';
     const NAMESPACE_PATH_CMS_TASKS       = '\\KikCMS\\Tasks\\';
+    const NAMESPACE_PATH_CMS_OBJECTS     = '\\KikCMS\\Objects\\';
 
     const NAMESPACE_PATH_PHALCON_VALIDATORS = 'Phalcon\\Validation\\Validator\\';
 
