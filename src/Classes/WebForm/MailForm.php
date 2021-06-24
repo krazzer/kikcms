@@ -65,21 +65,22 @@ abstract class MailForm extends WebForm
             return false;
         }
 
-        $contents    = $this->toMailOutput($input);
+        $body = $this->mailFormService->getHtml($this->getReadableInput($input));
+
         $attachments = $this->getAttachments();
         $to          = $this->getToAddress();
         $subject     = $this->getSubject();
 
-        $mailSend = $this->mailService->sendServiceMail($to, $subject, $contents, $params, $attachments);
+        $mailSend = $this->mailService->sendServiceMail($to, $subject, $body, $params, $attachments);
 
         if ( ! $mailSend) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
             return false;
         }
 
-        try{
+        try {
             $this->mailformSubmissionService->add($subject, $this->getReadableInput($input));
-        } catch (Exception $exception){
+        } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
         }
 
@@ -146,24 +147,6 @@ abstract class MailForm extends WebForm
     }
 
     /**
-     * @param array $input
-     * @return string
-     */
-    public function toMailOutput(array $input): string
-    {
-        $contents = '';
-
-        $readableInput = $this->getReadableInput($input);
-
-        foreach ($readableInput as $label => $value){
-            $contents .= '<b>' . $label . ':</b><br>';
-            $contents .= $value . '<br><br>';
-        }
-
-        return $contents;
-    }
-
-    /**
      * @return float|null
      */
     private function getSpamScore(): ?float
@@ -218,7 +201,7 @@ abstract class MailForm extends WebForm
     {
         $attachments = [];
 
-        if( ! $files = $this->request->getUploadedFiles(true)){
+        if ( ! $files = $this->request->getUploadedFiles(true)) {
             return [];
         }
 

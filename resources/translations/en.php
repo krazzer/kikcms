@@ -156,6 +156,11 @@ return [
 
             'activationLink' => 'Generate activation link',
         ],
+
+        'mailFormSubmissions' => [
+            'singular' => "submission",
+            'plural'   => "submissions",
+        ],
     ],
 
     'error' => [
@@ -226,10 +231,11 @@ return [
     ],
 
     'global' => [
-        'cancel' => 'Cancel',
-        'delete' => 'Delete',
-        'no'     => 'No',
-        'yes'    => 'Yes',
+        'cancel'  => 'Cancel',
+        'delete'  => 'Delete',
+        'no'      => 'No',
+        'yes'     => 'Yes',
+        'subject' => "Onderwerp",
     ],
 
     'login' => [
@@ -354,6 +360,7 @@ return [
             'users'     => 'Users',
             'logout'    => 'Logout',
             'stats'     => 'Visitors',
+            'sendforms' => 'Form submissions',
         ],
 
         'username' => 'Logged in as: :email',

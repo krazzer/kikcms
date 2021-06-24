@@ -3,9 +3,18 @@
 namespace KikCMS\Objects\MailformSubmission;
 
 use KikCMS\Classes\DataTable\DataTable;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 class MailformSubmissions extends DataTable
 {
+    /**
+     * @inheritDoc
+     */
+    public function getDefaultQuery(): BuilderInterface
+    {
+        return parent::getDefaultQuery()->orderBy(MailformSubmission::FIELD_CREATED . ' DESC');
+    }
+
     /**
      * @inheritdoc
      */
@@ -19,7 +28,10 @@ class MailformSubmissions extends DataTable
      */
     public function getLabels(): array
     {
-        return ['mailformsubmission', 'mailformsubmissions'];
+        return [
+            $this->translator->tl('dataTables.mailFormSubmissions.singular'),
+            $this->translator->tl('dataTables.mailFormSubmissions.plural'),
+        ];
     }
 
     /**
@@ -36,10 +48,9 @@ class MailformSubmissions extends DataTable
     public function getTableFieldMap(): array
     {
         return [
-            MailformSubmission::FIELD_ID       => 'Id',
-            MailformSubmission::FIELD_CREATED  => 'Created',
-            MailformSubmission::FIELD_SUBJECT  => 'Subject',
-            MailformSubmission::FIELD_CONTENTS => 'Contents',
+            MailformSubmission::FIELD_ID      => 'Id',
+            MailformSubmission::FIELD_CREATED => $this->translator->tl('contentTypes.date'),
+            MailformSubmission::FIELD_SUBJECT => $this->translator->tl('global.subject'),
         ];
     }
 
@@ -48,6 +59,6 @@ class MailformSubmissions extends DataTable
      */
     public function initialize()
     {
-        // nothing here...
+        $this->setFieldFormatting(MailformSubmission::FIELD_CREATED, [$this->dateTimeService, 'stringToDateTimeFormat']);
     }
 }

@@ -67,6 +67,7 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Services\WebForm\WebFormService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\FrontendService;
+use KikCMS\Services\Website\MailFormService;
 use KikCMS\Services\Website\MenuService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
@@ -113,6 +114,7 @@ use ReCaptcha\ReCaptcha;
  * @property Logger $logger
  * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
+ * @property MailFormService mailFormService
  * @property MenuService menuService
  * @property ModelService modelService
  * @property NamespaceService namespaceService

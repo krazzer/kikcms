@@ -9,6 +9,7 @@ use KikCMS\DataTables\Languages;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Translations;
 use KikCMS\DataTables\Users;
+use KikCMS\Objects\MailformSubmission\MailformSubmissions;
 use KikCMS\Services\UserService;
 use Phalcon\Acl\Component;
 use Phalcon\Acl\Enum;
@@ -117,6 +118,11 @@ class Permission extends Injectable
         $acl->addComponent(Pages::class);
         $acl->addComponent(Translations::class);
         $acl->addComponent(Users::class);
+        $acl->addComponent(MailformSubmissions::class, [self::ACCESS_ADD, self::ACCESS_EDIT]);
+
+        $acl->allow(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_ANY);
+        $acl->deny(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_ADD);
+        $acl->deny(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_EDIT);
 
         $acl->allow(self::DEVELOPER, self::ACCESS_DATATABLES_DEFAULT);
         $acl->allow(self::ADMIN, self::ACCESS_DATATABLES_DEFAULT);

@@ -14,6 +14,7 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Objects\MailformSubmission\MailformSubmissions;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\TinyMceService;
@@ -118,6 +119,18 @@ class CmsController extends BaseCmsController
         return $this->view('cms/default', [
             'title'  => $this->translator->tl('menu.item.users'),
             'object' => (new Users)->render(),
+        ]);
+    }
+
+    /**
+     * DataTable for viewing mail form submission
+     * @return ResponseInterface
+     */
+    public function sendformsAction(): ResponseInterface
+    {
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.sendforms'),
+            'object' => (new MailformSubmissions)->render(),
         ]);
     }
 

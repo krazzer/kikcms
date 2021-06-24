@@ -156,6 +156,11 @@ return [
 
             'activationLink' => 'Genereer activatie link',
         ],
+
+        'mailFormSubmissions' => [
+            'singular' => "inzending",
+            'plural'   => "inzendingen",
+        ],
     ],
 
     'error' => [
@@ -231,10 +236,11 @@ return [
     ],
 
     'global' => [
-        'cancel' => 'Annuleer',
-        'delete' => 'Verwijder',
-        'no'     => 'Nee',
-        'yes'    => 'Ja',
+        'cancel'  => 'Annuleer',
+        'delete'  => 'Verwijder',
+        'no'      => 'Nee',
+        'yes'     => 'Ja',
+        'subject' => "Onderwerp",
     ],
 
     'login' => [
@@ -358,6 +364,7 @@ return [
             'media'     => 'Media',
             'templates' => 'Templates',
             'settings'  => 'Instellingen',
+            'sendforms' => 'Formulier inzendingen',
             'users'     => 'Gebruikers',
             'logout'    => 'Uitloggen',
             'stats'     => 'Bezoekers',
