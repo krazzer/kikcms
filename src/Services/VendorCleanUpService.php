@@ -18,7 +18,7 @@ class VendorCleanUpService extends Injectable
         $vendorFolder = $this->config->application->path . 'vendor/';
 
         // remove unused google files
-        $unusedGoogleFiles = glob($vendorFolder . 'google/apiclient-services/src/Google/Service/*');
+        $unusedGoogleFiles = glob($vendorFolder . 'google/apiclient-services/src/*');
 
         $unusedGoogleFiles = array_filter($unusedGoogleFiles, function ($v) {
             return ! in_array(basename($v), ['AnalyticsReporting', 'AnalyticsReporting.php']);
