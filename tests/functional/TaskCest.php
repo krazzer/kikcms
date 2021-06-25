@@ -55,7 +55,7 @@ class TaskCest
         $generateTask = new GenerateTask();
         $generateTask->setDI($di);
 
-        $generateTask->modelAction(['test_generate_test']);
+        $generateTask->modelAction('test_generate_test');
 
         $I->getDbService()->db->dropTable('test_generate_test');
 
@@ -98,7 +98,7 @@ class TaskCest
 
     public function cleanUpVendorWorks(FunctionalTester $I)
     {
-        $googleServicePath = __DIR__ . '/../TestSitePath/vendor/google/apiclient-services/src/Google/Service/';
+        $googleServicePath = __DIR__ . '/../TestSitePath/vendor/google/apiclient-services/src/';
 
         mkdir($googleServicePath . 'test');
         file_put_contents($googleServicePath . 'file.txt', 'testfile');

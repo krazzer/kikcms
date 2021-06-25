@@ -25,6 +25,7 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TranslationService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCMS\Services\WebForm\StorageService;
+use KikCMS\Services\Website\MailFormService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Adapter\Memory as MemoryCache;
 use Phalcon\Config;
@@ -126,6 +127,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('pagesDataTableService', new PagesDataTableService);
         $di->set('templateService', new TemplateService);
         $di->set('request', new Request);
+        $di->set('mailFormService', new MailFormService);
         $di->set('cache', $memoryCache);
         $di->set('translator', $translator);
         $di->set('keyValue', $keyValue);

@@ -63,7 +63,7 @@ class Twig extends Engine\AbstractEngine
      * @param mixed $params
      * @param bool $mustClean
      */
-    public function render($path, $params, $mustClean = false)
+    public function render(string $path, $params, bool $mustClean = false)
     {
         if ( ! $params) {
             $params = [];
@@ -115,7 +115,7 @@ class Twig extends Engine\AbstractEngine
         $this->twig->addFilter(new TwigFilter('ucfirst', 'ucfirst'));
 
         // add lcfirst filter
-        $this->twig->addFilter(new Twig_SimpleFilter('lcfirst', 'lcfirst'));
+        $this->twig->addFilter(new TwigFilter('lcfirst', 'lcfirst'));
 
         // add price filter
         $this->twig->addFilter(new TwigFilter('price', function ($price) use ($di) {
