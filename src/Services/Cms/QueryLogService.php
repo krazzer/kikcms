@@ -50,7 +50,7 @@ class QueryLogService extends Injectable
         $time  = (microtime(true) - $this->timingMap[$this->index]) * 1000;
 
         if ($this->queryLogMap->has($hash)) {
-            $this->queryLogMap->get($hash)->called++;
+            $this->queryLogMap->get($hash)->called += 1;
             $this->queryLogMap->get($hash)->time += $time;
         } else {
             $queryLog         = new QueryLog();
@@ -76,6 +76,7 @@ class QueryLogService extends Injectable
         $queryLogMap = clone $this->queryLogMap;
 
         foreach ($queryLogMap as $queryLog) {
+            $queryLog->time = number_format($queryLog->time, 3, '.', '');
             $queryLog->save();
             $total += $queryLog->called;
         }
