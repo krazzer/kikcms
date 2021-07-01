@@ -74,14 +74,15 @@ class FileService extends Injectable
     /**
      * @param string $folderName
      * @param int|null $folderId
-     *
+     * @param string|null $key
      * @return int
      */
-    public function createFolder(string $folderName, $folderId = null): int
+    public function createFolder(string $folderName, int $folderId = null, string $key = null): int
     {
         $folder            = new Folder();
         $folder->name      = $folderName;
         $folder->folder_id = $folderId;
+        $folder->key       = $key;
         $folder->is_folder = 1;
 
         $folder->save();
@@ -641,7 +642,7 @@ class FileService extends Injectable
             throw new Exception('When overwriting, only 1 file is allowed to upload');
         }
 
-        foreach ($files as $index => $file) {
+        foreach ($files as $file) {
             if ($file->getError()) {
                 $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
                 $uploadStatus->addError($message);

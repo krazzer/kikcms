@@ -236,11 +236,12 @@ return [
     ],
 
     'global' => [
-        'cancel'  => 'Annuleer',
-        'delete'  => 'Verwijder',
-        'no'      => 'Nee',
-        'yes'     => 'Ja',
-        'subject' => "Onderwerp",
+        'cancel'      => 'Annuleer',
+        'delete'      => 'Verwijder',
+        'no'          => 'Nee',
+        'yes'         => 'Ja',
+        'subject'     => "Onderwerp",
+        'attachments' => "Bijlagen",
     ],
 
     'login' => [

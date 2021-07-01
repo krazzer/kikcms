@@ -66,6 +66,10 @@ class CmsService extends Injectable
             $groupMap->remove(MenuConfig::MENU_GROUP_STATS);
         }
 
+        if( ! $this->config->application->storeMailForms){
+            $groupMap->removeItem(MenuConfig::MENU_GROUP_CONTENT, MenuConfig::MENU_ITEM_SENDFORMS);
+        }
+
         if ( ! $this->acl->allowed(Pages::class)) {
             if ( ! $this->acl->allowed(Permission::ACCESS_FINDER)) {
                 $groupMap->remove(MenuConfig::MENU_GROUP_CONTENT);

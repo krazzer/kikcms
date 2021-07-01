@@ -231,11 +231,12 @@ return [
     ],
 
     'global' => [
-        'cancel'  => 'Cancel',
-        'delete'  => 'Delete',
-        'no'      => 'No',
-        'yes'     => 'Yes',
-        'subject' => "Onderwerp",
+        'cancel'      => 'Cancel',
+        'delete'      => 'Delete',
+        'no'          => 'No',
+        'yes'         => 'Yes',
+        'subject'     => "Subject",
+        'attachments' => "Attachments",
     ],
 
     'login' => [

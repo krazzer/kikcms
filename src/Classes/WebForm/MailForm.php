@@ -4,11 +4,13 @@ namespace KikCMS\Classes\WebForm;
 
 use Exception;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
+use KikCMS\Classes\WebForm\Fields\FileInputField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Monolog\Logger;
+use Phalcon\Http\Request\File;
 use Phalcon\Http\ResponseInterface;
 use ReCaptcha\Response as ReCaptchaResponse;
 use Swift_Attachment;
@@ -79,7 +81,7 @@ abstract class MailForm extends WebForm
         }
 
         try {
-            $this->mailformSubmissionService->add($subject, $this->getReadableInput($input));
+            $this->mailformSubmissionService->add($subject, $this->getReadableInput($input, $this->request->getUploadedFiles(true)));
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
         }
@@ -92,11 +94,16 @@ abstract class MailForm extends WebForm
 
     /**
      * @param array $input
+     * @param File[] $files
      * @return array [label => value]
      */
-    public function getReadableInput(array $input): array
+    public function getReadableInput(array $input, array $files = []): array
     {
         $readableInput = [];
+
+        foreach ($files as $file) {
+            $input[$file->getKey()] = $file;
+        }
 
         foreach ($this->getFieldMap() as $key => $field) {
             if ($key == $this->getFormId()) {
@@ -113,6 +120,13 @@ abstract class MailForm extends WebForm
 
             if ( ! array_key_exists($key, $input)) {
                 continue;
+            }
+
+            if ($field instanceof FileInputField) {
+                $fileId = $this->fileService->create($input[$key], $this->mailformSubmissionService->getUploadsFolderId());
+                $url    = $this->twigService->mediaFile($fileId, null, true);
+
+                $input[$key] = '<a href="' . $url . '" target="blank">' . $url . '</a>';
             }
 
             if ($field instanceof SelectField) {

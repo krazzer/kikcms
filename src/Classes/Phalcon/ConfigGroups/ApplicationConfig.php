@@ -15,6 +15,7 @@ use Phalcon\Config;
  * @property string baseUri
  * @property string path
  * @property string showCliOutput
+ * @property bool storeMailForms
  */
 class ApplicationConfig extends Config
 {
