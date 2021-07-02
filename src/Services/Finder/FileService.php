@@ -641,9 +641,19 @@ class FileService extends Injectable
             throw new Exception('When overwriting, only 1 file is allowed to upload');
         }
 
-        foreach ($files as $index => $file) {
+        foreach ($files as $file) {
             if ($file->getError()) {
                 $message = $this->translator->tl('media.upload.error.failed', ['fileName' => $file->getName()]);
+                $uploadStatus->addError($message);
+                continue;
+            }
+
+            if (strlen($file->getName()) > FinderConfig::MAX_FILENAME_LENGTH) {
+                $message = $this->translator->tl('media.upload.error.nameLength', [
+                    'max'      => FinderConfig::MAX_FILENAME_LENGTH,
+                    'fileName' => substr($file->getName(), 0, 50) . '...',
+                ]);
+
                 $uploadStatus->addError($message);
                 continue;
             }

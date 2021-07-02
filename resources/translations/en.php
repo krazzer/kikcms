@@ -319,8 +319,9 @@ return [
         'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',
         'upload'                   => [
             'error' => [
-                'failed' => 'Something went wrong uploading :fileName',
-                'mime'   => "File type ':extension' is not allowed (:fileName)",
+                'failed'     => 'Something went wrong uploading :fileName',
+                'mime'       => "File type ':extension' is not allowed (:fileName)",
+                'nameLength' => "Filename (:fileName) is too long, must be under :max characters.",
             ],
         ],
     ],

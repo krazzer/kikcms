@@ -326,8 +326,9 @@ return [
         'fileTypeWarning'          => 'Alleen bestanden met de volgende extensties zijn toegestaan: ',
         'upload'                   => [
             'error' => [
-                'failed' => 'Er is iets mis gegaan bij het uploaden van :fileName',
-                'mime'   => "Bestandstype ':extension' is niet toegestaan (:fileName)",
+                'failed'     => 'Er is iets mis gegaan bij het uploaden van :fileName',
+                'mime'       => "Bestandstype ':extension' is niet toegestaan (:fileName)",
+                'nameLength' => "Bestandsnaam (:fileName) is te lang, max maximaal :max karakters zijn.",
             ],
         ],
     ],
