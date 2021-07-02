@@ -648,7 +648,7 @@ class FileService extends Injectable
                 continue;
             }
 
-            if (strlen($file->getName()) > FinderConfig::MAX_FILENAME_LENGTH) {
+            if ($file->getName() && strlen($file->getName()) > FinderConfig::MAX_FILENAME_LENGTH) {
                 $message = $this->translator->tl('media.upload.error.nameLength', [
                     'max'      => FinderConfig::MAX_FILENAME_LENGTH,
                     'fileName' => substr($file->getName(), 0, 50) . '...',
