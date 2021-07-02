@@ -394,8 +394,10 @@ class UrlService extends Injectable
 
         $pageLanguageLink = $this->pageLanguageService->getByPageId((int) $link, $pageLanguage->getLanguageCode());
 
+        $page = Page::getById($pageLanguageLink->getPageId());
+
         // you cannot link to a link
-        if ($pageLanguageLink->page->type == Page::TYPE_LINK) {
+        if ($page->type == Page::TYPE_LINK) {
             return '';
         }
 
