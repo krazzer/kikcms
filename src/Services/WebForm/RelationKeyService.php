@@ -59,9 +59,7 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $subModel         = $model->$part1;
-                    $subModel->$part2 = $this->dbService->toStorage($value);
-                    $model->$part1    = $subModel;
+                    $model->$part1->$part2 = $this->dbService->toStorage($value);
                 }
 
             break;
