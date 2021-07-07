@@ -133,7 +133,7 @@ abstract class WebForm extends Renderable
     {
         $tab = new Tab($name, $fields);
 
-        foreach ($fields as $key => $field) {
+        foreach ($fields as $field) {
             $field->setTab($tab);
         }
 
@@ -357,12 +357,14 @@ abstract class WebForm extends Renderable
 
         if ($this->isPlaceHolderAsLabel()) {
             foreach ($this->fieldMap as $field) {
-                $field->setAttribute('placeholder', $field->getElement()->getLabel());
+                if($field->getElement()) {
+                    $field->setAttribute('placeholder', $field->getElement()->getLabel());
+                }
             }
         }
 
         // add select field placeholders
-        foreach ($this->fieldMap as $key => $field) {
+        foreach ($this->fieldMap as $field) {
             if ($field instanceof SelectField && $field->getAddPlaceholder()) {
                 $placeHolderLabel = $this->translator->tl('webform.selectPlaceHolderLabel');
                 $field->getElement()->setOptions(['' => $placeHolderLabel] + $field->getElement()->getOptions());
@@ -433,7 +435,7 @@ abstract class WebForm extends Renderable
     protected function renderDataTableFields()
     {
         /** @var SelectDataTableField|DataTableField $field */
-        foreach ($this->getFieldMap() as $key => $field) {
+        foreach ($this->getFieldMap() as $field) {
             if ($field instanceof SelectDataTableField) {
                 $this->renderSelectDataTableField($field);
             }
