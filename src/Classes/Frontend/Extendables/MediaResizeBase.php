@@ -52,8 +52,8 @@ class MediaResizeBase extends WebsiteExtendable
             $newHeight = (int) ($width / ($sourceAspectRatio));
         }
 
-        $x0 = ($newWidth - $width) / 2;
-        $y0 = ($newHeight - $height) / 2;
+        $x0 = (int) (($newWidth - $width) / 2);
+        $y0 = (int) (($newHeight - $height) / 2);
 
         if($newWidth != $sourceWidth || $newHeight != $sourceHeight){
             $image->resize($newWidth, $newHeight);
