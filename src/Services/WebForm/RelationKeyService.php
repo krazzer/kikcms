@@ -32,12 +32,15 @@ class RelationKeyService extends Injectable
      * @param string $relationKey
      * @param mixed $value
      * @param string|null $langCode
+     * @return array
      */
-    public function set(Model $model, string $relationKey, $value, string $langCode = null)
+    public function set(Model $model, string $relationKey, $value, string $langCode = null): array
     {
         $relationKey = $this->replaceLangCode($relationKey, $langCode);
 
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
+
+        $relationToPreSave = [];
 
         // if the value is empty and the field is not set, remove the relation
         if (count($parts) == 2 && $parts[1] === '' && ! $value) {
@@ -45,7 +48,7 @@ class RelationKeyService extends Injectable
                 $model->{$parts[0]}->delete();
             }
 
-            return;
+            return $relationToPreSave;
         }
 
         $this->createMissingRelations($model, $parts);
@@ -59,7 +62,13 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $model->$part1->$part2 = $this->dbService->toStorage($value);
+                    $subModel         = $model->$part1;
+                    $subModel->$part2 = $this->dbService->toStorage($value);
+                    $model->$part1    = $subModel;
+
+                    if($relation->getType() == Relation::BELONGS_TO){
+                        $relationToPreSave[] =$part1;
+                    }
                 }
 
             break;
@@ -76,6 +85,8 @@ class RelationKeyService extends Injectable
                 $model->$part1->$part2->$part3->$part4->$part5 = $this->dbService->toStorage($value);
             break;
         }
+
+        return $relationToPreSave;
     }
 
     /**

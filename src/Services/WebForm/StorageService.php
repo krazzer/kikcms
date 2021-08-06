@@ -160,10 +160,13 @@ class StorageService extends Injectable
         $langCode  = $this->storageData->getLanguageCode();
         $object    = $this->storageData->getObject();
 
+        $preSaveRelations = [];
+
         // set objects' properties
         foreach ($mainInput as $key => $value) {
             if ($this->relationKeyService->isRelationKey($key)) {
-                $this->relationKeyService->set($object, $key, $value, $langCode);
+                $localPreSaveRelations = $this->relationKeyService->set($object, $key, $value, $langCode);
+                $preSaveRelations = array_merge($preSaveRelations, $localPreSaveRelations);
             } else {
                 $object->$key = $this->dbService->toStorage($value);
             }
@@ -174,6 +177,10 @@ class StorageService extends Injectable
         $this->executeBeforeMainEvents();
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
+            foreach($preSaveRelations as $preSaveRelation){
+                $object->$preSaveRelation->save();
+            }
+
             $object->save();
         } else {
             $this->disableForeignKeysForTempKeys();
