@@ -25,6 +25,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
             $config = Di::getDefault()->get('config');
 
             $record['message'] = str_replace($config->database->password, '******', $record['message']);
+            $record['message'] = str_replace(substr($config->database->password, 0, 15), '******', $record['message']);
         } catch (Exception $exception) {
         }
 

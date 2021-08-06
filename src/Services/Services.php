@@ -36,6 +36,7 @@ use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
 use Monolog\Handler\DeduplicationHandler;
+use Monolog\Handler\SwiftMailerHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache;
@@ -47,10 +48,10 @@ use Phalcon\Http\Response\Cookies;
 use Phalcon\Security;
 use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
-use Monolog\Handler\NativeMailerHandler;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
+use Swift_Message;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Phalcon\Session\Manager as SessionManager;
@@ -331,12 +332,19 @@ class Services extends BaseServices
     {
         $logger = new Logger('logger');
 
+        /** @var Swift_Mailer $mailer */
+        $mailer = $this->get('mailer');
+
         if ($this->getIniConfig()->isProd() && $developerEmail = $this->getAppConfig()->developerEmail) {
             $errorFromMail = 'error@' . $_SERVER['HTTP_HOST'];
 
-            $handler = new NativeMailerHandler($developerEmail, 'Error', $errorFromMail, Logger::NOTICE);
-            $handler->setContentType('text/html');
-            $handler->setFormatter(new PhalconHtmlFormatter());
+            $message = new Swift_Message('Error');
+            $message->setFrom($errorFromMail);
+            $message->setTo($developerEmail);
+            $message->setContentType('text/html');
+
+            $handler = new SwiftMailerHandler($mailer, $message, Logger::NOTICE);
+            $handler->setFormatter(new PhalconHtmlFormatter);
 
             $logger->pushHandler(new DeduplicationHandler($handler));
         }
