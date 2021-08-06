@@ -15,4 +15,6 @@ class FinderConfig
     const FILES_DIR = 'files';
 
     const DEFAULT_THUMB_TYPE = 'default';
+
+    const MAX_FILENAME_LENGTH = 255;
 }

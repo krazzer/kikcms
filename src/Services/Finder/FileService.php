@@ -649,6 +649,16 @@ class FileService extends Injectable
                 continue;
             }
 
+            if ($file->getName() && strlen($file->getName()) > FinderConfig::MAX_FILENAME_LENGTH) {
+                $message = $this->translator->tl('media.upload.error.nameLength', [
+                    'max'      => FinderConfig::MAX_FILENAME_LENGTH,
+                    'fileName' => substr($file->getName(), 0, 50) . '...',
+                ]);
+
+                $uploadStatus->addError($message);
+                continue;
+            }
+
             if ( ! $this->mimeTypeAllowed($file)) {
                 $message = $this->translator->tl('media.upload.error.mime', [
                     'extension' => $file->getExtension(),

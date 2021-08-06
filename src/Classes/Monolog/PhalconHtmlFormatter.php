@@ -4,8 +4,10 @@ namespace KikCMS\Classes\Monolog;
 
 
 use Exception;
+use KikCMS\Classes\Phalcon\IniConfig;
 use Monolog\Formatter\HtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Di;
 
 /**
  * Filters out the config contents in error output, as it is contained in every Injectable class
@@ -13,11 +15,28 @@ use KikCMS\Classes\Phalcon\Injectable;
 class PhalconHtmlFormatter extends HtmlFormatter
 {
     /**
+     * Attempt to filter out DB password from error messages
+     * @inheritDoc
+     */
+    public function format(array $record)
+    {
+        try {
+            /** @var IniConfig $config */
+            $config = Di::getDefault()->get('config');
+
+            $record['message'] = str_replace($config->database->password, '******', $record['message']);
+        } catch (Exception $exception) {
+        }
+
+        return parent::format($record);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function toJson($data, $ignoreErrors = false)
     {
-        if(is_object($data) || is_array($data)) {
+        if (is_object($data) || is_array($data)) {
             $data = $this->removeConfig($data);
         }
 
@@ -30,7 +49,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
      */
     public function removeConfig($data)
     {
-        if($data instanceof Injectable){
+        if ($data instanceof Injectable) {
             unset($data->config);
             unset($data->applicationConfig);
         }
@@ -47,7 +66,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
                     $data[$property] = $this->removeConfig($value);
                 }
             }
-        } catch(Exception $exception){
+        } catch (Exception $exception) {
             return $data;
         }
 
