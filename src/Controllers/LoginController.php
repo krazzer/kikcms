@@ -102,7 +102,7 @@ class LoginController extends BaseController
      */
     public function resetPasswordAction(User $user, string $token): ResponseInterface
     {
-        if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId(), PassResetConfig::LIFETIME)) {
+        if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId() . $token, PassResetConfig::LIFETIME)) {
             $errorMessage = $this->translator->tl('login.reset.password.expired');
             $this->flash->error($errorMessage);
             return $this->response->redirect('cms/login/reset');

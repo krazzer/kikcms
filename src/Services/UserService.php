@@ -39,10 +39,10 @@ class UserService extends Injectable
      */
     public function getResetUrl(User $user): string
     {
-        $token       = $this->stringService->createRandomString();
+        $token       = $this->stringService->createRandomString(16);
         $hashedToken = $this->security->hash($token);
 
-        $this->keyValue->set(PassResetConfig::PREFIX . $user->getId(), $hashedToken, PassResetConfig::LIFETIME);
+        $this->keyValue->set(PassResetConfig::PREFIX . $user->getId() . $token, $hashedToken, PassResetConfig::LIFETIME);
 
         return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $token;
     }

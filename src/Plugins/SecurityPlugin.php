@@ -21,7 +21,7 @@ class SecurityPlugin extends Injectable
 {
     const CONTROLLER_LOGIN      = 'login';
     const CONTROLLER_STATISTICS = 'statistics';
-    const CONTROLLER_ERRORS     = 'statistics';
+    const CONTROLLER_ERRORS     = 'errors';
 
     const ALLOWED_CONTROLLERS = [
         self::CONTROLLER_LOGIN,
@@ -39,7 +39,7 @@ class SecurityPlugin extends Injectable
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         $controller = $dispatcher->getControllerName();
-        $isLoggedIn = $controller == self::CONTROLLER_STATISTICS ?: $this->userService->isLoggedIn();
+        $isLoggedIn = $controller == self::CONTROLLER_STATISTICS || $this->userService->isLoggedIn();
 
         if ( ! $isLoggedIn && ! in_array($controller, self::ALLOWED_CONTROLLERS)) {
             if ($this->request->isAjax()) {
