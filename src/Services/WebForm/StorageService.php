@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
+use KikCMS\Config\DataFormConfig;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
@@ -178,7 +179,18 @@ class StorageService extends Injectable
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
             foreach($preSaveRelations as $preSaveRelation){
-                $object->$preSaveRelation->save();
+                if(strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)){
+                    $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $preSaveRelation);
+
+                    switch (count($parts)) {
+                        case 2:
+                            list($part1, $part2) = $parts;
+                            $object->$part1->$part2->save();
+                        break;
+                    }
+                } else {
+                    $object->$preSaveRelation->save();
+                }
             }
 
             $object->save();

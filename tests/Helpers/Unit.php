@@ -352,6 +352,21 @@ class Unit extends \Codeception\Test\Unit
             ],
         ]);
 
+        $db->createTable('test_company_type', '', [
+            'columns'    => [
+                new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),
+                new Column('name', ['type' => Column::TYPE_VARCHAR, 'size' => 255, 'notNull' => false]),
+            ],
+            'indexes'    => [
+                new Index('PRIMARY', ['id']),
+            ],
+            'options'    => [
+                'ENGINE'          => 'InnoDB',
+                'TABLE_COLLATION' => 'utf8_general_ci',
+                'CHARSET'         => 'utf8',
+            ],
+        ]);
+
         $db->createTable('test_person', '', [
             'columns'    => [
                 new Column('id', ['type' => Column::TYPE_INTEGER, 'size' => 11, 'notNull' => true]),

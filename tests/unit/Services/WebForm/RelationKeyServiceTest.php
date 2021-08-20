@@ -8,6 +8,7 @@ use Helpers\Unit;
 use KikCMS\Services\WebForm\RelationKeyService;
 use Website\Models\Company;
 use Website\Models\Person;
+use Website\Models\PersonImage;
 
 class RelationKeyServiceTest extends Unit
 {
@@ -27,13 +28,20 @@ class RelationKeyServiceTest extends Unit
         $person->company_id = 1;
         $person->save();
 
+        $personInterest = new PersonInterest();
+        $personInterest->id = 1;
+        $personInterest->person_id = 1;
+        $personInterest->interest_id = 1;
+        $personInterest->save();
+
         $person = Person::getById(1);
         $relationKeyService->set($person, 'company', 1);
         $person = Person::getById(1);
         $relationKeyService->set($person, 'company:person', 1);
 
 //  fix this after belongsTo bug is fixed @see https://github.com/phalcon/cphalcon/issues/15572
-//        $relationKeyService->set($person, 'company:person:company', 1);
+        $relationKeyService->set($person, 'company:name', 'CompanyY');
+        $relationKeyService->set($person, 'company:companyType:name', 'TypeX');
 //        $person = Person::getById(1);
 //        $relationKeyService->set($person, 'company:person:company:person', 1);
 //        $person = Person::getById(1);

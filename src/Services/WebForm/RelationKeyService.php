@@ -66,15 +66,41 @@ class RelationKeyService extends Injectable
                     $subModel->$part2 = $this->dbService->toStorage($value);
                     $model->$part1    = $subModel;
 
-                    if($relation->getType() == Relation::BELONGS_TO){
-                        $relationToPreSave[] =$part1;
+                    if ($relation->getType() == Relation::BELONGS_TO) {
+                        $relationToPreSave[] = $part1;
                     }
                 }
 
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
-                $model->$part1->$part2->$part3 = $this->dbService->toStorage($value);
+                $relation = $this->getRelation($model, $part1);
+
+                $part1Model = $model->$part1;
+                $part2Model = $part1Model->$part2;
+
+                if ($part2Model === null) {
+                    $part2relation  = $this->getRelation($part1Model, $part2);
+                    $part2ModelName = $part2relation->getReferencedModel();
+                    $part2Model     = new $part2ModelName();
+
+                    $part2Model->save();
+
+                    $field    = $part2relation->getFields();
+                    $refField = $part2relation->getReferencedFields();
+
+                    $part1Model->$field = $part2Model->$refField;
+                }
+
+                $part2Model->$part3 = $this->dbService->toStorage($value);
+
+                $part1Model->$part2 = $part2Model;
+                $model->$part1      = $part1Model;
+
+                if ($relation->getType() == Relation::BELONGS_TO) {
+                    $relationToPreSave[] = $part1;
+                    $relationToPreSave[] = $part1 . DataFormConfig::RELATION_KEY_SEPARATOR . $part2;
+                }
             break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
