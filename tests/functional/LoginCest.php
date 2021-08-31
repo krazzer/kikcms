@@ -44,9 +44,7 @@ class LoginCest
         $I->addUser();
         $I->amOnPage('/cms/login/reset');
 
-        $I->submitForm('#login-form form', [
-            'email' => $I::TEST_USERNAME,
-        ]);
+        $I->submitForm('#login-form form', ['email' => $I::TEST_USERNAME]);
 
         $resetPassUrl = $this->getResetPasswordUrlFromEmail();
 
