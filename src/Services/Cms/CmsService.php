@@ -10,12 +10,15 @@ use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\MenuConfig;
+use KikCMS\Config\PassResetConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Objects\CmsMenuGroup;
 use KikCMS\Objects\CmsMenuItem;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Contains some generic CMS functions
@@ -42,6 +45,17 @@ class CmsService extends Injectable
             if ($newIdsCache->getDate()->modify("+1 day") < new DateTime) {
                 $this->removeUnsavedTemporaryRecords($newIdsCache);
                 $this->keyValue->delete($cacheKey);
+            }
+        }
+
+        // remove expired password reset tokens
+        $passwordResetTokenDir = new RecursiveDirectoryIterator($this->keyValue->getAdapter()->getStorageDir());
+
+        foreach (new RecursiveIteratorIterator($passwordResetTokenDir) as $filename => $cur) {
+            if(strstr($filename, PassResetConfig::PREFIX)){
+                if(date('U') - filemtime($filename) > PassResetConfig::LIFETIME){
+                    unlink($filename);
+                }
             }
         }
     }
