@@ -39,13 +39,11 @@ class RelationKeyServiceTest extends Unit
         $person = Person::getById(1);
         $relationKeyService->set($person, 'company:person', 1);
 
-//  fix this after belongsTo bug is fixed @see https://github.com/phalcon/cphalcon/issues/15572
         $relationKeyService->set($person, 'company:name', 'CompanyY');
+        $this->assertEquals('CompanyY', $person->company->name);
+
         $relationKeyService->set($person, 'company:companyType:name', 'TypeX');
-//        $person = Person::getById(1);
-//        $relationKeyService->set($person, 'company:person:company:person', 1);
-//        $person = Person::getById(1);
-//        $relationKeyService->set($person, 'company:person:company:person:company', 1);
+        $this->assertEquals('TypeX', $person->company->companyType->name);
 
         $person = Person::getById(1);
         $relationKeyService->set($person, 'personInterests:interest_id,grade', [1 => 10]);
