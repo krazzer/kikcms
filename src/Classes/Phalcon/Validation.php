@@ -42,6 +42,11 @@ class Validation extends \Phalcon\Validation
      */
     private function setDefaultTemplate(ValidatorInterface $validator)
     {
+        // if a custom message has been set, that should be used
+        if($validator->getOption('message')){
+            return;
+        }
+
         $className = get_class($validator);
         $className = str_replace([KikCMSConfig::NAMESPACE_PATH_PHALCON_VALIDATORS, '\\'], '', $className);
 

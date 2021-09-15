@@ -72,6 +72,9 @@ abstract class WebForm extends Renderable
     /** @var string */
     protected $sendButtonClass = 'btn btn-submit btn-primary';
 
+    /** @var bool if set to true, field errors will be shown above the form instead of under the field */
+    protected $placeAlertsOnTop = false;
+
     /** @var Form|null */
     private $form = null;
 
@@ -545,7 +548,15 @@ abstract class WebForm extends Renderable
                     $message = str_replace(':label', "'" . strip_tags($formElement->getLabel()) . "'", $message);
                 }
 
-                $errorContainer->addFieldError(new FieldError($elementName, $message, $alert));
+                if($this->placeAlertsOnTop) {
+                    if ($alert) {
+                        $errorContainer->addFormError($message, [$elementName]);
+                    } else {
+                        $errorContainer->addFieldError(new FieldError($elementName, $message, false));
+                    }
+                } else {
+                    $errorContainer->addFieldError(new FieldError($elementName, $message, $alert));
+                }
             }
 
             $class = $formElement->getAttribute('class');
