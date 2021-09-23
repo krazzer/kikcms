@@ -46,11 +46,7 @@ class LoginController extends BaseController
      */
     public function initializeLanguage()
     {
-        if (isset($this->config->application->defaultCmsLanguage)) {
-            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
-        } else {
-            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
-        }
+        $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }
 
     /**
