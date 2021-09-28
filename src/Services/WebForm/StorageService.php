@@ -162,6 +162,8 @@ class StorageService extends Injectable
 
         // set objects' properties
         foreach ($mainInput as $key => $value) {
+            $key = (string) $key;
+
             if ($this->relationKeyService->isRelationKey($key)) {
                 $this->relationKeyService->set($object, $key, $value, $langCode);
             } else {
