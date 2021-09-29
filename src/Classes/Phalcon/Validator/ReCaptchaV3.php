@@ -42,7 +42,7 @@ class ReCaptchaV3 extends AbstractValidator
      */
     private function returnError(Validation $validation, $field): bool
     {
-        $validation->appendMessage(new Message('Validation error', $field));
+        $validation->appendMessage(new Message($validation->translator->tl('webform.messages.reCaptchaV3Error'), $field));
         return false;
     }
 }
