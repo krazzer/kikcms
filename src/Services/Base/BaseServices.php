@@ -96,7 +96,7 @@ class BaseServices extends ApplicationServices
         }
 
         // initialize models meta data only in production
-        if ($this->getIniConfig()->isDev()) {
+        if ($this->getIniConfig()->isProd()) {
             $this->set('modelsMetadata', function () {
                 $dir = $this->getAppConfig()->path . "cache/metadata/";
 
