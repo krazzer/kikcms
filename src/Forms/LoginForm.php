@@ -24,12 +24,12 @@ class LoginForm extends WebForm
      */
     protected function initialize()
     {
-        $this->addTextField(self::FIELD_USERNAME, 'E-mail adres');
-        $this->addPasswordField(self::FIELD_PASSWORD, 'Wachtwoord');
-        $this->addCheckboxField(self::FIELD_REMEMBER, 'Onthoud mij')->setDefault(1);
+        $this->addTextField(self::FIELD_USERNAME, $this->translator->tl('login.email'));
+        $this->addPasswordField(self::FIELD_PASSWORD, $this->translator->tl('login.password'));
+        $this->addCheckboxField(self::FIELD_REMEMBER, $this->translator->tl('login.rememberMe'))->setDefault(1);
 
         $this->setPlaceHolderAsLabel(true);
-        $this->setSendButtonLabel('Inloggen');
+        $this->setSendButtonLabel($this->translator->tl('login.login'));
     }
 
     /**

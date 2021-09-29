@@ -245,11 +245,16 @@ return [
     ],
 
     'login' => [
-        'logout'  => 'U bent succesvol uitgelogd',
-        'failed'  => 'Onjuiste combinatie van e-mail en wachtwoord.',
-        'blocked' => 'U kunt niet inloggen omdat uw account is geblokkeerd.',
-        'expired' => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
-        'back'    => 'Terug naar login scherm',
+        'email'        => 'E-mail adres',
+        'password'     => 'Wachtwoord',
+        'rememberMe'   => 'Onthoud mij',
+        'login'        => 'Inloggen',
+        'lostLinkText' => 'Wachtwoord vergeten?',
+        'logout'       => 'U bent succesvol uitgelogd',
+        'failed'       => 'Onjuiste combinatie van e-mail en wachtwoord.',
+        'blocked'      => 'U kunt niet inloggen omdat uw account is geblokkeerd.',
+        'expired'      => 'U dient (opnieuw) in te loggen om verder te kunnen gaan.',
+        'back'         => 'Terug naar login scherm',
 
         'activate' => [
             'message'     => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
@@ -258,10 +263,13 @@ return [
         ],
 
         'reset' => [
-            'flash'       => 'Er is een e-mail met reset link verzonden. Let op, deze url is slechts 2 uur geldig.',
-            'error'       => 'Er is iets mis gegaan bij het versturen van de reset link.',
-            'buttonLabel' => 'Stuur wachtwoord reset link',
-            'title'       => 'Wachtwoord resetten',
+            'newPass'          => 'Nieuw wachtwoord',
+            'repeatPass'       => 'Herhaal wachtwoord',
+            'resetButtonLabel' => 'Nieuw wachtwoord instellen',
+            'flash'            => 'Er is een e-mail met reset link verzonden. Let op, deze url is slechts 2 uur geldig.',
+            'error'            => 'Er is iets mis gegaan bij het versturen van de reset link.',
+            'buttonLabel'      => 'Stuur wachtwoord reset link',
+            'title'            => 'Wachtwoord resetten',
 
             'mail' => [
                 'subject'     => 'Wachtwoord reset / activeren',

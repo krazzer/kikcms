@@ -240,11 +240,16 @@ return [
     ],
 
     'login' => [
-        'logout'  => 'You have been logged out',
-        'failed'  => 'Incorrect combination of e-mail and password.',
-        'blocked' => 'You cannot login because your account has been blocked.',
-        'expired' => 'You need to (re)login to continue.',
-        'back'    => 'Back to login screen',
+        'email'        => 'E-mail address',
+        'password'     => 'Password',
+        'rememberMe'   => 'Remember me',
+        'login'        => 'Login',
+        'lostLinkText' => 'Lost your password?',
+        'logout'       => 'You have been logged out',
+        'failed'       => 'Incorrect combination of e-mail and password.',
+        'blocked'      => 'You cannot login because your account has been blocked.',
+        'expired'      => 'You need to (re)login to continue.',
+        'back'         => 'Back to login screen',
 
         'activate' => [
             'message'     => 'Your account is not active yet, fill in your e-mail address to activate your account.',
@@ -253,10 +258,13 @@ return [
         ],
 
         'reset' => [
-            'flash'       => 'An e-mail with reset link has been send. This url will expire in 2 hours.',
-            'error'       => 'Something went wrong sending the reset link.',
-            'buttonLabel' => 'Send password reset link',
-            'title'       => 'Reset password',
+            'newPass'          => 'New password',
+            'repeatPass'       => 'repeat password',
+            'resetButtonLabel' => 'Update password',
+            'flash'            => 'An e-mail with reset link has been send. This url will expire in 2 hours.',
+            'error'            => 'Something went wrong sending the reset link.',
+            'buttonLabel'      => 'Send password reset link',
+            'title'            => 'Reset password',
 
             'mail' => [
                 'subject'     => 'Password reset / activation',

@@ -21,7 +21,7 @@ class PasswordResetLinkForm extends WebForm
      */
     protected function initialize()
     {
-        $emailField = $this->addTextField('email', 'E-mail adres', [new PresenceOf(), new Email()]);
+        $emailField = $this->addTextField('email', $this->translator->tl('login.email'), [new PresenceOf(), new Email()]);
 
         if($email = $this->request->get('email')){
             $emailField->setDefault($email);
