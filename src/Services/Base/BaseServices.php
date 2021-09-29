@@ -96,12 +96,15 @@ class BaseServices extends ApplicationServices
         }
 
         // initialize models meta data only in production
-        if ($this->getIniConfig()->isProd()) {
+        if ($this->getIniConfig()->isDev()) {
             $this->set('modelsMetadata', function () {
-                return new Stream([
-                    "lifetime"    => 86400,
-                    "metaDataDir" => $this->getAppConfig()->path . "cache/metadata/"
-                ]);
+                $dir = $this->getAppConfig()->path . "cache/metadata/";
+
+                if( ! file_exists($dir)){
+                    mkdir($dir);
+                }
+
+                return new Stream(["lifetime"    => 86400, "metaDataDir" => $dir]);
             });
         }
 
