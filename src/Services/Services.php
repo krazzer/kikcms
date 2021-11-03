@@ -253,7 +253,9 @@ class Services extends BaseServices
     protected function initKeyValue(): Cache
     {
         $adapter = new Stream(new SerializerFactory, [
-            'storageDir' => $this->getAppConfig()->path . 'storage/keyvalue/'
+            'defaultSerializer' => 'Json',
+            'lifetime'          => pow(10, 20), //aka infinite by default
+            'storageDir'        => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);
 
         $keyValue = new KeyValue($adapter);
