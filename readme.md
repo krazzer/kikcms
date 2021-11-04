@@ -60,7 +60,7 @@ Other technologies you don't <i>need</i> to know but might come in handy if you 
 ## Guide to setting up a new project from scratch
 
 ### Boilerplate code
-1. Let's get some boilerplate code, run this in the directory you want your project to be: `git clone git@github.com:krazzer/kikcms-boilerplate.git . && rm -rf ./.git && sh createdirs.sh`
+1. Let's get some boilerplate code, run this in the directory you want your project to be: `git clone https://github.com/krazzer/kikcms-boilerplate.git . && rm -rf ./.git`
 2. If you haven't already, install [composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-macos) and make sure the `composer` command works.
 3. Run `composer install`
 4. Create symlink for cms assets `ln -s ../vendor/kiksaus/kikcms/resources public_html/cmsassets`
