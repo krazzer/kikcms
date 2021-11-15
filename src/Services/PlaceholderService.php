@@ -70,7 +70,6 @@ class PlaceholderService extends Injectable
             $placeholderTable->get($type)->add(new $className($key, $placeholder, $args), $key);
         }
 
-
         if ($placeholderMap = $placeholderTable->get(PlaceholderConfig::FILE_THUMB_URL)) {
             $replaceMap = array_merge($replaceMap, $this->getFileThumbUrlReplaceMap($placeholderMap));
         }

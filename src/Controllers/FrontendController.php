@@ -127,7 +127,7 @@ class FrontendController extends BaseController
 
     /**
      * @param null|string $languageCode
-     * @return string
+     * @return string|ResponseInterface
      * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function pageNotFoundAction(string $languageCode = null)
@@ -168,11 +168,15 @@ class FrontendController extends BaseController
         $websiteVariables    = $this->templateVariables->getGlobalVariables();
         $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
+        if(is_object($templateVariables)){
+            $templateVariables = [$templateVariables];
+        }
+
         $variables = array_merge($langSwitchVariables, $fieldVariables, $websiteVariables, $templateVariables);
 
-        // in case a form has been send, it might want to redirect
+        // in case a form has been sent, it might want to redirect
         foreach ($variables as $variable){
-            if(is_object($variable) && $variable instanceof Response){
+            if($variable instanceof Response){
                 return $variable;
             }
         }
