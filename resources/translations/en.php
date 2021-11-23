@@ -255,6 +255,12 @@ return [
             'message'     => 'Your account is not active yet, fill in your e-mail address to activate your account.',
             'buttonLabel' => 'Send account activation link',
             'title'       => 'Activate account',
+
+            'mail' => [
+                'subject'     => 'Set password',
+                'body'        => 'Press the button below to set your password. This link will expire in 2 hours.',
+                'buttonLabel' => 'Set password',
+            ],
         ],
 
         'reset' => [
@@ -267,9 +273,9 @@ return [
             'title'            => 'Reset password',
 
             'mail' => [
-                'subject'     => 'Password reset / activation',
-                'body'        => 'Press the button below to (re)set your password. This link will expire in 2 hours.',
-                'buttonLabel' => '(re)set password',
+                'subject'     => 'Password reset',
+                'body'        => 'Press the button below to reset your password. This link will expire in 2 hours.',
+                'buttonLabel' => 'Resset password',
             ],
 
             'password' => [

@@ -260,6 +260,13 @@ return [
             'message'     => 'Uw account is nog niet actief, vul uw e-mail adres in om uw account te activeren.',
             'buttonLabel' => 'Stuur account activatie link',
             'title'       => 'Account activeren',
+
+            'mail' => [
+                'subject'     => 'Wachtwoord instellen',
+                'body'        => 'Druk op de onderstaande knop om uw wachtwoord in te stellen. ' .
+                    'Let op, deze link is slechts 2 uur geldig.',
+                'buttonLabel' => 'Wachtwoord instellen',
+            ],
         ],
 
         'reset' => [
@@ -272,10 +279,10 @@ return [
             'title'            => 'Wachtwoord resetten',
 
             'mail' => [
-                'subject'     => 'Wachtwoord reset / activeren',
-                'body'        => 'Druk op de onderstaande knop om uw wachtwoord (opnieuw) in te stellen. ' .
+                'subject'     => 'Wachtwoord resetten',
+                'body'        => 'Druk op de onderstaande knop om uw wachtwoord opnieuw in te stellen. ' .
                     'Let op, deze link is slechts 2 uur geldig.',
-                'buttonLabel' => 'Wachtwoord (opnieuw) instellen',
+                'buttonLabel' => 'Wachtwoord opnieuw instellen',
             ],
 
             'password' => [

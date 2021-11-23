@@ -185,12 +185,30 @@ class UserService extends Injectable
      * @param User $user
      * @return bool
      */
-    public function sendResetMail(User $user): bool
+    public function sendActivationMail(User $user): bool
+    {
+        $subject     = $this->translator->tl('login.activate.mail.subject');
+        $body        = $this->translator->tl('login.activate.mail.body');
+        $buttonLabel = $this->translator->tl('login.activate.mail.buttonLabel');
+
+        return $this->sendResetMail($user, $subject, $body, $buttonLabel);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function sendResetpasswordMail(User $user): bool
     {
         $subject     = $this->translator->tl('login.reset.mail.subject');
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
+        return $this->sendResetMail($user, $subject, $body, $buttonLabel);
+    }
+
+    public function sendResetMail(User $user, string $subject, string $body, string $buttonLabel): bool
+    {
         $resetUrl = $this->getResetUrl($user);
 
         $parameters = [
