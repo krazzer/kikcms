@@ -90,6 +90,8 @@ class FrontendController extends BaseController
             throw new NotFoundException();
         }
 
+        $this->response->setStatusCode(200);
+
         return $this->loadPage($pageLanguage);
     }
 
@@ -180,8 +182,6 @@ class FrontendController extends BaseController
                 return $variable;
             }
         }
-
-        $this->response->setStatusCode(200);
 
         $variables['languageCode'] = $languageCode;
         $variables['pageLanguage'] = $pageLanguage;
