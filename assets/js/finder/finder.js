@@ -191,12 +191,10 @@ var Finder = Class.extend({
                 if (!multiKeyPressed || (self.pickingMode && !self.multiPick)) {
                     $fileContainer.find('.file.selected').removeClass('selected');
                 }
-console.log($file.hasClass('selected') , multiKeyPressed);
+
                 if ($file.hasClass('selected') && multiKeyPressed) {
                     self.fileDeSelect($file);
                 } else {
-                    self.fileSelect($file);
-
                     if(self.shiftKeyPressed){
                         var $firstFile = self.getSelectedFiles().first();
 
@@ -204,6 +202,8 @@ console.log($file.hasClass('selected') , multiKeyPressed);
                             self.fileSelect($(file));
                         });
                     }
+
+                    self.fileSelect($file);
                 }
 
                 e.stopPropagation();
