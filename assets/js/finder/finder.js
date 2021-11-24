@@ -2,6 +2,7 @@ var Finder = Class.extend({
     renderableInstance: null,
     renderableClass: null,
     shiftKeyPressed: false,
+    commandKeyPressed: false,
     pickingMode: false,
     multiPick: false,
     cutFileIds: [],
@@ -185,14 +186,28 @@ var Finder = Class.extend({
 
             // select a file
             $fileSelectables.click(function (e) {
-                if (!self.shiftKeyPressed || (self.pickingMode && !self.multiPick)) {
+                var multiKeyPressed = self.shiftKeyPressed || self.commandKeyPressed;
+
+                if (!multiKeyPressed || (self.pickingMode && !self.multiPick)) {
                     $fileContainer.find('.file.selected').removeClass('selected');
                 }
 
-                if ($file.hasClass('selected') && self.shiftKeyPressed) {
+                if ($file.hasClass('selected') && multiKeyPressed) {
                     self.fileDeSelect($file);
                 } else {
                     self.fileSelect($file);
+
+                    if(self.shiftKeyPressed){
+                        // $file;
+                        var $firstFile = self.getSelectedFiles().first();
+
+                        $firstFile.nextUntil($file).each(function (index, file){
+                            // console.log($fileInBetween);
+                            self.fileSelect($(file));
+                        });
+
+                        console.log('select rest');
+                    }
                 }
 
                 e.stopPropagation();
@@ -252,11 +267,19 @@ var Finder = Class.extend({
             if (e.keyCode == keyCode.SHIFT) {
                 self.shiftKeyPressed = true;
             }
+
+            if (e.keyCode == keyCode.COMMAND || e.keyCode == keyCode.CTRL) {
+                self.commandKeyPressed = true;
+            }
         });
 
         $(document).keyup(function (e) {
             if (e.keyCode == keyCode.SHIFT) {
                 self.shiftKeyPressed = false;
+            }
+
+            if (e.keyCode == keyCode.COMMAND || e.keyCode == keyCode.CTRL) {
+                self.commandKeyPressed = false;
             }
         });
     },
