@@ -19,6 +19,7 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\FrontendService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @property FrontendHelper $frontendHelper
@@ -92,7 +93,7 @@ class FrontendController extends BaseController
 
         $this->response->setStatusCode(200);
 
-        return $this->loadPage($pageLanguage);
+        return $this->loadPage($pageLanguage, (string) $urlPath);
     }
 
     /**
@@ -138,7 +139,15 @@ class FrontendController extends BaseController
         $this->view->reset();
 
         if ($pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode)) {
-            return $this->loadPage($pageLanguage);
+            $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
+
+            if($this->config->application->pageCache) {
+                if ($content = $this->pageCacheService->getContentByUrlPath($url)) {
+                    return $this->response->setContent($content);
+                }
+            }
+
+            return $this->loadPage($pageLanguage, $url);
         }
 
         if ($route = $this->websiteSettings->getNotFoundRoute()) {
@@ -150,9 +159,10 @@ class FrontendController extends BaseController
 
     /**
      * @param PageLanguage $pageLanguage
+     * @param string $urlPath
      * @return null|ResponseInterface
      */
-    private function loadPage(PageLanguage $pageLanguage): ?ResponseInterface
+    private function loadPage(PageLanguage $pageLanguage, string $urlPath): ?ResponseInterface
     {
         if ($aliasId = $pageLanguage->page->getAliasId()) {
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
@@ -196,6 +206,14 @@ class FrontendController extends BaseController
         $variables['pageKey'] = $page->key;
         $variables['helper']  = $this->frontendHelper;
 
-        return $this->view('@website/templates/' . $templateFile, $variables);
+        $response = $this->view('@website/templates/' . $templateFile, $variables);
+
+        if($this->config->application->pageCache) {
+            if( ! $this->pageCacheService->save($urlPath, $response->getContent())){
+                $this->logger->log(LogLevel::NOTICE, 'Writing page ' . $urlPath . ' to cache failed');
+            }
+        }
+
+        return $response;
     }
 }

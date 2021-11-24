@@ -41,6 +41,7 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\MailService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\NamespaceService;
+use KikCMS\Services\PageCache\PageCacheService;
 use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -120,6 +121,7 @@ use ReCaptcha\ReCaptcha;
  * @property NamespaceService namespaceService
  * @property NestedSetService nestedSetService
  * @property NumberService numberService
+ * @property PageCacheService pageCacheService
  * @property PageContentService pageContentService
  * @property PageLanguageService pageLanguageService
  * @property PageRearrangeService pageRearrangeService
