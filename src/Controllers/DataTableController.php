@@ -45,7 +45,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function addAction()
+    public function addAction(): string
     {
         $dataTable = $this->getRenderable();
 
@@ -111,13 +111,21 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function checkCheckboxAction()
+    public function checkCheckboxAction(): string
     {
-        $id      = $this->request->getPost('editId');
+        $ids     = $this->request->getPost('ids');
         $column  = $this->request->getPost('column');
         $checked = $this->request->getPost('checked');
 
-        $success = $this->getRenderable()->checkCheckbox($id, $column, $checked);
+        if (is_array($ids)) {
+            $success = [];
+
+            foreach ($ids as $id) {
+                $success[$id] = $this->getRenderable()->checkCheckbox($id, $column, $checked);
+            }
+        } else {
+            $success = $this->getRenderable()->checkCheckbox($ids, $column, $checked);
+        }
 
         return json_encode($success);
     }
@@ -125,7 +133,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function editAction()
+    public function editAction(): string
     {
         $dataTable = $this->getRenderable();
 
@@ -138,7 +146,7 @@ class DataTableController extends RenderableController
      * @return string
      * @throws UnauthorizedException
      */
-    public function saveAction()
+    public function saveAction(): string
     {
         $dataTable = $this->getRenderable();
         $editId    = $dataTable->getFilters()->getEditId();
@@ -165,7 +173,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function pageAction()
+    public function pageAction(): string
     {
         $dataTable = $this->getRenderable();
 
@@ -178,7 +186,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function rearrangeAction()
+    public function rearrangeAction(): string
     {
         $dataTable = $this->getRenderable();
 
@@ -201,7 +209,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function searchAction()
+    public function searchAction(): string
     {
         $dataTable = $this->getRenderable();
 
@@ -214,7 +222,7 @@ class DataTableController extends RenderableController
     /**
      * @return string
      */
-    public function sortAction()
+    public function sortAction(): string
     {
         $dataTable = $this->getRenderable();
 

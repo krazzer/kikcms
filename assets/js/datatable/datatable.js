@@ -362,13 +362,24 @@ var DataTable = Class.extend({
         }).change(function () {
             var $checkbox = $(this);
             var checked   = $checkbox.is(":checked");
-            var editId    = $checkbox.parent().parent().attr('data-id');
+            var ids    = $checkbox.parent().parent().attr('data-id');
             var column    = $checkbox.attr('data-col');
 
             $checkbox.attr('readonly', 'readonly');
 
+            if(self.getSelectedIds().length > 1 && self.getSelectedIds().indexOf(ids) !== -1){
+                ids = self.getSelectedIds();
+
+                $.each(self.getSelectedIds(), function (index, id){
+                    var $row = self.$table.find('[data-id=' + id + ']');
+                    var $subCheckbox = $row.find('[data-col="' + column + '"]');
+
+                    $subCheckbox.prop('checked', checked);
+                });
+            }
+
             self.action('checkCheckbox', {
-                editId: editId,
+                ids: ids,
                 column: column,
                 checked: checked ? 1 : 0
             }, function () {
