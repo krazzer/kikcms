@@ -198,15 +198,11 @@ var Finder = Class.extend({
                     self.fileSelect($file);
 
                     if(self.shiftKeyPressed){
-                        // $file;
                         var $firstFile = self.getSelectedFiles().first();
 
                         $firstFile.nextUntil($file).each(function (index, file){
-                            // console.log($fileInBetween);
                             self.fileSelect($(file));
                         });
-
-                        console.log('select rest');
                     }
                 }
 
