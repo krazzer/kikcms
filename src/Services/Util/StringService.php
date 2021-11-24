@@ -41,12 +41,12 @@ class StringService
         }
 
         $base  = strlen($chars);
-        $index = false;
+        $index = '';
         $out   = '';
 
         if ( ! $base) {
             $base = strlen($index);
-        } else if ( ! $index) {
+        } else {
             $index = substr($chars, 0, $base);
         }
 

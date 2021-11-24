@@ -25,13 +25,13 @@ class FileResizeService extends Injectable
 
         $filePath = $this->fileService->getFilePath($file);
 
-        $jpgQuality = $this->config->media->jpgQuality;
-        $maxWidth   = $this->config->media->maxWidth;
-        $maxHeight  = $this->config->media->maxHeight;
+        $jpgQuality = (int) $this->config->media->jpgQuality;
+        $maxWidth   = (int) $this->config->media->maxWidth;
+        $maxHeight  = (int) $this->config->media->maxHeight;
 
         $image = $this->imageHandler->create($filePath);
 
-        // if dimensions are larger then the maximum, resize
+        // if dimensions are larger than the maximum, resize
         if ($image->getWidth() > $maxWidth || $image->getHeight() > $maxHeight) {
             $image->resize($maxWidth, $maxHeight);
         }
