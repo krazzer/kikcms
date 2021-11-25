@@ -126,7 +126,7 @@ class DataTableCest
             'renderableInstance' => 'dataTable5dc40ab26a399',
             'renderableClass'    => 'Website\DataTables\DataTableTestObjects',
             'activeLangCode'     => 'nl',
-            'editId'             => 4,
+            'ids'                => 4,
             'column'             => 'checkbox',
             'checked'            => 1,
         ]);
