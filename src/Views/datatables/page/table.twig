@@ -17,10 +17,4 @@
     {% endif %}
 {%- endblock -%}
 
-{%- block tableRowButton -%}
-    {% if row.type != 'menu' %}
-        {{ parent() }}
-    {% else %}
-        <td></td>
-    {% endif %}
-{%- endblock -%}
+{%- block tableRowButton row.type != 'menu' ? parent() : '' -%}

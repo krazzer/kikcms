@@ -339,7 +339,7 @@ body {
                     }
 
                     &:hover:not(.dragHover) {
-                        td {
+                        td, .actions {
                             background-color: $lightGray;
                         }
                     }
@@ -349,22 +349,24 @@ body {
                             background-color: $highLightColor;
                         }
 
-                        &:hover td {
+                        &:hover td, .actions {
                             background-color: $highLightColorDark;
                         }
                     }
 
                     &.selected {
-                        td {
+                        td, td:last-child .actions {
                             background-color: $colorPink;
                             color: $colorWhite;
 
-                            svg {
-                                fill: $colorWhite;
-                            }
+                            .action {
+                                svg {
+                                    fill: $colorWhite;
+                                }
 
-                            &.action a, a {
-                                color: $colorWhite;
+                                a {
+                                    color: $colorWhite;
+                                }
                             }
 
                             .highlight {
@@ -372,41 +374,51 @@ body {
                             }
                         }
 
-                        &:hover td {
-                            background-color: $pinkDark;
+                        &:hover {
+                            td, td:last-child .actions {
+                                background-color: $pinkDark;
 
-                            .highlight {
-                                background-color: $pinkDarker;
+                                .highlight {
+                                    background-color: $pinkDarker;
+                                }
                             }
                         }
                     }
 
                     td {
-                        &.action {
-                            text-align: center;
-                            cursor: pointer;
-                            padding-left: 5px;
-                            padding-right: 5px;
-                            width: 34px;
-
-                            a {
-                                color: $colorBlack;
-                                text-decoration: none;
-                            }
-
-                            .glyphicon {
-                                display: none;
-                                margin-top: -2px;
-                            }
-
-                            svg {
-                                display: none;
-                            }
-                        }
-
                         &:last-child {
+                            position: relative;
                             padding-right: 15px;
-                            width: 44px;
+
+                            .actions{
+                                position: absolute;
+                                display: flex;
+                                visibility: hidden;
+                                pointer-events: none;
+                                right: 0;
+                                padding-right: 10px;
+                                top: 0;
+                                height: 100%;
+                                align-items: center;
+
+                                .action{
+                                    height: 100%;
+                                    width: 30px;
+                                    display: flex;
+                                    cursor: pointer;
+                                    align-items: center;
+                                    justify-content: center;
+
+                                    a {
+                                        color: $colorBlack;
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+
+                            .actions + input[type=checkbox] {
+                                margin-right: 124px;
+                            }
                         }
 
                         &.sort {
@@ -415,12 +427,9 @@ body {
                     }
 
                     &:hover {
-                        td {
-                            &.action {
-                                .glyphicon, svg {
-                                    display: block;
-                                }
-                            }
+                        td:last-child .actions {
+                            visibility: visible;
+                            pointer-events: visible;
                         }
                     }
                 }
@@ -455,10 +464,8 @@ body {
             padding: $dataTableCellPadding;
         }
 
-        .action {
-            .glyphicon, svg {
-                display: none;
-            }
+        .actions {
+            display: none;
         }
     }
 }

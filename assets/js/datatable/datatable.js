@@ -294,12 +294,16 @@ var DataTable = Class.extend({
             self.onRowClick($row, e);
         });
 
-        $rows.find('td.edit').click(function () {
+        $rows.find('.action').click(function (e) {
+            e.stopPropagation();
+        });
+
+        $rows.find('.action.edit').click(function () {
             var id = $(this).find('input[name=id]').val();
             self.actionEdit(id);
         });
 
-        $rows.find('td.delete').click(function () {
+        $rows.find('.action.delete').click(function () {
             var id = $(this).attr('data-id');
 
             if (confirm(self.getDeleteConfirmMessage(1))) {
