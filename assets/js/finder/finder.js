@@ -195,6 +195,14 @@ var Finder = Class.extend({
                 if ($file.hasClass('selected') && multiKeyPressed) {
                     self.fileDeSelect($file);
                 } else {
+                    if(self.shiftKeyPressed){
+                        var $firstFile = self.getSelectedFiles().first();
+
+                        $firstFile.nextUntil($file).each(function (index, file){
+                            self.fileSelect($(file));
+                        });
+                    }
+
                     self.fileSelect($file);
 
                     if(self.shiftKeyPressed){

@@ -8,6 +8,7 @@ use Helpers\Unit;
 use KikCMS\Services\WebForm\RelationKeyService;
 use Website\Models\Company;
 use Website\Models\Person;
+use Website\Models\PersonImage;
 
 class RelationKeyServiceTest extends Unit
 {
@@ -27,16 +28,23 @@ class RelationKeyServiceTest extends Unit
         $person->company_id = 1;
         $person->save();
 
+        $personInterest = new PersonInterest();
+        $personInterest->id = 1;
+        $personInterest->person_id = 1;
+        $personInterest->interest_id = 1;
+        $personInterest->save();
+
         $person = Person::getById(1);
         $relationKeyService->set($person, 'company', 1);
         $person = Person::getById(1);
         $relationKeyService->set($person, 'company:person', 1);
-        $person = Person::getById(1);
-        $relationKeyService->set($person, 'company:person:company', 1);
-        $person = Person::getById(1);
-        $relationKeyService->set($person, 'company:person:company:person', 1);
-        $person = Person::getById(1);
-        $relationKeyService->set($person, 'company:person:company:person:company', 1);
+
+        $relationKeyService->set($person, 'company:name', 'CompanyY');
+        $this->assertEquals('CompanyY', $person->company->name);
+
+        $relationKeyService->set($person, 'company:companyType:name', 'TypeX');
+        $this->assertEquals('TypeX', $person->company->companyType->name);
+
         $person = Person::getById(1);
         $relationKeyService->set($person, 'personInterests:interest_id,grade', [1 => 10]);
         $relationKeyService->set($person, 'personInterests:interest_id,grade', [1 => null]);

@@ -1,23 +1,30 @@
 {
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/krazzer/module-phalcon4.git"
+        }
+    ],
     "homepage": "https://kikcms.com",
     "license": "MIT",
     "name": "kiksaus/kikcms",
     "config": {
         "platform": {
-            "php": "7.2",
+            "php": "7.4",
             "ext-zip": "master",
-            "ext-sockets": "master"
+            "ext-sockets": "master",
+            "ext-phalcon": "4.0"
         },
         "platform-check": false
     },
     "description": "A CMS based on the Phalcon Framework",
     "require": {
-        "twig/twig": "~1.0",
+        "twig/twig": "~3.0",
         "google/apiclient": "^2.0",
         "nette/php-generator": "^3.1",
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
-        "kiksaus/kikcms-core": "dev-master"
+        "kiksaus/kikcms-core": "dev-phalcon4"
     },
     "autoload": {
         "psr-4": {
@@ -33,6 +40,7 @@
         "codeception/module-asserts": "^1.0.0",
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-phalcon": "^1.0.0",
-        "codeception/module-cli": "^1.0.0"
+        "codeception/module-cli": "^1.0.0",
+        "kiksaus/module-phalcon4": "dev-master"
     }
 }

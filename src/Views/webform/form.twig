@@ -42,7 +42,9 @@
             {{ block('fields') }}
         {% endif %}
 
-        <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
+        {% if not config('application.jsCsrf') %}
+            <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
+        {% endif %}
 
         {% if(displaySendButton) %}
             <div class="form-group webform__submit">

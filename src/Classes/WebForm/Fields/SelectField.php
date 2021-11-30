@@ -4,13 +4,13 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element;
+use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Element\Select;
 
 class SelectField extends Field
 {
     /** @var bool */
-    private $addPlaceholder = false;
+    private bool $addPlaceholder = false;
 
     /**
      * @param string $key
@@ -49,9 +49,9 @@ class SelectField extends Field
     }
 
     /**
-     * @return null|Element|Select
+     * @return null|ElementInterface|Select
      */
-    public function getElement(): ?Element
+    public function getElement(): ?ElementInterface
     {
         return parent::getElement();
     }

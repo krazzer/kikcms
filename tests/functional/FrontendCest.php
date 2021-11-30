@@ -30,18 +30,19 @@ class FrontendCest
     {
         $I->getDbService()->insert(File::class, ['id' => 1, 'name' => 'testfile.png', 'hash' => 'abc', 'extension' => 'png']);
 
+        $baseUrl = $I->getApplication()->url->get('');
+
         $I->amOnPage('/');
         $I->see('Home');
 
         $I->see('
-            Finder allowed: no
             Config: test@test.dev
             Config not found:
             CSS:
             mediaFile empty:
-            mediaFile empty: https://kikcmstest.dev/media/files/1-testfile.png
-            mediaFile thumb: https://kikcmstest.dev/media/thumbs/example/1.png
-            mediaFileBg: background-image: url(\'https://kikcmstest.dev/media/files/1-testfile.png\');
+            mediaFile empty: ' . $baseUrl . 'media/files/1-testfile.png
+            mediaFile thumb: ' . $baseUrl . 'media/thumbs/example/1.png
+            mediaFileBg: background-image: url(\'' . $baseUrl . 'media/files/1-testfile.png\');
             url: /pagina-2
             url straight: /some-url
             url by key: /
@@ -51,7 +52,7 @@ class FrontendCest
             svg numeric & fail: ?
             tl: Developer
             ucfirst: Cheese
-            url: https://kikcmstest.dev/test-url
+            url: ' . $baseUrl . 'test-url
         ');
 
         $I->amOnPage('/nonexistingpage');

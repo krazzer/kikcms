@@ -5,28 +5,25 @@ namespace KikCMS\Classes\Phalcon;
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\TwigService;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\View\Engine;
-use Phalcon\Mvc\View\EngineInterface;
 use Phalcon\Mvc\ViewBaseInterface;
-use Twig_Environment;
-use Twig_Extension_Debug;
-use Twig_Loader_Filesystem;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 /**
  * Class Twig
  * @package Phalcon\Mvc\View\Engine
  */
-class Twig extends Engine implements EngineInterface
+class Twig extends Engine\AbstractEngine
 {
     const DEFAULT_EXTENSION = '.twig';
 
-    /**
-     * @var Twig_Environment
-     */
-    protected $twig;
+    /** @var Environment */
+    protected Environment $twig;
 
     /**
      * @param mixed|ViewBaseInterface $view
@@ -38,16 +35,16 @@ class Twig extends Engine implements EngineInterface
     {
         parent::__construct($view, $di);
 
-        $loader = new Twig_Loader_Filesystem($this->getView()->getViewsDir());
+        $loader = new FilesystemLoader($this->getView()->getViewsDir());
 
         foreach ($paths as $namespace => $path) {
             $loader->addPath($path, $namespace);
         }
 
-        $this->twig = new Twig_Environment($loader, $options);
+        $this->twig = new Environment($loader, $options);
 
         if ($this->twig->isDebug()) {
-            $this->twig->addExtension(new Twig_Extension_Debug());
+            $this->twig->addExtension(new DebugExtension());
         }
 
         $this->registryFunctions($di);
@@ -56,7 +53,7 @@ class Twig extends Engine implements EngineInterface
     /**
      * @return View|ViewBaseInterface
      */
-    public function getView()
+    public function getView(): ViewBaseInterface
     {
         return parent::getView();
     }
@@ -66,7 +63,7 @@ class Twig extends Engine implements EngineInterface
      * @param mixed $params
      * @param bool $mustClean
      */
-    public function render($path, $params, $mustClean = false)
+    public function render(string $path, $params, bool $mustClean = false)
     {
         if ( ! $params) {
             $params = [];
@@ -106,27 +103,27 @@ class Twig extends Engine implements EngineInterface
         $twigService = $di->get('twigService');
 
         foreach ($functions as $function) {
-            $this->twig->addFunction(new Twig_SimpleFunction($function, [$twigService, $function], $options));
+            $this->twig->addFunction(new TwigFunction($function, [$twigService, $function], $options));
         }
 
         // add truncate filter
-        $this->twig->addFilter(new Twig_SimpleFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
+        $this->twig->addFilter(new TwigFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
             return $di->getShared("stringService")->truncate((string) $string, $maxLength);
         }));
 
         // add ucfirst filter
-        $this->twig->addFilter(new Twig_SimpleFilter('ucfirst', 'ucfirst'));
+        $this->twig->addFilter(new TwigFilter('ucfirst', 'ucfirst'));
 
         // add lcfirst filter
-        $this->twig->addFilter(new Twig_SimpleFilter('lcfirst', 'lcfirst'));
+        $this->twig->addFilter(new TwigFilter('lcfirst', 'lcfirst'));
 
         // add price filter
-        $this->twig->addFilter(new Twig_SimpleFilter('price', function ($price) use ($di) {
+        $this->twig->addFilter(new TwigFilter('price', function ($price) use ($di) {
             return $di->getShared("numberService")->getPriceFormat((float) $price);
         }));
 
         // add date filter
-        $this->twig->addFilter(new Twig_SimpleFilter('date', function ($dateTime, string $format = null) use ($di) {
+        $this->twig->addFilter(new TwigFilter('date', function ($dateTime, string $format = null) use ($di) {
             if( ! $dateTime){
                 return '';
             }

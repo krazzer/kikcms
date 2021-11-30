@@ -59,6 +59,7 @@ var WebForm = Class.extend({
         this.initFileFields();
         this.initWysiwyg();
         this.initPopovers();
+        this.initCsrf();
     },
 
     /**
@@ -109,6 +110,22 @@ var WebForm = Class.extend({
             limit: 10,
             source: substringMatcher(data)
         });
+    },
+
+    initCsrf: function (){
+        var self = this;
+
+        setTimeout(function (){
+            KikCMS.action('/cms/webform/token/', {}, function (result) {
+                var key   = result[0];
+                var token = result[1];
+
+                var tokenField = '<input type="hidden" name="' + key + '" value="' + token + '" />';
+                var $form = self.getWebForm().find('form');
+
+                $form.append(tokenField);
+            });
+        }, 1500);
     },
 
     /**
@@ -395,11 +412,18 @@ var WebForm = Class.extend({
      * @param $field
      */
     onPickFile: function ($file, $field) {
+        $file.removeClass('selected');
+        this.pickFile($file.data('id'), $field);
+    },
+
+    /**
+     * @param fileId
+     * @param $field
+     */
+    pickFile: function (fileId, $field) {
         var self          = this;
-        var fileId        = $file.attr('data-id');
         var $uploadButton = this.getUploadButtonForFileField($field);
 
-        $file.removeClass('selected');
         $uploadButton.removeClass('disabled');
 
         KikCMS.action('/cms/webform/filepreview/' + fileId, {}, function (result) {

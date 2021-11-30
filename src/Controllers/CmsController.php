@@ -14,6 +14,7 @@ use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Objects\MailformSubmission\MailformSubmissions;
 use KikCMS\Services\Analytics\AnalyticsService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\DataTable\TinyMceService;
@@ -22,7 +23,6 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\TranslationService;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 /**
@@ -47,17 +47,18 @@ class CmsController extends BaseCmsController
         $finder = new Finder();
         $finder->setPickingMode(true);
 
-        $this->view->title  = $this->translator->tl('menu.item.media');
-        $this->view->finder = $finder->render();
-        $this->view->pick('cms/filePicker');
+        return $this->view('cms/filePicker', [
+            'title'  => $this->translator->tl('menu.item.media'),
+            'finder' => $finder->render(),
+        ]);
     }
 
     /**
      * First page to show when the user logs in, to avoid POST reset, redirect.
      *
-     * @return Response
+     * @return ResponseInterface|null
      */
-    public function indexAction()
+    public function indexAction(): ?ResponseInterface
     {
         $menuGroupMap  = $this->cmsService->getMenuGroupMap();
         $firstMenuItem = $menuGroupMap->getFirst()->getMenuItemMap()->getFirst();
@@ -66,66 +67,82 @@ class CmsController extends BaseCmsController
             return $this->response->redirect($firstMenuItem->getRoute());
         }
 
-        $this->view->title  = 'No available item found';
-        $this->view->object = $this->view->title;
-
-        $this->view->pick('cms/default');
-
-        return null;
+        return $this->view('cms/default', [
+            'title'  => 'No available item found',
+            'object' => 'No available item found'
+        ], 200);
     }
 
     /**
      * Manages pages
      */
-    public function pagesAction()
+    public function pagesAction(): ResponseInterface
     {
-        $this->view->title  = $this->translator->tl('menu.item.pages');
-        $this->view->object = (new Pages())->render();
-        $this->view->pick('cms/default');
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.pages'),
+            'object' => (new Pages)->render(),
+        ]);
     }
 
     /**
      * Manage images and other files
+     * @return ResponseInterface
      */
-    public function mediaAction()
+    public function mediaAction(): ResponseInterface
     {
-        $this->view->title  = $this->translator->tl('menu.item.media');
-        $this->view->object = (new Finder())->render();
-        $this->view->pick('cms/default');
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.media'),
+            'object' => (new Finder)->render(),
+        ]);
     }
 
     /**
      * Manage Website/CMS settings
+     * @return ResponseInterface
      */
-    public function settingsAction()
+    public function settingsAction(): ResponseInterface
     {
         $this->translationService->createSiteTranslationKeys();
 
-        $this->view->title  = $this->translator->tl('menu.item.settings');
-        $this->view->object = (new SettingsForm())->render();
-        $this->view->pick('cms/settings');
+        return $this->view('cms/settings', [
+            'title'  => $this->translator->tl('menu.item.settings'),
+            'object' => (new SettingsForm)->render(),
+        ]);
     }
 
     /**
      * Manage users
+     * @return ResponseInterface
      */
-    public function usersAction()
+    public function usersAction(): ResponseInterface
     {
-        $this->view->title  = $this->translator->tl('menu.item.users');
-        $this->view->object = (new Users())->render();
-        $this->view->pick('cms/default');
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.users'),
+            'object' => (new Users)->render(),
+        ]);
+    }
+
+    /**
+     * DataTable for viewing mail form submission
+     * @return ResponseInterface
+     */
+    public function sendformsAction(): ResponseInterface
+    {
+        return $this->view('cms/default', [
+            'title'  => $this->translator->tl('menu.item.sendforms'),
+            'object' => (new MailformSubmissions)->render(),
+        ]);
     }
 
     /**
      * Show the website's visitors
+     * @return ResponseInterface
      */
-    public function statsAction()
+    public function statsAction(): ResponseInterface
     {
         if ( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
             throw new UnauthorizedException();
         }
-
-        $this->view->title = $this->translator->tl('menu.item.stats');
 
         $startDate = $this->dateTimeService->getOneYearAgoFirstDayOfMonth();
         $maxDate   = $this->analyticsService->getMaxDate() ?: new DateTime();
@@ -135,7 +152,7 @@ class CmsController extends BaseCmsController
             $startDate = null;
         }
 
-        $this->view->settings = [
+        $settings = [
             'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
             'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,
             'maxDate'    => $maxDate->format(KikCMSConfig::DATE_FORMAT),
@@ -144,7 +161,10 @@ class CmsController extends BaseCmsController
 
         $this->assetService->addJs('https://www.gstatic.com/charts/loader.js');
 
-        $this->view->pick('cms/statistics');
+        return $this->view('cms/statistics', [
+            'title'    => $this->translator->tl('menu.item.stats'),
+            'settings' => $settings,
+        ]);
     }
 
     /**
@@ -159,13 +179,13 @@ class CmsController extends BaseCmsController
 
     /**
      * @param null $languageCode
-     * @return string
+     * @return ResponseInterface
      */
-    public function getTinyMceLinksAction($languageCode = null)
+    public function getTinyMceLinksAction($languageCode = null): ResponseInterface
     {
         $languageCode = $languageCode ? $languageCode : $this->languageService->getDefaultLanguageCode();
 
-        return json_encode($this->tinyMceService->getLinkList($languageCode));
+        return $this->response->setJsonContent($this->tinyMceService->getLinkList($languageCode));
     }
 
     /**
@@ -200,10 +220,13 @@ class CmsController extends BaseCmsController
 
     /**
      * Logout the CMS user
+     * @return ResponseInterface
      */
-    public function logoutAction()
+    public function logoutAction(): ResponseInterface
     {
         $this->userService->logout();
+
+        return $this->response->redirect('cms/login');
     }
 
     /**

@@ -22,6 +22,7 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * @property AccessControl $acl
@@ -43,7 +44,7 @@ class Pages extends DataTable
     /** @inheritdoc */
     protected $searchableFields = ['pl.name'];
 
-    /** @inheritdoc */
+    /** @var bool */
     protected $preLoadWysiwygJs = true;
 
     /** @inheritdoc */
@@ -197,7 +198,7 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
-    protected function getDefaultQuery()
+    protected function getDefaultQuery(): BuilderInterface
     {
         $langCode        = $this->getFilters()->getLanguageCode();
         $defaultLangCode = $this->languageService->getDefaultLanguageCode();
@@ -210,9 +211,9 @@ class Pages extends DataTable
             ->orderBy('IFNULL(p.lft, 99999 + IFNULL(p.display_order, 99999 + p.id)) asc')
             ->groupBy('p.id')
             ->columns([
-                'pld.name AS default_language_name', 'p.template', 'pl.name', 'p.id', 'p.display_order',
-                'p.level', 'p.lft', 'p.rgt', 'p.type', 'p.parent_id', 'p.menu_max_level', 'pl.active', 'pl.slug',
-                'pl.id AS plid', 'p.key'
+                'pld.name AS default_language_name', 'p.template AS template', 'pl.name AS name', 'p.id AS id',
+                'p.display_order AS display_order', 'p.level', 'p.lft', 'p.rgt', 'p.type AS type', 'p.parent_id',
+                'p.menu_max_level', 'pl.active AS active', 'pl.slug AS slug', 'pl.id AS plid', 'p.key AS key'
             ]);
 
         if ( ! $this->getAllowedTemplateKeys()) {

@@ -21,7 +21,7 @@ class PagesDataTableController extends DataTableController
     /**
      * @inheritdoc
      */
-    public function deleteAction()
+    public function deleteAction(): string
     {
         try {
             return parent::deleteAction();
@@ -34,7 +34,7 @@ class PagesDataTableController extends DataTableController
     /**
      * @inheritDoc
      */
-    public function rearrangeAction()
+    public function rearrangeAction(): string
     {
         if($this->getRenderable()->getSortableField() === Page::FIELD_DISPLAY_ORDER){
             return $this->treeOrderAction();

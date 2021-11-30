@@ -6,8 +6,7 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\Section;
-use Phalcon\Forms\Element;
-use Phalcon\Forms\ElementInterface;
+use Phalcon\Forms\Element\ElementInterface;
 
 /**
  * Represents a field of a form
@@ -37,7 +36,7 @@ abstract class Field
     /** @var WebForm|DataForm */
     protected $form;
 
-    /** @var Element|null */
+    /** @var ElementInterface|null */
     protected $element;
 
     /** @var string unique identifier for the field */
@@ -49,17 +48,17 @@ abstract class Field
     /** @var FieldTransformer[] */
     private $transformers = [];
 
-    /** @var Tab */
-    private $tab;
+    /** @var Tab|null */
+    private $tab = null;
 
-    /** @var Section */
-    private $section;
+    /** @var Section|null */
+    private $section = null;
 
     /** @var bool whether this field is required or not, note that this does nothing with validation */
     private $required = false;
 
     /** @var string|null */
-    private $helpText;
+    private $helpText = null;
 
     /** @var bool */
     private $dontStore = false;
@@ -131,9 +130,9 @@ abstract class Field
     }
 
     /**
-     * @return null|Element
+     * @return null|ElementInterface
      */
-    public function getElement(): ?Element
+    public function getElement(): ?ElementInterface
     {
         return $this->element;
     }
@@ -160,10 +159,10 @@ abstract class Field
     }
 
     /**
-     * @param Element|ElementInterface $element
+     * @param ElementInterface $element
      * @return $this|Field
      */
-    public function setElement(Element $element): Field
+    public function setElement(ElementInterface $element): Field
     {
         $this->element = $element;
         return $this;

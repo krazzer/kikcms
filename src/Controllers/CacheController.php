@@ -6,35 +6,27 @@ namespace KikCMS\Controllers;
 
 use DateTime;
 use KikCMS\Config\MenuConfig;
-use KikCMS\Services\CacheService;
-use KikCMS\Services\Util\ByteService;
-use Phalcon\Cache\Backend;
 use Phalcon\Http\ResponseInterface;
 
-/**
- * @property CacheService $cacheService
- * @property Backend $cache
- * @property ByteService $byteService
- */
 class CacheController extends BaseCmsController
 {
     /**
      * Display control panel for APCu cache
      */
-    public function managerAction()
+    public function managerAction(): ResponseInterface
     {
         $cacheInfo = @apcu_cache_info() ?: [];
 
         $startTime = isset($cacheInfo['start_time']) ? (new DateTime())->setTimestamp($cacheInfo['start_time']) : new DateTime;
 
-        $this->view->title            = 'Cache beheer';
-        $this->view->cacheInfo        = $cacheInfo;
-        $this->view->uptime           = $startTime->diff(new DateTime());
-        $this->view->memorySize       = $this->byteService->bytesToString((int) ($cacheInfo['mem_size'] ?? 0));
-        $this->view->cacheNodeMap     = $this->cacheService->getCacheNodeMap();
-        $this->view->selectedMenuItem = MenuConfig::MENU_ITEM_SETTINGS;
-
-        $this->view->pick('cms/cacheManager');
+        return $this->view('cms/cacheManager', [
+            'title'            => 'Cache beheer',
+            'cacheInfo'        => $cacheInfo,
+            'uptime'           => $startTime->diff(new DateTime()),
+            'memorySize'       => $this->byteService->bytesToString((int) ($cacheInfo['mem_size'] ?? 0)),
+            'cacheNodeMap'     => $this->cacheService->getCacheNodeMap(),
+            'selectedMenuItem' => MenuConfig::MENU_ITEM_SETTINGS,
+        ], 200);
     }
 
     /**

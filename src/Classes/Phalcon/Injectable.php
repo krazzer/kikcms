@@ -8,6 +8,7 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
+use KikCMS\Objects\MailformSubmission\MailformSubmissionService;
 use KikCMS\Services\Analytics\AnalyticsGoogleService;
 use KikCMS\Services\Analytics\AnalyticsImportService;
 use KikCMS\Services\Analytics\AnalyticsService;
@@ -40,6 +41,7 @@ use KikCMS\Services\LanguageService;
 use KikCMS\Services\MailService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\NamespaceService;
+use KikCMS\Services\PageCache\PageCacheService;
 use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -66,10 +68,11 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Services\WebForm\WebFormService;
 use KikCMS\Services\Website\FrontendHelper;
 use KikCMS\Services\Website\FrontendService;
+use KikCMS\Services\Website\MailFormService;
 use KikCMS\Services\Website\MenuService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
-use Phalcon\Cache\Backend;
+use Phalcon\Cache;
 use Phalcon\Validation;
 use ReCaptcha\ReCaptcha;
 
@@ -83,7 +86,7 @@ use ReCaptcha\ReCaptcha;
  * @property AssetService assetService
  * @property BaseServices baseServices
  * @property ByteService byteService
- * @property Backend cache
+ * @property Cache cache
  * @property CacheService cacheService
  * @property IniConfig config
  * @property CmsService cmsService
@@ -110,12 +113,15 @@ use ReCaptcha\ReCaptcha;
  * @property KeyValue $keyValue
  * @property LanguageService languageService
  * @property Logger $logger
+ * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
+ * @property MailFormService mailFormService
  * @property MenuService menuService
  * @property ModelService modelService
  * @property NamespaceService namespaceService
  * @property NestedSetService nestedSetService
  * @property NumberService numberService
+ * @property PageCacheService pageCacheService
  * @property PageContentService pageContentService
  * @property PageLanguageService pageLanguageService
  * @property PageRearrangeService pageRearrangeService

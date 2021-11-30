@@ -23,10 +23,10 @@ use Phalcon\Tag;
 class TwigService extends Injectable
 {
     /** @var string */
-    private $mediaStoragePath;
+    private string $mediaStoragePath;
 
     /** @var string */
-    private $iconStoragePath;
+    private string $iconStoragePath;
 
     /**
      * @param string $mediaStoragePath
@@ -143,7 +143,7 @@ class TwigService extends Injectable
 
         $cacheKey = CacheConfig::getUrlKey($pageId, $langCode);
 
-        return $this->cacheService->cache($cacheKey, function () use ($pageId, $langCode){
+        return (string) $this->cacheService->cache($cacheKey, function () use ($pageId, $langCode){
             if (is_numeric($pageId)) {
                 return $this->urlService->getUrlByPageId((int) $pageId, $langCode);
             }

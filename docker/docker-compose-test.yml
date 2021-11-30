@@ -1,10 +1,10 @@
 version: "3"
 services:
   php:
-    image: kiksaus/kikdev-cov
+    image: kiksaus/kikdev-phalcon4-cov
     restart: always
     ports:
-        - "9901:443"
+        - "9902:443"
     volumes:
         - ../tests/TestSitePath/public_html/:/var/www/html:cached
         - ../resources/:/var/www/html/cmsassets:cached
@@ -15,7 +15,7 @@ services:
     networks:
       kikdev:
         aliases:
-          - kikcmstest.dev
+          - kikcmstest-phalcon4.dev
     environment:
       XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
@@ -23,8 +23,8 @@ services:
     image: mailhog/mailhog
     restart: always
     ports:
-      - "8026:8025"
-      - "1026:1025"
+      - "8027:8025"
+      - "1027:1025"
     networks:
       kikdev:
         aliases:
@@ -34,7 +34,7 @@ services:
     image: selenium/standalone-chrome:3.141.59-mercury
     restart: always
     ports:
-      - "4444:4444"
+      - "4445:4444"
     networks:
       kikdev:
         aliases:

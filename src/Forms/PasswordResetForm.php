@@ -40,9 +40,9 @@ class PasswordResetForm extends WebForm
 
         $password = new Regex(['pattern' => '/^([^ ]*)$/', 'message' => $this->translator->tl('login.reset.password.space')]);
 
-        $this->addTextField('email', 'E-mail')->setDefault($this->user->email)->setAttribute('readonly', 'readonly');
-        $this->addPasswordField('password', 'Nieuw wachtwoord', [$passwordStringLength, $password]);
-        $this->addPasswordField('password_repeat', 'Herhaal wachtwoord', [
+        $this->addTextField('email', $this->translator->tl('login.email'))->setDefault($this->user->email)->setAttribute('readonly', 'readonly');
+        $this->addPasswordField('password', $this->translator->tl('login.reset.newPass'), [$passwordStringLength, $password]);
+        $this->addPasswordField('password_repeat', $this->translator->tl('login.reset.repeatPass'), [
             new Identical([
                 'value'   => $this->getElement('password')->getValue(),
                 'message' => $this->translator->tl('webform.messages.passwordMismatch'),
@@ -50,7 +50,7 @@ class PasswordResetForm extends WebForm
         ]);
 
         $this->setPlaceHolderAsLabel(true);
-        $this->setSendButtonLabel('Nieuw wachtwoord instellen');
+        $this->setSendButtonLabel($this->translator->tl('login.reset.resetButtonLabel'));
     }
 
     /**

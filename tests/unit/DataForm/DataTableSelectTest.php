@@ -10,6 +10,7 @@ use Helpers\Models\Interest;
 use Helpers\Models\Person;
 use Helpers\Models\PersonInterest;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Security;
 use PHPUnit\Framework\TestCase;
 
 class DataTableSelectTest extends TestCase
@@ -24,6 +25,11 @@ class DataTableSelectTest extends TestCase
         $form->db->delete(PersonInterest::TABLE);
         $form->db->delete(Interest::TABLE);
         $form->db->delete(Person::TABLE);
+
+        $securityMock = $this->createMock(Security::class);
+        $securityMock->method('checkToken')->willReturn(true);
+
+        $form->security = $securityMock;
 
         $interest       = new Interest;
         $interest->id   = 1;
@@ -65,6 +71,7 @@ class DataTableSelectTest extends TestCase
         $form = new PersonDataTableSelectForm();
         $form->setDI($testDi);
         $form->setFilters($filters);
+        $form->security = $securityMock;
 
         $form->render();
 

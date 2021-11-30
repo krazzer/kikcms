@@ -7,14 +7,13 @@ use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Classes\Exceptions\SessionExpiredException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
-use Phalcon\Dispatcher;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
 use Phalcon\Mvc\Dispatcher as MvcDispatcher;
-use Phalcon\Mvc\User\Plugin;
 
 /**
  * NotFoundPlugin
@@ -23,11 +22,11 @@ use Phalcon\Mvc\User\Plugin;
  *
  * @property UserService $userService
  */
-class BackendNotFoundPlugin extends Plugin
+class BackendNotFoundPlugin extends Injectable
 {
     const DISPATCH_ERRORS = [
-        Dispatcher::EXCEPTION_HANDLER_NOT_FOUND,
-        Dispatcher::EXCEPTION_ACTION_NOT_FOUND
+        DispatcherException::EXCEPTION_HANDLER_NOT_FOUND,
+        DispatcherException::EXCEPTION_ACTION_NOT_FOUND
     ];
 
     /**

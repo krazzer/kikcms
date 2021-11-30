@@ -10,6 +10,7 @@ use KikCMS\Forms\PageForm;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\DataTables\Filters\PagesDataTableFilters;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * Pages datatable for one-level, one-template
@@ -26,7 +27,7 @@ abstract class PagesFlat extends DataTable
     /**
      * @inheritdoc
      */
-    public function getDefaultQuery()
+    public function getDefaultQuery(): BuilderInterface
     {
         $langCode = $this->getFilters()->getLanguageCode();
 

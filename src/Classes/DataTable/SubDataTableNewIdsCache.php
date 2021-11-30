@@ -3,6 +3,8 @@
 
 namespace KikCMS\Classes\DataTable;
 
+use DateTime;
+
 /**
  * Contains the ids of a SubDataTable which parent hasn't been saved yet
  */
@@ -16,6 +18,14 @@ class SubDataTableNewIdsCache
 
     /** @var string */
     private $model;
+
+    /** @var DateTime */
+    private $date;
+
+    public function __construct()
+    {
+        $this->date = new DateTime();
+    }
 
     /**
      * @param int $id
@@ -78,6 +88,24 @@ class SubDataTableNewIdsCache
     public function setModel(string $model): SubDataTableNewIdsCache
     {
         $this->model = $model;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDate(): DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param DateTime $dateTime
+     * @return $this
+     */
+    public function setDate(DateTime $dateTime): SubDataTableNewIdsCache
+    {
+        $this->date = $dateTime;
         return $this;
     }
 }

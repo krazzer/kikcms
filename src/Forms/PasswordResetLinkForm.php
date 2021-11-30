@@ -3,6 +3,7 @@
 namespace KikCMS\Forms;
 
 use KikCMS\Classes\WebForm\WebForm;
+use KikCMS\Models\User;
 use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
 use Phalcon\Validation\Validator\PresenceOf;
@@ -21,7 +22,7 @@ class PasswordResetLinkForm extends WebForm
      */
     protected function initialize()
     {
-        $emailField = $this->addTextField('email', 'E-mail adres', [new PresenceOf(), new Email()]);
+        $emailField = $this->addTextField('email', $this->translator->tl('login.email'), [new PresenceOf(), new Email()]);
 
         if($email = $this->request->get('email')){
             $emailField->setDefault($email);
@@ -45,11 +46,20 @@ class PasswordResetLinkForm extends WebForm
             return;
         }
 
-        if ($this->userService->sendResetMail($user)) {
+        if ($this->sendMail($user)) {
             $this->flash->success($this->translator->tl('login.reset.flash'));
             $_POST = [];
         } else {
             $this->flash->error($this->translator->tl('login.reset.error'));
         }
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    protected function sendMail(User $user): bool
+    {
+        return $this->userService->sendResetpasswordMail($user);
     }
 }

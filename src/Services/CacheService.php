@@ -8,12 +8,12 @@ use KikCMS\Models\Page;
 use KikCMS\ObjectLists\CacheNodeMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
-use Phalcon\Cache\Backend;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Cache;
 
 /**
  * @property DbService $dbService
- * @property Backend $cache
+ * @property Cache $cache
  */
 class CacheService extends Injectable
 {
@@ -23,6 +23,11 @@ class CacheService extends Injectable
     public function clear(string $prefix = '')
     {
         if ( ! $this->cache) {
+            return;
+        }
+
+        if( ! $prefix){
+            $this->cache->clear();
             return;
         }
 
@@ -82,14 +87,14 @@ class CacheService extends Injectable
             return $function();
         }
 
-        if ($this->cache->exists($cacheKey)) {
+        if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);
         }
 
         $result = $function();
 
         if ($result !== null) {
-            $this->cache->save($cacheKey, $result, $ttl);
+            $this->cache->set($cacheKey, $result, $ttl);
         }
 
         return $result;
@@ -101,7 +106,7 @@ class CacheService extends Injectable
      */
     public function createKey(...$args): string
     {
-        return implode(':', $args);
+        return implode(CacheConfig::SEPARATOR, $args);
     }
 
     /**
@@ -119,7 +124,7 @@ class CacheService extends Injectable
         sort($allKeys);
 
         foreach ($allKeys as $key) {
-            $keyParts = explode(':', $key);
+            $keyParts = explode(CacheConfig::SEPARATOR, $key);
 
             $subMap       = $cacheCategoryMap;
             $fullKeyParts = [];
@@ -133,7 +138,7 @@ class CacheService extends Injectable
                 }
 
                 $cacheNode->setKey($keyPart);
-                $cacheNode->setFullKey(implode(':', $fullKeyParts));
+                $cacheNode->setFullKey(implode(CacheConfig::SEPARATOR, $fullKeyParts));
 
                 if ($keyPart == last($keyParts)) {
                     $cacheNode->setValue($this->cache->get($key));
@@ -156,21 +161,20 @@ class CacheService extends Injectable
      */
     public function getKeys(string $prefix = ''): array
     {
-        $mainPrefix = $this->getMainPrefix();
-
-        // fix inconsistency of phalcon caching, see https://github.com/phalcon/cphalcon/issues/14503
-        if($this->cache instanceof Backend\File){
-            $keys = $this->cache->queryKeys(preg_quote($prefix, '/'));
-        } else {
-            $keys = $this->cache->queryKeys($mainPrefix . preg_quote($prefix, '/'));
+        if( ! $this->cache || ! $this->cache->getAdapter()){
+            return [];
         }
+
+        $mainPrefix = $this->cache->getAdapter()->getPrefix();
+
+        $keys = $this->cache->getAdapter()->getKeys(preg_quote($prefix, '/'));
 
         if ( ! $mainPrefix) {
             return $keys;
         }
 
         foreach ($keys as &$key) {
-            if($prefix && ! strstr($key, $prefix . ':') && $key !== $mainPrefix . $prefix){
+            if($prefix && ! strstr($key, $prefix . CacheConfig::SEPARATOR) && $key !== $mainPrefix . $prefix){
                 unset($key);
             } else {
                 $key = substr($key, strlen($mainPrefix));
@@ -178,23 +182,5 @@ class CacheService extends Injectable
         }
 
         return $keys;
-    }
-
-    /**
-     * Get the caches' main prefix
-     *
-     * @return string|null
-     */
-    private function getMainPrefix(): ?string
-    {
-        if ( ! $this->cache->getOptions()) {
-            return null;
-        }
-
-        if ( ! array_key_exists('prefix', $this->cache->getOptions())) {
-            return null;
-        }
-
-        return $this->cache->getOptions()['prefix'];
     }
 }

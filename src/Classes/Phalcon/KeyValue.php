@@ -4,71 +4,73 @@
 namespace KikCMS\Classes\Phalcon;
 
 
-use Phalcon\Cache\Backend\File;
-use Phalcon\Cache\BackendInterface;
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
+use Phalcon\Cache;
 
 /**
  * This KeyValue is used to store a cache value on disk.
  * If the memory cache is available, it will try to utilise that first for better performance
- * @property BackendInterface $cache
+ * @property Cache $cache
  */
-class KeyValue extends File
+class KeyValue extends Cache
 {
-    /** @var null|BackendInterface */
-    private $memoryCache;
+    /** @var Cache|null */
+    private ?Cache $memoryCache = null;
+
+    /**
+     * @return Stream
+     */
+    public function getAdapter(): Stream
+    {
+        return parent::getAdapter();
+    }
 
     /**
      * @inheritDoc
      */
-    public function delete($keyName): bool
+    public function delete($key): bool
     {
         if($this->memoryCache) {
-            $this->memoryCache->delete($this->prefixKey($keyName));
+            $this->memoryCache->delete($this->prefixKey($key));
         }
 
-        return parent::delete($keyName);
+        return parent::delete($key);
     }
 
     /**
      * @inheritDoc
      */
-    public function get($keyName, $lifetime = null)
+    public function get($key, $defaultValue = null)
     {
-        $memoryCacheLifeTime = $lifetime ?: $this->getFrontend()->getLifeTime();
-
-        if($this->memoryCache && $this->memoryCache->exists($this->prefixKey($keyName), $memoryCacheLifeTime)){
-            return $this->memoryCache->get($this->prefixKey($keyName), $memoryCacheLifeTime);
+        if($this->memoryCache && $this->memoryCache->has($this->prefixKey($key))){
+            return $this->memoryCache->get($this->prefixKey($key));
         }
 
-        return parent::get($keyName, $lifetime);
+        return parent::get($key, $defaultValue);
     }
 
     /**
      * @inheritDoc
      */
-    public function save($keyName = null, $content = null, $lifetime = null, $stopBuffer = true): bool
+    public function set($key = null, $value = null, $ttl = null): bool
     {
-        $memoryCacheLifeTime = $lifetime ?: $this->getFrontend()->getLifeTime();
-
         if($this->memoryCache) {
-            $this->memoryCache->save($this->prefixKey($keyName), $content, $memoryCacheLifeTime);
+            $this->memoryCache->set($this->prefixKey($key), $value, $ttl);
         }
 
-        return parent::save($keyName, $content, $lifetime, $stopBuffer);
+        return parent::set($key, $value, $ttl);
     }
 
     /**
      * @inheritDoc
      */
-    public function exists($keyName = null, $lifetime = null): bool
+    public function has($key = null): bool
     {
-        $memoryCacheLifeTime = $lifetime ?: $this->getFrontend()->getLifeTime();
-
-        if($this->memoryCache && $this->memoryCache->exists($this->prefixKey($keyName), $memoryCacheLifeTime)){
+        if($this->memoryCache && $this->memoryCache->has($this->prefixKey($key))){
             return true;
         }
 
-        return parent::exists($keyName, $lifetime);
+        return parent::has($key);
     }
 
     /**
@@ -81,17 +83,17 @@ class KeyValue extends File
     }
 
     /**
-     * @return BackendInterface|null
+     * @return Cache|null
      */
-    public function getMemoryCache(): ?BackendInterface
+    public function getMemoryCache(): ?Cache
     {
         return $this->memoryCache;
     }
 
     /**
-     * @param BackendInterface|null $memoryCache
+     * @param Cache|null $memoryCache
      */
-    public function setMemoryCache(?BackendInterface $memoryCache): void
+    public function setMemoryCache(?Cache $memoryCache): void
     {
         $this->memoryCache = $memoryCache;
     }

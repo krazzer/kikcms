@@ -7,6 +7,7 @@ use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
 use KikCMS\Services\Cms\CmsService;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * @property CmsService $cmsService
@@ -19,7 +20,7 @@ class Users extends DataTable
     /**
      * @inheritdoc
      */
-    public function getDefaultQuery()
+    public function getDefaultQuery(): BuilderInterface
     {
         return parent::getDefaultQuery()->columns([
             User::FIELD_ID,

@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\Cache;
 
 
+use KikCMS\Config\CacheConfig;
 use KikCMS\ObjectLists\CacheNodeMap;
 
 class CacheNode
@@ -154,7 +155,7 @@ class CacheNode
                 ->setCacheNodeMap($cacheNode->getCacheNodeMap())
                 ->setFullKey($cacheNode->getFullKey())
                 ->setValue($cacheNode->getValue())
-                ->setKey($this->getKey() . ':' . $cacheNode->getKey());
+                ->setKey($this->getKey() . CacheConfig::SEPARATOR . $cacheNode->getKey());
         }
 
         if ($this->getCacheNodeMap()->count() > 1) {

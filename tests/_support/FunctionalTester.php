@@ -3,7 +3,7 @@
 use Codeception\Actor;
 use KikCMS\Models\User;
 use KikCmsCore\Services\DbService;
-use Phalcon\Cache\Backend;
+use Phalcon\Cache;
 use Website\Models\TestPerson;
 
 
@@ -44,6 +44,11 @@ class FunctionalTester extends Actor
             'password' => $password,
             'remember' => null,
         ]);
+
+        /** Set role correctly after login, because the acl object is preserved */
+        if($role = $this->getApplication()->session->get('role')) {
+            $this->getApplication()->acl->setCurrentRole($role);
+        }
     }
 
     /**
@@ -52,13 +57,13 @@ class FunctionalTester extends Actor
      */
     public function getService($name): object
     {
-        return $this->getApplication()->di->get($name);
+        return $this->getApplication()->$name;
     }
 
     /**
-     * @return Backend
+     * @return Cache
      */
-    public function getCache(): Backend
+    public function getCache(): Cache
     {
         return $this->getApplication()->di->get('cache');
     }

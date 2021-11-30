@@ -4,7 +4,7 @@
 
 var gulp       = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
-var sass       = require('gulp-sass');
+var sass       = require('gulp-sass')(require('sass'));
 var postcss    = require('gulp-postcss');
 var uglify     = require('gulp-uglify');
 var concat     = require('gulp-concat');
@@ -169,6 +169,7 @@ gulp.task('vendorsScriptsCms', function () {
 gulp.task('watch', gulp.series('styles', 'scriptsCms', function () {
     gulp.watch('sass/**/*.scss', gulp.series('styles', 'stylesLogin', 'tinyMceContentStyle'));
     gulp.watch('js/**/*.js', gulp.series('scriptsCms', 'scriptsFrontend'));
+    gulp.watch('sass/bootstrap/bootstrap.scss', gulp.series('vendorsStyles'));
 }));
 
 // Build everything

@@ -26,16 +26,6 @@
                     {{ name }}<span class="{{ sortClass }}"></span>
                 </td>
             {% endfor %}
-
-            {% set extraColumns = self.tableButtons|length + (self.sortable ? 1 : 0) %}
-
-            {% block actionEditHeaderColumn %}
-                <td></td>
-            {% endblock %}
-
-            {% if extraColumns %}
-                <td colspan="{{ extraColumns }}"></td>
-            {% endif %}
         </tr>
         </thead>
 
@@ -44,6 +34,52 @@
             <tr data-id="{{ row.id }}" class="{% block tableRowClass '' %}" {% block tableRowAttr '' %}>
                 {% for key, value in tableData.rowDisplayValues(index) %}
                     <td data-column="{{ key }}">
+                        {% if loop.last %}
+                            <div class="actions">
+
+                                {% if self.sortable %}
+                                    <div class="action sort" title="{{ sortLabel }}">
+                                        <span class="glyphicon glyphicon-menu-hamburger"></span>
+                                    </div>
+                                {% endif %}
+
+                                {% block tableRowButton %}
+                                    {% for tableButton in self.tableButtons %}
+                                        {% set onclick = tableButton.warning ? 'return confirm(\'' ~ tableButton.warning ~ '\')' %}
+                                        <div class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
+                                            {% if tableButton.hasUrl %}
+                                                {% if tableButton.icon ends with '.svg' %}
+                                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}"
+                                                                                                   onclick="{{ onclick }}">
+                                                        {{ source(tableButton.icon) }}
+                                                    </a>
+                                                {% else %}
+                                                    <a {{ tableButton.blank ? 'target="_blank"' }}
+                                                            href="{{ tableButton.url(row) }}" onclick="{{ onclick }}"
+                                                            class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
+                                {% endblock %}
+
+                                {% block actionDeleteColumn %}
+                                    <div class="action delete" data-id="{{ row.id }}" title="{{ deleteLabel }}">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </div>
+                                {% endblock %}
+
+                                {% block actionEditColumn %}
+                                    <div class="action edit" title="{{ editLabel }}">
+                                        <input type="hidden" name="id" value="{{ row.id }}">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                    </div>
+                                {% endblock %}
+                            </div>
+                        {% endif %}
+
                         {% if fieldFormatting[key] is defined %}
                             {{ self.formatValue(key, value, row)|raw }}
                         {% else %}
@@ -51,47 +87,6 @@
                         {% endif %}
                     </td>
                 {% endfor %}
-
-                {% if self.sortable %}
-                    <td class="action sort" title="{{ sortLabel }}">
-                        <span class="glyphicon glyphicon-menu-hamburger"></span>
-                    </td>
-                {% endif %}
-
-                {% block tableRowButton %}
-                    {% for tableButton in self.tableButtons %}
-                        {% set onclick = tableButton.warning ? 'return confirm(\'' ~ tableButton.warning ~ '\')' %}
-                        <td class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
-                            {% if tableButton.hasUrl %}
-                                {% if tableButton.icon ends with '.svg' %}
-                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}"
-                                    onclick="{{ onclick }}">
-                                        {{ source(tableButton.icon) }}
-                                    </a>
-                                {% else %}
-                                    <a {{ tableButton.blank ? 'target="_blank"' }}
-                                            href="{{ tableButton.url(row) }}" onclick="{{ onclick }}"
-                                            class="glyphicon glyphicon-{{ tableButton.icon }}"></a>
-                                {% endif %}
-                            {% else %}
-                                <span class="glyphicon glyphicon-{{ tableButton.icon }}"></span>
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                {% endblock %}
-
-                {% if showDeleteRowButton %}
-                    <td class="action delete" data-id="{{ row.id }}" title="{{ deleteLabel }}">
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                    </td>
-                {% endif %}
-
-                {% block actionEditColumn %}
-                    <td class="action edit" title="{{ editLabel }}">
-                        <input type="hidden" name="id" value="{{ row.id }}">
-                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                    </td>
-                {% endblock %}
             </tr>
         {% endfor %}
         </tbody>

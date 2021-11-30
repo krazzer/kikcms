@@ -156,10 +156,11 @@ class UrlServiceTest extends Unit
         $page->lft  = null;
         $page->rgt  = null;
         $page->link = null;
+        $page->save();
 
         $pageLanguage = new PageLanguage();
         $pageLanguage->setSlug($slug);
-        $pageLanguage->page          = $page;
+        $pageLanguage->page_id          = $page->getId();
         $pageLanguage->language_code = 'en';
 
         return $pageLanguage;

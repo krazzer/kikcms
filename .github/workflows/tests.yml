@@ -31,7 +31,7 @@ jobs:
           sudo chmod 777 tests/TestSitePath/public_html/media/files
           sudo chmod 777 tests/TestSitePath/public_html/media/thumbs
         env:
-          SITE_ALIAS: kikcmstest.dev
+          SITE_ALIAS: kikcmstest-phalcon4.dev
           SITE_PORT: 9901
       - name: Sleep for 15 seconds
         uses: jakejarvis/wait-action@master
@@ -51,4 +51,4 @@ jobs:
           gulp
           cd ..
       - name: Run tests
-        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml
+        run: docker run --net="kikdev" -v "$(pwd)":/opt/project --rm kiksaus/kikdev-phalcon4:latest /opt/project/vendor/bin/codecept run -c /opt/project/codeception.yml

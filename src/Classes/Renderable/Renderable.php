@@ -31,7 +31,7 @@ abstract class Renderable extends Injectable
     protected $jsClass;
 
     /** @var string unique identifier for this instance */
-    private $instance;
+    private $instance = '';
 
     /**
      * Renderable constructor.

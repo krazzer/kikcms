@@ -2,12 +2,16 @@
 
 namespace KikCMS\Classes\WebForm;
 
+use Exception;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
+use KikCMS\Classes\WebForm\Fields\FileInputField;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
-use Phalcon\Http\Response;
+use Monolog\Logger;
+use Phalcon\Http\Request\File;
+use Phalcon\Http\ResponseInterface;
 use ReCaptcha\Response as ReCaptchaResponse;
 use Swift_Attachment;
 use Swift_ByteStream_FileByteStream;
@@ -52,7 +56,7 @@ abstract class MailForm extends WebForm
 
     /**
      * @param array $input
-     * @return bool|Response
+     * @return bool|ResponseInterface
      */
     protected function successAction(array $input)
     {
@@ -63,31 +67,43 @@ abstract class MailForm extends WebForm
             return false;
         }
 
-        $contents    = $this->toMailOutput($input);
+        $body = $this->mailFormService->getHtml($this->getReadableInput($input));
+
         $attachments = $this->getAttachments();
         $to          = $this->getToAddress();
         $subject     = $this->getSubject();
 
-        $mailSend = $this->mailService->sendServiceMail($to, $subject, $contents, $params, $attachments);
+        $mailSend = $this->mailService->sendServiceMail($to, $subject, $body, $params, $attachments);
 
         if ( ! $mailSend) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
             return false;
         }
 
+        try {
+            $this->mailformSubmissionService->add($subject, $this->getReadableInput($input, $this->request->getUploadedFiles(true)));
+        } catch (Exception $exception) {
+            $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
+        }
+
         $this->flashForFormOnly();
         $this->flash->success($this->getSuccessMessage());
 
-        return $this->response->redirect(trim($this->router->getRewriteUri(), '/'));
+        return $this->response->redirect(trim($this->request->getServer('REQUEST_URI'), '/') ?: '/');
     }
 
     /**
      * @param array $input
-     * @return string
+     * @param File[] $files
+     * @return array [label => value]
      */
-    public function toMailOutput(array $input): string
+    public function getReadableInput(array $input, array $files = []): array
     {
-        $contents = '';
+        $readableInput = [];
+
+        foreach ($files as $file) {
+            $input[$file->getKey()] = $file;
+        }
 
         foreach ($this->getFieldMap() as $key => $field) {
             if ($key == $this->getFormId()) {
@@ -104,6 +120,13 @@ abstract class MailForm extends WebForm
 
             if ( ! array_key_exists($key, $input)) {
                 continue;
+            }
+
+            if ($field instanceof FileInputField) {
+                $fileId = $this->fileService->create($input[$key], $this->mailformSubmissionService->getUploadsFolderId());
+                $url    = $this->twigService->mediaFile($fileId, null, true);
+
+                $input[$key] = '<a href="' . $url . '" target="blank">' . $url . '</a>';
             }
 
             if ($field instanceof SelectField) {
@@ -131,11 +154,10 @@ abstract class MailForm extends WebForm
                 $label = $field->getElement()->getLabel();
             }
 
-            $contents .= '<b>' . $label . ':</b><br>';
-            $contents .= $value . '<br><br>';
+            $readableInput[$label] = $value;
         }
 
-        return $contents;
+        return $readableInput;
     }
 
     /**
@@ -193,7 +215,7 @@ abstract class MailForm extends WebForm
     {
         $attachments = [];
 
-        if( ! $files = $this->request->getUploadedFiles(true)){
+        if ( ! $files = $this->request->getUploadedFiles(true)) {
             return [];
         }
 

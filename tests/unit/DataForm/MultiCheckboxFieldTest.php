@@ -10,6 +10,7 @@ use Helpers\Models\Interest;
 use Helpers\Models\Person;
 use Helpers\Models\PersonInterest;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Security;
 use PHPUnit\Framework\TestCase;
 
 class MultiCheckboxFieldTest extends TestCase
@@ -30,6 +31,11 @@ class MultiCheckboxFieldTest extends TestCase
 
         $form = new PersonMultiCheckboxForm();
         $form->setDI($testDi);
+
+        $securityMock = $this->createMock(Security::class);
+        $securityMock->method('checkToken')->willReturn(true);
+
+        $form->security = $securityMock;
 
         $_POST = [
             $form->getFormId()             => $form->getFormId(),
@@ -61,6 +67,7 @@ class MultiCheckboxFieldTest extends TestCase
         $form = new PersonMultiCheckboxForm();
         $form->setDI($testDi);
         $form->setFilters($filters);
+        $form->security = $securityMock;
 
         $form->render();
 

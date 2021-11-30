@@ -10,6 +10,8 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\ObjectStorage\File;
 use KikCMS\Classes\Permission;
+use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Classes\Phalcon\Twig;
 use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
@@ -38,17 +40,17 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCmsCore\Services\DbService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Phalcon\Cache\Frontend\Data;
-use Phalcon\Cache\Frontend\Json;
+use Phalcon\Cache\Adapter\Memory as MemoryCache;
 use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di;
-use Phalcon\DiInterface;
+use Phalcon\Di\DiInterface;
 use Phalcon\Flash\Session;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
-use Phalcon\Mvc\Url;
 use Phalcon\Session\Bag;
+use Phalcon\Storage\SerializerFactory;
+use Phalcon\Url;
 use Phalcon\Validation;
 use PHPUnit\Framework\TestCase;
 
@@ -145,17 +147,22 @@ class TestHelper extends TestCase
         $fileStorage = new File();
         $fileStorage->setStorageDir($this->getSitePath() . 'storage/');
 
-        $frontend = new Json(["lifetime" => 3600 * 24 * 365 * 1000]);
-        $keyValue = new \Phalcon\Cache\Backend\File($frontend, ['cacheDir' => $this->getSitePath() . 'storage/keyvalue/']);
+        $adapter = new Stream(new SerializerFactory, [
+            'storageDir' => $this->getSitePath() . 'storage/keyvalue/'
+        ]);
+
+        $keyValue = new KeyValue($adapter);
+
+        $memoryCache = new MemoryCache(new SerializerFactory);
+        $session = new MemoryCache(new SerializerFactory);
 
         $url = new Url();
         $url->setBaseUri('/');
 
-        $permission = new Permission();
-
         $log = new Logger('name');
         $log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
+        $di->set('session', $session);
         $di->set('languageService', new LanguageService);
         $di->set('modelsManager', new Manager);
         $di->set('modelsMetadata', new Memory);
@@ -171,22 +178,19 @@ class TestHelper extends TestCase
         $di->set('urlService', new UrlService);
         $di->set('dataTableFilterService', new DataTableFilterService);
         $di->set('fileService', new FileService('media', 'thumbs'));
-        $di->set('cache', new \Phalcon\Cache\Backend\Memory(new Data));
+        $di->set('cache', $memoryCache);
         $di->set('translator', $this->getTranslator());
         $di->set('db', new Mysql($dbConfig));
         $di->set('config', $config);
         $di->set('keyValue', $keyValue);
         $di->set('fileStorage', $fileStorage);
         $di->set('url', $url);
-        $di->set('permisson', $permission);
-        $di->set('persistent', new Bag('persistent'));
-        $di->set('sessionBag', new Bag('session'));
         $di->set('storageService', new StorageService);
         $di->set('tableDataService', new TableDataService);
         $di->set('paginateListService', new PaginateListService);
         $di->set('queryService', new QueryService);
         $di->set('stringService', new StringService);
-        $di->set('view', $this->getView());
+        $di->set('view', $this->getView($di));
         $di->set('logger', $log);
         $di->set('flash', new Session);
         $di->set('filePermissionService', new FilePermissionService);
@@ -200,9 +204,16 @@ class TestHelper extends TestCase
 
         $di->get('session')->set('role', Permission::ADMIN);
 
+        Di::setDefault($di);
+
+        $di->set('persistent', new Bag('persistent'));
+        $di->set('sessionBag', new Bag('session'));
+
+        $permission = new Permission();
         $permission->setDI($di);
 
         $di->set('acl', $permission->getAcl());
+        $di->set('permisson', $permission);
 
         Di::setDefault($di);
 
@@ -220,9 +231,10 @@ class TestHelper extends TestCase
     }
 
     /**
+     * @param DiInterface $di
      * @return View
      */
-    private function getView(): View
+    private function getView(DiInterface $di): View
     {
         $cmsViewDir     = dirname(dirname(__DIR__)) . '/src/Views/';
         $cmsResourceDir = dirname(dirname(__DIR__)) . '/resources/';
@@ -236,7 +248,7 @@ class TestHelper extends TestCase
         $view->setViewsDir($cmsViewDir);
         $view->setNamespaces($namespaces);
         $view->registerEngines([
-            Twig::DEFAULT_EXTENSION => function (View $view, DiInterface $di) {
+            Twig::DEFAULT_EXTENSION => function (View $view) use ($di) {
                 $options = [
                     'cache' => false,
                     'debug' => true

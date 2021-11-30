@@ -87,7 +87,7 @@ class UrlService extends Injectable
     public function getPageLanguageByUrlPath(string $urlPath): ?PageLanguage
     {
         $urlPath  = $this->removeLeadingSlash($urlPath);
-        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . $urlPath;
+        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . str_replace('/', '_', $urlPath);
 
         $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
@@ -101,7 +101,7 @@ class UrlService extends Injectable
             return null;
         });
 
-        if ( ! $cached[0]) {
+        if ( ! $cached || ! $cached[0]) {
             return null;
         }
 
@@ -300,20 +300,20 @@ class UrlService extends Injectable
      * Check whether given urlPath already exists, excluding given PageLanguage
      *
      * @param string $urlPath
-     * @param PageLanguage|null $existingPageLanguage
+     * @param PageLanguage|null $pageLang
      * @return bool
      */
-    public function urlPathExists(string $urlPath, PageLanguage $existingPageLanguage = null): bool
+    public function urlPathExists(string $urlPath, PageLanguage $pageLang = null): bool
     {
-        if ( ! $pageLanguage = $this->getPageLanguageByUrlPath($urlPath)) {
+        if ( ! $existingPageLang = $this->getPageLanguageByUrlPath($urlPath)) {
             return false;
         }
 
-        if ( ! $existingPageLanguage || ! isset($existingPageLanguage->id)) {
+        if ( ! $pageLang || ! isset($pageLang->id) || ! property_exists($pageLang, PageLanguage::FIELD_ID)) {
             return true;
         }
 
-        return $pageLanguage->id !== $existingPageLanguage->id;
+        return $existingPageLang->id !== $pageLang->id;
     }
 
     /**
@@ -353,7 +353,7 @@ class UrlService extends Injectable
         $pageLanguageJoin = 'pla.page_id = pa.id AND pla.language_code = pl.language_code AND pla.slug IS NOT NULL';
 
         $query = (new Builder)
-            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("' . UrlConfig::ALIAS_SEP . '", p.id), ""))', 'pla.slug'])
+            ->columns(['CONCAT(pl.id, IF(p.alias, CONCAT("' . UrlConfig::ALIAS_SEP . '", p.id), ""))', 'pla.slug AS slug'])
             ->from(['pl' => PageLanguage::class])
             ->join(Page::class, 'IFNULL(p.alias, p.id) = pl.page_id', 'p')
             ->leftJoin(Page::class, 'pa.lft < p.lft AND pa.rgt > p.rgt', 'pa')
@@ -394,8 +394,10 @@ class UrlService extends Injectable
 
         $pageLanguageLink = $this->pageLanguageService->getByPageId((int) $link, $pageLanguage->getLanguageCode());
 
+        $page = Page::getById($pageLanguageLink->getPageId());
+
         // you cannot link to a link
-        if ($pageLanguageLink->page->type == Page::TYPE_LINK) {
+        if ($page->type == Page::TYPE_LINK) {
             return '';
         }
 

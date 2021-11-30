@@ -2,18 +2,20 @@
 
 namespace KikCMS\Classes\Phalcon;
 
+use Phalcon\Security;
+
 /**
  * Use the same token while users' session is active. This is required for having multiple forms active at the same
  * time. Required for subDataTables.
  */
-class SecuritySingleToken extends \Phalcon\Security
+class SecuritySingleToken extends Security
 {
     /**
      * @inheritdoc
      */
-    public function getTokenKey()
+    public function getTokenKey(): string
     {
-        $tokenKey = $this->getDI()->get('session')->get($this->_tokenKeySessionID);
+        $tokenKey = $this->getDI()->get('session')->get($this->tokenKeySessionId);
 
         if ($tokenKey) {
             return $tokenKey;
@@ -25,9 +27,9 @@ class SecuritySingleToken extends \Phalcon\Security
     /**
      * @inheritdoc
      */
-    public function getToken()
+    public function getToken(): string
     {
-        $token = $this->getDI()->get('session')->get($this->_tokenValueSessionID);
+        $token = $this->getDI()->get('session')->get($this->tokenValueSessionId);
 
         if ($token) {
             return $token;
@@ -37,9 +39,9 @@ class SecuritySingleToken extends \Phalcon\Security
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function checkToken($tokenKey = null, $tokenValue = null, $destroyIfValid = false)
+    public function checkToken($tokenKey = null, $tokenValue = null, bool $destroyIfValid = false): bool
     {
         return parent::checkToken($tokenKey, $tokenValue, $destroyIfValid);
     }

@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
+use KikCMS\Config\DataFormConfig;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
@@ -14,6 +15,7 @@ use KikCMS\Classes\WebForm\DataForm\Events\StoreEvent;
 use KikCMS\Services\TranslationService;
 use Monolog\Logger;
 use KikCMS\Classes\Phalcon\Injectable;
+use Psr\Log\LogLevel;
 
 /**
  * Service for handling a DataForms' Storage, using the StorageData object
@@ -160,12 +162,17 @@ class StorageService extends Injectable
         $langCode  = $this->storageData->getLanguageCode();
         $object    = $this->storageData->getObject();
 
+        $preSaveRelations = [];
+
         // set objects' properties
         foreach ($mainInput as $key => $value) {
-            $key = (string) $key;
+            if(is_integer($key)){
+                $this->logger->log(LogLevel::NOTICE, 'Integer key encountered: ' . json_encode($mainInput));
+            }
 
             if ($this->relationKeyService->isRelationKey($key)) {
-                $this->relationKeyService->set($object, $key, $value, $langCode);
+                $localPreSaveRelations = $this->relationKeyService->set($object, $key, $value, $langCode);
+                $preSaveRelations = array_merge($preSaveRelations, $localPreSaveRelations);
             } else {
                 $object->$key = $this->dbService->toStorage($value);
             }
@@ -176,6 +183,21 @@ class StorageService extends Injectable
         $this->executeBeforeMainEvents();
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
+            foreach($preSaveRelations as $preSaveRelation){
+                if(strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)){
+                    $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $preSaveRelation);
+
+                    switch (count($parts)) {
+                        case 2:
+                            list($part1, $part2) = $parts;
+                            $object->$part1->$part2->save();
+                        break;
+                    }
+                } else {
+                    $object->$preSaveRelation->save();
+                }
+            }
+
             $object->save();
         } else {
             $this->disableForeignKeysForTempKeys();

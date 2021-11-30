@@ -25,7 +25,8 @@ use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Validation\Validator;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
+use Phalcon\Validation\AbstractValidator;
 
 /**
  * @property AccessControl $acl
@@ -61,7 +62,7 @@ abstract class DataTable extends Renderable
     /** @var DataForm */
     protected $form;
 
-    /** @var DataTableFilters */
+    /** @var Filters|DataTableFilters */
     protected $filters;
 
     /** @var Filter[] */
@@ -70,7 +71,7 @@ abstract class DataTable extends Renderable
     /** @var false|string if set, the datatable will let you select or upload a file directly, using the set field */
     protected $directImageField = false;
 
-    /** @var Validator[] */
+    /** @var AbstractValidator[] */
     protected $directImageValidators = [];
 
     /** @var array default field values to be set for the child object */
@@ -138,9 +139,9 @@ abstract class DataTable extends Renderable
     public abstract function getFormClass(): string;
 
     /**
-     * @return Builder
+     * @return BuilderInterface
      */
-    protected function getDefaultQuery()
+    protected function getDefaultQuery(): BuilderInterface
     {
         $alias = $this->dbService->getAliasForModel($this->getModel());
 
@@ -656,7 +657,7 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ($this->keyValue->exists($cacheKey)) {
+        if ($this->keyValue->has($cacheKey)) {
             $newIdsCache = unserialize($this->keyValue->get($cacheKey));
         } else {
             $newIdsCache = (new SubDataTableNewIdsCache)
@@ -666,7 +667,7 @@ abstract class DataTable extends Renderable
 
         $newIdsCache->addId($editId);
 
-        $this->keyValue->save($cacheKey, serialize($newIdsCache));
+        $this->keyValue->set($cacheKey, serialize($newIdsCache));
     }
 
     /**
@@ -676,7 +677,7 @@ abstract class DataTable extends Renderable
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
-        if ( ! $this->keyValue->exists($cacheKey)) {
+        if ( ! $this->keyValue->has($cacheKey)) {
             return [];
         }
 
@@ -750,7 +751,7 @@ abstract class DataTable extends Renderable
     }
 
     /**
-     * @return Validator[]
+     * @return AbstractValidator[]
      */
     public function getDirectImageValidators(): array
     {

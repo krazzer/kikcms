@@ -32,7 +32,7 @@ class TableDataService extends Injectable
             "builder" => $query,
             "page"    => $page,
             "limit"   => $limit,
-        ]))->getPaginate();
+        ]))->paginate();
 
         $paginate->pages = $this->paginateListService->getPageList($paginate->last, $paginate->current);
 
@@ -50,8 +50,8 @@ class TableDataService extends Injectable
             ->setPages($paginate->pages)
             ->setLimit($paginate->limit)
             ->setCurrent($paginate->current)
-            ->setTotalItems($paginate->total_items)
-            ->setTotalPages($paginate->total_pages)
+            ->setTotalItems($paginate->getTotalItems())
+            ->setTotalPages(count($paginate->pages))
             ->setDisplayMap($fieldMap)
             ->setTableHeadColumns($headColumns)
             ->setData($tableData);

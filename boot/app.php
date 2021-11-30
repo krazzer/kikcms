@@ -32,6 +32,7 @@ $eventsManager->attach("application:beforeSendResponse", new PlaceholderConverte
 $application->setEventsManager($eventsManager);
 
 // make sure the errorHandler is initialized
+/** @noinspection PhpExpressionResultUnusedInspection */
 $application->errorHandler;
 
 return $application;

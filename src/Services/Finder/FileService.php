@@ -74,14 +74,15 @@ class FileService extends Injectable
     /**
      * @param string $folderName
      * @param int|null $folderId
-     *
+     * @param string|null $key
      * @return int
      */
-    public function createFolder(string $folderName, $folderId = null): int
+    public function createFolder(string $folderName, int $folderId = null, string $key = null): int
     {
         $folder            = new Folder();
         $folder->name      = $folderName;
         $folder->folder_id = $folderId;
+        $folder->key       = $key;
         $folder->is_folder = 1;
 
         $folder->save();

@@ -4,14 +4,14 @@ namespace KikCMS\Modules;
 
 use KikCMS\Plugins\FrontendNotFoundPlugin;
 use KikCMS\Plugins\ParamConverterPlugin;
+use Phalcon\Di\DiInterface;
 use Phalcon\Events\Manager;
-use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 
 class Frontend implements ModuleDefinitionInterface
 {
-    protected $defaultNamespace = "KikCMS\\Controllers";
+    protected string $defaultNamespace = "KikCMS\\Controllers";
 
     /**
      * @inheritdoc

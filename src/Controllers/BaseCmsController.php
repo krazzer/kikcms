@@ -48,7 +48,7 @@ class BaseCmsController extends BaseController
     /**
      * @inheritdoc
      */
-    protected function setDefaultLanguageCode()
+    protected function initializeLanguage()
     {
         $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }

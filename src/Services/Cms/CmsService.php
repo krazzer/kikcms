@@ -3,19 +3,22 @@
 namespace KikCMS\Services\Cms;
 
 
+use DateTime;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Injectable;
-use KikCMS\Config\CacheConfig;
 use KikCMS\Config\MenuConfig;
+use KikCMS\Config\PassResetConfig;
 use KikCMS\DataTables\Pages;
 use KikCMS\DataTables\Users;
 use KikCMS\ObjectLists\MenuGroupMap;
 use KikCMS\ObjectLists\MenuItemMap;
 use KikCMS\Objects\CmsMenuGroup;
 use KikCMS\Objects\CmsMenuItem;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * Contains some generic CMS functions
@@ -27,15 +30,32 @@ class CmsService extends Injectable
      */
     public function cleanUpDiskCache()
     {
-        $cacheFiles      = $this->keyValue->queryKeys(DataTable::INSTANCE_PREFIX);
-        $diskCacheFolder = $this->keyValue->getOptions()['cacheDir'];
+        $cacheKeys = $this->keyValue->getAdapter()->getKeys(DataTable::INSTANCE_PREFIX);
 
-        foreach ($cacheFiles as $fileName) {
-            // file must be older than 1 day
-            if (filemtime($diskCacheFolder . $fileName) - CacheConfig::ONE_DAY > time()) {
-                $newIdsCache = unserialize($this->keyValue->get($fileName));
+        foreach ($cacheKeys as $cacheKey) {
+            $newIdsCache = $this->keyValue->get($cacheKey);
+
+            // invalid entry, delete and skip
+            if( ! $newIdsCache instanceof SubDataTableNewIdsCache){
+                $this->keyValue->delete($cacheKey);
+                continue;
+            }
+
+            // entry must be older than 1 day
+            if ($newIdsCache->getDate()->modify("+1 day") < new DateTime) {
                 $this->removeUnsavedTemporaryRecords($newIdsCache);
-                unlink($diskCacheFolder . $fileName);
+                $this->keyValue->delete($cacheKey);
+            }
+        }
+
+        // remove expired password reset tokens
+        $passwordResetTokenDir = new RecursiveDirectoryIterator($this->keyValue->getAdapter()->getStorageDir());
+
+        foreach (new RecursiveIteratorIterator($passwordResetTokenDir) as $filename => $cur) {
+            if(strstr($filename, PassResetConfig::PREFIX)){
+                if(date('U') - filemtime($filename) > PassResetConfig::LIFETIME){
+                    unlink($filename);
+                }
             }
         }
     }
@@ -58,6 +78,10 @@ class CmsService extends Injectable
 
         if ( ! $this->config->get('analytics') || ! $this->acl->allowed(Permission::ACCESS_STATISTICS)) {
             $groupMap->remove(MenuConfig::MENU_GROUP_STATS);
+        }
+
+        if( ! $this->config->application->storeMailForms){
+            $groupMap->removeItem(MenuConfig::MENU_GROUP_CONTENT, MenuConfig::MENU_ITEM_SENDFORMS);
         }
 
         if ( ! $this->acl->allowed(Pages::class)) {
@@ -156,7 +180,7 @@ class CmsService extends Injectable
     {
         $token = uniqid('securityToken', true);
 
-        $this->keyValue->save($token);
+        $this->keyValue->set($token);
 
         return $token;
     }
@@ -169,7 +193,7 @@ class CmsService extends Injectable
      */
     public function checkSecurityToken(string $token)
     {
-        if ( ! $this->keyValue->exists($token)) {
+        if ( ! $this->keyValue->has($token)) {
             throw new UnauthorizedException();
         }
 

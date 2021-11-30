@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
-use KikCMS\Classes\Phalcon\Cache;
+use Phalcon\Cache;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\CacheConfig;
@@ -26,7 +26,7 @@ class NamespaceService extends Injectable
      */
     public function getClassNamesByNamespace(string $namespace): array
     {
-        $cacheKey = 'services:' . $namespace;
+        $cacheKey = 'services.' . str_replace(KikCMSConfig::NAMESPACE_SEPARATOR, '', $namespace);
 
         if($this->cache && $services = $this->cache->get($cacheKey)){
             return $services;
@@ -55,7 +55,7 @@ class NamespaceService extends Injectable
 
         // only cache on production, to prevent errors when creating new services
         if($this->cache && $this->config->isProd()){
-            $this->cache->save($cacheKey, $services, CacheConfig::ONE_YEAR);
+            $this->cache->set($cacheKey, $services, CacheConfig::ONE_YEAR);
         }
 
         return $services;

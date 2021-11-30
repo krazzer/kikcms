@@ -19,6 +19,7 @@ use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\Website\FrontendService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @property FrontendHelper $frontendHelper
@@ -74,10 +75,10 @@ class FrontendController extends BaseController
 
     /**
      * @param string|null $urlPath
-     * @return Response|ResponseInterface|void
+     * @return ResponseInterface
      * @throws NotFoundException
      */
-    public function pageAction(string $urlPath = null)
+    public function pageAction(string $urlPath = null): ResponseInterface
     {
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
             $title       = $this->translator->tl('maintenance.title');
@@ -90,7 +91,9 @@ class FrontendController extends BaseController
             throw new NotFoundException();
         }
 
-        $this->loadPage($pageLanguage);
+        $this->response->setStatusCode(200);
+
+        return $this->loadPage($pageLanguage, (string) $urlPath);
     }
 
     /**
@@ -127,7 +130,7 @@ class FrontendController extends BaseController
 
     /**
      * @param null|string $languageCode
-     * @return string
+     * @return string|ResponseInterface
      * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function pageNotFoundAction(string $languageCode = null)
@@ -136,7 +139,15 @@ class FrontendController extends BaseController
         $this->view->reset();
 
         if ($pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode)) {
-            return $this->loadPage($pageLanguage);
+            $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
+
+            if($this->config->application->pageCache) {
+                if ($content = $this->pageCacheService->getContentByUrlPath($url)) {
+                    return $this->response->setContent($content);
+                }
+            }
+
+            return $this->loadPage($pageLanguage, $url);
         }
 
         if ($route = $this->websiteSettings->getNotFoundRoute()) {
@@ -148,9 +159,10 @@ class FrontendController extends BaseController
 
     /**
      * @param PageLanguage $pageLanguage
-     * @return null|Response
+     * @param string $urlPath
+     * @return null|ResponseInterface
      */
-    private function loadPage(PageLanguage $pageLanguage): ?Response
+    private function loadPage(PageLanguage $pageLanguage, string $urlPath): ?ResponseInterface
     {
         if ($aliasId = $pageLanguage->page->getAliasId()) {
             $pageLanguage = $this->pageLanguageService->getByPageId($aliasId, $pageLanguage->getLanguageCode());
@@ -168,34 +180,40 @@ class FrontendController extends BaseController
         $websiteVariables    = $this->templateVariables->getGlobalVariables();
         $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
-        // in case a form has been send, it might want to redirect
-        if ($templateVariables instanceof Response) {
-            return $templateVariables;
+        if(is_object($templateVariables)){
+            $templateVariables = [$templateVariables];
         }
 
         $variables = array_merge($langSwitchVariables, $fieldVariables, $websiteVariables, $templateVariables);
 
-        // in case a form has been send, it might want to redirect
-        if ($variables instanceof Response) {
-            return $variables;
+        // in case a form has been sent, it might want to redirect
+        foreach ($variables as $variable){
+            if($variable instanceof Response){
+                return $variable;
+            }
         }
 
-        $this->view->languageCode = $languageCode;
-        $this->view->pageLanguage = $pageLanguage;
-        $this->view->page         = $page;
-        $this->view->pageId       = $pageLanguage->getPageId();
+        $variables['languageCode'] = $languageCode;
+        $variables['pageLanguage'] = $pageLanguage;
+        $variables['page']         = $page;
+        $variables['pageId']       = $pageLanguage->getPageId();
 
-        $this->view->currentUrl = $this->router->getRewriteUri();
-        $this->view->baseUrl    = $this->url->getBaseUri();
-        $this->view->fullUrl    = $this->url->getBaseUri() . ltrim($this->router->getRewriteUri(), '/');
+        $variables['currentUrl'] = $this->url->getRewriteUri();
+        $variables['baseUrl']    = $this->url->getBaseUri();
+        $variables['fullUrl']    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
 
-        $this->view->title   = $pageLanguage->name;
-        $this->view->pageKey = $page->key;
-        $this->view->helper  = $this->frontendHelper;
+        $variables['title']   = $pageLanguage->name;
+        $variables['pageKey'] = $page->key;
+        $variables['helper']  = $this->frontendHelper;
 
-        $this->view->setVars($variables);
-        $this->view->pick('@website/templates/' . $templateFile);
+        $response = $this->view('@website/templates/' . $templateFile, $variables);
 
-        return null;
+        if($this->config->application->pageCache) {
+            if( ! $this->pageCacheService->save($urlPath, $response->getContent())){
+                $this->logger->log(LogLevel::NOTICE, 'Writing page ' . $urlPath . ' to cache failed');
+            }
+        }
+
+        return $response;
     }
 }

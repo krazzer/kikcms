@@ -17,7 +17,7 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Forms\ElementInterface;
+use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
@@ -67,16 +67,19 @@ abstract class WebForm extends Renderable
     protected $viewDirectory = 'webform';
 
     /** @var string */
-    protected $sendButtonLabel;
+    protected $sendButtonLabel = '';
 
     /** @var string */
     protected $sendButtonClass = 'btn btn-submit btn-primary';
 
-    /** @var Form */
-    private $form;
+    /** @var bool if set to true, field errors will be shown above the form instead of under the field */
+    protected $placeAlertsOnTop = false;
+
+    /** @var Form|null */
+    private $form = null;
 
     /** @var bool */
-    private $placeHolderAsLabel = false;
+    private bool $placeHolderAsLabel = false;
 
     /** @var callable */
     private $successAction;
@@ -545,7 +548,15 @@ abstract class WebForm extends Renderable
                     $message = str_replace(':label', "'" . strip_tags($formElement->getLabel()) . "'", $message);
                 }
 
-                $errorContainer->addFieldError(new FieldError($elementName, $message, $alert));
+                if($this->placeAlertsOnTop) {
+                    if ($alert) {
+                        $errorContainer->addFormError($message, [$elementName]);
+                    } else {
+                        $errorContainer->addFieldError(new FieldError($elementName, $message, false));
+                    }
+                } else {
+                    $errorContainer->addFieldError(new FieldError($elementName, $message, $alert));
+                }
             }
 
             $class = $formElement->getAttribute('class');
@@ -628,7 +639,7 @@ abstract class WebForm extends Renderable
     {
         $sessionKey = self::FLASH_KEY;
 
-        if ( ! $this->session->$sessionKey) {
+        if ( ! ($this->session->$sessionKey ?? null)) {
             return true;
         }
 

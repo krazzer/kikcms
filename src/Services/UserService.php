@@ -26,10 +26,9 @@ class UserService extends Injectable
 
     /**
      * @param $email
-     *
      * @return User
      */
-    public function getByEmail($email)
+    public function getByEmail($email): ?User
     {
         return User::findFirst('email = ' . $this->dbService->escape($email));
     }
@@ -40,10 +39,10 @@ class UserService extends Injectable
      */
     public function getResetUrl(User $user): string
     {
-        $token       = $this->stringService->createRandomString();
+        $token       = $this->stringService->createRandomString(16);
         $hashedToken = $this->security->hash($token);
 
-        $this->keyValue->save(PassResetConfig::PREFIX . $user->getId(), $hashedToken, PassResetConfig::LIFETIME);
+        $this->keyValue->set(PassResetConfig::PREFIX . $user->getId() . $token, $hashedToken, PassResetConfig::LIFETIME);
 
         return $this->url->get('cms/login/reset-password') . '/' . $user->id . '/' . $token;
     }
@@ -130,7 +129,7 @@ class UserService extends Injectable
     /**
      * @return bool
      */
-    public function isLoggedIn()
+    public function isLoggedIn(): bool
     {
         if ($this->session->get('loggedIn', false)) {
             return true;
@@ -180,19 +179,36 @@ class UserService extends Injectable
         // start a new session so we can still flash
         $this->session->start();
         $this->flash->notice($this->translator->tl('login.logout'));
-        $this->response->redirect('cms/login');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function sendResetMail(User $user): bool
+    public function sendActivationMail(User $user): bool
+    {
+        $subject     = $this->translator->tl('login.activate.mail.subject');
+        $body        = $this->translator->tl('login.activate.mail.body');
+        $buttonLabel = $this->translator->tl('login.activate.mail.buttonLabel');
+
+        return $this->sendResetMail($user, $subject, $body, $buttonLabel);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function sendResetpasswordMail(User $user): bool
     {
         $subject     = $this->translator->tl('login.reset.mail.subject');
         $body        = $this->translator->tl('login.reset.mail.body');
         $buttonLabel = $this->translator->tl('login.reset.mail.buttonLabel');
 
+        return $this->sendResetMail($user, $subject, $body, $buttonLabel);
+    }
+
+    public function sendResetMail(User $user, string $subject, string $body, string $buttonLabel): bool
+    {
         $resetUrl = $this->getResetUrl($user);
 
         $parameters = [

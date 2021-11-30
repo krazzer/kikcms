@@ -3,12 +3,12 @@
 namespace KikCMS\Plugins;
 
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\UserService;
 use Phalcon\Events\Event;
-use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 
 /**
@@ -17,11 +17,11 @@ use Phalcon\Mvc\Dispatcher;
  * @property Translator $translator
  * @property UserService $userService
  */
-class SecurityPlugin extends Plugin
+class SecurityPlugin extends Injectable
 {
     const CONTROLLER_LOGIN      = 'login';
     const CONTROLLER_STATISTICS = 'statistics';
-    const CONTROLLER_ERRORS     = 'statistics';
+    const CONTROLLER_ERRORS     = 'errors';
 
     const ALLOWED_CONTROLLERS = [
         self::CONTROLLER_LOGIN,
@@ -39,7 +39,7 @@ class SecurityPlugin extends Plugin
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         $controller = $dispatcher->getControllerName();
-        $isLoggedIn = $controller == self::CONTROLLER_STATISTICS ?: $this->userService->isLoggedIn();
+        $isLoggedIn = $controller == self::CONTROLLER_STATISTICS || $this->userService->isLoggedIn();
 
         if ( ! $isLoggedIn && ! in_array($controller, self::ALLOWED_CONTROLLERS)) {
             if ($this->request->isAjax()) {

@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "eonasdan-bootstrap-datetimepicker": "^4.17.47",
-    "bootstrap-sass": "^3.3.7",
+    "bootstrap-sass": "^3.4.1",
     "moment": "^2.19.1",
     "tinymce": "tinymce-dist#^4.7.1",
     "jquery": "3.4.1",

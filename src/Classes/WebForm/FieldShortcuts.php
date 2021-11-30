@@ -14,6 +14,7 @@ use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
 use KikCMS\Classes\WebForm\Fields\DateField;
+use KikCMS\Classes\WebForm\Fields\EmailField;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\Header;
 use KikCMS\Classes\WebForm\Fields\HiddenField;
@@ -260,6 +261,18 @@ trait FieldShortcuts
     public function addTextField(string $key, string $label, array $validators = []): Field
     {
         return $this->addField(new TextField($key, $label, $validators));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param bool $allowEmpty
+     * @param array $validators
+     * @return Field
+     */
+    public function addEmailField(string $key, string $label, bool $allowEmpty = false, array $validators = []): Field
+    {
+        return $this->addField(new EmailField($key, $label, $allowEmpty, $validators));
     }
 
     /**

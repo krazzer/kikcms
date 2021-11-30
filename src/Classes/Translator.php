@@ -12,13 +12,13 @@ use Monolog\Logger;
 class Translator extends Injectable
 {
     /** @var string */
-    private $languageCode;
+    private string $languageCode;
 
     /** @var array */
-    private $siteFiles = [];
+    private array $siteFiles;
 
     /** @var array */
-    private $cmsFiles = [];
+    private array $cmsFiles;
 
     /**
      * @param array $cmsFiles
@@ -30,6 +30,18 @@ class Translator extends Injectable
         $this->siteFiles    = $siteFiles;
         $this->cmsFiles     = $cmsFiles;
         $this->languageCode = $languageCode;
+    }
+
+    /**
+     * @param string $key
+     * @param string|null $langCode
+     * @return bool
+     */
+    public function exists(string $key, string $langCode = null): bool
+    {
+        $translations = $this->getTranslations($langCode ?: $this->getLanguageCode());
+
+        return array_key_exists($key, $translations);
     }
 
     /**
@@ -71,6 +83,7 @@ class Translator extends Injectable
         $cacheKey = $this->translationService->getValueCacheKey($langCode, $key);
 
         if ( ! $this->cache || ! $translation = $this->cache->get($cacheKey)) {
+
             // numeric values given indicate it's a translation managed from a DataTable
             if (is_numeric($key)) {
                 return $this->getDbTranslation((int) $key, $langCode);
@@ -87,7 +100,7 @@ class Translator extends Injectable
             $translation = $translations[$key];
 
             if ($this->cache) {
-                $this->cache->save($cacheKey, $translation, CacheConfig::ONE_DAY);
+                $this->cache->set($cacheKey, $translation, CacheConfig::ONE_DAY);
             }
         }
 
@@ -180,7 +193,7 @@ class Translator extends Injectable
     public function getUserTranslations(string $langCode): array
     {
         $langCode = $langCode ?: $this->getLanguageCode();
-        $cacheKey = CacheConfig::USER_TRANSLATIONS . ':' . $langCode;
+        $cacheKey = CacheConfig::USER_TRANSLATIONS . CacheConfig::SEPARATOR . $langCode;
 
         return $this->cacheService->cache($cacheKey, function () use ($langCode) {
             // translations must be available, even without a db connection, hence the try-catch block
@@ -301,7 +314,5 @@ class Translator extends Injectable
         foreach ($webFormMessagesKeys as $key) {
             $defaultMessages[last(explode('.', $key))] = $this->tl($key);
         }
-
-        $this->validation->setDefaultMessages($defaultMessages);
     }
 }

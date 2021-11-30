@@ -12,10 +12,8 @@ class DataFormCest
 {
     public function renderWorks(FunctionalTester $I)
     {
-        $I->login();
-
         //TestUserPass
-        $I->amOnPage('/cms/test/personform');
+        $I->amOnPage('/test/personform');
         $I->seeElement('#webFormId_WebsiteFormsTestPersonForm');
 
         $I->submitForm('#webFormId_WebsiteFormsTestPersonForm form', [
@@ -30,8 +28,10 @@ class DataFormCest
 
     public function allFieldTypeWorks(FunctionalTester $I)
     {
-        $I->login();
-        $I->amOnPage('/cms/test/datatableform');
+        $I->getApplication()->acl->setCurrentRole('developer');
+
+        $I->amOnPage('/test/datatableform');
+        $I->makeHtmlSnapshot(1);
         $I->submitForm('#webFormId_WebsiteFormsDataTableTestForm form', [
             'text'            => 'testtext',
             'file_id'         => 1,

@@ -29,7 +29,7 @@ foreach ($argv as $k => $arg) {
     } elseif ($k === 2) {
         $arguments["action"] = $arg;
     } elseif ($k >= 3) {
-        $arguments["params"][] = $arg;
+        $arguments["params"]['params'][] = $arg;
     }
 }
 

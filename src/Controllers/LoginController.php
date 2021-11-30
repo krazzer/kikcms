@@ -46,48 +46,48 @@ class LoginController extends BaseController
      */
     public function initializeLanguage()
     {
-        if (isset($this->config->application->defaultCmsLanguage)) {
-            $this->translator->setLanguageCode($this->config->application->defaultCmsLanguage);
-        } else {
-            $this->translator->setLanguageCode($this->config->application->defaultLanguage);
-        }
+        $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }
 
     /**
      * Displays the login form
      * @return null|Response|string
      */
-    public function indexAction()
+    public function indexAction(): ResponseInterface
     {
         if ($this->userService->isLoggedIn()) {
             return $this->response->redirect('cms');
         }
 
-        $loginForm = (new LoginForm())->render();
+        $loginForm = (new LoginForm)->render();
 
         if ($loginForm instanceof Response) {
             return $loginForm;
         }
 
-        $this->view->form = $loginForm;
-
-        return null;
+        return $this->view('login/index', ['form' => $loginForm], 200);
     }
 
     /**
      * Displays the form to activate your account
+     * @return ResponseInterface
      */
-    public function activateAction()
+    public function activateAction(): ResponseInterface
     {
-        $this->view->form = (new PasswordResetLinkActivateForm())->render();
+        $form = (new PasswordResetLinkActivateForm())->render();
+
+        return $this->view('login/activate', ['form' => $form]);
     }
 
     /**
      * Displays the form to send you a password reset link
+     * @return ResponseInterface
      */
-    public function resetAction()
+    public function resetAction(): ResponseInterface
     {
-        $this->view->form = (new PasswordResetLinkForm())->render();
+        $form = (new PasswordResetLinkForm())->render();
+
+        return $this->view('login/reset', ['form' => $form], 200);
     }
 
     /**
@@ -98,7 +98,7 @@ class LoginController extends BaseController
      */
     public function resetPasswordAction(User $user, string $token): ResponseInterface
     {
-        if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId(), PassResetConfig::LIFETIME)) {
+        if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId() . $token, PassResetConfig::LIFETIME)) {
             $errorMessage = $this->translator->tl('login.reset.password.expired');
             $this->flash->error($errorMessage);
             return $this->response->redirect('cms/login/reset');
@@ -110,15 +110,14 @@ class LoginController extends BaseController
             return $this->response->redirect('cms/login');
         }
 
-        $passwordForm = (new PasswordResetForm())->setUser($user)->render();
+        $passwordForm = (new PasswordResetForm)->setUser($user)->render();
 
         if ($passwordForm instanceof Response) {
             return $passwordForm;
         }
 
         $this->flash->notice($this->translator->tl('login.reset.password.formMessage'));
-        $this->view->form = $passwordForm;
 
-        return $this->response->setContent($this->view->getPartial('login/reset'));
+        return $this->view('login/reset', ['form' => $passwordForm], 200);
     }
 }

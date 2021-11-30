@@ -40,7 +40,12 @@ class RememberMeService extends Injectable
     public function getUserIdByCookie(): ?int
     {
         // there is no cookie
-        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
+        if( ! $this->cookies->has($this->getKey())){
+            return null;
+        }
+
+        // get the cookie value, return null if empty
+        if( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()){
             return null;
         }
 
@@ -116,9 +121,11 @@ class RememberMeService extends Injectable
      */
     public function removeToken()
     {
-        if ( ! $cookieToken = $this->cookies->get($this->getKey())->getValue()) {
+        if( ! $this->cookies->has($this->getKey()) ){
             return;
         }
+
+        $cookieToken = $this->cookies->get($this->getKey())->getValue();
 
         $hashList = $this->getForCurrentUser();
 

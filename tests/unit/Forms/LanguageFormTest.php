@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace unit\Forms;
 
 use Helpers\Unit;
-use KikCMS\Classes\Phalcon\Cache;
 use KikCMS\Forms\LanguageForm;
 use KikCMS\Models\Language;
+use Phalcon\Cache\Adapter\AdapterInterface;
 use ReflectionMethod;
 
 class LanguageFormTest extends Unit
@@ -25,7 +25,7 @@ class LanguageFormTest extends Unit
 
         $languageForm = new LanguageForm();
 
-        $cacheMock = $this->createMock(Cache::class);
+        $cacheMock = $this->createMock(AdapterInterface::class);
         $cacheMock->expects($this->once())->method('delete');
 
         $languageForm->cache = $cacheMock;

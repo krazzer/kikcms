@@ -80,6 +80,8 @@ class DataTableCest
 
     public function deleteWorks(FunctionalTester $I)
     {
+        $I->getApplication()->acl->setCurrentRole('developer');
+
         $I->sendAjaxPostRequest('/cms/datatable/delete', [
             'renderableInstance' => 'dataTable5dc40ab26a399',
             'renderableClass'    => 'KikCMS\DataTables\Pages',
@@ -89,8 +91,8 @@ class DataTableCest
 
         $I->canSeeResponseCodeIs(200);
 
-        $I->getService('acl')->addResource(Pages::class, 'delete');
-        $I->getService('acl')->deny('developer', Pages::class, 'delete');
+        $I->getApplication()->acl->addComponent(Pages::class, 'delete');
+        $I->getApplication()->acl->deny('developer', Pages::class, '*');
 
         $I->sendAjaxPostRequest('/cms/datatable/delete', [
             'renderableInstance' => 'dataTable5dc40ab26a399',
@@ -101,7 +103,7 @@ class DataTableCest
 
         $I->canSeeResponseCodeIs(401);
 
-        $I->getService('acl')->allow('developer', Pages::class, 'delete');
+        $I->getApplication()->acl->allow('developer', Pages::class, '*');
 
         $I->getDbService()->insert(Page::class, ['id' => 10, 'lft' => 100, 'rgt' => 103]);
         $I->getDbService()->insert(Page::class, ['id' => 11, 'parent_id' => 10, 'lft' => 101, 'rgt' => 102]);
@@ -124,7 +126,7 @@ class DataTableCest
             'renderableInstance' => 'dataTable5dc40ab26a399',
             'renderableClass'    => 'Website\DataTables\DataTableTestObjects',
             'activeLangCode'     => 'nl',
-            'editId'             => 4,
+            'ids'                => 4,
             'column'             => 'checkbox',
             'checked'            => 1,
         ]);
@@ -203,7 +205,7 @@ class DataTableCest
 
     public function unauthorizedSaveWorks(FunctionalTester $I)
     {
-        $I->getService('acl')->addResource(Languages::class, 'edit');
+        $I->getService('acl')->addComponent(Languages::class, 'edit');
         $I->getService('acl')->deny('developer', Languages::class, 'edit');
 
         $I->sendAjaxPostRequest('/cms/datatable/save', [

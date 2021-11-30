@@ -3,19 +3,18 @@
 namespace unit\Classes\WebForm;
 
 use Helpers\Forms\TestMailForm;
-use Helpers\TestHelper;
 use Helpers\Unit;
 use KikCMS\Classes\Phalcon\View;
 use KikCMS\Classes\Translator;
+use KikCMS\Objects\MailformSubmission\MailformSubmissionService;
 use KikCMS\Services\MailService;
+use KikCMS\Services\Website\MailFormService;
 use Phalcon\Assets\Manager;
 use Phalcon\Config;
-use Phalcon\Di;
 use Phalcon\Flash\Direct;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
-use Phalcon\Mvc\Router;
-use Phalcon\Session\AdapterInterface;
+use Phalcon\Session\Adapter\AbstractAdapter;
 use Phalcon\Validation;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReCaptcha\Response as ReCaptchaResponse;
@@ -34,9 +33,10 @@ class MailFormTest extends Unit
         $mailForm = new TestMailForm();
         $mailForm->view = $view;
         $mailForm->translator = $translator;
-        $mailForm->session = $this->createMock(AdapterInterface::class);
+        $mailForm->session = $this->createMock(AbstractAdapter::class);
         $mailForm->flash = $this->createMock(Direct::class);
         $mailForm->request = $this->createMock(Request::class);
+        $mailForm->mailformSubmissionService = $this->createMock(MailformSubmissionService::class);
 
         $mailForm->config = new Config();
         $mailForm->config->recaptcha = new Config();
@@ -45,20 +45,23 @@ class MailFormTest extends Unit
         $mailForm->config->application = new Config();
         $mailForm->config->application->adminEmail = 'test@test.nl';
 
-        $response = $this->createMock(Response::class);
-        $response->method('redirect')->willReturn('redirect');
+        $redirectResponseMock = $this->createMock(Response::class);
 
-        $router = $this->createMock(Router::class);
-        $router->method('getRewriteUri')->willReturn('');
+        $response = $this->createMock(Response::class);
+        $response->method('redirect')->willReturn($redirectResponseMock);
+
+        $request = $this->createMock(Request::class);
+        $request->method('getServer')->willReturn('');
 
         $mailForm->mailService = $this->getMailService(1);
+        $mailForm->mailFormService = new MailFormService;
         $mailForm->response = $response;
-        $mailForm->router = $router;
+        $mailForm->request = $request;
 
         // all ok, will redirect
         $mailForm->validation = $this->getValidation(0.8);
         $mailForm->initializeForm();
-        $this->assertEquals('redirect', $this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertEquals($redirectResponseMock, $this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
 
         // spamscore too low, won't send
         $mailForm->validation = $this->getValidation(0.2);
@@ -83,65 +86,6 @@ class MailFormTest extends Unit
         $this->assertFalse($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
     }
 
-    public function testToMailOutput()
-    {
-        $di = new Di();
-        $di->set('validation', new Validation);
-        $di->set('translator', (new TestHelper)->getTranslator());
-
-        Di::setDefault($di);
-
-        $mailForm = new TestMailForm();
-        $mailForm->view = new View;
-        $mailForm->view->assets = new Manager;
-
-        $mailForm->config = new Config();
-        $mailForm->config->recaptcha = new Config();
-        $mailForm->config->recaptcha->siteKey = 'key';
-
-        $mailForm->initializeForm();
-
-        $input = [
-            'test' => 'test',
-            $mailForm->getFormId() => 'formId',
-            'select' => 'key1',
-            'text' => 'TextValue',
-            'text2' => [1,2,3],
-            'text3' => '',
-            'check' => false,
-            'html' => 'x',
-        ];
-
-        $expected = '<b>Select:</b><br>value1<br><br>';
-        $expected .= '<b>Text:</b><br>TextValue<br><br>';
-        $expected .= '<b>Text2:</b><br>1<br />2<br />3<br><br>';
-        $expected .= '<b>Text3:</b><br>-<br><br>';
-        $expected .= '<b>Check:</b><br>-<br><br>';
-
-        $this->assertEquals($expected, $mailForm->toMailOutput($input));
-
-        // test with checked checkbox
-        $input = [
-            'test' => 'test',
-            $mailForm->getFormId() => 'formId',
-            'select' => 'key1',
-            'text' => 'TextValue',
-            'text2' => [1,2,3],
-            'text3' => '',
-            'check' => true,
-            'hibben' => 'soundsystem',
-        ];
-
-        $expected = '<b>Select:</b><br>value1<br><br>';
-        $expected .= '<b>Text:</b><br>TextValue<br><br>';
-        $expected .= '<b>Text2:</b><br>1<br />2<br />3<br><br>';
-        $expected .= '<b>Text3:</b><br>-<br><br>';
-        $expected .= '<b>Check:</b><br>✔︎<br><br>';
-        $expected .= '<b>Hibben:</b><br>soundsystem<br><br>';
-
-        $this->assertEquals($expected, $mailForm->toMailOutput($input));
-    }
-
     /**
      * @param float $returnScore
      * @return MockObject|Validation
@@ -151,7 +95,7 @@ class MailFormTest extends Unit
         $reCaptchaResponse = $this->createMock(ReCaptchaResponse::class);
         $reCaptchaResponse->method('getScore')->willReturn($returnScore);
 
-        $validator = $this->createMock(Validation\Validator::class);
+        $validator = $this->createMock(Validation\AbstractValidator::class);
         $validator->method('getOption')->willReturn($reCaptchaResponse);
 
         $validation = $this->createMock(Validation::class);

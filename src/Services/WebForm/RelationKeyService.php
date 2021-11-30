@@ -32,12 +32,24 @@ class RelationKeyService extends Injectable
      * @param string $relationKey
      * @param mixed $value
      * @param string|null $langCode
+     * @return array
      */
-    public function set(Model $model, string $relationKey, $value, string $langCode = null)
+    public function set(Model $model, string $relationKey, $value, string $langCode = null): array
     {
         $relationKey = $this->replaceLangCode($relationKey, $langCode);
 
         $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $relationKey);
+
+        $relationToPreSave = [];
+
+        // if the value is empty and the field is not set, remove the relation
+        if (count($parts) == 2 && $parts[1] === '' && ! $value) {
+            if ($model->{$parts[0]}) {
+                $model->{$parts[0]}->delete();
+            }
+
+            return $relationToPreSave;
+        }
 
         $this->createMissingRelations($model, $parts);
 
@@ -50,13 +62,45 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $model->$part1->$part2 = $this->dbService->toStorage($value);
+                    $subModel         = $model->$part1;
+                    $subModel->$part2 = $this->dbService->toStorage($value);
+                    $model->$part1    = $subModel;
+
+                    if ($relation->getType() == Relation::BELONGS_TO) {
+                        $relationToPreSave[] = $part1;
+                    }
                 }
 
             break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
-                $model->$part1->$part2->$part3 = $this->dbService->toStorage($value);
+                $relation = $this->getRelation($model, $part1);
+
+                $part1Model = $model->$part1;
+                $part2Model = $part1Model->$part2;
+
+                if ($part2Model === null) {
+                    $part2relation  = $this->getRelation($part1Model, $part2);
+                    $part2ModelName = $part2relation->getReferencedModel();
+                    $part2Model     = new $part2ModelName();
+
+                    $part2Model->save();
+
+                    $field    = $part2relation->getFields();
+                    $refField = $part2relation->getReferencedFields();
+
+                    $part1Model->$field = $part2Model->$refField;
+                }
+
+                $part2Model->$part3 = $this->dbService->toStorage($value);
+
+                $part1Model->$part2 = $part2Model;
+                $model->$part1      = $part1Model;
+
+                if ($relation->getType() == Relation::BELONGS_TO) {
+                    $relationToPreSave[] = $part1;
+                    $relationToPreSave[] = $part1 . DataFormConfig::RELATION_KEY_SEPARATOR . $part2;
+                }
             break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
@@ -67,6 +111,8 @@ class RelationKeyService extends Injectable
                 $model->$part1->$part2->$part3->$part4->$part5 = $this->dbService->toStorage($value);
             break;
         }
+
+        return $relationToPreSave;
     }
 
     /**
@@ -95,15 +141,12 @@ class RelationKeyService extends Injectable
                 }
 
                 return @$model->$part1->$part2;
-            break;
             case 3:
                 list($part1, $part2, $part3) = $parts;
                 return @$model->$part1->$part2->$part3;
-            break;
             case 4:
                 list($part1, $part2, $part3, $part4) = $parts;
                 return @$model->$part1->$part2->$part3->$part4;
-            break;
             case 5:
                 list($part1, $part2, $part3, $part4, $part5) = $parts;
                 return @$model->$part1->$part2->$part3->$part4->$part5;
@@ -285,7 +328,11 @@ class RelationKeyService extends Injectable
             $relatedObjects[] = $referencedModel;
         }
 
-        $model->$relationField->delete();
+        // if it's an array the related objects aren't stored yet
+        if ( ! is_array($model->$relationField)) {
+            $model->$relationField->delete();
+        }
+
         $model->$relationField = $relatedObjects;
     }
 

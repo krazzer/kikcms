@@ -44,9 +44,7 @@ class LoginCest
         $I->addUser();
         $I->amOnPage('/cms/login/reset');
 
-        $I->submitForm('#login-form form', [
-            'email' => $I::TEST_USERNAME,
-        ]);
+        $I->submitForm('#login-form form', ['email' => $I::TEST_USERNAME]);
 
         $resetPassUrl = $this->getResetPasswordUrlFromEmail();
 
@@ -58,6 +56,9 @@ class LoginCest
             'password'        => 'myNewPassword1',
             'password_repeat' => 'myNewPassword1',
         ]);
+
+        // reset validation to prevent error from old forms
+        $I->getApplication()->validation->setValidators([]);
 
         $I->login($I::TEST_USERNAME, 'myNewPassword1', false);
 

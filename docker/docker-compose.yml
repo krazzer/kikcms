@@ -1,7 +1,7 @@
 version: "3"
 services:
   php:
-    image: kiksaus/kikdev
+    image: kiksaus/kikdev-phalcon4
     restart: always
     ports:
         - "443:443"

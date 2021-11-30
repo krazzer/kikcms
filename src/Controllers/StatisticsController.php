@@ -25,7 +25,7 @@ class StatisticsController extends BaseController
      *
      * @return string
      */
-    public function getVisitorsAction()
+    public function getVisitorsAction(): string
     {
         if( ! $this->acl->allowed(Permission::ACCESS_STATISTICS)){
             throw new UnauthorizedException();

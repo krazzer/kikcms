@@ -7,7 +7,6 @@ namespace KikCMS\Services\Analytics;
 use DateTime;
 use Exception;
 use Google_Service_AnalyticsReporting;
-use KikCMS\Classes\Phalcon\Cache;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
 use KikCmsCore\Services\DbService;
@@ -18,7 +17,9 @@ use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Cache;
 use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
  * @property Google_Service_AnalyticsReporting $analytics
@@ -42,7 +43,7 @@ class AnalyticsService extends Injectable
             return true;
         }
 
-        $this->keyValue->save(CacheConfig::STATS_UPDATE_IN_PROGRESS, true);
+        $this->keyValue->set(CacheConfig::STATS_UPDATE_IN_PROGRESS, true);
 
         $this->db->begin();
 
@@ -207,7 +208,7 @@ class AnalyticsService extends Injectable
      */
     public function isUpdating(): bool
     {
-        return $this->keyValue->exists(CacheConfig::STATS_UPDATE_IN_PROGRESS);
+        return $this->keyValue->has(CacheConfig::STATS_UPDATE_IN_PROGRESS);
     }
 
     /**
@@ -217,7 +218,11 @@ class AnalyticsService extends Injectable
      */
     public function requiresUpdate(): bool
     {
-        if ($this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE) === false) {
+        if ( ! $this->cache->has(CacheConfig::STATS_REQUIRE_UPDATE)) {
+            return true;
+        }
+
+        if ( ! $this->cache->get(CacheConfig::STATS_REQUIRE_UPDATE)) {
             return false;
         }
 
@@ -244,11 +249,11 @@ class AnalyticsService extends Injectable
     }
 
     /**
-     * @param Builder $query
+     * @param BuilderInterface $query
      * @param DateTime|null $start
      * @param DateTime|null $end
      */
-    private function addDateWhere(Builder $query, DateTime $start = null, DateTime $end = null)
+    private function addDateWhere(BuilderInterface $query, DateTime $start = null, DateTime $end = null)
     {
         if ($start) {
             $query->andWhere(GaDayVisit::FIELD_DATE . ' >= :dateStart:', [
@@ -267,11 +272,11 @@ class AnalyticsService extends Injectable
      * @param DateTime|null $start
      * @param DateTime|null $end
      *
-     * @return Builder
+     * @return BuilderInterface
      */
-    private function getChartQuery(DateTime $start = null, DateTime $end = null): Builder
+    private function getChartQuery(DateTime $start = null, DateTime $end = null): BuilderInterface
     {
-        $query = (new Builder())
+        $query = (new Builder)
             ->from(GaDayVisit::class)
             ->columns(['date', 'SUM(visits) AS visits', 'SUM(unique_visits) AS unique_visits'])
             ->groupBy('date');
@@ -282,11 +287,11 @@ class AnalyticsService extends Injectable
     }
 
     /**
-     * @param Builder $query
+     * @param BuilderInterface $query
      * @param string $dateFormat
      * @return array
      */
-    private function getChartQueryResult(Builder $query, string $dateFormat): array
+    private function getChartQueryResult(BuilderInterface $query, string $dateFormat): array
     {
         $rows   = [];
         $visits = $query->getQuery()->execute()->toArray();
@@ -393,6 +398,6 @@ class AnalyticsService extends Injectable
             return;
         }
 
-        $this->cache->save(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
+        $this->cache->set(CacheConfig::STATS_REQUIRE_UPDATE, false, CacheConfig::ONE_DAY / 4);
     }
 }
