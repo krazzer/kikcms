@@ -59,6 +59,7 @@ var WebForm = Class.extend({
         this.initFileFields();
         this.initWysiwyg();
         this.initPopovers();
+        this.initCsrf();
     },
 
     /**
@@ -109,6 +110,22 @@ var WebForm = Class.extend({
             limit: 10,
             source: substringMatcher(data)
         });
+    },
+
+    initCsrf: function (){
+        var self = this;
+
+        setTimeout(function (){
+            KikCMS.action('/cms/webform/token/', {}, function (result) {
+                var key   = result[0];
+                var token = result[1];
+
+                var tokenField = '<input type="hidden" name="' + key + '" value="' + token + '" />';
+                var $form = self.getWebForm().find('form');
+
+                $form.append(tokenField);
+            });
+        }, 1500);
     },
 
     /**

@@ -81,4 +81,12 @@ class WebFormController extends RenderableController
 
         return json_encode($result);
     }
+
+    /**
+     * @return string
+     */
+    public function tokenAction(): string
+    {
+        return json_encode([$this->security->getTokenKey(), $this->security->getToken()]);
+    }
 }
