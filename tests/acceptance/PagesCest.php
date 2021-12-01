@@ -121,7 +121,8 @@ class PagesCest
         $I->login();
         $I->amOnPage('/cms/pages');
 
-        $I->click('.table tr:nth-child(1) .edit');
+        $I->moveMouseOver(['css' => '.table tbody tr:nth-child(1)']);
+        $I->click('.table tbody tr:nth-child(1) .action.edit');
         $I->waitForJS("return $.active == 0;", 300);
         $I->waitForElement('#webFormId_KikCMSFormsMenuForm');
         $I->click('.saveAndClose');
