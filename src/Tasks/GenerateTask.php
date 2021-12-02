@@ -20,10 +20,10 @@ class GenerateTask extends Task
 
     /**
      * Called by: kikcms generate model <table_name>
-     * @param string $table
+     * @param array $params
      */
-    public function modelAction(string $table)
+    public function modelAction(array $params)
     {
-        $this->generatorService->generateForTable($table);
+        $this->generatorService->generateForTable($params[0]);
     }
 }
