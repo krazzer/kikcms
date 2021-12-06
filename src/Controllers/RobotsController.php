@@ -28,9 +28,9 @@ class RobotsController extends BaseController
         $sitemap = new DOMDocument("1.0", "UTF-8");
 
         $urlSet = $sitemap->createElement('urlset');
-        $urlSet->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $urlSet->setAttribute('xmlns', 'https://www.sitemaps.org/schemas/sitemap/0.9');
         $urlSet->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
-        $urlSet->setAttribute('xsi:schemaLocation', 'http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd');
+        $urlSet->setAttribute('xsi:schemaLocation', 'https://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd');
 
         $pageLanguages = PageLanguage::find();
 
@@ -56,9 +56,12 @@ class RobotsController extends BaseController
 
         $urlSet->appendChild($comment);
 
+        $baseUri = trim($this->url->getBaseUri(), '/');
+
         foreach ($links as $link) {
             $url  = $sitemap->createElement('url');
-            $href = $this->url->get($link);
+            $href = $baseUri . $link;
+
             $url->appendChild($sitemap->createElement('loc', $href));
             $url->appendChild($sitemap->createElement('changefreq', 'daily'));
             $url->appendChild($sitemap->createElement('priority', '0.5'));
@@ -73,7 +76,10 @@ class RobotsController extends BaseController
         return $this->response;
     }
 
-    public function robotsAction()
+    /**
+     * @return string
+     */
+    public function robotsAction(): string
     {
         $this->response->setHeader('Content-type', 'text/plain');
 
