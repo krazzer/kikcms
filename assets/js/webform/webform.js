@@ -123,7 +123,9 @@ var WebForm = Class.extend({
                 var tokenField = '<input type="hidden" name="' + key + '" value="' + token + '" />';
                 var $form = self.getWebForm().find('form');
 
-                $form.append(tokenField);
+                if( ! $form.find('input[name=' + key + ']').length) {
+                    $form.append(tokenField);
+                }
             });
         }, 1500);
     },
