@@ -42,7 +42,7 @@
             {{ block('fields') }}
         {% endif %}
 
-        {% if not config('application.jsCsrf') %}
+        {% if not webForm.useJsCsrfProtection %}
             <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
         {% endif %}
 

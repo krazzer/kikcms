@@ -294,6 +294,18 @@ abstract class DataForm extends WebForm
     }
 
     /**
+     * @return bool
+     */
+    public function useJsCsrfProtection(): bool
+    {
+        if( ! parent::useJsCsrfProtection()){
+            return false;
+        }
+
+        return ! $this->getDataTable();
+    }
+
+    /**
      * @param string $event
      * @param callable $callable
      */

@@ -400,6 +400,14 @@ abstract class WebForm extends Renderable
     }
 
     /**
+     * @return bool
+     */
+    public function useJsCsrfProtection(): bool
+    {
+        return $this->config->application->jsCsrf;
+    }
+
+    /**
      * Verify the input with additional rules, if the input was valid, i.e. checking login credentials
      * Override this method if you have such rules
      *
