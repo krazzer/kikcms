@@ -404,7 +404,7 @@ abstract class WebForm extends Renderable
      */
     public function useJsCsrfProtection(): bool
     {
-        return $this->config->application->jsCsrf;
+        return $this->config->application->jsCsrf ?: false;
     }
 
     /**
