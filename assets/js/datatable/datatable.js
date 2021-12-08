@@ -13,6 +13,7 @@ var DataTable = Class.extend({
     restore: null,
     filePicker: null,
     lastSelectedRow: null,
+    madeSpaceForButtonsOnce: null,
     $table: null,
 
     getDeleteConfirmMessage: function (amount) {
@@ -52,6 +53,8 @@ var DataTable = Class.extend({
         this.initKeyEvents();
         this.initFilters();
         this.initRestore();
+
+        $(window).resize(this.makeSpaceForButtons.bind(this));
     },
 
     /**
@@ -279,6 +282,16 @@ var DataTable = Class.extend({
 
         var self  = this;
         var $rows = this.$table.find('tbody tr');
+
+        if(this.madeSpaceForButtonsOnce){
+            self.makeSpaceForButtons();
+        }
+
+        $rows.hover(function (){
+            if( ! self.madeSpaceForButtonsOnce) {
+                self.makeSpaceForButtons();
+            }
+        });
 
         $rows.find('td a').click(function (e) {
             e.stopPropagation();
@@ -697,6 +710,24 @@ var DataTable = Class.extend({
      */
     contentHasChanged: function () {
         return this.currentFormInput != this.getFormSerialized();
+    },
+
+    /**
+     * Make space for action buttons in a row if the last item is a checkbox (to be able to still check the checkbox)
+     */
+    makeSpaceForButtons: function (){
+        this.getDataTable().find('.table .actions + input[type=checkbox]').each(function (){
+            var $checkbox = $(this);
+            var $actions = $(this).prev();
+
+            var actionsWidth = $actions.outerWidth();
+
+            if($checkbox.parent().outerWidth() < actionsWidth + 40) {
+                $checkbox.css('marginRight', actionsWidth - 5);
+            }
+        });
+
+        this.madeSpaceForButtonsOnce = true;
     },
 
     /**
