@@ -24,7 +24,7 @@
         "nette/php-generator": "^3.1",
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
-        "kiksaus/kikcms-core": "dev-phalcon4"
+        "kiksaus/kikcms-core": "dev-master"
     },
     "autoload": {
         "psr-4": {
