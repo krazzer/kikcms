@@ -21,6 +21,21 @@ use Phalcon\Mvc\Model\Query\Builder;
 class PageService extends Injectable
 {
     /**
+     * @param Page $page
+     * @return bool
+     */
+    public function checkForDisplayOrderCollision(Page $page): bool
+    {
+        $query = (new Builder)
+            ->from($this->websiteSettings->getPageClass())
+            ->where(Page::FIELD_ID . ' != ' . $page->getId())
+            ->andWhere(Page::FIELD_PARENT_ID . ' = ' . $page->getParentId())
+            ->andWhere(Page::FIELD_DISPLAY_ORDER . ' = ' . $page->getDisplayOrder());
+
+        return $this->dbService->getExists($query);
+    }
+
+    /**
      * @param array $pageIds
      * @return PageMap
      */

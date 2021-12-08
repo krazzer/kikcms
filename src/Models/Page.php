@@ -56,6 +56,13 @@ class Page extends Model
      */
     public function beforeSave()
     {
+        // if the parent changed, and the new parent has a child with the same display_order, reset it
+        if($this->getParentId() && $this->getDisplayOrder() && $this->getId()){
+            if($this->getPageService()->checkForDisplayOrderCollision($this)){
+                $this->resetDisplayOrder(true);
+            }
+        }
+
         if ($this->getPageService()->requiresNesting($this)) {
             $this->getNestedSetService()->setAndMakeRoomForNewPage($this);
         }
@@ -299,9 +306,14 @@ class Page extends Model
     /**
      * Set a new display order
      */
-    public function resetDisplayOrder()
+    public function resetDisplayOrder(bool $resetNestedSet = false)
     {
         $this->display_order = $this->getPageRearrangeService()->getMaxDisplayOrder($this->parent) + 1;
+
+        if($resetNestedSet){
+            $this->lft = null;
+            $this->rgt = null;
+        }
     }
 
     /**
