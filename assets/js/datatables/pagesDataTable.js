@@ -68,7 +68,7 @@ var PagesDataTable = DataTable.extend({
         this.updateEvenOdd();
 
         $('.action.preview').click(function () {
-            var pageLanguageId = $(this).parent().attr('data-plid');
+            var pageLanguageId = $(this).parent().parent().parent().data('plid');
             window.open('/cms/preview/' + pageLanguageId);
         });
     },
