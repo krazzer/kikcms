@@ -349,7 +349,7 @@ body {
                             background-color: $highLightColor;
                         }
 
-                        &:hover td, .actions {
+                        &:hover td, &:hover td .actions {
                             background-color: $highLightColorDark;
                         }
                     }
