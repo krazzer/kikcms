@@ -55,7 +55,7 @@ class TaskCest
         $generateTask = new GenerateTask();
         $generateTask->setDI($di);
 
-        $generateTask->modelAction('test_generate_test');
+        $generateTask->modelAction(['test_generate_test']);
 
         $I->getDbService()->db->dropTable('test_generate_test');
 
