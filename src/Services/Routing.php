@@ -113,6 +113,7 @@ class Routing extends Injectable
         $frontend->add('/robots.txt', "Robots::robots");
         $frontend->add('/object-not-found', "Frontend::objectNotFound")->setName('objectNotFound');
 
+        $frontend->add("/webform/token", "WebForm::token");
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
 
         $router->mount($frontend);

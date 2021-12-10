@@ -116,7 +116,7 @@ var WebForm = Class.extend({
         var self = this;
 
         setTimeout(function (){
-            KikCMS.action('/cms/webform/token/', {}, function (result) {
+            KikCMS.action('/webform/token/', {}, function (result) {
                 var key   = result[0];
                 var token = result[1];
 
