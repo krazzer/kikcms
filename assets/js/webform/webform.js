@@ -124,7 +124,7 @@ var WebForm = Class.extend({
                 var $form = self.getWebForm().find('form');
 
                 if( ! $form.find('input[name=' + key + ']').length) {
-                    $form.append(tokenField);
+                    $form.prepend(tokenField);
                 }
             });
         }, 1500);
