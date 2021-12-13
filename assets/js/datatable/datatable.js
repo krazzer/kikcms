@@ -828,7 +828,7 @@ var DataTable = Class.extend({
         var scrollTop    = $(window).scrollTop();
 
         if (editedRowY > scrollTop + windowHeight - 250 || editedRowY < scrollTop) {
-            $('body').animate({scrollTop: editedRowY - 250}, 1000);
+            $('html, body').animate({scrollTop: editedRowY - 250}, 1000);
         }
     },
 
