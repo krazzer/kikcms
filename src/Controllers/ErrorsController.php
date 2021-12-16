@@ -28,10 +28,10 @@ class ErrorsController extends BaseCmsController
     }
 
     /**
-     * @param string $object
+     * @param string|null $object
      * @return ResponseInterface
      */
-    public function show404ObjectAction(string $object): ResponseInterface
+    public function show404ObjectAction(?string $object): ResponseInterface
     {
         $this->response->setStatusCode(404);
 

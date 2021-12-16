@@ -50,7 +50,7 @@ class BackendNotFoundPlugin extends Injectable
             $params = ['error' => $exception];
 
             if ($exception instanceof ObjectNotFoundException) {
-                $params['object'] = $exception->getObject();
+                $params = ['object' => $exception->getObject()];
             }
 
             $dispatcher->forward([
