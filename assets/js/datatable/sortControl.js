@@ -81,7 +81,7 @@ var SortControl = Class.extend({
      * @returns {*}
      */
     cloneSelectedObject: function () {
-        var $row      = this.draggedObject.parent();
+        var $row      = this.draggedObject.parent().parent().parent();
         var $rowClone = $("<table class='draggedObject rowClone'></table>").append($row.clone());
 
         $rowClone.css('width', $row.innerWidth());
@@ -175,7 +175,7 @@ var SortControl = Class.extend({
      * Get the row object for the selected element
      */
     getSelectedRow: function () {
-        return this.draggedObject.parent();
+        return this.draggedObject.parent().parent().parent();
     },
 
     /**
@@ -184,7 +184,7 @@ var SortControl = Class.extend({
      * @returns {*|{}}
      */
     getDraggables: function () {
-        return this.$dataTable.find('tbody tr td.sort');
+        return this.$dataTable.find('tbody tr td .actions .sort');
     },
 
     /**
