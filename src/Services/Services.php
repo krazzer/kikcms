@@ -337,11 +337,8 @@ class Services extends BaseServices
         /** @var Swift_Mailer $mailer */
         $mailer = $this->get('mailer');
 
-        /** @var MailService $mailService */
-        $mailService = $this->get('mailService');
-
         if ($this->getIniConfig()->isProd() && $developerEmail = $this->getAppConfig()->developerEmail) {
-            $errorFromMail = $mailService->getDefaultFrom();
+            $errorFromMail = 'error@' . $_SERVER['HTTP_HOST'];
 
             $message = new Swift_Message('Error');
             $message->setFrom($errorFromMail);
