@@ -338,17 +338,23 @@ class Services extends BaseServices
         $mailer = $this->get('mailer');
 
         if ($this->getIniConfig()->isProd() && $developerEmail = $this->getAppConfig()->developerEmail) {
-            $errorFromMail = 'error@' . $_SERVER['HTTP_HOST'];
+            if( ! $domain = $this->getAppConfig()->get('domain')){
+                $domain = $_SERVER['HTTP_HOST'] ?? null;
+            }
 
-            $message = new Swift_Message('Error');
-            $message->setFrom($errorFromMail);
-            $message->setTo($developerEmail);
-            $message->setContentType('text/html');
+            if($domain) {
+                $errorFromMail = 'error@' . $domain;
 
-            $handler = new SwiftMailerHandler($mailer, $message, Logger::NOTICE);
-            $handler->setFormatter(new PhalconHtmlFormatter);
+                $message = new Swift_Message('Error');
+                $message->setFrom($errorFromMail);
+                $message->setTo($developerEmail);
+                $message->setContentType('text/html');
 
-            $logger->pushHandler(new DeduplicationHandler($handler));
+                $handler = new SwiftMailerHandler($mailer, $message, Logger::NOTICE);
+                $handler->setFormatter(new PhalconHtmlFormatter);
+
+                $logger->pushHandler(new DeduplicationHandler($handler));
+            }
         }
 
         $logger->pushHandler(new ErrorLogHandler());
