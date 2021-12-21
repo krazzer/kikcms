@@ -1,7 +1,10 @@
 {%- extends '@kikcms/datatable/table.twig' -%}
 
-{% block actionEditColumn %}
+{% block extraColumns %}
     <td class="select">
         <input type="checkbox" />
     </td>
 {% endblock %}
+
+{% block actionEditColumn '' %}
+{% block actionDeleteColumn '' %}
