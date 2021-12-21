@@ -45,9 +45,35 @@ class MailService extends Injectable
     /**
      * @return Swift_Message
      */
-    public function createMessage()
+    public function createMessage(): Swift_Message
     {
         return new Swift_Message();
+    }
+
+    /**
+     * @return string|array
+     */
+    public function getDefaultFrom()
+    {
+        if ($defaultFromEmail = $this->config->application->get('defaultFromEmail')) {
+            return $defaultFromEmail;
+        }
+
+        if ( ! $domain = $this->config->application->get('domain')) {
+            if ( ! @$this->request) {
+                throw new Exception('Domain to send from is unknown. Please set the application.domain setting');
+            } else {
+                $domain = $this->request->getServerName();
+            }
+        }
+
+        $from = 'noreply@' . $domain;
+
+        if ($this->config->get('company') && $companyName = $this->config->get('company')->get('name')) {
+            return [$from => $companyName];
+        }
+
+        return $from;
     }
 
     /**
@@ -168,31 +194,5 @@ class MailService extends Injectable
         }
 
         return $parameters;
-    }
-
-    /**
-     * @return string|array
-     */
-    private function getDefaultFrom()
-    {
-        if ($defaultFromEmail = $this->config->application->get('defaultFromEmail')) {
-            return $defaultFromEmail;
-        }
-
-        if ( ! $domain = $this->config->application->get('domain')) {
-            if ( ! @$this->request) {
-                throw new Exception('Domain to send from is unknown. Please set the application.domain setting');
-            } else {
-                $domain = $this->request->getServerName();
-            }
-        }
-
-        $from = 'noreply@' . $domain;
-
-        if ($this->config->get('company') && $companyName = $this->config->get('company')->get('name')) {
-            return [$from => $companyName];
-        }
-
-        return $from;
     }
 }
