@@ -360,10 +360,13 @@ class Services extends BaseServices
         $logger->pushHandler(new ErrorLogHandler());
 
         $logger->pushProcessor(function ($record) {
-            $record['extra'] = [
-                'Post Data' => $_POST,
-                'URL'       => $_SERVER['REQUEST_URI'] ?? null,
-            ];
+            if($_POST){
+                $record['extra']['POST'] = $_POST;
+            }
+
+            if(isset($_SERVER['REQUEST_URI'])){
+                $record['extra']['URL'] = $_SERVER['REQUEST_URI'];
+            }
 
             return $record;
         });
