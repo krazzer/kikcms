@@ -2,30 +2,20 @@
 
 namespace KikCMS\Classes\Phalcon;
 
-use Phalcon\Di\DiInterface;
-use Phalcon\Mvc\Router;
+use Phalcon\Mvc\RouterInterface;
 
 /**
  * Adds some convenience to Phalcons UrlProvider
  */
 class Url extends \Phalcon\Url
 {
-    /** @var Router */
-    protected Router $_router;
-
-    /** @var DiInterface */
-    protected DiInterface $_dependencyInjector;
-
     /**
      * @inheritdoc
      */
     public function get($uri = null, $args = null, bool $local = null, $baseUri = null): string
     {
-        /** @var Router $router */
-        $router = $this->getDI()->get('router');
-
         // transforms parameters
-        if ($uri != null && is_string($uri) && $route = $router->getRouteByName($uri)) {
+        if ($uri != null && is_string($uri) && $route = $this->getRouter()->getRouteByName($uri)) {
             $args = $this->convertArguments($args, $route->getPaths());
 
             $routeName  = $uri;
@@ -91,5 +81,19 @@ class Url extends \Phalcon\Url
     public function getRewriteUri(): string
     {
         return $_SERVER["REQUEST_URI"];
+    }
+
+    /**
+     * @return RouterInterface
+     */
+    private function getRouter(): RouterInterface
+    {
+        if($this->router){
+            return $this->router;
+        }
+
+        $this->router = $this->getDI()->get('router');
+
+        return $this->router;
     }
 }

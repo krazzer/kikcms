@@ -1,10 +1,10 @@
 {# @var file \KikCMS\Models\File #}
 {% if file.isImage %}
-    <img src="{{ mediaFile(file.id, 'default', true) }}" />
+    <img src="{{ mediaFile(file.id, 'default', true) }}"  alt=""/>
 {% elseif(file.extension == 'svg') %}
-    <img src="{{ mediaFile(file.id, 'default', true) }}" width="96" />
+    <img src="{{ mediaFile(file.id, 'default', true) }}" width="96"  alt=""/>
 {% elseif(file.isFolder) %}
-    <img src="/cmsassets/images/folder.png"/>
+    <img src="/cmsassets/images/folder.png" alt=""/>
 {% else %}
     <span class="extension">{{ file.extension }}</span>
     <span class="glyphicon glyphicon-file"></span>
