@@ -38,7 +38,8 @@ use Phalcon\Validation\Validator\StringLength;
  */
 class PageForm extends DataForm
 {
-    const FIELD_SLUG = 'pageLanguage*:slug';
+    const FIELD_SLUG   = 'pageLanguage*:slug';
+    const SLUG_PATTERN = '/^$|^([0-9a-z\-]+)$/';
 
     /**
      * @inheritdoc
@@ -59,7 +60,7 @@ class PageForm extends DataForm
         $this->addFieldsForCurrentTemplate();
 
         $urlPatternValidation = new Regex([
-            'pattern' => '/^$|^([0-9a-z\-]+)$/',
+            'pattern' => self::SLUG_PATTERN,
             'message' => $this->translator->tl('webform.messages.slug')
         ]);
 
@@ -135,6 +136,10 @@ class PageForm extends DataForm
         }
 
         if ( ! $urlPath = $input[self::FIELD_SLUG]) {
+            return $errorContainer;
+        }
+
+        if( ! preg_match(self::SLUG_PATTERN, $input[self::FIELD_SLUG])){
             return $errorContainer;
         }
 
@@ -228,15 +233,15 @@ class PageForm extends DataForm
      */
     function successAction(array $input)
     {
-        if( ! $page = $this->getObject()) {
+        if ( ! $page = $this->getObject()) {
             return parent::successAction($input);
         }
 
-        if( ! array_key_exists(Page::FIELD_PARENT_ID, $input)) {
+        if ( ! array_key_exists(Page::FIELD_PARENT_ID, $input)) {
             return parent::successAction($input);
         }
 
-        if($page->parent_id == $input[Page::FIELD_PARENT_ID]){
+        if ($page->parent_id == $input[Page::FIELD_PARENT_ID]) {
             return parent::successAction($input);
         }
 
