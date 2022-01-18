@@ -118,8 +118,8 @@ class Twig extends Engine\AbstractEngine
         $this->twig->addFilter(new TwigFilter('lcfirst', 'lcfirst'));
 
         // add price filter
-        $this->twig->addFilter(new TwigFilter('price', function ($price) use ($di) {
-            return $di->getShared("numberService")->getPriceFormat((float) $price);
+        $this->twig->addFilter(new TwigFilter('price', function ($price, $decimals = 2) use ($di) {
+            return $di->getShared("numberService")->getPriceFormat((float) $price, $decimals);
         }));
 
         // add date filter
