@@ -357,7 +357,13 @@ class Services extends BaseServices
             }
         }
 
-        $logger->pushHandler(new ErrorLogHandler());
+        $errorLogHandler = new ErrorLogHandler();
+
+        if($errorLogPath = $this->getAppConfig()->errorLogPath) {
+            $errorLogHandler->setErrorLogPath($this->getAppConfig()->path . $errorLogPath);
+        }
+
+        $logger->pushHandler($errorLogHandler);
 
         $logger->pushProcessor(function ($record) {
             if($_POST){
