@@ -2,6 +2,7 @@
 
 namespace KikCMS\Classes\Phalcon;
 
+use Phalcon\Cli\Router;
 use Phalcon\Mvc\RouterInterface;
 
 /**
@@ -84,9 +85,9 @@ class Url extends \Phalcon\Url
     }
 
     /**
-     * @return RouterInterface
+     * @return RouterInterface|Router
      */
-    private function getRouter(): RouterInterface
+    private function getRouter()
     {
         if($this->router){
             return $this->router;
