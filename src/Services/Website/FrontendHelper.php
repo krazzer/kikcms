@@ -92,7 +92,9 @@ class FrontendHelper extends Injectable
         $getMenu = function () use ($menu) {
             $this->menuService->addFullPageMap($menu);
 
-            $parentId = $this->pageService->getIdByKeyOrId($menu->getMenuKey());
+            if( ! $parentId = $this->pageService->getIdByKeyOrId($menu->getMenuKey())){
+                return '';
+            }
 
             return $this->buildMenu($parentId, $menu);
         };
