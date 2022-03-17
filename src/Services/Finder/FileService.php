@@ -259,7 +259,7 @@ class FileService extends Injectable
         $fileMediaPath = $this->getMediaFilePath($file, $private);
 
         // create dir if not existing (which is always the case for private files)
-        if ( ! is_dir(dirname($fileMediaPath))) {
+        if ( ! file_exists(dirname($fileMediaPath))) {
             mkdir(dirname($fileMediaPath));
         }
 
