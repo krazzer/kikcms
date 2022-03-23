@@ -162,6 +162,10 @@ class Page extends Model
      */
     public function getId(): int
     {
+        if ( ! property_exists($this, self::FIELD_ID)) {
+            return 0;
+        }
+
         return (int) $this->id;
     }
 
