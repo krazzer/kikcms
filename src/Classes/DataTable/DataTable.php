@@ -4,6 +4,7 @@ namespace KikCMS\Classes\DataTable;
 
 
 use Exception;
+use KikCMS\Classes\Exceptions\ObjectNotFoundException;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\WebForm\DataFormService;
@@ -215,7 +216,10 @@ abstract class DataTable extends Renderable
         }
 
         $langCode = $this->getFilters()->getLanguageCode();
-        $object   = $this->modelService->getObject($this->getModel(), (int) $id);
+
+        if ( ! $object = $this->modelService->getObject($this->getModel(), (int) $id)) {
+            throw new ObjectNotFoundException();
+        }
 
         if ($this->relationKeyService->isRelationKey($column)) {
             $this->relationKeyService->set($object, $column, $checked, $langCode);
@@ -507,7 +511,7 @@ abstract class DataTable extends Renderable
         $this->checkValidKey();
         $this->initializeDatatable();
 
-        if($this->isSortable()){
+        if ($this->isSortable()) {
             $this->rearrangeService->checkOrderIntegrity($this->getModel(), $this->getSortableField());
         }
 
@@ -548,7 +552,7 @@ abstract class DataTable extends Renderable
      */
     public function renderEditForm(): string
     {
-        if( ! $this->getFormClass()){
+        if ( ! $this->getFormClass()) {
             return '';
         }
 
@@ -700,7 +704,7 @@ abstract class DataTable extends Renderable
      */
     public function renderWindow(string $renderedForm): string
     {
-        if( ! $this->getFormClass()){
+        if ( ! $this->getFormClass()) {
             return '';
         }
 
