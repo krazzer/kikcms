@@ -36,6 +36,11 @@ class UrlToId extends FieldTransformer
      */
     public function toStorage($value)
     {
+        // it's a full URL, so just return as a whole
+        if(strstr($value, '://')){
+            return $value;
+        }
+
         if ($pageLanguage = $this->urlService->getPageLanguageByUrlPath($value)) {
             return $pageLanguage->getPageId();
         }
