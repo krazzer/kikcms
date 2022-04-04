@@ -135,13 +135,20 @@ var KikCmsClass = Class.extend({
 
     showError: function (result, onError) {
         if (typeof(onError) != 'undefined') {
-            onError();
+            onError(result);
         }
 
         this.hideLoader();
 
+        var $ajaxDebugger = $("#ajaxDebugger");
+
         if (this.isDev && result.status != 440) {
-            $("#ajaxDebugger").html(result.responseText).show();
+            if($ajaxDebugger.length) {
+                $ajaxDebugger.html(result.responseText).show();
+            } else {
+                console.warn('DIV #ajaxDebugger is missing, using alert to display HTML')
+                alert(result.responseText);
+            }
         } else {
             alert(result.responseJSON.title + "\n\n" + result.responseJSON.description);
         }

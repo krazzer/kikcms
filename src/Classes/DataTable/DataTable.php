@@ -218,7 +218,7 @@ abstract class DataTable extends Renderable
         $langCode = $this->getFilters()->getLanguageCode();
 
         if ( ! $object = $this->modelService->getObject($this->getModel(), (int) $id)) {
-            throw new ObjectNotFoundException();
+            throw new ObjectNotFoundException((string) $id);
         }
 
         if ($this->relationKeyService->isRelationKey($column)) {
