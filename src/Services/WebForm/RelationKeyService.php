@@ -84,10 +84,16 @@ class RelationKeyService extends Injectable
                     $part2ModelName = $part2relation->getReferencedModel();
                     $part2Model     = new $part2ModelName();
 
-                    $part2Model->save();
-
                     $field    = $part2relation->getFields();
                     $refField = $part2relation->getReferencedFields();
+
+                    $part2Model->$refField = $part1Model->$field;
+
+                    foreach($part2relation->getOptions()['defaults'] as $defaultKey => $defaultValue){
+                        $part2Model->$defaultKey = $defaultValue;
+                    }
+
+                    $part2Model->save();
 
                     $part1Model->$field = $part2Model->$refField;
                 }
