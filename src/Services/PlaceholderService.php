@@ -5,6 +5,7 @@ namespace KikCMS\Services;
 
 
 use KikCMS\Config\CacheConfig;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\ObjectLists\FileMap;
 use KikCMS\ObjectLists\PlaceholderFileThumbUrlMap;
@@ -96,6 +97,11 @@ class PlaceholderService extends Injectable
 
             if ( ! $file = $fileMap->get($placeholder->getFileId())) {
                 $replaceMap[$placeholder->getPlaceholder()] = $this->url->get('objectNotFound');
+                continue;
+            }
+
+            // can't make thumbs for non-image files
+            if( ! in_array($file->getExtension(), FinderConfig::FILE_TYPES_IMAGE)){
                 continue;
             }
 

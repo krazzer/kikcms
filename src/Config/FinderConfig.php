@@ -17,4 +17,6 @@ class FinderConfig
     const DEFAULT_THUMB_TYPE = 'default';
 
     const MAX_FILENAME_LENGTH = 255;
+
+    const FILE_TYPES_IMAGE = ['jpg', 'jpeg', 'png', 'gif'];
 }

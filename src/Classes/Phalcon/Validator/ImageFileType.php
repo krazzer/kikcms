@@ -3,8 +3,10 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
+use KikCMS\Config\FinderConfig;
+
 class ImageFileType extends FileType
 {
     /** @inheritdoc */
-    protected array $fileTypes = ['jpg', 'jpeg', 'png', 'gif'];
+    protected array $fileTypes = FinderConfig::FILE_TYPES_IMAGE;
 }
