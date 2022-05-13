@@ -117,6 +117,16 @@
     </div>
 {% endblock %}
 
+{%- block fieldFileInput -%}
+    <div{{ fieldContainterAttributes|raw }}>
+        {{ block('fieldDefaultInputAndField') }}
+        {% if(placeHolderAsLabel == true) %}
+            {{ element.label|raw }}
+        {% endif %}
+        {{ block('errorWarnings') }}
+    </div>
+{%- endblock -%}
+
 {%- block fieldHeader -%}
     {# @var field \KikCMS\Classes\WebForm\Fields\Header #}
     <div class="header header-{{ field.key }}">{{ field.label }}</div>

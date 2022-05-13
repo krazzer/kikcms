@@ -17,6 +17,7 @@ class FileInputField extends Field
     {
         $element = (new File($key))
             ->setLabel($label)
+            ->setAttribute('class', 'form-control')
             ->addValidators($validators);
 
         $this->element = $element;
