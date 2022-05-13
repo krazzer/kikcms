@@ -73,7 +73,9 @@ abstract class Renderable extends Injectable
      */
     public function renderView(string $view, array $parameters): string
     {
-        return $this->view->getPartial($this->viewDirectory . '/' . $view, $parameters);
+        $view = strstr($view, '@') ? $view : $this->viewDirectory . '/' . $view;
+
+        return $this->view->getPartial($view, $parameters);
     }
 
     /**

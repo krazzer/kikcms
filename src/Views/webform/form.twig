@@ -9,7 +9,8 @@
 {% use '@kikcms/webform/fields.twig' %}
 {% use '@kikcms/webform/fieldsBlock.twig' %}
 
-<div class="webForm" id="{{ formId }}" data-renderable="{{ jsData|json_encode }}" data-instance="{{ instance }}" data-id="{{ filters.editId }}">
+<div class="webForm" id="{{ formId }}" data-renderable="{{ jsData|json_encode }}" data-instance="{{ instance }}"
+     data-id="{{ filters.editId }}">
     <form name="form" method="post" action="{{ requestUri }}#{{ formId }}" enctype="{{ encType }}">
         <div class="flashContainer">
             {%- if mayFlash -%}
@@ -48,7 +49,9 @@
 
         {% if(displaySendButton) %}
             <div class="form-group webform__submit">
-                {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
+                {% block submitButton %}
+                    {{ submitButton(sendButtonLabel, {'class': sendButtonClass, 'name': 'submit'}) }}
+                {% endblock %}
             </div>
         {% endif %}
 
