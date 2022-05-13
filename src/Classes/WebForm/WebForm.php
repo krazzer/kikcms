@@ -549,7 +549,7 @@ abstract class WebForm extends Renderable
             }
 
             foreach ($elementMessages as $message) {
-                $alert   = $this->webFormService->messageNeedsAlert($message, $formElement, $this->getInput());
+                $alert   = $this->webFormService->messageNeedsAlert($message, $formElement, $this->getInput() + $_FILES);
                 $message = $message->getMessage();
 
                 if ($formElement->getLabel()) {

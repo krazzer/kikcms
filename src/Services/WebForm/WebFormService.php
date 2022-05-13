@@ -21,11 +21,17 @@ class WebFormService extends Injectable
     public function messageNeedsAlert(MessageInterface $message, ElementInterface $element, array $input): bool
     {
         // never alert if the field is empty
-        if(array_key_exists($element->getName(), $input) && ! $input[$element->getName()]){
+        if (array_key_exists($element->getName(), $input) && ! $input[$element->getName()]) {
             return false;
         }
 
-        if($element instanceof Hidden){
+        // check if the field is a file and don't alert if empty
+        if (array_key_exists($element->getName(), $input) && is_array($input[$element->getName()]) &&
+            array_key_exists('name', $input[$element->getName()]) && ! $input[$element->getName()]['name']) {
+            return false;
+        }
+
+        if ($element instanceof Hidden) {
             return true;
         }
 
