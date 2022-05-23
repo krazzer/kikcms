@@ -97,9 +97,9 @@ class FinderController extends RenderableController
 
     /**
      * @param File $file
-     * @return string
+     * @return ResponseInterface
      */
-    public function fileAction(File $file)
+    public function fileAction(File $file): ResponseInterface
     {
         if ( ! $this->filePermissionService->canRead($file)) {
             throw new UnauthorizedException();
@@ -110,11 +110,11 @@ class FinderController extends RenderableController
 
     /**
      * @param string $fileKey
-     * @return string
+     * @return ResponseInterface
      * @throws UnauthorizedException
      * @internal param int $fileId
      */
-    public function keyAction(string $fileKey)
+    public function keyAction(string $fileKey): ResponseInterface
     {
         $file = $this->fileService->getByKey($fileKey);
 
@@ -152,7 +152,7 @@ class FinderController extends RenderableController
     public function pasteAction()
     {
         $finder   = $this->getRenderable();
-        $fileIds  = $this->request->getPost('fileIds');
+        $fileIds  = $this->request->getPost('fileIds') ?: [];
         $folderId = $finder->getFilters()->getFolderId();
 
         if ( ! $this->filePermissionService->canEditId($folderId)) {
