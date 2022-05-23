@@ -7,6 +7,7 @@ namespace KikCMS\Classes\Phalcon;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
 use Phalcon\Messages\Messages;
+use Phalcon\Validation\Validator\File\AbstractFile;
 use Phalcon\Validation\ValidatorCompositeInterface;
 use Phalcon\Validation\ValidatorInterface;
 
@@ -61,6 +62,14 @@ class Validation extends \Phalcon\Validation
         if($this->translator->exists($translationKey)) {
             $translation = $this->translator->tl($translationKey);
             $validator->setTemplate($translation);
+        }
+
+        if($validator instanceof AbstractFile){
+            $maxSize = $validator->getOption('size');
+
+            $validator->setMessageFileEmpty($this->translator->tl('webform.messages.PresenceOf'));
+            $validator->setMessageIniSize($this->translator->tl('webform.messages.FileSizeMax', ['size' => $maxSize]));
+            $validator->setMessageValid($this->translator->tl('webform.messages.FileValid'));
         }
     }
 }
