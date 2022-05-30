@@ -155,6 +155,10 @@ var WebForm = Class.extend({
                     $field.val('');
                 }
             }
+
+            if ($field.attr('data-viewmode')) {
+                $field.datetimepicker('viewMode', $field.attr('data-viewmode'));
+            }
         });
     },
 
