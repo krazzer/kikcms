@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace KikCMS\Classes\Phalcon;
 
+use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
@@ -81,6 +82,7 @@ use ReCaptcha\ReCaptcha;
  * @property AnalyticsGoogleService analyticsGoogleService
  * @property AnalyticsImportService analyticsImportService
  * @property AnalyticsService analyticsService
+ * @property BetaAnalyticsDataClient analyticsData
  * @property CliService cliService
  * @property Google_Service_AnalyticsReporting analytics
  * @property AssetService assetService

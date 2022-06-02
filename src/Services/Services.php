@@ -4,6 +4,7 @@ namespace KikCMS\Services;
 
 use ErrorException;
 use Exception;
+use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use Google_Client;
 use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\ErrorLogHandler;
@@ -165,6 +166,21 @@ class Services extends BaseServices
         $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
 
         return new Google_Service_AnalyticsReporting($client, $this->getIniConfig()->analytics->url ?? null);
+    }
+
+    /**
+     * @return BetaAnalyticsDataClient
+     */
+    protected function initAnalyticsData(): BetaAnalyticsDataClient
+    {
+        $credentialsFile    = $this->getAppConfig()->path . 'config/analytics-credentials.json';
+        $credentialsEnvFile = $this->getAppConfig()->path . 'env/analytics-credentials.json';
+
+        if (is_readable($credentialsEnvFile)) {
+            $credentialsFile = $credentialsEnvFile;
+        }
+
+        return new BetaAnalyticsDataClient(['credentials' => $credentialsFile]);
     }
 
     /**

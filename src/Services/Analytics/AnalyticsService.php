@@ -25,6 +25,7 @@ use Phalcon\Mvc\Model\Query\BuilderInterface;
  * @property Google_Service_AnalyticsReporting $analytics
  * @property AnalyticsImportService $analyticsImportService
  * @property AnalyticsGoogleService $analyticsGoogleService
+ * @property AnalyticsDataService $analyticsDataService
  * @property DbService $dbService
  * @property Cache $cache
  * @property KeyValue $keyValue
@@ -48,22 +49,30 @@ class AnalyticsService extends Injectable
         $this->db->begin();
 
         try {
-            $results       = $this->analyticsGoogleService->getVisitData();
-            $requireUpdate = $this->analyticsImportService->importVisitorMetrics();
+            if ($this->config->analytics->version == 4) {
+                $visitData  = $this->analyticsDataService->getVisitData();
+                $metricData = $this->analyticsDataService->getVisitMetricData();
 
-            $results = array_map(function ($row) {
-                return [
-                    GaDayVisit::FIELD_DATE          => $row['ga:year'] . '-' . $row['ga:month'] . '-' . $row['ga:day'],
-                    GaDayVisit::FIELD_VISITS        => (int) $row['visits'],
-                    GaDayVisit::FIELD_UNIQUE_VISITS => (int) $row['visits'] * ($row['unique'] / 100),
-                ];
-            }, $results);
+                $this->dbService->insertBulk(GaDayVisit::class, $visitData, true);
+                $this->dbService->insertBulk(GaVisitData::class, $metricData, true);
+            } else {
+                $results       = $this->analyticsGoogleService->getVisitData();
+                $requireUpdate = $this->analyticsImportService->importVisitorMetrics();
 
-            $this->dbService->truncate(GaDayVisit::class);
-            $this->dbService->insertBulk(GaDayVisit::class, $results);
+                $results = array_map(function ($row) {
+                    return [
+                        GaDayVisit::FIELD_DATE          => $row['ga:year'] . '-' . $row['ga:month'] . '-' . $row['ga:day'],
+                        GaDayVisit::FIELD_VISITS        => (int) $row['visits'],
+                        GaDayVisit::FIELD_UNIQUE_VISITS => (int) $row['visits'] * ($row['unique'] / 100),
+                    ];
+                }, $results);
 
-            if ( ! $requireUpdate) {
-                $this->stopUpdatingForSixHours();
+                $this->dbService->truncate(GaDayVisit::class);
+                $this->dbService->insertBulk(GaDayVisit::class, $results);
+
+                if ( ! $requireUpdate) {
+                    $this->stopUpdatingForSixHours();
+                }
             }
         } catch (Exception $exception) {
             $this->logger->log(Logger::ERROR, $exception);
@@ -239,7 +248,7 @@ class AnalyticsService extends Injectable
         }
 
         // if there are no visitor data stats for today
-        foreach ($typeMaxDates as $type => $maxDate) {
+        foreach ($typeMaxDates as $maxDate) {
             if ( ! $maxDate || $maxDate->format('dmY') !== (new DateTime)->format('dmY')) {
                 return true;
             }
@@ -394,7 +403,7 @@ class AnalyticsService extends Injectable
      */
     private function stopUpdatingForSixHours()
     {
-        if( ! $this->cache){
+        if ( ! $this->cache) {
             return;
         }
 

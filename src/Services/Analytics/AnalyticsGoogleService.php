@@ -5,6 +5,11 @@ namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
+use Google\Analytics\Data\V1beta\DateRange;
+use Google\Analytics\Data\V1beta\Dimension;
+use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\OrderBy;
+use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
 use Google_Service_AnalyticsReporting_ColumnHeader;
 use Google_Service_AnalyticsReporting_DateRange;
 use Google_Service_AnalyticsReporting_DateRangeValues;
@@ -21,6 +26,7 @@ use Phalcon\Config;
 
 /**
  * @property Config $config
+ * @property AnalyticsDataService $analyticsDataService
  */
 class AnalyticsGoogleService extends Injectable
 {
@@ -33,7 +39,7 @@ class AnalyticsGoogleService extends Injectable
     }
 
     /**
-     * @param string $dimensionName
+     * @param string|null $dimensionName
      * @param DateTime|null $fromDate
      * @param array $addMetrics
      * @param array $filters

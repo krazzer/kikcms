@@ -15,7 +15,10 @@
             "ext-sockets": "master",
             "ext-phalcon": "4.0"
         },
-        "platform-check": false
+        "platform-check": false,
+        "allow-plugins": {
+            "codeception/c3": true
+        }
     },
     "description": "A CMS based on the Phalcon Framework",
     "require": {
@@ -24,7 +27,8 @@
         "nette/php-generator": "^3.1",
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
-        "kiksaus/kikcms-core": "dev-master"
+        "kiksaus/kikcms-core": "dev-master",
+        "google/analytics-data": "^0.8.4"
     },
     "autoload": {
         "psr-4": {
