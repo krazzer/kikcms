@@ -4,8 +4,6 @@ namespace KikCMS\Services\Analytics;
 
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
-use Google\Analytics\Data\V1beta\DimensionExpression;
-use Google\Analytics\Data\V1beta\DimensionExpression\ConcatenateExpression;
 use Google\Analytics\Data\V1beta\Metric;
 use Google\Analytics\Data\V1beta\OrderBy;
 use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
