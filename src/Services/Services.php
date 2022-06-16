@@ -21,7 +21,6 @@ use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Frontend\Extendables\TemplateVariablesBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
-use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Phalcon\View;
@@ -36,8 +35,6 @@ use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Exceptions\ResourcesExceededException;
 use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
-use Monolog\Handler\DeduplicationHandler;
-use Monolog\Handler\SwiftMailerHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
 use Phalcon\Cache;
@@ -52,7 +49,6 @@ use Phalcon\Storage\SerializerFactory;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
-use Swift_Message;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Phalcon\Session\Manager as SessionManager;
@@ -188,7 +184,7 @@ class Services extends BaseServices
      */
     protected function initCache(): ?Cache
     {
-        if ( ! $config = (array) $this->getIniConfig()->cache->toArray() ?? null) {
+        if ( ! $config = $this->getIniConfig()->cache->toArray() ?? null) {
             return null;
         }
 
@@ -350,43 +346,27 @@ class Services extends BaseServices
     {
         $logger = new Logger('logger');
 
-        /** @var Swift_Mailer $mailer */
-        $mailer = $this->get('mailer');
+        /** @var ErrorService $errorService */
+        $errorService = $this->get('errorService');
 
-        if ($this->getIniConfig()->isProd() && $developerEmail = $this->getAppConfig()->developerEmail) {
-            if( ! $domain = $this->getAppConfig()->get('domain')){
-                $domain = $_SERVER['HTTP_HOST'] ?? null;
-            }
-
-            if($domain) {
-                $errorFromMail = 'error@' . $domain;
-
-                $message = new Swift_Message('Error');
-                $message->setFrom($errorFromMail);
-                $message->setTo($developerEmail);
-                $message->setContentType('text/html');
-
-                $handler = new SwiftMailerHandler($mailer, $message, Logger::NOTICE);
-                $handler->setFormatter(new PhalconHtmlFormatter);
-
-                $logger->pushHandler(new DeduplicationHandler($handler));
-            }
+        if ($this->getIniConfig()->isProd() && ($emailHandler = $errorService->getEmailHandler())) {
+            $logger->pushHandler($emailHandler);
         }
 
         $errorLogHandler = new ErrorLogHandler();
 
-        if($errorLogPath = $this->getAppConfig()->errorLogPath) {
+        if ($errorLogPath = $this->getAppConfig()->errorLogPath) {
             $errorLogHandler->setErrorLogPath($this->getAppConfig()->path . $errorLogPath);
         }
 
         $logger->pushHandler($errorLogHandler);
 
         $logger->pushProcessor(function ($record) {
-            if($_POST){
+            if ($_POST) {
                 $record['extra']['POST'] = $_POST;
             }
 
-            if(isset($_SERVER['REQUEST_URI'])){
+            if (isset($_SERVER['REQUEST_URI'])) {
                 $record['extra']['URL'] = $_SERVER['REQUEST_URI'];
             }
 

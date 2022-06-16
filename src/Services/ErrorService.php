@@ -4,12 +4,59 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
+use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
+use Monolog\Handler\AbstractHandler;
+use Monolog\Handler\DeduplicationHandler;
+use Monolog\Handler\SwiftMailerHandler;
+use Monolog\Logger;
 use Phalcon\Http\ResponseInterface;
 use stdClass;
+use Swift_Message;
 
 class ErrorService extends Injectable
 {
+    /**
+     * @return AbstractHandler|null
+     */
+    public function getEmailHandler(int $deDuplicationTime = 60)
+    {
+        if( ! $developerEmail = $this->config->application->developerEmail){
+            return null;
+        }
+
+        if( ! $domain = $this->config->application->domain){
+            if( ! $domain = $_SERVER['HTTP_HOST'] ?? null){
+                return null;
+            }
+        }
+
+        $errorFromMail = 'error@' . $domain;
+
+        $message = new Swift_Message('Error');
+        $message->setFrom($errorFromMail);
+        $message->setTo($developerEmail);
+        $message->setContentType('text/html');
+
+        $handler = new SwiftMailerHandler($this->mailer, $message, Logger::NOTICE);
+        $handler->setFormatter(new PhalconHtmlFormatter);
+
+        return new DeduplicationHandler($handler, null, Logger::ERROR, $deDuplicationTime);
+    }
+
+    /**
+     * @param int $deDuplicationTime
+     * @return Logger
+     */
+    public function getEmailLogger(int $deDuplicationTime = 60): Logger
+    {
+        $logger = new Logger('logger');
+
+        $logger->pushHandler($this->getEmailHandler($deDuplicationTime));
+
+        return $logger;
+    }
+
     /**
      * @param $error
      * @param bool $isProduction

@@ -76,6 +76,7 @@ use Monolog\Logger;
 use Phalcon\Cache;
 use Phalcon\Validation;
 use ReCaptcha\ReCaptcha;
+use Swift_Mailer;
 
 /**
  * @property AccessControl $acl
@@ -115,6 +116,7 @@ use ReCaptcha\ReCaptcha;
  * @property KeyValue $keyValue
  * @property LanguageService languageService
  * @property Logger $logger
+ * @property Swift_Mailer mailer
  * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
  * @property MailFormService mailFormService
