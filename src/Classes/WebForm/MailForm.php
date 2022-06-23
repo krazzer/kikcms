@@ -35,15 +35,7 @@ abstract class MailForm extends WebForm
      */
     protected function getSubject(): string
     {
-        $subject = $this->translator->translateDefaultLanguage('mailForm.subject');
-
-        if ($spamScore = $this->getSpamScore()) {
-            if ($spamScore < 0.9) {
-                return $subject . ' (spamscore: ' . $spamScore . ')';
-            }
-        }
-
-        return $subject;
+        return $this->translator->translateDefaultLanguage('mailForm.subject');
     }
 
     /**
@@ -72,6 +64,12 @@ abstract class MailForm extends WebForm
         $attachments = $this->getAttachments();
         $to          = $this->getToAddress();
         $subject     = $this->getSubject();
+
+        if ($spamScore = $this->getSpamScore()) {
+            if ($spamScore < 0.9) {
+                return $subject . ' (spamscore: ' . $spamScore . ')';
+            }
+        }
 
         $mailSend = $this->mailService->sendServiceMail($to, $subject, $body, $params, $attachments);
 
