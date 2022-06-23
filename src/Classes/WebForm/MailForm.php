@@ -67,7 +67,7 @@ abstract class MailForm extends WebForm
 
         if ($spamScore = $this->getSpamScore()) {
             if ($spamScore < 0.9) {
-                return $subject . ' (spamscore: ' . $spamScore . ')';
+                $subject = $subject . ' (spamscore: ' . $spamScore . ')';
             }
         }
 
