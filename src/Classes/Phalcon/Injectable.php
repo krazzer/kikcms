@@ -19,6 +19,7 @@ use KikCMS\Services\CacheService;
 use KikCMS\Services\CliService;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
+use KikCMS\Services\Cms\TokenService;
 use KikCMS\Services\Cms\UserSettingsService;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\DataTable\DataTableService;
@@ -147,6 +148,7 @@ use Swift_Mailer;
  * @property TableDataService tableDataService
  * @property TemplateService templateService
  * @property TinyMceService tinyMceService
+ * @property TokenService tokenService
  * @property TranslationService translationService
  * @property Translator translator
  * @property TwigService twigService

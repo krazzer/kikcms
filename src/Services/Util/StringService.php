@@ -34,7 +34,7 @@ class StringService
      * @param string $chars
      * @return string
      */
-    public function floatToBaseString(float $number, $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string
+    public function floatToBaseString(float $number, string $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string
     {
         if( ! $number){
             return '0';
