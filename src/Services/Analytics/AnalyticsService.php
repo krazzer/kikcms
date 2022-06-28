@@ -55,6 +55,8 @@ class AnalyticsService extends Injectable
 
                 $this->dbService->insertBulk(GaDayVisit::class, $visitData, true);
                 $this->dbService->insertBulk(GaVisitData::class, $metricData, true);
+
+                $this->stopUpdatingForSixHours();
             } else {
                 $results       = $this->analyticsGoogleService->getVisitData();
                 $requireUpdate = $this->analyticsImportService->importVisitorMetrics();
