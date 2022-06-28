@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace KikCMS\Services\Analytics;
 
 
+use DateInterval;
+use DatePeriod;
 use DateTime;
 use Exception;
 use Google_Service_AnalyticsReporting;
@@ -190,13 +192,13 @@ class AnalyticsService extends Injectable
         $query = $this->getChartQuery($start, $end);
 
         if ($interval == StatisticsConfig::VISITS_DAILY) {
-            $rows = $this->getChartQueryResult($query, $dateDisplayFormat);
+            $rows = $this->getChartQueryResult($query, $dateDisplayFormat, $interval);
         } else {
             $query
                 ->columns(array_merge($query->getColumns(), ["DATE_FORMAT(date, '%Y%m') AS month"]))
                 ->groupBy('month');
 
-            $rows = $this->getChartQueryResult($query, $monthDisplayFormat);
+            $rows = $this->getChartQueryResult($query, $monthDisplayFormat, $interval);
         }
 
         $strVisitors       = $this->translator->tl('statistics.visitors');
@@ -280,6 +282,43 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @param $visits
+     * @return array
+     * @throws Exception
+     */
+    private function addMissingDays($visits): array
+    {
+        $dates = [];
+
+        foreach ($visits as $visit) {
+            $dates[] = $visit['date'];
+        }
+
+        $start = first($dates);
+        $end   = last($dates);
+
+        $period = new DatePeriod(new DateTime($start), new DateInterval('P1D'), new DateTime($end));
+
+        foreach ($period as $value) {
+            $date = $value->format('Y-m-d');
+
+            if ( ! in_array($date, $dates)) {
+                $visits[] = [
+                    'date'          => $date,
+                    'visits'        => 0,
+                    'unique_visits' => 0,
+                ];
+            }
+        }
+
+        usort($visits, function ($visit1, $visit2){
+            return strtotime($visit1['date']) - strtotime($visit2['date']);
+        });
+
+        return $visits;
+    }
+
+    /**
      * @param DateTime|null $start
      * @param DateTime|null $end
      *
@@ -300,12 +339,17 @@ class AnalyticsService extends Injectable
     /**
      * @param BuilderInterface $query
      * @param string $dateFormat
+     * @param string $interval
      * @return array
      */
-    private function getChartQueryResult(BuilderInterface $query, string $dateFormat): array
+    private function getChartQueryResult(BuilderInterface $query, string $dateFormat, string $interval): array
     {
         $rows   = [];
         $visits = $query->getQuery()->execute()->toArray();
+
+        if ($interval == StatisticsConfig::VISITS_DAILY) {
+            $visits = $this->addMissingDays($visits);
+        }
 
         foreach ($visits as $visit) {
             $rows[] = ['c' => [
