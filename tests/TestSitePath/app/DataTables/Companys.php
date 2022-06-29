@@ -4,7 +4,7 @@ namespace Website\DataTables;
 
 use KikCMS\Classes\DataTable\DataTable;
 use Website\Forms\CompanyForm;
-use Website\Models\Company;
+use Website\Models\TestCompany;
 
 class Companys extends DataTable
 {
@@ -29,7 +29,7 @@ class Companys extends DataTable
      */
     public function getModel(): string
     {
-        return Company::class;
+        return TestCompany::class;
     }
 
     /**
@@ -38,8 +38,8 @@ class Companys extends DataTable
     public function getTableFieldMap(): array
     {
         return [
-            Company::FIELD_ID => 'Id',
-            Company::FIELD_NAME => 'Name',
+            TestCompany::FIELD_ID   => 'Id',
+            TestCompany::FIELD_NAME => 'Name',
         ];
     }
 

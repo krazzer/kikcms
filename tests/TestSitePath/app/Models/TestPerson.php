@@ -8,7 +8,7 @@ use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset\Simple;
 
 /**
- * @property Company|Simple $company
+ * @property TestCompany|Simple $company
  */
 class TestPerson extends Model
 {
@@ -28,7 +28,7 @@ class TestPerson extends Model
     {
         parent::initialize();
 
-        $this->belongsTo(self::FIELD_COMPANY_ID, Company::class, Company::FIELD_ID, ['alias' => 'company']);
+        $this->belongsTo(self::FIELD_COMPANY_ID, TestCompany::class, TestCompany::FIELD_ID, ['alias' => 'company']);
         $this->hasMany(self::FIELD_ID, PersonInterest::class, PersonInterest::FIELD_PERSON_ID, ['alias' => 'personInterests']);
     }
 }

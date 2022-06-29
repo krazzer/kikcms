@@ -6,7 +6,7 @@ namespace Website\Models;
 
 use KikCmsCore\Classes\Model;
 
-class Company extends Model
+class TestCompany extends Model
 {
     const TABLE = 'test_company';
     const ALIAS = 'c';

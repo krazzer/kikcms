@@ -3,13 +3,13 @@
 namespace Website\ObjectList;
 
 use KikCmsCore\Classes\ObjectList;
-use Website\Models\Company;
+use Website\Models\TestCompany;
 
 class CompanyList extends ObjectList
 {
     /**
      * @inheritdoc
-     * @return Company|false
+     * @return TestCompany|false
      */
     public function current()
     {
@@ -18,7 +18,7 @@ class CompanyList extends ObjectList
 
     /**
      * @inheritdoc
-     * @return Company|false
+     * @return TestCompany|false
      */
     public function get($key)
     {
@@ -27,7 +27,7 @@ class CompanyList extends ObjectList
 
     /**
      * @inheritdoc
-     * @return Company|false
+     * @return TestCompany|false
      */
     public function getFirst()
     {
@@ -36,7 +36,7 @@ class CompanyList extends ObjectList
 
     /**
      * @inheritdoc
-     * @return Company|false
+     * @return TestCompany|false
      */
     public function getLast()
     {

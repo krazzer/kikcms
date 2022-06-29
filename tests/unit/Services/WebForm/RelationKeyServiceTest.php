@@ -6,9 +6,8 @@ namespace unit\Services\WebForm;
 use Helpers\Models\PersonInterest;
 use Helpers\Unit;
 use KikCMS\Services\WebForm\RelationKeyService;
-use Website\Models\Company;
+use Website\Models\TestCompany;
 use Website\Models\Person;
-use Website\Models\PersonImage;
 
 class RelationKeyServiceTest extends Unit
 {
@@ -17,7 +16,7 @@ class RelationKeyServiceTest extends Unit
         $relationKeyService = new RelationKeyService();
         $relationKeyService->setDI($this->getDbDi());
 
-        $company = new Company();
+        $company = new TestCompany();
         $company->name = 'CompanyX';
         $company->id = 1;
         $company->save();
@@ -55,7 +54,7 @@ class RelationKeyServiceTest extends Unit
         $relationKeyService = new RelationKeyService();
         $relationKeyService->setDI($this->getDbDi());
 
-        $company = new Company();
+        $company = new TestCompany();
         $company->name = 'CompanyX';
         $company->id = 1;
         $company->save();

@@ -3,7 +3,7 @@
 namespace Website\Forms;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
-use Website\Models\Company;
+use Website\Models\TestCompany;
 
 class CompanyForm extends DataForm
 {
@@ -12,7 +12,7 @@ class CompanyForm extends DataForm
      */
     public function getModel(): string
     {
-        return Company::class;
+        return TestCompany::class;
     }
 
     /**

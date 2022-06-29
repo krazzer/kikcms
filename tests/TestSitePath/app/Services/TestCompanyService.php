@@ -4,6 +4,6 @@ namespace Website\Services;
 
 use KikCMS\Classes\Phalcon\Injectable;
 
-class CompanyService extends Injectable
+class TestCompanyService extends Injectable
 {
 }
