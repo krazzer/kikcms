@@ -98,6 +98,14 @@ class Permission extends Injectable
     }
 
     /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return in_array($this->getCurrentRole(), [self::ADMIN, self::DEVELOPER]);
+    }
+
+    /**
      * Reset access control data from session
      */
     public function reset()
