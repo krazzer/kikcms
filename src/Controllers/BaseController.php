@@ -22,8 +22,8 @@ class BaseController extends Controller
         $maxPostSize       = $this->byteService->stringToBytes(ini_get('post_max_size'));
         $maxFileSizeConfig = $this->byteService->stringToBytes($this->config->media->maxFileSize);
 
-        $maxFileSize = $maxFileSizeServer < $maxFileSizeConfig ? $maxFileSizeServer : $maxFileSizeConfig;
-        $maxFileSize = $maxFileSize > $maxPostSize ? $maxPostSize : $maxFileSize;
+        $maxFileSize = min($maxFileSizeServer, $maxFileSizeConfig);
+        $maxFileSize = min($maxFileSize, $maxPostSize);
 
         $maxFileSizeString = $this->byteService->bytesToString($maxFileSize);
 
