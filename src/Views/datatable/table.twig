@@ -49,8 +49,8 @@
                                         <div class="action {{ tableButton.class }}" title="{{ tableButton.title }}">
                                             {% if tableButton.hasUrl %}
                                                 {% if tableButton.icon ends with '.svg' %}
-                                                    <a {{ tableButton.blank ? 'target="_blank"' }} href="{{ tableButton.url(row) }}"
-                                                                                                   onclick="{{ onclick }}">
+                                                    <a {{ tableButton.blank ? 'target="_blank"' }}
+                                                            href="{{ tableButton.url(row) }}" onclick="{{ onclick }}">
                                                         {{ source(tableButton.icon) }}
                                                     </a>
                                                 {% else %}
@@ -66,9 +66,11 @@
                                 {% endblock %}
 
                                 {% block actionDeleteColumn %}
-                                    <div class="action delete" data-id="{{ row.id }}" title="{{ deleteLabel }}">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                    </div>
+                                    {% if showDeleteRowButton %}
+                                        <div class="action delete" data-id="{{ row.id }}" title="{{ deleteLabel }}">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </div>
+                                    {% endif %}
                                 {% endblock %}
 
                                 {% block actionEditColumn %}
