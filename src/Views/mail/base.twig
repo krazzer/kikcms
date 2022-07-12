@@ -170,6 +170,14 @@
             border-color: {{ mainColor }};
             color: #ffffff; }
 
+        .btn-default table td {
+            background-color: {{ colorWhite }}; }
+
+        .btn-default a {
+            background-color: {{ colorWhite }};
+            border-color: #ccc;
+            color: black; }
+
         /* -------------------------------------
             OTHER STYLES THAT MIGHT BE USEFUL
         ------------------------------------- */
@@ -246,6 +254,10 @@
             .btn-primary a:hover {
                 background-color: {{ mainColorDark }} !important;
                 border-color: {{ mainColorDark }} !important; } }
+            .btn-default table td:hover {
+                background-color: #eee !important; }
+            .btn-default a:hover {
+                background-color: #eee !important; }
 
     </style>
 </head>
@@ -280,7 +292,7 @@
 
                                         {% if buttons %}
                                             <br><br>
-                                            <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+                                            <table border="0" cellpadding="0" cellspacing="0" class="btn">
                                                 <tbody>
                                                 <tr>
                                                     <td align="left">
@@ -289,11 +301,12 @@
                                                             <tr>
                                                                 {% for button in buttons %}
                                                                     {% block button %}
-                                                                        <td>
+                                                                        <td class="btn-{{ button.type ?: 'primary' }}">
                                                                             <a href="{{ button.url }}" target="_blank">
                                                                                 {{ button.label }}
                                                                             </a>
                                                                         </td>
+                                                                        <td style="background-color: transparent;">&nbsp;</td>
                                                                     {% endblock %}
                                                                 {% endfor %}
                                                             </tr>
