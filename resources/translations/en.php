@@ -10,7 +10,6 @@ return [
             'hitsAndMisses' => 'Hits / misses',
             'empty'         => 'Completely clear cache',
         ],
-        'loading'         => 'Loading...',
         'roles'           => [
             'developer' => 'Developer',
             'admin'     => 'Administrator',
@@ -18,6 +17,8 @@ return [
             'client'    => 'Client',
             'visitor'   => 'Visitor',
         ],
+        'loading'         => 'Loading...',
+        'close'           => 'Close',
     ],
 
     'contentTypes' => [
@@ -310,7 +311,6 @@ return [
             'modal' => [
                 'title'               => 'Edit rights for',
                 'applyToSubFolders'   => 'Apply to sub files and folders',
-                'close'               => 'Close',
                 'save'                => 'Save',
                 'read'                => 'Read',
                 'write'               => 'Edit',

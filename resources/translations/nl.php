@@ -10,7 +10,6 @@ return [
             'hitsAndMisses' => 'Hits / misses',
             'empty'         => 'Volledige cache legen',
         ],
-        'loading'         => 'Bezig met laden...',
         'roles'           => [
             'developer' => 'Developer',
             'admin'     => 'Administrator',
@@ -18,6 +17,8 @@ return [
             'client'    => 'Klant',
             'visitor'   => 'Bezoeker',
         ],
+        'loading'         => 'Bezig met laden...',
+        'close'           => 'Sluiten',
     ],
 
     'contentTypes' => [
@@ -317,7 +318,6 @@ return [
             'modal' => [
                 'title'               => 'Rechten instellen voor',
                 'applyToSubFolders'   => 'Pas toe op onderliggende bestanden en mappen',
-                'close'               => 'Sluiten',
                 'save'                => 'Opslaan',
                 'read'                => 'Lezen',
                 'write'               => 'Schrijven',

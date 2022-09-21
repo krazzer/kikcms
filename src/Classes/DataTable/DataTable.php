@@ -66,6 +66,9 @@ abstract class DataTable extends Renderable
     /** @var Filters|DataTableFilters */
     protected $filters;
 
+    /** @var string|null */
+    protected $helpText = null;
+
     /** @var Filter[] */
     protected $customFilters = [];
 
@@ -384,6 +387,14 @@ abstract class DataTable extends Renderable
     public function getForm(): ?DataForm
     {
         return $this->form;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHelpText(): ?string
+    {
+        return $this->helpText;
     }
 
     /**
