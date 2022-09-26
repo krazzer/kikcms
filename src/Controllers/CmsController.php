@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use DateTime;
+use KikCMS\Classes\Exceptions\NotFoundException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
 use KikCMS\Classes\Permission;
@@ -168,10 +169,14 @@ class CmsController extends BaseCmsController
     }
 
     /**
-     * @param PageLanguage $pageLanguage
+     * @param PageLanguage|null $pageLanguage
      */
-    public function previewAction(PageLanguage $pageLanguage)
+    public function previewAction(PageLanguage $pageLanguage = null)
     {
+        if( ! $pageLanguage){
+            throw new NotFoundException();
+        }
+
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
         $this->response->redirect($url);

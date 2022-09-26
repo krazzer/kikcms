@@ -168,14 +168,14 @@ return [
         '401' => [
             'title'       => 'Geen toegang',
             'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
-                "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de webmaster",
+                "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de ontwikkelaar",
         ],
 
         '404' => [
             'title'       => 'Pagina niet gevonden',
             'description' => "De opgevraagde pagina bestaat niet. \nMogelijk is deze nog in ontwikkeling of is hij " .
                 "verwijderd. \n\nHeeft u het vermoeden dat de pagina wel zou moeten bestaan? \nNeem dan contact op " .
-                "met de webmaster.",
+                "met de ontwikkelaar.",
         ],
 
         '404object' => [
