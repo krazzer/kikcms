@@ -19,6 +19,7 @@ class CacheConfig
     const USER_TRANSLATIONS = 'userTranslations';
 
     const PAGE_LANGUAGE_FOR_URL = 'pageLanguageForUrl';
+    const PAGE_LANGUAGE_FOR_KEY = 'pageLanguageForKey';
     const OTHER_LANG_MAP        = 'otherLangMap';
     const URL                   = 'url';
     const MENU                  = 'menu';

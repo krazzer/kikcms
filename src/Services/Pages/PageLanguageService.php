@@ -90,8 +90,8 @@ class PageLanguageService extends Injectable
         /** @var PageLanguage $pageLanguage */
         $pageLanguage = $this->dbService->getObject($query);
 
-        if($page = Page::getById($pageId)){
-            if($page->getAliasId()){
+        if ($page = Page::getById($pageId)) {
+            if ($page->getAliasId()) {
                 $pageLanguage->setAliasPage($page);
             }
         }
@@ -106,15 +106,20 @@ class PageLanguageService extends Injectable
      */
     public function getByPageKey(string $pageKey, string $languageCode): ?PageLanguage
     {
-        $query = (new Builder)
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'pl.page_id = p.id', 'p')
-            ->where('p.key = :pageKey: AND pl.language_code = :langCode:', [
-                'pageKey'  => $pageKey,
-                'langCode' => $languageCode
-            ]);
+        $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_KEY . CacheConfig::SEPARATOR . $pageKey . CacheConfig::SEPARATOR .
+            $languageCode;
 
-        return $this->dbService->getObject($query);
+        return $this->cacheService->cache($cacheKey, function () use ($pageKey, $languageCode) {
+            $query = (new Builder)
+                ->from(['pl' => PageLanguage::class])
+                ->join(Page::class, 'pl.page_id = p.id', 'p')
+                ->where('p.key = :pageKey: AND pl.language_code = :langCode:', [
+                    'pageKey'  => $pageKey,
+                    'langCode' => $languageCode
+                ]);
+
+            return $this->dbService->getObject($query);
+        });
     }
 
     /**
@@ -161,7 +166,7 @@ class PageLanguageService extends Injectable
 
     /**
      * @param PageMap $pageMap
-     * @param string $langCode
+     * @param string|null $langCode
      * @param bool $activeOnly
      * @return PageLanguageMap
      */
@@ -263,7 +268,7 @@ class PageLanguageService extends Injectable
 
         $pageLanguageMap = $this->getPathMap($pageLanguage);
 
-        if( ! $pageLanguageMap->getLast()) {
+        if ( ! $pageLanguageMap->getLast()) {
             return $pageLanguageMap;
         }
 
