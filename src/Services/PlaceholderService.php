@@ -6,6 +6,7 @@ namespace KikCMS\Services;
 
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\FinderConfig;
+use KikCMS\Config\MimeConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\ObjectLists\FileMap;
 use KikCMS\ObjectLists\PlaceholderFileThumbUrlMap;
@@ -101,7 +102,7 @@ class PlaceholderService extends Injectable
             }
 
             // can't make thumbs for non-image files
-            if( ! in_array($file->getExtension(), FinderConfig::FILE_TYPES_IMAGE)){
+            if( ! in_array($file->getExtension(), FinderConfig::FILE_TYPES_IMAGE) && $file->getExtension() !== MimeConfig::SVG){
                 continue;
             }
 
