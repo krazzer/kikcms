@@ -68,7 +68,7 @@ class ClassesGenerator extends Injectable
         }
 
         $class->addMethod('initialize')
-            ->addComment('@inheritdoc')
+            ->addComment('Initialize relations')
             ->addBody('parent::initialize();');
 
         return $this->generatorService->createFile($this->getDirectory(), $className, $namespace);
