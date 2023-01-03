@@ -56,7 +56,11 @@ class MailService extends Injectable
     public function getDefaultFrom()
     {
         if ($defaultFromEmail = $this->config->application->get('defaultFromEmail')) {
-            return $defaultFromEmail;
+            if ($defaultFromName = $this->config->application->get('defaultFromName')) {
+                return [$defaultFromEmail => $defaultFromName];
+            } else {
+                return $defaultFromEmail;
+            }
         }
 
         if ( ! $domain = $this->config->application->get('domain')) {
@@ -116,14 +120,14 @@ class MailService extends Injectable
             ->setSubject($subject)
             ->setBody($htmlBody, 'text/html');
 
-        if($plainTextBody = $parameters['plainTextBody'] ?? null){
+        if ($plainTextBody = $parameters['plainTextBody'] ?? null) {
             $message->addPart($plainTextBody, 'text/plain');
         } else {
             $message->addPart(strip_tags($body), 'text/plain');
         }
 
         foreach ($attachments as $attachment) {
-            if($attachment instanceof Swift_Attachment){
+            if ($attachment instanceof Swift_Attachment) {
                 $message->attach($attachment);
             } else {
                 $message->attach(Swift_Attachment::fromPath($attachment));
