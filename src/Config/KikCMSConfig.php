@@ -31,7 +31,8 @@ class KikCMSConfig
     const NAMESPACE_PATH_CMS_TASKS       = '\\KikCMS\\Tasks\\';
     const NAMESPACE_PATH_CMS_OBJECTS     = '\\KikCMS\\Objects\\';
 
-    const NAMESPACE_PATH_PHALCON_VALIDATORS = 'Phalcon\\Validation\\Validator\\';
+    const NAMESPACE_PATH_PHALCON_VALIDATORS        = 'Phalcon\\Validation\\Validator\\';
+    const NAMESPACE_PATH_CUSTOM_PHALCON_VALIDATORS = 'KikCMS\\Classes\\Phalcon\\Validator\\';
 
     const CONTENT_TYPES = [
         'text'         => self::CONTENT_TYPE_TEXT,

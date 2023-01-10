@@ -463,6 +463,7 @@ return [
             'Numericality'        => 'Het veld :label mag alleen numeriek zijn',
             'PresenceOf'          => 'Het veld :label is verplicht',
             'Regex'               => 'Het veld :label heeft niet het verwachte formaat',
+            'PhoneNumber'         => "Het veld :label heeft niet het verwachte formaat",
             'Uniqueness'          => 'Het veld :label bestaat al, moet uniek zijn',
             'Url'                 => 'Het veld :label moet een geldige url zijn',
             'CreditCard'          => 'Het veld :label moet een geldig credit card nummer zijn',

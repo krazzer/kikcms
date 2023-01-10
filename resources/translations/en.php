@@ -454,6 +454,7 @@ return [
             'Numericality'        => "Field :label does not have a valid numeric format",
             'PresenceOf'          => "Field :label is required",
             'Regex'               => "Field :label does not match the required format",
+            'PhoneNumber'         => "Field :label does not match the required format",
             'Uniqueness'          => "Field :label must be unique",
             'Url'                 => "Field :label must be a url",
             'CreditCard'          => "Field :label is not valid for a credit card number",

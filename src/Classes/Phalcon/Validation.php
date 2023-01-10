@@ -55,7 +55,13 @@ class Validation extends \Phalcon\Validation
             return;
         }
 
-        $className = str_replace([KikCMSConfig::NAMESPACE_PATH_PHALCON_VALIDATORS, '\\'], '', $className);
+        $replaces = [
+            KikCMSConfig::NAMESPACE_PATH_PHALCON_VALIDATORS,
+            KikCMSConfig::NAMESPACE_PATH_CUSTOM_PHALCON_VALIDATORS,
+            '\\'
+        ];
+
+        $className = str_replace($replaces, '', $className);
 
         $translationKey = 'webform.messages.' . $className;
 
