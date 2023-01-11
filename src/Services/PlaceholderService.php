@@ -50,7 +50,7 @@ class PlaceholderService extends Injectable
     public function replaceAll(string $content): string
     {
         if ( ! preg_match_all('/\[\[\[([a-zA-Z0-9.-]+)]]]/', $content, $output)) {
-            return $content;
+            return $this->updateOriginLinks($content);
         }
 
         $placeholderTable = new PlaceholderTable();
@@ -80,7 +80,7 @@ class PlaceholderService extends Injectable
             $replaceMap = array_merge($replaceMap, $this->getFileUrlReplaceMap($placeholderMap));
         }
 
-        return strtr($content, $replaceMap);
+        return $this->updateOriginLinks(strtr($content, $replaceMap));
     }
 
     /**
@@ -102,7 +102,7 @@ class PlaceholderService extends Injectable
             }
 
             // can't make thumbs for non-image files
-            if( ! in_array($file->getExtension(), FinderConfig::FILE_TYPES_IMAGE) && $file->getExtension() !== MimeConfig::SVG){
+            if ( ! in_array($file->getExtension(), FinderConfig::FILE_TYPES_IMAGE) && $file->getExtension() !== MimeConfig::SVG) {
                 continue;
             }
 
@@ -115,7 +115,7 @@ class PlaceholderService extends Injectable
 
             $replaceMap[$placeholder->getPlaceholder()] = $thumbUrl;
 
-            if($this->cache){
+            if ($this->cache) {
                 $this->cache->set($key, $thumbUrl, CacheConfig::ONE_YEAR);
             }
         }
@@ -166,5 +166,37 @@ class PlaceholderService extends Injectable
         }
 
         return $this->fileService->getByIdList($fileIdList);
+    }
+
+    /**
+     * Update links to their origin host if they don't match.
+     * This is useful if a proxy like BrowserSync is used.
+     * This is not used in production
+     *
+     * @param string $content
+     * @return string
+     */
+    private function updateOriginLinks(string $content): string
+    {
+        if ( ! $this->config->isDev()) {
+            return $content;
+        }
+
+        if ( ! $origin = $this->request->getServer('HTTP_ORIGIN')) {
+            return $content;
+        }
+
+        $originPort = parse_url($origin)['port'];
+        $originHost = parse_url($origin)['host'];
+
+        $host = $this->request->getServer('HTTP_HOST');
+
+        $newHost = $originHost . ':' . $originPort;
+
+        if ($newHost == $host) {
+            return $content;
+        }
+
+        return str_replace($host, $newHost, $content);
     }
 }

@@ -19,12 +19,12 @@ class PlaceholderConverterPlugin extends Injectable
      *
      * @noinspection PhpUnusedParameterInspection
      * @param Event $event
-     * @param $app
-     * @param $response
+     * @param Application $app
+     * @param Response $response
      */
     public function beforeSendResponse(Event $event, Application $app, Response $response)
     {
-        if( ! $content = $response->getContent()){
+        if ( ! $content = $response->getContent()) {
             return;
         }
 
