@@ -4,6 +4,7 @@ namespace unit\Services;
 
 
 use Helpers\TestHelper;
+use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Models\File;
 use KikCMS\Services\PlaceholderService;
 use PHPUnit\Framework\TestCase;
@@ -16,6 +17,12 @@ class PlaceholderServiceTest extends TestCase
         $sitePath = (new TestHelper)->getSitePath();
 
         $placeholderService = new PlaceholderService();
+
+        $configStub = $this->createMock(IniConfig::class);
+        $configStub->method('isDev')->willReturn(false);
+
+        $placeholderService->config = $configStub;
+
         $placeholderService->setDI($di);
 
         $content        = 'content';

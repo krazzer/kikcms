@@ -186,8 +186,12 @@ class PlaceholderService extends Injectable
             return $content;
         }
 
-        $originPort = parse_url($origin)['port'];
+        $originPort = parse_url($origin)['port'] ?? null;
         $originHost = parse_url($origin)['host'];
+
+        if( ! $originPort){
+            return $content;
+        }
 
         $host = $this->request->getServer('HTTP_HOST');
 
