@@ -79,7 +79,7 @@
         <div class="field">
             <div class="buttons">
                 <div class="btn btn-default preview{{ not element.value ? ' hidden' }}"
-                     data-finder="{{ allowedFinderAccess ? 1 : 0 }}">
+                     data-finder="{{ allowedFinderAccess and not field.uploadOnly ? 1 : 0 }}">
                     <div class="thumb">
                         {% if element.value %}
                             {% include "@kikcms/finder/file.twig" %}
@@ -90,7 +90,7 @@
                      title="{{ tl('webform.detachFile') }}">
                     <span class="glyphicon glyphicon-remove"></span>
                 </div>
-                {% if allowedFinderAccess %}
+                {% if allowedFinderAccess and not field.uploadOnly %}
                     <div class="btn btn-default pick{{ element.value ? ' hidden' }}">
                         <span class="glyphicon glyphicon-hand-up"></span>
                         <span class="lbl">{{ tl('dataTable.pickFile') }}</span>

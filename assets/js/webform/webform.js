@@ -112,18 +112,18 @@ var WebForm = Class.extend({
         });
     },
 
-    initCsrf: function (){
+    initCsrf: function () {
         var self = this;
 
-        setTimeout(function (){
+        setTimeout(function () {
             KikCMS.action('/webform/token/', {}, function (result) {
                 var key   = result[0];
                 var token = result[1];
 
-                var tokenField = '<input type="hidden" name="' + key + '" value="' + token + '" />';
-                var $form = self.getWebForm().find('form');
+                var tokenField = '<input class="webform-token" type="hidden" name="' + key + '" value="' + token + '" />';
+                var $form      = self.getWebForm().find('form');
 
-                if( ! $form.find('input[name=' + key + ']').length) {
+                if ( ! $form.find('input[name=' + key + ']').length) {
                     $form.prepend(tokenField);
                 }
             });
@@ -263,13 +263,17 @@ var WebForm = Class.extend({
     initUploader: function ($field) {
         var self = this;
 
+        var $tokenField = (this.getWebForm().find('.webform-token'));
+
         var uploader = new FileUploader({
             $container: $field,
-            action: '/cms/webform/uploadAndPreview',
+            action: '/webform/uploadAndPreview',
             addParametersBeforeUpload: function (formData) {
                 formData.append('folderId', $field.find('.btn.upload').attr('data-folder-id'));
                 formData.append('renderableInstance', self.renderableInstance);
                 formData.append('renderableClass', self.renderableClass);
+                formData.append('tokenKey', $tokenField.attr('name'));
+                formData.append('tokenValue', $tokenField.val());
                 return formData;
             },
             onSuccess: function (result) {

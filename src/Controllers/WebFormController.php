@@ -61,12 +61,18 @@ class WebFormController extends RenderableController
      */
     public function uploadAndPreviewAction()
     {
+        $tokenKey      = $this->request->getPost('tokenKey', 'string');
+        $tokenValue    = $this->request->getPost('tokenValue', 'string');
+
+        if( ! $this->security->checkToken($tokenKey, $tokenValue, false)){
+            return json_encode(['errors' => [$this->translator->tl('login.reset.password.tokenError')]]);
+        }
+
         $folderId      = ((int) $this->request->getPost('folderId', 'int')) ?: null;
         $uploadedFiles = $this->request->getUploadedFiles();
         $uploadStatus  = $this->fileService->uploadFiles($uploadedFiles, $folderId);
         $fileIds       = $uploadStatus->getFileIds();
-
-        $fileId = isset($fileIds[0]) ? $fileIds[0] : null;
+        $fileId        = $fileIds[0] ?? null;
 
         $result = [
             'fileId' => $fileId,

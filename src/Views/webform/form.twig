@@ -44,7 +44,7 @@
         {% endif %}
 
         {% if not webForm.useJsCsrfProtection %}
-            <input type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
+            <input class="webform-token" type="hidden" name="{{ security.tokenKey }}" value="{{ security.token }}"/>
         {% endif %}
 
         {% if(displaySendButton) %}

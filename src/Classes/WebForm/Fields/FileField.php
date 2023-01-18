@@ -12,6 +12,9 @@ class FileField extends Field
     /** @var int|null */
     private $folderId;
 
+    /** @var bool set true to hide the file picker */
+    private $uploadOnly = false;
+
     /**
      * @param string $key
      * @param string $label
@@ -61,6 +64,24 @@ class FileField extends Field
     public function setFolderId(?int $folderId): FileField
     {
         $this->folderId = $folderId;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUploadOnly(): bool
+    {
+        return $this->uploadOnly;
+    }
+
+    /**
+     * @param bool $uploadOnly
+     * @return FileField
+     */
+    public function setUploadOnly(bool $uploadOnly = true): FileField
+    {
+        $this->uploadOnly = $uploadOnly;
         return $this;
     }
 }

@@ -114,6 +114,7 @@ class Routing extends Injectable
         $frontend->add('/object-not-found', "Frontend::objectNotFound")->setName('objectNotFound');
 
         $frontend->add("/webform/token", "WebForm::token");
+        $frontend->add("/webform/uploadAndPreview", "WebForm::uploadAndPreview");
         $frontend->add("/cache/clear/{token:[a-zA-Z0-9\.]+}", "CacheClear::clear")->setName('cacheClear');
 
         $router->mount($frontend);
