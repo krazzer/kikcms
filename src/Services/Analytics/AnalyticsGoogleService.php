@@ -129,6 +129,10 @@ class AnalyticsGoogleService extends Injectable
             $metricHeaders    = $header->getMetricHeader()->getMetricHeaderEntries();
             $rows             = $report->getData()->getRows();
 
+            if( ! is_countable($rows)){
+                continue;
+            }
+
             for ($rowIndex = 0; $rowIndex < count($rows); $rowIndex++) {
                 $results[] = $this->reportRowToArray($rows[$rowIndex], $metricHeaders, $dimensionHeaders);
             }
@@ -139,7 +143,7 @@ class AnalyticsGoogleService extends Injectable
 
     /**
      * @param Google_Service_AnalyticsReporting_ReportRow $reportRow
-     * @param Google_Service_AnalyticsReporting_MetricHeaderEntry $metricHeaders
+     * @param Google_Service_AnalyticsReporting_MetricHeaderEntry[] $metricHeaders
      * @param array $dimensionHeaders
      * @return array
      */
@@ -159,7 +163,6 @@ class AnalyticsGoogleService extends Injectable
             $metric = $metrics[$j];
             $values = $metric->getValues();
             for ($k = 0; $k < count($values); $k++) {
-                /** @var Google_Service_AnalyticsReporting_MetricHeaderEntry $entry */
                 $entry                        = $metricHeaders[$k];
                 $resultRow[$entry->getName()] = $values[$k];
             }

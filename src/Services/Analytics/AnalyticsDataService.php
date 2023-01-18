@@ -86,10 +86,17 @@ class AnalyticsDataService extends Injectable
                 $type .= ucfirst($row->getDimensionValues()[2]->getValue());
             }
 
+            $value = $row->getDimensionValues()[1]->getValue();
+
+            // empty value in path is same as /, so replace to merge
+            if($metric === GaConfig::METRIC_PATH && $value === ''){
+                $value = '/';
+            }
+
             $results[] = [
                 GaVisitData::FIELD_DATE   => $row->getDimensionValues()[0]->getValue(),
                 GaVisitData::FIELD_TYPE   => $type,
-                GaVisitData::FIELD_VALUE  => $row->getDimensionValues()[1]->getValue(),
+                GaVisitData::FIELD_VALUE  => $value,
                 GaVisitData::FIELD_VISITS => $row->getMetricValues()[0]->getValue(),
             ];
         }
