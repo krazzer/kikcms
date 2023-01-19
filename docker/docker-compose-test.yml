@@ -1,6 +1,6 @@
 version: "3"
 services:
-  php:
+  phptest:
     image: kiksaus/kikdev-phalcon4-cov
     restart: always
     ports:
@@ -19,7 +19,7 @@ services:
     environment:
       XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
-  mailhog:
+  mailhogtest:
     image: mailhog/mailhog
     restart: always
     ports:

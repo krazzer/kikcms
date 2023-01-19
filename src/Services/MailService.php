@@ -55,12 +55,27 @@ class MailService extends Injectable
      */
     public function getDefaultFrom()
     {
-        if ($defaultFromEmail = $this->config->application->get('defaultFromEmail')) {
-            if ($defaultFromName = $this->config->application->get('defaultFromName')) {
-                return [$defaultFromEmail => $defaultFromName];
-            } else {
-                return $defaultFromEmail;
-            }
+        $defaultFromEmail = $this->getDefaultFromEmail();
+        $defaultFromName  = $this->getDefaultFromName();
+
+        if ($defaultFromName) {
+            return [$defaultFromEmail => $defaultFromName];
+        }
+
+        return $defaultFromEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultFromEmail(): string
+    {
+        if ($email = $this->config->application->get('defaultFromEmail')) {
+            return $email;
+        }
+
+        if ($this->config->get('company') && ($email = $this->config->get('company')->get('email'))) {
+            return $email;
         }
 
         if ( ! $domain = $this->config->application->get('domain')) {
@@ -71,13 +86,23 @@ class MailService extends Injectable
             }
         }
 
-        $from = 'noreply@' . $domain;
+        return 'noreply@' . $domain;
+    }
 
-        if ($this->config->get('company') && $companyName = $this->config->get('company')->get('name')) {
-            return [$from => $companyName];
+    /**
+     * @return string|null
+     */
+    public function getDefaultFromName(): ?string
+    {
+        if ($name = $this->config->application->get('defaultFromName')) {
+            return $name;
         }
 
-        return $from;
+        if ($this->config->get('company') && ($name = $this->config->get('company')->get('name'))) {
+            return $name;
+        }
+
+        return null;
     }
 
     /**
@@ -96,10 +121,11 @@ class MailService extends Injectable
      * @param null $template
      * @param array $parameters
      * @param array|Swift_Attachment $attachments
-     *
+     * @param null|array|string $from
      * @return int The number of successful recipients. Can be 0 which indicates failure
+     * @throws Exception
      */
-    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = []): int
+    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = [], $from = null): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -110,7 +136,7 @@ class MailService extends Injectable
             $htmlBody = $body;
         }
 
-        $from = $this->getDefaultFrom();
+        $from = $from ?: $this->getDefaultFrom();
 
         $htmlBody = $this->placeholderService->replaceAll($htmlBody);
 
@@ -146,13 +172,14 @@ class MailService extends Injectable
      *
      * @param array $parameters
      * @param array $attachments
+     * @param null|array|string $from
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
+    public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [], $from = null): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
-        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments, $from);
     }
 
     /**
@@ -162,15 +189,15 @@ class MailService extends Injectable
      * @param string $subject
      * @param string $body
      * @param array $parameters
-     *
      * @param array $attachments
+     * @param null|array|string $from
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = []): int
+    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = [], $from = null): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
 
-        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments);
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments, $from);
     }
 
     /**
