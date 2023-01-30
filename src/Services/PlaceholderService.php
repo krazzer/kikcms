@@ -178,7 +178,7 @@ class PlaceholderService extends Injectable
      */
     private function updateOriginLinks(string $content): string
     {
-        if ( ! $this->config->isDev()) {
+        if ( ! $this->config->isDev() || ! ($this->request ?? null)) {
             return $content;
         }
 
