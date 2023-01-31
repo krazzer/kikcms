@@ -44,10 +44,18 @@ class FrontendService extends Injectable
      */
     public function getPageLanguageToLoadByUrlPath(?string $urlPath): ?PageLanguage
     {
+        if($this->existingPageCacheService->exists($urlPath) === false){
+            return null;
+        }
+
         if ($urlPath && $urlPath !== '/') {
             $pageLanguage = $this->urlService->getPageLanguageByUrlPath($urlPath);
         } else {
             $pageLanguage = $this->pageLanguageService->getDefault();
+        }
+
+        if ( ! $pageLanguage) {
+            $this->existingPageCacheService->buildCache();
         }
 
         if ( ! $pageLanguage || ! $pageLanguage->page || ( ! $pageLanguage->active && ! $this->userService->isLoggedIn())) {

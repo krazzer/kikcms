@@ -257,6 +257,32 @@ class UrlService extends Injectable
     }
 
     /**
+     * Get all URLs for pages
+     * @return array
+     */
+    public function getUrls(): array
+    {
+        $pageLanguages = PageLanguage::find();
+
+        $links = [];
+
+        foreach ($pageLanguages as $pageLanguage) {
+            if ( ! $pageLanguage->slug) {
+                continue;
+            }
+
+            // exclude not found page
+            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_NOT_FOUND){
+                continue;
+            }
+
+            $links[] = $this->urlService->getUrlByPageLanguage($pageLanguage);
+        }
+
+        return $links;
+    }
+
+    /**
      * @param string $langCode
      * @return array
      */

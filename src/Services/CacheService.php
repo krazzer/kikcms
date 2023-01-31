@@ -64,6 +64,8 @@ class CacheService extends Injectable
         $this->clear(CacheConfig::MENU_PAGES);
         $this->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
         $this->clear(CacheConfig::PAGE_LANGUAGE_FOR_KEY);
+
+        $this->existingPageCacheService->clear();
     }
 
     /**

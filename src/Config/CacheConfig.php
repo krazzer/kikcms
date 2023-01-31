@@ -24,6 +24,8 @@ class CacheConfig
     const URL                   = 'url';
     const MENU                  = 'menu';
     const MENU_PAGES            = 'menuPages';
+    const EXISTING_PAGE_CACHE   = 'existingPageCache';
+    const PAGE_404              = 'page404';
 
     const STATS_REQUIRE_UPDATE     = 'statsRequireUpdate';
     const STATS_UPDATE_IN_PROGRESS = 'statsUpdateInProgress';

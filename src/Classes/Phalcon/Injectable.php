@@ -44,6 +44,7 @@ use KikCMS\Services\MailService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\PageCache\PageCacheService;
+use KikCMS\Services\Pages\ExistingPageCacheService;
 use KikCMS\Services\Pages\FullPageService;
 use KikCMS\Services\Pages\PageContentService;
 use KikCMS\Services\Pages\PageLanguageService;
@@ -100,6 +101,7 @@ use Swift_Mailer;
  * @property DateTimeService dateTimeService
  * @property DbService dbService
  * @property ErrorService errorService
+ * @property ExistingPageCacheService existingPageCacheService
  * @property FileCacheService fileCacheService
  * @property FileHashService fileHashService
  * @property FilePermissionHelper filePermissionHelper

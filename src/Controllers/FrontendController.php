@@ -138,6 +138,10 @@ class FrontendController extends BaseController
         $this->response->setStatusCode(404);
         $this->view->reset();
 
+        if($cached404PageContent = $this->existingPageCacheService->get404PageContent()){
+            return $cached404PageContent;
+        }
+
         if ($pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode)) {
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
@@ -147,7 +151,11 @@ class FrontendController extends BaseController
                 }
             }
 
-            return $this->loadPage($pageLanguage, $url);
+            $response = $this->loadPage($pageLanguage, $url);
+
+            $this->existingPageCacheService->cache404Page($response->getContent());
+
+            return $response;
         }
 
         if ($route = $this->websiteSettings->getNotFoundRoute()) {

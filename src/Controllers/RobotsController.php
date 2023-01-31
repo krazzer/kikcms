@@ -32,22 +32,7 @@ class RobotsController extends BaseController
         $urlSet->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
         $urlSet->setAttribute('xsi:schemaLocation', 'https://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd');
 
-        $pageLanguages = PageLanguage::find();
-
-        $links = [];
-
-        foreach ($pageLanguages as $pageLanguage) {
-            if ( ! $pageLanguage->slug) {
-                continue;
-            }
-
-            // exclude not found page
-            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_NOT_FOUND){
-                continue;
-            }
-
-            $links[] = $this->urlService->getUrlByPageLanguage($pageLanguage);
-        }
+        $links = $this->urlService->getUrls();
 
         $modifiedAt = new DateTime();
         $modifiedAt->setTimezone(new DateTimeZone('UTC'));
