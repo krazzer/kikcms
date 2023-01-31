@@ -406,7 +406,7 @@ abstract class DataForm extends WebForm
      * Retrieve the parentEditId for given DataTableField
      * This can be one of the following:
      * - The current objects' id
-     * - 0, if their is a relation, but the current forms' object has not been saved yet
+     * - 0, if there is a relation, but the current forms' object has not been saved yet
      * - null, if there is no relation at all
      *
      * @param DataTableField $field
