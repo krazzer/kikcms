@@ -7,6 +7,7 @@ use Helpers\TestHelper;
 use Helpers\Unit;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
+use KikCMS\Services\Pages\ExistingPageCacheService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Services\UserService;
@@ -66,6 +67,11 @@ class FrontendServiceTest extends Unit
 
         $frontendService->setDI((new TestHelper)->getTestDi());
         $frontendService->userService = $this->createUserServiceMock(false);
+
+        $existingPageCacheService = $this->createMock(ExistingPageCacheService::class);
+        $existingPageCacheService->method('exists')->willReturn(null);
+
+        $frontendService->existingPageCacheService = $existingPageCacheService;
 
         // default page
         $pageLanguage                         = $this->createPageLanguage(new Page);
