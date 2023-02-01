@@ -5,6 +5,7 @@ namespace KikCMS\Controllers;
 
 
 use DateTime;
+use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Config\MenuConfig;
 use Phalcon\Http\ResponseInterface;
 
@@ -15,6 +16,10 @@ class CacheController extends BaseCmsController
      */
     public function managerAction(): ResponseInterface
     {
+        if( ! $this->permission->isAdmin()){
+            throw new UnauthorizedException;
+        }
+
         $cacheInfo = @apcu_cache_info() ?: [];
 
         $startTime = isset($cacheInfo['start_time']) ? (new DateTime())->setTimestamp($cacheInfo['start_time']) : new DateTime;
