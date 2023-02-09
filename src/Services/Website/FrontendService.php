@@ -40,11 +40,12 @@ class FrontendService extends Injectable
 
     /**
      * @param string|null $urlPath
+     * @param bool $existsCheck
      * @return PageLanguage|null
      */
-    public function getPageLanguageToLoadByUrlPath(?string $urlPath): ?PageLanguage
+    public function getPageLanguageToLoadByUrlPath(?string $urlPath, bool $existsCheck = true): ?PageLanguage
     {
-        if($this->existingPageCacheService->exists($urlPath) === false){
+        if($existsCheck && $this->existingPageCacheService->exists($urlPath) === false){
             return null;
         }
 

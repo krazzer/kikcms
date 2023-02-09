@@ -75,10 +75,12 @@ class FrontendController extends BaseController
 
     /**
      * @param string|null $urlPath
+     * @param bool $existsCheck checks if the page exists in existingPageCache.
+     * Set to false if the page is not expected to be in the cache, for example if a custom URL is forwarded to this function
      * @return ResponseInterface
      * @throws NotFoundException
      */
-    public function pageAction(string $urlPath = null): ResponseInterface
+    public function pageAction(string $urlPath = null, bool $existsCheck = true): ResponseInterface
     {
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
             $title       = $this->translator->tl('maintenance.title');
@@ -87,7 +89,7 @@ class FrontendController extends BaseController
             return $this->frontendService->getMessageResponse($title, $description);
         }
 
-        if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath)) {
+        if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath, $existsCheck)) {
             throw new NotFoundException();
         }
 
