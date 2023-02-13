@@ -3,6 +3,7 @@
 namespace KikCMS\Models;
 
 use KikCMS\Classes\Database\Now;
+use KikCMS\Classes\Permission;
 use KikCmsCore\Classes\Model;
 
 /**
@@ -123,5 +124,13 @@ class User extends Model
     {
         $this->settings = $settings;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClient(): bool
+    {
+        return ! in_array($this->role, [Permission::ADMIN, Permission::DEVELOPER, Permission::USER]);
     }
 }

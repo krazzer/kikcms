@@ -216,7 +216,7 @@ class UserService extends Injectable
             'plainTextBody' => $body . "\n\n" . $resetUrl,
         ];
 
-        if ($this->getRole() == Permission::CLIENT) {
+        if ($user->isClient()) {
             return (bool) $this->mailService->sendMailUser($user->email, $subject, $body, $parameters);
         } else {
             return (bool) $this->mailService->sendServiceMail($user->email, $subject, $body, $parameters);
