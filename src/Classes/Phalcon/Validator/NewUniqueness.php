@@ -22,14 +22,17 @@ class NewUniqueness extends Uniqueness
             return true;
         }
 
-        $id     = $this->getOption('id');
-        $model  = $this->getOption('model');
+        $id    = $this->getOption('id');
+        $model = $this->getOption('model');
+        $attr  = $this->getOption('attribute');
 
-        if( ! $object = $model::getById($id)){
+        $fieldName = $attr ?: $field;
+
+        if ( ! $object = $model::getById($id)) {
             return parent::validate($validation, $field);
         }
 
-        if($object->$field == $validation->getValue($field)){
+        if ($object->$fieldName == $validation->getValue($field)) {
             return true;
         }
 
