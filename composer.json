@@ -23,7 +23,6 @@
     "description": "A CMS based on the Phalcon Framework",
     "require": {
         "twig/twig": "~3.0",
-        "google/apiclient": "^2.0",
         "nette/php-generator": "^3.1",
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
