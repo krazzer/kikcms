@@ -59,9 +59,11 @@ class FrontendHelper extends Injectable
      * @param string|null $template
      * @param null|string|array $templateKey
      * @param bool $cache
+     * @param string $ulClass
      * @return string
      */
-    public function menu($menuKey, int $maxLevel = null, string $template = null, $templateKey = null, $cache = true): string
+    public function menu($menuKey, int $maxLevel = null, string $template = null, $templateKey = null,
+                         bool $cache = true, string $ulClass = ''): string
     {
         if ( ! $menuKey) {
             return '';
@@ -78,7 +80,8 @@ class FrontendHelper extends Injectable
             ->setTemplate($template)
             ->setRestrictTemplates((array) $templateKey)
             ->setLanguageCode($this->languageCode)
-            ->setCache($cache);
+            ->setCache($cache)
+            ->setUlClass($ulClass);
 
         return $this->getMenuOutput($menu);
     }
@@ -185,7 +188,7 @@ class FrontendHelper extends Injectable
             return '';
         }
 
-        return '<ul>' . $menuOutput . '</ul>';
+        return '<ul class="' . $menu->getUlClass() . '">' . $menuOutput . '</ul>';
     }
 
     /**

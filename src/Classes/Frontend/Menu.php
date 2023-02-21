@@ -28,6 +28,9 @@ class Menu
     /** @var array */
     private $restrictTemplates = [];
 
+    /** @var string */
+    private $ulClass = '';
+
     /**
      * @return bool
      */
@@ -151,6 +154,24 @@ class Menu
     public function setLanguageCode(string $languageCode): Menu
     {
         $this->languageCode = $languageCode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUlClass(): string
+    {
+        return $this->ulClass;
+    }
+
+    /**
+     * @param string $ulClass
+     * @return Menu
+     */
+    public function setUlClass(string $ulClass): Menu
+    {
+        $this->ulClass = $ulClass;
         return $this;
     }
 }
