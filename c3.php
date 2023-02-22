@@ -1,5 +1,5 @@
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 // @codeCoverageIgnoreStart
 
 /**
@@ -10,7 +10,9 @@
 
 // $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 1;
 
+use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
+use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Filter as CodeCoverageFilter;
 
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
@@ -263,15 +265,24 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             $pathCoverage = (bool)$settings['coverage']['path_coverage'];
         }
 
-        if (method_exists(Driver::class, 'forLineCoverage')) {
-            //php-code-coverage 9+
+        if (class_exists(Selector::class)) {
+            //php-code-coverage >= 9.1.10
+            $filter = new CodeCoverageFilter();
+            if ($pathCoverage) {
+                $driver = (new Selector())->forLineAndPathCoverage($filter);
+            } else {
+                $driver = (new Selector())->forLineCoverage($filter);
+            }
+            $phpCoverage = new CodeCoverage($driver, $filter);
+        } elseif (method_exists(Driver::class, 'forLineCoverage')) {
+            //php-code-coverage 9.0.0 - 9.1.9
             $filter = new CodeCoverageFilter();
             if ($pathCoverage) {
                 $driver = Driver::forLineAndPathCoverage($filter);
             } else {
                 $driver = Driver::forLineCoverage($filter);
             }
-            $phpCoverage = new PHP_CodeCoverage($driver, $filter);
+            $phpCoverage = new CodeCoverage($driver, $filter);
         } else {
             //php-code-coverage 8 or older
             $phpCoverage = new PHP_CodeCoverage();

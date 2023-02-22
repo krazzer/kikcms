@@ -96,24 +96,6 @@ class TaskCest
         $mainTask->updateMissingFileHashesAction();
     }
 
-    public function cleanUpVendorWorks(FunctionalTester $I)
-    {
-        $googleServicePath = __DIR__ . '/../TestSitePath/vendor/google/apiclient-services/src/';
-
-        mkdir($googleServicePath . 'test');
-        file_put_contents($googleServicePath . 'file.txt', 'testfile');
-        file_put_contents($googleServicePath . 'test/file.txt', 'testfile');
-
-        $di = $I->getApplication()->getDI();
-
-        $mainTask = new MainTask();
-        $mainTask->setDI($di);
-
-        $mainTask->cleanUpVendorAction();
-
-        $I->assertFalse(file_exists($googleServicePath . 'test/file.txt'));
-    }
-
     public function createUrlsWorks(FunctionalTester $I)
     {
         $I->getDbService()->query('UPDATE cms_page_language SET slug = NULL WHERE id = 9');
