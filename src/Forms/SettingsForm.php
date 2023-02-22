@@ -42,7 +42,7 @@ class SettingsForm extends WebForm
      */
     public function successAction(array $input)
     {
-        $this->keyValue->save(KikCMSConfig::SETTING_MAINTENANCE, $input['maintenance']);
+        $this->keyValue->set(KikCMSConfig::SETTING_MAINTENANCE, $input['maintenance']);
         $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
     }
 }
