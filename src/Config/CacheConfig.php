@@ -22,6 +22,7 @@ class CacheConfig
     const PAGE_LANGUAGE_FOR_KEY = 'pageLanguageForKey';
     const OTHER_LANG_MAP        = 'otherLangMap';
     const URL                   = 'url';
+    const URL_FOR_KEY           = 'urlForKey';
     const MENU                  = 'menu';
     const MENU_PAGES            = 'menuPages';
     const EXISTING_PAGE_CACHE   = 'existingPageCache';

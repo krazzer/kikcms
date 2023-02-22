@@ -207,11 +207,19 @@ class UrlService extends Injectable
      */
     public function getUrlByPageKey(string $pageKey, string $languageCode = null): string
     {
-        if ( ! $page = $this->pageService->getByKey($pageKey)) {
-            return '';
+        $cacheKey = CacheConfig::URL_FOR_KEY . CacheConfig::SEPARATOR . $pageKey;
+
+        if($languageCode){
+            $cacheKey .= CacheConfig::SEPARATOR . $languageCode;
         }
 
-        return $this->getUrlByPageId($page->getId(), $languageCode);
+        return $this->cacheService->cache($cacheKey, function () use ($pageKey, $languageCode) {
+            if ( ! $page = $this->pageService->getByKey($pageKey)) {
+                return '';
+            }
+
+            return $this->getUrlByPageId($page->getId(), $languageCode);
+        });
     }
 
     /**
