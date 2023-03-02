@@ -119,7 +119,7 @@ class PageLanguageService extends Injectable
                 ]);
 
             return $this->dbService->getObject($query);
-        });
+        }, CacheConfig::ONE_DAY, true);
     }
 
     /**

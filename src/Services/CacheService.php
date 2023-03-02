@@ -82,10 +82,10 @@ class CacheService extends Injectable
      * @param string $cacheKey
      * @param callable $function
      * @param float|int $ttl
-     *
+     * @param bool $cacheNull if true, a NULL value may be cached
      * @return mixed|null
      */
-    public function cache(string $cacheKey, callable $function, $ttl = CacheConfig::ONE_DAY)
+    public function cache(string $cacheKey, callable $function, $ttl = CacheConfig::ONE_DAY, bool $cacheNull = false)
     {
         if ( ! $this->cache) {
             return $function();
@@ -97,7 +97,9 @@ class CacheService extends Injectable
 
         $result = $function();
 
-        $this->cache->set($cacheKey, $result, $ttl);
+        if ($result !== null || $cacheNull) {
+            $this->cache->set($cacheKey, $result, $ttl);
+        }
 
         return $result;
     }
