@@ -38,7 +38,7 @@ class MediaResizeBase extends WebsiteExtendable
         $sourceHeight = $image->getHeight();
 
         if ($sourceWidth < $width && $sourceHeight < $height) {
-            return;
+            $image->resize($width, $height);
         }
 
         $sourceAspectRatio  = $sourceWidth / $sourceHeight;

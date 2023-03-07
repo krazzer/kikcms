@@ -14,10 +14,10 @@ class MediaResizeBaseTest extends TestCase
     {
         $mediaResizeBase = new MediaResizeBase();
 
-        // test inside bounds
+        // test inside bounds, needs to be resized to larger first
         $imageMock = $this->getImageMock(50, 50);
-        $imageMock->expects($this->never())->method('resize');
-        $imageMock->expects($this->never())->method('crop');
+        $imageMock->expects($this->exactly(2))->method('resize');
+        $imageMock->expects($this->once())->method('crop');
         $mediaResizeBase->crop($imageMock, 100, 100);
 
         // test resize same ratio, needs resize
