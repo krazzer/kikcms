@@ -43,6 +43,9 @@ class PagesCest
     {
         $I->addUser();
         $I->login();
+
+        // clear cache
+        $I->amOnPage('/cms/cache/empty');
         $I->amOnPage('/cms/pages');
 
         // click add page
