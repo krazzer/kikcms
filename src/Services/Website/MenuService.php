@@ -39,7 +39,6 @@ class MenuService extends Injectable
             $menu->getLanguageCode(),
             $menu->getMaxLevel(),
             $menu->getTemplate() ?: 'default',
-            $menu->getUlClass() ?: 'null',
             $menu->getRestrictTemplates() ? implode('-', $menu->getRestrictTemplates()) : 'null'
         );
     }
