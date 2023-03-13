@@ -2,6 +2,7 @@
 
 use KikCMS\Config\KikCMSConfig;
 use Phalcon\Cli\Console;
+use Psr\Log\LogLevel;
 
 if ( ! isset($sitePath)) {
     throw new Exception('Variable $sitePath must be set');
@@ -35,7 +36,20 @@ foreach ($argv as $k => $arg) {
 
 try {
     $console->handle($arguments);
-} catch (\Phalcon\Exception $e) {
-    echo $e->getMessage() . PHP_EOL;
+} catch (Exception $exception) {
+    $message = $exception->getMessage();
+    $trace   = $exception->getTraceAsString();
+
+    echo $message . PHP_EOL;
+    echo $trace . PHP_EOL;
+
+    // run from cron
+    if (php_sapi_name() == 'cli' && ! isset($_SERVER['TERM'])) {
+        $context = ['exception' => $trace];
+
+        $logger = $console->getDI()->get('errorService')->getEmailLogger(3600);
+        $logger->log(LogLevel::ERROR, $message, $context);
+    }
+
     exit(255);
 }
