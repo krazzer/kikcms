@@ -4,6 +4,7 @@
 namespace KikCMS\Classes\Phalcon;
 
 
+use Exception;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use Phalcon\Cache;
 
@@ -46,7 +47,11 @@ class KeyValue extends Cache
             return $this->memoryCache->get($this->prefixKey($key));
         }
 
-        return parent::get($key, $defaultValue);
+        try{
+            return parent::get($key, $defaultValue);
+        } catch (Exception $exception){
+            return $defaultValue;
+        }
     }
 
     /**
