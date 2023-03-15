@@ -32,13 +32,16 @@ class MenuService extends Injectable
      * @param string $prefix
      * @return string
      */
-    public function getCacheKey(Menu $menu, $prefix = CacheConfig::MENU): string
+    public function getCacheKey(Menu $menu, string $prefix = CacheConfig::MENU): string
     {
+        $encodedUlClass = preg_replace("/\W+/", "", str_replace('-', '_', $menu->getUlClass()));
+
         return $this->cacheService->createKey($prefix,
             $menu->getMenuKey(),
             $menu->getLanguageCode(),
             $menu->getMaxLevel(),
             $menu->getTemplate() ?: 'default',
+            $menu->getUlClass() ? $encodedUlClass : 'null',
             $menu->getRestrictTemplates() ? implode('-', $menu->getRestrictTemplates()) : 'null'
         );
     }
