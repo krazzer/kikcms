@@ -4,8 +4,8 @@
 namespace KikCMS\Classes\Phalcon;
 
 
-use Exception;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
+use KikCMS\Config\CacheConfig;
 use Phalcon\Cache;
 
 /**
@@ -47,11 +47,7 @@ class KeyValue extends Cache
             return $this->memoryCache->get($this->prefixKey($key));
         }
 
-        try{
-            return parent::get($key, $defaultValue);
-        } catch (Exception $exception){
-            return $defaultValue;
-        }
+        return parent::get($key, $defaultValue);
     }
 
     /**
@@ -59,8 +55,14 @@ class KeyValue extends Cache
      */
     public function set($key = null, $value = null, $ttl = null): bool
     {
+        $memoryTtl = $ttl ?: CacheConfig::ONE_DAY;
+
         if($this->memoryCache) {
-            $this->memoryCache->set($this->prefixKey($key), $value, $ttl);
+            $this->memoryCache->set($this->prefixKey($key), $value, $memoryTtl);
+        }
+
+        if($ttl === null){
+            $ttl = CacheConfig::FOREVER;
         }
 
         return parent::set($key, $value, $ttl);

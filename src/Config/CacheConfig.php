@@ -13,6 +13,7 @@ class CacheConfig
     const ONE_HOUR   = 3600;
     const ONE_DAY    = self::ONE_HOUR * 24;
     const ONE_YEAR   = self::ONE_DAY * 365;
+    const FOREVER    = self::ONE_YEAR * 10 ** 6; // a million years enough?
 
     const LANGUAGES         = 'languages';
     const TRANSLATION       = 'translation';
