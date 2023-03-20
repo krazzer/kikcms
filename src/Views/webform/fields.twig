@@ -6,7 +6,7 @@
     {% if errorMessages %}
         {% for errorMessage in errorMessages %}
             <span class="help-block alert alert-warning">
-                <i class="glyphicon glyphicon-exclamation-sign"></i> {{ errorMessage }}
+                <i class="glyphicon glyphicon-exclamation-sign"></i> {{ errorMessage|raw }}
             </span>
         {% endfor %}
     {% endif %}
