@@ -4,9 +4,12 @@
 namespace KikCMS\Classes\Phalcon;
 
 
+use Exception;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Config\CacheConfig;
+use Monolog\Logger;
 use Phalcon\Cache;
+use Psr\Log\LogLevel;
 
 /**
  * This KeyValue is used to store a cache value on disk.
@@ -17,6 +20,9 @@ class KeyValue extends Cache
 {
     /** @var Cache|null */
     private ?Cache $memoryCache = null;
+
+    /** @var Logger|null */
+    private ?Logger $logger = null;
 
     /**
      * @return Stream
@@ -47,7 +53,15 @@ class KeyValue extends Cache
             return $this->memoryCache->get($this->prefixKey($key));
         }
 
-        return parent::get($key, $defaultValue);
+        try {
+            return parent::get($key, $defaultValue);
+        } catch (Exception $exception){
+            if($this->logger){
+                $this->logger->log(LogLevel::WARNING, $exception, ['key' => $key]);
+            }
+
+            return $defaultValue;
+        }
     }
 
     /**
@@ -103,5 +117,23 @@ class KeyValue extends Cache
     public function setMemoryCache(?Cache $memoryCache): void
     {
         $this->memoryCache = $memoryCache;
+    }
+
+    /**
+     * @return Logger|null
+     */
+    public function getLogger(): ?Logger
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param Logger|null $logger
+     * @return KeyValue
+     */
+    public function setLogger(?Logger $logger): KeyValue
+    {
+        $this->logger = $logger;
+        return $this;
     }
 }
