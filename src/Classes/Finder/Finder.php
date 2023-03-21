@@ -95,6 +95,7 @@ class Finder extends Renderable
             'roleMap'     => $this->cmsService->getRoleMap(false),
             'visitorRole' => Permission::VISITOR,
             'userMap'     => $this->filePermissionService->getEditableUserMap(),
+            'isDev'       => $this->permission->isDev(),
         ]);
     }
 

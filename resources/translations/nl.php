@@ -302,6 +302,7 @@ return [
 
     'media' => [
         'button'                   => [
+            'editKey'        => 'Key bewerken',
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
             'overwrite'      => 'Overschrijf',
@@ -341,6 +342,7 @@ return [
         'createFolder'             => 'Geef een naam op voor de nieuwe map',
         'defaultFolderName'        => 'Nieuwe map',
         'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
+        'editKey'                  => 'Geef een nieuwe key op voor het bestand',
         'pickFile'                 => 'Kies bestand',
         'pickFiles'                => 'Kies bestanden',
         'uploadMaxFilesWarning'    => 'U kunt maximaal :amount bestanden tegelijk uploaden',

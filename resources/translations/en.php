@@ -295,6 +295,7 @@ return [
 
     'media' => [
         'button'                   => [
+            'editKey'        => 'Edit key',
             'upload'         => 'Upload',
             'uploadTitle'    => 'Upload files from your device',
             'overwrite'      => 'Overwrite',
@@ -333,6 +334,7 @@ return [
         'createFolder'             => 'Give a name for the new folder',
         'defaultFolderName'        => 'New folder',
         'editFileName'             => 'Give a name to the file',
+        'editKey'                  => 'Give a key to the file',
         'pickFile'                 => 'Pick file',
         'pickFiles'                => 'Pick files',
         'uploadMaxFilesWarning'    => 'You can upload ca maximum of :amount files at the same time',

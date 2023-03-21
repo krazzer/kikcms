@@ -33,6 +33,7 @@ class BaseController extends Controller
             'media.createFolder', 'media.defaultFolderName', 'media.editFileName', 'dataTable.delete.confirmOne',
             'dataTable.delete.confirm', 'dataTable.closeWarning', 'dataTable.switchWarning', 'dataTable.restoreConfirm',
             'statistics.fetchingNewData', 'statistics.fetchingFailed', 'statistics.fetchNewData', 'statistics.visitors',
+            'media.editKey'
         ];
 
         $translations = [];

@@ -96,6 +96,29 @@ class FinderController extends RenderableController
     }
 
     /**
+     * @return string
+     */
+    public function editKeyAction()
+    {
+        $finder = $this->getRenderable();
+        $fileId = (int) $this->request->getPost('fileId', 'int');
+        $key    = $this->request->getPost('key');
+
+        if ( ! $this->filePermissionService->canEditId($fileId)) {
+            throw new UnauthorizedException();
+        }
+
+        $file      = File::getById($fileId);
+        $file->key = $key;
+        $file->save();
+
+        return json_encode([
+            'files'   => $finder->renderFiles(),
+            'fileIds' => [$fileId]
+        ]);
+    }
+
+    /**
      * @param File $file
      * @return ResponseInterface
      */

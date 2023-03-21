@@ -23,7 +23,7 @@ var Finder = Class.extend({
         var self       = this;
         var folderName = prompt(KikCMS.tl('media.createFolder'), KikCMS.tl('media.defaultFolderName'));
 
-        if (!folderName) {
+        if ( ! folderName) {
             return;
         }
 
@@ -45,13 +45,13 @@ var Finder = Class.extend({
             ? KikCMS.tl('media.deleteConfirm', {amount: selectedIds.length})
             : KikCMS.tl('media.deleteConfirmOne');
 
-        if (!confirm(confirmMessage)) {
+        if ( ! confirm(confirmMessage)) {
             return;
         }
 
         this.action('delete', {fileIds: selectedIds}, function (result) {
             if (result.errorMessages) {
-                for(var i in result.errorMessages){
+                for (var i in result.errorMessages) {
                     alert(result.errorMessages[i]);
                 }
             }
@@ -70,11 +70,26 @@ var Finder = Class.extend({
 
         var newFileName = prompt(KikCMS.tl('media.editFileName'), currentFileName);
 
-        if (!newFileName) {
+        if ( ! newFileName) {
             return;
         }
 
         this.action('editFileName', {fileId: fileId, fileName: newFileName}, function (result) {
+            self.setFilesContainer(result.files, result.fileIds);
+        });
+    },
+
+    actionEditKey: function () {
+        var self = this;
+
+        var $file = this.getSelectedFiles().first();
+
+        var fileId  = $file.data('id');
+        var fileKey = $file.data('key');
+
+        var newKey = prompt(KikCMS.tl('media.editKey'), fileKey);
+
+        this.action('editKey', {fileId: fileId, key: newKey}, function (result) {
             self.setFilesContainer(result.files, result.fileIds);
         });
     },
@@ -129,6 +144,7 @@ var Finder = Class.extend({
         this.getToolbar().find('.paste').click(this.actionPaste.bind(this));
         this.getToolbar().find('.download').click(this.download.bind(this));
         this.getToolbar().find('.rights').click(this.permission.openModal.bind(this.permission));
+        this.getToolbar().find('.editKey').click(this.actionEditKey.bind(this));
     },
 
     initCutFiles: function () {
@@ -166,7 +182,7 @@ var Finder = Class.extend({
 
             // click name
             $file.find('.name span').click(function () {
-                if (!$file.hasClass('selected')) {
+                if ( ! $file.hasClass('selected')) {
                     return;
                 }
 
@@ -188,27 +204,29 @@ var Finder = Class.extend({
             $fileSelectables.click(function (e) {
                 var multiKeyPressed = self.shiftKeyPressed || self.commandKeyPressed;
 
-                if (!multiKeyPressed || (self.pickingMode && !self.multiPick)) {
+                if ( ! multiKeyPressed || (self.pickingMode && ! self.multiPick)) {
                     $fileContainer.find('.file.selected').removeClass('selected');
                 }
 
                 if ($file.hasClass('selected') && multiKeyPressed) {
                     self.fileDeSelect($file);
                 } else {
-                    if(self.shiftKeyPressed){
-                        var $firstFile = self.getSelectedFiles().first();
+                    var $firstFile = null;
 
-                        $firstFile.nextUntil($file).each(function (index, file){
+                    if (self.shiftKeyPressed) {
+                        $firstFile = self.getSelectedFiles().first();
+
+                        $firstFile.nextUntil($file).each(function (index, file) {
                             self.fileSelect($(file));
                         });
                     }
 
                     self.fileSelect($file);
 
-                    if(self.shiftKeyPressed){
-                        var $firstFile = self.getSelectedFiles().first();
+                    if (self.shiftKeyPressed) {
+                        $firstFile = self.getSelectedFiles().first();
 
-                        $firstFile.nextUntil($file).each(function (index, file){
+                        $firstFile.nextUntil($file).each(function (index, file) {
                             self.fileSelect($(file));
                         });
                     }
@@ -334,7 +352,7 @@ var Finder = Class.extend({
 
         uploader.init();
 
-        uploaderOptions.$uploadButton = this.getFinder().find('.btn.overwrite');
+        uploaderOptions.$uploadButton             = this.getFinder().find('.btn.overwrite');
         uploaderOptions.addParametersBeforeUpload = function (formData) {
             formData.append('overwriteFileId', self.getSelectedFileIds()[0]);
             formData.append('renderableInstance', self.renderableInstance);
@@ -360,7 +378,7 @@ var Finder = Class.extend({
     },
 
     pickFile: function ($file) {
-        if (!this.pickingMode) {
+        if ( ! this.pickingMode) {
             window.open($file.attr('data-url'));
         } else {
             $file.trigger("pick");
@@ -454,12 +472,18 @@ var Finder = Class.extend({
         var self     = this;
         var $toolbar = this.getToolbar();
 
-        if (this.getSelectedFileIds().length === 1 && !this.selectedSingleFolder()) {
+        if (this.getSelectedFileIds().length === 1 && ! this.selectedSingleFolder()) {
             $toolbar.find('.download').fadeIn();
             $toolbar.find('.overwrite').fadeIn();
         } else {
             $toolbar.find('.download').fadeOut();
             $toolbar.find('.overwrite').fadeOut();
+        }
+
+        if (this.getSelectedFileIds().length === 1) {
+            $toolbar.find('.editKey').fadeIn();
+        } else {
+            $toolbar.find('.editKey').fadeOut();
         }
 
         if (this.getSelectedFileIds().length >= 1) {

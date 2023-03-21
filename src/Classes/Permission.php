@@ -106,6 +106,14 @@ class Permission extends Injectable
     }
 
     /**
+     * @return bool
+     */
+    public function isDev(): bool
+    {
+        return $this->getCurrentRole() == self::DEVELOPER;
+    }
+
+    /**
      * Reset access control data from session
      */
     public function reset()

@@ -5,7 +5,7 @@
         {% set url = url('file', file.id) ~ (file.secondsUpdated ? '?u=' ~ file.secondsUpdated) %}
     {% endif %}
     <div class="file file-{{ file.id }}{{ file.isFolder ? ' folder' }}" data-id="{{ file.id }}"
-            {% if not file.isFolder %} data-url="{{ url }}" {% endif %}>
+            {% if not file.isFolder %} data-url="{{ url }}" {% endif %} data-key="{{ file.key }}">
         <div class="thumb">
             {% include "@kikcms/finder/file.twig" %}
         </div>

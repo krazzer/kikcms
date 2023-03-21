@@ -32,6 +32,12 @@
             </div>
         {% endif %}
 
+        {% if isDev %}
+            <div class="btn btn-default editKey" style="display: none;" title="{{ tl('media.button.editKey') }}">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </div>
+        {% endif %}
+
         <div class="btn btn-default delete" style="display: none;" title="{{ tl('media.button.deleteTitle') }}">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>
