@@ -350,4 +350,25 @@ class RelationKeyService extends Injectable
     {
         return strpos($relationKey, DataFormConfig::RELATION_KEY_SEPARATOR) !== false;
     }
+
+    /**
+     * @param Model $object
+     * @param array $preSaveRelations
+     * @return void
+     */
+    public function savePreSaveRelations(Model $object, array $preSaveRelations)
+    {
+        foreach($preSaveRelations as $preSaveRelation){
+            if(strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)){
+                $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $preSaveRelation);
+
+                if (count($parts) == 2) {
+                    list($part1, $part2) = $parts;
+                    $object->$part1->$part2->save();
+                }
+            } else {
+                $object->$preSaveRelation->save();
+            }
+        }
+    }
 }

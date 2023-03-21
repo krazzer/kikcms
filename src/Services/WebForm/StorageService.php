@@ -183,21 +183,7 @@ class StorageService extends Injectable
         $this->executeBeforeMainEvents();
 
         if (property_exists($object, DataTable::TABLE_KEY)) {
-            foreach($preSaveRelations as $preSaveRelation){
-                if(strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)){
-                    $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $preSaveRelation);
-
-                    switch (count($parts)) {
-                        case 2:
-                            list($part1, $part2) = $parts;
-                            $object->$part1->$part2->save();
-                        break;
-                    }
-                } else {
-                    $object->$preSaveRelation->save();
-                }
-            }
-
+            $this->relationKeyService->savePreSaveRelations($object, $preSaveRelations);
             $object->save();
         } else {
             $this->disableForeignKeysForTempKeys();

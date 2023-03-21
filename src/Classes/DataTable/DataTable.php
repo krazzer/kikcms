@@ -225,7 +225,8 @@ abstract class DataTable extends Renderable
         }
 
         if ($this->relationKeyService->isRelationKey($column)) {
-            $this->relationKeyService->set($object, $column, $checked, $langCode);
+            $relationsToPreSave = $this->relationKeyService->set($object, $column, $checked, $langCode);
+            $this->relationKeyService->savePreSaveRelations($object, $relationsToPreSave);
         } else {
             $object->$column = $checked;
         }
