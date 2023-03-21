@@ -2,6 +2,7 @@
 
 namespace KikCMS\Controllers;
 
+use KikCMS\Config\CacheConfig;
 use KikCmsCore\Exceptions\DbForeignKeyDeleteException;
 use KikCMS\Classes\Exceptions\UnauthorizedException;
 use KikCMS\Classes\Finder\Finder;
@@ -108,9 +109,12 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        $file      = File::getById($fileId);
+        $file = File::getById($fileId);
+
         $file->key = $key;
         $file->save();
+
+        $this->cacheService->clear(CacheConfig::FILE_ID_BY_KEY);
 
         return json_encode([
             'files'   => $finder->renderFiles(),

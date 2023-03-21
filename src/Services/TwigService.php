@@ -94,10 +94,14 @@ class TwigService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function mediaFile($fileId, string $thumb = null, $private = false): string
+    public function mediaFile($fileId, string $thumb = null, bool $private = false): string
     {
         if ( ! $fileId) {
             return '';
+        }
+
+        if( ! is_numeric($fileId)){
+            $fileId = $this->fileService->getIdByKey($fileId);
         }
 
         $private = $private ? 'private' : 'public';

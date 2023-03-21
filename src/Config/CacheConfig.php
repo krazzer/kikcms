@@ -28,12 +28,13 @@ class CacheConfig
     const MENU_PAGES            = 'menuPages';
     const EXISTING_PAGE_CACHE   = 'existingPageCache';
     const PAGE_404              = 'page404';
+    const FILE_ID_BY_KEY        = 'fileIdByKey';
 
-    const STATS_REQUIRE_UPDATE     = 'statsRequireUpdate';
+    const STATS_REQUIRE_UPDATE = 'statsRequireUpdate';
+
     const STATS_UPDATE_IN_PROGRESS = 'statsUpdateInProgress';
 
-    const SEPARATOR = '.';
-
+    const SEPARATOR    = '.';
     const ALIAS_PREFIX = 'a';
 
     /**

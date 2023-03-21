@@ -8,6 +8,7 @@ use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Finder\UploadStatus;
 use KikCMS\Classes\Phalcon\Injectable;
+use KikCMS\Config\CacheConfig;
 use KikCMS\Config\FinderConfig;
 use KikCMS\Config\MimeConfig;
 use KikCMS\Models\FilePermission;
@@ -182,6 +183,23 @@ class FileService extends Injectable
             ->inWhere(File::FIELD_KEY, [$key]);
 
         return $this->dbService->getObject($query);
+    }
+
+    /**
+     * @param string $key
+     * @return int|null
+     */
+    public function getIdByKey(string $key): ?int
+    {
+        $cacheKey = CacheConfig::FILE_ID_BY_KEY . CacheConfig::SEPARATOR . $key;
+
+        return $this->cacheService->cache($cacheKey, function () use ($key) {
+            if ($file = $this->getByKey($key)) {
+                return $file->getId();
+            }
+
+            return null;
+        });
     }
 
     /**

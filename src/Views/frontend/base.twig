@@ -17,6 +17,10 @@
         <meta name="robots" content="noindex" />
     {% endif %}
 
+    {% if socialImageId %}
+        <meta property="og:image" content="{{ mediaFile(socialImageId) }}" />
+    {% endif %}
+
     <title>
         {% block title %}
             {% if pageLanguage and pageLanguage.seo_title %}

@@ -140,14 +140,14 @@ class FrontendController extends BaseController
         $this->response->setStatusCode(404);
         $this->view->reset();
 
-        if($cached404PageContent = $this->existingPageCacheService->get404PageContent()){
+        if ($cached404PageContent = $this->existingPageCacheService->get404PageContent()) {
             return $cached404PageContent;
         }
 
         if ($pageLanguage = $this->pageLanguageService->getNotFoundPage($languageCode)) {
             $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
-            if($this->config->application->pageCache) {
+            if ($this->config->application->pageCache) {
                 if ($content = $this->pageCacheService->getContentByUrlPath($url)) {
                     return $this->response->setContent($content);
                 }
@@ -190,15 +190,15 @@ class FrontendController extends BaseController
         $websiteVariables    = $this->templateVariables->getGlobalVariables();
         $templateVariables   = $this->templateVariables->getTemplateVariables($templateFile);
 
-        if(is_object($templateVariables)){
+        if (is_object($templateVariables)) {
             $templateVariables = [$templateVariables];
         }
 
         $variables = array_merge($langSwitchVariables, $fieldVariables, $websiteVariables, $templateVariables);
 
         // in case a form has been sent, it might want to redirect
-        foreach ($variables as $variable){
-            if($variable instanceof Response){
+        foreach ($variables as $variable) {
+            if ($variable instanceof Response) {
                 return $variable;
             }
         }
@@ -212,14 +212,15 @@ class FrontendController extends BaseController
         $variables['baseUrl']    = $this->url->getBaseUri();
         $variables['fullUrl']    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
 
-        $variables['title']   = $pageLanguage->name;
-        $variables['pageKey'] = $page->key;
-        $variables['helper']  = $this->frontendHelper;
+        $variables['title']         = $pageLanguage->name;
+        $variables['pageKey']       = $page->key;
+        $variables['helper']        = $this->frontendHelper;
+        $variables['socialImageId'] = $this->fileService->getIdByKey(KikCMSConfig::KEY_FILE_SOCIAL);
 
         $response = $this->view('@website/templates/' . $templateFile, $variables);
 
-        if($this->config->application->pageCache) {
-            if( ! $this->pageCacheService->save($urlPath, $response->getContent())){
+        if ($this->config->application->pageCache) {
+            if ( ! $this->pageCacheService->save($urlPath, $response->getContent())) {
                 $this->logger->log(LogLevel::NOTICE, 'Writing page ' . $urlPath . ' to cache failed');
             }
         }
