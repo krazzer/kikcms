@@ -139,6 +139,10 @@ class TwigService extends Injectable
      */
     public function pageUrl($pageId): string
     {
+        if( ! $pageId){
+            return '';
+        }
+
         $langCode = $this->translator->getLanguageCode();
 
         if (is_string($pageId) && strstr($pageId, '/')) {
