@@ -97,7 +97,7 @@ class CacheService extends Injectable
 
         $result = $function();
 
-        if ($result !== null || $cacheNull) {
+        if ($result != null || $cacheNull) {
             $this->cache->set($cacheKey, $result, $ttl);
         }
 
