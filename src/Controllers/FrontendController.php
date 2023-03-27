@@ -99,6 +99,24 @@ class FrontendController extends BaseController
     }
 
     /**
+     * @param string $url
+     * @param int $page
+     */
+    public function pageIndexAction(string $url, int $page)
+    {
+        $this->dispatcher->forward([
+            'namespace'  => KikCMSConfig::NAMESPACE_PATH_CMS_CONTROLLERS,
+            'controller' => 'frontend',
+            'action'     => 'page',
+            'params'     => [
+                'url'         => $url,
+                'existsCheck' => false,
+                'page'        => $page,
+            ],
+        ]);
+    }
+
+    /**
      * @param string $languageCode
      * @param int $pageId
      * @throws NotFoundException
@@ -211,6 +229,7 @@ class FrontendController extends BaseController
         $variables['currentUrl'] = $this->url->getRewriteUri();
         $variables['baseUrl']    = $this->url->getBaseUri();
         $variables['fullUrl']    = $this->url->getBaseUri() . ltrim($this->url->getRewriteUri(), '/');
+        $variables['urlPath']    = $urlPath;
 
         $variables['title']         = $pageLanguage->name;
         $variables['pageKey']       = $page->key;

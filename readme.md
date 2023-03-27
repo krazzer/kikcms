@@ -101,3 +101,6 @@ Now you're good to go! Test if the app is working in the browser: [https://local
 To be able to login to the CMS, make sure you create a user in the `cms_user` table, with an e-mail address and role set to `developer`.
 
 Now go to [https://localhost:9001/cms](https://localhost:9001/cms) to login (use password lost to activate your account)
+
+# How to's
+- [Pagination](resources/readme/pagination.md)
