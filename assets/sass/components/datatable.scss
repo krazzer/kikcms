@@ -440,6 +440,33 @@ body {
     > .footer {
         @include clearFix();
     }
+
+    .modal{
+        .modal-title{
+            float: left;
+        }
+
+        .modal-dialog{
+            width: 900px;
+
+            @media (max-width: $screen-sm-max) {
+                width: calc(100% - 20px);
+            }
+        }
+
+        .modal-body {
+
+            h1, h2, h3, h4, h5, h6 {
+                font-weight: 400;
+                margin-bottom: 10px;
+                margin-top: 40px;
+            }
+
+            img{
+                margin-bottom: 20px;
+            }
+        }
+    }
 }
 
 .draggedObject {
