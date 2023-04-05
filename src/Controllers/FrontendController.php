@@ -82,6 +82,11 @@ class FrontendController extends BaseController
      */
     public function pageAction(string $urlPath = null, bool $existsCheck = true): ResponseInterface
     {
+        // do not use the existingPageCache if it's disabled in the config.
+        if($existsCheck && ! $this->config->application->cacheExistingPages){
+            $existsCheck = false;
+        }
+
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
             $title       = $this->translator->tl('maintenance.title');
             $description = $this->translator->tl('maintenance.description');

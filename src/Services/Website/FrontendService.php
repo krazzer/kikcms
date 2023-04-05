@@ -55,7 +55,7 @@ class FrontendService extends Injectable
             $pageLanguage = $this->pageLanguageService->getDefault();
         }
 
-        if ( ! $pageLanguage) {
+        if ( ! $pageLanguage && $existsCheck) {
             $this->existingPageCacheService->buildCache();
         }
 
