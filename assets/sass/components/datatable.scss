@@ -326,7 +326,6 @@ body {
                     cursor: default;
 
                     td {
-                        @include noTextSelect();
                         @include thumbChild();
 
                         .highlight {

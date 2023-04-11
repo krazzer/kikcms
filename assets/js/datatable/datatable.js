@@ -325,8 +325,19 @@ var DataTable = Class.extend({
         });
 
         $rows.find('td:not(.action)').on('dblclick', function () {
+            if (window.getSelection) {window.getSelection().removeAllRanges();}
+            else if (document.selection) {document.selection.empty();}
+
             self.onRowDblClick($(this).parent());
-        });
+        })
+
+        if(this.$table.get(0)) {
+            this.$table.get(0).addEventListener('mousedown', function(event) {
+                if (event.detail > 1) {
+                    event.preventDefault();
+                }
+            }, false);
+        }
 
         var searchValue = this.getSearchField().val();
 
