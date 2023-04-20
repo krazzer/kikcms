@@ -19,10 +19,10 @@ class Json extends JsonSerializer
         }
 
         if ( ! $this->isSerializable($this->data)) {
-            return $this->data;
+            return $this->data ?: '';
         }
 
-        return json_encode($this->data, JSON_THROW_ON_ERROR);
+        return json_encode($this->data, JSON_THROW_ON_ERROR) ?: '';
     }
 
     /**
