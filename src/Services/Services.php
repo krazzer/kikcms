@@ -12,6 +12,7 @@ use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
+use KikCMS\Classes\Phalcon\Storage\Serializer\Json;
 use KikCMS\Classes\Phalcon\Validation;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Services\Cms\QueryLogService;
@@ -264,7 +265,9 @@ class Services extends BaseServices
      */
     protected function initKeyValue(): Cache
     {
-        $adapter = new Stream(new SerializerFactory, [
+        $services = ['json' => Json::class];
+
+        $adapter = new Stream(new SerializerFactory($services), [
             'defaultSerializer' => 'Json',
             'lifetime'          => pow(10, 20), //aka infinite by default
             'storageDir'        => $this->getAppConfig()->path . 'storage/keyvalue/'
