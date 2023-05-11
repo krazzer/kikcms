@@ -27,6 +27,8 @@ class TemplateVariablesBase extends WebsiteExtendable
      */
     public function getTemplateVariables(string $templateFile)
     {
+        $templateFile = str_replace('-', '', $templateFile);
+
         $methodName = 'get' . ucfirst($templateFile) . 'Variables';
 
         if( ! method_exists($this, $methodName)){
