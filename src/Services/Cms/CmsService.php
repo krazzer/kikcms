@@ -49,11 +49,13 @@ class CmsService extends Injectable
         }
 
         // remove expired password reset tokens
-        $passwordResetTokenDir = new RecursiveDirectoryIterator($this->keyValue->getAdapter()->getStorageDir());
+        $passwordResetDir = $this->keyValue->getAdapter()->getStoragePath() . PassResetConfig::PREFIX;
 
-        foreach (new RecursiveIteratorIterator($passwordResetTokenDir) as $filename => $cur) {
-            if(strstr($filename, PassResetConfig::PREFIX)){
-                if(date('U') - filemtime($filename) > PassResetConfig::LIFETIME){
+        if(is_dir($passwordResetDir)) {
+            $passwordResetTokenDir = new RecursiveDirectoryIterator($passwordResetDir);
+
+            foreach (new RecursiveIteratorIterator($passwordResetTokenDir) as $filename => $cur) {
+                if (date('U') - filemtime($filename) > PassResetConfig::LIFETIME) {
                     unlink($filename);
                 }
             }
