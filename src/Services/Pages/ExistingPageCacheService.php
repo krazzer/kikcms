@@ -12,7 +12,7 @@ class ExistingPageCacheService extends Injectable
      */
     public function buildCache()
     {
-        $links = $this->urlService->getUrls();
+        $links = $this->urlService->getUrls(true);
 
         $this->keyValue->set(CacheConfig::EXISTING_PAGE_CACHE, json_encode($links));
     }
@@ -62,5 +62,13 @@ class ExistingPageCacheService extends Injectable
     public function get404PageContent(): ?string
     {
         return $this->keyValue->get(CacheConfig::PAGE_404);
+    }
+
+    /**
+     * @return bool
+     */
+    public function cacheIsBuild(): bool
+    {
+        return $this->keyValue->has(CacheConfig::EXISTING_PAGE_CACHE);
     }
 }

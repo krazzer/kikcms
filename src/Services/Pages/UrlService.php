@@ -6,7 +6,6 @@ namespace KikCMS\Services\Pages;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\UrlConfig;
-use KikCMS\ObjectLists\PageLanguageList;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\KikCMSConfig;
@@ -82,14 +81,19 @@ class UrlService extends Injectable
 
     /**
      * @param string $urlPath
+     * @param bool $existsCheck
      * @return null|PageLanguage
      */
-    public function getPageLanguageByUrlPath(string $urlPath): ?PageLanguage
+    public function getPageLanguageByUrlPath(string $urlPath, bool $existsCheck = false): ?PageLanguage
     {
         $urlPath  = $this->removeLeadingSlash($urlPath);
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . str_replace('/', '_', $urlPath);
 
-        $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
+        $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath, $existsCheck) {
+            if ($existsCheck && $this->existingPageCacheService->exists($urlPath) === false) {
+                return null;
+            }
+
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
 
             foreach ($urlMap as $key => $possibleUrl) {
@@ -209,7 +213,7 @@ class UrlService extends Injectable
     {
         $cacheKey = CacheConfig::URL_FOR_KEY . CacheConfig::SEPARATOR . $pageKey;
 
-        if($languageCode){
+        if ($languageCode) {
             $cacheKey .= CacheConfig::SEPARATOR . $languageCode;
         }
 
@@ -266,53 +270,49 @@ class UrlService extends Injectable
 
     /**
      * Get all URLs for pages
+     * @param bool $addAliases
      * @return array
      */
-    public function getUrls(): array
+    public function getUrls(bool $addAliases = false): array
     {
-        $pageLanguages = PageLanguage::find();
+        $languages = $this->languageService->getLanguages(true);
+        $links     = [];
 
-        $links = [];
-
-        foreach ($pageLanguages as $pageLanguage) {
-            if ( ! $pageLanguage->slug) {
-                continue;
-            }
-
-            // exclude not found page
-            if($pageLanguage->page->key == KikCMSConfig::KEY_PAGE_NOT_FOUND){
-                continue;
-            }
-
-            $links[] = $this->urlService->getUrlByPageLanguage($pageLanguage);
+        foreach ($languages as $language) {
+            $languageLinks = $this->getUrlsByLangCode($language->getCode(), $addAliases);
+            $links         = array_merge($links, $languageLinks);
         }
+
+        sort($links);
 
         return $links;
     }
 
     /**
      * @param string $langCode
+     * @param bool $addAliases
      * @return array
      */
-    public function getUrlsByLangCode(string $langCode): array
+    public function getUrlsByLangCode(string $langCode, bool $addAliases = false): array
     {
+        $types = $addAliases ? [Page::TYPE_PAGE, Page::TYPE_ALIAS] : [Page::TYPE_PAGE];
+
+        $urlColumn = "CONCAT_WS('/', '', GROUP_CONCAT_EXT(pla.slug, ac.level, '/'), pl.slug)";
+
         $query = (new Builder)
-            ->from(['pl' => PageLanguage::class])
-            ->join(Page::class, 'pl.page_id = p.id', 'p')
-            ->inWhere(PageLanguage::FIELD_LANGUAGE_CODE, [$langCode])
-            ->notInWhere(Page::FIELD_TYPE, [Page::TYPE_MENU, Page::TYPE_LINK]);
+            ->columns(["IF(p.key = '" . KikCMSConfig::KEY_PAGE_DEFAULT . "', '/', " . $urlColumn . ")"])
+            ->from(['p' => Page::class])
+            ->leftJoin(Page::class, 'ac.lft < p.lft AND ac.rgt > p.rgt', 'ac')
+            ->leftJoin(PageLanguage::class, 'pla.page_id = ac.id AND pla.language_code = "' . $langCode . '"', 'pla')
+            ->leftJoin(PageLanguage::class, 'pl.page_id = IFNULL(p.alias, p.id) AND pl.language_code = "' . $langCode .
+                '"', 'pl')
+            ->inWhere('p.type', $types)
+            ->andWhere('p.key IS NULL OR p.key != :p:', ['p' => KikCMSConfig::KEY_PAGE_NOT_FOUND])
+            ->groupBy('p.id');
 
-        $pageLanguageList = $this->dbService->getObjectList($query, PageLanguageList::class);
+        dlog($query->getQuery()->getSql());
 
-        $urls = [];
-
-        foreach ($pageLanguageList as $pageLanguage) {
-            $urls[$pageLanguage->page_id] = $this->getUrlByPageLanguage($pageLanguage);
-        }
-
-        sort($urls);
-
-        return $urls;
+        return $this->dbService->getValues($query);
     }
 
     /**

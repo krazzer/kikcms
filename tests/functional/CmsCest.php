@@ -63,7 +63,7 @@ class CmsCest
     public function getUrlsWorks(FunctionalTester $I)
     {
         $I->amOnPage('/cms/get-urls/en');
-        $I->see('["\/","\/page-not-found","\/pagina-2"]');
+        $I->see('["\/","\/pagina-2"]');
     }
 
     public function generateSecurityTokenWorks(FunctionalTester $I)

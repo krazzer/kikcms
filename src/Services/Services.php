@@ -56,6 +56,7 @@ use Phalcon\Session\Manager as SessionManager;
 use Phalcon\Session\Adapter\Stream as SessionAdapter;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Db\Dialect\MySQL as SqlDialect;
 
 class Services extends BaseServices
 {
@@ -236,6 +237,27 @@ class Services extends BaseServices
     protected function initDb(): PdoAdapterInterface
     {
         $config = $this->getDbConfig()->toArray();
+
+        $dialect = new SqlDialect();
+
+        $dialect->registerCustomFunction(
+            'GROUP_CONCAT_EXT',
+            function ($dialect, $expression) {
+                $arguments = $expression['arguments'];
+                $result = sprintf(
+                    'GROUP_CONCAT(%s ORDER BY %s SEPARATOR %s)',
+                    $dialect->getSqlExpression($arguments[0]),
+                    $dialect->getSqlExpression($arguments[1]),
+                    $dialect->getSqlExpression($arguments[2]),
+                );
+
+                print_r($result . PHP_EOL);
+
+                return $result;
+            }
+        );
+
+        $config['dialectClass'] = $dialect;
 
         try {
             $db = (new PdoFactory)->load(['adapter' => $config['adapter'], 'options' => $config]);
