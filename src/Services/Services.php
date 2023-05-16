@@ -244,16 +244,13 @@ class Services extends BaseServices
             'GROUP_CONCAT_EXT',
             function ($dialect, $expression) {
                 $arguments = $expression['arguments'];
-                $result = sprintf(
+
+                return sprintf(
                     'GROUP_CONCAT(%s ORDER BY %s SEPARATOR %s)',
                     $dialect->getSqlExpression($arguments[0]),
                     $dialect->getSqlExpression($arguments[1]),
                     $dialect->getSqlExpression($arguments[2]),
                 );
-
-                print_r($result . PHP_EOL);
-
-                return $result;
             }
         );
 
