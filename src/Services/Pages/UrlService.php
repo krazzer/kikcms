@@ -310,8 +310,6 @@ class UrlService extends Injectable
             ->andWhere('p.key IS NULL OR p.key != :p:', ['p' => KikCMSConfig::KEY_PAGE_NOT_FOUND])
             ->groupBy('p.id');
 
-        dlog($query->getQuery()->getSql());
-
         return $this->dbService->getValues($query);
     }
 
