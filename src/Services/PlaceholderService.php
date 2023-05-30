@@ -147,7 +147,9 @@ class PlaceholderService extends Injectable
 
             $replaceMap[$placeholder->getPlaceholder()] = $url;
 
-            $this->cache->set($key, $url, CacheConfig::ONE_YEAR);
+            if($this->cache) {
+                $this->cache->set($key, $url, CacheConfig::ONE_YEAR);
+            }
         }
 
         return $replaceMap;
