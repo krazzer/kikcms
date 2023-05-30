@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Config\CacheConfig;
 use KikCmsCore\Services\DbService;
 use KikCMS\Classes\Frontend\Menu;
 use KikCMS\Models\Page;
@@ -54,11 +55,15 @@ class PageService extends Injectable
      */
     public function getByKey(string $key): ?Page
     {
-        $query = (new Builder)
-            ->from($this->websiteSettings->getPageClass())
-            ->where(Page::FIELD_KEY . ' = :key:', ['key' => $key]);
+        $cacheKey = CacheConfig::PAGE_FOR_KEY . CacheConfig::SEPARATOR . $key;
 
-        return $this->dbService->getObject($query);
+        return $this->cacheService->cache($cacheKey, function () use ($key) {
+            $query = (new Builder)
+                ->from($this->websiteSettings->getPageClass())
+                ->where(Page::FIELD_KEY . ' = :key:', ['key' => $key]);
+
+            return $this->dbService->getObject($query);
+        }, CacheConfig::ONE_DAY, true);
     }
 
     /**

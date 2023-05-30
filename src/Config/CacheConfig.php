@@ -21,6 +21,7 @@ class CacheConfig
 
     const PAGE_LANGUAGE_FOR_URL = 'pageLanguageForUrl';
     const PAGE_LANGUAGE_FOR_KEY = 'pageLanguageForKey';
+    const PAGE_FOR_KEY          = 'pageForKey';
     const OTHER_LANG_MAP        = 'otherLangMap';
     const URL                   = 'url';
     const URL_FOR_KEY           = 'urlForKey';
