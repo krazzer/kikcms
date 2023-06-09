@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace KikCMS\Classes\Phalcon;
 
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
-use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
@@ -41,6 +40,7 @@ use KikCMS\Services\Finder\FinderService;
 use KikCMS\Services\Generator\GeneratorService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\MailService;
+use KikCMS\Services\Model\PreloadService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\PageCache\PageCacheService;
@@ -87,7 +87,6 @@ use Swift_Mailer;
  * @property AnalyticsService analyticsService
  * @property BetaAnalyticsDataClient analyticsData
  * @property CliService cliService
- * @property Google_Service_AnalyticsReporting analytics
  * @property AssetService assetService
  * @property BaseServices baseServices
  * @property ByteService byteService
@@ -136,6 +135,7 @@ use Swift_Mailer;
  * @property PagesDataTableService pagesDataTableService
  * @property PaginateListService paginateListService
  * @property Permission $permission
+ * @property PreloadService preloadService
  * @property PlaceholderService placeholderService
  * @property QueryService queryService
  * @property RearrangeService rearrangeService
