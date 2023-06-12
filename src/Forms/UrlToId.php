@@ -41,6 +41,11 @@ class UrlToId extends FieldTransformer
             return $value;
         }
 
+        // it contains an anchor, so store as whole link
+        if(strstr($value, '#')){
+            return $value;
+        }
+
         if ($pageLanguage = $this->urlService->getPageLanguageByUrlPath($value)) {
             return $pageLanguage->getPageId();
         }
