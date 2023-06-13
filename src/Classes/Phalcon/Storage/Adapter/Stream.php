@@ -34,7 +34,12 @@ class Stream extends \Phalcon\Cache\Adapter\Stream
         // add to prefix to get the right directory from Str::dirFromFile
         $prefixDir = $prefix . (strlen($prefix) % 2 ? ' ' : '  ');
 
-        $dir      = $this->getStoragePath() . Str::dirFromFile($prefixDir);
+        $dir = $this->getStoragePath() . Str::dirFromFile($prefixDir);
+
+        if ( ! file_exists($dir)) {
+            return [];
+        }
+
         $iterator = new RecursiveDirectoryIterator($dir);
         $keys     = [];
 
