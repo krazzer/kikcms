@@ -4,6 +4,7 @@ namespace KikCMS\Services\Model;
 
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCmsCore\Classes\Model;
+use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Classes\ObjectMap;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
@@ -11,18 +12,18 @@ use Phalcon\Mvc\Model\Relation;
 class PreloadService extends Injectable
 {
     /**
-     * @param ObjectMap $objectMap
+     * @param ObjectList|array $objects
      * @param array|string $relationAlias
      * @param callable|string|null $pathToChild
      * @param null $order
      * @return void
      */
-    public function preload(ObjectMap $objectMap, $relationAlias, $pathToChild = null, $order = null)
+    public function preload($objects, $relationAlias, $pathToChild = null, $order = null)
     {
         $idList   = [];
         $relation = null;
 
-        foreach ($objectMap as $object) {
+        foreach ($objects as $object) {
             if( ! $object = $this->getObject($object, $pathToChild)){
                 continue;
             }
@@ -45,7 +46,7 @@ class PreloadService extends Injectable
 
         $relatedObjectMap = $this->getRelatedObjects($idList, $relation, $order);
 
-        foreach ($objectMap as $object) {
+        foreach ($objects as $object) {
             $field  = $relation->getFields();
 
             if( ! $object = $this->getObject($object, $pathToChild)){
