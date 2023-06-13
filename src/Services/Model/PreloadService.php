@@ -14,15 +14,18 @@ class PreloadService extends Injectable
      * @param ObjectMap $objectMap
      * @param array|string $relationAlias
      * @param callable|string|null $pathToChild
+     * @param null $order
      * @return void
      */
-    public function preload(ObjectMap $objectMap, $relationAlias, $pathToChild = null)
+    public function preload(ObjectMap $objectMap, $relationAlias, $pathToChild = null, $order = null)
     {
         $idList   = [];
         $relation = null;
 
         foreach ($objectMap as $object) {
-            $object = $this->getObject($object, $pathToChild);
+            if( ! $object = $this->getObject($object, $pathToChild)){
+                continue;
+            }
 
             if ( ! $relation) {
                 $relation = $this->modelService->getRelation($object, $relationAlias);
@@ -40,17 +43,24 @@ class PreloadService extends Injectable
             return;
         }
 
-        $relatedObjectMap = $this->getRelatedObjects($idList, $relation);
+        $relatedObjectMap = $this->getRelatedObjects($idList, $relation, $order);
 
         foreach ($objectMap as $object) {
             $field  = $relation->getFields();
-            $object = $this->getObject($object, $pathToChild);
+
+            if( ! $object = $this->getObject($object, $pathToChild)){
+                continue;
+            }
 
             if ( ! $relationId = $object->$field) {
                 continue;
             }
 
-            $object->$relationAlias = null;
+            if($relation->getType() == Relation::HAS_MANY) {
+                $object->$relationAlias = new ObjectMap;
+            } else {
+                $object->$relationAlias = null;
+            }
 
             if ( ! array_key_exists($relationId, $relatedObjectMap)) {
                 continue;
@@ -58,16 +68,21 @@ class PreloadService extends Injectable
 
             $relatedObject = $relatedObjectMap[$relationId];
 
-            $object->$relationAlias = $relatedObject;
+            if($relation->getType() == Relation::HAS_MANY){
+                $object->$relationAlias = new ObjectMap($relatedObject);
+            } else {
+                $object->$relationAlias = $relatedObject;
+            }
         }
     }
 
     /**
      * @param array $idMap
      * @param Relation $relation
+     * @param null $order
      * @return Model[]
      */
-    private function getRelatedObjects(array $idMap, Relation $relation): array
+    private function getRelatedObjects(array $idMap, Relation $relation, $order = null): array
     {
         $keyField = $relation->getReferencedFields();
 
@@ -75,12 +90,22 @@ class PreloadService extends Injectable
             ->from($relation->getReferencedModel())
             ->inWhere($keyField, $idMap);
 
+        if($order){
+            $query->orderBy($order);
+        }
+
         $objects = $this->dbService->getObjects($query);
 
         $objectMap = [];
 
-        foreach ($objects as $object) {
-            $objectMap[$object->$keyField] = $object;
+        if($relation->getType() == Relation::HAS_MANY){
+            foreach ($objects as $object) {
+                $objectMap[$object->$keyField][] = $object;
+            }
+        } else {
+            foreach ($objects as $object) {
+                $objectMap[$object->$keyField] = $object;
+            }
         }
 
         return $objectMap;
@@ -89,9 +114,9 @@ class PreloadService extends Injectable
     /**
      * @param object $object
      * @param callable|string|null $pathToChild
-     * @return object
+     * @return object|null
      */
-    private function getObject(object $object, $pathToChild = null): object
+    private function getObject(object $object, $pathToChild = null): ?object
     {
         if (is_callable($pathToChild)) {
             return $pathToChild($object);
