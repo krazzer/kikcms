@@ -482,6 +482,7 @@ return [
             'StringLengthMin'     => "Veld :label moet tenminste :min karakters lang zijn",
             'Callback'            => "Het veld :label moet gelijk zijn aan de callback functie",
             'Ip'                  => "Het veld :label moet een geldig IP adres zijn",
+            'IBAN'                => "Ongeldige IBAN, voorbeeld: NL99BANK1234567890",
 
             'Default'          => 'De waarde van het veld :label is niet geldig',
             'passwordMismatch' => 'Wachtwoorden moeten overeenkomen',

@@ -473,6 +473,7 @@ return [
             'StringLengthMin'     => "Field :label must be at least :min characters long",
             'Callback'            => "Field :label must match the callback function",
             'Ip'                  => "Field :label must be a valid IP address",
+            'IBAN'                => "Invalid IBAN, example: GB33BANK20201555555555",
 
             'Default'          => 'The value of the field :label is not valid',
             'passwordMismatch' => 'Passwords must match',
