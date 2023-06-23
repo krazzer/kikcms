@@ -60,8 +60,12 @@ class PlaceholderService extends Injectable
             $args = explode(CacheConfig::SEPARATOR, $key);
             $type = array_shift($args);
 
-            $className    = PlaceholderConfig::CLASS_MAP[$type];
-            $mapClassName = PlaceholderConfig::MAP_CLASS_MAP[$type];
+            $className    = PlaceholderConfig::CLASS_MAP[$type] ?? null;
+            $mapClassName = PlaceholderConfig::MAP_CLASS_MAP[$type] ?? null;
+
+            if( ! $className){
+                continue;
+            }
 
             if ( ! $placeholderTable->has($type)) {
                 $placeholderTable->add(new $mapClassName, $type);
