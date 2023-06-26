@@ -270,11 +270,13 @@
                 <!-- START CENTERED WHITE CONTAINER -->
                 <span class="preheader">{{ subject }}</span>
 
-                <div align="center">
-                    <span class="logo">
-                        <img src="{{ url(logo) }}" style="max-width: 400px; height: auto;" alt="Logo" />
-                    </span>
-                </div>
+                {% if not hideBranding %}
+                    <div align="center">
+                        <span class="logo">
+                            <img src="{{ url(logo) }}" style="max-width: 400px; height: auto;" alt="Logo" />
+                        </span>
+                    </div>
+                {% endif %}
 
                 <table class="main">
 
@@ -326,20 +328,22 @@
                     <!-- END MAIN CONTENT AREA -->
                 </table>
 
-                <!-- START FOOTER -->
-                <div class="footer">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td class="content-block">
-                                <span class="apple-link">{{ address }}</span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                {% if not hideBranding %}
+                    <!-- START FOOTER -->
+                    <div class="footer">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="content-block">
+                                    <span class="apple-link">{{ address }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!-- END FOOTER -->
+                {% endif %}
 
-                <!-- END FOOTER -->
-
-                <!-- END CENTERED WHITE CONTAINER --></div>
+                <!-- END CENTERED WHITE CONTAINER -->
+            </div>
         </td>
         <td>&nbsp;</td>
     </tr>

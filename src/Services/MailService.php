@@ -197,6 +197,8 @@ class MailService extends Injectable
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
 
+        $parameters['hideBranding'] = $this->config->application->hideServiceMailBranding;
+
         return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments, $from);
     }
 

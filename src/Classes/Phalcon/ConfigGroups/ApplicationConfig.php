@@ -17,6 +17,7 @@ use Phalcon\Config;
  * @property string showCliOutput
  * @property bool storeMailForms
  * @property bool pageCache
+ * @property bool hideServiceMailBranding
  */
 class ApplicationConfig extends Config
 {
