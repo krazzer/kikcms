@@ -49,7 +49,7 @@ class FullPageService extends Injectable
                 $content = $pageFieldTable[$page->getRealId()] ?? [];
                 $url     = $this->urlService->getUrlByPageLanguage($pageLang, $page);
 
-                $fullPageMap->add(new FullPage($page, $pageLang, $content, $url));
+                $fullPageMap->add(new FullPage($page, $pageLang, $content, $url), $page->getId());
             }
         }
 
