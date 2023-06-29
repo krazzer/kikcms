@@ -165,6 +165,19 @@ class FrontendHelper extends Injectable
     }
 
     /**
+     * Override this method to add html inside the ul tag of a menu
+     *
+     * @param int $parentId
+     * @param Menu $menu
+     * @param string $menuOutput
+     * @return string
+     */
+    protected function addToMenuOutput(int $parentId, Menu $menu, string $menuOutput): string
+    {
+        return $menuOutput;
+    }
+
+    /**
      * @param int $parentId
      * @param Menu $menu
      * @return string
@@ -187,6 +200,8 @@ class FrontendHelper extends Injectable
         if ( ! $menuOutput) {
             return '';
         }
+
+        $menuOutput = $this->addToMenuOutput($parentId, $menu, $menuOutput);
 
         return '<ul class="' . $menu->getUlClass() . '">' . $menuOutput . '</ul>';
     }
