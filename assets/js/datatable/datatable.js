@@ -217,10 +217,10 @@ var DataTable = Class.extend({
 
         // unbind any previously bindings for this instance
         $(window).unbind('keydown.' + this.renderableInstance);
-        $(window).unbind('keypress.' + this.renderableInstance);
+        $(window).unbind('keyup.' + this.renderableInstance);
 
         $(window).bind('keydown.' + this.renderableInstance, keyDownEvent);
-        $(window).bind('keypress.' + this.renderableInstance, keyPressEvent);
+        $(window).bind('keyup.' + this.renderableInstance, keyPressEvent);
     },
 
     initLanguageSwitch: function () {
