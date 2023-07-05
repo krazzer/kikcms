@@ -19,6 +19,7 @@ return [
         ],
         'loading'         => 'Bezig met laden...',
         'close'           => 'Sluiten',
+        'amount'          => 'Aantal',
     ],
 
     'contentTypes' => [

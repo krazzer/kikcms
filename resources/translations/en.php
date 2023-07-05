@@ -19,6 +19,7 @@ return [
         ],
         'loading'         => 'Loading...',
         'close'           => 'Close',
+        'amount'          => 'Amount',
     ],
 
     'contentTypes' => [

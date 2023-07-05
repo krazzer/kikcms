@@ -12,10 +12,14 @@ var SelectDataTable = DataTable.extend({
     },
 
     getSelectionFromInput: function () {
-        var selection = [];
+        var selection = this.isNumeric() ? {} : [];
 
         if (this.getInputField().val()) {
             selection = JSON.parse(this.getInputField().val());
+        }
+
+        if(Array.isArray(selection) && this.isNumeric()){
+            selection = {};
         }
 
         return selection;
@@ -24,8 +28,10 @@ var SelectDataTable = DataTable.extend({
     initTable: function () {
         this.$.initTable.call(this);
 
-        this.selectCheckBoxes();
+        this.fill();
+
         this.initCheckBoxes();
+        this.initAmountBoxes();
     },
 
     initCheckBoxes: function () {
@@ -51,9 +57,33 @@ var SelectDataTable = DataTable.extend({
         });
     },
 
+    initAmountBoxes: function () {
+        var self = this;
+
+        this.getDataTable().find('td.amount input').change(function () {
+            var $amountInput = $(this);
+
+            var id        = $amountInput.parent().parent().attr('data-id');
+            var selection = self.getSelectionFromInput();
+            var amount    = $amountInput.val();
+
+            if (amount) {
+                selection[id] = amount;
+            } else {
+                delete selection[id];
+            }
+
+            self.getInputField().val(JSON.stringify(selection));
+        });
+    },
+
+    isNumeric: function (){
+        return !! this.getDataTable().find('td.amount').length;
+    },
+
     onRowClick: function ($row) {
         var $checkBox = $row.find('.select input');
-        $checkBox.prop("checked", !$checkBox.prop("checked"));
+        $checkBox.prop("checked", ! $checkBox.prop("checked"));
         $checkBox.change();
     },
 
@@ -61,14 +91,20 @@ var SelectDataTable = DataTable.extend({
         // do nothing
     },
 
-    selectCheckBoxes: function () {
+    fill: function () {
         var self      = this;
         var selection = this.getSelectionFromInput();
 
         $.each(selection, function (index, value) {
             self.getDataTable().find('.table tr[data-id=' + value + ']').each(function () {
                 $(this).find('.select input').prop("checked", true);
-            })
+
+            });
+
+            self.getDataTable().find('.table tr[data-id=' + index + ']').each(function () {
+                $(this).find('.amount input').val(value);
+
+            });
         });
     }
 });

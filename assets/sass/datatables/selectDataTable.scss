@@ -3,6 +3,7 @@
     .table{
 
         td.select{
+            width: 44px;
 
             input{
                 height: 14px;
@@ -10,6 +11,17 @@
                 display: block;
                 margin: 0;
                 pointer-events: none;
+            }
+        }
+
+        td.amount{
+            width: 100px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+
+            input{
+                height: 28px;
+                padding: 7px;
             }
         }
     }

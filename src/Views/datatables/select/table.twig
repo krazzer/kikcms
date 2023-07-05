@@ -1,9 +1,15 @@
 {%- extends '@kikcms/datatable/table.twig' -%}
 
 {% block extraColumns %}
-    <td class="select">
-        <input type="checkbox" />
-    </td>
+    {% if self.isNumeric %}
+        <td class="amount">
+            <input class="form-control" type="text" name="amount" placeholder="{{ tl('cms.amount') }}" maxlength="6"/>
+        </td>
+    {% else %}
+        <td class="select">
+            <input type="checkbox"/>
+        </td>
+    {% endif %}
 {% endblock %}
 
 {% block actionEditColumn '' %}

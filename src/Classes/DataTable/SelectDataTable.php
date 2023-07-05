@@ -8,7 +8,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 
 /**
- * A DataTable used for selecting it's results
+ * A DataTable used for selecting its results
  */
 abstract class SelectDataTable extends DataTable
 {
@@ -20,6 +20,9 @@ abstract class SelectDataTable extends DataTable
 
     /** @inheritdoc */
     public $jsClass = 'SelectDataTable';
+
+    /** @var bool set to true if you want to store amounts instead of only ids */
+    protected bool $numeric = false;
 
     /**
      * @inheritdoc
@@ -46,8 +49,8 @@ abstract class SelectDataTable extends DataTable
     }
 
     /**
-     * Update the given query so it adds a column that is 1 if the row is selected, 0 if it's not
-     * It will then add a orderBy so it will be ordered by the new field descending.
+     * Update the given query, so it adds a column that is 1 if the row is selected, 0 if it's not
+     * It will then add a orderBy, so it will be ordered by the new field descending.
      *
      * By doing so the selected items will be shown first in the DataTable
      *
@@ -75,5 +78,13 @@ abstract class SelectDataTable extends DataTable
         } else {
             $query->orderBy('dataTableSelectIds DESC, ' . $query->getOrderBy());
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNumeric(): bool
+    {
+        return $this->numeric;
     }
 }
