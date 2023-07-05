@@ -69,6 +69,9 @@ abstract class DataTable extends Renderable
     /** @var string|null */
     protected $helpText = null;
 
+    /** @var string|null */
+    protected $helpTextTitle = null;
+
     /** @var Filter[] */
     protected $customFilters = [];
 
@@ -396,6 +399,14 @@ abstract class DataTable extends Renderable
     public function getHelpText(): ?string
     {
         return $this->helpText;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHelpTextTitle(): ?string
+    {
+        return $this->helpTextTitle ?: ucfirst($this->getLabels()[1]);
     }
 
     /**
