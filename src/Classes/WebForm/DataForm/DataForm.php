@@ -256,7 +256,6 @@ abstract class DataForm extends WebForm
         }
 
         if ($saveSuccess) {
-            /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->saveSuccessAction($isNew);
         } else {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
@@ -361,6 +360,19 @@ abstract class DataForm extends WebForm
      */
     protected function onSave()
     {
+    }
+
+    /**
+     * Re-initializes the form
+     */
+    protected function reInitializeForm()
+    {
+        $this->fieldMap = new FieldMap();
+
+        $this->tabs = [];
+        $this->keys = [];
+
+        $this->initializeForm();
     }
 
     /**
@@ -521,18 +533,5 @@ abstract class DataForm extends WebForm
         }
 
         return $this->fieldTransformers[$key]->toStorage($value);
-    }
-
-    /**
-     * Re-initializes the form
-     */
-    private function reInitializeForm()
-    {
-        $this->fieldMap = new FieldMap();
-
-        $this->tabs = [];
-        $this->keys = [];
-
-        $this->initializeForm();
     }
 }
