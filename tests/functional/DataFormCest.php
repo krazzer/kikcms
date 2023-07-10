@@ -57,7 +57,7 @@ class DataFormCest
         $I->assertEquals($testRow->select, 1);
         $I->assertEquals($testRow->date, '2020-10-30 00:00:00');
         $I->assertEquals($testRow->multicheckbox, '["1"]');
-        $I->assertEquals($testRow->datatableselect, '["1"]');
+        $I->assertEquals($testRow->datatableselect, '[1]');
         $I->assertEquals($testRow->textarea, 6);
         $I->assertEquals($testRow->hidden, 7);
         $I->assertEquals($testRow->autocomplete, 8);
