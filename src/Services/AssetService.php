@@ -19,15 +19,25 @@ class AssetService extends Injectable
     {
         $dontStartWithList = ['//', 'https://', 'http://'];
 
-        foreach ($dontStartWithList as $dontStartWith){
-            if(str_startswith($file, $dontStartWith)){
+        foreach ($dontStartWithList as $dontStartWith) {
+            if (str_startswith($file, $dontStartWith)) {
                 return $file;
             }
         }
 
         $publicFolder = $this->config->application->path . $this->config->application->publicFolder;
+        $filePath     = $publicFolder . DIRECTORY_SEPARATOR . $file;
 
-        return $file . '?v=' . filemtime($publicFolder . DIRECTORY_SEPARATOR . $file);
+        if ($this->config->isDev()) {
+            $devFilePath = $publicFolder . DIRECTORY_SEPARATOR . 'build' . DIRECTORY_SEPARATOR . $file;
+
+            if(file_exists($devFilePath)){
+                $filePath = $devFilePath;
+                $file = 'build' . DIRECTORY_SEPARATOR . $file;
+            }
+        }
+
+        return $file . '?v=' . filemtime($filePath);
     }
 
     /**
