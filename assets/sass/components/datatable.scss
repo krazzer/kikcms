@@ -31,7 +31,9 @@ body {
         background-color: rgba(200,200,200,.6);
         opacity: 0;
         z-index: $zIndexWindowLevel0;
-        transition: opacity 0.3s;
+        transition: opacity 0.5s;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
     }
 
     .datatableThumbHoverContainer {
@@ -64,7 +66,6 @@ body {
     overflow: hidden;
 
     > #menu, > #main {
-        @include blur(6);
         @include noTextSelect();
         pointer-events: none;
     }
@@ -285,6 +286,7 @@ body {
                 color: $colorWhite;
                 background-color: $colorPink;
                 border-color: $colorPink;
+                z-index: 0;
             }
         }
     }
