@@ -65,6 +65,10 @@ abstract class SelectDataTable extends DataTable
         $selectedIds = $this->getFilters()->getSelectedValues();
         $field       = $this->getAliasedTableKey();
 
+        if($this->isNumeric()){
+            $selectedIds = array_keys($selectedIds);
+        }
+
         if ($selectedIds) {
             $selectedColumn = 'IF(' . $field . ' IN(' . implode(',', $selectedIds) . '), 1, 0) AS dataTableSelectIds';
         } else {
@@ -76,7 +80,11 @@ abstract class SelectDataTable extends DataTable
         if (is_array($query->getOrderBy())) {
             $query->orderBy(array_merge(['dataTableSelectIds DESC'], $query->getOrderBy()));
         } else {
-            $query->orderBy('dataTableSelectIds DESC, ' . $query->getOrderBy());
+            if($orderBy = $query->getOrderBy()){
+                $query->orderBy('dataTableSelectIds DESC, ' . $orderBy);
+            } else {
+                $query->orderBy('dataTableSelectIds DESC');
+            }
         }
     }
 
