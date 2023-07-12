@@ -9,6 +9,8 @@ use Phalcon\Config;
  * @property string adapter
  * @property string host
  * @property string charset
+ * @property string username
+ * @property string password
  */
 class DatabaseConfig extends Config
 {
