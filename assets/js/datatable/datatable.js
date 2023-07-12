@@ -98,7 +98,7 @@ var DataTable = Class.extend({
             action: '/cms/datatable/uploadImages',
             fileTypes: KikCMS.allowedExt,
             addParametersBeforeUpload: function (formData) {
-                $.each(self.addActionParameters({}), function (key, value){
+                $.each(self.addActionParameters({}), function (key, value) {
                     formData.append(key, value);
                 });
 
@@ -283,12 +283,12 @@ var DataTable = Class.extend({
         var self  = this;
         var $rows = this.$table.find('tbody tr');
 
-        if(this.madeSpaceForButtonsOnce){
+        if (this.madeSpaceForButtonsOnce) {
             self.makeSpaceForButtons();
         }
 
-        $rows.hover(function (){
-            if( ! self.madeSpaceForButtonsOnce) {
+        $rows.hover(function () {
+            if ( ! self.madeSpaceForButtonsOnce) {
                 self.makeSpaceForButtons();
             }
         });
@@ -325,19 +325,8 @@ var DataTable = Class.extend({
         });
 
         $rows.find('td:not(.action)').on('dblclick', function () {
-            if (window.getSelection) {window.getSelection().removeAllRanges();}
-            else if (document.selection) {document.selection.empty();}
-
             self.onRowDblClick($(this).parent());
         })
-
-        if(this.$table.get(0)) {
-            this.$table.get(0).addEventListener('mousedown', function(event) {
-                if (event.detail > 1) {
-                    event.preventDefault();
-                }
-            }, false);
-        }
 
         var searchValue = this.getSearchField().val();
 
@@ -374,6 +363,7 @@ var DataTable = Class.extend({
         this.initImageThumbs();
         this.updateToolbar();
         this.initTableCheckBoxes();
+        this.preventTableDoubleClickTextSelect();
 
         if (typeof SortControl !== 'undefined') {
             this.initSort();
@@ -390,16 +380,16 @@ var DataTable = Class.extend({
         }).change(function () {
             var $checkbox = $(this);
             var checked   = $checkbox.is(":checked");
-            var ids    = $checkbox.parent().parent().attr('data-id');
+            var ids       = $checkbox.parent().parent().attr('data-id');
             var column    = $checkbox.attr('data-col');
 
             $checkbox.attr('readonly', 'readonly');
 
-            if(self.getSelectedIds().length > 1 && self.getSelectedIds().indexOf(ids) !== -1){
+            if (self.getSelectedIds().length > 1 && self.getSelectedIds().indexOf(ids) !== -1) {
                 ids = self.getSelectedIds();
 
-                $.each(self.getSelectedIds(), function (index, id){
-                    var $row = self.$table.find('[data-id=' + id + ']');
+                $.each(self.getSelectedIds(), function (index, id) {
+                    var $row         = self.$table.find('[data-id=' + id + ']');
                     var $subCheckbox = $row.find('[data-col="' + column + '"]');
 
                     $subCheckbox.prop('checked', checked);
@@ -606,7 +596,18 @@ var DataTable = Class.extend({
     actionSave: function (closeWindow) {
         var self    = this;
         var $window = this.getWindow();
-        var params  = this.getFormGroups().serializeObject();
+
+        // save select datatables
+        this.getForm().find('.type-selectDataTable > .datatable').each(function () {
+            var $dataTable      = $(this);
+            var id              = $dataTable.attr('id');
+            var selectDataTable = KikCMS.renderables[id];
+
+            // trigger change so the focused field is saved
+            selectDataTable.getAmountInputFields().filter(':focus').change();
+        });
+
+        var params = this.getFormGroups().serializeObject();
 
         // if a file has been selected, then auto-pick that file
         var $selectedFile = $window.find('.file-picker:visible .file.selected');
@@ -726,14 +727,14 @@ var DataTable = Class.extend({
     /**
      * Make space for action buttons in a row if the last item is a checkbox (to be able to still check the checkbox)
      */
-    makeSpaceForButtons: function (){
-        this.getDataTable().find('.table .actions + input[type=checkbox]').each(function (){
+    makeSpaceForButtons: function () {
+        this.getDataTable().find('.table .actions + input[type=checkbox]').each(function () {
             var $checkbox = $(this);
-            var $actions = $(this).prev();
+            var $actions  = $(this).prev();
 
             var actionsWidth = $actions.outerWidth();
 
-            if($checkbox.parent().outerWidth() < actionsWidth + 40) {
+            if ($checkbox.parent().outerWidth() < actionsWidth + 40) {
                 $checkbox.css('marginRight', actionsWidth - 5);
             }
         });
@@ -775,7 +776,7 @@ var DataTable = Class.extend({
                 var indexCurrent = this.getRows().index($row);
                 var indexLast    = this.getRows().index(this.lastSelectedRow);
 
-                if(indexCurrent > indexLast){
+                if (indexCurrent > indexLast) {
                     this.lastSelectedRow.nextUntil($row).add($row).addClass('selected');
                 } else {
                     $row.nextUntil(this.lastSelectedRow).add($row).addClass('selected');
@@ -791,6 +792,12 @@ var DataTable = Class.extend({
     },
 
     onRowDblClick: function ($row) {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else if (document.selection) {
+            document.selection.empty();
+        }
+
         var id = $row.find('input[name=id]').val();
         this.actionEdit(id);
     },
@@ -979,6 +986,16 @@ var DataTable = Class.extend({
      */
     isSubDataTable: function () {
         return this.getDataTable().parents('.dataTableWindow').length >= 1;
+    },
+
+    preventTableDoubleClickTextSelect: function () {
+        if (this.$table.get(0)) {
+            this.$table.get(0).addEventListener('mousedown', function (event) {
+                if (event.detail > 1) {
+                    event.preventDefault();
+                }
+            }, false);
+        }
     },
 
     /**

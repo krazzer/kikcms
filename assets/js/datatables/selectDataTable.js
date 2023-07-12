@@ -25,6 +25,13 @@ var SelectDataTable = DataTable.extend({
         return selection;
     },
 
+    /**
+     * @returns {*}
+     */
+    getAmountInputFields: function (){
+        return this.getDataTable().find('td.amount input');
+    },
+
     initTable: function () {
         this.$.initTable.call(this);
 
@@ -60,7 +67,7 @@ var SelectDataTable = DataTable.extend({
     initAmountBoxes: function () {
         var self = this;
 
-        this.getDataTable().find('td.amount input').change(function () {
+        this.getAmountInputFields().change(function () {
             var $amountInput = $(this);
 
             var id        = $amountInput.parent().parent().attr('data-id');
@@ -106,5 +113,9 @@ var SelectDataTable = DataTable.extend({
 
             });
         });
+    },
+
+    preventTableDoubleClickTextSelect: function (){
+        // do nothing
     }
 });
