@@ -122,10 +122,11 @@ class MailService extends Injectable
      * @param array $parameters
      * @param array|Swift_Attachment $attachments
      * @param null|array|string $from
+     * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
-     * @throws Exception
      */
-    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [], array $attachments = [], $from = null): int
+    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [],
+                             array $attachments = [], $from = null, bool $bcc = false): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -142,9 +143,14 @@ class MailService extends Injectable
 
         $message = $this->createMessage()
             ->setFrom($from)
-            ->setTo($to)
             ->setSubject($subject)
             ->setBody($htmlBody, 'text/html');
+
+        if($bcc){
+            $message->setBcc($to);
+        } else {
+            $message->setTo($to);
+        }
 
         if ($plainTextBody = $parameters['plainTextBody'] ?? null) {
             $message->addPart($plainTextBody, 'text/plain');
@@ -173,13 +179,16 @@ class MailService extends Injectable
      * @param array $parameters
      * @param array $attachments
      * @param null|array|string $from
+     * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
+     * @throws Exception
      */
-    public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [], $from = null): int
+    public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [],
+                                 $from = null, bool $bcc = false): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
-        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments, $from);
+        return $this->sendMail($to, $subject, $body, '@kikcms/mail/default', $parameters, $attachments, $from, $bcc);
     }
 
     /**
