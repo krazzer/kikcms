@@ -26,6 +26,9 @@
                     <a class="menu-item{{ class }}" href="{{ url(menuItem.route) }}"
                        title="{{ id == 'logout' ? tl('menu.username', {'email' : userEmail}) }}" target="{{ target }}">
                         {{ menuItem.label }}
+                        {% if menuItem.badge %}
+                            <span class="badge badge-secondary">{{ menuItem.badge }}</span>
+                        {% endif %}
                     </a>
                 {% endfor %}
             </div>

@@ -55,6 +55,12 @@ $menuBackGroundColor: $superLightGray;
                 background-color: $pinkHover;
             }
         }
+
+        .badge{
+            position: absolute;
+            margin-left: 3px;
+            margin-top: -2px;
+        }
     }
 
     @media #{$lowerThanDesktop} {

@@ -8,16 +8,19 @@ namespace KikCMS\Objects;
 class CmsMenuItem
 {
     /** @var string */
-    private $id;
+    private string $id;
 
     /** @var string */
-    private $route;
+    private string $route;
 
     /** @var string */
-    private $label;
+    private string $label;
 
     /** @var bool */
-    private $targetBlank = false;
+    private bool $targetBlank = false;
+
+    /** @var int */
+    private int $badge = 0;
 
     /**
      * @param string $id
@@ -100,6 +103,24 @@ class CmsMenuItem
     public function setTargetBlank(bool $targetBlank): CmsMenuItem
     {
         $this->targetBlank = $targetBlank;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBadge(): int
+    {
+        return $this->badge;
+    }
+
+    /**
+     * @param int $badge
+     * @return CmsMenuItem
+     */
+    public function setBadge(int $badge): CmsMenuItem
+    {
+        $this->badge = $badge;
         return $this;
     }
 }
