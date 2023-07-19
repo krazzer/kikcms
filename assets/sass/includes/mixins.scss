@@ -28,7 +28,7 @@
 
     &:before, &:after {
         position: absolute;
-        left: ($size / 2) + px;
+        left: calc($size / 2) + px;
         height: ($size) + px;
         content: ' ';
         width: 1px;
