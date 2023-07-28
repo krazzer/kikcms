@@ -52,6 +52,7 @@ class CacheService extends Injectable
         $this->cacheService->clear(CacheConfig::getUrlKeyForId($page->getId()));
         $this->cacheService->clear(CacheConfig::MENU);
         $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
+        $this->cacheService->clear(CacheConfig::PAGE_FOR_KEY);
     }
 
     /**
