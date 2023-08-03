@@ -27,7 +27,8 @@
         "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
         "kiksaus/kikcms-core": "dev-master",
-        "google/analytics-data": "^0.8.4"
+        "google/analytics-data": "^0.8.4",
+        "symfony/var-dumper": "^5.4"
     },
     "autoload": {
         "psr-4": {
