@@ -45,6 +45,6 @@ abstract class Controller extends Injectable implements ControllerInterface
 
         $globalParameters['helper'] = $this->frontendHelper;
 
-        return $this->view($view, $globalParameters + $parameters, $statusCode);
+        return $this->view($view, $parameters + $globalParameters, $statusCode);
     }
 }
