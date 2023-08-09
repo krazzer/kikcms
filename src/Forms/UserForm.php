@@ -7,7 +7,7 @@ use KikCMS\Classes\Phalcon\Validator\NewUniqueness;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Models\User;
 use KikCMS\Services\Cms\CmsService;
-use Phalcon\Validation\Validator\Email;
+use Phalcon\Filter\Validation\Validator\Email;
 
 /**
  * @property CmsService $cmsService

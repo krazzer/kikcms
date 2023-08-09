@@ -5,9 +5,9 @@ namespace KikCMS\Forms;
 
 use KikCMS\Classes\Permission;
 use KikCMS\Models\Page;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\StringLength;
 
 class LinkForm extends PageForm
 {

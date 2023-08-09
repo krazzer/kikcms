@@ -7,14 +7,14 @@ namespace KikCMS\Classes\Phalcon;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
 use Phalcon\Messages\Messages;
-use Phalcon\Validation\Validator\File\AbstractFile;
-use Phalcon\Validation\ValidatorCompositeInterface;
-use Phalcon\Validation\ValidatorInterface;
+use Phalcon\Filter\Validation\Validator\File\AbstractFile;
+use Phalcon\Filter\Validation\ValidatorCompositeInterface;
+use Phalcon\Filter\Validation\ValidatorInterface;
 
 /**
  * @property Translator $translator
  */
-class Validation extends \Phalcon\Validation
+class Validation extends \Phalcon\Filter\Validation
 {
     /**
      * @inheritDoc

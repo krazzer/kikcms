@@ -6,8 +6,8 @@ use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Models\User;
 use KikCMS\Services\MailService;
 use KikCMS\Services\UserService;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Email;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Email;
 
 /**
  * @property UserService $userService

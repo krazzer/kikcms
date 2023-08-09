@@ -77,7 +77,7 @@ class ErrorService extends Injectable
 
         http_response_code(500);
 
-        if ($this->request->isAjax() && ! $isProduction) {
+        if (@$this->request->isAjax() && ! $isProduction) {
             return '500content';
         }
 
@@ -91,17 +91,17 @@ class ErrorService extends Injectable
      */
     public function getResponse(string $errorType, array $parameters = []): ResponseInterface
     {
-        $title       = $this->translator->tl('error.' . $errorType . '.title');
-        $description = $this->translator->tl('error.' . $errorType . '.description', $parameters);
+        $title       = @$this->translator->tl('error.' . $errorType . '.title');
+        $description = @$this->translator->tl('error.' . $errorType . '.description', $parameters);
 
-        if ($this->request->isAjax() && $this->config->isProd()) {
+        if (@$this->request->isAjax() && $this->config->isProd()) {
             return $this->response->setJsonContent(['title' => $title, 'description' => $description]);
         } else {
-            if($this->config->isProd()){
-                return $this->frontendService->getMessageResponse($title, $description);
+            if(@$this->config->isProd()){
+                return @$this->frontendService->getMessageResponse($title, $description);
             } else {
-                $content = $this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
-                return $this->response->setContent($content);
+                $content = @$this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
+                return @$this->response->setContent($content);
             }
         }
     }
@@ -111,7 +111,7 @@ class ErrorService extends Injectable
      */
     public function handleError($error)
     {
-        $isProduction = $this->config->isProd();
+        $isProduction = @$this->config->isProd();
 
         if( ! $errorView = $this->getErrorView($error, $isProduction)){
             return;
@@ -130,7 +130,7 @@ class ErrorService extends Injectable
             return false;
         }
 
-        return ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR]);
+        return ! in_array($errorType, [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_DEPRECATED]);
     }
 
     /**

@@ -1,8 +1,8 @@
 version: "3.5"
 services:
   php:
-    image: kiksaus/kikdev-phalcon4
-    restart: always
+    image: phalcon5-bare
+    #    restart: always
     ports:
       - "${SITE_PORT}:443"
     volumes:

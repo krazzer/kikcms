@@ -5,7 +5,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Email;
-use Phalcon\Validation\Validator\Email as EmailValidator;
+use Phalcon\Filter\Validation\Validator\Email as EmailValidator;
 
 class EmailField extends Field
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Loader;
 use KikCMS\Config\CacheConfig;
@@ -28,7 +28,7 @@ class NamespaceService extends Injectable
     {
         $cacheKey = 'services.' . str_replace(KikCMSConfig::NAMESPACE_SEPARATOR, '', $namespace);
 
-        if($this->cache && $services = $this->cache->get($cacheKey)){
+        if ($this->cache && $services = $this->cache->get($cacheKey)) {
             return $services;
         }
 
@@ -54,7 +54,7 @@ class NamespaceService extends Injectable
         }
 
         // only cache on production, to prevent errors when creating new services
-        if($this->cache && $this->config->isProd()){
+        if ($this->cache && $this->config->isProd()) {
             $this->cache->set($cacheKey, $services, CacheConfig::ONE_YEAR);
         }
 
@@ -71,7 +71,8 @@ class NamespaceService extends Injectable
 
         $namespaceParts = explode(KikCMSConfig::NAMESPACE_SEPARATOR, trim($namespace, KikCMSConfig::NAMESPACE_SEPARATOR));
 
-        $path = $loadedNamespaces[$namespaceParts[0]][0];
+        $pathArray = (array) $loadedNamespaces[$namespaceParts[0] . KikCMSConfig::NAMESPACE_SEPARATOR];
+        $path      = first($pathArray);
 
         array_shift($namespaceParts);
 

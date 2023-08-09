@@ -8,7 +8,7 @@ use Exception;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Config\CacheConfig;
 use Monolog\Logger;
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 use Psr\Log\LogLevel;
 
 /**

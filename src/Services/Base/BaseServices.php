@@ -10,7 +10,8 @@ use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
 use KikCMS\Classes\Phalcon\Loader;
-use Phalcon\Config;
+use Phalcon\Config\Adapter\Ini;
+use Phalcon\Config\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Stream;
 use ReflectionObject;
@@ -38,10 +39,10 @@ class BaseServices extends ApplicationServices
     }
 
     /**
-     * @param Config $config
+     * @param Ini $config
      * @param Loader $loader
      */
-    public function __construct(Config $config, Loader $loader)
+    public function __construct(Ini $config, Loader $loader)
     {
         parent::__construct();
 

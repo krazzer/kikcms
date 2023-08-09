@@ -7,7 +7,7 @@ use DateInterval;
 use DateTime;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Injectable;
-use Phalcon\Validation\Validator\Date;
+use Phalcon\Filter\Validation\Validator\Date;
 
 /**
  * Utility Service for handling DateTime objects

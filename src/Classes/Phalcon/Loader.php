@@ -6,7 +6,7 @@ namespace KikCMS\Classes\Phalcon;
 
 use KikCMS\Config\KikCMSConfig;
 
-class Loader extends \Phalcon\Loader
+class Loader extends \Phalcon\Autoload\Loader
 {
     /**
      * @return string

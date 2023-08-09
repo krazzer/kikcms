@@ -4,7 +4,7 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
-use Phalcon\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\Regex;
 
 class PhoneNumber extends Regex
 {

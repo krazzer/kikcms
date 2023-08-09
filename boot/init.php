@@ -1,5 +1,8 @@
 <?php
 
+// disable deprecation messages until https://github.com/phalcon/cphalcon/issues/16263# is resolved
+error_reporting(E_ALL ^ E_DEPRECATED);
+
 use Phalcon\Application\AbstractApplication;
 
 ini_set('session.cookie_httponly', 1);

@@ -22,9 +22,9 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\StringLength;
 
 /**
  * @property TemplateService $templateService

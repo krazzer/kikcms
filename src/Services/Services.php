@@ -38,13 +38,15 @@ use KikCmsCore\Services\DbService;
 use Monolog\ErrorHandler;
 use Phalcon\Acl\Adapter\Memory;
 use Phalcon\Assets\Manager;
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 use Phalcon\Db\Adapter\AdapterInterface as PdoAdapterInterface;
 use Phalcon\Cache\AdapterFactory;
 use Phalcon\Db\Adapter\PdoFactory;
 use Phalcon\Di\FactoryDefault\Cli;
+use Phalcon\Encryption\Security;
+use Phalcon\Html\Escaper;
+use Phalcon\Html\TagFactory;
 use Phalcon\Http\Response\Cookies;
-use Phalcon\Security;
 use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
 use Monolog\Logger;
@@ -453,7 +455,7 @@ class Services extends BaseServices
      */
     protected function initSessionBag(): Bag
     {
-        return new Bag("sessionBag");
+        return new Bag($this->get('session'), "sessionBag");
     }
 
     /**
@@ -542,7 +544,7 @@ class Services extends BaseServices
             }
         ]);
 
-        $view->assets = new Manager();
+        $view->assets = new Manager(new TagFactory(new Escaper()));
 
         return $view;
     }

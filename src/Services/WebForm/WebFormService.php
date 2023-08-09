@@ -8,7 +8,7 @@ use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Element\Hidden;
 use Phalcon\Messages\MessageInterface;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
 
 class WebFormService extends Injectable
 {

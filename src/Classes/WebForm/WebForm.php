@@ -22,7 +22,7 @@ use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Date;
+use Phalcon\Filter\Validation\Validator\Date;
 
 /**
  * @property AccessControl $acl

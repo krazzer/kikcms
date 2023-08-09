@@ -7,9 +7,9 @@ use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\PassResetConfig;
 use KikCMS\Models\User;
 use KikCMS\Services\UserService;
-use Phalcon\Validation\Validator\Identical;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Filter\Validation\Validator\Identical;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\StringLength;
 
 /**
  * @property UserService $userService

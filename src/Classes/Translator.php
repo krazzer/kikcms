@@ -110,6 +110,10 @@ class Translator extends Injectable
                 continue;
             }
 
+            if(is_int($replace)){
+                $replace = (string) $replace;
+            }
+
             $translation = str_replace(':' . $key, $replace, $translation);
         }
 

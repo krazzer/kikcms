@@ -6,7 +6,7 @@ namespace Helpers\Forms;
 
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Helpers\Models\Person;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
 
 class PersonMultiCheckboxForm extends DataForm
 {

@@ -6,7 +6,7 @@ namespace Website\TestClasses;
 use KikCMS\Classes\Frontend\Extendables\TemplateFieldsBase;
 use KikCMS\Classes\Page\Template;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
 
 class TemplateFields extends TemplateFieldsBase
 {

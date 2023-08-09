@@ -5,7 +5,7 @@ namespace KikCMS\Classes\Phalcon\Validator;
 
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Filter\Validation\Validator\Uniqueness;
 
 /**
  * Extends Uniqueness validator

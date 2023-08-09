@@ -39,11 +39,11 @@ $cmsPath = $config->application->cmsPath = dirname(__DIR__) . "/";
 
 /** @var Loader $loader */
 $loader = (new Loader)
-    ->registerNamespaces([
+    ->setNamespaces([
         KikCMSConfig::NAMESPACE_WEBSITE => $sitePath . 'app/',
         KikCMSConfig::NAMESPACE_KIKCMS  => $cmsPath . 'src/',
     ])
-    ->registerDirs([
+    ->setDirectories([
         $sitePath . 'app/Tasks',
         $cmsPath . 'src/Tasks',
     ])

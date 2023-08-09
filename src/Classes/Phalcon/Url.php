@@ -8,7 +8,7 @@ use Phalcon\Mvc\RouterInterface;
 /**
  * Adds some convenience to Phalcons UrlProvider
  */
-class Url extends \Phalcon\Url
+class Url extends \Phalcon\Mvc\Url
 {
     /**
      * @inheritdoc

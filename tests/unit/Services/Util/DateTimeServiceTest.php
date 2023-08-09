@@ -5,7 +5,7 @@ namespace unit\Services\Util;
 
 use Helpers\Unit;
 use KikCMS\Services\Util\DateTimeService;
-use Phalcon\Validation\Validator\Date;
+use Phalcon\Filter\Validation\Validator\Date;
 
 class DateTimeServiceTest extends Unit
 {

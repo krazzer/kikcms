@@ -5,10 +5,10 @@ namespace KikCMS\Forms;
 
 use KikCMS\Models\Page;
 use KikCMS\Services\LanguageService;
-use Phalcon\Validation\Validator\Numericality;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\StringLength;
+use Phalcon\Filter\Validation\Validator\Numericality;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\StringLength;
 
 /**
  * @property LanguageService $languageService

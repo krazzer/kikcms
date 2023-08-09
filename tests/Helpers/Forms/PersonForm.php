@@ -7,7 +7,7 @@ namespace Helpers\Forms;
 use Helpers\DataTables\PersonInterests;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use Helpers\Models\Person;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
 
 class PersonForm extends DataForm
 {

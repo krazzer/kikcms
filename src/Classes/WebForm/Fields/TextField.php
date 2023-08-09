@@ -5,8 +5,8 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\WebForm\Field;
 use Phalcon\Forms\Element\Text;
-use Phalcon\Validation\Validator\Email;
-use Phalcon\Validation\Validator\Numericality;
+use Phalcon\Filter\Validation\Validator\Email;
+use Phalcon\Filter\Validation\Validator\Numericality;
 
 class TextField extends Field
 {
