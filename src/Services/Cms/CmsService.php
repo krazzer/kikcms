@@ -195,7 +195,7 @@ class CmsService extends Injectable
      */
     public function checkSecurityToken(string $token)
     {
-        if ( ! $this->keyValue->has($token)) {
+        if ( ! $token || ! $this->keyValue->has($token)) {
             throw new UnauthorizedException();
         }
 

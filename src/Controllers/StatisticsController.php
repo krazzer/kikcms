@@ -49,11 +49,11 @@ class StatisticsController extends BaseController
     }
 
     /**
-     * Update statistics data from google analytics
+     * Update statistics data from Google Analytics
      */
     public function updateAction()
     {
-        $token = $this->request->getPost('token');
+        $token = (string) $this->request->getPost('token', 'string');
 
         $this->cmsService->checkSecurityToken($token);
 
