@@ -90,10 +90,6 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function resizeByType(AbstractAdapter $image, string $type)
     {
-        if ( ! $this->typeMethodExists($type)) {
-            $this->throwMethodDoesNotExistException($this->getMethod($type));
-        }
-
         $method = $this->getMethod($type);
         $this->$method($image);
     }
@@ -110,7 +106,7 @@ class MediaResizeBase extends WebsiteExtendable
      * @param $type
      * @return bool
      */
-    private function typeMethodExists($type): bool
+    public function typeMethodExists($type): bool
     {
         return method_exists($this, $this->getMethod($type));
     }

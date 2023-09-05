@@ -111,9 +111,10 @@ class FileService extends Injectable
 
         $image = $this->imageHandler->create($filePath);
 
-        $this->mediaResize->resizeByType($image, $type);
-
-        $image->save($thumbPath, 90);
+        if ($this->mediaResize->typeMethodExists($type)) {
+            $this->mediaResize->resizeByType($image, $type);
+            $image->save($thumbPath, 90);
+        }
     }
 
     /**

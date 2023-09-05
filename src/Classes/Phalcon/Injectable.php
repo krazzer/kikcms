@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Classes\Phalcon;
 
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
+use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
@@ -122,6 +123,7 @@ use Swift_Mailer;
  * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
  * @property MailFormService mailFormService
+ * @property MediaResizeBase mediaResize
  * @property MenuService menuService
  * @property ModelService modelService
  * @property NamespaceService namespaceService
