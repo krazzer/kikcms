@@ -18,6 +18,7 @@ use Phalcon\Config;
  * @property bool storeMailForms
  * @property bool pageCache
  * @property bool hideServiceMailBranding
+ * @property bool autoredirect
  */
 class ApplicationConfig extends Config
 {

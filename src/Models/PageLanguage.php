@@ -2,6 +2,10 @@
 
 namespace KikCMS\Models;
 
+use KikCMS\Classes\Phalcon\IniConfig;
+use KikCMS\Objects\Redirect\RedirectService;
+use KikCMS\Services\Pages\PageLanguageService;
+use KikCMS\Services\Pages\UrlService;
 use KikCmsCore\Classes\Model;
 
 /**
@@ -42,7 +46,10 @@ class PageLanguage extends Model
      */
     public function beforeDelete()
     {
-        $this->getDI()->get('pageLanguageService')->removeCache($this);
+        /** @var PageLanguageService $pageLanguageService */
+        $pageLanguageService = $this->getDI()->get('pageLanguageService');
+
+        $pageLanguageService->removeCache($this);
     }
 
     /**
@@ -50,7 +57,40 @@ class PageLanguage extends Model
      */
     public function beforeSave()
     {
-        $this->getDI()->get('pageLanguageService')->checkAndUpdateSlug($this);
+        /** @var PageLanguageService $pageLanguageService */
+        $pageLanguageService = $this->getDI()->get('pageLanguageService');
+
+        $pageLanguageService->checkAndUpdateSlug($this);
+    }
+
+    /**
+     * Check if the slug has changed
+     */
+    public function beforeUpdate()
+    {
+        /** @var IniConfig $config */
+        $config = $this->getDI()->get('config');
+
+        if( ! $config->application->autoredirect){
+            return;
+        }
+
+        if ( ! $this->hasChanged(self::FIELD_SLUG)) {
+            return;
+        }
+
+        $previousPageLanguage = self::getById($this->getId());
+
+        /** @var UrlService $urlService */
+        $urlService = $this->getDI()->get('urlService');
+
+        /** @var RedirectService $redirectService */
+        $redirectService = $this->getDI()->get('redirectService');
+
+        $previousUrlPath = $urlService->createUrlPathByPageLanguage($previousPageLanguage);
+        $urlPath         = $urlService->createUrlPathByPageLanguage($this);
+
+        $redirectService->add($previousUrlPath, $urlPath, $this->getId());
     }
 
     /**
@@ -59,6 +99,8 @@ class PageLanguage extends Model
     public function initialize()
     {
         parent::initialize();
+
+        $this->keepSnapshots(true);
 
         $pageClass = $this->getDI()->get('websiteSettings')->getPageClass() ?: Page::class;
 
