@@ -25,9 +25,9 @@ use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Services\DataTable\DataTableFilterService;
 use KikCMS\Services\LanguageService;
+use Phalcon\Filter\Validation\AbstractValidator;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
-use Phalcon\Validation\AbstractValidator;
 
 /**
  * @property AccessControl $acl
@@ -270,10 +270,9 @@ abstract class DataTable extends Renderable
      * @param $column
      * @return string
      */
-    public function formatCheckbox($value, $rowData, $column)
+    public function formatCheckbox($value, $rowData, $column): string
     {
         $attributes = [
-            'type'     => 'checkbox',
             'class'    => 'table-checkbox',
             'data-col' => $column,
         ];
@@ -283,9 +282,11 @@ abstract class DataTable extends Renderable
             $attributes['checked'] = 'checked';
         } elseif ($value) {
             $attributes['checked'] = 'checked';
+        } else {
+            $attributes['checked'] = null;
         }
 
-        return $this->tag->tagHtml('input', $attributes);
+        return (string) $this->tag->inputCheckbox('input', $attributes['checked'], $attributes);
     }
 
     /**
@@ -303,7 +304,7 @@ abstract class DataTable extends Renderable
 
         $style = 'background-image: url(' . $thumbUrl . ')';
 
-        return $this->tag->tagHtml('div', [
+        return $this->tag->element('div', '', [
             'class'          => 'thumb',
             'data-url'       => $url,
             'data-thumb-url' => $thumbUrl,

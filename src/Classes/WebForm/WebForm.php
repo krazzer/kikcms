@@ -17,11 +17,11 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
 use KikCMS\Services\Util\DateTimeService;
+use Phalcon\Filter\Validation;
 use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Form;
 use Phalcon\Http\Response;
 use Phalcon\Mvc\View;
-use Phalcon\Validation;
 use Phalcon\Filter\Validation\Validator\Date;
 
 /**
@@ -647,6 +647,11 @@ abstract class WebForm extends Renderable
             // set unposted multi-checkboxes to default empty
             if ($field->getType() == Field::TYPE_MULTI_CHECKBOX && ! $this->request->hasPost($key)) {
                 $field->setDefault([]);
+            }
+
+            if ($field->getType() == Field::TYPE_CHECKBOX && $this->request->hasPost($key)) {
+                $field->getElement()->setAttribute('checked', '1');
+                $field->getElement()->setAttribute('value', '1');
             }
         }
     }

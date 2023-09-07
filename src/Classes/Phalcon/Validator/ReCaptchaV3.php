@@ -4,9 +4,9 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\AbstractValidator;
 use Phalcon\Messages\Message;
-use Phalcon\Validation;
-use Phalcon\Validation\AbstractValidator;
 
 class ReCaptchaV3 extends AbstractValidator
 {

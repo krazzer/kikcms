@@ -7,6 +7,8 @@ use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\UserService;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property UserService $userService
@@ -22,7 +24,7 @@ class LoginForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->addTextField(self::FIELD_USERNAME, $this->translator->tl('login.email'));
         $this->addPasswordField(self::FIELD_PASSWORD, $this->translator->tl('login.password'));
@@ -35,7 +37,7 @@ class LoginForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function successAction(array $input)
+    protected function successAction(array $input): Response|ResponseInterface|string|null
     {
         $user = $this->userService->getByEmail($input[self::FIELD_USERNAME]);
 

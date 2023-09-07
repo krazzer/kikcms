@@ -5,8 +5,8 @@ namespace KikCMS\Services;
 
 use Exception;
 use KikCMS\Classes\Phalcon\IniConfig;
-use Phalcon\Config;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Config\Config;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;

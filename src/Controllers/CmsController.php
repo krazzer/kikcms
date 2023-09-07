@@ -160,7 +160,7 @@ class CmsController extends BaseCmsController
             'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
         ];
 
-        $this->assetService->addJs('https://www.gstatic.com/charts/loader.js');
+        $this->assetService->addJs('https://www.gstatic.com/charts/loader.js', false);
 
         return $this->view('cms/statistics', [
             'title'    => $this->translator->tl('menu.item.stats'),

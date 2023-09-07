@@ -4,7 +4,7 @@
 namespace KikCMS\Classes\Phalcon\Storage\Adapter;
 
 
-use Phalcon\Helper\Str;
+use Phalcon\Support\HelperFactory;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -34,7 +34,9 @@ class Stream extends \Phalcon\Cache\Adapter\Stream
         // add to prefix to get the right directory from Str::dirFromFile
         $prefixDir = $prefix . (strlen($prefix) % 2 ? ' ' : '  ');
 
-        $dir = $this->getStoragePath() . Str::dirFromFile($prefixDir);
+        $helper = new HelperFactory();
+
+        $dir = $this->getStoragePath() . $helper->dirFromFile($prefixDir);
 
         if ( ! file_exists($dir)) {
             return [];

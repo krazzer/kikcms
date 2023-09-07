@@ -17,7 +17,6 @@ class CheckboxField extends Field
     {
         $element = (new Check($key))
             ->setLabel($label)
-            ->setAttribute('type', 'element')
             ->addValidators($validators);
 
         $this->element = $element;
@@ -30,5 +29,18 @@ class CheckboxField extends Field
     public function getType()
     {
         return Field::TYPE_CHECKBOX;
+    }
+
+    /**
+     * @param $value
+     * @return Field
+     */
+    public function setDefault($value): Field
+    {
+        if($value){
+            $this->element->setAttribute('checked', '1');
+        }
+
+        return parent::setDefault($value);
     }
 }

@@ -22,6 +22,9 @@ class TableButton
     /** @var string|null */
     private $warning;
 
+    /** @var bool */
+    private bool $blank = false;
+
     /**
      * @param string $icon
      * @param string $title
@@ -73,7 +76,7 @@ class TableButton
         $url = $this->url;
 
         foreach ($row as $key => $value) {
-            $url = str_replace(':' . $key, $value, $url);
+            $url = str_replace(':' . $key, (string) $value, $url);
         }
 
         return $url;

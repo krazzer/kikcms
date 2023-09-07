@@ -44,7 +44,7 @@ class PageForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         if ($this->getObject() && $this->getObject()->alias) {
             $this->addHtmlField('alias', null, 'Aliases cannot be edited');
