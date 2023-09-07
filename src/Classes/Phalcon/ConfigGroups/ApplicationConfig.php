@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Classes\Phalcon\ConfigGroups;
 
 
-use Phalcon\Config;
+use Phalcon\Config\Config;
 
 /**
  * @property string env
