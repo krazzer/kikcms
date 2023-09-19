@@ -12,7 +12,7 @@ class PageList extends ObjectList
      * @param int|string $key
      * @return Page|false
      */
-    public function get($key)
+    public function get($key): Page|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PageList extends ObjectList
     /**
      * @return Page|false
      */
-    public function current()
+    public function current(): Page|false
     {
         return parent::current();
     }

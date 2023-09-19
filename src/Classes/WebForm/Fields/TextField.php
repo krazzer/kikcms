@@ -26,7 +26,11 @@ class TextField extends Field
         $this->key     = $key;
     }
 
-    public function getInput($value)
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function getInput($value): mixed
     {
         if($this->hasEmailValidator()){
             $value = trim($value);

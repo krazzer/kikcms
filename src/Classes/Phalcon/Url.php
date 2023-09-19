@@ -35,7 +35,7 @@ class Url extends \Phalcon\Mvc\Url
      * @param array $routePaths
      * @return array
      */
-    public function convertArguments($args, array $routePaths): array
+    public function convertArguments(mixed $args, array $routePaths): array
     {
         if( ! $args){
             return [];
@@ -67,9 +67,9 @@ class Url extends \Phalcon\Mvc\Url
      * @param mixed $uri
      * @return mixed
      */
-    public function fixDoubleSlashes($uri)
+    public function fixDoubleSlashes(mixed $uri): mixed
     {
-        if(is_string($uri) && substr($uri, 0, 1) == '/' && substr($uri, 1, 1) != '/'){
+        if(is_string($uri) && str_starts_with($uri, '/') && substr($uri, 1, 1) != '/'){
             $uri = substr($uri, 1);
         }
 
@@ -87,7 +87,7 @@ class Url extends \Phalcon\Mvc\Url
     /**
      * @return RouterInterface|Router
      */
-    private function getRouter()
+    private function getRouter(): RouterInterface|Router
     {
         if($this->router){
             return $this->router;

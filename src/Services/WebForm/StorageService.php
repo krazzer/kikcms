@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\Exceptions\DuplicateTemporaryDataTableKeyException;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
-use KikCMS\Config\DataFormConfig;
 use KikCMS\Services\ModelService;
 use KikCmsCore\Config\DbConfig;
 use KikCmsCore\Services\DbService;
@@ -88,7 +87,7 @@ class StorageService extends Injectable
     /**
      * If a temporary key is inserted, fk checks needs to be disabled for insert
      */
-    private function disableForeignKeysForTempKeys()
+    private function disableForeignKeysForTempKeys(): void
     {
         if ($this->storageData->hasTempParentEditId()) {
             $this->dbService->setForeignKeyChecks(false);
@@ -98,7 +97,7 @@ class StorageService extends Injectable
     /**
      * If a temporary key is inserted, fk checks needs to be re-enabled after insert
      */
-    private function enableForeignKeysForTempKeys()
+    private function enableForeignKeysForTempKeys(): void
     {
         if ($this->storageData->hasTempParentEditId()) {
             $this->dbService->setForeignKeyChecks(true);
@@ -108,7 +107,7 @@ class StorageService extends Injectable
     /**
      * @param string $eventType
      */
-    private function executeEvents(string $eventType)
+    private function executeEvents(string $eventType): void
     {
         if ( ! array_key_exists($eventType, $this->storageData->getEvents())) {
             return;
@@ -124,7 +123,7 @@ class StorageService extends Injectable
     /**
      * Execute after the main insert/update is completed
      */
-    private function executeAfterMainEvents()
+    private function executeAfterMainEvents(): void
     {
         $this->executeEvents(StoreEvent::AFTER_MAIN_STORE);
     }
@@ -132,7 +131,7 @@ class StorageService extends Injectable
     /**
      * Execute after the main insert/update is completed
      */
-    private function executeAfterStoreEvents()
+    private function executeAfterStoreEvents(): void
     {
         $this->executeEvents(StoreEvent::AFTER_STORE);
     }
@@ -140,7 +139,7 @@ class StorageService extends Injectable
     /**
      * Execute after the main insert/update is completed
      */
-    private function executeBeforeStoreEvents()
+    private function executeBeforeStoreEvents(): void
     {
         $this->executeEvents(StoreEvent::BEFORE_STORE);
     }
@@ -148,7 +147,7 @@ class StorageService extends Injectable
     /**
      * Execute after the main insert/update is completed
      */
-    private function executeBeforeMainEvents()
+    private function executeBeforeMainEvents(): void
     {
         $this->executeEvents(StoreEvent::BEFORE_MAIN_STORE);
     }
@@ -156,7 +155,7 @@ class StorageService extends Injectable
     /**
      * Store the main forms' table row
      */
-    private function storeMain()
+    private function storeMain(): void
     {
         $mainInput = $this->storageData->getMainInput();
         $langCode  = $this->storageData->getLanguageCode();
@@ -195,7 +194,7 @@ class StorageService extends Injectable
     /**
      * Store data after the main forms' table row is inserted/updated
      */
-    private function setSubDataTableData()
+    private function setSubDataTableData(): void
     {
         foreach ($this->storageData->getDataTableFieldMap() as $key => $field) {
             $keysToUpdate = $field->getDataTable()->getCachedNewIds();

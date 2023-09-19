@@ -25,7 +25,7 @@ class Sqlite extends PhalconSqlite
      * @return string
      * @throws Exception
      */
-    public function concat(Dialect $dialect, $expression)
+    public function concat(?Dialect $dialect, $expression): string
     {
         $arguments = [];
 
@@ -42,7 +42,7 @@ class Sqlite extends PhalconSqlite
      * @return string
      * @throws Exception
      */
-    public function concatWs(Dialect $dialect, $expression)
+    public function concatWs(?Dialect $dialect, $expression): string
     {
         $sql = '';
 
@@ -74,7 +74,7 @@ class Sqlite extends PhalconSqlite
      * @param $expression
      * @return string
      */
-    public function if(Dialect $dialect, $expression)
+    public function if(Dialect $dialect, $expression): string
     {
         $if   = $dialect->getSqlExpression($expression['arguments'][0]);
         $then = $dialect->getSqlExpression($expression['arguments'][1]);

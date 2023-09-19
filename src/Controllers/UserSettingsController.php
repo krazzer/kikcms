@@ -7,6 +7,7 @@ namespace KikCMS\Controllers;
 use Exception;
 use KikCMS\Services\Cms\UserSettingsService;
 use Monolog\Logger;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property UserSettingsService $userSettingsService
@@ -14,7 +15,7 @@ use Monolog\Logger;
  */
 class UserSettingsController extends BaseCmsController
 {
-    public function updateClosedPageIdsAction()
+    public function updateClosedPageIdsAction(): ResponseInterface
     {
         $ids       = $this->request->getPost('ids', 'int', []);
         $className = $this->request->getPost('className', 'string');

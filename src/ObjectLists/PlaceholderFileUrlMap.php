@@ -12,7 +12,7 @@ class PlaceholderFileUrlMap extends ObjectMap
      * @param int|string $key
      * @return PlaceholderFileUrl|false
      */
-    public function get($key)
+    public function get($key): false|PlaceholderFileUrl
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PlaceholderFileUrlMap extends ObjectMap
     /**
      * @return PlaceholderFileUrl|false
      */
-    public function getFirst()
+    public function getFirst(): false|PlaceholderFileUrl
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class PlaceholderFileUrlMap extends ObjectMap
     /**
      * @return PlaceholderFileUrl|false
      */
-    public function current()
+    public function current(): false|PlaceholderFileUrl
     {
         return parent::current();
     }
@@ -36,7 +36,7 @@ class PlaceholderFileUrlMap extends ObjectMap
     /**
      * @return ObjectMap|PlaceholderFileUrl|false
      */
-    public function reverse()
+    public function reverse(): ObjectMap|false|PlaceholderFileUrl
     {
         return parent::reverse();
     }

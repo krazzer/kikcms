@@ -54,7 +54,7 @@ class StorageData
      * @param int|null $editId
      * @return StorageData|$this
      */
-    public function setEditId($editId): StorageData
+    public function setEditId(?int $editId): StorageData
     {
         $this->editId = $editId;
         return $this;
@@ -69,10 +69,10 @@ class StorageData
     }
 
     /**
-     * @param null|string $languageCode
+     * @param string|null $languageCode
      * @return StorageData|$this
      */
-    public function setLanguageCode($languageCode): StorageData
+    public function setLanguageCode(?string $languageCode): StorageData
     {
         $this->languageCode = $languageCode;
         return $this;
@@ -90,7 +90,7 @@ class StorageData
      * @param int|null $parentEditId
      * @return StorageData|$this
      */
-    public function setParentEditId($parentEditId): StorageData
+    public function setParentEditId(?int $parentEditId): StorageData
     {
         $this->parentEditId = $parentEditId;
         return $this;

@@ -40,7 +40,7 @@ class PagesDataTableService extends Injectable
      * @param Renderable|DataTable|DataForm $renderable
      * @return Template|null
      */
-    public function getTemplate(Renderable $renderable): ?Template
+    public function getTemplate(Renderable|DataTable|DataForm $renderable): ?Template
     {
         $templateKey = $this->request->getPost('template');
 

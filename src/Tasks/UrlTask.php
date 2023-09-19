@@ -13,12 +13,12 @@ class UrlTask extends Task
     /**
      * Create urls for all pages that lack them
      */
-    public function createUrlsAction()
+    public function createUrlsAction(): void
     {
         $pageIds = $this->urlService->getPageIdsWithoutUrl();
 
         foreach ($pageIds as $pageId) {
-            $this->urlService->createUrlsForPageId((int) $pageId);
+            $this->urlService->createUrlsForPageId($pageId);
         }
     }
 }

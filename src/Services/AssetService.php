@@ -17,7 +17,7 @@ class AssetService extends Injectable
      */
     public function addVersion(string $file): string
     {
-        $dontStartWithList = ['//', 'https://', 'http://'];
+        $dontStartWithList = ['//', 'https://', 'ht=tp://'];
 
         foreach ($dontStartWithList as $dontStartWith) {
             if (str_startswith($file, $dontStartWith)) {
@@ -43,7 +43,7 @@ class AssetService extends Injectable
     /**
      * @param string $file
      */
-    public function addCss(string $file)
+    public function addCss(string $file): void
     {
         $file = $this->addVersion($file);
 
@@ -54,7 +54,7 @@ class AssetService extends Injectable
      * @param string $file
      * @param bool $local
      */
-    public function addJs(string $file, bool $local = true)
+    public function addJs(string $file, bool $local = true): void
     {
         $file = $this->addVersion($file);
 

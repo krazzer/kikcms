@@ -27,9 +27,9 @@ class WysiwygField extends Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_WYSIWYG;
     }

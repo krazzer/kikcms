@@ -12,14 +12,14 @@ class FullPageMap extends ObjectMap
      * @param int|string $key
      * @return FullPage|false
      */
-    public function get($key)
+    public function get($key): FullPage|false
     {
         return parent::get($key);
     }
     /**
      * @return FullPage|false
      */
-    public function getFirst()
+    public function getFirst(): FullPage|false
     {
         return parent::getFirst();
     }
@@ -27,7 +27,7 @@ class FullPageMap extends ObjectMap
     /**
      * @return FullPage|false
      */
-    public function current()
+    public function current(): FullPage|false
     {
         return parent::current();
     }
@@ -35,7 +35,7 @@ class FullPageMap extends ObjectMap
     /**
      * @return ObjectMap|FullPageMap|false
      */
-    public function reverse()
+    public function reverse(): ObjectMap|FullPageMap|false
     {
         return parent::reverse();
     }
@@ -44,7 +44,7 @@ class FullPageMap extends ObjectMap
      * @inheritDoc
      * @return FullPage[]|Object[]
      */
-    public function getObjects()
+    public function getObjects(): array
     {
         return parent::getObjects();
     }

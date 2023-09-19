@@ -34,7 +34,7 @@ class SelectDataTableField extends Field
     /**
      * @inheritdoc
      */
-    public function getInput($value)
+    public function getInput($value): array
     {
         return (array) json_decode($value);
     }
@@ -42,7 +42,7 @@ class SelectDataTableField extends Field
     /**
      * @inheritdoc
      */
-    public function getFormFormat($value)
+    public function getFormFormat($value): string|false
     {
         return is_array($value) ? json_encode($value) : $value;
     }
@@ -50,7 +50,7 @@ class SelectDataTableField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_SELECT_DATA_TABLE;
     }

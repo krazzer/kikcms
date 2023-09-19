@@ -64,7 +64,7 @@ class CacheConfig
      * @param string $langCode
      * @return string
      */
-    public static function getUrlKey($pageKey, string $langCode): string
+    public static function getUrlKey(int|string $pageKey, string $langCode): string
     {
         return implode(self::SEPARATOR, [self::URL, $pageKey, $langCode]);
     }

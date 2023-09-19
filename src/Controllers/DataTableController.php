@@ -35,7 +35,7 @@ class DataTableController extends RenderableController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -72,7 +72,7 @@ class DataTableController extends RenderableController
         $editIds = [];
 
         foreach ($fileIds as $fileId) {
-            $fileIds[] = $this->dataTableService->addImageDirectly((int) $fileId, $dataTable);
+            $this->dataTableService->addImageDirectly((int) $fileId, $dataTable);
         }
 
         return $this->response->setJsonContent([
@@ -98,7 +98,7 @@ class DataTableController extends RenderableController
 
         try {
             $dataTable->delete($ids);
-        } catch (DbForeignKeyDeleteException $e) {
+        } catch (DbForeignKeyDeleteException) {
             return json_encode(['error' => $this->translator->tl('dataTable.deleteErrorLinked')]);
         }
 

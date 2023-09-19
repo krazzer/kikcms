@@ -14,7 +14,7 @@ class LinkForm extends PageForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $langCode  = $this->getFilters()->getLanguageCode();
         $urlsRoute = '/cms/get-urls/' . $langCode;

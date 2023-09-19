@@ -15,7 +15,7 @@ class PlaceholderFileUrl extends Placeholder
     /**
      * @param array $arguments
      */
-    function mapArguments(array $arguments)
+    function mapArguments(array $arguments): void
     {
         $this->setFileId((int) $arguments[0])
             ->setPrivate($arguments[1] == 'private');

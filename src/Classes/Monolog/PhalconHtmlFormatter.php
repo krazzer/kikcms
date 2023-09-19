@@ -7,7 +7,7 @@ use Exception;
 use KikCMS\Classes\Phalcon\IniConfig;
 use Monolog\Formatter\HtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 
 /**
  * Filters out the config contents in error output, as it is contained in every Injectable class
@@ -26,7 +26,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
 
             $record['message'] = str_replace($config->database->password, '******', $record['message']);
             $record['message'] = str_replace(substr($config->database->password, 0, 15), '******', $record['message']);
-        } catch (Exception $exception) {
+        } catch (Exception) {
         }
 
         return parent::format($record);
@@ -35,7 +35,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
     /**
      * @inheritdoc
      */
-    protected function toJson($data, $ignoreErrors = false)
+    protected function toJson($data, $ignoreErrors = false): string
     {
         if (is_object($data) || is_array($data)) {
             $data = $this->removeConfig($data);
@@ -48,7 +48,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
      * @param $data
      * @return mixed
      */
-    public function removeConfig($data)
+    public function removeConfig($data): mixed
     {
         if ($data instanceof Injectable) {
             unset($data->config);
@@ -67,7 +67,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
                     $data[$property] = $this->removeConfig($value);
                 }
             }
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return $data;
         }
 

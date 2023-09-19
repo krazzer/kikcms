@@ -22,7 +22,7 @@ class PageLanguageService extends Injectable
     /**
      * @param PageLanguage $pageLanguage
      */
-    public function checkAndUpdateSlug(PageLanguage $pageLanguage)
+    public function checkAndUpdateSlug(PageLanguage $pageLanguage): void
     {
         // url is set, so do nothing
         if ($pageLanguage->getSlug()) {
@@ -52,7 +52,7 @@ class PageLanguageService extends Injectable
      *
      * @param Page $alias
      */
-    public function createForAlias(Page $alias)
+    public function createForAlias(Page $alias): void
     {
         if ( ! $alias->getAliasId()) {
             return;
@@ -104,7 +104,7 @@ class PageLanguageService extends Injectable
      * @param string $languageCode
      * @return null|Model|PageLanguage
      */
-    public function getByPageKey(string $pageKey, string $languageCode): ?PageLanguage
+    public function getByPageKey(string $pageKey, string $languageCode): null|Model|PageLanguage
     {
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_KEY . CacheConfig::SEPARATOR . $pageKey . CacheConfig::SEPARATOR .
             $languageCode;
@@ -189,9 +189,9 @@ class PageLanguageService extends Injectable
     /**
      * Get the default pageLanguage (homepage), in the default language
      *
-     * @return PageLanguage
+     * @return PageLanguage|Model|null
      */
-    public function getDefault()
+    public function getDefault(): PageLanguage|Model|null
     {
         $defaultLanguageCode = $this->config->application->defaultLanguage;
         return $this->getByPageKey(KikCMSConfig::KEY_PAGE_DEFAULT, $defaultLanguageCode);

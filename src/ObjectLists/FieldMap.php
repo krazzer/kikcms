@@ -12,7 +12,7 @@ class FieldMap extends ObjectMap
      * @inheritdoc
      * @return Field|false
      */
-    public function get($key)
+    public function get($key): Field|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class FieldMap extends ObjectMap
     /**
      * @return Field|false
      */
-    public function current()
+    public function current(): Field|false
     {
         return parent::current();
     }

@@ -22,7 +22,7 @@ class PageRearrangeService extends Injectable
     /**
      * Check if there are pages where displayOrder is not set, if so, set them
      */
-    public function checkOrderIntegrity()
+    public function checkOrderIntegrity(): void
     {
         if ( ! $this->hasPagesWithoutDisplayOrder()) {
             return;
@@ -47,7 +47,7 @@ class PageRearrangeService extends Injectable
      *
      * @param Page $page
      */
-    public function checkUrls(Page $page)
+    public function checkUrls(Page $page): void
     {
         foreach ($page->pageLanguages as $pageLanguage) {
             // if there's no url, we don't need to check for dupes
@@ -72,7 +72,7 @@ class PageRearrangeService extends Injectable
         $query = (new Builder())
             ->from(Page::class)
             ->columns(["MAX(" . Page::FIELD_DISPLAY_ORDER . ")"])
-            ->where('parent_id = :parentId:', ['parentId' => $parentPage ? $parentPage->getId() : null]);
+            ->where('parent_id = :parentId:', ['parentId' => $parentPage?->getId()]);
 
         return (int) $this->dbService->getValue($query);
     }
@@ -82,7 +82,7 @@ class PageRearrangeService extends Injectable
      * @param Page $targetPage
      * @param string $rearrange
      */
-    public function rearrange(Page $page, Page $targetPage, string $rearrange)
+    public function rearrange(Page $page, Page $targetPage, string $rearrange): void
     {
         $this->checkOrderIntegrity();
 
@@ -110,7 +110,7 @@ class PageRearrangeService extends Injectable
      * @param int|null $parentId
      * @param int|null $dislplayOrder
      */
-    public function updateLeftSiblingsOrder(int $parentId = null, int $dislplayOrder = null)
+    public function updateLeftSiblingsOrder(int $parentId = null, int $dislplayOrder = null): void
     {
         if ( ! $dislplayOrder) {
             return;
@@ -126,7 +126,7 @@ class PageRearrangeService extends Injectable
     /**
      * Convert parent-child to nested set, and save
      */
-    public function updateNestedSet()
+    public function updateNestedSet(): void
     {
         $this->checkOrderIntegrity();
 
@@ -200,7 +200,7 @@ class PageRearrangeService extends Injectable
      *
      * @throws Exception
      */
-    private function placeBeforeOrAfter(Page $page, Page $targetPage, bool $placeAfter)
+    private function placeBeforeOrAfter(Page $page, Page $targetPage, bool $placeAfter): void
     {
         $this->dbService->transaction(function () use ($page, $targetPage, $placeAfter) {
             $targetParentId     = $targetPage->getParentId();
@@ -220,7 +220,7 @@ class PageRearrangeService extends Injectable
      * @param Page $page
      * @param Page $targetPage
      */
-    private function placeInto(Page $page, Page $targetPage)
+    private function placeInto(Page $page, Page $targetPage): void
     {
         $menu = $this->pageService->getMaxLevelDeterminer($targetPage);
 
@@ -253,7 +253,7 @@ class PageRearrangeService extends Injectable
      *
      * @param array $nestedSetStructure [pageId => [lft, rgt, level]]
      */
-    private function saveStructure(array $nestedSetStructure)
+    private function saveStructure(array $nestedSetStructure): void
     {
         $insertValues = [];
 
@@ -289,7 +289,7 @@ class PageRearrangeService extends Injectable
      * @param int|null $parentId
      * @param int|null $displayOrder
      */
-    private function updatePage(Page $page, int $parentId = null, int $displayOrder = null)
+    private function updatePage(Page $page, int $parentId = null, int $displayOrder = null): void
     {
         $page->setParentId($parentId)->setDisplayOrder($displayOrder)->save();
     }
@@ -298,7 +298,7 @@ class PageRearrangeService extends Injectable
      * @param Page $page
      * @param bool $placeAfter
      */
-    private function updateSiblingOrder(Page $page, bool $placeAfter)
+    private function updateSiblingOrder(Page $page, bool $placeAfter): void
     {
         if ( ! $page->display_order) {
             return;

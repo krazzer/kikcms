@@ -43,7 +43,7 @@ class CmsController extends BaseCmsController
     /**
      * Renders a file picker used for TinyMCE
      */
-    public function filePickerAction()
+    public function filePickerAction(): ResponseInterface
     {
         $finder = new Finder();
         $finder->setPickingMode(true);
@@ -155,7 +155,7 @@ class CmsController extends BaseCmsController
 
         $settings = [
             'dateFormat' => $this->translator->tl('system.momentJsDateFormat'),
-            'startDate'  => $startDate ? $startDate->format(KikCMSConfig::DATE_FORMAT) : null,
+            'startDate'  => $startDate?->format(KikCMSConfig::DATE_FORMAT),
             'maxDate'    => $maxDate->format(KikCMSConfig::DATE_FORMAT),
             'minDate'    => $minDate->format(KikCMSConfig::DATE_FORMAT),
         ];
@@ -171,7 +171,7 @@ class CmsController extends BaseCmsController
     /**
      * @param PageLanguage|null $pageLanguage
      */
-    public function previewAction(PageLanguage $pageLanguage = null)
+    public function previewAction(PageLanguage $pageLanguage = null): void
     {
         if( ! $pageLanguage){
             throw new NotFoundException();
@@ -188,7 +188,7 @@ class CmsController extends BaseCmsController
      */
     public function getTinyMceLinksAction($languageCode = null): ResponseInterface
     {
-        $languageCode = $languageCode ? $languageCode : $this->languageService->getDefaultLanguageCode();
+        $languageCode = $languageCode ?: $this->languageService->getDefaultLanguageCode();
 
         return $this->response->setJsonContent($this->tinyMceService->getLinkList($languageCode));
     }

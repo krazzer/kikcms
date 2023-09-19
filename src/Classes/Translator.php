@@ -49,7 +49,7 @@ class Translator extends Injectable
      * @param string $prefix
      * @return array
      */
-    public function flatten(array $array, $prefix = ''): array
+    public function flatten(array $array, string $prefix = ''): array
     {
         $result = array();
 
@@ -65,12 +65,12 @@ class Translator extends Injectable
     }
 
     /**
-     * @param string|int|null $key
+     * @param int|string|null $key
      * @param array $replaces
      * @param string|null $langCode if null, this->getLanguageCode() will be used
      * @return string
      */
-    public function tl($key, array $replaces = [], $langCode = null): string
+    public function tl(int|string|null $key, array $replaces = [], string $langCode = null): string
     {
         $langCode = $langCode ?: $this->getLanguageCode();
 
@@ -124,7 +124,7 @@ class Translator extends Injectable
      * @param string $string
      * @return array
      */
-    public function getCmsTranslationGroupKeys(string $string)
+    public function getCmsTranslationGroupKeys(string $string): array
     {
         $translations = $this->getCmsTranslations();
 
@@ -142,7 +142,7 @@ class Translator extends Injectable
     /**
      * @return array
      */
-    public function getContentTypeMap()
+    public function getContentTypeMap(): array
     {
         $contentTypeMap = [];
 
@@ -181,11 +181,9 @@ class Translator extends Injectable
      * @param mixed $languageCode
      * @return Translator
      */
-    public function setLanguageCode($languageCode)
+    public function setLanguageCode(mixed $languageCode): static
     {
         $this->languageCode = $languageCode;
-
-        $this->setValidatorMessages();
 
         return $this;
     }
@@ -203,7 +201,7 @@ class Translator extends Injectable
             // translations must be available, even without a db connection, hence the try-catch block
             try {
                 return $this->translationService->getUserTranslations($langCode);
-            } catch(Exception $exception){
+            } catch(Exception){
                 return [];
             }
         }, CacheConfig::ONE_YEAR, true) ?: [];
@@ -304,19 +302,5 @@ class Translator extends Injectable
         }
 
         return $translations;
-    }
-
-    /**
-     * Set the validators' default messages to match the current language
-     */
-    private function setValidatorMessages()
-    {
-        $webFormMessagesKeys = $this->getCmsTranslationGroupKeys('webform.messages');
-
-        $defaultMessages = [];
-
-        foreach ($webFormMessagesKeys as $key) {
-            $defaultMessages[last(explode('.', $key))] = $this->tl($key);
-        }
     }
 }

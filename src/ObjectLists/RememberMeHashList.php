@@ -12,7 +12,7 @@ class RememberMeHashList extends ObjectList
      * @param int|string $key
      * @return RememberMeHash|false
      */
-    public function get($key)
+    public function get($key): RememberMeHash|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class RememberMeHashList extends ObjectList
     /**
      * @return RememberMeHash|false
      */
-    public function getFirst()
+    public function getFirst(): RememberMeHash|false
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class RememberMeHashList extends ObjectList
     /**
      * @return RememberMeHash|false
      */
-    public function getLast()
+    public function getLast(): RememberMeHash|false
     {
         return parent::getLast();
     }
@@ -36,7 +36,7 @@ class RememberMeHashList extends ObjectList
     /**
      * @return RememberMeHash|false
      */
-    public function current()
+    public function current(): RememberMeHash|false
     {
         return parent::current();
     }

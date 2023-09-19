@@ -20,9 +20,9 @@ class StringService
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @param bool $capitalizeFirstCharacter
-     * @return mixed|string
+     * @return string
      */
     public function dashesToCamelCase(string $string, bool $capitalizeFirstCharacter = false): string
     {
@@ -70,9 +70,9 @@ class StringService
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @param bool $capitalizeFirstCharacter
-     * @return mixed|string
+     * @return string
      */
     public function underscoresToCamelCase(string $string, bool $capitalizeFirstCharacter = false): string
     {

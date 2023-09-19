@@ -9,7 +9,7 @@ class ObjectNotFoundException extends NotFoundException
     private $object;
 
     /**
-     * @param string $object
+     * @param string|null $object
      */
     public function __construct(string $object = null)
     {

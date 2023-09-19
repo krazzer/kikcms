@@ -34,7 +34,7 @@ class RelationKeyService extends Injectable
      * @param string|null $langCode
      * @return array
      */
-    public function set(Model $model, string $relationKey, $value, string $langCode = null): array
+    public function set(Model $model, string $relationKey, mixed $value, string $langCode = null): array
     {
         $relationKey = $this->replaceLangCode($relationKey, $langCode);
 
@@ -135,7 +135,7 @@ class RelationKeyService extends Injectable
      * @param string|null $langCode
      * @return mixed
      */
-    public function get(Model $model, string $relationKey, string $langCode = null)
+    public function get(Model $model, string $relationKey, string $langCode = null): mixed
     {
         $relationKey = $this->replaceLangCode($relationKey, $langCode);
 
@@ -224,7 +224,7 @@ class RelationKeyService extends Injectable
      * @param Model $model
      * @param array $parts
      */
-    private function createMissingRelations(Model $model, array $parts)
+    private function createMissingRelations(Model $model, array $parts): void
     {
         $currentModel = $model;
 
@@ -244,7 +244,7 @@ class RelationKeyService extends Injectable
      * @param Model $model
      * @param string $property
      */
-    private function createMissingRelation(Model $model, string $property)
+    private function createMissingRelation(Model $model, string $property): void
     {
         if ($model->$property) {
             return;
@@ -260,9 +260,9 @@ class RelationKeyService extends Injectable
      * @param Model $model
      * @param string $relation
      * @param string $field
-     * @return mixed
+     * @return array
      */
-    private function getValueForHasMany(Model $model, string $relation, string $field)
+    private function getValueForHasMany(Model $model, string $relation, string $field): array
     {
         $returnValue = [];
 
@@ -311,7 +311,7 @@ class RelationKeyService extends Injectable
      * @param string $field
      * @param $value
      */
-    private function storeHasManyRelation(Model $model, string $relationField, string $field, $value)
+    private function storeHasManyRelation(Model $model, string $relationField, string $field, $value): void
     {
         $relation = $this->getRelation($model, $relationField);
 
@@ -353,7 +353,7 @@ class RelationKeyService extends Injectable
      */
     private function hasMultipleRelations(string $relationKey): bool
     {
-        return strpos($relationKey, DataFormConfig::RELATION_KEY_SEPARATOR) !== false;
+        return str_contains($relationKey, DataFormConfig::RELATION_KEY_SEPARATOR);
     }
 
     /**
@@ -361,7 +361,7 @@ class RelationKeyService extends Injectable
      * @param array $preSaveRelations
      * @return void
      */
-    public function savePreSaveRelations(Model $object, array $preSaveRelations)
+    public function savePreSaveRelations(Model $object, array $preSaveRelations): void
     {
         foreach ($preSaveRelations as $preSaveRelation) {
             if (strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)) {

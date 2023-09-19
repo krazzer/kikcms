@@ -152,11 +152,11 @@ class PageService extends Injectable
      *
      * @param int $parentId
      * @param PageMap $pageMap
-     * @param PageLanguageMap $pageLangMap
+     * @param PageLanguageMap|null $pageLangMap
      * @param int $level
      * @return array
      */
-    public function getSelect($parentId, PageMap $pageMap, PageLanguageMap $pageLangMap = null, $level = 0): array
+    public function getSelect(int $parentId, PageMap $pageMap, PageLanguageMap $pageLangMap = null, int $level = 0): array
     {
         if ( ! $pageLangMap) {
             $pageLangMap = $this->pageLanguageService->getByPageMap($pageMap, null, false);
@@ -245,7 +245,7 @@ class PageService extends Injectable
      * @param mixed $menuKeyOrId
      * @return int|null
      */
-    public function getIdByKeyOrId($menuKeyOrId): ?int
+    public function getIdByKeyOrId(mixed $menuKeyOrId): ?int
     {
         if (is_numeric($menuKeyOrId)) {
             return (int) $menuKeyOrId;

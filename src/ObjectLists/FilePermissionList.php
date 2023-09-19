@@ -12,7 +12,7 @@ class FilePermissionList extends ObjectList
      * @param int|string $key
      * @return FilePermission|false
      */
-    public function get($key)
+    public function get($key): FilePermission|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class FilePermissionList extends ObjectList
     /**
      * @return FilePermission|false
      */
-    public function current()
+    public function current(): FilePermission|false
     {
         return parent::current();
     }

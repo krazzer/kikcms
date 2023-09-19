@@ -124,7 +124,7 @@ class FilePermissionHelper extends Injectable
      * @param array $values
      * @return FilePermission
      */
-    private function createPermissionByData(int $fileId, $key, array $values): FilePermission
+    private function createPermissionByData(int $fileId, int|string $key, array $values): FilePermission
     {
         $permission = new FilePermission();
 

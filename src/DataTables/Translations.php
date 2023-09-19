@@ -25,7 +25,7 @@ class Translations extends DataTable
     /**
      * @inheritdoc
      */
-    public function delete(array $ids)
+    public function delete(array $ids): void
     {
         parent::delete($ids);
 
@@ -87,7 +87,7 @@ class Translations extends DataTable
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->setFieldFormatting('value', function ($value, $row) {
             if( ! $value){

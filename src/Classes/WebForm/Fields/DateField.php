@@ -35,7 +35,7 @@ class DateField extends Field
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return Field::TYPE_DATE;
     }

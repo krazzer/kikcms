@@ -122,9 +122,7 @@ abstract class WebForm extends Renderable
             $this->getForm()->add($field->getElement());
         }
 
-        if ($tab) {
-            $tab->addField($field);
-        }
+        $tab?->addField($field);
 
         return $field;
     }
@@ -151,7 +149,7 @@ abstract class WebForm extends Renderable
     /**
      * @return mixed
      */
-    public function getCurrentTab()
+    public function getCurrentTab(): mixed
     {
         return $this->request->getPost('currentTab', null, 0);
     }
@@ -228,7 +226,7 @@ abstract class WebForm extends Renderable
     /**
      * @return Tab[]
      */
-    public function getTabs()
+    public function getTabs(): array
     {
         return $this->tabs;
     }
@@ -246,7 +244,7 @@ abstract class WebForm extends Renderable
      *
      * @return Response|string
      */
-    public function render()
+    public function render(): Response|string
     {
         $errorContainer = new ErrorContainer();
 
@@ -276,7 +274,7 @@ abstract class WebForm extends Renderable
      *
      * @return WebForm|$this
      */
-    public function setSendButtonLabel(string $sendButtonLabel)
+    public function setSendButtonLabel(string $sendButtonLabel): WebForm|static
     {
         $this->sendButtonLabel = $sendButtonLabel;
         return $this;
@@ -313,7 +311,7 @@ abstract class WebForm extends Renderable
     /**
      * Checks whether this form has been posted
      */
-    public function isPosted()
+    public function isPosted(): bool
     {
         return $this->request->getPost($this->getFormId()) == $this->getFormId();
     }
@@ -323,7 +321,7 @@ abstract class WebForm extends Renderable
      *
      * @return WebForm|$this
      */
-    public function setPlaceHolderAsLabel(bool $placeHolderAsLabel)
+    public function setPlaceHolderAsLabel(bool $placeHolderAsLabel): WebForm|static
     {
         $this->placeHolderAsLabel = $placeHolderAsLabel;
 
@@ -355,7 +353,7 @@ abstract class WebForm extends Renderable
     /**
      * @return WebForm|$this
      */
-    public function initializeForm()
+    public function initializeForm(): WebForm|static
     {
         $this->initialize();
 
@@ -403,7 +401,7 @@ abstract class WebForm extends Renderable
     /**
      * Make sure only this for will output flash messages
      */
-    public function flashForFormOnly()
+    public function flashForFormOnly(): void
     {
         $sessionKey = self::FLASH_KEY;
 
@@ -441,7 +439,7 @@ abstract class WebForm extends Renderable
      * @param array $input
      * @return null|Response|string
      */
-    protected function successAction(array $input)
+    protected function successAction(array $input): Response|string|null
     {
         if ($this->successAction) {
             return call_user_func($this->successAction, $input);
@@ -454,7 +452,7 @@ abstract class WebForm extends Renderable
     /**
      * Pre-renders the DataTable fields, so that any required asset will be correctly added
      */
-    protected function renderDataTableFields()
+    protected function renderDataTableFields(): void
     {
         /** @var SelectDataTableField|DataTableField $field */
         foreach ($this->getFieldMap() as $field) {
@@ -472,7 +470,7 @@ abstract class WebForm extends Renderable
      * @param ErrorContainer $errorContainer
      * @return string
      */
-    protected function renderForm(ErrorContainer $errorContainer)
+    protected function renderForm(ErrorContainer $errorContainer): string
     {
         $this->renderDataTableFields();
 
@@ -504,7 +502,7 @@ abstract class WebForm extends Renderable
     /**
      * @param DataTableField $field
      */
-    protected function renderDataTableField(DataTableField $field)
+    protected function renderDataTableField(DataTableField $field): void
     {
         $field->setRenderedDataTable($field->getDataTable()->render());
     }
@@ -512,7 +510,7 @@ abstract class WebForm extends Renderable
     /**
      * @param SelectDataTableField $field
      */
-    protected function renderSelectDataTableField(SelectDataTableField $field)
+    protected function renderSelectDataTableField(SelectDataTableField $field): void
     {
         // set selected ids filter for SelectDataTable
         if ($value = $field->getElement()->getValue()) {
@@ -597,7 +595,7 @@ abstract class WebForm extends Renderable
      *
      * return Field[]
      */
-    private function getFieldsWithoutContainer()
+    private function getFieldsWithoutContainer(): array
     {
         $fieldsWithoutContainer = [];
 
@@ -615,7 +613,7 @@ abstract class WebForm extends Renderable
      *
      * @param DateField $field
      */
-    private function initializeDateField(DateField $field)
+    private function initializeDateField(DateField $field): void
     {
         if ($field->getElement()->getValidators()) {
             return;
@@ -636,7 +634,7 @@ abstract class WebForm extends Renderable
     /**
      * Update the forms' input after a post is done
      */
-    private function updateFieldsByPostData()
+    private function updateFieldsByPostData(): void
     {
         foreach ($this->fieldMap as $key => $field) {
             // set unchecked checkboxes (with default = 1) to default 0
@@ -679,7 +677,7 @@ abstract class WebForm extends Renderable
     /**
      * Make sure datatable instance keys are re-used after a post
      */
-    private function reUseDataTableInstances()
+    private function reUseDataTableInstances(): void
     {
         foreach ($this->fieldMap as $key => $field) {
             if ($field instanceof DataTableField && $this->request->hasPost($key)) {

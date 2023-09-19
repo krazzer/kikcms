@@ -14,20 +14,21 @@ class View extends PhalconView
     /**
      * @inheritdoc
      */
-    protected function engineRender($engines, $viewPath, $silence, $mustClean = true)
+    protected function engineRender($engines, $viewPath, $silence, $mustClean = true): void
     {
         $viewPath = $this->convertNamespace($viewPath);
 
-        return parent::engineRender($engines, $viewPath, $silence, $mustClean);
+        parent::engineRender($engines, $viewPath, $silence, $mustClean);
     }
 
     /**
-     * @inheritdoc
+     * @param string $view
+     * @return bool
      */
-    public function exists($view): bool
+    public function exists(string $view): bool
     {
         if( ! $this->isNamespaced($view)){
-            return parent::exists($view);
+            return parent::has($view);
         }
 
         foreach ($this->registeredEngines as $extension => $engine) {
@@ -50,30 +51,30 @@ class View extends PhalconView
     /**
      * @param array $namespaces
      */
-    public function setNamespaces(array $namespaces)
+    public function setNamespaces(array $namespaces): void
     {
         $this->namespaces = $namespaces;
     }
 
     /**
-     * @param mixed $viewPath
+     * @param mixed $renderView
      * @return PhalconView
      * @throws Exception
      */
-    public function pick($viewPath): PhalconView
+    public function pick(mixed $renderView): PhalconView
     {
-        if( ! $this->exists($viewPath)){
-            throw new Exception('View "' . $viewPath . '" not found.');
+        if( ! $this->exists($renderView)){
+            throw new Exception('View "' . $renderView . '" not found.');
         }
 
-        return parent::pick($viewPath);
+        return parent::pick($renderView);
     }
 
     /**
      * @param mixed $viewPath
      * @return mixed
      */
-    private function convertNamespace($viewPath)
+    private function convertNamespace(mixed $viewPath): mixed
     {
         if ($this->isNamespaced($viewPath)) {
             foreach ($this->namespaces as $namespace => $path) {
@@ -86,6 +87,6 @@ class View extends PhalconView
 
     private function isNamespaced($viewPath): bool
     {
-        return strpos($viewPath, '@') === 0;
+        return str_starts_with($viewPath, '@');
     }
 }

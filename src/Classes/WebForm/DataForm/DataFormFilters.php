@@ -28,7 +28,7 @@ class DataFormFilters extends Filters
      * @param int|null $editId
      * @return DataFormFilters|$this
      */
-    public function setEditId(?int $editId)
+    public function setEditId(?int $editId): DataFormFilters|static
     {
         $this->editId = $editId;
         return $this;
@@ -46,7 +46,7 @@ class DataFormFilters extends Filters
      * @param string|null $languageCode
      * @return DataFormFilters
      */
-    public function setLanguageCode(?string $languageCode)
+    public function setLanguageCode(?string $languageCode): static
     {
         $this->languageCode = $languageCode;
         return $this;
@@ -64,7 +64,7 @@ class DataFormFilters extends Filters
      * @param int|null $parentEditId
      * @return DataFormFilters
      */
-    public function setParentEditId($parentEditId)
+    public function setParentEditId(?int $parentEditId): static
     {
         $this->parentEditId = $parentEditId;
         return $this;

@@ -3,7 +3,9 @@
 namespace KikCMS\Classes\Exceptions;
 
 
-class SessionExpiredException extends \Exception
+use Exception;
+
+class SessionExpiredException extends Exception
 {
 
 }

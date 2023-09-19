@@ -11,7 +11,7 @@ class QueryLogMap extends ObjectMap
      * @inheritdoc
      * @return QueryLog|false
      */
-    public function current()
+    public function current(): QueryLog|false
     {
         return parent::current();
     }
@@ -20,7 +20,7 @@ class QueryLogMap extends ObjectMap
      * @inheritdoc
      * @return QueryLog|false
      */
-    public function get($key)
+    public function get($key): QueryLog|false
     {
         return parent::get($key);
     }
@@ -29,7 +29,7 @@ class QueryLogMap extends ObjectMap
      * @inheritdoc
      * @return QueryLog|false
      */
-    public function getFirst()
+    public function getFirst(): QueryLog|false
     {
         return parent::getFirst();
     }
@@ -38,7 +38,7 @@ class QueryLogMap extends ObjectMap
      * @inheritdoc
      * @return QueryLog|false
      */
-    public function getLast()
+    public function getLast(): QueryLog|false
     {
         return parent::getLast();
     }

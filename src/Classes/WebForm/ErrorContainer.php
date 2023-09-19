@@ -21,7 +21,7 @@ class ErrorContainer
      * @param bool $addToGlobal set this true if you also want this to be shown as form error
      * @return ErrorContainer
      */
-    public function addFieldError(FieldError $fieldError, $addToGlobal = false): ErrorContainer
+    public function addFieldError(FieldError $fieldError, bool $addToGlobal = false): ErrorContainer
     {
         $field = $fieldError->getField();
 
@@ -160,7 +160,7 @@ class ErrorContainer
     /**
      * @param string $field
      */
-    private function setFieldHasError(string $field)
+    private function setFieldHasError(string $field): void
     {
         if( ! in_array($field, $this->fieldsWithErrors)) {
             $this->fieldsWithErrors[] = $field;

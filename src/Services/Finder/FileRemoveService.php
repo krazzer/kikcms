@@ -32,7 +32,7 @@ class FileRemoveService extends Injectable
     /**
      * Walk through the public media folder to find and remove broken links
      */
-    public function cleanUpBrokenSymlinks()
+    public function cleanUpBrokenSymlinks(): void
     {
         $filesDir = $this->fileService->getMediaStorageDir() . FinderConfig::FILES_DIR . DIRECTORY_SEPARATOR;
 
@@ -52,7 +52,7 @@ class FileRemoveService extends Injectable
     /**
      * @param int[] $fileIds
      */
-    public function deleteFilesByIds(array $fileIds)
+    public function deleteFilesByIds(array $fileIds): void
     {
         $files      = File::getByIdList($fileIds);
         $allFileIds = $fileIds;
@@ -64,7 +64,7 @@ class FileRemoveService extends Injectable
 
         $files = File::getByIdList($allFileIds);
 
-        if ( ! $filesRemoved = $this->dbService->delete(File::class, [File::FIELD_ID => $fileIds])) {
+        if ( ! $this->dbService->delete(File::class, [File::FIELD_ID => $fileIds])) {
             return;
         }
 
@@ -125,7 +125,7 @@ class FileRemoveService extends Injectable
     /**
      * @param File $file
      */
-    public function removeThumbNails(File $file)
+    public function removeThumbNails(File $file): void
     {
         $thumbNailDirs = glob($this->fileService->getMediaThumbDir() . '*');
 
@@ -148,7 +148,7 @@ class FileRemoveService extends Injectable
      *
      * @param File $file
      */
-    private function unlinkFiles(File $file)
+    private function unlinkFiles(File $file): void
     {
         $filePath             = $this->fileService->getFilePath($file);
         $mediaFilePath        = $this->fileService->getMediaFilePath($file);

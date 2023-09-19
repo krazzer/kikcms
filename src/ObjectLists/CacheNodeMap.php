@@ -12,7 +12,7 @@ class CacheNodeMap extends ObjectMap
      * @param int|string $key
      * @return CacheNode|false
      */
-    public function get($key)
+    public function get($key): CacheNode|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class CacheNodeMap extends ObjectMap
     /**
      * @return CacheNode|false
      */
-    public function getFirst()
+    public function getFirst(): CacheNode|false
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class CacheNodeMap extends ObjectMap
     /**
      * @return CacheNode|false
      */
-    public function getLast()
+    public function getLast(): CacheNode|false
     {
         return parent::getLast();
     }
@@ -36,7 +36,7 @@ class CacheNodeMap extends ObjectMap
     /**
      * @return CacheNode|false
      */
-    public function current()
+    public function current(): CacheNode|false
     {
         return parent::current();
     }

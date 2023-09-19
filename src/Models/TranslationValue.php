@@ -17,7 +17,7 @@ class TranslationValue extends Model
     /**
      * Remove cache when updating a value
      */
-    public function afterUpdate()
+    public function afterUpdate(): void
     {
         $this->getCacheService()->clear($this->getCacheKey());
     }

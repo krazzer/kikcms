@@ -8,7 +8,6 @@ use KikCMS\Services\Cms\CmsService;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\UserService;
 use Phalcon\Http\Response;
-use Phalcon\Http\ResponseInterface;
 
 /**
  * @property UserService $userService
@@ -37,7 +36,7 @@ class LoginForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function successAction(array $input): Response|ResponseInterface|string|null
+    protected function successAction(array $input): Response|string|null
     {
         $user = $this->userService->getByEmail($input[self::FIELD_USERNAME]);
 

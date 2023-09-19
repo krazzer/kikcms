@@ -51,7 +51,7 @@ class StatisticsController extends BaseController
     /**
      * Update statistics data from Google Analytics
      */
-    public function updateAction()
+    public function updateAction(): bool|string
     {
         $token = (string) $this->request->getPost('token', 'string');
 
@@ -69,7 +69,7 @@ class StatisticsController extends BaseController
 
         return json_encode([
             'success' => $this->analyticsService->importIntoDb(),
-            'maxDate' => $maxDate ? $maxDate->format(KikCMSConfig::DATE_FORMAT) : null,
+            'maxDate' => $maxDate?->format(KikCMSConfig::DATE_FORMAT),
         ]);
     }
 }

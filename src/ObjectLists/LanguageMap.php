@@ -13,7 +13,7 @@ class LanguageMap extends ObjectMap
      * @param int|string $key
      * @return Language|false
      */
-    public function get($key)
+    public function get($key): Language|false
     {
         return parent::get($key);
     }
@@ -21,7 +21,7 @@ class LanguageMap extends ObjectMap
     /**
      * @return Language|false
      */
-    public function getFirst()
+    public function getFirst(): Language|false
     {
         return parent::getFirst();
     }
@@ -29,7 +29,7 @@ class LanguageMap extends ObjectMap
     /**
      * @return Language|false
      */
-    public function getLast()
+    public function getLast(): Language|false
     {
         return parent::getLast();
     }
@@ -37,7 +37,7 @@ class LanguageMap extends ObjectMap
     /**
      * @return Language|false
      */
-    public function current()
+    public function current(): Language|false
     {
         return parent::current();
     }

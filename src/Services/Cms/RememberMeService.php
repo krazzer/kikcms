@@ -19,7 +19,7 @@ class RememberMeService extends Injectable
     /**
      * Add a token for the current loggedin user and store it in a cookie
      */
-    public function addToken()
+    public function addToken(): void
     {
         $hashList    = $this->getForCurrentUser();
         $expire      = $this->getExpireDate();
@@ -104,7 +104,7 @@ class RememberMeService extends Injectable
     /**
      * @param RememberMeHashList $hashList
      */
-    private function store(RememberMeHashList $hashList)
+    private function store(RememberMeHashList $hashList): void
     {
         if( ! $user = $this->userService->getUser()){
             return;
@@ -119,7 +119,7 @@ class RememberMeService extends Injectable
     /**
      * Remove token that is bound to the user's cookie. Also unset the cookie
      */
-    public function removeToken()
+    public function removeToken(): void
     {
         if( ! $this->cookies->has($this->getKey()) ){
             return;
@@ -173,7 +173,7 @@ class RememberMeService extends Injectable
     /**
      * @param RememberMeHashList $hashList
      */
-    private function cleanUpExpiredTokens(RememberMeHashList $hashList)
+    private function cleanUpExpiredTokens(RememberMeHashList $hashList): void
     {
         foreach ($hashList as $i => $hash) {
             if ($hash->getExpire() < new DateTime()) {

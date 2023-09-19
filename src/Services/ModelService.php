@@ -19,18 +19,18 @@ class ModelService extends Injectable
      * @param Model $model
      * @param string $field
      */
-    public function addTranslationRelation(Model $model, string $field)
+    public function addTranslationRelation(Model $model, string $field): void
     {
         $alias = $this->stringService->underscoresToCamelCase($field) . 'Key';
         $model->belongsTo($field, TranslationKey::class, TranslationKey::FIELD_ID, ['alias' => $alias]);
     }
 
     /**
-     * @param Model|string $model
+     * @param string|Model $model
      * @param string $alias
      * @return Relation|null
      */
-    public function getRelation($model, string $alias): ?Relation
+    public function getRelation(string|Model $model, string $alias): ?Relation
     {
         if ( ! $model instanceof Model) {
             $model = $this->getModelByClassName($model);
@@ -67,7 +67,6 @@ class ModelService extends Injectable
     /**
      * @param Model $object
      * @return null|string
-     * @noinspection PhpPossiblePolymorphicInvocationInspection
      */
     public function getObjectName(Model $object): ?string
     {

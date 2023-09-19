@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassInspection */
 declare(strict_types=1);
 
 namespace KikCMS\Services\Analytics;
@@ -18,7 +18,6 @@ use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 use Monolog\Logger;
 use KikCMS\Classes\Phalcon\Injectable;
-use Phalcon\Cache;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 
@@ -264,7 +263,7 @@ class AnalyticsService extends Injectable
      * @param DateTime|null $start
      * @param DateTime|null $end
      */
-    private function addDateWhere(BuilderInterface $query, DateTime $start = null, DateTime $end = null)
+    private function addDateWhere(BuilderInterface $query, DateTime $start = null, DateTime $end = null): void
     {
         if ($start) {
             $query->andWhere(GaDayVisit::FIELD_DATE . ' >= :dateStart:', [
@@ -445,7 +444,7 @@ class AnalyticsService extends Injectable
     /**
      * Store cache entry that prevents updates for 6 hours
      */
-    private function stopUpdatingForSixHours()
+    private function stopUpdatingForSixHours(): void
     {
         if ( ! $this->cache) {
             return;

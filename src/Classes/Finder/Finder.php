@@ -57,7 +57,7 @@ class Finder extends Renderable
     /**
      * @return FinderFilters|Filters
      */
-    public function getFinderFilters(): FinderFilters
+    public function getFinderFilters(): FinderFilters|Filters
     {
         return parent::getFilters();
     }
@@ -65,7 +65,7 @@ class Finder extends Renderable
     /**
      * @return FinderFilters|Filters
      */
-    public function getFilters(): Filters
+    public function getFilters(): FinderFilters|Filters
     {
         if ( ! $this->getFinderFilters()->getFolderId()) {
             $this->finderService->setStartingFolder($this->getFinderFilters());
@@ -102,7 +102,7 @@ class Finder extends Renderable
     /**
      * @return string
      */
-    public function renderFiles()
+    public function renderFiles(): string
     {
         $files = $this->fileService->getByFilters($this->getFilters());
 
@@ -115,7 +115,7 @@ class Finder extends Renderable
      * @param File $file
      * @return string
      */
-    public function renderFilePreview(File $file)
+    public function renderFilePreview(File $file): string
     {
         return $this->renderView('file', [
             'file' => $file,
@@ -125,7 +125,7 @@ class Finder extends Renderable
     /**
      * @return string
      */
-    public function renderPath()
+    public function renderPath(): string
     {
         $folderId = $this->getFilters()->getFolderId();
 
@@ -145,7 +145,7 @@ class Finder extends Renderable
     /**
      * @param bool $pickingMode
      */
-    public function setPickingMode(bool $pickingMode)
+    public function setPickingMode(bool $pickingMode): void
     {
         $this->pickingMode = $pickingMode;
     }
@@ -153,7 +153,7 @@ class Finder extends Renderable
     /**
      * @return Filters|FinderFilters
      */
-    public function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters|FinderFilters
     {
         return new FinderFilters();
     }

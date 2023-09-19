@@ -21,7 +21,7 @@ class QueryLogService extends Injectable
     /**
      * Setup the query logger
      */
-    public function setup()
+    public function setup(): void
     {
         $this->queryLogMap = new QueryLogMap();
 
@@ -43,7 +43,7 @@ class QueryLogService extends Injectable
      * @param $connection
      * @noinspection PhpUnusedParameterInspection
      */
-    private function addToLog(Event $event, $connection)
+    private function addToLog(Event $event, $connection): void
     {
         $query = $connection->getSQLStatement();
         $hash  = md5($query);
@@ -68,7 +68,7 @@ class QueryLogService extends Injectable
     /**
      * Store the log entries in the db
      */
-    private function saveLog()
+    private function saveLog(): void
     {
         $total = 0;
 
@@ -89,7 +89,7 @@ class QueryLogService extends Injectable
     /**
      * Start timing the current query
      */
-    private function startTiming()
+    private function startTiming(): void
     {
         $this->timingMap[$this->index] = microtime(true);
     }

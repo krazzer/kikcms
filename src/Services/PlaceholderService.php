@@ -15,7 +15,7 @@ use KikCMS\ObjectLists\PlaceholderTable;
 use KikCMS\Services\Finder\FileService;
 use KikCMS\Services\Pages\UrlService;
 use KikCMS\Classes\Phalcon\Injectable;
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 
 /**
  * @property Cache $cache
@@ -167,7 +167,7 @@ class PlaceholderService extends Injectable
     {
         $fileIdList = [];
 
-        foreach ($placeholderMap as $key => $placeholder) {
+        foreach ($placeholderMap as $placeholder) {
             $fileIdList[] = $placeholder->getFileId();
         }
 

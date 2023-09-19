@@ -166,7 +166,7 @@ abstract class DataTable extends Renderable
     /**
      * @param Filter $filter
      */
-    public function addFilter(Filter $filter)
+    public function addFilter(Filter $filter): void
     {
         $this->customFilters[$filter->getField()] = $filter;
     }
@@ -200,7 +200,7 @@ abstract class DataTable extends Renderable
      * @param int|null $id
      * @return bool
      */
-    public function canEdit($id = null): bool
+    public function canEdit(int $id = null): bool
     {
         if ( ! $this->acl->resourceExists(static::class)) {
             return true;
@@ -240,7 +240,7 @@ abstract class DataTable extends Renderable
     /**
      * @param array $ids
      */
-    public function delete(array $ids)
+    public function delete(array $ids): void
     {
         foreach ($ids as $i => $id) {
             if ( ! $this->canDelete($id)) {
@@ -316,12 +316,12 @@ abstract class DataTable extends Renderable
      * Used by Twig
      *
      * @param string $column
-     * @param string $value
+     * @param string|null $value
      * @param array $rowData
      *
      * @return string|null
      */
-    public function formatValue(string $column, $value, array $rowData = []): ?string
+    public function formatValue(string $column, ?string $value, array $rowData = []): ?string
     {
         if ( ! array_key_exists($column, $this->fieldFormatting)) {
             return null;
@@ -365,7 +365,7 @@ abstract class DataTable extends Renderable
     /**
      * @return Filters|DataTableFilters
      */
-    public function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters|DataTableFilters
     {
         return new DataTableFilters();
     }
@@ -373,7 +373,7 @@ abstract class DataTable extends Renderable
     /**
      * @return Filters|DataTableFilters
      */
-    public function getFilters(): Filters
+    public function getFilters(): Filters|DataTableFilters
     {
         /** @var DataTableFilters $filters */
         $filters = parent::getFilters();
@@ -442,7 +442,7 @@ abstract class DataTable extends Renderable
     /**
      * @return mixed
      */
-    public function getParentRelationValue()
+    public function getParentRelationValue(): mixed
     {
         return $this->dataTableFilterService->getParentRelationValue($this->getFilters());
     }
@@ -491,7 +491,7 @@ abstract class DataTable extends Renderable
      * Initializes the dataTable
      * @param bool $initializeForm
      */
-    public function initializeDatatable($initializeForm = false)
+    public function initializeDatatable(bool $initializeForm = false): void
     {
         if ($this->initialized) {
             return;
@@ -588,7 +588,7 @@ abstract class DataTable extends Renderable
     /**
      * @return string
      */
-    public function renderPagination()
+    public function renderPagination(): string
     {
         return $this->renderView('pagination', [
             'tableData' => $this->getTableData(),
@@ -598,7 +598,7 @@ abstract class DataTable extends Renderable
     /**
      * @return string
      */
-    public function renderTable()
+    public function renderTable(): string
     {
         $this->initializeDatatable();
 
@@ -645,7 +645,7 @@ abstract class DataTable extends Renderable
      * @param string $field
      * @param string|null $relationKey
      */
-    public function setCheckboxFormat(string $field, string $relationKey = null)
+    public function setCheckboxFormat(string $field, string $relationKey = null): void
     {
         $this->setFieldFormatting($field, function ($value, $rowData, $column) use ($relationKey) {
             return $this->formatCheckbox($value, $rowData, $relationKey ?: $column);
@@ -657,7 +657,7 @@ abstract class DataTable extends Renderable
      * @param callable $callback
      * @return $this|DataTable
      */
-    public function setFieldFormatting(string $column, $callback)
+    public function setFieldFormatting(string $column, callable $callback): DataTable|static
     {
         $this->fieldFormatting[$column] = $callback;
 
@@ -668,7 +668,7 @@ abstract class DataTable extends Renderable
      * @param int $limit
      * @return $this|DataTable
      */
-    public function setLimit(int $limit)
+    public function setLimit(int $limit): DataTable|static
     {
         $this->limit = $limit;
 
@@ -681,7 +681,7 @@ abstract class DataTable extends Renderable
      *
      * @param int $editId
      */
-    public function cacheNewId(int $editId)
+    public function cacheNewId(int $editId): void
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
@@ -715,7 +715,7 @@ abstract class DataTable extends Renderable
     /**
      * Remove cache files
      */
-    public function removeNewIdCache()
+    public function removeNewIdCache(): void
     {
         $cacheKey = $this->getNewIdsCacheKey();
 
@@ -757,7 +757,7 @@ abstract class DataTable extends Renderable
      * @param bool $blank
      * @param string|null $warning
      */
-    protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false, string $warning = null)
+    protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false, string $warning = null): void
     {
         $this->tableButtons[] = new TableButton($icon, $title, $class, $url, $blank, $warning);
     }
@@ -765,7 +765,7 @@ abstract class DataTable extends Renderable
     /**
      * @return false|string
      */
-    public function getDirectImageField()
+    public function getDirectImageField(): false|string
     {
         return $this->directImageField;
     }
@@ -858,7 +858,7 @@ abstract class DataTable extends Renderable
     /**
      * @return string
      */
-    private function getNewIdsCacheKey()
+    private function getNewIdsCacheKey(): string
     {
         return $this->getInstance() . self::IDS_CACHE_SUFFIX;
     }
@@ -866,7 +866,7 @@ abstract class DataTable extends Renderable
     /**
      * Check if the table used has an id field
      */
-    private function checkValidKey()
+    private function checkValidKey(): void
     {
         $constant = $this->getModel() . '::FIELD_' . strtoupper(self::TABLE_KEY);
 

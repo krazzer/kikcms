@@ -22,7 +22,7 @@ class PlaceholderConverterPlugin extends Injectable
      * @param Application $app
      * @param Response $response
      */
-    public function beforeSendResponse(Event $event, Application $app, Response $response)
+    public function beforeSendResponse(Event $event, Application $app, Response $response): void
     {
         if ( ! $content = $response->getContent()) {
             return;

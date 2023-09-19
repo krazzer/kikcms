@@ -8,6 +8,7 @@ use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\DataTables\Languages;
 use KikCMS\DataTables\Translations;
+use Phalcon\Http\Response;
 
 /**
  * @property AccessControl $acl
@@ -17,7 +18,7 @@ class SettingsForm extends WebForm
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         if($this->acl->allowed(Languages::class)) {
             $this->addDataTableField('languages', Languages::class, $this->translator->tl("fields.languages"));
@@ -40,9 +41,11 @@ class SettingsForm extends WebForm
     /**
      * @inheritDoc
      */
-    public function successAction(array $input)
+    public function successAction(array $input): null|Response|string
     {
         $this->keyValue->set(KikCMSConfig::SETTING_MAINTENANCE, $input['maintenance']);
         $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+
+        return null;
     }
 }

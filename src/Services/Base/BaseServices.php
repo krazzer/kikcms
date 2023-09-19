@@ -1,4 +1,5 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
 namespace KikCMS\Services\Base;
@@ -62,7 +63,7 @@ class BaseServices extends ApplicationServices
      * @param string|null $item
      * @return mixed
      */
-    public function getConfig(string $group = null, string $item = null)
+    public function getConfig(string $group = null, string $item = null): mixed
     {
         $config = $this->get('config');
 
@@ -80,7 +81,7 @@ class BaseServices extends ApplicationServices
     /**
      * Binds all services
      */
-    protected function bindServices()
+    protected function bindServices(): void
     {
         $this->bindMethodServices();
         $this->bindExtendableServices();
@@ -155,7 +156,7 @@ class BaseServices extends ApplicationServices
     /**
      * Binds services that are extendable by the website
      */
-    private function bindExtendableServices()
+    private function bindExtendableServices(): void
     {
         foreach ($this->getExtendableServices() as $service) {
             $serviceName        = lcfirst(last(explode('\\', $service)));
@@ -176,7 +177,7 @@ class BaseServices extends ApplicationServices
     /**
      * Bind services required by a plugin
      */
-    private function bindPluginServices()
+    private function bindPluginServices(): void
     {
         $pluginList = $this->getWebsiteSettings()->getPluginList();
 
@@ -190,7 +191,7 @@ class BaseServices extends ApplicationServices
     /**
      * Bind simple services that only require a new instance
      */
-    private function bindSimpleServices()
+    private function bindSimpleServices(): void
     {
         foreach ($this->getSimpleServices() as $service) {
             $serviceName = lcfirst(last(explode('\\', $service)));
@@ -208,7 +209,7 @@ class BaseServices extends ApplicationServices
     /**
      * @param CmsPlugin $plugin
      */
-    private function addPluginSimpleServices(CmsPlugin $plugin)
+    private function addPluginSimpleServices(CmsPlugin $plugin): void
     {
         $services = $plugin->getSimpleServices();
 
@@ -224,18 +225,18 @@ class BaseServices extends ApplicationServices
     /**
      * Bind services by methods of the current class that start with init or initShared
      */
-    private function bindMethodServices()
+    private function bindMethodServices(): void
     {
         $reflection = new ReflectionObject($this);
         $methods    = $reflection->getMethods();
 
         foreach ($methods as $method) {
-            if ((strlen($method->name) > 10) && (strpos($method->name, 'initShared') === 0)) {
+            if ((strlen($method->name) > 10) && (str_starts_with($method->name, 'initShared'))) {
                 $this->set(lcfirst(substr($method->name, 10)), $method->getClosure($this));
                 continue;
             }
 
-            if ((strlen($method->name) > 4) && (strpos($method->name, 'init') === 0)) {
+            if ((strlen($method->name) > 4) && (str_starts_with($method->name, 'init'))) {
                 $this->set(lcfirst(substr($method->name, 4)), $method->getClosure($this));
             }
         }

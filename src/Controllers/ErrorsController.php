@@ -10,7 +10,7 @@ class ErrorsController extends BaseCmsController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 

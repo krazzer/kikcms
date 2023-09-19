@@ -36,7 +36,7 @@ class PageLanguage extends Model
      * @inheritDoc
      * @return PageLanguage
      */
-    public static function getById($id)
+    public static function getById($id): PageLanguage
     {
         return parent::getById($id);
     }
@@ -44,7 +44,7 @@ class PageLanguage extends Model
     /**
      * Remove cache
      */
-    public function beforeDelete()
+    public function beforeDelete(): void
     {
         /** @var PageLanguageService $pageLanguageService */
         $pageLanguageService = $this->getDI()->get('pageLanguageService');
@@ -55,7 +55,7 @@ class PageLanguage extends Model
     /**
      * Create URL if needed
      */
-    public function beforeSave()
+    public function beforeSave(): void
     {
         /** @var PageLanguageService $pageLanguageService */
         $pageLanguageService = $this->getDI()->get('pageLanguageService');
@@ -94,9 +94,9 @@ class PageLanguage extends Model
     }
 
     /**
-     * @inheritdoc
+     * Initialize relations
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -112,7 +112,7 @@ class PageLanguage extends Model
      */
     public function hasAliasPage(): bool
     {
-        return $this->aliasPage ? true : false;
+        return (bool) $this->aliasPage;
     }
 
     /**

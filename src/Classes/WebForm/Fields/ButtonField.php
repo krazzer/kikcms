@@ -42,7 +42,7 @@ class ButtonField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_BUTTON;
     }
@@ -59,7 +59,7 @@ class ButtonField extends Field
      * @param string $info
      * @return $this|ButtonField
      */
-    public function setInfo(string $info)
+    public function setInfo(string $info): ButtonField|static
     {
         $this->info = $info;
         return $this;
@@ -77,7 +77,7 @@ class ButtonField extends Field
      * @param string $buttonLabel
      * @return $this|ButtonField
      */
-    public function setButtonLabel(string $buttonLabel)
+    public function setButtonLabel(string $buttonLabel): ButtonField|static
     {
         $this->buttonLabel = $buttonLabel;
         return $this;
@@ -95,7 +95,7 @@ class ButtonField extends Field
      * @param string $route
      * @return $this|ButtonField
      */
-    public function setRoute(string $route)
+    public function setRoute(string $route): ButtonField|static
     {
         $this->route = $route;
         return $this;

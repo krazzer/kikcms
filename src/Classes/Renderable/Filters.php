@@ -10,7 +10,7 @@ class Filters
     /**
      * @param array $filters
      */
-    public function setByArray(array $filters)
+    public function setByArray(array $filters): void
     {
         foreach ($filters as $filterType => $value) {
             $setMethod = 'set' . $filterType;

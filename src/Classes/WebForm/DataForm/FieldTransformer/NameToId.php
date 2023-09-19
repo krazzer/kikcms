@@ -16,7 +16,7 @@ class NameToId extends FieldTransformer
     /**
      * @inheritdoc
      */
-    public function toStorage($value)
+    public function toStorage(mixed $value): mixed
     {
         /** @var Model $sourceModel */
         $sourceModel = $this->field->getForm()->getModel();
@@ -29,7 +29,7 @@ class NameToId extends FieldTransformer
     /**
      * @inheritdoc
      */
-    public function toDisplay($value)
+    public function toDisplay(mixed $value): mixed
     {
         /** @var Model $sourceModel */
         $sourceModel = $this->field->getForm()->getModel();

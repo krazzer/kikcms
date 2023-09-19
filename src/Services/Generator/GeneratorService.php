@@ -58,7 +58,7 @@ class GeneratorService extends Injectable
 
         $classesGenerator = new ClassesGenerator($className);
 
-        foreach ($classesToGenerate as $i => list($method, $parameters)) {
+        foreach ($classesToGenerate as list($method, $parameters)) {
             if ( ! class_exists($namespace . $parameters[0])) {
                 $method = 'create' . ucfirst($method) . 'Class';
                 if(call_user_func_array([$classesGenerator, $method], $parameters)){
@@ -90,12 +90,12 @@ class GeneratorService extends Injectable
      *
      * @return string[]
      */
-    private function getTables()
+    private function getTables(): array
     {
         $tables = $this->dbService->queryValues("SHOW TABLES");
 
         foreach ($tables as $index => $table) {
-            if (substr($table, 0, 3) == 'ga_' || substr($table, 0, 4) == 'cms_' || substr($table, 0, 7) == 'finder_') {
+            if (str_starts_with($table, 'ga_') || str_starts_with($table, 'cms_') || str_starts_with($table, 'finder_')) {
                 unset($tables[$index]);
             }
         }

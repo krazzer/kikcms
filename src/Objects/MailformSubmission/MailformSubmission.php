@@ -13,12 +13,4 @@ class MailformSubmission extends Model
     const FIELD_CREATED  = 'created';
     const FIELD_SUBJECT  = 'subject';
     const FIELD_CONTENTS = 'contents';
-
-    /**
-     * @inheritdoc
-     */
-    public function initialize()
-    {
-        parent::initialize();
-    }
 }

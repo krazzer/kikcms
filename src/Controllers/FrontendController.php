@@ -107,7 +107,7 @@ class FrontendController extends BaseController
      * @param string $url
      * @param int $page
      */
-    public function pageIndexAction(string $url, int $page)
+    public function pageIndexAction(string $url, int $page): void
     {
         $this->dispatcher->forward([
             'namespace'  => KikCMSConfig::NAMESPACE_PATH_CMS_CONTROLLERS,
@@ -126,7 +126,7 @@ class FrontendController extends BaseController
      * @param int $pageId
      * @throws NotFoundException
      */
-    public function pageByIdAction(string $languageCode, int $pageId)
+    public function pageByIdAction(string $languageCode, int $pageId): void
     {
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
 
@@ -142,7 +142,7 @@ class FrontendController extends BaseController
      * @param string $pageKey
      * @throws NotFoundException
      */
-    public function pageByKeyAction(string $languageCode, string $pageKey)
+    public function pageByKeyAction(string $languageCode, string $pageKey): void
     {
         $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
 
@@ -155,10 +155,10 @@ class FrontendController extends BaseController
 
     /**
      * @param null|string $languageCode
-     * @return string|ResponseInterface
+     * @return ResponseInterface|string|null
      * @noinspection PhpVoidFunctionResultUsedInspection
      */
-    public function pageNotFoundAction(string $languageCode = null)
+    public function pageNotFoundAction(string $languageCode = null): ResponseInterface|string|null
     {
         $this->response->setStatusCode(404);
         $this->view->reset();

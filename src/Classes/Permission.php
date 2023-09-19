@@ -56,7 +56,7 @@ class Permission extends Injectable
     /**
      * @return AccessControl
      */
-    public function getAcl()
+    public function getAcl(): AccessControl
     {
         if (isset($this->persistent->acl) && ! $this->persistent->acl->requiresUpdate()) {
             if ($this->persistent->acl->getCurrentRole() == $this->getCurrentRole()) {
@@ -121,7 +121,7 @@ class Permission extends Injectable
     /**
      * Reset access control data from session
      */
-    public function reset()
+    public function reset(): void
     {
         $this->persistent->clear();
     }
@@ -129,7 +129,7 @@ class Permission extends Injectable
     /**
      * @param AccessControl $acl
      */
-    private function addDataTablePermissions(AccessControl $acl)
+    private function addDataTablePermissions(AccessControl $acl): void
     {
         $acl->addComponent(self::ACCESS_DATATABLES_DEFAULT);
         $acl->addComponent(self::ACCESS_FINDER);
@@ -141,7 +141,7 @@ class Permission extends Injectable
         $acl->addComponent(Users::class);
         $acl->addComponent(MailformSubmissions::class, [self::ACCESS_ADD, self::ACCESS_EDIT]);
 
-        $acl->allow(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_ANY);
+        $acl->allow(self::ACCESS_ANY, MailformSubmissions::class);
         $acl->deny(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_ADD);
         $acl->deny(self::ACCESS_ANY, MailformSubmissions::class, self::ACCESS_EDIT);
 
@@ -174,18 +174,18 @@ class Permission extends Injectable
     /**
      * @param AccessControl $acl
      */
-    private function addMenuPermissions(AccessControl $acl)
+    private function addMenuPermissions(AccessControl $acl): void
     {
-        $acl->addComponent(new Component(self::PAGE_MENU), self::ACCESS_ANY);
-        $acl->allow(self::DEVELOPER, self::PAGE_MENU, self::ACCESS_ANY);
+        $acl->addComponent(new Component(self::PAGE_MENU));
+        $acl->allow(self::DEVELOPER, self::PAGE_MENU);
     }
 
     /**
      * @param AccessControl $acl
      */
-    private function addPagePermissions(AccessControl $acl)
+    private function addPagePermissions(AccessControl $acl): void
     {
-        $acl->addComponent(new Component(self::PAGE_KEY), self::ACCESS_ANY);
-        $acl->allow(self::DEVELOPER, self::PAGE_KEY, self::ACCESS_ANY);
+        $acl->addComponent(new Component(self::PAGE_KEY));
+        $acl->allow(self::DEVELOPER, self::PAGE_KEY);
     }
 }

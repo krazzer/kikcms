@@ -77,8 +77,7 @@ use KikCMS\Services\Website\MailFormService;
 use KikCMS\Services\Website\MenuService;
 use KikCmsCore\Services\DbService;
 use Monolog\Logger;
-use Phalcon\Cache;
-use Phalcon\Validation;
+use Phalcon\Cache\Cache;
 use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
 

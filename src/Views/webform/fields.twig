@@ -198,6 +198,7 @@
             </div>
         {% elseif field.version == 3 %}
             {{ form.render(element.name)|raw }}
+            <!--suppress JSUnresolvedReference -->
             <script>
                 window.onload = function () {
                     grecaptcha.ready(function () {

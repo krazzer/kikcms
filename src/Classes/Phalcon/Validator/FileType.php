@@ -4,9 +4,9 @@ namespace KikCMS\Classes\Phalcon\Validator;
 
 
 use KikCMS\Models\File;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\AbstractValidator;
 use Phalcon\Messages\Message;
-use Phalcon\Validation;
-use Phalcon\Validation\AbstractValidator;
 
 class FileType extends AbstractValidator
 {

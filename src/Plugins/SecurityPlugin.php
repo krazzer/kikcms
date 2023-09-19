@@ -36,7 +36,7 @@ class SecurityPlugin extends Injectable
      * @param Dispatcher $dispatcher
      * @return bool
      */
-    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
+    public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher): bool
     {
         $controller = $dispatcher->getControllerName();
         $isLoggedIn = $controller == self::CONTROLLER_STATISTICS || $this->userService->isLoggedIn();

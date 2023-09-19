@@ -12,7 +12,7 @@ class PageMap extends ObjectMap
      * @param int|string $key
      * @return Page|false
      */
-    public function get($key)
+    public function get($key): Page|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PageMap extends ObjectMap
     /**
      * @return Page|false
      */
-    public function current()
+    public function current(): Page|false
     {
         return parent::current();
     }

@@ -23,7 +23,7 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
-    public function getStorageDir()
+    public function getStorageDir(): mixed
     {
         return $this->storageDir;
     }
@@ -31,7 +31,7 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
-    public function setStorageDir($storageDir)
+    public function setStorageDir(mixed $storageDir): static
     {
         $this->storageDir = $storageDir;
         return $this;
@@ -58,7 +58,7 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
-    public function store(string $fileName, string $contents, string $dir = '')
+    public function store(string $fileName, string $contents, string $dir = ''): false|int
     {
         $filePath = $this->getStorageDir() . $dir . '/' . $fileName;
         return file_put_contents($filePath, $contents);

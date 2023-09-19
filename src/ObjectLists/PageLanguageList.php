@@ -12,7 +12,7 @@ class PageLanguageList extends ObjectList
      * @inheritdoc
      * @return PageLanguage|false
      */
-    public function get($key)
+    public function get($key): PageLanguage|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PageLanguageList extends ObjectList
     /**
      * @return PageLanguage|false
      */
-    public function getFirst()
+    public function getFirst(): PageLanguage|false
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class PageLanguageList extends ObjectList
     /**
      * @return PageLanguage|false
      */
-    public function current()
+    public function current(): PageLanguage|false
     {
         return parent::current();
     }

@@ -4,7 +4,6 @@ namespace KikCMS\Classes\ImageHandler;
 
 
 use Imagick;
-use Phalcon\Image\Adapter;
 use Phalcon\Image\Adapter\Imagick as PhalconImagick;
 
 /**
@@ -14,9 +13,9 @@ class ImageHandler
 {
     /**
      * @param string $filePath
-     * @return Adapter
+     * @return PhalconImagick
      */
-    public function create(string $filePath)
+    public function create(string $filePath): PhalconImagick
     {
         $image = new PhalconImagick($filePath);
 
@@ -29,7 +28,7 @@ class ImageHandler
     /**
      * @param PhalconImagick $image
      */
-    private function rotateImageByExifData(PhalconImagick $image)
+    private function rotateImageByExifData(PhalconImagick $image): void
     {
         $orientation = $this->getImagick($image)->getImageOrientation();
 
@@ -53,10 +52,10 @@ class ImageHandler
      *
      * @param PhalconImagick $image
      */
-    private function stripExifData(PhalconImagick $image)
+    private function stripExifData(PhalconImagick $image): void
     {
         $imagickImage = $this->getImagick($image);
-        $profiles     = $imagickImage->getImageProfiles("icc", true);
+        $profiles     = $imagickImage->getImageProfiles("icc");
 
         $imagickImage->stripImage();
 
@@ -69,9 +68,9 @@ class ImageHandler
      * Get Imagick object from Phalcon Imagick Adapter
      *
      * @param PhalconImagick $image
-     * @return Imagick
+     * @return object
      */
-    private function getImagick(PhalconImagick $image): Imagick
+    private function getImagick(PhalconImagick $image): object
     {
         return $image->getImage();
     }

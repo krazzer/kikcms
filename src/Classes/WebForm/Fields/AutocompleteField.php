@@ -31,7 +31,7 @@ class AutocompleteField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_AUTOCOMPLETE;
     }

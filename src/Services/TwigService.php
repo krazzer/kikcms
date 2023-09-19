@@ -9,8 +9,8 @@ use KikCMS\Classes\Translator;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\PlaceholderConfig;
 use KikCMS\Services\Pages\UrlService;
-use Phalcon\Config;
 use KikCMS\Classes\Phalcon\Injectable;
+use Phalcon\Config\Config;
 use Phalcon\Tag;
 
 /**
@@ -44,7 +44,7 @@ class TwigService extends Injectable
      * @param array|null $parameters
      * @return bool
      */
-    public function allowed(string $resourceName, $access = '*', array $parameters = null): bool
+    public function allowed(string $resourceName, string $access = '*', array $parameters = null): bool
     {
         return $this->acl->allowed($resourceName, $access, $parameters);
     }
@@ -60,11 +60,8 @@ class TwigService extends Injectable
         /** @var Config $configGroup */
         $configGroup = $this->config->get($string[0]);
 
-        if ( ! $configGroup) {
-            return '';
-        }
+        return (string) $configGroup?->get($string[1]);
 
-        return (string) $configGroup->get($string[1]);
     }
 
     /**
@@ -94,7 +91,7 @@ class TwigService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function mediaFile($fileId, string $thumb = null, bool $private = false): string
+    public function mediaFile(mixed $fileId, string $thumb = null, bool $private = false): string
     {
         if ( ! $fileId) {
             return '';
@@ -130,14 +127,14 @@ class TwigService extends Injectable
      */
     public function form(array $parameters = []): string
     {
-        return Tag::form($parameters);
+        return Tag::formLegacy($parameters);
     }
 
     /**
      * @param int|mixed|string $pageId
      * @return string
      */
-    public function pageUrl($pageId): string
+    public function pageUrl(mixed $pageId): string
     {
         if( ! $pageId){
             return '';
@@ -184,10 +181,10 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param string|int $value
+     * @param int|string $value
      * @return string
      */
-    public function svg($value): string
+    public function svg(int|string $value): string
     {
         if (is_numeric($value)) {
             $filePath = $this->mediaStoragePath . $value . '.svg';

@@ -18,7 +18,7 @@ class FileCacheService extends Injectable
     /**
      * @param File $file
      */
-    public function removeUrlCache(File $file)
+    public function removeUrlCache(File $file): void
     {
         $this->cacheService->clear(PlaceholderConfig::FILE_URL . CacheConfig::SEPARATOR . $file->getId());
         $this->cacheService->clear(PlaceholderConfig::FILE_THUMB_URL . CacheConfig::SEPARATOR . $file->getId());

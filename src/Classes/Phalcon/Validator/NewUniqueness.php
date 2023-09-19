@@ -4,7 +4,7 @@
 namespace KikCMS\Classes\Phalcon\Validator;
 
 
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 use Phalcon\Filter\Validation\Validator\Uniqueness;
 
 /**

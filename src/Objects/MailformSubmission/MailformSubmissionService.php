@@ -11,7 +11,7 @@ class MailformSubmissionService extends Injectable
      * @param string $subject
      * @param array $contents
      */
-    public function add(string $subject, array $contents)
+    public function add(string $subject, array $contents): void
     {
         $submission = new MailformSubmission;
 

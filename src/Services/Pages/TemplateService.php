@@ -129,7 +129,7 @@ class TemplateService extends Injectable
      * @param string $fieldKey
      * @return Tab|Field|null
      */
-    private function getFieldByKey(string $fieldKey)
+    private function getFieldByKey(string $fieldKey): Tab|Field|null
     {
         $fields = $this->templateFields->getFields();
 

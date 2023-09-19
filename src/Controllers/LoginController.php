@@ -31,7 +31,7 @@ class LoginController extends BaseController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -45,7 +45,7 @@ class LoginController extends BaseController
     /**
      * @inheritdoc
      */
-    public function initializeLanguage()
+    public function initializeLanguage(): void
     {
         $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }
@@ -69,9 +69,9 @@ class LoginController extends BaseController
 
     /**
      * Displays the login form
-     * @return null|Response|string
+     * @return null|ResponseInterface|string
      */
-    public function indexAction(): ResponseInterface
+    public function indexAction(): null|ResponseInterface|string
     {
         if ($this->userService->isLoggedIn()) {
             return $this->response->redirect('cms');
@@ -114,7 +114,7 @@ class LoginController extends BaseController
      * @param string $token
      * @return ResponseInterface
      */
-    public function resetPasswordAction(User $user, $token): ResponseInterface
+    public function resetPasswordAction(User $user, string $token): ResponseInterface
     {
         if ( ! $hashedToken = $this->keyValue->get(PassResetConfig::PREFIX . $user->getId() . $token)) {
             $errorMessage = $this->translator->tl('login.reset.password.expired');

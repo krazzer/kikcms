@@ -13,7 +13,7 @@ class MenuItemMap extends ObjectMap
      * @param int|string $key
      * @return CmsMenuItem|false
      */
-    public function get($key)
+    public function get($key): CmsMenuItem|false
     {
         return parent::get($key);
     }
@@ -21,7 +21,7 @@ class MenuItemMap extends ObjectMap
     /**
      * @return CmsMenuItem|false
      */
-    public function getFirst()
+    public function getFirst(): CmsMenuItem|false
     {
         return parent::getFirst();
     }
@@ -29,7 +29,7 @@ class MenuItemMap extends ObjectMap
     /**
      * @return CmsMenuItem|false
      */
-    public function getLast()
+    public function getLast(): CmsMenuItem|false
     {
         return parent::getLast();
     }
@@ -37,7 +37,7 @@ class MenuItemMap extends ObjectMap
     /**
      * @return CmsMenuItem|false
      */
-    public function current()
+    public function current(): CmsMenuItem|false
     {
         return parent::current();
     }

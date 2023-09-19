@@ -32,7 +32,7 @@ class FrontendHelper extends Injectable
     /**
      * @return null|string
      */
-    public function getAliasUrl()
+    public function getAliasUrl(): ?string
     {
         return $this->aliasUrl;
     }
@@ -41,7 +41,7 @@ class FrontendHelper extends Injectable
      * @param string $languageCode
      * @param PageLanguage $pageLanguage
      */
-    public function initialize(string $languageCode, PageLanguage $pageLanguage)
+    public function initialize(string $languageCode, PageLanguage $pageLanguage): void
     {
         $this->languageCode             = $languageCode;
         $this->currentPageLanguage      = $pageLanguage;
@@ -57,13 +57,13 @@ class FrontendHelper extends Injectable
      * @param int|string $menuKey can be either the id or the key of the menu
      * @param int|null $maxLevel
      * @param string|null $template
-     * @param null|string|array $templateKey
+     * @param array|string|null $templateKey
      * @param bool $cache
      * @param string $ulClass
      * @return string
      */
-    public function menu($menuKey, int $maxLevel = null, string $template = null, $templateKey = null,
-                         bool $cache = true, string $ulClass = ''): string
+    public function menu(int|string $menuKey, int $maxLevel = null, string $template = null,
+                         array|string $templateKey = null, bool $cache = true, string $ulClass = ''): string
     {
         if ( ! $menuKey) {
             return '';
@@ -171,6 +171,7 @@ class FrontendHelper extends Injectable
      * @param Menu $menu
      * @param string $menuOutput
      * @return string
+     * @noinspection PhpUnusedParameterInspection
      */
     protected function addToMenuOutput(int $parentId, Menu $menu, string $menuOutput): string
     {
@@ -189,7 +190,7 @@ class FrontendHelper extends Injectable
 
         $menuOutput = '';
 
-        foreach ($fullPageMap as $pageId => $fullPage) {
+        foreach ($fullPageMap as $fullPage) {
             if ($fullPage->getParentId() != $parentId) {
                 continue;
             }
@@ -216,7 +217,7 @@ class FrontendHelper extends Injectable
     {
         $pageId = $fullPage->getPageId();
 
-        if ($menu->getMaxLevel() !== null && (int) $fullPage->getLevel() >= (int) $initialLevel + $menu->getMaxLevel()) {
+        if ($menu->getMaxLevel() !== null && $fullPage->getLevel() >= $initialLevel + $menu->getMaxLevel()) {
             $subMenuOutput = '';
         } else {
             $subMenuOutput = $this->buildMenu($pageId, $menu);
@@ -265,7 +266,7 @@ class FrontendHelper extends Injectable
     {
         $path = $this->getPath();
 
-        foreach ($path as $pageId => $pageLanguage) {
+        foreach ($path as $pageLanguage) {
             $menu = str_replace('class="s' . $pageLanguage->getAliasPageId() . '"', 'class="selected"', $menu);
         }
 

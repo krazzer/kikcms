@@ -81,7 +81,7 @@ abstract class DataForm extends WebForm
     /**
      * @param FieldTransformer $fieldTransformer
      */
-    public function addFieldTransformer(FieldTransformer $fieldTransformer)
+    public function addFieldTransformer(FieldTransformer $fieldTransformer): void
     {
         $this->fieldTransformers[$fieldTransformer->getField()->getKey()] = $fieldTransformer;
     }
@@ -104,7 +104,7 @@ abstract class DataForm extends WebForm
      * @param string $fieldKey
      * @return Model[]|Resultset
      */
-    public function getDataTableFieldObjects(string $fieldKey)
+    public function getDataTableFieldObjects(string $fieldKey): array|Resultset
     {
         if ( ! $relation = $this->modelService->getRelation($this->getModel(), $fieldKey)) {
             throw new Exception("Relation $fieldKey does not exist");
@@ -127,7 +127,7 @@ abstract class DataForm extends WebForm
     }
 
     /**
-     * @return mixed|Model|null
+     * @return Model|null
      */
     public function getObject(): ?Model
     {
@@ -147,7 +147,7 @@ abstract class DataForm extends WebForm
     /**
      * @return DataFormFilters|Filters
      */
-    public function getFilters(): Filters
+    public function getFilters(): DataFormFilters|Filters
     {
         return parent::getFilters();
     }
@@ -155,12 +155,12 @@ abstract class DataForm extends WebForm
     /**
      * @inheritdoc
      */
-    public function initializeForm()
+    public function initializeForm(): WebForm
     {
         parent::initializeForm();
 
-        if ( ! $editId = $this->getFilters()->getEditId()) {
-            return;
+        if ( ! $this->getFilters()->getEditId()) {
+            return $this;
         }
 
         $defLangCode = $this->languageService->getDefaultLanguageCode();
@@ -182,6 +182,8 @@ abstract class DataForm extends WebForm
                 }
             }
         }
+
+        return $this;
     }
 
     /**
@@ -215,7 +217,7 @@ abstract class DataForm extends WebForm
 
         $data = $object->toArray();
         $data = $this->getRelatedData($langCode) + $data;
-        $data = $this->transformDataForDisplay((array) $data);
+        $data = $this->transformDataForDisplay($data);
 
         $this->cachedEditData[$editId] = $data;
 
@@ -226,7 +228,7 @@ abstract class DataForm extends WebForm
      * What happens after successfully saving the Form's data
      * @param bool $isNew
      */
-    public function saveSuccessAction(bool $isNew)
+    public function saveSuccessAction(bool $isNew): void
     {
         $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
 
@@ -240,15 +242,15 @@ abstract class DataForm extends WebForm
 
     /**
      * @param array $input
-     * @return Response|string
+     * @return Response|string|null
      */
-    public function successAction(array $input)
+    public function successAction(array $input): Response|string|null
     {
-        $isNew = ! (bool) $this->filters->getEditId();
+        $isNew = ! $this->filters->getEditId();
 
         try {
             $saveSuccess = $this->saveData($input);
-        } catch (DuplicateTemporaryDataTableKeyException $exception) {
+        } catch (DuplicateTemporaryDataTableKeyException) {
             $this->response->setStatusCode(StatusCodes::FORM_INVALID, StatusCodes::FORM_INVALID_MESSAGE);
             $this->flash->error($this->translator->tl('dataForm.saveFailure') . '. ' .
                 $this->translator->tl('dataForm.duplicateTemporaryKeyFailure'));
@@ -287,7 +289,7 @@ abstract class DataForm extends WebForm
     /**
      * @return Filters|DataFormFilters
      */
-    public function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters|DataFormFilters
     {
         return new DataFormFilters();
     }
@@ -308,7 +310,7 @@ abstract class DataForm extends WebForm
      * @param string $event
      * @param callable $callable
      */
-    protected function addEventListener(string $event, callable $callable)
+    protected function addEventListener(string $event, callable $callable): void
     {
         if ( ! array_key_exists($event, $this->events)) {
             $this->events[$event] = [];
@@ -365,7 +367,7 @@ abstract class DataForm extends WebForm
     /**
      * Re-initializes the form
      */
-    protected function reInitializeForm()
+    protected function reInitializeForm(): void
     {
         $this->fieldMap = new FieldMap();
 
@@ -380,7 +382,7 @@ abstract class DataForm extends WebForm
      *
      * @inheritdoc
      */
-    protected function renderDataTableFields()
+    protected function renderDataTableFields(): void
     {
         $this->getEditData();
 
@@ -390,7 +392,7 @@ abstract class DataForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function renderDataTableField(DataTableField $field)
+    protected function renderDataTableField(DataTableField $field): void
     {
         $langCode     = $this->getFilters()->getLanguageCode();
         $parentEditId = $this->getParentEditIdForDataTableField($field);
@@ -407,7 +409,7 @@ abstract class DataForm extends WebForm
     /**
      * @param StorageData $storageData
      */
-    private function addAutoGeneratedInput(StorageData $storageData)
+    private function addAutoGeneratedInput(StorageData $storageData): void
     {
         if ($this->getDataTable() && $this->getDataTable()->isSortable() && ! $this->getFilters()->getEditId()) {
             $this->dataTableService->addDisplayOrderToStorageData($this->getDataTable(), $storageData);
@@ -524,7 +526,7 @@ abstract class DataForm extends WebForm
      *
      * @return mixed
      */
-    private function transformInputForStorage(array $input, string $key)
+    private function transformInputForStorage(array $input, string $key): mixed
     {
         $value = $input[$key];
 

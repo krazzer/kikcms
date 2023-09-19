@@ -11,7 +11,7 @@ class BaseController extends Controller
     /**
      * Initialize the controller
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->initializeLanguage();
 
@@ -63,7 +63,7 @@ class BaseController extends Controller
     /**
      * Initialize the language
      */
-    protected function initializeLanguage()
+    protected function initializeLanguage(): void
     {
         $langCode = $this->request->getPost('activeLangCode');
 
@@ -105,7 +105,7 @@ class BaseController extends Controller
      * @param array $lines
      * @param array $headerLines
      */
-    protected function outputCsv(string $fileName, array $lines, array $headerLines = [])
+    protected function outputCsv(string $fileName, array $lines, array $headerLines = []): void
     {
         $this->response->setHeader('Content-Type', 'application/csv');
         $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $fileName . '.csv";');

@@ -10,7 +10,7 @@ class ExistingPageCacheService extends Injectable
     /**
      * Build up cache for existing links
      */
-    public function buildCache()
+    public function buildCache(): void
     {
         $links = $this->urlService->getUrls(true);
 
@@ -41,7 +41,7 @@ class ExistingPageCacheService extends Injectable
     /**
      * Clear cache
      */
-    public function clear()
+    public function clear(): void
     {
         $this->keyValue->delete(CacheConfig::EXISTING_PAGE_CACHE);
         $this->keyValue->delete(CacheConfig::PAGE_404);
@@ -51,7 +51,7 @@ class ExistingPageCacheService extends Injectable
      * @param string $content
      * @return void
      */
-    public function cache404Page(string $content)
+    public function cache404Page(string $content): void
     {
         $this->keyValue->set(CacheConfig::PAGE_404, $content);
     }

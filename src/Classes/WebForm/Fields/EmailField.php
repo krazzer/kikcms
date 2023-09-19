@@ -30,7 +30,11 @@ class EmailField extends Field
         $this->key     = $key;
     }
 
-    public function getInput($value)
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getInput($value): string
     {
         return trim($value);
     }

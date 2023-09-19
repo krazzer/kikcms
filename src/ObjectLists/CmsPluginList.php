@@ -12,7 +12,7 @@ class CmsPluginList extends ObjectList
      * @param int|string $key
      * @return CmsPlugin|false
      */
-    public function get($key)
+    public function get($key): CmsPlugin|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class CmsPluginList extends ObjectList
     /**
      * @return CmsPlugin|false
      */
-    public function current()
+    public function current(): CmsPlugin|false
     {
         return parent::current();
     }

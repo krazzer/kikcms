@@ -12,7 +12,7 @@ class PlaceholderFileThumbUrl extends PlaceholderFileUrl
     /**
      * @param array $arguments
      */
-    function mapArguments(array $arguments)
+    function mapArguments(array $arguments): void
     {
         $this
             ->setFileId((int) $arguments[0])

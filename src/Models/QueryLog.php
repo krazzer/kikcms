@@ -15,12 +15,4 @@ class QueryLog extends Model
     const FIELD_TIME     = 'time';
     const FIELD_DATETIME = 'datetime';
     const FIELD_HASH     = 'hash';
-
-    /**
-     * @inheritdoc
-     */
-    public function initialize()
-    {
-        parent::initialize();
-    }
 }

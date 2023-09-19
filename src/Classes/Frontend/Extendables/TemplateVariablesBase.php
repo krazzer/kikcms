@@ -25,7 +25,7 @@ class TemplateVariablesBase extends WebsiteExtendable
      * @param string $templateFile
      * @return array|Response
      */
-    public function getTemplateVariables(string $templateFile)
+    public function getTemplateVariables(string $templateFile): Response|array
     {
         $templateFile = str_replace('-', '', $templateFile);
 

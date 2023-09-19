@@ -8,7 +8,7 @@ use KikCMS\Classes\Phalcon\Injectable;
 
 class CliService extends Injectable
 {
-    public function outputLine(string $text)
+    public function outputLine(string $text): void
     {
         if( ! $this->config->application->showCliOutput){
             return;

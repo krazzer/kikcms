@@ -31,7 +31,7 @@ class ParamConverterPlugin extends Injectable
      * @param Dispatcher $dispatcher
      * @throws NotFoundException
      */
-    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher)
+    public function beforeDispatchLoop(Event $event, Dispatcher $dispatcher): void
     {
         $actionName = $dispatcher->getActionName() . 'Action';
 
@@ -62,7 +62,7 @@ class ParamConverterPlugin extends Injectable
      * @return array
      * @throws ObjectNotFoundException
      */
-    public function getConvertedParameters(array $methodParameters, array $paramValueMap)
+    public function getConvertedParameters(array $methodParameters, array $paramValueMap): array
     {
         foreach ($methodParameters as $parameter) {
             if ( ! $class = $parameter->getClass()) {
@@ -90,7 +90,7 @@ class ParamConverterPlugin extends Injectable
      * @return array
      * @throws ObjectNotFoundException
      */
-    private function replaceParameter(ReflectionClass $class, ReflectionParameter $parameter, array $paramValueMap)
+    private function replaceParameter(ReflectionClass $class, ReflectionParameter $parameter, array $paramValueMap): array
     {
         $obParamName = $this->getParamName($parameter);
         $idParamName = $this->getIdParamName($parameter);

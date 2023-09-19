@@ -16,7 +16,7 @@ use KikCMS\Classes\Phalcon\Injectable;
  */
 class FileResizeService extends Injectable
 {
-    public function resizeWithinBoundaries(File $file)
+    public function resizeWithinBoundaries(File $file): void
     {
         // is no image, so do nothing
         if ( ! $file->isImage()) {

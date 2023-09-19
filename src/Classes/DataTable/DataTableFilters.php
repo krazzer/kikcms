@@ -193,10 +193,10 @@ class DataTableFilters extends Filters
     }
 
     /**
-     * @param null|string $windowLanguageCode
+     * @param string|null $windowLanguageCode
      * @return DataTableFilters
      */
-    public function setWindowLanguageCode($windowLanguageCode): DataTableFilters
+    public function setWindowLanguageCode(?string $windowLanguageCode): DataTableFilters
     {
         $this->windowLanguageCode = $windowLanguageCode;
         return $this;

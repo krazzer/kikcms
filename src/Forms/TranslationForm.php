@@ -37,7 +37,7 @@ class TranslationForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $translationKeys = array_keys($this->translator->getWebsiteTranslations());
 
@@ -53,7 +53,7 @@ class TranslationForm extends DataForm
             $valueField  = $this->addTextAreaField($relationKey, (string) $language->name)
                 ->setAttribute('data-language-code', $language->code);
 
-            if ($key = $this->getObject()) {
+            if ($this->getObject()) {
                 $valueField->setDefault($this->cache->get($this->getCacheKey($language)));
             }
         }
@@ -62,7 +62,7 @@ class TranslationForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function onSave()
+    protected function onSave(): void
     {
         // clear cache
         foreach ($this->languageService->getLanguages() as $language) {

@@ -34,6 +34,7 @@ class TableDataService extends Injectable
             "limit"   => $limit,
         ]))->paginate();
 
+        /** @noinspection PhpDynamicFieldDeclarationInspection */
         $paginate->pages = $this->paginateListService->getPageList($paginate->last, $paginate->current);
 
         $tableData = $paginate->items->toArray();

@@ -34,7 +34,7 @@ class CmsMenuGroup
      * @param CmsMenuItem $menuItem
      * @return $this|CmsMenuGroup
      */
-    public function add(CmsMenuItem $menuItem)
+    public function add(CmsMenuItem $menuItem): CmsMenuGroup|static
     {
         $this->getMenuItemMap()->add($menuItem, $menuItem->getId());
         return $this;

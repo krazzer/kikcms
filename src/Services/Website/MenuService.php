@@ -20,7 +20,7 @@ class MenuService extends Injectable
      *
      * @param Menu $menu
      */
-    public function addFullPageMap(Menu $menu)
+    public function addFullPageMap(Menu $menu): void
     {
         $fullPageMap = $this->fullPageService->getMapByMenu($menu);
 

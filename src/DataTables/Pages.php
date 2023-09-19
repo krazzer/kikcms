@@ -74,7 +74,7 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
-    public function delete(array $ids)
+    public function delete(array $ids): void
     {
         foreach ($ids as $pageId) {
             $page = Page::getById($pageId);
@@ -107,7 +107,7 @@ class Pages extends DataTable
     /**
      * @return PagesDataTableFilters|Filters
      */
-    public function getFilters(): Filters
+    public function getFilters(): PagesDataTableFilters|Filters
     {
         return parent::getFilters();
     }
@@ -241,7 +241,7 @@ class Pages extends DataTable
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->linkTitle     = $this->translator->tl('dataTables.pages.titles.link');
         $this->inactiveTitle = $this->translator->tl('dataTables.pages.titles.inactive');
@@ -275,7 +275,7 @@ class Pages extends DataTable
      * @param array $rowData
      * @return string
      */
-    protected function formatName($value, array $rowData)
+    protected function formatName($value, array $rowData): string
     {
         $value = $this->pagesDataTableService->getValue($value, $rowData);
 

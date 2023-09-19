@@ -57,7 +57,7 @@ class MailformSubmissions extends DataTable
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->setFieldFormatting(MailformSubmission::FIELD_CREATED, [$this->dateTimeService, 'stringToDateTimeFormat']);
     }

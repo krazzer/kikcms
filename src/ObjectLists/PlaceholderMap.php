@@ -4,6 +4,7 @@ namespace KikCMS\ObjectLists;
 
 
 use KikCMS\Objects\Placeholder;
+use KikCmsCore\Classes\ObjectListInterface;
 use KikCmsCore\Classes\ObjectMap;
 
 class PlaceholderMap extends ObjectMap
@@ -12,7 +13,7 @@ class PlaceholderMap extends ObjectMap
      * @param int|string $key
      * @return Placeholder|false
      */
-    public function get($key)
+    public function get($key): Placeholder|false
     {
         return parent::get($key);
     }
@@ -20,7 +21,7 @@ class PlaceholderMap extends ObjectMap
     /**
      * @return Placeholder|false
      */
-    public function getFirst()
+    public function getFirst(): Placeholder|false
     {
         return parent::getFirst();
     }
@@ -28,15 +29,15 @@ class PlaceholderMap extends ObjectMap
     /**
      * @return Placeholder|false
      */
-    public function current()
+    public function current(): Placeholder|false
     {
         return parent::current();
     }
 
     /**
-     * @return ObjectMap|Placeholder|false
+     * @return ObjectListInterface|ObjectMap|PlaceholderMap
      */
-    public function reverse()
+    public function reverse(): PlaceholderMap|ObjectListInterface|ObjectMap
     {
         return parent::reverse();
     }

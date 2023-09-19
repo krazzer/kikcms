@@ -26,7 +26,7 @@ class UserService extends Injectable
 
     /**
      * @param $email
-     * @return User
+     * @return User|null
      */
     public function getByEmail($email): ?User
     {
@@ -111,7 +111,7 @@ class UserService extends Injectable
      * @param User $user
      * @param string $password
      */
-    public function storePassword(User $user, string $password)
+    public function storePassword(User $user, string $password): void
     {
         $user->password = $this->hashPassword($password);
         $user->save();
@@ -144,9 +144,9 @@ class UserService extends Injectable
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
-    public function setLoggedIn(int $id)
+    public function setLoggedIn(int $id): void
     {
         // Clean up disk cache. If this fails for any reason, don't bother the user
         try {
@@ -168,7 +168,7 @@ class UserService extends Injectable
     /**
      * Log the user out and redirect him to the login page
      */
-    public function logout()
+    public function logout(): void
     {
         $this->rememberMeService->removeToken();
 

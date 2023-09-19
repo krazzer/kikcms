@@ -14,7 +14,7 @@ class UploadStatus
     /**
      * @param string $message
      */
-    public function addError(string $message)
+    public function addError(string $message): void
     {
         $this->errors[] = $message;
     }
@@ -22,7 +22,7 @@ class UploadStatus
     /**
      * @param int $fileId
      */
-    public function addFileId(int $fileId)
+    public function addFileId(int $fileId): void
     {
         $this->fileIds[] = $fileId;
     }

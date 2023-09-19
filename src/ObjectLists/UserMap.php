@@ -12,7 +12,7 @@ class UserMap extends ObjectMap
      * @param int|string $key
      * @return User|false
      */
-    public function get($key)
+    public function get($key): User|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class UserMap extends ObjectMap
     /**
      * @return User|false
      */
-    public function current()
+    public function current(): User|false
     {
         return parent::current();
     }

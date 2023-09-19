@@ -25,6 +25,7 @@ use KikCMS\Services\Pages\UrlService;
 use Phalcon\Filter\Validation\Validator\PresenceOf;
 use Phalcon\Filter\Validation\Validator\Regex;
 use Phalcon\Filter\Validation\Validator\StringLength;
+use Phalcon\Http\Response;
 
 /**
  * @property TemplateService $templateService
@@ -174,7 +175,7 @@ class PageForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function onSave()
+    protected function onSave(): void
     {
         $this->pageRearrangeService->updateNestedSet();
         $this->cacheService->clearPageCache();
@@ -183,7 +184,7 @@ class PageForm extends DataForm
     /**
      * Adds fields for current template
      */
-    protected function addFieldsForCurrentTemplate()
+    protected function addFieldsForCurrentTemplate(): void
     {
         $template          = $this->getTemplate();
         $fields            = $this->templateService->getFieldsByTemplate($template);
@@ -234,7 +235,7 @@ class PageForm extends DataForm
     /**
      * @inheritDoc
      */
-    function successAction(array $input)
+    function successAction(array $input): Response|string|null
     {
         if ( ! $page = $this->getObject()) {
             return parent::successAction($input);

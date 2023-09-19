@@ -9,7 +9,7 @@ use Phalcon\Forms\Element\Check;
 class MultiCheckboxField extends Field
 {
     /** @var array */
-    private $options = [];
+    private $options;
 
     /** @var bool allow a different value to be entered */
     private $different = false;
@@ -42,9 +42,9 @@ class MultiCheckboxField extends Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_MULTI_CHECKBOX;
     }
@@ -70,7 +70,7 @@ class MultiCheckboxField extends Field
     /**
      * @inheritdoc
      */
-    public function getFormFormat($value)
+    public function getFormFormat($value): mixed
     {
         return is_string($value) ? json_decode($value) : $value;
     }

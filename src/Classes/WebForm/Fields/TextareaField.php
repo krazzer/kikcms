@@ -25,9 +25,9 @@ class TextareaField extends Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_TEXTAREA;
     }
@@ -38,7 +38,7 @@ class TextareaField extends Field
      * @param int $rows
      * @return $this|TextareaField
      */
-    public function rows(int $rows)
+    public function rows(int $rows): TextareaField|static
     {
         $style = $this->getElement()->getAttribute('style');
         $this->getElement()->setAttribute('style', $style . 'height: ' . (($rows * 19) + 16) . 'px;');

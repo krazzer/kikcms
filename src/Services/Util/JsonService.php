@@ -14,7 +14,7 @@ class JsonService extends Injectable
      * @param string|null $password
      * @return mixed
      */
-    public function getByUrl(string $url, string $username = null, string $password = null)
+    public function getByUrl(string $url, string $username = null, string $password = null): mixed
     {
         $contextOptions = ["ssl" => [
             "verify_peer"      => false,

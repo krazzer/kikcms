@@ -6,7 +6,7 @@ namespace Helpers;
 
 class EditableDataTable extends TestableDataTable
 {
-    public function canEdit($id = null): bool
+    public function canEdit(int $id = null): bool
     {
         return true;
     }

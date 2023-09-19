@@ -52,9 +52,26 @@ class UserSettings implements Serializable
     /**
      * @inheritDoc
      */
-    public function unserialize($serialized): UserSettings
+    public function unserialize($data): UserSettings
     {
-        $this->closedPageIdMap = (array) unserialize($serialized);
+        $this->closedPageIdMap = (array) unserialize($data);
         return $this;
+    }
+
+    /**
+     * @return null[]|string[]
+     */
+    public function __serialize(): array
+    {
+        return [$this->serialize()];
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data[0]);
     }
 }

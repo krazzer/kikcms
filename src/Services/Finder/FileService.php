@@ -44,7 +44,7 @@ class FileService extends Injectable
      * @param int|null $folderId
      * @return bool|int
      */
-    public function create(UploadedFile $uploadedFile, $folderId = null)
+    public function create(UploadedFile $uploadedFile, int $folderId = null): bool|int
     {
         $mimeType = $uploadedFile->getRealType();
 
@@ -98,7 +98,7 @@ class FileService extends Injectable
      * @param string|null $type
      * @param bool $private
      */
-    public function createMediaThumb(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false)
+    public function createMediaThumb(File $file, ?string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false): void
     {
         $filePath  = $this->getFilePath($file);
         $thumbPath = $this->getMediaThumbPath($file, $type, $private);
@@ -208,7 +208,7 @@ class FileService extends Injectable
      *
      * @return string
      */
-    public function getFilePath(File $file)
+    public function getFilePath(File $file): string
     {
         return $this->getStorageDir() . $this->getMediaDir() . '/' . $file->getFileName();
     }
@@ -219,7 +219,7 @@ class FileService extends Injectable
      *
      * @return array
      */
-    public function getFolderPath(?int $folderId, $path = [])
+    public function getFolderPath(?int $folderId, array $path = []): array
     {
         $homeFolderId = $this->getHomeFolderId();
 
@@ -315,7 +315,7 @@ class FileService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function getMediaThumbPath(File $file, string $type = FinderConfig::DEFAULT_THUMB_TYPE,
+    public function getMediaThumbPath(File $file, ?string $type = FinderConfig::DEFAULT_THUMB_TYPE,
                                       bool $private = false): string
     {
         $dirPath = $this->getMediaThumbDir() . $type . DIRECTORY_SEPARATOR;
@@ -371,7 +371,7 @@ class FileService extends Injectable
      * @param int[] $fileIds
      * @param int|null $folderId
      */
-    public function moveFilesToFolderById(array $fileIds, ?int $folderId)
+    public function moveFilesToFolderById(array $fileIds, ?int $folderId): void
     {
         $fileIds = $this->removeFileIdsInPath($fileIds, $folderId);
 
@@ -386,7 +386,7 @@ class FileService extends Injectable
      * @param int $fileId
      * @param string $fileName
      */
-    public function updateFileNameById(int $fileId, string $fileName)
+    public function updateFileNameById(int $fileId, string $fileName): void
     {
         $file = File::getById($fileId);
 
@@ -407,7 +407,7 @@ class FileService extends Injectable
      *
      * @return array
      */
-    public function getFileIdsRecursive(File $file, $fileIds = []): array
+    public function getFileIdsRecursive(File $file, array $fileIds = []): array
     {
         if ( ! $file->isFolder()) {
             $fileIds[] = $file->getId();
@@ -430,7 +430,7 @@ class FileService extends Injectable
      * @param File $file
      * @return array|null returns same results as @see getimagesize
      */
-    public function getImageDimensions(File $file)
+    public function getImageDimensions(File $file): ?array
     {
         if ( ! $file->isImage()) {
             return null;
@@ -449,7 +449,7 @@ class FileService extends Injectable
      * @param File $file
      * @return array|null returns same results as @see getimagesize
      */
-    public function getThumbDimensions(File $file)
+    public function getThumbDimensions(File $file): ?array
     {
         if ( ! $file->isImage()) {
             return null;
@@ -478,7 +478,7 @@ class FileService extends Injectable
 
         while ( ! feof($fh) && $count < 2) {
             $chunk = fread($fh, 1024 * 100);
-            $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00[\x2C\x21]#s', $chunk, $matches);
+            $count += preg_match_all('#\x00\x21\xF9\x04.{4}\x00[\x2C\x21]#s', $chunk);
         }
 
         fclose($fh);
@@ -492,7 +492,7 @@ class FileService extends Injectable
      *
      * @return int[]
      */
-    private function removeFileIdsInPath(array $fileIds, ?int $folderId)
+    private function removeFileIdsInPath(array $fileIds, ?int $folderId): array
     {
         $breadCrumbs = $this->getFolderPath($folderId);
 

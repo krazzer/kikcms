@@ -34,7 +34,7 @@ class FileField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_FILE;
     }
@@ -52,7 +52,7 @@ class FileField extends Field
     /**
      * @return int|null
      */
-    public function getFolderId()
+    public function getFolderId(): ?int
     {
         return $this->folderId;
     }

@@ -11,7 +11,7 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
 use Monolog\Logger;
 use Phalcon\Http\Request\File;
-use Phalcon\Http\ResponseInterface;
+use Phalcon\Http\Response;
 use ReCaptcha\Response as ReCaptchaResponse;
 use Swift_Attachment;
 use Swift_ByteStream_FileByteStream;
@@ -41,22 +41,22 @@ abstract class MailForm extends WebForm
     /**
      * @return string|array
      */
-    protected function getToAddress()
+    protected function getToAddress(): array|string
     {
         return $this->config->application->adminEmail;
     }
 
     /**
      * @param array $input
-     * @return bool|ResponseInterface
+     * @return Response|string|null
      */
-    protected function successAction(array $input)
+    protected function successAction(array $input): null|Response|string
     {
         $params = [];
 
         if ($this->getSpamScore() && $this->getSpamScore() <= 0.3) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
-            return false;
+            return null;
         }
 
         $body = $this->mailFormService->getHtml($this->getReadableInput($input));
@@ -75,7 +75,7 @@ abstract class MailForm extends WebForm
 
         if ( ! $mailSend) {
             $this->flash->error($this->translator->tl('mailForm.sendFail'));
-            return false;
+            return null;
         }
 
         try {

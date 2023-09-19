@@ -17,7 +17,7 @@ class UserSettingsService extends Injectable
      * @param string $class
      * @param array $pageIds
      */
-    public function storeClosedPageIds(string $class, array $pageIds)
+    public function storeClosedPageIds(string $class, array $pageIds): void
     {
         $settings   = $this->get();
         $pageIdsMap = $settings->getClosedPageIdMap();
@@ -48,7 +48,7 @@ class UserSettingsService extends Injectable
     /**
      * @param UserSettings $settings
      */
-    private function store(UserSettings $settings)
+    private function store(UserSettings $settings): void
     {
         $user = $this->userService->getUser();
 

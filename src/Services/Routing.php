@@ -17,7 +17,7 @@ class Routing extends Injectable
     const MODULE_BACKEND  = 'backend';
     const MODULE_FRONTEND = 'frontend';
 
-    public function initialize()
+    public function initialize(): Router
     {
         $router = new Router(false);
 
@@ -152,7 +152,7 @@ class Routing extends Injectable
     /**
      * @param Router $router
      */
-    private function addPluginRoutes(Router $router)
+    private function addPluginRoutes(Router $router): void
     {
         $plugins = $this->websiteSettings->getPluginList();
 

@@ -12,7 +12,7 @@ class PlaceholderFileThumbUrlMap extends PlaceholderFileUrlMap
      * @param int|string $key
      * @return PlaceholderFileThumbUrl|false
      */
-    public function get($key)
+    public function get($key): PlaceholderFileThumbUrl|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PlaceholderFileThumbUrlMap extends PlaceholderFileUrlMap
     /**
      * @return PlaceholderFileThumbUrl|false
      */
-    public function getFirst()
+    public function getFirst(): PlaceholderFileThumbUrl|false
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class PlaceholderFileThumbUrlMap extends PlaceholderFileUrlMap
     /**
      * @return PlaceholderFileThumbUrl|false
      */
-    public function current()
+    public function current(): PlaceholderFileThumbUrl|false
     {
         return parent::current();
     }
@@ -36,7 +36,7 @@ class PlaceholderFileThumbUrlMap extends PlaceholderFileUrlMap
     /**
      * @return ObjectMap|PlaceholderFileThumbUrl|false
      */
-    public function reverse()
+    public function reverse(): ObjectMap|PlaceholderFileThumbUrl|false
     {
         return parent::reverse();
     }

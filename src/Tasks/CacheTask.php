@@ -16,20 +16,20 @@ class CacheTask extends Task
      * Called by: php kikcms cache clear
      * @param array $params [0 => username, 1 => password]
      */
-    public function clearAction(array $params = [])
+    public function clearAction(array $params = []): void
     {
         $username = $password = $baseUrl = null;
 
         foreach ($params as $i => $param){
-            if(substr($param, 0, 10) == '--username'){
+            if(str_starts_with($param, '--username')){
                 $username = $params[$i+1];
             }
 
-            if(substr($param, 0, 10) == '--password'){
+            if(str_starts_with($param, '--password')){
                 $password = $params[$i+1];
             }
 
-            if(substr($param, 0, 5) == '--url'){
+            if(str_starts_with($param, '--url')){
                 $baseUrl = $params[$i+1];
             }
         }

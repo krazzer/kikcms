@@ -5,9 +5,9 @@ namespace KikCMS\Classes\Phalcon;
 
 
 use Exception;
-use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Config\CacheConfig;
 use Monolog\Logger;
+use Phalcon\Cache\Adapter\AdapterInterface;
 use Phalcon\Cache\Cache;
 use Psr\Log\LogLevel;
 
@@ -25,9 +25,9 @@ class KeyValue extends Cache
     private ?Logger $logger = null;
 
     /**
-     * @return Stream
+     * @return AdapterInterface
      */
-    public function getAdapter(): Stream
+    public function getAdapter(): AdapterInterface
     {
         return parent::getAdapter();
     }
@@ -37,9 +37,7 @@ class KeyValue extends Cache
      */
     public function delete($key): bool
     {
-        if($this->memoryCache) {
-            $this->memoryCache->delete($this->prefixKey($key));
-        }
+        $this->memoryCache?->delete($this->prefixKey($key));
 
         return parent::delete($key);
     }
@@ -56,9 +54,7 @@ class KeyValue extends Cache
         try {
             return parent::get($key, $defaultValue);
         } catch (Exception $exception){
-            if($this->logger){
-                $this->logger->log(LogLevel::WARNING, $exception, ['key' => $key]);
-            }
+            $this->logger?->log(LogLevel::WARNING, $exception, ['key' => $key]);
 
             return $defaultValue;
         }
@@ -71,9 +67,7 @@ class KeyValue extends Cache
     {
         $memoryTtl = $ttl ?: CacheConfig::ONE_DAY;
 
-        if($this->memoryCache) {
-            $this->memoryCache->set($this->prefixKey($key), $value, $memoryTtl);
-        }
+        $this->memoryCache?->set($this->prefixKey($key), $value, $memoryTtl);
 
         if($ttl === null){
             $ttl = CacheConfig::FOREVER;

@@ -36,7 +36,7 @@ class TranslationService extends Injectable
     /**
      * Add entries to the db for site-specific translation keys, that haven't been added yet
      */
-    public function createSiteTranslationKeys()
+    public function createSiteTranslationKeys(): void
     {
         $keys = array_keys($this->translator->getWebsiteTranslations());
 
@@ -109,7 +109,7 @@ class TranslationService extends Injectable
      * @param int|string $keyId
      * @return string
      */
-    public function getValueCacheKey(string $languageCode, $keyId): string
+    public function getValueCacheKey(string $languageCode, int|string $keyId): string
     {
         return CacheConfig::TRANSLATION . CacheConfig::SEPARATOR . $languageCode . CacheConfig::SEPARATOR . $keyId;
     }

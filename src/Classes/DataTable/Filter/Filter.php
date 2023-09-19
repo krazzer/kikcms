@@ -93,7 +93,7 @@ abstract class Filter
     /**
      * @return mixed
      */
-    public function getDefault()
+    public function getDefault(): mixed
     {
         return $this->default;
     }
@@ -102,7 +102,7 @@ abstract class Filter
      * @param mixed $default
      * @return Filter
      */
-    public function setDefault($default): Filter
+    public function setDefault(mixed $default): Filter
     {
         $this->default = $default;
         return $this;

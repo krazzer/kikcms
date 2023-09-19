@@ -10,6 +10,7 @@ use KikCMS\Services\UserService;
 use Phalcon\Filter\Validation\Validator\Identical;
 use Phalcon\Filter\Validation\Validator\Regex;
 use Phalcon\Filter\Validation\Validator\StringLength;
+use Phalcon\Http\Response;
 
 /**
  * @property UserService $userService
@@ -34,7 +35,7 @@ class PasswordResetForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
 
@@ -56,7 +57,7 @@ class PasswordResetForm extends WebForm
     /**
      * @inheritdoc
      */
-    protected function successAction(array $input)
+    protected function successAction(array $input): Response|string|null
     {
         $succesMessage = $this->getSuccessMessage();
 
@@ -73,7 +74,7 @@ class PasswordResetForm extends WebForm
     private function getSuccessMessage(): string
     {
         if ( ! $this->userService->isLoggedIn()) {
-            return $succesMessage = $this->translator->tl('login.reset.password.flash.default');
+            return $this->translator->tl('login.reset.password.flash.default');
         }
 
         if ($this->user->getId() === $this->userService->getUserId()) {

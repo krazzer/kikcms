@@ -33,9 +33,9 @@ class User extends Model
     private $settings;
 
     /**
-     * @inheritdoc
+     * @return void
      */
-    public function beforeValidation()
+    public function beforeValidation(): void
     {
         if ( ! property_exists($this, self::FIELD_CREATED_AT)) {
             $this->created_at = new Now;
@@ -46,7 +46,7 @@ class User extends Model
      * @inheritdoc
      * @return User
      */
-    public static function getById($id)
+    public static function getById($id): User
     {
         /** @var User $kikCmsUser */
         $kikCmsUser = parent::getById($id);
@@ -67,13 +67,13 @@ class User extends Model
     }
 
     /**
-     * @inheritdoc
+     * Initialize relations
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
-        $this->hasOne(User::FIELD_ID, Folder::class, Folder::FIELD_USER_ID, ["alias" => "folder"]);
+        $this->hasOne(User::FIELD_ID, Folder::class, File::FIELD_USER_ID, ["alias" => "folder"]);
 
         $this->skipAttributesOnCreate([self::FIELD_CREATED_AT]);
     }
@@ -87,7 +87,7 @@ class User extends Model
             return null;
         }
 
-        return (int) $this->id;
+        return $this->id;
     }
 
     /**

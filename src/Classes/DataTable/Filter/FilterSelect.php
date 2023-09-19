@@ -11,7 +11,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 class FilterSelect extends Filter
 {
     /** @var array */
-    private $options = [];
+    private $options;
 
     /**
      * @param string $field
@@ -19,7 +19,7 @@ class FilterSelect extends Filter
      * @param array $options
      * @param string|null $alias
      */
-    public function __construct(string $field, string $label, array $options, $alias = null)
+    public function __construct(string $field, string $label, array $options, string $alias = null)
     {
         $this->field   = $field;
         $this->label   = $label;
@@ -30,7 +30,7 @@ class FilterSelect extends Filter
     /**
      * @inheritdoc
      */
-    public function applyFilter(Builder $builder, $value)
+    public function applyFilter(Builder $builder, $value): void
     {
         $valueKey = 'filter' . uniqid();
 

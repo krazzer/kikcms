@@ -13,9 +13,9 @@ class TranslationKey extends Model
     const FIELD_KEY = 'key';
 
     /**
-     * @inheritdoc
+     * Initialize relations
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 

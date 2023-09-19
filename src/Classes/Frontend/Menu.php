@@ -70,7 +70,7 @@ class Menu
     /**
      * @return int|string
      */
-    public function getMenuKey()
+    public function getMenuKey(): int|string
     {
         return $this->menuKey;
     }
@@ -79,7 +79,7 @@ class Menu
      * @param int|string $menuKey
      * @return Menu
      */
-    public function setMenuKey($menuKey): Menu
+    public function setMenuKey(int|string $menuKey): Menu
     {
         $this->menuKey = $menuKey;
         return $this;
@@ -112,10 +112,10 @@ class Menu
     }
 
     /**
-     * @param null|string $template
+     * @param string|null $template
      * @return Menu
      */
-    public function setTemplate($template)
+    public function setTemplate(?string $template): static
     {
         $this->template = $template;
         return $this;
@@ -133,7 +133,7 @@ class Menu
      * @param array $restrictTemplates
      * @return Menu
      */
-    public function setRestrictTemplates(array $restrictTemplates)
+    public function setRestrictTemplates(array $restrictTemplates): static
     {
         $this->restrictTemplates = $restrictTemplates;
         return $this;

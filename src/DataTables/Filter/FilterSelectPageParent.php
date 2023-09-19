@@ -12,7 +12,7 @@ class FilterSelectPageParent extends FilterSelect
     /**
      * @inheritdoc
      */
-    public function applyFilter(Builder $builder, $value)
+    public function applyFilter(Builder $builder, $value): void
     {
         $parentPage = Page::getById($value);
         $alias      = Page::ALIAS;

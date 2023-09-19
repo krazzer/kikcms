@@ -24,7 +24,7 @@ abstract class FieldTransformer extends Injectable
     /**
      * @return Field
      */
-    public function getField()
+    public function getField(): Field
     {
         return $this->field;
     }
@@ -33,11 +33,11 @@ abstract class FieldTransformer extends Injectable
      * @param mixed $value
      * @return mixed
      */
-    public abstract function toStorage($value);
+    public abstract function toStorage(mixed $value): mixed;
 
     /**
      * @param mixed $value
      * @return mixed
      */
-    public abstract function toDisplay($value);
+    public abstract function toDisplay(mixed $value): mixed;
 }

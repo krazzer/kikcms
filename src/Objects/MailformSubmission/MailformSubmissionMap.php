@@ -10,7 +10,7 @@ class MailformSubmissionMap extends ObjectMap
      * @inheritdoc
      * @return MailformSubmission|false
      */
-    public function current()
+    public function current(): MailformSubmission|false
     {
         return parent::current();
     }
@@ -19,7 +19,7 @@ class MailformSubmissionMap extends ObjectMap
      * @inheritdoc
      * @return MailformSubmission|false
      */
-    public function get($key)
+    public function get($key): MailformSubmission|false
     {
         return parent::get($key);
     }
@@ -28,7 +28,7 @@ class MailformSubmissionMap extends ObjectMap
      * @inheritdoc
      * @return MailformSubmission|false
      */
-    public function getFirst()
+    public function getFirst(): MailformSubmission|false
     {
         return parent::getFirst();
     }
@@ -37,7 +37,7 @@ class MailformSubmissionMap extends ObjectMap
      * @inheritdoc
      * @return MailformSubmission|false
      */
-    public function getLast()
+    public function getLast(): MailformSubmission|false
     {
         return parent::getLast();
     }

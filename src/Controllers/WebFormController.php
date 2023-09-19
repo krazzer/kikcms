@@ -15,7 +15,7 @@ class WebFormController extends RenderableController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -26,7 +26,7 @@ class WebFormController extends RenderableController
      * @param File $file
      * @return string
      */
-    public function getFilePreviewAction(File $file)
+    public function getFilePreviewAction(File $file): string
     {
         $finder = new Finder();
 
@@ -40,7 +40,7 @@ class WebFormController extends RenderableController
     /**
      * @return string
      */
-    public function getFinderAction()
+    public function getFinderAction(): string
     {
         $finder = new Finder();
         $finder->setPickingMode(true);
@@ -59,7 +59,7 @@ class WebFormController extends RenderableController
     /**
      * @return string
      */
-    public function uploadAndPreviewAction()
+    public function uploadAndPreviewAction(): string
     {
         $tokenKey      = $this->request->getPost('tokenKey', 'string');
         $tokenValue    = $this->request->getPost('tokenValue', 'string');

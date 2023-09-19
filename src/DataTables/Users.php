@@ -73,7 +73,7 @@ class Users extends DataTable
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $this->setFieldFormatting(User::FIELD_BLOCKED, function ($value) {
             return $value == 1 ? '<span style="color: #A00000;" class="glyphicon glyphicon-ban-circle"></span>' : '';

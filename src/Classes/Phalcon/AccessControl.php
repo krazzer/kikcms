@@ -40,21 +40,21 @@ class AccessControl extends Memory
     /**
      * @inheritdoc
      */
-    public function allow(string $roleName, string $resourceName, $access = Permission::ACCESS_ANY, $func = null): void
+    public function allow(string $roleName, string $componentName, $access = Permission::ACCESS_ANY, $func = null): void
     {
-        parent::allow($roleName, $resourceName, $access, $func);
+        parent::allow($roleName, $componentName, $access, $func);
     }
 
     /**
      * Shortcut to check if access is allowed for the current logged in user's role
      *
      * @param $resourceName
-     * @param $access
+     * @param string $access
      * @param array|null $parameters
      *
      * @return bool
      */
-    public function allowed($resourceName, $access = Permission::ACCESS_ANY, array $parameters = null): bool
+    public function allowed($resourceName, string $access = Permission::ACCESS_ANY, array $parameters = null): bool
     {
         return parent::isAllowed($this->currentRole, $resourceName, $access, $parameters);
     }
@@ -70,7 +70,7 @@ class AccessControl extends Memory
     /**
      * Update the updated time to the current time
      */
-    public function update()
+    public function update(): void
     {
         $this->updated = new DateTime;
     }
@@ -78,7 +78,7 @@ class AccessControl extends Memory
     /**
      * @return int|null
      */
-    public function getUpdateTime()
+    public function getUpdateTime(): ?int
     {
         return $this->updateTime;
     }
@@ -87,7 +87,7 @@ class AccessControl extends Memory
      * @param int|null $updateTime
      * @return AccessControl
      */
-    public function setUpdateTime($updateTime)
+    public function setUpdateTime(?int $updateTime): static
     {
         $this->updateTime = $updateTime;
         return $this;

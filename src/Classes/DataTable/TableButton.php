@@ -23,7 +23,7 @@ class TableButton
     private $warning;
 
     /** @var bool */
-    private bool $blank = false;
+    private bool $blank;
 
     /**
      * @param string $icon

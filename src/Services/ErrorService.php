@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
+use Error;
+use Exception;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
 use Monolog\Handler\AbstractHandler;
@@ -17,9 +19,10 @@ use Swift_Message;
 class ErrorService extends Injectable
 {
     /**
-     * @return AbstractHandler|null
+     * @param int $deDuplicationTime
+     * @return AbstractHandler|DeduplicationHandler|null
      */
-    public function getEmailHandler(int $deDuplicationTime = 60)
+    public function getEmailHandler(int $deDuplicationTime = 60): AbstractHandler|DeduplicationHandler|null
     {
         if( ! $developerEmail = $this->config->application->developerEmail){
             return null;
@@ -109,7 +112,7 @@ class ErrorService extends Injectable
     /**
      * @param mixed $error
      */
-    public function handleError($error)
+    public function handleError(mixed $error): void
     {
         $isProduction = @$this->config->isProd();
 
@@ -121,10 +124,10 @@ class ErrorService extends Injectable
     }
 
     /**
-     * @param stdClass|array $error
+     * @param mixed $error
      * @return bool
      */
-    public function isRecoverableError($error): bool
+    public function isRecoverableError(mixed $error): bool
     {
         if ( ! $errorType = $this->getErrorType($error)) {
             return false;
@@ -134,10 +137,10 @@ class ErrorService extends Injectable
     }
 
     /**
-     * @param stdClass|array $error
+     * @param mixed $error
      * @return null|int
      */
-    private function getErrorType($error): ?int
+    private function getErrorType(Exception|Error|stdClass|array $error): ?int
     {
         if (is_object($error)) {
             return $error->type ?? null;

@@ -34,15 +34,15 @@ class UrlToId extends FieldTransformer
      * @param mixed $value
      * @return mixed
      */
-    public function toStorage($value)
+    public function toStorage(mixed $value): mixed
     {
         // it's a full URL, so just return as a whole
-        if(strstr($value, '://')){
+        if(str_contains($value, '://')){
             return $value;
         }
 
         // it contains an anchor, so store as whole link
-        if(strstr($value, '#')){
+        if(str_contains($value, '#')){
             return $value;
         }
 
@@ -57,7 +57,7 @@ class UrlToId extends FieldTransformer
      * @param mixed $value
      * @return mixed
      */
-    public function toDisplay($value)
+    public function toDisplay(mixed $value): mixed
     {
         if (is_numeric($value)) {
             return $this->urlService->getUrlByPageId((int) $value, $this->languageCode);

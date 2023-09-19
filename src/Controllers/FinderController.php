@@ -15,7 +15,7 @@ class FinderController extends RenderableController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -25,7 +25,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function createFolderAction()
+    public function createFolderAction(): string
     {
         $finder     = $this->getRenderable();
         $folderName = $this->request->getPost('folderName');
@@ -46,7 +46,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function deleteAction()
+    public function deleteAction(): string
     {
         $finder        = $this->getRenderable();
         $fileIds       = $this->request->getPost('fileIds', 'int');
@@ -65,7 +65,7 @@ class FinderController extends RenderableController
 
         try {
             $this->fileRemoveService->deleteFilesByIds($idsToRemove);
-        } catch (DbForeignKeyDeleteException $e) {
+        } catch (DbForeignKeyDeleteException) {
             $errorMessages[] = $this->translator->tl('media.deleteErrorLinked');
         }
 
@@ -78,7 +78,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function editFileNameAction()
+    public function editFileNameAction(): string
     {
         $finder   = $this->getRenderable();
         $fileId   = (int) $this->request->getPost('fileId', 'int');
@@ -99,7 +99,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function editKeyAction()
+    public function editKeyAction(): string
     {
         $finder = $this->getRenderable();
         $fileId = (int) $this->request->getPost('fileId', 'int');
@@ -155,7 +155,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function openFolderAction()
+    public function openFolderAction(): string
     {
         $targetFolderId = (int) $this->request->getPost('folderId', 'int');
 
@@ -176,7 +176,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function pasteAction()
+    public function pasteAction(): string
     {
         $finder   = $this->getRenderable();
         $fileIds  = $this->request->getPost('fileIds') ?: [];
@@ -197,7 +197,7 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function searchAction()
+    public function searchAction(): string
     {
         $finder = $this->getRenderable();
 
@@ -214,11 +214,11 @@ class FinderController extends RenderableController
     /**
      * @return string
      */
-    public function uploadAction()
+    public function uploadAction(): string
     {
         $finder          = $this->getRenderable();
         $uploadedFiles   = $this->request->getUploadedFiles();
-        $overwriteFileId = (int) $this->request->getPost('overwriteFileId', 'int', null);
+        $overwriteFileId = (int) $this->request->getPost('overwriteFileId', 'int');
 
         $folderId = $finder->getFilters()->getFolderId();
 

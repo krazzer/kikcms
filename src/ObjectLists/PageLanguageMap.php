@@ -12,7 +12,7 @@ class PageLanguageMap extends ObjectMap
      * @param int|string $key
      * @return PageLanguage|false
      */
-    public function get($key)
+    public function get($key): PageLanguage|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class PageLanguageMap extends ObjectMap
     /**
      * @return PageLanguage|false
      */
-    public function getFirst()
+    public function getFirst(): PageLanguage|false
     {
         return parent::getFirst();
     }
@@ -28,7 +28,7 @@ class PageLanguageMap extends ObjectMap
     /**
      * @return PageLanguage|false
      */
-    public function getLast()
+    public function getLast(): PageLanguage|false
     {
         return parent::getLast();
     }
@@ -36,7 +36,7 @@ class PageLanguageMap extends ObjectMap
     /**
      * @return PageLanguage|false
      */
-    public function current()
+    public function current(): PageLanguage|false
     {
         return parent::current();
     }

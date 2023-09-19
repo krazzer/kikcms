@@ -20,7 +20,7 @@ class NestedSetService extends Injectable
      *
      * @param Page $page
      */
-    public function setAndMakeRoomForNewPage(Page $page)
+    public function setAndMakeRoomForNewPage(Page $page): void
     {
         if ( ! $page->parent->rgt) {
             $this->addToNestedSet($page->parent);
@@ -40,7 +40,7 @@ class NestedSetService extends Injectable
     /**
      * @param Page $page
      */
-    public function addToNestedSet(Page $page)
+    public function addToNestedSet(Page $page): void
     {
         $maxRight = $this->getMaxRightValue();
 

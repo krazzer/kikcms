@@ -28,7 +28,7 @@ class CmsService extends Injectable
     /**
      * Clean up cache files saved on disk
      */
-    public function cleanUpDiskCache()
+    public function cleanUpDiskCache(): void
     {
         $cacheKeys = $this->keyValue->getAdapter()->getKeys(DataTable::INSTANCE_PREFIX);
 
@@ -108,7 +108,7 @@ class CmsService extends Injectable
      * @param bool $removeVisitorRole
      * @return array
      */
-    public function getRoleMap($removeVisitorRole = true): array
+    public function getRoleMap(bool $removeVisitorRole = true): array
     {
         $roleMap = [];
 
@@ -155,9 +155,9 @@ class CmsService extends Injectable
     }
 
     /**
-     * @param $cache
+     * @param SubDataTableNewIdsCache $cache
      */
-    private function removeUnsavedTemporaryRecords(SubDataTableNewIdsCache $cache)
+    private function removeUnsavedTemporaryRecords(SubDataTableNewIdsCache $cache): void
     {
         if ( ! class_exists($cache->getModel())) {
             return;
@@ -193,7 +193,7 @@ class CmsService extends Injectable
      * @param string $token
      * @throws UnauthorizedException
      */
-    public function checkSecurityToken(string $token)
+    public function checkSecurityToken(string $token): void
     {
         if ( ! $token || ! $this->keyValue->has($token)) {
             throw new UnauthorizedException();
@@ -219,7 +219,7 @@ class CmsService extends Injectable
 
         // walk through the path to see if the domain name can be retrieved
         foreach ($pathParts as $part) {
-            if (strstr($part, '.')) {
+            if (str_contains($part, '.')) {
                 return "https://" . $part . '/';
             }
         }

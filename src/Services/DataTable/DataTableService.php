@@ -20,7 +20,7 @@ class DataTableService extends Injectable
      * @param DataTable $dataTable
      * @param StorageData $storageData
      */
-    public function addDisplayOrderToStorageData(DataTable $dataTable, StorageData $storageData)
+    public function addDisplayOrderToStorageData(DataTable $dataTable, StorageData $storageData): void
     {
         if ($dataTable->isSortableNewFirst()) {
             $storageData->addAdditionalInputValue($dataTable->getSortableField(), 1);
@@ -123,7 +123,7 @@ class DataTableService extends Injectable
      *
      * @param DataTable $dataTable
      */
-    public function handleNewObject(DataTable $dataTable)
+    public function handleNewObject(DataTable $dataTable): void
     {
         $editId          = $dataTable->getForm()->getFilters()->getEditId();
         $hasTempParentId = $dataTable->getFilters()->hasTempParentEditId();

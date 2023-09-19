@@ -12,7 +12,7 @@ class GenerateTask extends Task
     /**
      * Called by: kikcms generate models
      */
-    public function modelsAction()
+    public function modelsAction(): void
     {
         $filesGeneratedCount = $this->generatorService->generate();
         $this->cliService->outputLine($filesGeneratedCount . " files generated");
@@ -22,7 +22,7 @@ class GenerateTask extends Task
      * Called by: kikcms generate model <table_name>
      * @param array $params
      */
-    public function modelAction(array $params)
+    public function modelAction(array $params): void
     {
         $this->generatorService->generateForTable($params[0]);
     }

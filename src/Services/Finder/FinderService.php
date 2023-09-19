@@ -45,7 +45,7 @@ class FinderService extends Injectable
      * Sets the starting folder to a previously visited one using session
      * @param FinderFilters $filters
      */
-    public function setFolderBySession(FinderFilters $filters)
+    public function setFolderBySession(FinderFilters $filters): void
     {
         $folder = Folder::getById($this->session->finderFolderId);
 

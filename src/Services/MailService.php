@@ -37,7 +37,7 @@ class MailService extends Injectable
      *
      * @return int
      */
-    public function send(Swift_Message $message): int
+    public function send(Swift_Message|Swift_Mime_MimePart $message): int
     {
         return $this->mailer->send($message);
     }
@@ -53,7 +53,7 @@ class MailService extends Injectable
     /**
      * @return string|array
      */
-    public function getDefaultFrom()
+    public function getDefaultFrom(): array|string
     {
         $defaultFromEmail = $this->getDefaultFromEmail();
         $defaultFromName  = $this->getDefaultFromName();
@@ -114,19 +114,20 @@ class MailService extends Injectable
     }
 
     /**
-     * @param string|array $to
+     * @param array|string $to
      * @param string $subject
      * @param string $body
      *
      * @param null $template
      * @param array $parameters
      * @param array|Swift_Attachment $attachments
-     * @param null|array|string $from
+     * @param array|string|null $from
      * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail($to, string $subject, string $body, $template = null, array $parameters = [],
-                             array $attachments = [], $from = null, bool $bcc = false): int
+    public function sendMail(array|string $to, string $subject, string $body, $template = null, array $parameters = [],
+                             array|Swift_Attachment $attachments = [], array|string $from = null,
+                             bool $bcc = false): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -178,13 +179,13 @@ class MailService extends Injectable
      *
      * @param array $parameters
      * @param array $attachments
-     * @param null|array|string $from
+     * @param array|string|null $from
      * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
      * @throws Exception
      */
     public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [],
-                                 $from = null, bool $bcc = false): int
+                                 array|string $from = null, bool $bcc = false): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
@@ -199,10 +200,11 @@ class MailService extends Injectable
      * @param string $body
      * @param array $parameters
      * @param array $attachments
-     * @param null|array|string $from
+     * @param array|string|null $from
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = [], $from = null): int
+    public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = [],
+                                    array|string $from = null): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
 

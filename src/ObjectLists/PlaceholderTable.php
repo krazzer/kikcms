@@ -11,7 +11,7 @@ class PlaceholderTable extends ObjectMap
      * @param int|string $key
      * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
      */
-    public function get($key)
+    public function get($key): PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
     {
         return parent::get($key);
     }
@@ -19,7 +19,7 @@ class PlaceholderTable extends ObjectMap
     /**
      * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
      */
-    public function getFirst()
+    public function getFirst(): PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
     {
         return parent::getFirst();
     }
@@ -27,7 +27,7 @@ class PlaceholderTable extends ObjectMap
     /**
      * @return PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
      */
-    public function current()
+    public function current(): PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
     {
         return parent::current();
     }
@@ -35,7 +35,7 @@ class PlaceholderTable extends ObjectMap
     /**
      * @return ObjectMap|PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
      */
-    public function reverse()
+    public function reverse(): ObjectMap|PlaceholderMap|PlaceholderFileThumbUrlMap|PlaceholderFileUrlMap|false
     {
         return parent::reverse();
     }

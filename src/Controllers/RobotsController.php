@@ -7,16 +7,16 @@ namespace KikCMS\Controllers;
 use DateTime;
 use DateTimeZone;
 use DOMDocument;
-use KikCMS\Config\KikCMSConfig;
-use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\UrlService;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * @property UrlService $urlService
  */
 class RobotsController extends BaseController
 {
-    public function sitemapAction()
+    public function sitemapAction(): Response|ResponseInterface
     {
         $expireDate = new DateTime();
         $expireDate->modify('+1 day');

@@ -19,7 +19,7 @@ class FileHashService extends Injectable
     /**
      * Update all files where the hash is missing
      */
-    public function updateMissingHashes()
+    public function updateMissingHashes(): void
     {
         $fileMap = $this->getFileMapMissingHash();
 
@@ -44,7 +44,7 @@ class FileHashService extends Injectable
     /**
      * @param File $file
      */
-    public function updateHash(File $file)
+    public function updateHash(File $file): void
     {
         $filePath = $this->fileService->getFilePath($file);
 

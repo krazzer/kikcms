@@ -12,19 +12,20 @@ use Phalcon\Mvc\Model\Relation;
 class PreloadService extends Injectable
 {
     /**
-     * @param ObjectList|array $objects
+     * @param array|ObjectList $objects
      * @param array|string $relationAlias
      * @param callable|string|null $pathToChild
      * @param null $order
      * @return void
      */
-    public function preload($objects, $relationAlias, $pathToChild = null, $order = null)
+    public function preload(ObjectList|array $objects, array|string $relationAlias, callable|string $pathToChild = null,
+                            $order = null): void
     {
         $idList   = [];
         $relation = null;
 
         foreach ($objects as $object) {
-            if( ! $object = $this->getObject($object, $pathToChild)){
+            if ( ! $object = $this->getObject($object, $pathToChild)) {
                 continue;
             }
 
@@ -47,9 +48,9 @@ class PreloadService extends Injectable
         $relatedObjectMap = $this->getRelatedObjects($idList, $relation, $order);
 
         foreach ($objects as $object) {
-            $field  = $relation->getFields();
+            $field = $relation->getFields();
 
-            if( ! $object = $this->getObject($object, $pathToChild)){
+            if ( ! $object = $this->getObject($object, $pathToChild)) {
                 continue;
             }
 
@@ -57,7 +58,7 @@ class PreloadService extends Injectable
                 continue;
             }
 
-            if($relation->getType() == Relation::HAS_MANY) {
+            if ($relation->getType() == Relation::HAS_MANY) {
                 $object->$relationAlias = new ObjectMap;
             } else {
                 $object->$relationAlias = null;
@@ -69,7 +70,7 @@ class PreloadService extends Injectable
 
             $relatedObject = $relatedObjectMap[$relationId];
 
-            if($relation->getType() == Relation::HAS_MANY){
+            if ($relation->getType() == Relation::HAS_MANY) {
                 $object->$relationAlias = new ObjectMap($relatedObject);
             } else {
                 $object->$relationAlias = $relatedObject;
@@ -91,7 +92,7 @@ class PreloadService extends Injectable
             ->from($relation->getReferencedModel())
             ->inWhere($keyField, $idMap);
 
-        if($order){
+        if ($order) {
             $query->orderBy($order);
         }
 
@@ -99,7 +100,7 @@ class PreloadService extends Injectable
 
         $objectMap = [];
 
-        if($relation->getType() == Relation::HAS_MANY){
+        if ($relation->getType() == Relation::HAS_MANY) {
             foreach ($objects as $object) {
                 $objectMap[$object->$keyField][] = $object;
             }
@@ -117,7 +118,7 @@ class PreloadService extends Injectable
      * @param callable|string|null $pathToChild
      * @return object|null
      */
-    private function getObject(object $object, $pathToChild = null): ?object
+    private function getObject(object $object, callable|string $pathToChild = null): ?object
     {
         if (is_callable($pathToChild)) {
             return $pathToChild($object);

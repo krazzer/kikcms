@@ -32,20 +32,20 @@ class File extends Model
     public $key;
 
     /**
-     * @inheritdoc
+     * Initialize relations
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
-        $this->hasOne(self::FIELD_FOLDER_ID, Folder::class, Folder::FIELD_ID, ['alias' => 'folder']);
+        $this->hasOne(self::FIELD_FOLDER_ID, Folder::class, self::FIELD_ID, ['alias' => 'folder']);
     }
 
     /**
      * @inheritdoc
-     * @return File
+     * @return File|null
      */
-    public static function getById($id)
+    public static function getById($id): ?File
     {
         return parent::getById($id);
     }
@@ -55,7 +55,7 @@ class File extends Model
      *
      * @return File[]
      */
-    public static function getByIdList(array $ids)
+    public static function getByIdList(array $ids): array
     {
         return parent::getByIdList($ids);
     }
@@ -63,7 +63,7 @@ class File extends Model
     /**
      * @return DateTime
      */
-    public function getCreated()
+    public function getCreated(): DateTime
     {
         return new DateTime($this->created ?: 'now');
     }
@@ -71,7 +71,7 @@ class File extends Model
     /**
      * @return string
      */
-    public function getExtension()
+    public function getExtension(): string
     {
         return $this->extension;
     }
@@ -116,7 +116,7 @@ class File extends Model
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -124,15 +124,15 @@ class File extends Model
     /**
      * @return string
      */
-    public function getThumbNail()
+    public function getThumbNail(): string
     {
         return $this->fileStorage;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimetype;
     }

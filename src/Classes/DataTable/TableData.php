@@ -67,7 +67,7 @@ class TableData
         }
 
         foreach ($this->displayMap as $fieldKey => $fieldName) {
-            if (strstr($fieldKey, '.')) {
+            if (str_contains($fieldKey, '.')) {
                 list($alias, $column) = explode('.', $fieldKey);
                 $value = $allRowData[$alias]->$column;
             } else {

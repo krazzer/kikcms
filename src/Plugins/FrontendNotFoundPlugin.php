@@ -27,7 +27,7 @@ class FrontendNotFoundPlugin extends Injectable
      *
      * @return bool
      */
-    public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception)
+    public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception): bool
     {
         if ($exception instanceof ResourcesExceededException) {
             $dispatcher->forward([

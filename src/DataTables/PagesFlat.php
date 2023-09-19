@@ -53,7 +53,7 @@ abstract class PagesFlat extends DataTable
     /**
      * @inheritdoc
      */
-    public function getJsData()
+    public function getJsData(): array
     {
         $jsData = parent::getJsData();
 

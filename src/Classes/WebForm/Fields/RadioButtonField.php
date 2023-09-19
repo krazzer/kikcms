@@ -34,7 +34,7 @@ class RadioButtonField extends Field
     /**
      * @return null|ElementInterface|Select
      */
-    public function getElement(): ?ElementInterface
+    public function getElement(): null|ElementInterface|Select
     {
         return parent::getElement();
     }
@@ -42,7 +42,7 @@ class RadioButtonField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_RADIOBUTTON;
     }

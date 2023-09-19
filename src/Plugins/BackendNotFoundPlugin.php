@@ -11,6 +11,7 @@ use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
 use KikCMS\Services\UserService;
+use Phalcon\Dispatcher\Exception as ExceptionAlias;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher\Exception as DispatcherException;
 use Phalcon\Mvc\Dispatcher as MvcDispatcher;
@@ -25,8 +26,8 @@ use Phalcon\Mvc\Dispatcher as MvcDispatcher;
 class BackendNotFoundPlugin extends Injectable
 {
     const DISPATCH_ERRORS = [
-        DispatcherException::EXCEPTION_HANDLER_NOT_FOUND,
-        DispatcherException::EXCEPTION_ACTION_NOT_FOUND
+        ExceptionAlias::EXCEPTION_HANDLER_NOT_FOUND,
+        ExceptionAlias::EXCEPTION_ACTION_NOT_FOUND
     ];
 
     /**
@@ -38,7 +39,7 @@ class BackendNotFoundPlugin extends Injectable
      *
      * @return bool
      */
-    public function beforeException(Event $event, MvcDispatcher $dispatcher, Exception $exception)
+    public function beforeException(Event $event, MvcDispatcher $dispatcher, Exception $exception): bool
     {
         list($forwardView, $statusCode, $return) = $this->getActionForException($exception);
 
@@ -77,17 +78,12 @@ class BackendNotFoundPlugin extends Injectable
     {
         $isDispatchError = $exception instanceof DispatcherException && in_array($exception->getCode(), self::DISPATCH_ERRORS);
 
-        switch (true) {
-            case $exception instanceof SessionExpiredException:
-                return [null, StatusCodes::SESSION_EXPIRED, false];
-            case $exception instanceof ObjectNotFoundException:
-                return ['show404object', null, false];
-            case $exception instanceof NotFoundException || $isDispatchError:
-                return ['show404', null, false];
-            case $exception instanceof UnauthorizedException:
-                return ['show401', 401, false];
-            default:
-                return [null, null, true];
-        }
+        return match (true) {
+            $exception instanceof SessionExpiredException => [null, StatusCodes::SESSION_EXPIRED, false],
+            $exception instanceof ObjectNotFoundException => ['show404object', null, false],
+            $exception instanceof NotFoundException || $isDispatchError => ['show404', null, false],
+            $exception instanceof UnauthorizedException => ['show401', 401, false],
+            default => [null, null, true],
+        };
     }
 }

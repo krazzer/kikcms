@@ -17,7 +17,7 @@ class Date extends FieldTransformer
     /**
      * @inheritdoc
      */
-    public function toStorage($value)
+    public function toStorage(mixed $value): string
     {
         $date = DateTime::createFromFormat($this->field->getFormat(), $value);
 
@@ -27,7 +27,7 @@ class Date extends FieldTransformer
     /**
      * @inheritdoc
      */
-    public function toDisplay($value)
+    public function toDisplay(mixed $value): string
     {
         $date = new DateTime($value);
 

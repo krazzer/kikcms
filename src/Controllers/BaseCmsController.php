@@ -23,7 +23,7 @@ class BaseCmsController extends BaseController
     /**
      * @inheritdoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -48,7 +48,7 @@ class BaseCmsController extends BaseController
     /**
      * @inheritdoc
      */
-    protected function initializeLanguage()
+    protected function initializeLanguage(): void
     {
         $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
     }
@@ -56,7 +56,7 @@ class BaseCmsController extends BaseController
     /**
      * @param string $menuItem
      */
-    protected function highlightMenuItem(string $menuItem)
+    protected function highlightMenuItem(string $menuItem): void
     {
         $this->view->actionName = $menuItem;
     }

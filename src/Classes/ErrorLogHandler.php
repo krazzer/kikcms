@@ -15,7 +15,7 @@ class ErrorLogHandler extends AbstractProcessingHandler
     /**
      * @inheritdoc
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if($errorLogPath = $this->getErrorLogPath()){
             if( ! is_dir(dirname($errorLogPath))){

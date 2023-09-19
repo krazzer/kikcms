@@ -54,7 +54,7 @@ class Page extends Model
     /**
      * Set lft, rgt, level and display_order if empty
      */
-    public function beforeSave()
+    public function beforeSave(): void
     {
         // if the parent changed, and the new parent has a child with the same display_order, reset it
         if($this->getParentId() && $this->getDisplayOrder() && $this->getId()){
@@ -75,7 +75,7 @@ class Page extends Model
     /**
      * Remove cache when removing a page
      */
-    public function beforeDelete()
+    public function beforeDelete(): void
     {
         foreach ($this->pageLanguages as $pageLanguage) {
             $this->getPageLanguageService()->removeCache($pageLanguage);
@@ -99,7 +99,7 @@ class Page extends Model
     /**
      * Init
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
 
@@ -129,9 +129,9 @@ class Page extends Model
 
     /**
      * @inheritdoc
-     * @return Page
+     * @return Page|null
      */
-    public static function getById($id)
+    public static function getById($id): ?Page
     {
         return parent::getById($id);
     }
@@ -140,7 +140,7 @@ class Page extends Model
      * @inheritdoc
      * @return Page[]
      */
-    public static function getByIdList(array $ids)
+    public static function getByIdList(array $ids): array
     {
         return parent::getByIdList($ids);
     }
@@ -310,7 +310,7 @@ class Page extends Model
     /**
      * Set a new display order
      */
-    public function resetDisplayOrder(bool $resetNestedSet = false)
+    public function resetDisplayOrder(bool $resetNestedSet = false): void
     {
         $this->display_order = $this->getPageRearrangeService()->getMaxDisplayOrder($this->parent) + 1;
 
@@ -341,14 +341,14 @@ class Page extends Model
     /**
      * Add relations for each field, and for each language
      */
-    private function addPageContentRelations()
+    private function addPageContentRelations(): void
     {
         $templateFieldKeys = $this->getTemplateFieldMap();
         $languages         = $this->getDI()->getShared('languageService')->getLanguages();
 
         foreach ($templateFieldKeys as $key => $field) {
             // skip fields that aren't content fields
-            if ($field instanceof Field && substr($field->getKey(), -6) !== ':value') {
+            if ($field instanceof Field && ! str_ends_with($field->getKey(), ':value')) {
                 continue;
             }
 
@@ -372,7 +372,7 @@ class Page extends Model
     /**
      * Add pageLanguage relations for each language, like pageLanguageEn
      */
-    private function addPageLanguageRelations()
+    private function addPageLanguageRelations(): void
     {
         $languages = $this->getDI()->get('languageService')->getLanguages();
 
@@ -441,7 +441,7 @@ class Page extends Model
      * @param int|null $displayOrder
      * @return $this
      */
-    public function setDisplayOrder(?int $displayOrder)
+    public function setDisplayOrder(?int $displayOrder): static
     {
         $this->display_order = $displayOrder;
         return $this;

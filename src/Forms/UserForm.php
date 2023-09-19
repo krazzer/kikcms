@@ -25,7 +25,7 @@ class UserForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $id = $this->getObject()->id ?? null;
 

@@ -63,7 +63,7 @@ class CacheNode
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -97,7 +97,7 @@ class CacheNode
      * @param mixed $value
      * @return CacheNode
      */
-    public function setValue($value): CacheNode
+    public function setValue(mixed $value): CacheNode
     {
         $this->value = $value;
         return $this;
@@ -144,7 +144,7 @@ class CacheNode
     /**
      * Find nodes that have only one child, and merge it with the parent
      */
-    public function flattenSingleNodes()
+    public function flattenSingleNodes(): void
     {
         // flatten the map if there is only one node
         if ($this->getCacheNodeMap()->count() === 1 && ! $this->value) {

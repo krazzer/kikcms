@@ -85,7 +85,7 @@ class FilePermissionService extends Injectable
      * @param int $fileId
      * @param int $right
      */
-    public function create($userIdOrRole, int $fileId, int $right)
+    public function create($userIdOrRole, int $fileId, int $right): void
     {
         $permission = new FilePermission();
 
@@ -105,7 +105,7 @@ class FilePermissionService extends Injectable
      * @param array $fileIds
      * @throws Exception
      */
-    public function deleteByFileIds(array $fileIds)
+    public function deleteByFileIds(array $fileIds): void
     {
         $roles   = $this->getEditableRoles();
         $userIds = $this->getEditableUserIds();
@@ -222,11 +222,11 @@ class FilePermissionService extends Injectable
      */
     public function userLevel(): bool
     {
-        if($this->config->media->filePermissionsDefaultUser === true){
+        if($this->config->media->filePermissionsDefaultUser){
             return true;
         }
 
-        if ($this->config->media->filePermissionsDefaultUser === false) {
+        if ( ! $this->config->media->filePermissionsDefaultUser) {
             return false;
         }
 

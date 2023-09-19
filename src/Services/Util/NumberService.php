@@ -25,7 +25,7 @@ class NumberService extends Injectable
         $decimalNotation = $this->translator->tl('system.decimalNotation');
 
         if($decimalNotation == 'point'){
-            return number_format($amount, $decimals, '.', ',');
+            return number_format($amount, $decimals);
         } else {
             return number_format($amount, $decimals, ',', '.');
         }

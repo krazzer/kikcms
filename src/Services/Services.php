@@ -5,8 +5,6 @@ namespace KikCMS\Services;
 use ErrorException;
 use Exception;
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
-use Google_Client;
-use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
@@ -83,7 +81,7 @@ class Services extends BaseServices
         $cmsObjectServices = [];
 
         foreach ($cmsObjects as $object) {
-            if (is_string($object) && (substr($object, -7) == 'Service' || substr($object, -6) == 'Helper')) {
+            if (is_string($object) && (str_ends_with($object, 'Service') || str_ends_with($object, 'Helper'))) {
                 $cmsObjectServices[] = $object;
             }
         }
@@ -120,7 +118,7 @@ class Services extends BaseServices
         $simpleServices = [];
 
         foreach ($services as $service) {
-            if (is_string($service) && (substr($service, -7) == 'Service' || substr($service, -6) == 'Helper')) {
+            if (is_string($service) && (str_ends_with($service, 'Service') || str_ends_with($service, 'Helper'))) {
                 $simpleServices[] = $service;
             }
         }
@@ -145,27 +143,6 @@ class Services extends BaseServices
     protected function initPermission(): Permission
     {
         return new Permission();
-    }
-
-    /**
-     * @return Google_Service_AnalyticsReporting
-     */
-    protected function initAnalytics(): Google_Service_AnalyticsReporting
-    {
-        $keyFileLocation    = $this->getAppConfig()->path . 'config/service-account-credentials.json';
-        $keyFileEnvLocation = $this->getAppConfig()->path . 'env/service-account-credentials.json';
-
-        if (is_readable($keyFileEnvLocation)) {
-            $keyFileLocation = $keyFileEnvLocation;
-        }
-
-        // Create and configure a new client object.
-        $client = new Google_Client();
-        $client->setApplicationName("Analytics");
-        $client->setAuthConfig($keyFileLocation);
-        $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
-
-        return new Google_Service_AnalyticsReporting($client, $this->getIniConfig()->analytics->url ?? null);
     }
 
     /**
@@ -329,9 +306,9 @@ class Services extends BaseServices
     }
 
     /**
-     * @return FileStorage
+     * @return FileStorageFile|FileStorage
      */
-    protected function initFileStorage()
+    protected function initFileStorage(): FileStorageFile|FileStorage
     {
         $fileStorage = new FileStorageFile();
         $fileStorage->setStorageDir($this->getAppConfig()->path . 'storage/');

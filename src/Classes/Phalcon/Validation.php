@@ -41,7 +41,7 @@ class Validation extends \Phalcon\Filter\Validation
     /**
      * @param ValidatorInterface $validator
      */
-    private function setDefaultTemplate(ValidatorInterface $validator)
+    private function setDefaultTemplate(ValidatorInterface $validator): void
     {
         $className = get_class($validator);
 

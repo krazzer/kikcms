@@ -12,7 +12,7 @@ class FileMap extends ObjectMap
      * @param int|string $key
      * @return File|false
      */
-    public function get($key)
+    public function get($key): File|false
     {
         return parent::get($key);
     }
@@ -20,7 +20,7 @@ class FileMap extends ObjectMap
     /**
      * @return File|false
      */
-    public function current()
+    public function current(): File|false
     {
         return parent::current();
     }

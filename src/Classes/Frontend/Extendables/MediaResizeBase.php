@@ -32,7 +32,7 @@ class MediaResizeBase extends WebsiteExtendable
      * @param $width
      * @param $height
      */
-    public function crop(AbstractAdapter $image, $width, $height)
+    public function crop(AbstractAdapter $image, $width, $height): void
     {
         $sourceWidth = $image->getWidth();
         $sourceHeight = $image->getHeight();
@@ -64,10 +64,10 @@ class MediaResizeBase extends WebsiteExtendable
 
     /**
      * @param AbstractAdapter $image
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      */
-    public function resize(AbstractAdapter $image, int $width, int $height)
+    public function resize(AbstractAdapter $image, int $width, int $height): void
     {
         if ($image->getWidth() < $width && $image->getHeight() < $height) {
             return;
@@ -88,7 +88,7 @@ class MediaResizeBase extends WebsiteExtendable
      * @param AbstractAdapter $image
      * @param string $type
      */
-    public function resizeByType(AbstractAdapter $image, string $type)
+    public function resizeByType(AbstractAdapter $image, string $type): void
     {
         $method = $this->getMethod($type);
         $this->$method($image);
@@ -97,7 +97,7 @@ class MediaResizeBase extends WebsiteExtendable
     /**
      * @param AbstractAdapter $image
      */
-    public function resizeDefault(AbstractAdapter $image)
+    public function resizeDefault(AbstractAdapter $image): void
     {
         $this->resize($image, 192, 192);
     }

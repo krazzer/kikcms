@@ -48,13 +48,13 @@ class DataTableField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_DATA_TABLE;
     }
 
     /**
-     * @return DataTable
+     * @return string
      */
     public function getClass(): string
     {

@@ -17,7 +17,7 @@ class MailformSubmissionForm extends DataForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $input = (array) json_decode($this->getObject()->contents);
 

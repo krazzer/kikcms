@@ -20,7 +20,7 @@ class FilePermission extends Model
     /**
      * @return string|int
      */
-    public function getKey()
+    public function getKey(): int|string
     {
         return $this->role ?: $this->user_id;
     }

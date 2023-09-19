@@ -3,8 +3,6 @@
 namespace KikCMS\Models;
 
 
-use KikCmsCore\Classes\Model;
-
 class Folder extends File
 {
     /** @var int */
@@ -16,7 +14,7 @@ class Folder extends File
     /**
      * @inheritdoc
      *
-     * @return Folder|Model
+     * @return File|null
      */
     public static function getById($id): ?File
     {

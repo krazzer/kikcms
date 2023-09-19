@@ -31,7 +31,7 @@ class FinderPermissionController extends BaseCmsController
     /**
      * Update file permissions
      */
-    public function updateAction()
+    public function updateAction(): ResponseInterface
     {
         $permission      = (array) $this->request->getPost('permission');
         $fileIds         = (array) $this->request->getPost('fileIds');

@@ -18,7 +18,7 @@ class MenuForm extends PageForm
     /**
      * @inheritdoc
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         $dlc = ucfirst($this->languageService->getDefaultLanguageCode());
 

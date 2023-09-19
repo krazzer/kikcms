@@ -29,7 +29,7 @@ class AdjacencyToNestedSet
      * @param int $parentId
      * @param int $level
      */
-    public function traverse(int $parentId = 0, int $level = -1)
+    public function traverse(int $parentId = 0, int $level = -1): void
     {
         $left = $this->total;
         $this->total++;
@@ -67,7 +67,7 @@ class AdjacencyToNestedSet
      * @param int $parentId
      * @return mixed
      */
-    private function getChildren(int $parentId)
+    private function getChildren(int $parentId): mixed
     {
         return $this->relations[$parentId];
     }
@@ -78,7 +78,7 @@ class AdjacencyToNestedSet
      * @param int $right
      * @param int $level
      */
-    private function save(int $id, int $left, int $right, int $level)
+    private function save(int $id, int $left, int $right, int $level): void
     {
         $this->result[$id] = [$left, $right, $level];
     }

@@ -1,28 +1,13 @@
-<?php
+<?php /** @noinspection PhpUndefinedClassInspection */
 declare(strict_types=1);
 
 namespace KikCMS\Services\Analytics;
 
 
 use DateTime;
-use Google\Analytics\Data\V1beta\DateRange;
-use Google\Analytics\Data\V1beta\Dimension;
-use Google\Analytics\Data\V1beta\Metric;
-use Google\Analytics\Data\V1beta\OrderBy;
-use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
-use Google_Service_AnalyticsReporting_ColumnHeader;
-use Google_Service_AnalyticsReporting_DateRange;
-use Google_Service_AnalyticsReporting_DateRangeValues;
-use Google_Service_AnalyticsReporting_Dimension;
-use Google_Service_AnalyticsReporting_GetReportsRequest;
-use Google_Service_AnalyticsReporting_Metric;
-use Google_Service_AnalyticsReporting_MetricHeaderEntry;
-use Google_Service_AnalyticsReporting_Report;
-use Google_Service_AnalyticsReporting_ReportRequest;
-use Google_Service_AnalyticsReporting_ReportRow;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\StatisticsConfig;
-use Phalcon\Config;
+use Phalcon\Config\Config;
 
 /**
  * @property Config $config
@@ -146,6 +131,7 @@ class AnalyticsGoogleService extends Injectable
      * @param Google_Service_AnalyticsReporting_MetricHeaderEntry[] $metricHeaders
      * @param array $dimensionHeaders
      * @return array
+     * @noinspection PhpMissingParamTypeInspection
      */
     private function reportRowToArray($reportRow, $metricHeaders, array $dimensionHeaders): array
     {

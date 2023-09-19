@@ -56,7 +56,7 @@ class FullPage extends Identifiable
      * @param string $fieldName
      * @return mixed
      */
-    public function get(string $fieldName)
+    public function get(string $fieldName): mixed
     {
         if ( ! array_key_exists($fieldName, $this->content)) {
             return null;
@@ -164,7 +164,7 @@ class FullPage extends Identifiable
     /**
      * @param array $content
      */
-    public function setContent(array $content)
+    public function setContent(array $content): void
     {
         $this->content = $content;
     }
@@ -172,7 +172,7 @@ class FullPage extends Identifiable
     /**
      * @param Page $page
      */
-    public function setPage(Page $page)
+    public function setPage(Page $page): void
     {
         $this->page = $page;
     }
@@ -180,7 +180,7 @@ class FullPage extends Identifiable
     /**
      * @param PageLanguage $pageLanguage
      */
-    public function setPageLanguage(PageLanguage $pageLanguage)
+    public function setPageLanguage(PageLanguage $pageLanguage): void
     {
         $this->pageLanguage = $pageLanguage;
     }
@@ -188,7 +188,7 @@ class FullPage extends Identifiable
     /**
      * @param string $url
      */
-    public function setUrl(string $url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }

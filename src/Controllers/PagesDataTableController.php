@@ -25,7 +25,7 @@ class PagesDataTableController extends DataTableController
     {
         try {
             return parent::deleteAction();
-        } catch (DbForeignKeyDeleteException $e) {
+        } catch (DbForeignKeyDeleteException) {
             $fkDeleteErrorMsg = $this->translator->tl('dataTables.pages.deleteErrorFk');
             return json_encode(['error' => $fkDeleteErrorMsg]);
         }
@@ -46,7 +46,7 @@ class PagesDataTableController extends DataTableController
     /**
      * @return string
      */
-    public function treeOrderAction()
+    public function treeOrderAction(): string
     {
         $pageId       = $this->request->getPost('id');
         $targetPageId = $this->request->getPost('targetId');

@@ -24,7 +24,7 @@ class DataTableFilterService extends Injectable
      * @param DataTableFilters $filters
      * @param Filter[] $customFilters
      */
-    public function addCustomFilters(Builder $query, DataTableFilters $filters, array $customFilters)
+    public function addCustomFilters(Builder $query, DataTableFilters $filters, array $customFilters): void
     {
         $filterValues = $filters->getCustomFilterValues();
 
@@ -44,7 +44,7 @@ class DataTableFilterService extends Injectable
      * @param DataTableFilters $filters
      * @param array $searchFields
      */
-    public function addSearchFilter(Builder $query, DataTableFilters $filters, array $searchFields)
+    public function addSearchFilter(Builder $query, DataTableFilters $filters, array $searchFields): void
     {
         if ( ! $searchValue = $filters->getSearch()) {
             return;
@@ -67,7 +67,7 @@ class DataTableFilterService extends Injectable
      * @param bool $isSortable
      * @param string $sortableField
      */
-    public function addSortFilter(Builder $query, DataTableFilters $filters, bool $isSortable, string $sortableField)
+    public function addSortFilter(Builder $query, DataTableFilters $filters, bool $isSortable, string $sortableField): void
     {
         if ( ! $filters->getSortColumn()) {
             if ($isSortable) {
@@ -103,7 +103,7 @@ class DataTableFilterService extends Injectable
      * @param string $aliasedTableKey
      */
     public function addSubDataTableFilter(Builder $query, DataTableFilters $filters, array $cachedNewIds,
-                                          string $aliasedTableKey)
+                                          string $aliasedTableKey): void
     {
         if ( ! $this->hasParent($filters)) {
             return;
@@ -153,7 +153,7 @@ class DataTableFilterService extends Injectable
      * @param DataTableFilters $filters
      * @return mixed
      */
-    public function getParentRelationValue(DataTableFilters $filters)
+    public function getParentRelationValue(DataTableFilters $filters): mixed
     {
         $model       = $filters->getParentModel();
         $editId      = $filters->getParentEditId();

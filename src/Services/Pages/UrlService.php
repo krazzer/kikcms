@@ -30,7 +30,7 @@ class UrlService extends Injectable
      *
      * @param int $pageId
      */
-    public function createUrlsForPageId(int $pageId)
+    public function createUrlsForPageId(int $pageId): void
     {
         $pageLanguageMap = $this->pageLanguageService->getAllByPageId($pageId);
 
@@ -48,7 +48,7 @@ class UrlService extends Injectable
     /**
      * @param PageLanguage $pageLanguage
      */
-    public function deduplicateUrl(PageLanguage $pageLanguage)
+    public function deduplicateUrl(PageLanguage $pageLanguage): void
     {
         $newUrlIndex = 1;
 
@@ -70,7 +70,7 @@ class UrlService extends Injectable
     /**
      * @param PageLanguage $pageLanguage
      */
-    public function deduplicateAndStoreNewUrl(PageLanguage $pageLanguage)
+    public function deduplicateAndStoreNewUrl(PageLanguage $pageLanguage): void
     {
         $this->deduplicateUrl($pageLanguage);
 
@@ -417,7 +417,7 @@ class UrlService extends Injectable
                 return $link;
             }
 
-            if (substr($link, 0, 1) !== '/') {
+            if ( ! str_starts_with($link, '/')) {
                 return '/' . $link;
             }
 
@@ -442,7 +442,7 @@ class UrlService extends Injectable
      */
     private function removeLeadingSlash(string $urlPath): string
     {
-        if (substr($urlPath, 0, 1) == '/') {
+        if (str_starts_with($urlPath, '/')) {
             $urlPath = substr($urlPath, 1);
         }
 
@@ -453,10 +453,10 @@ class UrlService extends Injectable
      * Return the PageLanguage and Page
      * Page is only filled if the page is an alias and not the PageLanguage's Page
      *
-     * @param string|int $key the is is either the pageLanguageId, or the pageLanguageId + aliasId concatenated with 'a'
+     * @param int|string $key the is is either the pageLanguageId, or the pageLanguageId + aliasId concatenated with 'a'
      * @return array [PageLanguage, ?Page]
      */
-    private function getPageLangAndAliasByKey($key): array
+    private function getPageLangAndAliasByKey(int|string $key): array
     {
         if (is_string($key) && strstr($key, UrlConfig::ALIAS_SEP)) {
             $pageLanguageIdParts = explode(UrlConfig::ALIAS_SEP, $key);
@@ -471,10 +471,10 @@ class UrlService extends Injectable
     }
 
     /**
-     * @param string|int $url
+     * @param int|string $url
      * @return bool
      */
-    public function isExternal($url): bool
+    public function isExternal(int|string $url): bool
     {
         $components = parse_url($url);
         return ! empty($components['host']) && strcasecmp($components['host'], $_SERVER['HTTP_HOST']);

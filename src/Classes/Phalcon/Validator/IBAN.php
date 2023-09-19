@@ -2,9 +2,9 @@
 
 namespace KikCMS\Classes\Phalcon\Validator;
 
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\AbstractValidator;
 use Phalcon\Messages\Message;
-use Phalcon\Validation;
-use Phalcon\Validation\AbstractValidator;
 
 class IBAN extends AbstractValidator
 {
@@ -13,7 +13,7 @@ class IBAN extends AbstractValidator
      */
     public function validate(Validation $validation, $field): bool
     {
-        $message = $this->getOption('message') ?: $validation->translator->tl('webform.messages.IBAN');;
+        $message = $this->getOption('message') ?: $validation->translator->tl('webform.messages.IBAN');
         $iban    = $validation->getValue($field);
 
         if (strlen($iban) < 5) {

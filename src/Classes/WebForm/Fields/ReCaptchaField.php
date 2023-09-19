@@ -13,7 +13,12 @@ class ReCaptchaField extends Field
     private $version;
 
     /**
-     * @param string $label
+     * @var string|null
+     */
+    private ?string $label;
+
+    /**
+     * @param string|null $label
      * @param int $version
      * @param array $validators
      */
@@ -30,7 +35,7 @@ class ReCaptchaField extends Field
     /**
      * @inheritdoc
      */
-    public function getType()
+    public function getType(): ?string
     {
         return Field::TYPE_RECAPTCHA;
     }
@@ -41,6 +46,14 @@ class ReCaptchaField extends Field
     public function getVersion(): int
     {
         return $this->version;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLabel(): ?string
+    {
+        return $this->label;
     }
 
     /**

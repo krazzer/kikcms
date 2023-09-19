@@ -53,7 +53,7 @@ class Twig extends Engine\AbstractEngine
     /**
      * @return View|ViewBaseInterface
      */
-    public function getView(): ViewBaseInterface
+    public function getView(): View|ViewBaseInterface
     {
         return parent::getView();
     }
@@ -63,7 +63,7 @@ class Twig extends Engine\AbstractEngine
      * @param mixed $params
      * @param bool $mustClean
      */
-    public function render(string $path, $params, bool $mustClean = false)
+    public function render(string $path, $params, bool $mustClean = false): void
     {
         if ( ! $params) {
             $params = [];
@@ -90,7 +90,7 @@ class Twig extends Engine\AbstractEngine
      *
      * @param DiInterface $di
      */
-    protected function registryFunctions(DiInterface $di)
+    protected function registryFunctions(DiInterface $di): void
     {
         $options = ['is_safe' => ['html']];
 

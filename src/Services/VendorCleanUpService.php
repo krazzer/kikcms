@@ -4,6 +4,7 @@
 namespace KikCMS\Services;
 
 
+use FilesystemIterator;
 use KikCMS\Classes\Phalcon\Injectable;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -13,7 +14,7 @@ class VendorCleanUpService extends Injectable
     /**
      * Clean up the vendor folder to keep only necessary files
      */
-    public function clean()
+    public function clean(): void
     {
         $vendorFolder = $this->config->application->path . 'vendor/';
 
@@ -41,7 +42,7 @@ class VendorCleanUpService extends Injectable
     /**
      * @param string $folder
      */
-    private function removeRecursively(string $folder)
+    private function removeRecursively(string $folder): void
     {
         if ( ! file_exists($folder)) {
             return;
@@ -53,7 +54,7 @@ class VendorCleanUpService extends Injectable
         }
 
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($folder, RecursiveDirectoryIterator::SKIP_DOTS),
+            new RecursiveDirectoryIterator($folder, FilesystemIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
 

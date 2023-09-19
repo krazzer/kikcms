@@ -13,7 +13,7 @@ class MenuGroupMap extends ObjectMap
      * @param int|string $key
      * @return CmsMenuGroup|false
      */
-    public function get($key)
+    public function get($key): CmsMenuGroup|false
     {
         return parent::get($key);
     }
@@ -21,7 +21,7 @@ class MenuGroupMap extends ObjectMap
     /**
      * @return CmsMenuGroup|false
      */
-    public function getFirst()
+    public function getFirst(): CmsMenuGroup|false
     {
         return parent::getFirst();
     }
@@ -29,7 +29,7 @@ class MenuGroupMap extends ObjectMap
     /**
      * @return CmsMenuGroup|false
      */
-    public function getLast()
+    public function getLast(): CmsMenuGroup|false
     {
         return parent::getLast();
     }
@@ -37,7 +37,7 @@ class MenuGroupMap extends ObjectMap
     /**
      * @return CmsMenuGroup|false
      */
-    public function current()
+    public function current(): CmsMenuGroup|false
     {
         return parent::current();
     }

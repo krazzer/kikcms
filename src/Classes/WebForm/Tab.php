@@ -71,7 +71,7 @@ class Tab
     /**
      * @param string $name
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -103,7 +103,7 @@ class Tab
     /**
      * @param FieldMap $fieldMap
      */
-    public function setFieldMap(FieldMap $fieldMap)
+    public function setFieldMap(FieldMap $fieldMap): void
     {
         $this->fieldMap = $fieldMap;
     }

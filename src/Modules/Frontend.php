@@ -16,7 +16,7 @@ class Frontend implements ModuleDefinitionInterface
     /**
      * @inheritdoc
      */
-    public function registerAutoloaders(DiInterface $di = null)
+    public function registerAutoloaders(DiInterface $container = null)
     {
         // nothing else needed
     }
@@ -24,11 +24,11 @@ class Frontend implements ModuleDefinitionInterface
     /**
      * @inheritdoc
      */
-    public function registerServices(DiInterface $di)
+    public function registerServices(DiInterface $container): void
     {
         $defaultNameSpace = $this->defaultNamespace;
 
-        $di->set("dispatcher", function () use ($defaultNameSpace) {
+        $container->set("dispatcher", function () use ($defaultNameSpace) {
             $dispatcher = new Dispatcher();
             $dispatcher->setDefaultNamespace($defaultNameSpace);
 

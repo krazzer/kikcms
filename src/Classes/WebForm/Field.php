@@ -82,7 +82,7 @@ abstract class Field
      * @param string $class
      * @return $this|Field
      */
-    public function addElementClass(string $class)
+    public function addElementClass(string $class): Field|static
     {
         $classes = explode(' ', $this->getElement()->getAttribute('class'));
 
@@ -140,7 +140,7 @@ abstract class Field
     /**
      * @return WebForm|DataForm
      */
-    public function getForm(): WebForm
+    public function getForm(): WebForm|DataForm
     {
         return $this->form;
     }
@@ -151,7 +151,7 @@ abstract class Field
      *
      * @return $this|Field
      */
-    public function setAttribute(string $attribute, $value)
+    public function setAttribute(string $attribute, mixed $value): Field|static
     {
         $this->element->setAttribute($attribute, $value);
 
@@ -169,9 +169,9 @@ abstract class Field
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return null;
     }
@@ -179,7 +179,7 @@ abstract class Field
     /**
      * @return string
      */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
@@ -188,13 +188,11 @@ abstract class Field
      * @param string $key
      * @return $this|Field
      */
-    public function setKey(string $key)
+    public function setKey(string $key): Field|static
     {
         $this->key = $key;
 
-        if ($this->element) {
-            $this->element->setName($key);
-        }
+        $this->element?->setName($key);
 
         return $this;
     }
@@ -203,7 +201,7 @@ abstract class Field
      * @param Webform $form
      * @return $this|Field
      */
-    public function setForm(WebForm $form)
+    public function setForm(WebForm $form): Field|static
     {
         $this->form = $form;
 
@@ -219,10 +217,10 @@ abstract class Field
     }
 
     /**
-     * @param null|string $helpText
+     * @param string|null $helpText
      * @return $this|Field
      */
-    public function setHelpText($helpText)
+    public function setHelpText(?string $helpText): Field|static
     {
         $this->helpText = $helpText;
         return $this;
@@ -234,7 +232,7 @@ abstract class Field
      * @param int $maxLength
      * @return $this|Field
      */
-    public function setMaxLength(int $maxLength)
+    public function setMaxLength(int $maxLength): Field|static
     {
         $this->getElement()->setAttribute('maxlength', $maxLength);
         return $this;
@@ -255,7 +253,7 @@ abstract class Field
      * @param $value
      * @return mixed
      */
-    public function getInput($value)
+    public function getInput($value): mixed
     {
         return $value;
     }
@@ -267,7 +265,7 @@ abstract class Field
      * @param $value
      * @return mixed
      */
-    public function getFormFormat($value)
+    public function getFormFormat($value): mixed
     {
         return $value;
     }

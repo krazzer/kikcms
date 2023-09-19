@@ -30,7 +30,7 @@ class RearrangeService extends Injectable
      * @param $className
      * @param string $orderField
      */
-    public function checkOrderIntegrity($className, string $orderField = self::SORTABLE_FIELD)
+    public function checkOrderIntegrity($className, string $orderField = self::SORTABLE_FIELD): void
     {
         $objectListWithoutDisplayOrder = $this->getObjectListWithoutDisplayOrder($className, $orderField);
 
@@ -68,7 +68,7 @@ class RearrangeService extends Injectable
      * @param string $model
      * @param string $orderField
      */
-    public function makeRoomForFirst(string $model, string $orderField = self::SORTABLE_FIELD)
+    public function makeRoomForFirst(string $model, string $orderField = self::SORTABLE_FIELD): void
     {
         $where = "1 = 1 ORDER BY " . $orderField . " DESC";
 
@@ -81,7 +81,7 @@ class RearrangeService extends Injectable
      * @param string $rearrange
      * @param string $orderField
      */
-    public function rearrange(Model $source, Model $target, string $rearrange, string $orderField = self::SORTABLE_FIELD)
+    public function rearrange(Model $source, Model $target, string $rearrange, string $orderField = self::SORTABLE_FIELD): void
     {
         $this->checkOrderValues($source, $target, $orderField);
 
@@ -113,7 +113,7 @@ class RearrangeService extends Injectable
      * @param Model $item
      * @param string $orderField
      */
-    private function updateLeftSiblingsOrder(Model $item, string $orderField = self::SORTABLE_FIELD)
+    private function updateLeftSiblingsOrder(Model $item, string $orderField = self::SORTABLE_FIELD): void
     {
         $this->dbService->update($item->getClassName(), [$orderField => new RawValue($orderField . " - 1")],
             $orderField . " > " . $item->$orderField . " ORDER BY " . $orderField . " ASC");
@@ -126,7 +126,7 @@ class RearrangeService extends Injectable
      * @param Model $target
      * @param string $orderField
      */
-    private function checkOrderValues(Model $source, Model $target, string $orderField = self::SORTABLE_FIELD)
+    private function checkOrderValues(Model $source, Model $target, string $orderField = self::SORTABLE_FIELD): void
     {
         if ( ! $source->$orderField) {
             $source->$orderField = $this->getMax($source->getClassName(), $orderField) + 1;
@@ -147,7 +147,7 @@ class RearrangeService extends Injectable
      * @param string $field
      * @throws Exception
      */
-    private function placeBeforeOrAfter(Model $source, Model $target, bool $after, string $field = self::SORTABLE_FIELD)
+    private function placeBeforeOrAfter(Model $source, Model $target, bool $after, string $field = self::SORTABLE_FIELD): void
     {
         $targetDisplayOrder = $target->$field;
         $newDisplayOrder    = $targetDisplayOrder ? $targetDisplayOrder + ($after ? 1 : 0) : null;
@@ -173,7 +173,7 @@ class RearrangeService extends Injectable
      * @param string $orderField
      * @throws Exception
      */
-    private function updateItem(Model $item, int $displayOrder = null, string $orderField = self::SORTABLE_FIELD)
+    private function updateItem(Model $item, int $displayOrder = null, string $orderField = self::SORTABLE_FIELD): void
     {
         $item->$orderField = $displayOrder;
         $item->save();
@@ -184,7 +184,7 @@ class RearrangeService extends Injectable
      * @param bool $placeAfter
      * @param string $orderField
      */
-    private function updateSiblingOrder(Model $item, bool $placeAfter, string $orderField = self::SORTABLE_FIELD)
+    private function updateSiblingOrder(Model $item, bool $placeAfter, string $orderField = self::SORTABLE_FIELD): void
     {
         $this->dbService->update($item->getClassName(), [$orderField => new RawValue($orderField . " + 1")],
             $orderField . " >= " . ($item->$orderField + ($placeAfter ? 1 : 0)) . " ORDER BY " . $orderField . " DESC");

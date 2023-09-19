@@ -56,7 +56,7 @@ abstract class Renderable extends Injectable
      *
      * @return Response|string
      */
-    public abstract function render();
+    public abstract function render(): Response|string;
 
     /**
      * This method may contain logic that will influence the output when rendered
@@ -73,7 +73,7 @@ abstract class Renderable extends Injectable
      */
     public function renderView(string $view, array $parameters): string
     {
-        $view = strstr($view, '@') ? $view : $this->viewDirectory . '/' . $view;
+        $view = str_contains($view, '@') ? $view : $this->viewDirectory . '/' . $view;
 
         return $this->view->getPartial($view, $parameters);
     }
@@ -109,7 +109,7 @@ abstract class Renderable extends Injectable
     /**
      * @return array
      */
-    protected function getJsData()
+    protected function getJsData(): array
     {
         $properties = [
             self::FILTER_INSTANCE => $this->getInstance(),
@@ -145,7 +145,7 @@ abstract class Renderable extends Injectable
     /**
      * @param string $instance
      */
-    public function setInstance(string $instance)
+    public function setInstance(string $instance): void
     {
         $this->instance = $instance;
     }

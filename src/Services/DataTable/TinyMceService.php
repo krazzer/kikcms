@@ -44,9 +44,8 @@ class TinyMceService extends Injectable
         }
 
         $linkList = $this->makeNested($pageUrlDataMap);
-        $linkList = $this->addUrls($linkList);
 
-        return $linkList;
+        return $this->addUrls($linkList);
     }
 
     /**
@@ -54,7 +53,7 @@ class TinyMceService extends Injectable
      * @param string $url
      * @return array
      */
-    private function addUrls(array $linkList, $url = ''): array
+    private function addUrls(array $linkList, string $url = ''): array
     {
         foreach ($linkList as $i => $item) {
             if ($item['type'] !== Page::TYPE_MENU) {
@@ -75,7 +74,7 @@ class TinyMceService extends Injectable
     }
 
     /**
-     * @param $source
+     * @param array $source
      * @return array
      */
     private function makeNested(array $source): array

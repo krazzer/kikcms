@@ -35,7 +35,7 @@ abstract class SelectDataTable extends DataTable
     /**
      * @return Filters|SelectDataTableFilters
      */
-    public function getEmptyFilters(): Filters
+    public function getEmptyFilters(): Filters|SelectDataTableFilters
     {
         return new SelectDataTableFilters();
     }
@@ -43,7 +43,7 @@ abstract class SelectDataTable extends DataTable
     /**
      * @return Filters|SelectDataTableFilters
      */
-    public function getFilters(): Filters
+    public function getFilters(): Filters|SelectDataTableFilters
     {
         return parent::getFilters();
     }
@@ -56,7 +56,7 @@ abstract class SelectDataTable extends DataTable
      *
      * @param Builder $query
      */
-    public function setQueryToShowSelectionFirst(Builder $query)
+    public function setQueryToShowSelectionFirst(Builder $query): void
     {
         if( ! $columns = $query->getColumns()){
             throw new Exception('A SelectDataTable must have columns in its query');

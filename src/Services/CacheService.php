@@ -9,7 +9,7 @@ use KikCMS\ObjectLists\CacheNodeMap;
 use KikCmsCore\Services\DbService;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Classes\Phalcon\Injectable;
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 
 /**
  * @property DbService $dbService
@@ -20,7 +20,7 @@ class CacheService extends Injectable
     /**
      * @param string $prefix
      */
-    public function clear(string $prefix = '')
+    public function clear(string $prefix = ''): void
     {
         if ( ! $this->cache) {
             return;
@@ -41,7 +41,7 @@ class CacheService extends Injectable
     /**
      * @param Page $page
      */
-    public function clearForPage(Page $page)
+    public function clearForPage(Page $page): void
     {
         $offspring = $this->pageService->getOffspring($page);
 
@@ -58,7 +58,7 @@ class CacheService extends Injectable
     /**
      * Clears all caches related to pages
      */
-    public function clearPageCache()
+    public function clearPageCache(): void
     {
         $this->clear(CacheConfig::URL);
         $this->clear(CacheConfig::MENU);
@@ -74,7 +74,7 @@ class CacheService extends Injectable
     /**
      * Clears all cached menu's
      */
-    public function clearMenuCache()
+    public function clearMenuCache(): void
     {
         $this->clear(CacheConfig::MENU);
         $this->clear(CacheConfig::MENU_PAGES);
@@ -87,7 +87,7 @@ class CacheService extends Injectable
      * @param bool $cacheNull if true, a NULL value may be cached
      * @return mixed|null
      */
-    public function cache(string $cacheKey, callable $function, $ttl = CacheConfig::ONE_DAY, bool $cacheNull = false)
+    public function cache(string $cacheKey, callable $function, float|int $ttl = CacheConfig::ONE_DAY, bool $cacheNull = false): mixed
     {
         if ( ! $this->cache) {
             return $function();
@@ -154,7 +154,7 @@ class CacheService extends Injectable
             }
         }
 
-        foreach ($cacheCategoryMap as $key => $cacheNode){
+        foreach ($cacheCategoryMap as $cacheNode){
             $cacheNode->flattenSingleNodes();
         }
 

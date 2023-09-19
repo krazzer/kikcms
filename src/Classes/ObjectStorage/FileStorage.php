@@ -10,7 +10,7 @@ interface FileStorage
     /**
      * @return mixed
      */
-    public function getStorageDir();
+    public function getStorageDir(): mixed;
 
     /**
      * @param string $fileName
@@ -23,13 +23,12 @@ interface FileStorage
      * @param mixed $storageDir
      * @return $this
      */
-    public function setStorageDir($storageDir);
+    public function setStorageDir(mixed $storageDir): static;
 
     /**
      * @param string $fileName
-     * @param string $dir
      * @param string $contents
-     * @return
+     * @param string $dir
      */
     public function store(string $fileName, string $contents, string $dir = '');
 
