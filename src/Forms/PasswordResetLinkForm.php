@@ -44,7 +44,7 @@ class PasswordResetLinkForm extends WebForm
             // pretend we send the mail, so the user won't know whether the given email adres exists or not
             $this->flash->success($this->translator->tl('login.reset.flash'));
             $_POST = [];
-            return;
+            return null;
         }
 
         if ($this->sendMail($user)) {

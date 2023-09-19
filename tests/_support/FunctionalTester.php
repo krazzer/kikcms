@@ -3,7 +3,7 @@
 use Codeception\Actor;
 use KikCMS\Models\User;
 use KikCmsCore\Services\DbService;
-use Phalcon\Cache;
+use Phalcon\Cache\Cache;
 use Website\Models\TestPerson;
 
 

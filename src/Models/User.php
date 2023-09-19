@@ -44,9 +44,9 @@ class User extends Model
 
     /**
      * @inheritdoc
-     * @return User
+     * @return User|null
      */
-    public static function getById($id): User
+    public static function getById($id): ?User
     {
         /** @var User $kikCmsUser */
         $kikCmsUser = parent::getById($id);
@@ -56,7 +56,7 @@ class User extends Model
 
     /**
      * @inheritdoc
-     * @return User
+     * @return User|null
      */
     public static function findFirst($parameters = null): ?Model
     {

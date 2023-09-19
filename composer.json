@@ -45,7 +45,7 @@
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-phalcon": "^1.0.0",
         "codeception/module-cli": "^1.0.0",
-        "kiksaus/module-phalcon4": "dev-master",
-        "mockery/mockery": "^1.5"
+        "mockery/mockery": "^1.5",
+        "codeception/module-phalcon5": "^1.0"
     }
 }
