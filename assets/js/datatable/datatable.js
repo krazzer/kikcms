@@ -16,6 +16,17 @@ var DataTable = Class.extend({
     madeSpaceForButtonsOnce: null,
     $table: null,
 
+    /**
+     * De-select selected text
+     */
+    deselectText() {
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else if (document.selection) {
+            document.selection.empty();
+        }
+    },
+
     getDeleteConfirmMessage: function (amount) {
         var confirmText = capitalize(KikCMS.tl('dataTable.delete.confirmOne', {itemSingular: this.labels[0]}));
 
@@ -778,8 +789,10 @@ var DataTable = Class.extend({
 
                 if (indexCurrent > indexLast) {
                     this.lastSelectedRow.nextUntil($row).add($row).addClass('selected');
-                } else {
+                    this.deselectText();
+                } else if (indexCurrent < indexLast) {
                     $row.nextUntil(this.lastSelectedRow).add($row).addClass('selected');
+                    this.deselectText();
                 }
             }
         } else {
