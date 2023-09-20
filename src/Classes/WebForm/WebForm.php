@@ -75,6 +75,9 @@ abstract class WebForm extends Renderable
     /** @var bool if set to true, field errors will be shown above the form instead of under the field */
     protected $placeAlertsOnTop = false;
 
+    /** @var bool if set to true, the post action will stay on the same page, useful when an anchor is used */
+    protected $postToSelf = false;
+
     /** @var Form|null */
     private $form = null;
 
@@ -387,6 +390,14 @@ abstract class WebForm extends Renderable
     public function getEmptyFilters(): Filters
     {
         return new Filters();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPostToSelf(): bool
+    {
+        return $this->postToSelf;
     }
 
     /**

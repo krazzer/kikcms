@@ -11,7 +11,7 @@
 
 <div class="webForm" id="{{ formId }}" data-renderable="{{ jsData|json_encode }}" data-instance="{{ instance }}"
      data-id="{{ filters.editId }}">
-    <form name="form" method="post" action="{{ requestUri }}#{{ formId }}" enctype="{{ encType }}">
+    <form name="form" method="post" action="{{ not webForm.postToSelf ? requestUri ~ '#' ~ formId }}" enctype="{{ encType }}">
         <div class="flashContainer">
             {%- if mayFlash -%}
                 {{ flash.output }}
