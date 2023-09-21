@@ -45,4 +45,12 @@ class MainTask extends Task
     {
         $this->vendorCleanUpService->clean();
     }
+
+    /**
+     * Write redirects
+     */
+    public function writeRedirectsAction(): void
+    {
+        $this->redirectService->writeRedirects();
+    }
 }

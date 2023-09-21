@@ -10,6 +10,7 @@ use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Permission;
 use KikCMS\Classes\Translator;
 use KikCMS\Objects\MailformSubmission\MailformSubmissionService;
+use KikCMS\Objects\Redirect\RedirectService;
 use KikCMS\Services\Analytics\AnalyticsGoogleService;
 use KikCMS\Services\Analytics\AnalyticsImportService;
 use KikCMS\Services\Analytics\AnalyticsService;
@@ -142,6 +143,7 @@ use Swift_Mailer;
  * @property QueryService queryService
  * @property RearrangeService rearrangeService
  * @property ReCaptcha reCaptcha
+ * @property RedirectService redirectService
  * @property RelationKeyService relationKeyService
  * @property RememberMeService rememberMeService
  * @property Routing routing
