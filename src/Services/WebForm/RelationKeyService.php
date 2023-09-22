@@ -62,7 +62,12 @@ class RelationKeyService extends Injectable
                 if ($relation->getType() == Relation::HAS_MANY) {
                     $this->storeHasManyRelation($model, $part1, $part2, $value);
                 } else {
-                    $subModel         = $model->$part1;
+                    $subModel = $model->$part1;
+
+                    foreach ($relation->getOptions()['defaults'] ?? [] as $defaultKey => $defaultValue) {
+                        $subModel->$defaultKey = $defaultValue;
+                    }
+
                     $subModel->$part2 = $this->dbService->toStorage($value);
                     $model->$part1    = $subModel;
 
@@ -89,7 +94,7 @@ class RelationKeyService extends Injectable
 
                     $part2Model->$refField = $part1Model->$field;
 
-                    foreach($part2relation->getOptions()['defaults'] as $defaultKey => $defaultValue){
+                    foreach ($part2relation->getOptions()['defaults'] as $defaultKey => $defaultValue) {
                         $part2Model->$defaultKey = $defaultValue;
                     }
 
@@ -358,8 +363,8 @@ class RelationKeyService extends Injectable
      */
     public function savePreSaveRelations(Model $object, array $preSaveRelations)
     {
-        foreach($preSaveRelations as $preSaveRelation){
-            if(strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)){
+        foreach ($preSaveRelations as $preSaveRelation) {
+            if (strstr($preSaveRelation, DataFormConfig::RELATION_KEY_SEPARATOR)) {
                 $parts = explode(DataFormConfig::RELATION_KEY_SEPARATOR, $preSaveRelation);
 
                 if (count($parts) == 2) {
