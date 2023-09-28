@@ -105,6 +105,8 @@ class Routing extends Injectable
         $backend->add("/file/{fileId:[0-9]+}", "Finder::file")->setName('file');
         $backend->add("/file/key/{key:[0-9a-z\-]+}", "Finder::key");
 
+        $backend->add("/user/{userId:[0-9]+}/impersonate", "Login::impersonate")->setName('impersonate');
+
         if($this->config->application->pageRouting) {
             $frontend->add('/{url:[0-9a-z\/\-]+}', "Frontend::page")->setName('page');
             $frontend->add('/', "Frontend::page")->setName('page');

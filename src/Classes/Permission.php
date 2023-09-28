@@ -48,6 +48,11 @@ class Permission extends Injectable
         self::VISITOR,
     ];
 
+    const ADMIN_ROLES = [
+        self::DEVELOPER,
+        self::ADMIN,
+    ];
+
     /**
      * @return AccessControl
      */
@@ -102,7 +107,7 @@ class Permission extends Injectable
      */
     public function isAdmin(): bool
     {
-        return in_array($this->getCurrentRole(), [self::ADMIN, self::DEVELOPER]);
+        return in_array($this->getCurrentRole(), self::ADMIN_ROLES);
     }
 
     /**

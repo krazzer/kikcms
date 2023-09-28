@@ -3,6 +3,7 @@
 namespace KikCMS\Controllers;
 
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
+use KikCMS\Classes\Permission;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\PassResetConfig;
@@ -47,6 +48,23 @@ class LoginController extends BaseController
     public function initializeLanguage()
     {
         $this->translator->setLanguageCode($this->languageService->getDefaultCmsLanguageCode());
+    }
+
+    /**
+     * @param User $user
+     * @return ResponseInterface
+     */
+    public function impersonateAction(User $user): ResponseInterface
+    {
+        if( ! $this->permission->isAdmin() || in_array($user->role, Permission::ADMIN_ROLES)){
+            $this->flash->error($this->translator->tl('permissions.noImpersonateAcces'));
+            return $this->response->redirect($this->url->get('cms/users'));
+        }
+
+        $this->flash->success($this->translator->tl('permissions.impersonated', ['email' => $user->email]));
+        $this->userService->setLoggedIn($user->getId());
+
+        return $this->response->redirect($this->url->get('cms'));
     }
 
     /**

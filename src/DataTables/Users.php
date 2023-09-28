@@ -83,6 +83,7 @@ class Users extends DataTable
             return $this->cmsService->getRoleMap()[$value];
         });
 
+        $this->addTableButton('glyphicon glyphicon-user', $this->translator->tl('dataTables.users.impersonate'), 'impersonate', '/cms/user/:id/impersonate');
         $this->addTableButton('glyphicon glyphicon-link', $this->translator->tl('dataTables.users.activationLink'), 'link');
     }
 }

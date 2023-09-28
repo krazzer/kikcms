@@ -157,6 +157,7 @@ return [
             'plural'   => "gebruikers",
 
             'activationLink' => 'Genereer activatie link',
+            'impersonate'    => 'Login als deze gebruiker',
         ],
 
         'mailFormSubmissions' => [
@@ -400,7 +401,9 @@ return [
     ],
 
     'permissions' => [
-        'editMenus' => "U kunt geen menu's bewerken",
+        'editMenus'          => "U kunt geen menu's bewerken",
+        'noImpersonateAcces' => "U heeft onvoldoende rechten om als deze gebruiker te kunnen inloggen",
+        'impersonated'       => "U bent nu ingelogd als :email",
     ],
 
     'statistics' => [

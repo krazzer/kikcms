@@ -157,6 +157,7 @@ return [
             'plural'   => "users",
 
             'activationLink' => 'Generate activation link',
+            'impersonate'    => 'Login as this user',
         ],
 
         'mailFormSubmissions' => [
@@ -391,7 +392,9 @@ return [
     ],
 
     'permissions' => [
-        'editMenus' => "You cannot edit menus",
+        'editMenus'          => "You cannot edit menus",
+        'noImpersonateAcces' => "You have insufficient rights to be able to login as this user",
+        'impersonated'       => "You are now logged in as :email",
     ],
 
     'statistics' => [
