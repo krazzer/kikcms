@@ -166,10 +166,6 @@ class StorageService extends Injectable
 
         // set objects' properties
         foreach ($mainInput as $key => $value) {
-            if(is_integer($key)){
-                $this->logger->log(LogLevel::NOTICE, 'Integer key encountered: ' . json_encode($mainInput));
-            }
-
             if ($this->relationKeyService->isRelationKey($key)) {
                 $localPreSaveRelations = $this->relationKeyService->set($object, $key, $value, $langCode);
                 $preSaveRelations = array_merge($preSaveRelations, $localPreSaveRelations);

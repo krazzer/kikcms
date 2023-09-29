@@ -16,7 +16,7 @@ class Header extends Field
      */
     public function __construct(string $label)
     {
-        $this->key   = uniqid();
+        $this->key   = 'header_' . uniqid();
         $this->label = $label;
     }
 

@@ -5,6 +5,7 @@ namespace KikCMS\Classes\WebForm\DataForm;
 
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\DataTableField;
+use KikCMS\Classes\WebForm\Fields\Header;
 use KikCMS\Classes\WebForm\Fields\HtmlField;
 use KikCMS\ObjectLists\FieldMap;
 use KikCmsCore\Classes\Model;
@@ -110,7 +111,7 @@ class StorageData
 
         foreach ($this->fieldMap as $key => $field) {
             if ($field->isDontStore() || $field instanceof DataTableField || $field instanceof ButtonField ||
-                $field instanceof HtmlField) {
+                $field instanceof HtmlField || $field instanceof Header) {
                 continue;
             }
 
