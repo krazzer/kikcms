@@ -67,6 +67,19 @@ return [
         'pages' => [
             'total'         => 'Total',
             'amountPerPage' => 'Amount of items per page',
+
+            'seo' => [
+                'title'           => 'SEO title',
+                'keywords'        => 'SEO keywords',
+                'description'     => 'SEO description',
+                'titleHelp'       => 'The SEO title is the name of the page as you would like it to appear in ' .
+                    'search engines (if different from the regular title)',
+                'keywordsHelp'    => 'Keywords are the words (comma separated) where you want the ' .
+                    'page to be found with in search engines.',
+                'descriptionHelp' => 'The description is the description you want to show of the page in the ' .
+                    'search engine. If you leave this empty, the search engine will do this itself using the contents '.
+                    'of the page',
+            ]
         ],
 
         'delete' => [

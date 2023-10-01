@@ -87,9 +87,12 @@ class PageForm extends DataForm
         }
 
         $tabSeoFields = [
-            $this->addTextField('pageLanguage*:seo_title', 'SEO titel'),
-            $this->addTextAreaField('pageLanguage*:seo_keywords', 'SEO sleutelwoorden')->rows(4),
-            $this->addTextAreaField('pageLanguage*:seo_description', 'SEO omschrijving')->rows(12),
+            $this->addTextField('pageLanguage*:seo_title', $this->translator->tl('dataTable.pages.seo.title'))
+                ->setHelpText($this->translator->tl('dataTable.pages.seo.titleHelp')),
+            $this->addTextAreaField('pageLanguage*:seo_keywords', $this->translator->tl('dataTable.pages.seo.keywords'))
+                ->rows(4)->setHelpText($this->translator->tl('dataTable.pages.seo.keywordsHelp')),
+            $this->addTextAreaField('pageLanguage*:seo_description', $this->translator->tl('dataTable.pages.seo.description'))
+                ->rows(12)->setHelpText($this->translator->tl('dataTable.pages.seo.descriptionHelp')),
         ];
 
         $this->addTab('SEO', $tabSeoFields);

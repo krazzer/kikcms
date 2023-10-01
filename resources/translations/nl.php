@@ -67,6 +67,19 @@ return [
         'pages' => [
             'total'         => 'Totaal',
             'amountPerPage' => 'Aantal items per pagina',
+
+            'seo' => [
+                'title'           => 'SEO titel',
+                'keywords'        => 'SEO sleutelwoorden',
+                'description'     => 'SEO omschrijving',
+                'titleHelp'       => 'De SEO titel is de naam van de pagina zoals je hem zou willen weergeven in ' .
+                    'zoekmachines (indien afwijkend van de reguliere titel)',
+                'keywordsHelp'    => 'Sleutelwoorden zijn de woorden (kommagescheiden) waarop je wilt dat de ' .
+                    'pagina gevonden moet worden in zoekmachines.',
+                'descriptionHelp' => 'De omschrijving is de omschrijving die je wilt tonen van de pagina in de ' .
+                    'zoekmachine. Als je dit leeg laat zal de zoekmachine dit zelf a.d.h.v. van de inhoud van de ' .
+                    'pagina',
+            ]
         ],
 
         'delete' => [
