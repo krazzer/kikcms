@@ -202,7 +202,7 @@ class Translator extends Injectable
             } catch(Exception $exception){
                 return [];
             }
-        }) ?: [];
+        }, CacheConfig::ONE_YEAR, true) ?: [];
     }
 
     /**
