@@ -42,10 +42,13 @@ class AnalyticsDataService extends Injectable
         $results = [];
 
         foreach ($response->getRows() as $row) {
+            $sessions = $row->getMetricValues()[0]->getValue();
+            $users    = $row->getMetricValues()[1]->getValue();
+
             $results[] = [
                 GaDayVisit::FIELD_DATE          => $row->getDimensionValues()[0]->getValue(),
-                GaDayVisit::FIELD_VISITS        => $row->getMetricValues()[0]->getValue(),
-                GaDayVisit::FIELD_UNIQUE_VISITS => $row->getMetricValues()[1]->getValue(),
+                GaDayVisit::FIELD_VISITS        => $sessions,
+                GaDayVisit::FIELD_UNIQUE_VISITS => min($users, $sessions),
             ];
         }
 

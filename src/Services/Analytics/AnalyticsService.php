@@ -8,7 +8,6 @@ use DateInterval;
 use DatePeriod;
 use DateTime;
 use Exception;
-use Google_Service_AnalyticsReporting;
 use KikCMS\Classes\Phalcon\KeyValue;
 use KikCMS\Classes\Translator;
 use KikCmsCore\Services\DbService;
@@ -24,7 +23,6 @@ use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Query\BuilderInterface;
 
 /**
- * @property Google_Service_AnalyticsReporting $analytics
  * @property AnalyticsImportService $analyticsImportService
  * @property AnalyticsGoogleService $analyticsGoogleService
  * @property AnalyticsDataService $analyticsDataService
