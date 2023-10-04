@@ -34,14 +34,14 @@ var PagesDataTable = DataTable.extend({
         this.$.initWindow.call(this);
 
         this.onChange(this.getTemplateField(), false, function () {
-            var fieldValues = self.getFormGroups().serializeObject();
+            var fieldValues = self.getFormGroupsWithoutDataTable().serializeObject();
 
             $.each(fieldValues, function (index, value) {
                 self.cachedFieldValues[index] = value;
             });
 
             self.actionReloadWindow(function () {
-                self.getFormGroups().each(function () {
+                self.getFormGroupsWithoutDataTable().each(function () {
                     var $field = $(this);
                     var name   = $field.attr('name');
 
@@ -149,6 +149,13 @@ var PagesDataTable = DataTable.extend({
         });
 
         return filters;
+    },
+
+    /**
+     * Exclude datatable instances
+     */
+    getFormGroupsWithoutDataTable: function () {
+        return this.getWindow().find('form :input').not('.datatable :input').not('.type-dataTable :input');
     },
 
     /**
