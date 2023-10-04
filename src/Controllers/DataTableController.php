@@ -121,10 +121,10 @@ class DataTableController extends RenderableController
             $success = [];
 
             foreach ($ids as $id) {
-                $success[$id] = $this->getRenderable()->checkCheckbox($id, $column, $checked);
+                $success[$id] = $this->getRenderable()->checkCheckbox((int) $id, $column, $checked);
             }
         } else {
-            $success = $this->getRenderable()->checkCheckbox($ids, $column, $checked);
+            $success = $this->getRenderable()->checkCheckbox((int) $ids, $column, $checked);
         }
 
         return json_encode($success);
