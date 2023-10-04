@@ -65,11 +65,11 @@ class ParamConverterPlugin extends Injectable
     public function getConvertedParameters(array $methodParameters, array $paramValueMap): array
     {
         foreach ($methodParameters as $parameter) {
-            if ( ! $class = $parameter->getClass()) {
+            if( ! $class = $parameter->getType()->getName()){
                 continue;
             }
 
-            if ( ! $class->isSubclassOf(Model::class)) {
+            if ( ! is_subclass_of($class, Model::class)) {
                 continue;
             }
 
@@ -84,20 +84,20 @@ class ParamConverterPlugin extends Injectable
     }
 
     /**
-     * @param ReflectionClass $class
+     * @param string $class
      * @param ReflectionParameter $parameter
      * @param array $paramValueMap
      * @return array
      * @throws ObjectNotFoundException
      */
-    private function replaceParameter(ReflectionClass $class, ReflectionParameter $parameter, array $paramValueMap): array
+    private function replaceParameter(string $class, ReflectionParameter $parameter, array $paramValueMap): array
     {
         $obParamName = $this->getParamName($parameter);
         $idParamName = $this->getIdParamName($parameter);
 
         $objectId = (int) $paramValueMap[$idParamName];
 
-        $object = $this->modelService->getObject($class->getName(), $objectId);
+        $object = $this->modelService->getObject($class, $objectId);
 
         if ( ! $object && ! $parameter->allowsNull()) {
             throw new ObjectNotFoundException($obParamName . $objectId);
