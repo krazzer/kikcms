@@ -51,7 +51,7 @@ class CmsCest
     public function getTinyMceLinksWorks(FunctionalTester $I)
     {
         $I->amOnPage('/cms/getTinyMceLinks');
-        $I->see('[{"id":"6","parent_id":null');
+        $I->see('[{"id":6,"parent_id":null');
     }
 
     public function getTranslationsForKeyWorks(FunctionalTester $I)

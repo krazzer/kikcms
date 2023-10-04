@@ -65,6 +65,10 @@ class ParamConverterPlugin extends Injectable
     public function getConvertedParameters(array $methodParameters, array $paramValueMap): array
     {
         foreach ($methodParameters as $parameter) {
+            if( ! $parameter->getType()){
+                continue;
+            }
+
             if( ! $class = $parameter->getType()->getName()){
                 continue;
             }

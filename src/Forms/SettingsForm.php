@@ -4,6 +4,7 @@ namespace KikCMS\Forms;
 
 
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\WebForm\Fields\FileInputField;
 use KikCMS\Classes\WebForm\WebForm;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\DataTables\Languages;

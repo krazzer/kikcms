@@ -3,8 +3,8 @@
 namespace KikCMS\Classes\WebForm\Fields;
 
 
+use KikCMS\Classes\Phalcon\Forms\Element\File;
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element\File;
 
 class FileInputField extends Field
 {

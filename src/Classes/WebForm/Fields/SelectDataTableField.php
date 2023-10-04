@@ -5,8 +5,8 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\DataTable\SelectDataTable;
+use KikCMS\Classes\Phalcon\Forms\Element\Hidden;
 use KikCMS\Classes\WebForm\Field;
-use Phalcon\Forms\Element\Hidden;
 
 class SelectDataTableField extends Field
 {
