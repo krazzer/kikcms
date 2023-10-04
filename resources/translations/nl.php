@@ -459,7 +459,7 @@ return [
         'phpDateFormat'         => 'd-m-Y',
         'phpDateTimeFormat'     => 'd-m-Y H:i',
         'momentJsDateFormat'    => 'DD-MM-YYYY',
-        'dateDisplayFormat'     => '%e %b %Y',
+        'dateDisplayFormat'     => 'd MMM Y',
         'dateTimeDisplayFormat' => '%e %b %Y, om %H:%M',
         'monthDisplayFormat'    => '%b %Y',
         'decimalNotation'       => 'comma',

@@ -5,6 +5,7 @@ namespace KikCMS\Classes\Phalcon;
 use DateTime;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\TwigService;
+use KikCMS\Services\Util\DateTimeService;
 use Phalcon\Di\DiInterface;
 use Phalcon\Mvc\View\Engine;
 use Phalcon\Mvc\ViewBaseInterface;
@@ -133,7 +134,11 @@ class Twig extends Engine\AbstractEngine
             }
 
             $format = $format ?: $di->getShared('translator')->tl('system.dateDisplayFormat');
-            return strftime($format, $dateTime->getTimestamp());
+
+            /** @var DateTimeService $dateTimeService */
+            $dateTimeService = $this->getDI()->get('dateTimeService');
+
+            return $dateTimeService->format($format, $dateTime);
         }));
 
         /** @var WebsiteSettingsBase $siteSettings */

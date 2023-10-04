@@ -5,6 +5,7 @@ namespace KikCMS\Services\Util;
 
 use DateInterval;
 use DateTime;
+use IntlDateFormatter;
 use KikCMS\Classes\Translator;
 use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Filter\Validation\Validator\Date;
@@ -16,6 +17,80 @@ use Phalcon\Filter\Validation\Validator\Date;
  */
 class DateTimeService extends Injectable
 {
+    const STRFTIME_REPLACES = [
+        '%a' => 'E',
+        '%A' => 'EEEE',
+        '%d' => 'dd',
+        '%e' => 'd',
+        '%j' => 'D',
+        '%u' => 'e',// not 100% correct
+        '%w' => 'c',// not 100% correct
+        '%U' => 'w',
+        '%V' => 'ww',// not 100% correct
+        '%W' => 'w',// not 100% correct
+        '%b' => 'MMM',
+        '%B' => 'MMMM',
+        '%h' => 'MMM',// alias of %b
+        '%m' => 'MM',
+        '%C' => 'yy',// no replace for this
+        '%g' => 'yy',// no replace for this
+        '%G' => 'Y',// not 100% correct
+        '%y' => 'yy',
+        '%Y' => 'yyyy',
+        '%H' => 'HH',
+        '%k' => 'H',
+        '%I' => 'hh',
+        '%l' => 'h',
+        '%M' => 'mm',
+        '%p' => 'a',
+        '%P' => 'a',// no replace for this
+        '%r' => 'hh:mm:ss a',
+        '%R' => 'HH:mm',
+        '%S' => 'ss',
+        '%T' => 'HH:mm:ss',
+        '%X' => 'HH:mm:ss',// no replace for this
+        '%z' => 'ZZ',
+        '%Z' => 'v',// no replace for this
+        '%c' => 'd/M/YYYY HH:mm:ss',// Buddhist era not converted.
+        '%D' => 'MM/dd/yy',
+        '%F' => 'yyyy-MM-dd',
+        '%s' => '',// no replace for this
+        '%x' => 'd/MM/yyyy',// Buddhist era not converted.
+        '%n' => "\n",
+        '%t' => "\t",
+        '%%' => '%',
+    ];
+
+    /**
+     * @param string $pattern
+     * @param mixed $datetime
+     * @return string
+     */
+    public function format(string $pattern, mixed $datetime): string
+    {
+        // replace legacy strftime uses
+        if(str_contains($pattern, '%')){
+            foreach (self::STRFTIME_REPLACES as $search => $replace){
+                $pattern = str_replace($search, $replace, $pattern);
+            }
+        }
+
+        $formatter = new IntlDateFormatter($this->translator->tl('system.locale'));
+        $formatter->setPattern($pattern);
+
+        return $formatter->format($datetime);
+    }
+
+    /**
+     * @param string $pattern
+     * @param string $dateTimeString
+     * @return string
+     */
+    public function formatFromStr(string $pattern, string $dateTimeString): string
+    {
+        return $this->format($pattern, strtotime($dateTimeString));
+    }
+
     /**
      * Converts a date string (like 2017-12-31) to the default display format
      *
@@ -24,11 +99,11 @@ class DateTimeService extends Injectable
      */
     public function stringToDateFormat(?string $dateString): string
     {
-        if( ! $dateString){
+        if ( ! $dateString) {
             return '';
         }
 
-        return strftime($this->translator->tl('system.dateDisplayFormat'), strtotime($dateString));
+        return $this->formatFromStr($this->translator->tl('system.dateDisplayFormat'), $dateString);
     }
 
     /**
@@ -39,11 +114,11 @@ class DateTimeService extends Injectable
      */
     public function stringToDateTimeFormat(?string $dateTimeString): string
     {
-        if( ! $dateTimeString){
+        if ( ! $dateTimeString) {
             return '';
         }
 
-        return strftime($this->translator->tl('system.dateTimeDisplayFormat'), strtotime($dateTimeString));
+        return $this->formatFromStr($this->translator->tl('system.dateTimeDisplayFormat'), $dateTimeString);
     }
 
     /**

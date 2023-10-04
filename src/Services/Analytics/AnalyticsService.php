@@ -350,7 +350,7 @@ class AnalyticsService extends Injectable
 
         foreach ($visits as $visit) {
             $rows[] = ['c' => [
-                ["v" => strftime($dateFormat, strtotime($visit['date']))],
+                ["v" => $this->dateTimeService->formatFromStr($dateFormat, $visit['date'])],
                 ["v" => $visit['visits']],
                 ["v" => $visit['unique_visits']]
             ]];
