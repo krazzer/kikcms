@@ -172,7 +172,7 @@ class UserService extends Injectable
     {
         $this->rememberMeService->removeToken();
 
-        // remove current session data
+        // remove current session data, added @for unit test to pass
         @$this->session->destroy();
         $this->permission->reset();
 

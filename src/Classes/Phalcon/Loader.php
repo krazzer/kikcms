@@ -10,17 +10,19 @@ class Loader extends \Phalcon\Autoload\Loader
 {
     /**
      * @return string
+     * @noinspection PhpParamsInspection
      */
     public function getWebsiteSrcPath(): string
     {
-        return $this->getNamespaces()[KikCMSConfig::NAMESPACE_WEBSITE][0];
+        return first($this->getNamespaces()[KikCMSConfig::NAMESPACE_WEBSITE . KikCMSConfig::NAMESPACE_SEPARATOR]);
     }
 
     /**
      * @return string
+     * @noinspection PhpParamsInspection
      */
     public function getCmsSrcPath(): string
     {
-        return $this->getNamespaces()[KikCMSConfig::NAMESPACE_KIKCMS][0];
+        return first($this->getNamespaces()[KikCMSConfig::NAMESPACE_KIKCMS . KikCMSConfig::NAMESPACE_SEPARATOR]);
     }
 }
