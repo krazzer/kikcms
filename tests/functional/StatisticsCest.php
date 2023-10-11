@@ -71,16 +71,16 @@ class StatisticsCest
         $metricData = $I->getDbService()->queryRows("SELECT * FROM cms_analytics_metric");
 
         $expectedMetricData = [
-            ['date' => '2020-01-01', 'type' => 'source', 'value' => 'value1', 'visits' => '1'],
-            ['date' => '2020-01-01', 'type' => 'os', 'value' => 'value1', 'visits' => '1'],
-            ['date' => '2020-01-01', 'type' => 'page', 'value' => 'value1', 'visits' => '1'],
-            ['date' => '2020-01-01', 'type' => 'browser', 'value' => 'value1', 'visits' => '1'],
-            ['date' => '2020-01-01', 'type' => 'location', 'value' => 'value1', 'visits' => '1'],
-            ['date' => '2020-01-01', 'type' => 'resolutionDesktop', 'value' => 'value1', 'visits' => '1'],
+            ['date' => '2020-01-01', 'type' => 'source', 'value' => 'value1', 'visits' => '2'],
+            ['date' => '2020-01-01', 'type' => 'os', 'value' => 'value1', 'visits' => '2'],
+            ['date' => '2020-01-01', 'type' => 'page', 'value' => 'value1', 'visits' => '2'],
+            ['date' => '2020-01-01', 'type' => 'browser', 'value' => 'value1', 'visits' => '2'],
+            ['date' => '2020-01-01', 'type' => 'location', 'value' => 'value1', 'visits' => '2'],
+            ['date' => '2020-01-01', 'type' => 'resolutionDesktop', 'value' => 'value1', 'visits' => '2'],
         ];
 
         $expecteVisitData = [
-            ['date' => "2020-01-01", 'visits' => 1, 'unique_visits' => 2],
+            ['date' => "2020-01-01", 'visits' => 2, 'unique_visits' => 1],
         ];
 
         $I->assertEquals($expectedMetricData, $metricData);
@@ -112,8 +112,8 @@ class StatisticsCest
                             new DimensionValue(['value' => '20200101']),
                         ],
                         'metric_values'    => [
-                            new MetricValue(['value' => 1]),
                             new MetricValue(['value' => 2]),
+                            new MetricValue(['value' => 1]),
                         ],
                     ])
                 ]
@@ -139,8 +139,8 @@ class StatisticsCest
                             new DimensionValue(['value' => 'desktop']),
                         ],
                         'metric_values'    => [
-                            new MetricValue(['value' => 1]),
                             new MetricValue(['value' => 2]),
+                            new MetricValue(['value' => 1]),
                         ],
                     ])
                 ]
