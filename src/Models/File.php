@@ -4,6 +4,7 @@ namespace KikCMS\Models;
 
 use DateTime;
 use KikCmsCore\Classes\Model;
+use Phalcon\Mvc\Model\Resultset;
 
 /**
  * @property Folder $folder
@@ -55,7 +56,7 @@ class File extends Model
      *
      * @return File[]
      */
-    public static function getByIdList(array $ids): array
+    public static function getByIdList(array $ids): array|Resultset
     {
         return parent::getByIdList($ids);
     }
