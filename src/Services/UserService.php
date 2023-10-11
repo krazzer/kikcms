@@ -173,7 +173,7 @@ class UserService extends Injectable
         $this->rememberMeService->removeToken();
 
         // remove current session data
-        $this->session->destroy();
+        @$this->session->destroy();
         $this->permission->reset();
 
         // start a new session so we can still flash
