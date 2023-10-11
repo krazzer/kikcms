@@ -47,7 +47,7 @@ var SelectDataTable = DataTable.extend({
         this.getDataTable().find('td.select input').change(function () {
             var $checkBox = $(this);
 
-            var value     = $checkBox.parent().parent().attr('data-id');
+            var value     = parseInt($checkBox.parent().parent().attr('data-id'));
             var selection = self.getSelectionFromInput();
 
             if ($checkBox.prop("checked")) {
