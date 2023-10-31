@@ -85,15 +85,16 @@ class FullPageService extends Injectable
 
     /**
      * @param string $pageKey
+     * @param int|null $limit
      * @return FullPageMap
      */
-    public function getMapByParentKey(string $pageKey): FullPageMap
+    public function getMapByParentKey(string $pageKey, int $limit = null): FullPageMap
     {
         if( ! $parentPage = $this->pageService->getByKey($pageKey)){
             return new FullPageMap;
         }
 
-        $childPageMap = $this->pageService->getChildren($parentPage);
+        $childPageMap = $this->pageService->getChildren($parentPage, $limit);
 
         return $this->getByPageMap($childPageMap);
     }
