@@ -45,7 +45,7 @@ class PasswordResetForm extends WebForm
         $this->addPasswordField('password', $this->translator->tl('login.reset.newPass'), [$passwordStringLength, $password]);
         $this->addPasswordField('password_repeat', $this->translator->tl('login.reset.repeatPass'), [
             new Identical([
-                'value'   => $this->getElement('password')->getValue(),
+                'value'   => $this->getInput()['password'] ?? null,
                 'message' => $this->translator->tl('webform.messages.passwordMismatch'),
             ]),
         ]);
