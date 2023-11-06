@@ -68,11 +68,17 @@ class NamespaceService extends Injectable
     private function getPathByNamespace(string $namespace): string
     {
         $loadedNamespaces = $this->loader->getNamespaces();
+        $loadedNamespaceWithoutSlashes = [];
+
+        foreach ($loadedNamespaces as $name => $values){
+            $name = trim($name, KikCMSConfig::NAMESPACE_SEPARATOR);
+            $loadedNamespaceWithoutSlashes[$name] = $values;
+        }
 
         $namespaceParts = explode(KikCMSConfig::NAMESPACE_SEPARATOR, trim($namespace, KikCMSConfig::NAMESPACE_SEPARATOR));
         $namespacePart1 = trim($namespaceParts[0], KikCMSConfig::NAMESPACE_SEPARATOR);
 
-        $pathArray = (array) $loadedNamespaces[$namespacePart1];
+        $pathArray = (array) $loadedNamespaceWithoutSlashes[$namespacePart1];
         $path      = first($pathArray);
 
         array_shift($namespaceParts);
