@@ -56,8 +56,8 @@ class PageContentService extends Injectable
             ->from(['pl' => PageLanguage::class])
             ->leftJoin(PageLanguageContent::class, 'plc.page_id = pl.page_id', 'plc')
             ->inWhere(PageLanguageContent::FIELD_FIELD, $wysiwygFieldKeys)
-            ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
-            ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :code:', ['code' => $languageCode])
+            ->andWhere('pl.' . PageLanguage::FIELD_LANGUAGE_CODE . ' = :c:', ['c' => $languageCode])
+            ->andWhere('plc.' . PageLanguageContent::FIELD_LANGUAGE_CODE . ' = :c2:', ['c2' => $languageCode])
             ->andWhere('plc.value LIKE :public: OR plc.value LIKE :private:', $searchParams)
             ->groupBy('pl.page_id');
 
