@@ -18,7 +18,7 @@ use KikCMS\Services\DataTable\PagesDataTableService;
 use KikCMS\Services\Pages\PageLanguageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 use ReflectionMethod;
 
 class PageFormTest extends Unit
@@ -99,6 +99,7 @@ class PageFormTest extends Unit
         $pageForm->acl = $acl;
 
         $method = new ReflectionMethod(PageForm::class, 'initialize');
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         $method->invoke($pageForm);
@@ -125,6 +126,7 @@ class PageFormTest extends Unit
         $pageForm->validation            = new Validation();
 
         $method = new ReflectionMethod(PageForm::class, 'addFieldsForCurrentTemplate');
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         $method->invoke($pageForm);

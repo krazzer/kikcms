@@ -8,7 +8,7 @@ use Helpers\Unit;
 use KikCMS\Forms\UserForm;
 use KikCMS\Models\User;
 use KikCMS\Services\Cms\CmsService;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 use ReflectionMethod;
 
 class UserFormTest extends Unit
@@ -32,6 +32,7 @@ class UserFormTest extends Unit
         $userForm->cmsService = $cmsService;
 
         $method = new ReflectionMethod(UserForm::class, 'initialize');
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         $method->invoke($userForm);

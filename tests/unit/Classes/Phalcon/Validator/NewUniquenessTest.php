@@ -6,7 +6,7 @@ namespace unit\Classes\Phalcon\Validator;
 use Helpers\Unit;
 use KikCMS\Classes\Phalcon\Validator\NewUniqueness;
 use KikCMS\Models\User;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 
 class NewUniquenessTest extends Unit
 {

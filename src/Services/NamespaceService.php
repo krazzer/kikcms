@@ -70,8 +70,9 @@ class NamespaceService extends Injectable
         $loadedNamespaces = $this->loader->getNamespaces();
 
         $namespaceParts = explode(KikCMSConfig::NAMESPACE_SEPARATOR, trim($namespace, KikCMSConfig::NAMESPACE_SEPARATOR));
+        $namespacePart1 = trim($namespaceParts[0], KikCMSConfig::NAMESPACE_SEPARATOR);
 
-        $pathArray = (array) $loadedNamespaces[$namespaceParts[0] . KikCMSConfig::NAMESPACE_SEPARATOR];
+        $pathArray = (array) $loadedNamespaces[$namespacePart1];
         $path      = first($pathArray);
 
         array_shift($namespaceParts);

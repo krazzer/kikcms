@@ -7,12 +7,14 @@ namespace unit\Classes\WebForm;
 use Helpers\Forms\TestMailForm;
 use Helpers\TestHelper;
 use Helpers\Unit;
+use KikCMS\Classes\Phalcon\Validation;
 use KikCMS\Services\Website\MailFormService;
 use Phalcon\Assets\Manager;
-use Phalcon\Config;
-use Phalcon\Di;
+use Phalcon\Config\Config;
+use Phalcon\Di\Di;
+use Phalcon\Html\Escaper;
+use Phalcon\Html\TagFactory;
 use Phalcon\Mvc\View;
-use Phalcon\Validation;
 
 class MailFormServiceTest extends Unit
 {
@@ -26,7 +28,7 @@ class MailFormServiceTest extends Unit
 
         $mailForm = new TestMailForm();
         $mailForm->view = new View;
-        $mailForm->view->assets = new Manager;
+        $mailForm->view->assets = new Manager(new TagFactory(new Escaper()));
 
         $mailForm->config = new Config();
         $mailForm->config->recaptcha = new Config();

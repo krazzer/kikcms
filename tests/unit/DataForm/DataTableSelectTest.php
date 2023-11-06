@@ -9,8 +9,8 @@ use Helpers\TestHelper;
 use Helpers\Models\Interest;
 use Helpers\Models\Person;
 use Helpers\Models\PersonInterest;
+use Phalcon\Encryption\Security;
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Security;
 use PHPUnit\Framework\TestCase;
 
 class DataTableSelectTest extends TestCase

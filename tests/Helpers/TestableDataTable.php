@@ -45,7 +45,7 @@ class TestableDataTable extends DataTable
         return parent::formatBoolean($value);
     }
 
-    public function formatCheckbox($value, $rowData, $column)
+    public function formatCheckbox($value, $rowData, $column): string
     {
         return parent::formatCheckbox($value, $rowData, $column);
     }

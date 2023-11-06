@@ -15,9 +15,9 @@ class DateTimeServiceTest extends Unit
         $dateTimeService->setDI($this->getDbDi());
 
         $this->assertEquals('', $dateTimeService->stringToDateFormat(''));
-        $this->assertEquals('jan 20 2010', $dateTimeService->stringToDateFormat('2010-01-20'));
+        $this->assertEquals('Jan 20 2010', $dateTimeService->stringToDateFormat('2010-01-20'));
         $this->assertEquals('', $dateTimeService->stringToDateTimeFormat(''));
-        $this->assertEquals('jan 20 2010, at 10:10', $dateTimeService->stringToDateTimeFormat('2010-01-20 10:10:10'));
+        $this->assertEquals('Jan 20 2010, at 10:10', $dateTimeService->stringToDateTimeFormat('2010-01-20 10:10:10'));
     }
 
     public function testGetValidator()

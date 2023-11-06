@@ -7,7 +7,7 @@ use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Models\File;
 use KikCMS\Services\Finder\FileResizeService;
 use KikCMS\Services\Finder\FileService;
-use Phalcon\Config;
+use Phalcon\Config\Config;
 use Phalcon\Image\Adapter\Imagick;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

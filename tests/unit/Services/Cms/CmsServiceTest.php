@@ -8,7 +8,7 @@ use Helpers\Unit;
 use KikCMS\Classes\DataTable\SubDataTableNewIdsCache;
 use KikCMS\Models\Page;
 use KikCMS\Services\Cms\CmsService;
-use Phalcon\Config;
+use Phalcon\Config\Config;
 use Phalcon\Http\Request;
 
 class CmsServiceTest extends Unit

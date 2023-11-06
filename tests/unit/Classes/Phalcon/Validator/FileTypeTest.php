@@ -8,7 +8,7 @@ use Helpers\TestHelper;
 use KikCMS\Classes\Phalcon\Validator\FileType;
 use KikCMS\Models\File;
 use KikCmsCore\Services\DbService;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 
 class FileTypeTest extends Unit
 {

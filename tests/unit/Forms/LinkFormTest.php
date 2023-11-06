@@ -7,7 +7,7 @@ use Helpers\Unit;
 use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Translator;
 use KikCMS\Forms\LinkForm;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 use ReflectionMethod;
 
 class LinkFormTest extends Unit
@@ -29,6 +29,7 @@ class LinkFormTest extends Unit
         $linkForm->getFilters()->setLanguageCode('en');
 
         $method = new ReflectionMethod(LinkForm::class, 'initialize');
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         $method->invoke($linkForm);

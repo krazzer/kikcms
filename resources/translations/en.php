@@ -450,7 +450,7 @@ return [
         'phpDateFormat'         => 'Y-m-d',
         'phpDateTimeFormat'     => 'Y-m-d H:i',
         'dateDisplayFormat'     => '%b %e %Y',
-        'dateTimeDisplayFormat' => '%b %e %Y, at %H:%M',
+        'dateTimeDisplayFormat' => '%b %e %Y, \'at\' %H:%M',
         'momentJsDateFormat'    => 'YYYY-MM-DD',
         'monthDisplayFormat'    => '%b %Y',
         'decimalNotation'       => 'point',

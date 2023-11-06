@@ -5,8 +5,8 @@ namespace unit\Services;
 
 use Helpers\Unit;
 use KikCMS\Services\CliService;
-use Phalcon\Config;
-use Phalcon\Di;
+use Phalcon\Config\Config;
+use Phalcon\Di\Di;
 
 class CliServiceTest extends Unit
 {

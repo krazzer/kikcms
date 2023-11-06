@@ -102,9 +102,10 @@ abstract class DataForm extends WebForm
      * Get the Objects for a DataTableField. This can be useful if you want to validate them
      *
      * @param string $fieldKey
-     * @return Model[]|Resultset
+     * @return array|Resultset|Model
+     * @throws Exception
      */
-    public function getDataTableFieldObjects(string $fieldKey): array|Resultset
+    public function getDataTableFieldObjects(string $fieldKey): array|Resultset|Model
     {
         if ( ! $relation = $this->modelService->getRelation($this->getModel(), $fieldKey)) {
             throw new Exception("Relation $fieldKey does not exist");
@@ -243,6 +244,7 @@ abstract class DataForm extends WebForm
     /**
      * @param array $input
      * @return Response|string|null
+     * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function successAction(array $input): Response|string|null
     {

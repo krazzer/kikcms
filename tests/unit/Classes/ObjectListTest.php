@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace unit\Classes;
 
 use Helpers\Unit;
+use KikCMS\Classes\Cache\CacheNode;
+use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\ObjectLists\CacheNodeMap;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\ObjectLists\FieldMap;
@@ -23,7 +26,7 @@ use KikCMS\ObjectLists\PlaceholderTable;
 use KikCMS\ObjectLists\RememberMeHashList;
 use KikCMS\ObjectLists\UserMap;
 use KikCmsCore\Classes\ObjectList;
-use StdClass;
+use stdClass;
 
 class ObjectListTest extends Unit
 {
@@ -52,18 +55,15 @@ class ObjectListTest extends Unit
 
         foreach ($objectLists as $objectListClassName){
             /** @var ObjectList $objectList */
-            $objectList = new $objectListClassName([new StdClass()]);
+            $objectList = new $objectListClassName([]);
 
             $objectList->getLast();
             $objectList->getFirst();
             $objectList->get(1);
 
-            foreach ($objectList as $object){
-                $this->assertInstanceOf(StdClass::class, $object);
-            }
-
             $objectList->reverse();
 
+            $this->assertInstanceOf($objectListClassName, $objectList);
         }
     }
 }

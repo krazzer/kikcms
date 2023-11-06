@@ -28,20 +28,20 @@ use KikCMS\Services\WebForm\StorageService;
 use KikCMS\Services\Website\MailFormService;
 use KikCmsCore\Services\DbService;
 use Phalcon\Cache\Adapter\Memory as MemoryCache;
-use Phalcon\Config;
+use Phalcon\Config\Config;
 use Phalcon\Db\Adapter\PdoFactory;
 use Phalcon\Db\Column;
 use Phalcon\Db\Index;
 use Phalcon\Db\Reference;
-use Phalcon\Di;
-use Phalcon\Escaper;
+use Phalcon\Di\Di;
+use Phalcon\Encryption\Security;
+use Phalcon\Filter\Validation;
 use Phalcon\Flash\Direct;
+use Phalcon\Html\Escaper;
 use Phalcon\Http\Request;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
-use Phalcon\Security;
 use Phalcon\Storage\SerializerFactory;
-use Phalcon\Validation;
 use ReflectionClass;
 use Website\TestClasses\TemplateFields;
 use Website\TestClasses\WebsiteSettings;
@@ -493,10 +493,11 @@ class Unit extends \Codeception\Test\Unit
      * @param array $parameters
      * @return mixed
      */
-    public function invokeMethod(&$object, $methodName, array $parameters = array())
+    public function invokeMethod(&$object, $methodName, array $parameters = array()): mixed
     {
         $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
+        /** @noinspection PhpExpressionResultUnusedInspection */
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);

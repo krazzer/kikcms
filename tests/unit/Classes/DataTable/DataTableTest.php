@@ -22,7 +22,7 @@ use KikCMS\Services\ModelService;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\WebForm\RelationKeyService;
 use KikCmsCore\Services\DbService;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -232,30 +232,29 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
+        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['inputCheckbox'])->getMock();
 
         $attributes = [
-            'type'     => 'checkbox',
             'class'    => 'table-checkbox',
             'data-col' => 'test',
             'checked'  => 'checked'
         ];
 
-        $tagMock->expects($this->exactly(2))->method('tagHtml')->with('input', $attributes);
+        $tagMock->expects($this->exactly(2))->method('inputCheckbox')->with('input', true, $attributes);
         $dataTable->tag = $tagMock;
 
         $dataTable->formatCheckbox(1, [], 'test');
         $dataTable->formatCheckbox(1, ['test' => 1], 'test');
 
-        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
+        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['inputCheckbox'])->getMock();
 
         $attributes = [
-            'type'     => 'checkbox',
             'class'    => 'table-checkbox',
             'data-col' => 'test',
+            'checked'  => null
         ];
 
-        $tagMock->expects($this->once())->method('tagHtml')->with('input', $attributes);
+        $tagMock->expects($this->once())->method('inputCheckbox')->with('input', null, $attributes);
         $dataTable->tag = $tagMock;
 
         $dataTable->formatCheckbox(0, [], 'test');
@@ -265,8 +264,8 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['tagHtml'])->getMock();
-        $urlMock = $this->getMockBuilder(Url::class)->setMethods(['get'])->getMock();
+        $tagMock         = $this->getMockBuilder(Tag::class)->setMethods(['element'])->getMock();
+        $urlMock         = $this->getMockBuilder(Url::class)->setMethods(['get'])->getMock();
         $twigServiceMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->setMethods(['mediaFile'])->getMock();
 
         $attributes = [
@@ -276,12 +275,12 @@ class DataTableTest extends TestCase
             'style'          => 'background-image: url(url)',
         ];
 
-        $tagMock->expects($this->once())->method('tagHtml')->willReturn('url')->with('div', $attributes);
+        $tagMock->expects($this->once())->method('element')->willReturn('url')->with('div', '', $attributes);
         $urlMock->expects($this->once())->method('get')->willReturn('url');
         $twigServiceMock->expects($this->once())->method('mediaFile')->willReturn('url');
 
-        $dataTable->tag = $tagMock;
-        $dataTable->url = $urlMock;
+        $dataTable->tag         = $tagMock;
+        $dataTable->url         = $urlMock;
         $dataTable->twigService = $twigServiceMock;
 
         $dataTable->formatFinderImage(1);

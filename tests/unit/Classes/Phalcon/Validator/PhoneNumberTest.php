@@ -4,7 +4,7 @@ namespace unit\Classes\Phalcon\Validator;
 
 
 use KikCMS\Classes\Phalcon\Validator\PhoneNumber;
-use Phalcon\Validation;
+use Phalcon\Filter\Validation;
 use PHPUnit\Framework\TestCase;
 
 class PhoneNumberTest extends TestCase

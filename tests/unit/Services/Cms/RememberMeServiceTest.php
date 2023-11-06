@@ -12,9 +12,9 @@ use KikCMS\ObjectLists\RememberMeHashList;
 use KikCMS\Objects\RememberMeHash;
 use KikCMS\Services\Cms\RememberMeService;
 use KikCMS\Services\UserService;
+use Phalcon\Encryption\Security;
 use Phalcon\Http\Cookie;
 use Phalcon\Http\Response\Cookies;
-use Phalcon\Security;
 
 class RememberMeServiceTest extends Unit
 {

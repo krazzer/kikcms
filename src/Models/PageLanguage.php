@@ -34,9 +34,9 @@ class PageLanguage extends Model
 
     /**
      * @inheritDoc
-     * @return PageLanguage
+     * @return PageLanguage|null
      */
-    public static function getById($id): PageLanguage
+    public static function getById($id): ?PageLanguage
     {
         return parent::getById($id);
     }

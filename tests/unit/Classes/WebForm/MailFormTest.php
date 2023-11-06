@@ -10,12 +10,14 @@ use KikCMS\Objects\MailformSubmission\MailformSubmissionService;
 use KikCMS\Services\MailService;
 use KikCMS\Services\Website\MailFormService;
 use Phalcon\Assets\Manager;
-use Phalcon\Config;
+use Phalcon\Config\Config;
+use Phalcon\Filter\Validation;
 use Phalcon\Flash\Direct;
+use Phalcon\Html\Escaper;
+use Phalcon\Html\TagFactory;
 use Phalcon\Http\Request;
 use Phalcon\Http\Response;
 use Phalcon\Session\Adapter\AbstractAdapter;
-use Phalcon\Validation;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReCaptcha\Response as ReCaptchaResponse;
 
@@ -25,7 +27,7 @@ class MailFormTest extends Unit
     {
         $view = $this->createMock(View::class);
         $view->method('getPartial')->willReturn('');
-        $view->method('__get')->willReturn(new Manager);
+        $view->method('__get')->willReturn(new Manager(new TagFactory(new Escaper())));
 
         $translator = $this->createMock(Translator::class);
         $translator->method('tl')->willReturn('');
@@ -65,12 +67,12 @@ class MailFormTest extends Unit
 
         // spamscore too low, won't send
         $mailForm->validation = $this->getValidation(0.2);
-        $this->assertFalse($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertNull($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
 
         // mail could not be send
         $mailForm->validation = $this->getValidation(1);
         $mailForm->mailService = $this->getMailService(0);
-        $this->assertFalse($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertNull($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
 
         // no validators
         $validation = $this->createMock(Validation::class);
@@ -78,12 +80,12 @@ class MailFormTest extends Unit
 
         $mailForm->validation = $validation;
 
-        $this->assertFalse($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertNull($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
 
         // no captcha field
         $mailForm->getFieldMap()->remove('captcha');
         $mailForm->validation = $this->getValidation(1);
-        $this->assertFalse($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
+        $this->assertNull($this->invokeMethod($mailForm, 'successAction', [['check' => true]]));
     }
 
     /**

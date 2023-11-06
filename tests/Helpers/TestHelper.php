@@ -43,15 +43,16 @@ use Monolog\Logger;
 use Phalcon\Cache\Adapter\Memory as MemoryCache;
 use Phalcon\Config\Adapter\Ini;
 use Phalcon\Db\Adapter\Pdo\Mysql;
-use Phalcon\Di;
+use Phalcon\Di\Di;
 use Phalcon\Di\DiInterface;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Filter\Validation;
 use Phalcon\Flash\Session;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Mvc\Url;
 use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
-use Phalcon\Url;
-use Phalcon\Validation;
 use PHPUnit\Framework\TestCase;
 
 class TestHelper extends TestCase
@@ -129,7 +130,7 @@ class TestHelper extends TestCase
         // set session superglobal
         if ( ! isset($_SESSION)) $_SESSION = [];
 
-        $di = new Di\FactoryDefault();
+        $di = new FactoryDefault();
 
         $dbConfig = [
             'username' => 'root',
@@ -206,8 +207,8 @@ class TestHelper extends TestCase
 
         Di::setDefault($di);
 
-        $di->set('persistent', new Bag('persistent'));
-        $di->set('sessionBag', new Bag('session'));
+        $di->set('persistent', new Bag(new \Phalcon\Session\Manager(), 'persistent'));
+        $di->set('sessionBag', new Bag(new \Phalcon\Session\Manager(), 'session'));
 
         $permission = new Permission();
         $permission->setDI($di);
