@@ -29,7 +29,7 @@ class RememberMeService extends Injectable
 
         $this->store($hashList);
 
-        $this->cookies->set($this->getKey(), $cookieToken, $expire->getTimestamp(), '/', true)->send();
+        $this->cookies->set($this->getKey(), $cookieToken, $expire->getTimestamp(), '/', true, '')->send();
     }
 
     /**
