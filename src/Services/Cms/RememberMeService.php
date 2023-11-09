@@ -137,7 +137,7 @@ class RememberMeService extends Injectable
 
         $this->store($hashList);
 
-        $this->cookies->get($this->getKey())->delete();
+        @$this->cookies->get($this->getKey())->delete();
     }
 
     /**
