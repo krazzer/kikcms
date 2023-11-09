@@ -1,7 +1,7 @@
 version: "3"
 services:
   phptest:
-    image: kiksaus/kikdev-phalcon5
+    image: kiksaus/kikdev-phalcon5-cov
     restart: always
     ports:
         - "9903:443"
