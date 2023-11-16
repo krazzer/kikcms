@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace KikCMS\Classes\Phalcon;
 
+use AllowDynamicProperties;
 use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use KikCMS\Classes\Frontend\Extendables\MediaResizeBase;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
@@ -166,6 +167,7 @@ use Swift_Mailer;
  * @property WebFormService webFormService
  * @property WebsiteSettingsBase websiteSettings
  */
+#[AllowDynamicProperties]
 class Injectable extends \Phalcon\Di\Injectable
 {
 
