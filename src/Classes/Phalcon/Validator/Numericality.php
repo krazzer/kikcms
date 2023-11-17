@@ -2,8 +2,8 @@
 
 namespace KikCMS\Classes\Phalcon\Validator;
 
+use Phalcon\Filter\Validation;
 use Phalcon\Messages\Message;
-use Phalcon\Validation;
 
 class Numericality extends Validation\Validator\Numericality
 {
@@ -15,7 +15,7 @@ class Numericality extends Validation\Validator\Numericality
         $value = $validation->getValue($field);
 
         // value may not contain a space
-        if(strstr($value, ' ')){
+        if(str_contains($value, ' ')){
             $message = $this->getOption('message') ?: $validation->translator->tl('webform.messages.Numericality');
 
             $validation->appendMessage(new Message($message, $field));
