@@ -757,7 +757,8 @@ abstract class DataTable extends Renderable
      * @param bool $blank
      * @param string|null $warning
      */
-    protected function addTableButton(string $icon, string $title, string $class, string $url = null, bool $blank = false, string $warning = null): void
+    protected function addTableButton(string $icon, string $title, string $class, string $url = null,
+                                      bool $blank = false, string $warning = null): void
     {
         $this->tableButtons[] = new TableButton($icon, $title, $class, $url, $blank, $warning);
     }
