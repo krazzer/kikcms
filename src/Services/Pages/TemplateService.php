@@ -3,6 +3,7 @@
 namespace KikCMS\Services\Pages;
 
 use KikCMS\Classes\Phalcon\Injectable;
+use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\FileField;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
 use KikCMS\Classes\WebForm\Tab;
@@ -129,7 +130,7 @@ class TemplateService extends Injectable
      * @param string $fieldKey
      * @return Tab|Field|null
      */
-    private function getFieldByKey(string $fieldKey): Tab|Field|null
+    private function getFieldByKey(string $fieldKey): Tab|Field|FieldTransformer|null
     {
         $fields = $this->templateFields->getFields();
 
