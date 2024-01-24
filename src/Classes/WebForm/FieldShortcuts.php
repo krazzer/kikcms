@@ -222,7 +222,7 @@ trait FieldShortcuts
     {
         $siteKey = $this->config->recaptcha->siteKey;
 
-        $this->view->assets->addJs('https://www.google.com/recaptcha/api.js?render=' . $siteKey);
+        $this->view->assets->addJs('https://www.google.com/recaptcha/api.js?render=' . $siteKey, false);
         $this->view->reCaptchaSiteKey = $siteKey;
 
         $validators = $version == 2 ? [new ReCaptcha] : [new ReCaptchaV3];
