@@ -81,11 +81,14 @@ class RelationKeyService extends Injectable
                 list($part1, $part2, $part3) = $parts;
                 $relation = $this->getRelation($model, $part1);
 
+                /** @var Model $part1Model */
                 $part1Model = $model->$part1;
                 $part2Model = $part1Model->$part2;
 
+                $part2relation = $this->getRelation($part1Model, $part2);
+                $part2defaults = $part2relation->getOptions()['defaults'] ?? [];
+
                 if ($part2Model === null) {
-                    $part2relation  = $this->getRelation($part1Model, $part2);
                     $part2ModelName = $part2relation->getReferencedModel();
                     $part2Model     = new $part2ModelName();
 
@@ -94,13 +97,17 @@ class RelationKeyService extends Injectable
 
                     $part2Model->$refField = $part1Model->$field;
 
-                    foreach ($part2relation->getOptions()['defaults'] as $defaultKey => $defaultValue) {
+                    foreach ($part2defaults as $defaultKey => $defaultValue) {
                         $part2Model->$defaultKey = $defaultValue;
                     }
 
                     $part2Model->save();
 
                     $part1Model->$field = $part2Model->$refField;
+                } elseif ( ! $part1Model->isRelationshipLoaded($part2)) {
+                    foreach ($part2defaults as $defaultKey => $defaultValue) {
+                        $part2Model->$defaultKey = $defaultValue;
+                    }
                 }
 
                 $part2Model->$part3 = $this->dbService->toStorage($value);
