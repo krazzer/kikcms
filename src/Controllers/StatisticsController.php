@@ -53,7 +53,9 @@ class StatisticsController extends BaseController
      */
     public function updateAction(): bool|string
     {
-        $token = (string) $this->request->getPost('token', 'string');
+        if( ! $token = $this->request->getPost('token', 'string')){
+            throw new UnauthorizedException();
+        }
 
         $this->cmsService->checkSecurityToken($token);
 
