@@ -29,7 +29,11 @@ class Date extends FieldTransformer
      */
     public function toDisplay(mixed $value): string
     {
-        $date = new DateTime($value);
+        if($value instanceof DateTime){
+            $date = $value;
+        } else {
+            $date = new DateTime($value);
+        }
 
         return $date->format($this->field->getFormat());
     }
