@@ -299,8 +299,14 @@ class UrlService extends Injectable
 
         $urlColumn = "CONCAT_WS('/', '', GROUP_CONCAT_EXT(pla.slug, ac.level, '/'), pl.slug)";
 
+        $column = $urlColumn;
+
+        if($langCode == $this->languageService->getDefaultLanguageCode()){
+            $column = "IF(p.key = '" . KikCMSConfig::KEY_PAGE_DEFAULT . "', '/', " . $urlColumn . ")";
+        }
+
         $query = (new Builder)
-            ->columns(["IF(p.key = '" . KikCMSConfig::KEY_PAGE_DEFAULT . "', '/', " . $urlColumn . ")"])
+            ->columns([$column])
             ->from(['p' => Page::class])
             ->leftJoin(Page::class, 'ac.lft < p.lft AND ac.rgt > p.rgt', 'ac')
             ->leftJoin(PageLanguage::class, 'pla.page_id = ac.id AND pla.language_code = "' . $langCode . '"', 'pla')
