@@ -327,6 +327,10 @@ class RelationKeyService extends Injectable
         // could be json from selectDataTable or multiCheckbox, then decode first
         $value = is_string($value) ? json_decode($value) : $value;
 
+        if($value === null){
+            $value = [];
+        }
+
         foreach ($value as $valueKey => $valueValue) {
             $referencedModel = $relation->getReferencedModel();
 
