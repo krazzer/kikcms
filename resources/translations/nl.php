@@ -460,7 +460,7 @@ return [
         'phpDateTimeFormat'     => 'd-m-Y H:i',
         'momentJsDateFormat'    => 'DD-MM-YYYY',
         'dateDisplayFormat'     => 'd MMM Y',
-        'dateTimeDisplayFormat' => '%e %b %Y, om %H:%M',
+        'dateTimeDisplayFormat' => '%e %b %Y, \'om\' %H:%M',
         'monthDisplayFormat'    => '%b %Y',
         'decimalNotation'       => 'comma',
     ],
