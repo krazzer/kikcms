@@ -30,6 +30,11 @@ class Json extends JsonSerializer
      */
     public function unserialize($data): void
     {
+        if( ! $data){
+            $this->data = null;
+            return;
+        }
+
         $this->data = json_decode($data, null, 512, JSON_THROW_ON_ERROR);
     }
 }
