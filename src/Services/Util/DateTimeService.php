@@ -68,6 +68,11 @@ class DateTimeService extends Injectable
      */
     public function format(string $pattern, mixed $datetime): string
     {
+        if($pattern === '%s' || $pattern === 'U'){
+            $datetime = is_string($datetime) ? new DateTime($datetime) : $datetime;
+            return $datetime->format('U');
+        }
+
         // replace legacy strftime uses
         if(str_contains($pattern, '%')){
             foreach (self::STRFTIME_REPLACES as $search => $replace){
