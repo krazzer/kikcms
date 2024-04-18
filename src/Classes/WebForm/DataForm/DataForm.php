@@ -25,6 +25,7 @@ use KikCMS\Config\StatusCodes;
 use KikCMS\Services\LanguageService;
 use Monolog\Logger;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Model\Resultset;
 
 /**
@@ -228,8 +229,9 @@ abstract class DataForm extends WebForm
     /**
      * What happens after successfully saving the Form's data
      * @param bool $isNew
+     * @return void|null|ResponseInterface
      */
-    public function saveSuccessAction(bool $isNew): void
+    public function saveSuccessAction(bool $isNew)
     {
         $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
 
@@ -244,7 +246,6 @@ abstract class DataForm extends WebForm
     /**
      * @param array $input
      * @return Response|string|null
-     * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function successAction(array $input): Response|string|null
     {
