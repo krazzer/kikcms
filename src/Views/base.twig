@@ -15,6 +15,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
     {% block afterHead '' %}
+    {% if config('cms.logo') %}
+        <style>
+            #login .logo, #menu .logo {
+                background-image: url("{{ config('cms.logo') }}");
+                background-size: {{ config('cms.logoWidth') }}px {{ config('cms.logoHeight') }}px;
+                height: {{ config('cms.logoHeight') }}px;
+            }
+        </style>
+    {% endif %}
 </head>
 <body class="{% block bodyClass '' %}">
 <div id="overlay"></div>
