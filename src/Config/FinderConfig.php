@@ -19,4 +19,6 @@ class FinderConfig
     const MAX_FILENAME_LENGTH = 255;
 
     const FILE_TYPES_IMAGE = ['jpg', 'jpeg', 'png', 'gif'];
+
+    const ERROR_CODE_IMAGES_NOT_SAME_SIZE = 410;
 }

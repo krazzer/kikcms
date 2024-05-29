@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace KikCMS\Services\Finder;
 
 
+use Exception;
 use KikCMS\Classes\ImageHandler\ImageHandler;
 use KikCMS\Classes\Phalcon\IniConfig;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Models\File;
 use KikCMS\Classes\Phalcon\Injectable;
+use Monolog\Logger;
 
 /**
  * @property ImageHandler $imageHandler
@@ -36,6 +39,13 @@ class FileResizeService extends Injectable
             $image->resize($maxWidth, $maxHeight);
         }
 
-        $image->save($filePath, $jpgQuality);
+        try {
+            $image->save($filePath, $jpgQuality);
+        } catch (Exception $exception){
+            // just ignore the resize if this error occurs. Likely to happen with animated gifs
+            if($exception->getCode() != FinderConfig::ERROR_CODE_IMAGES_NOT_SAME_SIZE) {
+                $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
+            }
+        }
     }
 }

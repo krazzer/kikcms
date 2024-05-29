@@ -3,6 +3,7 @@
 namespace KikCMS\Models;
 
 use DateTime;
+use KikCMS\Classes\Database\Now;
 use KikCmsCore\Classes\Model;
 use Phalcon\Mvc\Model\Resultset;
 
@@ -66,7 +67,13 @@ class File extends Model
      */
     public function getCreated(): DateTime
     {
-        return new DateTime($this->created ?: 'now');
+        $created = $this->created ?: 'now';
+
+        if($created instanceof Now){
+            $created = 'now';
+        }
+
+        return new DateTime($created);
     }
 
     /**
@@ -173,7 +180,13 @@ class File extends Model
      */
     public function getUpdated(): DateTime
     {
-        return new DateTime($this->updated ?: 'now');
+        $updated = $this->updated ?: 'now';
+
+        if($updated instanceof Now){
+            $updated = 'now';
+        }
+
+        return new DateTime($updated);
     }
 
     /**
