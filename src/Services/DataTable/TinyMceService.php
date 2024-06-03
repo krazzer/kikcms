@@ -40,6 +40,10 @@ class TinyMceService extends Injectable
         $pageUrlDataMap = [];
 
         foreach ($pageUrlData as $pageUrlDatum) {
+            if($pageUrlDatum['type'] == Page::TYPE_MENU) {
+                $pageUrlDatum['menu'] = [];
+            }
+
             $pageUrlDataMap[$pageUrlDatum['id']] = $pageUrlDatum;
         }
 
