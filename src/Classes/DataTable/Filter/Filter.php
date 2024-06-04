@@ -59,7 +59,7 @@ abstract class Filter
      */
     public function getFieldWithAlias(): string
     {
-        return $this->alias ? $this->alias . '.' . $this->field : $this->field;
+        return $this->alias ? $this->alias . '.[' . $this->field . ']' : '[' . $this->field . ']';
     }
 
     /**
