@@ -34,7 +34,7 @@ class FilterSelect extends Filter
     {
         $valueKey = 'filter' . uniqid();
 
-        $builder->andWhere($this->getFieldWithAlias() . ' = :' . $valueKey .':', [
+        $builder->andWhere($this->getQueryableKey() . ' = :' . $valueKey .':', [
             $valueKey => $value,
         ]);
     }

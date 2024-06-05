@@ -17,12 +17,12 @@ class FilterTest extends TestCase
         $filter->setField('test');
         $filter->setAlias('t');
 
-        $this->assertEquals('t.[test]', $filter->getFieldWithAlias());
+        $this->assertEquals('t.test', $filter->getQueryableKey());
 
         $filter = new TestableFilter();
         $filter->setField('test');
 
-        $this->assertEquals('[test]', $filter->getFieldWithAlias());
+        $this->assertEquals('test', $filter->getQueryableKey());
     }
 
     public function testGettersAndSetters()

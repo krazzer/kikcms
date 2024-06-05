@@ -22,6 +22,9 @@ abstract class Filter
     /** @var mixed */
     protected $default;
 
+    /** @var string set this if the field to query is more complex than just the fieldname */
+    protected $queryKey;
+
     /**
      * @param Builder $builder
      * @param $value
@@ -57,9 +60,13 @@ abstract class Filter
     /**
      * @return string
      */
-    public function getFieldWithAlias(): string
+    public function getQueryableKey(): string
     {
-        return $this->alias ? $this->alias . '.[' . $this->field . ']' : '[' . $this->field . ']';
+        if($this->queryKey){
+            return $this->queryKey;
+        }
+
+        return $this->alias ? $this->alias . '.' . $this->field : $this->field;
     }
 
     /**
@@ -105,6 +112,24 @@ abstract class Filter
     public function setDefault(mixed $default): Filter
     {
         $this->default = $default;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getQueryKey(): string
+    {
+        return $this->queryKey;
+    }
+
+    /**
+     * @param string $queryKey
+     * @return Filter
+     */
+    public function setQueryKey(string $queryKey): Filter
+    {
+        $this->queryKey = $queryKey;
         return $this;
     }
 }
