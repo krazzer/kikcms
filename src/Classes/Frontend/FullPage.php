@@ -90,9 +90,9 @@ class FullPage extends Identifiable
     }
 
     /**
-     * @return int|null
+     * @return int|null|string
      */
-    public function getLink(): ?int
+    public function getLink(): null|int|string
     {
         return $this->getPage()->getLink();
     }

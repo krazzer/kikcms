@@ -287,15 +287,19 @@ class Page extends Model
     }
 
     /**
-     * @return int|null
+     * @return int|string|null
      */
-    public function getLink(): ?int
+    public function getLink(): null|int|string
     {
         if ( ! $this->link) {
             return null;
         }
 
-        return (int) $this->link;
+        if(is_numeric($this->link)){
+            return (int) $this->link;
+        }
+
+        return $this->link;
     }
 
     /**
