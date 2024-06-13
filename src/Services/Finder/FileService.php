@@ -537,6 +537,15 @@ class FileService extends Injectable
 
     /**
      * @param File $file
+     * @return string
+     */
+    public function getMediaFileName(File $file): string
+    {
+        return $file->getId() . '-' . $this->getUrlFriendlyFileName($file);
+    }
+
+    /**
+     * @param File $file
      * @param string $type
      * @param bool $private
      * @return string
@@ -723,14 +732,5 @@ class FileService extends Injectable
         }
 
         return $this->userService->getUser()->folder->getId();
-    }
-
-    /**
-     * @param File $file
-     * @return string
-     */
-    private function getMediaFileName(File $file): string
-    {
-        return $file->getId() . '-' . $this->getUrlFriendlyFileName($file);
     }
 }
