@@ -38,7 +38,11 @@ class UserSettingsService extends Injectable
      */
     private function get(): UserSettings
     {
-        if ($settings = $this->userService->getUser()->getSettings()) {
+        if( ! $user = $this->userService->getUser()){
+            return new UserSettings();
+        }
+
+        if ($settings = $user->getSettings()) {
             return (new UserSettings)->unserialize($settings);
         }
 
