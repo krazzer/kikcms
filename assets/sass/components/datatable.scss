@@ -198,6 +198,7 @@ body {
             border-bottom: 1px solid $lightGray;
             white-space: nowrap;
             overflow: auto;
+            display: flex;
 
             .tab {
                 display: inline-block;
@@ -206,6 +207,7 @@ body {
 
                 &.error {
                     color: $colorErrorText;
+                    background-color: $colorErrorBg;
                 }
 
                 &.active {
