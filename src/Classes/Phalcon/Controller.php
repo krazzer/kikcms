@@ -24,7 +24,7 @@ abstract class Controller extends Injectable implements ControllerInterface
      * @param int|null $statusCode
      * @return ResponseInterface
      */
-    protected function view(string $view, array $parameters, int $statusCode = null): ResponseInterface
+    protected function view(string $view, array $parameters = [], int $statusCode = null): ResponseInterface
     {
         if($statusCode){
             $this->response->setStatusCode($statusCode);
