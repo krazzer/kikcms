@@ -18,6 +18,10 @@ $gray: #aaaaaa;
 $grayMedium: #999;
 $grayDark: #333;
 
+$secondaryButtonColor: #ddd;
+$secondaryButtonColorDark: darken($secondaryButtonColor, 10%);
+$secondaryButtonColorDarker: darken($secondaryButtonColor, 20%);
+
 $highLightColor: #dff0d8;
 $highLightColorDark: darken($highLightColor, 5%);
 
