@@ -118,6 +118,9 @@ class Twig extends Engine\AbstractEngine
         // add lcfirst filter
         $this->twig->addFilter(new TwigFilter('lcfirst', 'lcfirst'));
 
+        // add json_decode filter
+        $this->twig->addFilter(new TwigFilter('json_decode', 'json_decode'));
+
         // add price filter
         $this->twig->addFilter(new TwigFilter('price', function ($price, $decimals = 2) use ($di) {
             return $di->getShared("numberService")->getPriceFormat((float) $price, $decimals);
