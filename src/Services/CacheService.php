@@ -47,12 +47,23 @@ class CacheService extends Injectable
 
         foreach ($offspring as $item){
             $this->cacheService->clear(CacheConfig::getUrlKeyForId($item->getId()));
+
+            if($aliasId = $item->getAliasId()){
+                $this->cacheService->clear(CacheConfig::getUrlKeyForId($aliasId));
+            }
         }
 
         $this->cacheService->clear(CacheConfig::getUrlKeyForId($page->getId()));
+
+        if($aliasId = $page->getAliasId()){
+            $this->cacheService->clear(CacheConfig::getUrlKeyForId($aliasId));
+        }
+
         $this->cacheService->clear(CacheConfig::MENU);
         $this->cacheService->clear(CacheConfig::PAGE_LANGUAGE_FOR_URL);
         $this->cacheService->clear(CacheConfig::PAGE_FOR_KEY);
+
+        $this->existingPageCacheService->clear();
     }
 
     /**
