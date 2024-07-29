@@ -167,7 +167,11 @@ class MailService extends Injectable
             }
         }
 
-        return $this->send($message);
+        $mailsSend = $this->send($message);
+
+        $this->eventsManager->fire('email:send', $this, ['message' => $message, 'send' => $mailsSend]);
+
+        return $mailsSend;
     }
 
     /**
