@@ -9,6 +9,7 @@ use Google\Analytics\Data\V1beta\OrderBy;
 use Google\Analytics\Data\V1beta\OrderBy\DimensionOrderBy;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\GaConfig;
+use KikCMS\Config\StatisticsConfig;
 use KikCMS\Models\Analytics\GaDayVisit;
 use KikCMS\Models\Analytics\GaVisitData;
 
@@ -72,10 +73,12 @@ class AnalyticsDataService extends Injectable
             $dimensions[] = new Dimension(['name' => 'deviceCategory']);
         }
 
+        $lastUpdate = $this->analyticsService->getMaxMetricDate($metric);
+
         $response = $this->analyticsData->runReport([
             'property'   => 'properties/' . $this->config->analytics->propertyId,
             'dimensions' => $dimensions,
-            'dateRanges' => [new DateRange(['start_date' => GaConfig::GA4_LAUNCH_DATE, 'end_date' => 'today'])],
+            'dateRanges' => [new DateRange(['start_date' => $lastUpdate->format('Y-m-d'), 'end_date' => 'today'])],
             'metrics'    => [new Metric(['name' => 'sessions']), new Metric(['name' => 'activeUsers'])],
             'orderBys'   => [new OrderBy(['dimension' => new DimensionOrderBy(['dimension_name' => 'date'])])],
         ]);
@@ -92,8 +95,12 @@ class AnalyticsDataService extends Injectable
             $value = $row->getDimensionValues()[1]->getValue();
 
             // empty value in path is same as /, so replace to merge
-            if($metric === GaConfig::METRIC_PATH && $value === ''){
+            if ($metric === GaConfig::METRIC_PATH && $value === '') {
                 $value = '/';
+            }
+
+            if ( ! array_key_exists($type, StatisticsConfig::GA_TYPES)) {
+                continue;
             }
 
             $results[] = [

@@ -102,6 +102,20 @@ class AnalyticsService extends Injectable
     }
 
     /**
+     * @param string $type
+     * @return null|DateTime
+     */
+    public function getMaxMetricDate(string $type): ?DateTime
+    {
+        $query = (new Builder())
+            ->from(GaVisitData::class)
+            ->columns(['MAX(date)'])
+            ->where(GaVisitData::FIELD_TYPE . ' = :t:', ['t' => $type]);
+
+        return $this->dbService->getDate($query);
+    }
+
+    /**
      * @return null|DateTime
      */
     public function getMinDate(): ?DateTime
