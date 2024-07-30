@@ -73,12 +73,16 @@ class AnalyticsDataService extends Injectable
             $dimensions[] = new Dimension(['name' => 'deviceCategory']);
         }
 
-        $lastUpdate = $this->analyticsService->getMaxMetricDate($metric);
+        if($lastUpdate = $this->analyticsService->getMaxMetricDate($metric)){
+            $lastUpdate = $lastUpdate->format('Y-m-d');
+        } else {
+            $lastUpdate = GaConfig::GA4_LAUNCH_DATE;
+        }
 
         $response = $this->analyticsData->runReport([
             'property'   => 'properties/' . $this->config->analytics->propertyId,
             'dimensions' => $dimensions,
-            'dateRanges' => [new DateRange(['start_date' => $lastUpdate->format('Y-m-d'), 'end_date' => 'today'])],
+            'dateRanges' => [new DateRange(['start_date' => $lastUpdate, 'end_date' => 'today'])],
             'metrics'    => [new Metric(['name' => 'sessions']), new Metric(['name' => 'activeUsers'])],
             'orderBys'   => [new OrderBy(['dimension' => new DimensionOrderBy(['dimension_name' => 'date'])])],
         ]);
