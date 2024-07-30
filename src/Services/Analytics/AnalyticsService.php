@@ -110,7 +110,7 @@ class AnalyticsService extends Injectable
         $query = (new Builder())
             ->from(GaVisitData::class)
             ->columns(['MAX(date)'])
-            ->where(GaVisitData::FIELD_TYPE . ' = :t:', ['t' => $type]);
+            ->where(GaVisitData::FIELD_TYPE . ' LIKE :t:', ['t' => $type . '%']);
 
         return $this->dbService->getDate($query);
     }
