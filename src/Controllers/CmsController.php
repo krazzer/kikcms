@@ -105,9 +105,11 @@ class CmsController extends BaseCmsController
     {
         $this->translationService->createSiteTranslationKeys();
 
+        $settingsFormClass = $this->websiteSettings->getSettingsFormClass();
+
         return $this->view('cms/settings', [
             'title'  => $this->translator->tl('menu.item.settings'),
-            'object' => (new SettingsForm)->render(),
+            'object' => (new $settingsFormClass())->render(),
         ]);
     }
 

@@ -27,7 +27,7 @@ class CmsCest
     public function settingsWorks(FunctionalTester $I)
     {
         $I->amOnPage('/cms/settings');
-        $I->seeElement('#webFormId_KikCMSFormsSettingsForm');
+        $I->seeElement('.settingsform');
     }
 
     public function usersWorks(FunctionalTester $I)
