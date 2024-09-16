@@ -39,11 +39,11 @@ jobs:
         with:
           time: '15s'
       - name: Create test DB
-        run: docker exec -i docker_mysql_1 mysql -uroot -padminkik12 -e "CREATE DATABASE test"
+        run: docker exec -i docker-mysql-1 mysql -uroot -padminkik12 -e "CREATE DATABASE test"
       - name: Fill test DB
         run: |
-          docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < install.sql
-          docker exec -i docker_mysql_1 mysql -uroot -padminkik12 test < tests/test.sql
+          docker exec -i docker-mysql-1 mysql -uroot -padminkik12 test < install.sql
+          docker exec -i docker-mysql-1 mysql -uroot -padminkik12 test < tests/test.sql
       - name: Build Js & CSS
         run: |
           cd assets
