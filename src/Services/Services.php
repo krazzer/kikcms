@@ -50,6 +50,7 @@ use Phalcon\Storage\SerializerFactory;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
 use Swift_Mailer;
+use Swift_Plugins_AntiFloodPlugin;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Phalcon\Session\Manager as SessionManager;
@@ -391,7 +392,10 @@ class Services extends BaseServices
             }
         }
 
-        return new Swift_Mailer($transport);
+        $mailer = new Swift_Mailer($transport);
+        $mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(50));
+
+        return $mailer;
     }
 
     /**
