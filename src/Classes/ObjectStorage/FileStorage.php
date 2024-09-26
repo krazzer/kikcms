@@ -8,6 +8,13 @@ use Phalcon\Http\Request\File as UploadedFile;
 interface FileStorage
 {
     /**
+     * @param string $fileName
+     * @param string $dir
+     * @return string
+     */
+    public function get(string $fileName, string $dir = ''): string;
+
+    /**
      * @return mixed
      */
     public function getStorageDir(): mixed;

@@ -23,6 +23,14 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
+    public function get(string $fileName, string $dir = ''): string
+    {
+        return (string) file_get_contents($this->getStorageDir() . $dir . '/' . $fileName);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getStorageDir(): mixed
     {
         return $this->storageDir;
