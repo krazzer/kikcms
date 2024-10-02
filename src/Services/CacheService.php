@@ -17,6 +17,9 @@ use Phalcon\Cache\Cache;
  */
 class CacheService extends Injectable
 {
+    /** @var array */
+    private array $localCache = [];
+
     /**
      * @param string $prefix
      */
@@ -115,6 +118,22 @@ class CacheService extends Injectable
         }
 
         return $result;
+    }
+
+    /**
+     * Cache function just to remember locally, use if you call the same function multiple times in one request
+     *
+     * @param string $cacheKey
+     * @param callable $function
+     * @return mixed
+     */
+    public function cacheLocal(string $cacheKey, callable $function): mixed
+    {
+        if( ! array_key_exists($cacheKey, $this->localCache)){
+            $this->localCache[$cacheKey] = $function();
+        }
+
+        return $this->localCache[$cacheKey];
     }
 
     /**
