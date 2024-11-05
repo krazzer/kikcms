@@ -200,7 +200,7 @@
             {{ form.render(element.name)|raw }}
             <!--suppress JSUnresolvedReference -->
             <script>
-                window.onload = function () {
+                window.addEventListener('load', function () {
                     grecaptcha.ready(function () {
                         grecaptcha.execute('{{ config('recaptcha.siteKey') }}', { action: 'contact' }).then(function (token) {
                             var fields = document.getElementsByClassName('webform-field-recaptcha');
@@ -210,7 +210,7 @@
                             }
                         });
                     });
-                };
+                });
             </script>
         {% endif %}
         {{ block('errorWarnings') }}
