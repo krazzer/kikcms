@@ -51,6 +51,7 @@ class BaseController extends Controller
             'translations'      => $translations,
             'allowedExt'        => MimeConfig::UPLOAD_ALLOW_DEFAULT,
             'tinyMceApiKey'     => $this->config->application->tinyMceApiKey ?? null,
+            'tinyMceClick'      => $this->config->application->tinyMceClick ?? false,
         ];
 
         $this->view->setVar("flash", $this->flash);

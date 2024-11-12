@@ -245,7 +245,7 @@ var WebForm = Class.extend({
             plugins: [
                 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace visualblocks',
                 'visualchars code insertdatetime media nonbreaking save table directionality template paste',
-                'textpattern codesample toc'
+                'textpattern codesample'
             ],
             image_advtab: true,
             content_css: ['/cmsassets/css/tinymce_content.css'],
@@ -292,22 +292,37 @@ var WebForm = Class.extend({
     initWysiwyg: function () {
         var self = this;
 
+        let initTinyMce = function (){
+            if (typeof tinymce == 'undefined') {
+                var baseUrl = "https://cdn.tiny.cloud/1/" + KikCMS.tinyMceApiKey + "/tinymce/5";
+                $.getScript(baseUrl + '/tinymce.min.js', function () {
+                    window.tinymce.dom.Event.domLoaded = true;
+                    tinymce.baseURL                    = baseUrl;
+                    tinymce.suffix                     = ".min";
+
+                    self.initTinyMCE();
+                });
+            } else {
+                self.initTinyMCE();
+            }
+        };
+
+        $(this.getWysiwygSelector()).each(function (){
+            $(this).click(function (){
+                initTinyMce();
+            })
+        });
+
+        // only enable tinymce on click
+        if(KikCMS.tinyMceClick) {
+            return;
+        }
+
         if ($(this.getWysiwygSelector()).length == 0) {
             return;
         }
 
-        if (typeof tinymce == 'undefined') {
-            var baseUrl = "https://cdn.tiny.cloud/1/" + KikCMS.tinyMceApiKey + "/tinymce/5";
-            $.getScript(baseUrl + '/tinymce.min.js', function () {
-                window.tinymce.dom.Event.domLoaded = true;
-                tinymce.baseURL                    = baseUrl;
-                tinymce.suffix                     = ".min";
-
-                self.initTinyMCE();
-            });
-        } else {
-            this.initTinyMCE();
-        }
+        initTinyMce();
     },
 
     /**

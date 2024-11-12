@@ -116,8 +116,35 @@
         float: right;
         color: $lightGrayDark;
         font-size: 11px;
-        position: relative;
         top: 5px;
+    }
+
+    .type-wysiwyg {
+        position: relative;
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: calc(100% - 24px);
+            background-color: rgba(0,0,0,.2);
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            pointer-events: none;
+        }
+
+        &:hover{
+            cursor: pointer;
+
+            &:before{
+                content: 'Click to edit';
+                background-color: rgba(0,0,0,.4);
+            }
+        }
     }
 
     .required-message{
