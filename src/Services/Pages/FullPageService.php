@@ -76,11 +76,12 @@ class FullPageService extends Injectable
 
     /**
      * @param string $template
+     * @param callable|null $queryModify
      * @return FullPageMap
      */
-    public function getByTemplate(string $template): FullPageMap
+    public function getByTemplate(string $template, callable $queryModify = null): FullPageMap
     {
-        return $this->getByPageMap($this->pageService->getByTemplate($template));
+        return $this->getByPageMap($this->pageService->getByTemplate($template, $queryModify));
     }
 
     /**

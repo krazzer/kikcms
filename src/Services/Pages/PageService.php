@@ -296,14 +296,19 @@ class PageService extends Injectable
 
     /**
      * @param string $template
+     * @param callable|null $queryModify
      * @return PageMap
      */
-    public function getByTemplate(string $template): PageMap
+    public function getByTemplate(string $template, callable $queryModify = null): PageMap
     {
         $query = (new Builder)
             ->from($this->websiteSettings->getPageClass())
             ->where(Page::FIELD_TEMPLATE . ' = :template:', ['template' => $template])
             ->orderBy(Page::FIELD_DISPLAY_ORDER);
+
+        if($queryModify){
+            $queryModify($query);
+        }
 
         return $this->dbService->getObjectMap($query, PageMap::class);
     }
