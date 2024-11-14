@@ -24,7 +24,7 @@ class SpamBlock extends AbstractValidator
             return true;
         }
 
-        error_log(date('Y-m-d h:i:s') . ' | ' . $answer . ' | ' . $correctAnswer . ' | ' . $question . PHP_EOL, 3,
+        error_log(date('Y-m-d H:i:s') . ' | ' . $answer . ' | ' . $correctAnswer . ' | ' . $question . PHP_EOL, 3,
             $validation->config->application->path . 'storage/spamblock.log');
 
         $message = $this->getOption('message') ?: $validation->translator->tl('spamBlock.message');
