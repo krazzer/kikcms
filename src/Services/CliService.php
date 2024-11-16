@@ -14,6 +14,6 @@ class CliService extends Injectable
             return;
         }
 
-        echo "\033[0;33m" . $text . " files generated\033[0m" . PHP_EOL;
+        echo "\033[0;33m" . $text . "\033[0m" . PHP_EOL;
     }
 }
