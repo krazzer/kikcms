@@ -4,6 +4,7 @@ namespace KikCMS\Classes\WebForm\Fields;
 
 
 use KikCMS\Classes\WebForm\Field;
+use KikCMS\Classes\WebForm\WebForm;
 use Phalcon\Forms\Element\TextArea;
 
 class WysiwygField extends Field
@@ -32,6 +33,21 @@ class WysiwygField extends Field
     public function getType(): ?string
     {
         return Field::TYPE_WYSIWYG;
+    }
+
+    /**
+     * @param WebForm $form
+     * @return Field|$this
+     */
+    public function setForm(WebForm $form): Field|static
+    {
+        parent::setForm($form);
+
+        if($this->getForm()->config->application->tinyMceClick){
+            $this->addClass('click-to-activate');
+        }
+
+        return $this;
     }
 
     /**
