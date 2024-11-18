@@ -302,9 +302,9 @@ class PageService extends Injectable
     public function getByTemplate(string $template, callable $queryModify = null): PageMap
     {
         $query = (new Builder)
-            ->from($this->websiteSettings->getPageClass())
-            ->where(Page::FIELD_TEMPLATE . ' = :template:', ['template' => $template])
-            ->orderBy(Page::FIELD_DISPLAY_ORDER);
+            ->from(['p' => $this->websiteSettings->getPageClass()])
+            ->where('p.' . Page::FIELD_TEMPLATE . ' = ?0', [$template])
+            ->orderBy('p.' . Page::FIELD_DISPLAY_ORDER);
 
         if($queryModify){
             $queryModify($query);
