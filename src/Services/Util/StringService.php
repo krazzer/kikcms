@@ -66,7 +66,9 @@ class StringService
      */
     public function truncate(string $string, int $maxLength = 50): string
     {
-        return strlen($string) < $maxLength ? $string : mb_substr($string, 0, $maxLength) . '...';
+        $string = html_entity_decode($string);
+
+        return mb_strlen($string) < $maxLength ? $string : mb_substr($string, 0, $maxLength) . '...';
     }
 
     /**
