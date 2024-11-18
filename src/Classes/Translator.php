@@ -216,7 +216,7 @@ class Translator extends Injectable
         $langCode = $langCode ?: $this->getLanguageCode();
 
         if ( ! array_key_exists($langCode, $this->siteFiles)) {
-            return [];
+            return $this->getByFile($this->config->application->path . 'resources/translations/' . $langCode . '.php');
         }
 
         return $this->getByFile($this->siteFiles[$langCode]);
