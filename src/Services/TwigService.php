@@ -111,12 +111,12 @@ class TwigService extends Injectable
     }
 
     /**
-     * @param int|null $fileId
+     * @param int|string|null $fileId
      * @param string|null $thumb
      * @param bool $private
      * @return string
      */
-    public function mediaFileBg(?int $fileId, string $thumb = null, bool $private = false): string
+    public function mediaFileBg(mixed $fileId, string $thumb = null, bool $private = false): string
     {
         return "background-image: url('" . $this->mediaFile($fileId, $thumb, $private) . "');";
     }
