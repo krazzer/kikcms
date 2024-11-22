@@ -60,6 +60,11 @@ class TestHelper extends TestCase
     /** @var DiInterface */
     private $testDbDi;
 
+    public function __construct()
+    {
+        parent::__construct('name');
+    }
+
     public function testGetterAndSetter(string $className, array $variables)
     {
         foreach ($variables as $variable) {
@@ -90,15 +95,15 @@ class TestHelper extends TestCase
     public function getTranslator(): Translator
     {
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
-            ->setMethods(['cache'])
+            ->onlyMethods(['cache'])
             ->getMock();
 
         $websiteSettingsMock = $this->getMockBuilder(WebsiteSettingsBase::class)
-            ->setMethods(['getPluginList'])
+            ->onlyMethods(['getPluginList'])
             ->getMock();
 
         $validationMock = $this->getMockBuilder(Validation::class)
-            ->setMethods(['setDefaultMessages'])
+//            ->onlyMethods(['setDefaultMessages'])
             ->getMock();
 
         $cacheServiceMock->method('cache')->willReturn([]);

@@ -192,7 +192,7 @@ class DataTableTest extends TestCase
     {
         /** @var DataTable|MockObject $datatableMock */
         $datatableMock = $this->getMockBuilder(TestableDataTable::class)
-            ->setMethods(['canDelete', 'getModel'])
+            ->onlyMethods(['canDelete', 'getModel'])
             ->getMock();
 
         $di = new Di();
@@ -201,13 +201,13 @@ class DataTableTest extends TestCase
         /** @var User|MockObject $userReturnMock */
         $userReturnMock = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
-            ->setMethods(['delete'])
+            ->onlyMethods(['delete'])
             ->getMock();
 
         $userReturnMock->expects($this->exactly(3))->method('delete')->willReturn(true);
 
         $modelServiceMock = $this->getMockBuilder(ModelService::class)
-            ->setMethods(['getObjects'])
+            ->onlyMethods(['getObjects'])
             ->getMock();
 
         $modelServiceMock->method('getObjects')->willReturn([$userReturnMock, $userReturnMock, $userReturnMock]);
@@ -232,7 +232,7 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['inputCheckbox'])->getMock();
+        $tagMock = $this->getMockBuilder(Tag::class)->onlyMethods(['inputCheckbox'])->getMock();
 
         $attributes = [
             'class'    => 'table-checkbox',
@@ -246,7 +246,7 @@ class DataTableTest extends TestCase
         $dataTable->formatCheckbox(1, [], 'test');
         $dataTable->formatCheckbox(1, ['test' => 1], 'test');
 
-        $tagMock = $this->getMockBuilder(Tag::class)->setMethods(['inputCheckbox'])->getMock();
+        $tagMock = $this->getMockBuilder(Tag::class)->onlyMethods(['inputCheckbox'])->getMock();
 
         $attributes = [
             'class'    => 'table-checkbox',
@@ -264,9 +264,9 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $tagMock         = $this->getMockBuilder(Tag::class)->setMethods(['element'])->getMock();
-        $urlMock         = $this->getMockBuilder(Url::class)->setMethods(['get'])->getMock();
-        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->setMethods(['mediaFile'])->getMock();
+        $tagMock         = $this->getMockBuilder(Tag::class)->onlyMethods(['element'])->getMock();
+        $urlMock         = $this->getMockBuilder(Url::class)->onlyMethods(['get'])->getMock();
+        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->onlyMethods(['mediaFile'])->getMock();
 
         $attributes = [
             'class'          => 'thumb',
@@ -317,7 +317,7 @@ class DataTableTest extends TestCase
     {
         /** @var MockObject|DataTable $dataTableMock */
         $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
-            ->setMethods(['getAlias'])
+            ->onlyMethods(['getAlias'])
             ->getMock();
 
         $dataTableMock->method('getAlias')->willReturn('a');
@@ -326,7 +326,7 @@ class DataTableTest extends TestCase
 
         /** @var MockObject|DataTable $dataTableMock */
         $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
-            ->setMethods(['getAlias'])
+            ->onlyMethods(['getAlias'])
             ->getMock();
 
         $dataTableMock->method('getAlias')->willReturn(null);
@@ -407,7 +407,7 @@ class DataTableTest extends TestCase
     {
         /** @var MockObject|DataTable $dataTableMock */
         $dataTableMock = $this->getMockBuilder(TestableDataTable::class)
-            ->setMethods(['getFormClass', 'initialize'])
+            ->onlyMethods(['getFormClass', 'initialize'])
             ->getMock();
 
         $dataTableMock->method('getFormClass')->willReturn(MagicForm::class);

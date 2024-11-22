@@ -10,7 +10,7 @@
     "name": "kiksaus/kikcms",
     "config": {
         "platform": {
-            "php": "7.4",
+            "php": "8.2.25",
             "ext-zip": "master",
             "ext-sockets": "master",
             "ext-phalcon": "4.0"
@@ -36,16 +36,15 @@
         }
     },
     "require-dev": {
-        "codeception/codeception": "^4.2",
+        "codeception/codeception": "^5.1.2",
         "codeception/c3": "2.*",
         "donatj/mock-webserver": "dev-master",
-        "codeception/module-webdriver": "^1.0.0",
-        "codeception/module-db": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0",
-        "codeception/module-filesystem": "^1.0.0",
-        "codeception/module-phalcon": "^1.0.0",
-        "codeception/module-cli": "^1.0.0",
-        "mockery/mockery": "^1.5",
-        "codeception/module-phalcon5": "^1.0"
+        "codeception/module-webdriver": "^4.0.2",
+        "codeception/module-db": "^3.1.4",
+        "codeception/module-asserts": "^3.0.0",
+        "codeception/module-filesystem": "^3.0.1",
+        "codeception/module-cli": "^2.0.1",
+        "mockery/mockery": "^1.6.12",
+        "codeception/module-phalcon5": "^2.0.1"
     }
 }

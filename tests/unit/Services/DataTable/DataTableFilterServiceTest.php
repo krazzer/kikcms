@@ -233,7 +233,7 @@ class DataTableFilterServiceTest extends TestCase
     private function getMock(array $methods): MockObject
     {
         return $this->getMockBuilder(DataTableFilterService::class)
-            ->setMethods($methods)
+            ->onlyMethods($methods)
             ->getMock();
     }
 }
