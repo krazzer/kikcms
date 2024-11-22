@@ -68,18 +68,18 @@ class PageService extends Injectable
 
     /**
      * @param Page $page
-     * @param int|null $limit
+     * @param callable|null $queryModifier
      * @return PageMap
      */
-    public function getChildren(Page $page, int $limit = null): PageMap
+    public function getChildren(Page $page, callable $queryModifier = null): PageMap
     {
         $query = (new Builder)
-            ->from($this->websiteSettings->getPageClass())
-            ->where(Page::FIELD_PARENT_ID . ' = :parentId:', ['parentId' => $page->id])
-            ->orderBy(Page::FIELD_DISPLAY_ORDER);
+            ->from(['p' => $this->websiteSettings->getPageClass()])
+            ->where('p.' . Page::FIELD_PARENT_ID . ' = :parentId:', ['parentId' => $page->id])
+            ->orderBy('p.' . Page::FIELD_DISPLAY_ORDER);
 
-        if($limit){
-            $query->limit($limit);
+        if($queryModifier){
+            $queryModifier($query);
         }
 
         return $this->dbService->getObjectMap($query, PageMap::class);
