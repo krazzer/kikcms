@@ -30,7 +30,7 @@ CREATE TABLE `cms_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
   `alias` int(11) DEFAULT NULL,
-  `template` varchar(16) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `template` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `display_order` int(11) DEFAULT NULL,
   `key` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` enum('page','menu','link','alias') CHARACTER SET utf8 NOT NULL DEFAULT 'page',
@@ -57,7 +57,7 @@ CREATE TABLE `cms_page` (
 DROP TABLE IF EXISTS `cms_page_content`;
 CREATE TABLE `cms_page_content` (
   `page_id` int(11) NOT NULL,
-  `field` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `field` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `value` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`page_id`,`field`),
   KEY `field` (`field`) USING BTREE,
