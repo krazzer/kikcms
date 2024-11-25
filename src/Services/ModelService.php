@@ -74,8 +74,8 @@ class ModelService extends Injectable
             return (string) $object->getName();
         }
 
-        if (isset($object->nameKey)) {
-            return $this->translator->tl($object->name);
+        if (isset($object->nameKey) && is_numeric($object->nameKey)) {
+            return $this->translator->tl($object->nameKey);
         }
 
         if (property_exists($object, DbConfig::NAME_FIELD)) {
