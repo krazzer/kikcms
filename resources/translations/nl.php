@@ -22,6 +22,12 @@ return [
         'amount'          => 'Aantal',
     ],
 
+    'button' => [
+        'target' => 'Doel',
+        'self'   => 'Zelfde tabblad',
+        'blank'  => 'Nieuw tabblad',
+    ],
+
     'contentTypes' => [
         'text'         => 'Tekstveld',
         'textarea'     => 'Tekstgebied',
@@ -560,6 +566,6 @@ return [
         "purple" => "paars",
         "black"  => "zwart",
 
-        "message"  => "Verkeerd antwoord",
+        "message" => "Verkeerd antwoord",
     ],
 ];

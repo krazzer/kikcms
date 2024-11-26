@@ -1,0 +1,17 @@
+<div class="button-input">
+    <div class="button-input__field">
+        <input class="form-control" type="text" value="{{ value.label }}" name="{{ name }}[label]" />
+        <div class="button-input__name">{{ tl('fields.name') }}</div>
+    </div>
+    <div class="button-input__field">
+        <input class="form-control" type="text" value="{{ value.url }}" name="{{ name }}[url]" />
+        <div class="button-input__name">{{ tl('fields.url') }}</div>
+    </div>
+    <div class="button-input__field">
+        <select name="{{ name }}[target]" class="form-control">
+            <option {{ value.target == '_self' ? 'selected' }} value="_self">{{ tl('button.self') }}</option>
+            <option {{ value.target == '_blank' ? 'selected' }} value="_blank">{{ tl('button.blank') }}</option>
+        </select>
+        <div class="button-input__name">{{ tl('button.target') }}</div>
+    </div>
+</div>

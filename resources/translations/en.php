@@ -22,6 +22,12 @@ return [
         'amount'          => 'Amount',
     ],
 
+    'button' => [
+        'target' => 'Target',
+        'self'   => 'Same tab',
+        'blank'  => 'New tab',
+    ],
+
     'contentTypes' => [
         'text'         => 'Textfield',
         'textarea'     => 'Textarea',

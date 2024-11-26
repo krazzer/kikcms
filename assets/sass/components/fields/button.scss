@@ -1,0 +1,20 @@
+@import "../../includes/variables";
+@import "../../includes/mixins";
+
+.button-input{
+    display: grid;
+    grid-template-columns: 5fr 12fr 3fr;
+    grid-gap: 8px;
+
+    &__field{
+        position: relative;
+    }
+
+    &__name{
+        color: #ccc;
+        font-size: $fontSizeSmall;
+        position: absolute;
+        top: -19px;
+        right: 1px;
+    }
+}

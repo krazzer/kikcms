@@ -12,6 +12,7 @@ use KikCMS\Classes\Translator;
 use KikCMS\Classes\WebForm\DataForm\DataFormFilters;
 use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
+use KikCMS\Classes\WebForm\Fields\ButtonStoreField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\EmailField;
@@ -65,6 +66,16 @@ trait FieldShortcuts
     public function addButtonField(string $key, string $label, string $info, string $buttonLabel, string $route): ButtonField|Field
     {
         return $this->addField(new ButtonField($key, $label, $info, $buttonLabel, $route));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @return ButtonField|Field
+     */
+    public function addButtonStoreField(string $key, string $label): ButtonField|Field
+    {
+        return $this->addField(new ButtonStoreField($key, $label));
     }
 
     /**
