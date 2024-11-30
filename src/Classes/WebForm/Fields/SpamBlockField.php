@@ -38,7 +38,7 @@ class SpamBlockField extends Field
         }
 
         $question = $this->getForm()->translator->tl('spamBlock.' . SpamBlockConfig::QUESTIONS[$questionId]['q']);
-        $question = $question . ' (Bot controle)';
+        $question = $question . ' (' . $this->getForm()->translator->tl('spamBlock.check') . ')';
 
         $element = (new Text($this->key))
             ->setLabel($question)

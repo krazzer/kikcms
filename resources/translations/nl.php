@@ -567,5 +567,6 @@ return [
         "black"  => "zwart",
 
         "message" => "Verkeerd antwoord",
+        'check'   => 'Bot controle',
     ],
 ];

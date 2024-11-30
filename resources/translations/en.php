@@ -83,7 +83,7 @@ return [
                 'keywordsHelp'    => 'Keywords are the words (comma separated) where you want the ' .
                     'page to be found with in search engines.',
                 'descriptionHelp' => 'The description is the description you want to show of the page in the ' .
-                    'search engine. If you leave this empty, the search engine will do this itself using the contents '.
+                    'search engine. If you leave this empty, the search engine will do this itself using the contents ' .
                     'of the page',
             ]
         ],
@@ -515,15 +515,15 @@ return [
     ],
 
     'spamBlock' => [
-        "q1" => "What color is the clear sky?",
-        "q2" => "What color is grass?",
-        "q3" => "What color is a banana?",
-        "q4" => "What color are oranges?",
-        "q5" => "What color is a tomato?",
-        "q6" => "What color is snow?",
-        "q7" => "What color do you get when you mix red and white?",
-        "q8" => "What color is a lemon?",
-        "q9" => "What color is chocolate?",
+        "q1"  => "What color is the clear sky?",
+        "q2"  => "What color is grass?",
+        "q3"  => "What color is a banana?",
+        "q4"  => "What color are oranges?",
+        "q5"  => "What color is a tomato?",
+        "q6"  => "What color is snow?",
+        "q7"  => "What color do you get when you mix red and white?",
+        "q8"  => "What color is a lemon?",
+        "q9"  => "What color is chocolate?",
         "q10" => "What color is a strawberry?",
         "q11" => "What color is a flamingo?",
         "q12" => "What color is the sun?",
@@ -557,6 +557,7 @@ return [
         "purple" => "purple",
         "black"  => "black",
 
-        "message"  => "Wrong answer",
+        "message" => "Wrong answer",
+        'check'   => 'Bot check',
     ],
 ];
