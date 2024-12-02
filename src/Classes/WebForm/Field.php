@@ -63,6 +63,9 @@ abstract class Field
     /** @var bool */
     private $dontStore = false;
 
+    /** @var null|string */
+    private ?string $defaultLanguageValue = null;
+
     /**
      * Add a css class to the field wrapper
      *
@@ -96,6 +99,14 @@ abstract class Field
     }
 
     /**
+     * @return string|null
+     */
+    public function getDefaultLanguageValue(): ?string
+    {
+        return $this->defaultLanguageValue;
+    }
+
+    /**
      * @param $value
      * @return $this|Field
      */
@@ -108,6 +119,15 @@ abstract class Field
         $this->element->setDefault($value);
 
         return $this;
+    }
+
+    /**
+     * @param string|null $defaultLanguageValue
+     * @return void
+     */
+    public function setDefaultLanguageValue(?string $defaultLanguageValue): void
+    {
+        $this->defaultLanguageValue = $defaultLanguageValue;
     }
 
     /**

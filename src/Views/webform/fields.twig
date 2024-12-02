@@ -55,6 +55,10 @@
                             <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
                                data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
                         {% endif %}
+                        {% if field.defaultLanguageValue %}
+                            <!--suppress JSIgnoredPromiseFromCall -->
+                            <a href='javascript:navigator.clipboard.writeText("{{ field.defaultLanguageValue }}");'>#</a>
+                        {% endif %}
                     {% endblock %}
                 {% endblock %}
             {% endif %}
@@ -190,22 +194,22 @@
     {# @var field \KikCMS\Classes\WebForm\Fields\ReCaptchaField #}
     <div{{ fieldContainterAttributes|raw }}>
         {% if field.version == 2 %}
-            {% if field.label %}
-                <label>{{ field.label|raw }}</label>
-            {% endif %}
+        {% if field.label %}
+            <label>{{ field.label|raw }}</label>
+        {% endif %}
             <div class="field">
                 <div class="g-recaptcha" data-sitekey="{{ reCaptchaSiteKey }}"></div>
             </div>
-        {% elseif field.version == 3 %}
+            {% elseif field.version == 3 %}
             {{ form.render(element.name)|raw }}
             <!--suppress JSUnresolvedReference -->
             <script>
                 window.addEventListener('load', function () {
                     grecaptcha.ready(function () {
-                        grecaptcha.execute('{{ config('recaptcha.siteKey') }}', { action: 'contact' }).then(function (token) {
+                        grecaptcha.execute('{{ config('recaptcha.siteKey') }}', {action: 'contact'}).then(function (token) {
                             var fields = document.getElementsByClassName('webform-field-recaptcha');
 
-                            for(var i in fields){
+                            for (var i in fields) {
                                 fields[i].value = token;
                             }
                         });
