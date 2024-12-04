@@ -31,7 +31,7 @@ class DataFormCest
         $I->getApplication()->acl->setCurrentRole('developer');
 
         $I->amOnPage('/test/datatableform');
-        $I->makeHtmlSnapshot(1);
+        $I->makeHtmlSnapshot('1');
         $I->submitForm('#webFormId_WebsiteFormsDataTableTestForm form', [
             'text'            => 'testtext',
             'file_id'         => 1,
