@@ -126,6 +126,7 @@
         {{ block('fieldDefaultInputAndField') }}
         {% if(placeHolderAsLabel == true) %}
             {{ element.label|raw }}
+            <div class="button">{{ tl('media.pickFile') }}</div>
         {% endif %}
         {{ block('errorWarnings') }}
     </div>
