@@ -27,6 +27,7 @@ use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class DataTableTest extends TestCase
 {
@@ -224,6 +225,10 @@ class DataTableTest extends TestCase
         $dataTable = new TestableDataTable();
 
         $dataTable->translator = (new TestHelper)->getTranslator();
+
+        $dataTable->translator->config = new StdClass;
+        $dataTable->translator->config->application = new StdClass;
+        $dataTable->translator->config->application->path = '';
 
         $this->assertTrue(is_string($dataTable->formatBoolean(true)));
     }

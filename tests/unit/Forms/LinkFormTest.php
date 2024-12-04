@@ -5,6 +5,7 @@ namespace unit\Forms;
 
 use Helpers\Unit;
 use KikCMS\Classes\Phalcon\AccessControl;
+use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Translator;
 use KikCMS\Forms\LinkForm;
 use Phalcon\Filter\Validation;
@@ -25,6 +26,7 @@ class LinkFormTest extends Unit
         $linkForm->acl        = $acl;
         $linkForm->translator = $translator;
         $linkForm->validation = $this->createMock(Validation::class);
+        $linkForm->url        = $this->createMock(Url::class);
 
         $linkForm->getFilters()->setLanguageCode('en');
 
