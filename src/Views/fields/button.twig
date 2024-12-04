@@ -4,7 +4,8 @@
         <div class="button-input__name">{{ tl('fields.name') }}</div>
     </div>
     <div class="button-input__field">
-        <input class="form-control" type="text" value="{{ value.url }}" name="{{ name }}[url]" />
+        <input class="form-control autocomplete" type="text" value="{{ value.url }}" name="{{ name }}[url]"
+               autocomplete="off" data-route="{{ route }}" data-field-key="{{ name }}" />
         <div class="button-input__name">{{ tl('fields.url') }}</div>
     </div>
     <div class="button-input__field">

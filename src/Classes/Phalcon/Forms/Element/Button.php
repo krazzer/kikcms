@@ -18,7 +18,8 @@ class Button extends AbstractElement
 
         return $this->getForm()->view->getPartial('@kikcms/fields/button', [
             'value' => $value,
-            'name'  => $this->getName()
+            'name'  => $this->getName(),
+            'route' => $this->getForm()->url->get('getUrls', $this->getForm()->translator->getLanguageCode()),
         ]);
     }
 }

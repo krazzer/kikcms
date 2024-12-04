@@ -17,7 +17,7 @@ class LinkForm extends PageForm
     protected function initialize(): void
     {
         $langCode  = $this->getFilters()->getLanguageCode();
-        $urlsRoute = '/cms/get-urls/' . $langCode;
+        $urlsRoute = $this->url->get('getUrls', $langCode);
 
         $urlPatternValidation = new Regex([
             'pattern'    => '/^$|^([0-9a-z\-]+)$/',

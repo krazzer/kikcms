@@ -50,7 +50,7 @@ class Routing extends Injectable
 
         $backend->add("/preview/{pageLanguageId:[0-9]+}", "Cms::preview")->setName('preview');
         $backend->add("/getTinyMceLinks/{languageCode:[a-z]+}", "Cms::getTinyMceLinks");
-        $backend->add("/get-urls/{langCode:[a-z]+}", "Cms::getUrls");
+        $backend->add("/get-urls/{langCode:[a-z]+}", "Cms::getUrls")->setName('getUrls');
 
         $backend->add("/user-settings/update-closed-page-ids", "UserSettings::updateClosedPageIds");
 
