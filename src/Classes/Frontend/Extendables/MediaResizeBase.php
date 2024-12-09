@@ -6,6 +6,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 use KikCMS\Classes\Frontend\WebsiteExtendable;
 use KikCMS\Services\Util\StringService;
 use Phalcon\Image\Adapter\AbstractAdapter;
+use Phalcon\Image\Exception;
 
 /**
  * Contains methods to resize thumbnails in predefined formats
@@ -31,8 +32,11 @@ class MediaResizeBase extends WebsiteExtendable
      * @param AbstractAdapter $image
      * @param $width
      * @param $height
+     * @param int|null $y
+     * @param int|null $x
+     * @throws Exception
      */
-    public function crop(AbstractAdapter $image, $width, $height): void
+    public function crop(AbstractAdapter $image, $width, $height, int $x = null, int $y = null): void
     {
         $sourceWidth = $image->getWidth();
         $sourceHeight = $image->getHeight();
@@ -52,8 +56,8 @@ class MediaResizeBase extends WebsiteExtendable
             $newHeight = (int) ($width / ($sourceAspectRatio));
         }
 
-        $x0 = (int) (($newWidth - $width) / 2);
-        $y0 = (int) (($newHeight - $height) / 2);
+        $x0 = $x === null ? (int) (($newWidth - $width) / 2) : $x;
+        $y0 = $y === null ? (int) (($newHeight - $height) / 2) : $y;
 
         if($newWidth != $sourceWidth || $newHeight != $sourceHeight){
             $image->resize($newWidth, $newHeight);
