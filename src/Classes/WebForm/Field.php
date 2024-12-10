@@ -6,6 +6,7 @@ namespace KikCMS\Classes\WebForm;
 use KikCMS\Classes\WebForm\DataForm\DataForm;
 use KikCMS\Classes\WebForm\DataForm\FieldTransformer;
 use KikCMS\Classes\WebForm\Fields\Section;
+use KikCMS\Config\DataFormConfig;
 use Phalcon\Forms\Element\ElementInterface;
 
 /**
@@ -372,5 +373,13 @@ abstract class Field
     public function getTransformers(): array
     {
         return $this->transformers;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiLingual(): bool
+    {
+        return str_contains($this->getKey(), DataFormConfig::RELATION_KEY_LANGUAGE_CODE_PLACEHOLDER);
     }
 }

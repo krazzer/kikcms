@@ -55,7 +55,7 @@
                             <a tabindex="-1" class="helptext-btn glyphicon glyphicon-question-sign" role="button"
                                data-toggle="popover" data-trigger="focus" data-content="{{ field.helpText }}"></a>
                         {% endif %}
-                        {% if field.defaultLanguageValue %}
+                        {% if field.defaultLanguageValue and field.multiLingual %}
                             <!--suppress JSIgnoredPromiseFromCall -->
                             <a href='javascript:navigator.clipboard.writeText("{{ field.defaultLanguageValue }}");'>#</a>
                         {% endif %}
