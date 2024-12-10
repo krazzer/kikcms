@@ -57,7 +57,7 @@
                         {% endif %}
                         {% if field.defaultLanguageValue and field.multiLingual %}
                             <!--suppress JSIgnoredPromiseFromCall -->
-                            <a href='javascript:navigator.clipboard.writeText("{{ field.defaultLanguageValue }}");'>#</a>
+                            <a data-value="{{ field.defaultLanguageValue }}" class="translate">#</a>
                         {% endif %}
                     {% endblock %}
                 {% endblock %}

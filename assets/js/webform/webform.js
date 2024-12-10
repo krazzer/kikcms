@@ -60,6 +60,7 @@ var WebForm = Class.extend({
         this.initWysiwyg();
         this.initPopovers();
         this.initCsrf();
+        this.initTranslate();
     },
 
     /**
@@ -256,6 +257,16 @@ var WebForm = Class.extend({
         });
     },
 
+    initTranslate: function () {
+        this.getWebForm().find('a.translate').click(function () {
+            let content = $(this).data('value');
+            navigator.clipboard.writeText(content).then(() => {
+                $(this).html('✔︎');
+                setTimeout(() => $(this).html('#'), 500);
+            });
+        });
+    },
+
     /**
      * Init uploader for direct upload file fields
      * @param $field
@@ -292,7 +303,7 @@ var WebForm = Class.extend({
     initWysiwyg: function () {
         var self = this;
 
-        let initTinyMce = function (){
+        let initTinyMce = function () {
             if (typeof tinymce == 'undefined') {
                 var baseUrl = "https://cdn.tiny.cloud/1/" + KikCMS.tinyMceApiKey + "/tinymce/5";
                 $.getScript(baseUrl + '/tinymce.min.js', function () {
@@ -307,14 +318,14 @@ var WebForm = Class.extend({
             }
         };
 
-        $(this.getWysiwygSelector()).each(function (){
-            $(this).click(function (){
+        $(this.getWysiwygSelector()).each(function () {
+            $(this).click(function () {
                 initTinyMce();
             })
         });
 
         // only enable tinymce on click
-        if(KikCMS.tinyMceClick) {
+        if (KikCMS.tinyMceClick) {
             return;
         }
 
