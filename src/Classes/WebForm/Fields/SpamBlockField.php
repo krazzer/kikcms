@@ -37,6 +37,11 @@ class SpamBlockField extends Field
             $questionId = $this->getForm()->session->get($sessionKey);
         }
 
+        // session is not set, so it's a spammer anyhow
+        if( ! $questionId){
+            $questionId = array_rand(SpamBlockConfig::QUESTIONS);
+        }
+
         $question = $this->getForm()->translator->tl('spamBlock.' . SpamBlockConfig::QUESTIONS[$questionId]['q']);
         $question = $question . ' (' . $this->getForm()->translator->tl('spamBlock.check') . ')';
 
