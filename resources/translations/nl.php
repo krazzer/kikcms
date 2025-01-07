@@ -462,9 +462,9 @@ return [
     'system' => [
         'langCode'              => 'nl',
         'locale'                => 'nl_NL',
-        'phpDateFormat'         => 'd-m-y',
-        'phpDateTimeFormat'     => 'd-m-y H:i',
-        'momentJsDateFormat'    => 'DD-MM-yyyy',
+        'phpDateFormat'         => 'd-m-Y',
+        'phpDateTimeFormat'     => 'd-m-Y H:i',
+        'momentJsDateFormat'    => 'DD-MM-YYYY',
         'dateDisplayFormat'     => 'd MMM y',
         'dateTimeDisplayFormat' => '%e %b %Y, \'om\' %H:%M',
         'monthDisplayFormat'    => '%b %Y',
