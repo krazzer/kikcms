@@ -3,6 +3,7 @@
 namespace KikCMS\Classes\Phalcon;
 
 use DateTime;
+use DOMDocument;
 use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Services\TwigService;
 use KikCMS\Services\Util\DateTimeService;
@@ -110,6 +111,39 @@ class Twig extends Engine\AbstractEngine
         // add truncate filter
         $this->twig->addFilter(new TwigFilter('truncate', function ($string, int $maxLength = 50) use ($di) {
             return $di->getShared("stringService")->truncate((string) $string, $maxLength);
+        }));
+
+        // add truncate HTML filter
+        $this->twig->addFilter(new TwigFilter('truncate_html', function ($string, int $length = 50) use ($di) {
+            if(mb_strlen($string) < $length){
+                return $string;
+            }
+
+            $truncated = mb_substr($string, 0, $length);
+
+            if (mb_strlen($string) > $length) {
+                $truncated .= '...';
+            }
+
+            $doc = new DOMDocument();
+            libxml_use_internal_errors(true); // Verberg waarschuwingen van ongeldige HTML
+            $doc->loadHTML('<?xml encoding="UTF-8">' . $truncated, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+            $body = $doc->getElementsByTagName('body')->item(0);
+
+            $newHtml = '';
+
+            if ($body) {
+                foreach ($body->childNodes as $child) {
+                    $newHtml .= $doc->saveHTML($child);
+                }
+            } else {
+                foreach ($doc->childNodes as $child) {
+                    $newHtml .= $doc->saveHTML($child);
+                }
+            }
+
+            return $newHtml;
         }));
 
         // add ucfirst filter
