@@ -6,11 +6,13 @@
     <link href="//fonts.googleapis.com/css?family=Lato:400,700" nonce="" rel="stylesheet">
     {{ css('cmsassets/css/cms.css') }}
     {{ customCss ? css(customCss) }}
+    {% block head '' %}
 </head>
 <body class="message">
 <img src="{{ config('cms.errorLogo') ?: '/images/logo.png' }}" alt="" />
 
 <h1>{{ title }}</h1>
 <div class="text">{{ description }}</div>
+{% block content '' %}
 </body>
 </html>

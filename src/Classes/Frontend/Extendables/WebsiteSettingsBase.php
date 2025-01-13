@@ -9,6 +9,7 @@ use KikCMS\Forms\SettingsForm;
 use KikCMS\Models\Page;
 use KikCMS\ObjectLists\CmsPluginList;
 use KikCMS\ObjectLists\MenuGroupMap;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Router\Group;
 use Twig\Environment;
 
@@ -117,6 +118,17 @@ class WebsiteSettingsBase extends WebsiteExtendable
     public function addPermissions(AccessControl $acl)
     {
 
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    public function getMaintenanceResponse(): ResponseInterface
+    {
+        $title       = $this->translator->tl('maintenance.title');
+        $description = $this->translator->tl('maintenance.description');
+
+        return $this->frontendService->getMessageResponse($title, $description);
     }
 
     /**

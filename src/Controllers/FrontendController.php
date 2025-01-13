@@ -88,10 +88,7 @@ class FrontendController extends BaseController
         }
 
         if ($this->keyValue->get(KikCMSConfig::SETTING_MAINTENANCE) && ! $this->userService->isLoggedIn()) {
-            $title       = $this->translator->tl('maintenance.title');
-            $description = $this->translator->tl('maintenance.description');
-
-            return $this->frontendService->getMessageResponse($title, $description);
+            return $this->websiteSettings->getMaintenanceResponse();
         }
 
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath, $existsCheck)) {
