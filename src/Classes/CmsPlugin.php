@@ -37,6 +37,14 @@ abstract class CmsPlugin
     public abstract function getSimpleServices(): array;
 
     /**
+     * @return array
+     */
+    public function getJsTranslations(): array
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
     public function getControllersNamespace(): string

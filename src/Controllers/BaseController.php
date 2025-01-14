@@ -36,6 +36,10 @@ class BaseController extends Controller
             'media.editKey'
         ];
 
+        foreach ($this->websiteSettings->getPluginList() as $plugin) {
+            $jsTranslations = array_merge($jsTranslations, $plugin->getJsTranslations());
+        }
+
         $translations = [];
 
         foreach ($jsTranslations as $translation) {
