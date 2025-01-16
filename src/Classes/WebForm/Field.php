@@ -64,6 +64,9 @@ abstract class Field
     /** @var bool */
     private $dontStore = false;
 
+    /** @var string|null */
+    private $storageKey;
+
     /** @var null|string */
     private ?string $defaultLanguageValue = null;
 
@@ -381,5 +384,22 @@ abstract class Field
     public function isMultiLingual(): bool
     {
         return str_contains($this->getKey(), DataFormConfig::RELATION_KEY_LANGUAGE_CODE_PLACEHOLDER);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getStorageKey(): ?string
+    {
+        return $this->storageKey;
+    }
+
+    /**
+     * @param string|null $storageKey
+     * @return void
+     */
+    public function setStorageKey(?string $storageKey): void
+    {
+        $this->storageKey = $storageKey;
     }
 }

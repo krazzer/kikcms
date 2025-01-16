@@ -174,6 +174,8 @@ abstract class DataForm extends WebForm
 
         /** @var Field $field */
         foreach ($this->fieldMap as $key => $field) {
+            $key = $field->getStorageKey() ?: $key;
+
             if (array_key_exists($key, $editData) && $editData[$key] !== null) {
                 $field->setDefault($editData[$key]);
             }
@@ -343,7 +345,9 @@ abstract class DataForm extends WebForm
 
             $value = $this->transformInputForStorage($input, $key);
 
-            $storageData->addFormInputValue($key, $value);
+            $inputKey = $field->getStorageKey() ?: $key;
+
+            $storageData->addFormInputValue($inputKey, $value);
         }
 
         if ($editId = $this->getFilters()->getEditId()) {
