@@ -39,6 +39,10 @@ class BaseCmsController extends BaseController
             $this->assetService->addCss($customCss);
         }
 
+        if ($customJs = $this->websiteSettings->getCustomJs()) {
+            $this->assetService->addJs($customJs);
+        }
+
         $this->view->userEmail    = $this->userService->getUser()->email ?? null;
         $this->view->menuGroupMap = $menuGroupMap;
 

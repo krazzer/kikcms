@@ -41,6 +41,14 @@ class WebsiteSettingsBase extends WebsiteExtendable
     }
 
     /**
+     * @return null|string
+     */
+    public function getCustomJs(): ?string
+    {
+        return null;
+    }
+
+    /**
      * If present, this route will be used to present a 404 not found page
      *
      * Use Phalcon array route format, for example:
