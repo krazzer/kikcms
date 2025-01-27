@@ -34,6 +34,8 @@ FileUploader.prototype = {
                 return self.cancel();
             }
 
+            let totalSize = 0;
+
             for (var i = 0; i < fileAmount; i++) {
                 var file = this.files[i];
 
@@ -42,8 +44,15 @@ FileUploader.prototype = {
                     continue;
                 }
 
+                totalSize += file.size;
+
                 formData.append('files[]', file);
                 filesAdded++;
+            }
+
+            if (totalSize > KikCMS.maxPostSize) {
+                alert(KikCMS.tl('media.uploadMaxTotalFileSizeWarning', {max: KikCMS.maxPostSizeString}));
+                return self.cancel();
             }
 
             if (!self.checkFileTypes(this.files) || !filesAdded) {

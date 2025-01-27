@@ -322,7 +322,7 @@ return [
     ],
 
     'media' => [
-        'button'                   => [
+        'button'                        => [
             'editKey'        => 'Key bewerken',
             'upload'         => 'Uploaden',
             'uploadTitle'    => 'Upload bestanden vanaf uw computer',
@@ -349,27 +349,28 @@ return [
                 'titleMultiple'       => ':amount bestanden',
             ],
         ],
-        'title'                    => 'Media',
-        'searchPlaceholder'        => 'Zoeken naar bestanden',
-        'deleteConfirm'            => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
-        'deleteConfirmOne'         => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
-        'deleteErrorLinked'        => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, ' .
+        'title'                         => 'Media',
+        'searchPlaceholder'             => 'Zoeken naar bestanden',
+        'deleteConfirm'                 => 'Wilt u zeker weten de :amount geselecteerde bestanden verwijderen?',
+        'deleteConfirmOne'              => 'Wilt u zeker weten het geselecteerde bestand verwijderen?',
+        'deleteErrorLinked'             => 'Minimaal een van de geselecteerde bestanden kon niet worden verwijderd, ' .
             'omdat deze ergens aan gekoppeld is.',
-        'deleteErrorLocked'        => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat deze nodig ' .
+        'deleteErrorLocked'             => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat deze nodig ' .
             'is voor het correct werken van de website.',
-        'deleteErrorLinkedPage'    => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de pagina \':pageName\'',
-        'deleteErrorLinkedPages'   => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de volgende pagina\'s: :pageNames',
-        'errorCantEdit'            => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat u deze niet mag bewerken',
-        'createFolder'             => 'Geef een naam op voor de nieuwe map',
-        'defaultFolderName'        => 'Nieuwe map',
-        'editFileName'             => 'Geef een nieuwe naam op voor het bestand',
-        'editKey'                  => 'Geef een nieuwe key op voor het bestand',
-        'pickFile'                 => 'Kies bestand',
-        'pickFiles'                => 'Kies bestanden',
-        'uploadMaxFilesWarning'    => 'U kunt maximaal :amount bestanden tegelijk uploaden',
-        'uploadMaxFileSizeWarning' => 'Bestanden mogen maximaal :max zijn',
-        'fileTypeWarning'          => 'Alleen bestanden met de volgende extensties zijn toegestaan: ',
-        'upload'                   => [
+        'deleteErrorLinkedPage'         => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de pagina \':pageName\'',
+        'deleteErrorLinkedPages'        => 'De afbeelding :image kan niet worden verwijderd, omdat deze gebruikt wordt in de volgende pagina\'s: :pageNames',
+        'errorCantEdit'                 => 'Minimaal 1 van de geselecteerde bestanden is niet verwijderd, omdat u deze niet mag bewerken',
+        'createFolder'                  => 'Geef een naam op voor de nieuwe map',
+        'defaultFolderName'             => 'Nieuwe map',
+        'editFileName'                  => 'Geef een nieuwe naam op voor het bestand',
+        'editKey'                       => 'Geef een nieuwe key op voor het bestand',
+        'pickFile'                      => 'Kies bestand',
+        'pickFiles'                     => 'Kies bestanden',
+        'uploadMaxFilesWarning'         => 'U kunt maximaal :amount bestanden tegelijk uploaden',
+        'uploadMaxFileSizeWarning'      => 'Bestanden mogen maximaal :max zijn',
+        'uploadMaxTotalFileSizeWarning' => 'Het totaal van alle te uploaden bestanden mag maximaal :max zijn',
+        'fileTypeWarning'               => 'Alleen bestanden met de volgende extensties zijn toegestaan: ',
+        'upload'                        => [
             'error' => [
                 'failed'     => 'Er is iets mis gegaan bij het uploaden van :fileName',
                 'mime'       => "Bestandstype ':extension' is niet toegestaan (:fileName)",

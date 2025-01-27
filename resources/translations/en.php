@@ -315,7 +315,7 @@ return [
     ],
 
     'media' => [
-        'button'                   => [
+        'button'                        => [
             'editKey'        => 'Edit key',
             'upload'         => 'Upload',
             'uploadTitle'    => 'Upload files from your device',
@@ -342,26 +342,27 @@ return [
                 'titleMultiple'       => ':amount files',
             ],
         ],
-        'title'                    => 'Media',
-        'searchPlaceholder'        => 'Search files',
-        'deleteConfirm'            => 'Are you sure you want to remove the :amount selected files?',
-        'deleteConfirmOne'         => 'Are you sure you want to remove the selected file?',
-        'deleteErrorLinked'        => 'At least one of the selected files cannot be removed because it is used elsewhere.',
-        'deleteErrorLocked'        => 'At least one of the selected files hasn\'t been removed, because it is required ' .
+        'title'                         => 'Media',
+        'searchPlaceholder'             => 'Search files',
+        'deleteConfirm'                 => 'Are you sure you want to remove the :amount selected files?',
+        'deleteConfirmOne'              => 'Are you sure you want to remove the selected file?',
+        'deleteErrorLinked'             => 'At least one of the selected files cannot be removed because it is used elsewhere.',
+        'deleteErrorLocked'             => 'At least one of the selected files hasn\'t been removed, because it is required ' .
             'for the website to work correctly.',
-        'deleteErrorLinkedPage'    => 'The file :image cannot be removed, because it is used in the page \':pageName\'',
-        'deleteErrorLinkedPages'   => 'The file :image cannot be removed, because it is used in the following pages: :pageNames',
-        'errorCantEdit'            => 'At least one of the selected files cannot be removed because of insuffient rights',
-        'createFolder'             => 'Give a name for the new folder',
-        'defaultFolderName'        => 'New folder',
-        'editFileName'             => 'Give a name to the file',
-        'editKey'                  => 'Give a key to the file',
-        'pickFile'                 => 'Pick file',
-        'pickFiles'                => 'Pick files',
-        'uploadMaxFilesWarning'    => 'You can upload ca maximum of :amount files at the same time',
-        'uploadMaxFileSizeWarning' => 'Files cannot be bigger than :max',
-        'fileTypeWarning'          => 'Only files with the following extensions are allowed: ',
-        'upload'                   => [
+        'deleteErrorLinkedPage'         => 'The file :image cannot be removed, because it is used in the page \':pageName\'',
+        'deleteErrorLinkedPages'        => 'The file :image cannot be removed, because it is used in the following pages: :pageNames',
+        'errorCantEdit'                 => 'At least one of the selected files cannot be removed because of insuffient rights',
+        'createFolder'                  => 'Give a name for the new folder',
+        'defaultFolderName'             => 'New folder',
+        'editFileName'                  => 'Give a name to the file',
+        'editKey'                       => 'Give a key to the file',
+        'pickFile'                      => 'Pick file',
+        'pickFiles'                     => 'Pick files',
+        'uploadMaxFilesWarning'         => 'You can upload ca maximum of :amount files at the same time',
+        'uploadMaxFileSizeWarning'      => 'Files cannot be bigger than :max',
+        'uploadMaxTotalFileSizeWarning' => 'The total size of all files to be uploaded must not exceed :max.',
+        'fileTypeWarning'               => 'Only files with the following extensions are allowed: ',
+        'upload'                        => [
             'error' => [
                 'failed'     => 'Something went wrong uploading :fileName',
                 'mime'       => "File type ':extension' is not allowed (:fileName)",

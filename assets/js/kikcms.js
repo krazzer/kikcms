@@ -6,6 +6,8 @@ var KikCmsClass = Class.extend({
     maxFileUploads: null,
     maxFileSize: null,
     maxFileSizeString: null,
+    maxPostSize: null,
+    maxPostSizeString: null,
     windowManager: null,
     renderables: {},
 

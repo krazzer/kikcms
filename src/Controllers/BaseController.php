@@ -26,14 +26,15 @@ class BaseController extends Controller
         $maxFileSize = min($maxFileSize, $maxPostSize);
 
         $maxFileSizeString = $this->byteService->bytesToString($maxFileSize);
+        $maxPostSizeString = $this->byteService->bytesToString($maxPostSize);
 
         $jsTranslations = [
             'system.langCode', 'pages.warningTemplateChange', 'media.uploadMaxFilesWarning',
-            'media.uploadMaxFileSizeWarning', 'media.fileTypeWarning', 'media.deleteConfirm', 'media.deleteConfirmOne',
-            'media.createFolder', 'media.defaultFolderName', 'media.editFileName', 'dataTable.delete.confirmOne',
-            'dataTable.delete.confirm', 'dataTable.closeWarning', 'dataTable.switchWarning', 'dataTable.restoreConfirm',
-            'statistics.fetchingNewData', 'statistics.fetchingFailed', 'statistics.fetchNewData', 'statistics.visitors',
-            'media.editKey'
+            'media.uploadMaxTotalFileSizeWarning', 'media.uploadMaxFileSizeWarning', 'media.fileTypeWarning',
+            'media.deleteConfirm', 'media.deleteConfirmOne', 'media.createFolder', 'media.defaultFolderName',
+            'media.editFileName', 'dataTable.delete.confirmOne', 'dataTable.delete.confirm', 'dataTable.closeWarning',
+            'dataTable.switchWarning', 'dataTable.restoreConfirm', 'statistics.fetchingNewData',
+            'statistics.fetchingFailed', 'statistics.fetchNewData', 'statistics.visitors', 'media.editKey'
         ];
 
         foreach ($this->websiteSettings->getPluginList() as $plugin) {
@@ -52,6 +53,8 @@ class BaseController extends Controller
             'maxFileUploads'    => $maxFileUploads,
             'maxFileSize'       => $maxFileSize,
             'maxFileSizeString' => $maxFileSizeString,
+            'maxPostSize'       => $maxPostSize,
+            'maxPostSizeString' => $maxPostSizeString,
             'translations'      => $translations,
             'allowedExt'        => MimeConfig::UPLOAD_ALLOW_DEFAULT,
             'tinyMceApiKey'     => $this->config->application->tinyMceApiKey ?? null,
