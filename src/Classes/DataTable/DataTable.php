@@ -633,7 +633,7 @@ abstract class DataTable extends Renderable
 
         $this->dataTableFilterService->addSearchFilter($query, $filters, $searchFields);
         $this->dataTableFilterService->addSortFilter($query, $filters, $isSortable, $sortableField);
-        $this->dataTableFilterService->addSubDataTableFilter($query, $filters, $cachedNewIds, $aliasedTableKey);
+        $this->dataTableFilterService->addSubDataTableFilter($query, $filters, $cachedNewIds, $aliasedTableKey, $this->getAlias());
         $this->dataTableFilterService->addCustomFilters($query, $filters, $customFilters);
 
         return $query;

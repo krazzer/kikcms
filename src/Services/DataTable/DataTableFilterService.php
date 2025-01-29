@@ -101,9 +101,10 @@ class DataTableFilterService extends Injectable
      * @param DataTableFilters $filters
      * @param array $cachedNewIds
      * @param string $aliasedTableKey
+     * @param string|null $alias
      */
     public function addSubDataTableFilter(Builder $query, DataTableFilters $filters, array $cachedNewIds,
-                                          string $aliasedTableKey): void
+                                          string $aliasedTableKey, ?string $alias): void
     {
         if ( ! $this->hasParent($filters)) {
             return;
@@ -111,6 +112,10 @@ class DataTableFilterService extends Injectable
 
         $key   = $this->getParentRelationField($filters);
         $value = $this->getParentRelationValue($filters);
+
+        if($alias){
+            $key = $alias . '.' . $key;
+        }
 
         $query->andWhere($key . ' = ' . $value);
 
