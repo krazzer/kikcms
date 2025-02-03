@@ -104,7 +104,7 @@ class DataTableFilterService extends Injectable
      * @param string|null $alias
      */
     public function addSubDataTableFilter(Builder $query, DataTableFilters $filters, array $cachedNewIds,
-                                          string $aliasedTableKey, ?string $alias): void
+                                          string $aliasedTableKey, string $alias = null): void
     {
         if ( ! $this->hasParent($filters)) {
             return;
