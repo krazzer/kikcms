@@ -98,7 +98,7 @@ class Twig extends Engine\AbstractEngine
 
         $functions = [
             'allowed', 'config', 'css', 'endForm', 'file', 'fileBg', 'form', 'js', 'pageUrl', 'submitButton', 'svg',
-            'tl', 'ucfirst', 'url', 'mediaFileBg', 'mediaFile'
+            'tl', 'ucfirst', 'url', 'mediaFileBg', 'mediaFile', 'is_numeric'
         ];
 
         /** @var TwigService $twigService */

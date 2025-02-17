@@ -219,6 +219,15 @@ class TwigService extends Injectable
     }
 
     /**
+     * @param string $string
+     * @return bool
+     */
+    public function is_numeric(string $string): bool
+    {
+        return is_numeric($string);
+    }
+
+    /**
      * @param string $route
      * @param null $args
      * @return string
