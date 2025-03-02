@@ -28,6 +28,7 @@ use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\Section;
 use KikCMS\Classes\WebForm\Fields\SelectDataTableField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
+use KikCMS\Classes\WebForm\Fields\SpamBlockField;
 use KikCMS\Classes\WebForm\Fields\TextareaField;
 use KikCMS\Classes\WebForm\Fields\TextField;
 use KikCMS\Classes\WebForm\Fields\WysiwygField;
@@ -316,6 +317,15 @@ trait FieldShortcuts
     public function addHiddenField(string $key, mixed $defaultValue = null): Field
     {
         return $this->addField(new HiddenField($key, $defaultValue));
+    }
+
+    /**
+     * @param string|null $key
+     * @return Field
+     */
+    public function addSpamBlockField(string $key = null): Field
+    {
+        return $this->addField(new SpamBlockField($key));
     }
 
     /**
