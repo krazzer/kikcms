@@ -48,6 +48,7 @@ class SpamBlockField extends Field
         $element = (new Text($this->key))
             ->setLabel($question)
             ->setAttribute('class', 'form-control')
+            ->setAttribute('translate', 'no')
             ->addValidators([new SpamBlock(['questionId' => $questionId])]);
 
         $this->element = $element;
