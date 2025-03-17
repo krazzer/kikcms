@@ -36,7 +36,7 @@ abstract class PagesFlat extends DataTable
         $query = parent::getDefaultQuery()->leftJoin(PageLanguage::class, $pageLangJoin, 'pl');
 
         if($template = $this->getTemplate()){
-            $query->andWhere(Page::FIELD_TEMPLATE . ' = :t:', ['t' => $template]);
+            $query->andWhere('p.' . Page::FIELD_TEMPLATE . ' = :t:', ['t' => $template]);
         }
 
         return $query;
