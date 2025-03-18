@@ -24,6 +24,8 @@ class SpamBlock extends AbstractValidator
             return true;
         }
 
+        $answer = substr(str_pad($answer, 20, '_'), 0, 20);
+
         error_log(date('Y-m-d H:i:s') . ' | ' . $answer . ' | ' . $correctAnswer . ' | ' . $question . PHP_EOL, 3,
             $validation->config->application->path . 'storage/spamblock.log');
 
