@@ -87,11 +87,18 @@ class PageService extends Injectable
 
     /**
      * @param Page $page
+     * @param callable|null $queryModifier
      * @return PageMap
      */
-    public function getOffspring(Page $page): PageMap
+    public function getOffspring(Page $page, callable $queryModifier = null): PageMap
     {
-        return $this->dbService->getObjectMap($this->getOffspringQuery($page), PageMap::class);
+        $query = $this->getOffspringQuery($page);
+
+        if($queryModifier){
+            $queryModifier($query);
+        }
+
+        return $this->dbService->getObjectMap($query, PageMap::class);
     }
 
     /**
