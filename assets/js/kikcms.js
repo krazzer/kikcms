@@ -16,10 +16,14 @@ var KikCmsClass = Class.extend({
             moment.locale($('html').attr('lang'));
         }
 
-        var settings = JSON.parse($('#kikCmsJsSettings').text());
+        var settingsJson = $('#kikCmsJsSettings').text();
 
-        for(var i in settings){
-            this[i] = settings[i];
+        if(settingsJson){
+            var settings = JSON.parse(settingsJson);
+
+            for(var i in settings){
+                this[i] = settings[i];
+            }
         }
 
         // fix mouseover for all typeahead instances
@@ -174,6 +178,10 @@ var KikCmsClass = Class.extend({
 
     tl: function (key, params) {
         var translation = this.translations[key];
+
+        if( ! translation){
+            return translation;
+        }
 
         $.each(params, function (key, value) {
             translation = translation.replace(new RegExp(':' + key, 'g'), value);
