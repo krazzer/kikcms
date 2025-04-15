@@ -28,7 +28,7 @@ class File extends Model
     const FIELD_KEY       = 'key';
     const FIELD_HASH      = 'hash';
 
-    const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
     /** @var string|null */
     public $key;
