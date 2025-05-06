@@ -66,6 +66,20 @@ class File implements FileStorage
     /**
      * @inheritdoc
      */
+    public function storeByData(string $fileContent, string $dir, string $fileName, string $extension, bool $overwrite = false): bool
+    {
+        $filePath = $this->getStorageDir() . $dir . '/' . $fileName . '.' . $extension;
+
+        if ($overwrite && file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        return (bool) file_put_contents($filePath, $fileContent);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function store(string $fileName, string $contents, string $dir = ''): false|int
     {
         $filePath = $this->getStorageDir() . $dir . '/' . $fileName;

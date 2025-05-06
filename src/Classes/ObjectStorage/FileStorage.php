@@ -47,4 +47,14 @@ interface FileStorage
      * @return mixed
      */
     public function storeByRequest(UploadedFile $uploadedFile, string $dir = '', $fileName = null, bool $overwrite = false): bool;
+
+    /**
+     * @param string $fileContent
+     * @param string $dir
+     * @param string $fileName
+     * @param string $extension
+     * @param bool $overwrite
+     * @return mixed
+     */
+    public function storeByData(string $fileContent, string $dir, string $fileName, string $extension, bool $overwrite = false): bool;
 }

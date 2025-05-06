@@ -7,6 +7,7 @@ use Exception;
 use KikCMS\Classes\Database\Now;
 use KikCMS\Classes\Finder\FinderFilters;
 use KikCMS\Classes\Finder\UploadStatus;
+use KikCMS\Classes\ObjectStorage\FileStorage;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCMS\Config\CacheConfig;
 use KikCMS\Config\FinderConfig;
@@ -20,6 +21,7 @@ use Phalcon\Mvc\Model\Query\Builder;
 
 /**
  * Handles Files
+ * @property FileStorage $fileStorage
  */
 class FileService extends Injectable
 {
@@ -68,6 +70,41 @@ class FileService extends Injectable
         $this->fileStorage->storeByRequest($uploadedFile, $this->mediaDir, $file->id);
         $this->fileResizeService->resizeWithinBoundaries($file);
         $this->fileHashService->updateHash($file);
+
+        return (int) $file->id;
+    }
+
+    /**
+     * @param string $fileContent
+     * @param string $name
+     * @param string $extension
+     * @param string $mime
+     * @param int|null $folderId
+     * @return bool|int
+     * @throws Exception
+     */
+    public function createByString(string $fileContent, string $name, string $extension, string $mime, int $folderId = null): bool|int
+    {
+        $file = new File();
+
+        $file->name      = $name;
+        $file->extension = $extension;
+        $file->created   = new Now();
+        $file->updated   = new Now();
+        $file->mimetype  = $mime;
+        $file->folder_id = $folderId;
+        $file->is_folder = 0;
+
+        if ( ! $file->save()) {
+            return false;
+        }
+
+        $this->filePermissionService->createForFile($file);
+
+        $this->fileStorage->storeByData($fileContent, $this->mediaDir, $file->id, $extension);
+        $this->fileResizeService->resizeWithinBoundaries($file);
+        $this->fileHashService->updateHash($file);
+        $this->updateSize($file);
 
         return (int) $file->id;
     }
@@ -654,6 +691,17 @@ class FileService extends Injectable
 
         // check if the file's mime matches it's extension
         return in_array($fileMimeType, MimeConfig::ALL_MIME_TYPES[$extension]);
+    }
+
+    /**
+     * @param File $file
+     */
+    public function updateSize(File $file): void
+    {
+        $filePath = $this->fileService->getFilePath($file);
+
+        $file->size = filesize($filePath);
+        $file->save();
     }
 
     /**
