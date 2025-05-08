@@ -21,4 +21,7 @@ class FinderConfig
     const FILE_TYPES_IMAGE = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
     const ERROR_CODE_IMAGES_NOT_SAME_SIZE = 410;
+
+    const THUMB_RESIZE_TYPE_RESIZE = 'resize';
+    const THUMB_RESIZE_TYPE_CROP   = 'crop';
 }

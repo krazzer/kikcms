@@ -4,6 +4,7 @@ namespace KikCMS\Classes\Frontend\Extendables;
 
 
 use KikCMS\Classes\Frontend\WebsiteExtendable;
+use KikCMS\Classes\ObjectStorage\ThumbSettings;
 use KikCMS\Services\Util\StringService;
 use Phalcon\Image\Adapter\AbstractAdapter;
 use Phalcon\Image\Exception;
@@ -122,5 +123,20 @@ class MediaResizeBase extends WebsiteExtendable
     private function getMethod($type): string
     {
         return 'resize' . $this->stringService->dashesToCamelCase($type, true);
+    }
+
+    /**
+     * @param string|null $type
+     * @return ThumbSettings|null
+     */
+    public function getThumbSettings(?string $type): ?ThumbSettings
+    {
+        $settingsMethod = 'get' . $this->stringService->dashesToCamelCase($type, true) . 'Settings';
+
+        if( ! method_exists($this, $settingsMethod)){
+            return null;
+        }
+
+        return $this->$settingsMethod();
     }
 }

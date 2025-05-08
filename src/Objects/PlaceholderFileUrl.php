@@ -7,10 +7,13 @@ namespace KikCMS\Objects;
 class PlaceholderFileUrl extends Placeholder
 {
     /** @var bool */
-    private $private;
+    private bool $private;
 
     /** @var int */
-    private $fileId;
+    private int $fileId;
+
+    /** @var string|null */
+    private ?string $extension = null;
 
     /**
      * @param array $arguments
@@ -55,5 +58,22 @@ class PlaceholderFileUrl extends Placeholder
     {
         $this->fileId = $fileId;
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getExtension(): ?string
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param string|null $extension
+     * @return void
+     */
+    public function setExtension(?string $extension): void
+    {
+        $this->extension = $extension;
     }
 }

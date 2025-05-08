@@ -63,7 +63,7 @@ class PlaceholderService extends Injectable
             $className    = PlaceholderConfig::CLASS_MAP[$type] ?? null;
             $mapClassName = PlaceholderConfig::MAP_CLASS_MAP[$type] ?? null;
 
-            if( ! $className){
+            if ( ! $className) {
                 continue;
             }
 
@@ -97,8 +97,8 @@ class PlaceholderService extends Injectable
         $fileMap    = $this->getFileMap($placeholderMap);
 
         foreach ($placeholderMap as $key => $placeholder) {
-            $type    = $placeholder->getType();
-            $private = $placeholder->isPrivate();
+            $type      = $placeholder->getType();
+            $private   = $placeholder->isPrivate();
 
             if ( ! $file = $fileMap->get($placeholder->getFileId())) {
                 $replaceMap[$placeholder->getPlaceholder()] = $this->url->get('objectNotFound');
@@ -110,6 +110,7 @@ class PlaceholderService extends Injectable
                 continue;
             }
 
+            // if the original file is missing, we can't make a thumb for it, so we return a broken link
             if ( ! file_exists($this->fileService->getFilePath($file))) {
                 $replaceMap[$placeholder->getPlaceholder()] = $this->fileService->getThumbUrl($file, $type, $private);
                 continue;
@@ -151,7 +152,7 @@ class PlaceholderService extends Injectable
 
             $replaceMap[$placeholder->getPlaceholder()] = $url;
 
-            if($this->cache) {
+            if ($this->cache) {
                 $this->cache->set($key, $url, CacheConfig::ONE_YEAR);
             }
         }
@@ -195,7 +196,7 @@ class PlaceholderService extends Injectable
         $originPort = parse_url($origin)['port'] ?? null;
         $originHost = parse_url($origin)['host'];
 
-        if( ! $originPort){
+        if ( ! $originPort) {
             return $content;
         }
 

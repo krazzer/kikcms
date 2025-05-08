@@ -137,8 +137,10 @@ class FileService extends Injectable
      */
     public function createMediaThumb(File $file, ?string $type = FinderConfig::DEFAULT_THUMB_TYPE, bool $private = false): void
     {
+        $thumbSettings = $this->mediaResize->getThumbSettings($type);
+
         $filePath  = $this->getFilePath($file);
-        $thumbPath = $this->getMediaThumbPath($file, $type, $private);
+        $thumbPath = $this->getMediaThumbPath($file, $type, $private, $thumbSettings?->getExtension());
 
         // do not resize animated gifs
         if ($this->isAnimatedGif($filePath)) {
@@ -150,7 +152,16 @@ class FileService extends Injectable
 
         if ($this->mediaResize->typeMethodExists($type)) {
             $this->mediaResize->resizeByType($image, $type);
-            $image->save($thumbPath, 90);
+            $image->save($thumbPath, 80);
+        }
+
+        if ($thumbSettings) {
+            $width  = $thumbSettings->getWidth() * ($thumbSettings->isX2() ? 2 : 1);
+            $height = $thumbSettings->getHeight() * ($thumbSettings->isX2() ? 2 : 1);
+            $method = $thumbSettings->getResizeType();
+
+            $this->mediaResize->$method($image, $width, $height);
+            $image->save($thumbPath, $thumbSettings->getQuality());
         }
     }
 
@@ -350,10 +361,11 @@ class FileService extends Injectable
      * @param File $file
      * @param string|null $type
      * @param bool $private
+     * @param string|null $extension
      * @return string
      */
     public function getMediaThumbPath(File $file, ?string $type = FinderConfig::DEFAULT_THUMB_TYPE,
-                                      bool $private = false): string
+        bool $private = false, string $extension = null): string
     {
         $dirPath = $this->getMediaThumbDir() . $type . DIRECTORY_SEPARATOR;
 
@@ -361,7 +373,7 @@ class FileService extends Injectable
             mkdir($dirPath);
         }
 
-        return $dirPath . $file->getFileName($private);
+        return $dirPath . $file->getFileName($private, $extension);
     }
 
     /**
@@ -585,11 +597,12 @@ class FileService extends Injectable
      * @param File $file
      * @param string $type
      * @param bool $private
+     * @param string|null $extension
      * @return string
      */
-    public function getThumbUrl(File $file, string $type, bool $private = false): string
+    public function getThumbUrl(File $file, string $type, bool $private = false, string $extension = null): string
     {
-        return $this->getMediaThumbsUrl() . $type . DIRECTORY_SEPARATOR . $file->getFileName($private);
+        return $this->getMediaThumbsUrl() . $type . DIRECTORY_SEPARATOR . $file->getFileName($private, $extension);
     }
 
     /**
@@ -602,7 +615,8 @@ class FileService extends Injectable
      */
     public function getThumbUrlCreateIfMissing(File $file, string $type, bool $private = false): string
     {
-        $thumbFilePath = $this->getMediaThumbPath($file, $type, $private);
+        $thumbSettings = $this->mediaResize->getThumbSettings($type);
+        $thumbFilePath = $this->getMediaThumbPath($file, $type, $private, $thumbSettings?->getExtension());
 
         // svg's don't need thumbs, just return the URL
         if ($file->getExtension() == MimeConfig::SVG) {
@@ -613,7 +627,7 @@ class FileService extends Injectable
             $this->createMediaThumb($file, $type, $private);
         }
 
-        $url = $this->getThumbUrl($file, $type, $private);
+        $url = $this->getThumbUrl($file, $type, $private, $thumbSettings?->getExtension());
 
         // add seconds between create and update to avoid browser cache
         if ($secondsUpdated = $file->secondsUpdated()) {

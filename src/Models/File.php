@@ -88,13 +88,14 @@ class File extends Model
      * Returns the real file name of the file on disk.
      *
      * @param bool $private
+     * @param string|null $extension
      * @return string
      */
-    public function getFileName(bool $private = false): string
+    public function getFileName(bool $private = false, string $extension = null): string
     {
         $name = $private ? $this->getHash() : $this->getId();
 
-        return $name . '.' . $this->getExtension();
+        return $name . '.' . ($extension ?: $this->getExtension());
     }
 
     /**
