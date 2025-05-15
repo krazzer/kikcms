@@ -7,6 +7,7 @@ use Phalcon\Application\AbstractApplication;
 
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_samesite', 'None');
 
 /** @var AbstractApplication $application */
 $application = include __DIR__ . '/app.php';
