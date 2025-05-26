@@ -15,6 +15,7 @@ var DataTable = Class.extend({
     lastSelectedRow: null,
     madeSpaceForButtonsOnce: null,
     $table: null,
+    pageBeforeSearch: null,
 
     /**
      * De-select selected text
@@ -262,9 +263,23 @@ var DataTable = Class.extend({
         var self = this;
 
         this.getSearchField().searchAble(function (value) {
-            var filters    = self.getFilters();
+            var filters = self.getFilters();
+
+            if (self.pageBeforeSearch === null) {
+                if(filters.page > 1) {
+                    self.pageBeforeSearch = filters.page;
+                } else {
+                    self.pageBeforeSearch = false;
+                }
+            }
+
             filters.search = value;
             filters.page   = 1;
+
+            if (value === '' && self.pageBeforeSearch) {
+                filters.page          = self.pageBeforeSearch;
+                self.pageBeforeSearch = null;
+            }
 
             self.action('search', filters, function (result) {
                 self.setTableContent(result.table);
