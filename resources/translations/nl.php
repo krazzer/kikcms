@@ -541,6 +541,7 @@ return [
         "q14" => "Kleur van sla?",
         "q15" => "Kleur van een wortel?",
         "q16" => "Kleur van rozen?",
+        "q17" => "Kleur van herfstbladeren?",
         "q18" => "Kleur als geel en blauw mengt?",
         "q19" => "Kleur van een walnoot?",
         "q20" => "Kleur van kersen?",
