@@ -6,7 +6,7 @@ This video will show you the general UX used for the KikCMS and DataTables creat
 
 [![KikCMS UX overview](https://i.ytimg.com/vi/QC54n2KOSfs/maxresdefault.jpg)](https://www.youtube.com/watch?v=QC54n2KOSfs "KikCMS UX overview")
 
-Check out the docs at: https://kikcms.com
+Check out the docs at: https://kikcmsdocs.kiksaus.nl
 
 ## What is KikCMS and who is it for?
 
