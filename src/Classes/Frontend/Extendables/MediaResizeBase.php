@@ -131,6 +131,10 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function getThumbSettings(?string $type): ?ThumbSettings
     {
+        if($type == 'thumb'){
+            return null;
+        }
+
         $settingsMethod = 'get' . $this->stringService->dashesToCamelCase($type, true) . 'Settings';
 
         if( ! method_exists($this, $settingsMethod)){
