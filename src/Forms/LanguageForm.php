@@ -20,7 +20,7 @@ class LanguageForm extends DataForm
      */
     protected function initialize(): void
     {
-        $strLength = new StringLength(['max' => 2, 'min' => 2]);
+        $strLength = new StringLength(['max' => 1, 'min' => 3]);
 
         $this->addTextField(Language::FIELD_NAME, $this->translator->tl('fields.name'), [new PresenceOf()]);
         $this->addTextField(Language::FIELD_CODE, $this->translator->tl('fields.code'), [new PresenceOf(), $strLength]);
