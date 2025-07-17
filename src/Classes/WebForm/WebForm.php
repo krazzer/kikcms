@@ -17,6 +17,7 @@ use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Config\StatusCodes;
 use KikCMS\ObjectLists\FieldMap;
 use KikCMS\Services\Util\DateTimeService;
+use Phalcon\Encryption\Security;
 use Phalcon\Filter\Validation;
 use Phalcon\Forms\Element\ElementInterface;
 use Phalcon\Forms\Form;
@@ -77,6 +78,9 @@ abstract class WebForm extends Renderable
 
     /** @var bool if set to true, the post action will stay on the same page, useful when an anchor is used */
     protected $postToSelf = false;
+
+    /** @var bool set to true to let csrf protection work via keyValue, in case sessions are disabled (iframe) */
+    protected $useKeyValueCsrf = false;
 
     /** @var Form|null */
     private $form = null;
@@ -231,6 +235,15 @@ abstract class WebForm extends Renderable
         return $this->tabs;
     }
 
+    public function getSecurity(): Security
+    {
+        if ($this->useKeyValueCsrf) {
+            return $this->securityKeyValue;
+        } else {
+            return $this->security;
+        }
+    }
+
     /**
      * @return bool
      */
@@ -361,7 +374,7 @@ abstract class WebForm extends Renderable
 
         if ($this->isPlaceHolderAsLabel()) {
             foreach ($this->fieldMap as $field) {
-                if($field->getElement()) {
+                if ($field->getElement()) {
                     $field->setAttribute('placeholder', $field->getElement()->getLabel());
                 }
             }
@@ -478,7 +491,7 @@ abstract class WebForm extends Renderable
             'class'                  => static::class,
             'requestUri'             => $this->request->getServer('REQUEST_URI'),
             'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
-            'security'               => $this->security,
+            'security'               => $this->getSecurity(),
             'form'                   => $this->getForm(),
             'fields'                 => $this->fieldMap,
             'tabs'                   => $this->tabs,
@@ -495,6 +508,7 @@ abstract class WebForm extends Renderable
             'mayFlash'               => $this->mayFlash(),
             'encType'                => $this->getEncType(),
             'errorContainer'         => $errorContainer,
+            'useKeyValueCsrf'        => $this->useKeyValueCsrf,
             'webForm'                => $this,
         ]);
     }
@@ -541,7 +555,7 @@ abstract class WebForm extends Renderable
     {
         $errorContainer = $this->validate($this->getInput());
 
-        if ( ! $this->security->checkToken()) {
+        if ( ! $this->getSecurity()->checkToken()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
 
@@ -565,7 +579,7 @@ abstract class WebForm extends Renderable
                     $message = str_replace(':label', "'" . strip_tags($formElement->getLabel()) . "'", $message);
                 }
 
-                if($this->placeAlertsOnTop) {
+                if ($this->placeAlertsOnTop) {
                     if ($alert) {
                         $errorContainer->addFormError($message, [$elementName]);
                     } else {

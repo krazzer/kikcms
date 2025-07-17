@@ -8,6 +8,7 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\SecurityKeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
 use KikCMS\Classes\Phalcon\Storage\Serializer\Json;
@@ -445,6 +446,14 @@ class Services extends BaseServices
     protected function initSecurity(): Security
     {
         return new SecuritySingleToken();
+    }
+
+    /**
+     * @return Security
+     */
+    protected function initSecurityKeyValue(): Security
+    {
+        return new SecurityKeyValue();
     }
 
     /**
