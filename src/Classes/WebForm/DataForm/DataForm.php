@@ -236,7 +236,7 @@ abstract class DataForm extends WebForm
      */
     public function saveSuccessAction(bool $isNew)
     {
-        $this->flash->success($this->translator->tl('dataForm.saveSuccess'));
+        @$this->flash->success($this->translator->tl('dataForm.saveSuccess'));
 
         if ( ! $isNew) {
             return;

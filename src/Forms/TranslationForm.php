@@ -54,7 +54,7 @@ class TranslationForm extends DataForm
                 ->setAttribute('data-language-code', $language->code);
 
             if ($this->getObject()) {
-                $valueField->setDefault($this->cache->get($this->getCacheKey($language)));
+                $valueField->setDefault(@$this->cache->get($this->getCacheKey($language)));
             }
         }
     }
