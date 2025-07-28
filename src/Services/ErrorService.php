@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace KikCMS\Services;
 
 
+use Closure;
 use Error;
 use Exception;
 use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
@@ -24,12 +25,12 @@ class ErrorService extends Injectable
      */
     public function getEmailHandler(int $deDuplicationTime = 60): AbstractHandler|DeduplicationHandler|null
     {
-        if( ! $developerEmail = $this->config->application->developerEmail){
+        if ( ! $developerEmail = $this->config->application->developerEmail) {
             return null;
         }
 
-        if( ! $domain = $this->config->application->domain){
-            if( ! $domain = $_SERVER['HTTP_HOST'] ?? null){
+        if ( ! $domain = $this->config->application->domain) {
+            if ( ! $domain = $_SERVER['HTTP_HOST'] ?? null) {
                 return null;
             }
         }
@@ -100,7 +101,7 @@ class ErrorService extends Injectable
         if (@$this->request->isAjax() && $this->config->isProd()) {
             return $this->response->setJsonContent(['title' => $title, 'description' => $description]);
         } else {
-            if(@$this->config->isProd()){
+            if (@$this->config->isProd()) {
                 return @$this->frontendService->getMessageResponse($title, $description);
             } else {
                 $content = @$this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
@@ -116,7 +117,7 @@ class ErrorService extends Injectable
     {
         $isProduction = @$this->config->isProd();
 
-        if( ! $errorView = $this->getErrorView($error, $isProduction)){
+        if ( ! $errorView = $this->getErrorView($error, $isProduction)) {
             return;
         }
 
@@ -148,4 +149,19 @@ class ErrorService extends Injectable
 
         return $error['type'] ?? null;
     }
+
+    /**
+     * @param Closure $function
+     * @return bool
+     */
+    public function tryBoolean(Closure $function): bool
+    {
+        try {
+            return $function();
+        } catch (Exception $e) {
+            $this->logger->log($e, Logger::ERROR);
+            return false;
+        }
+    }
+
 }
