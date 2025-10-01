@@ -159,7 +159,7 @@ class ErrorService extends Injectable
         try {
             return $function();
         } catch (Exception $e) {
-            $this->logger->log($e, Logger::ERROR);
+            $this->logger->log(Logger::ERROR, $e);
             return false;
         }
     }
