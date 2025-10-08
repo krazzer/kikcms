@@ -487,12 +487,20 @@ abstract class WebForm extends Renderable
     {
         $this->renderDataTableFields();
 
+        try {
+            $token    = $this->getSecurity()->getToken();
+            $tokenKey = $this->getSecurity()->getTokenKey();
+        } catch (Exception) {
+            $token    = null;
+            $tokenKey = null;
+        }
+
         return $this->renderView($this->formTemplate, [
             'class'                  => static::class,
             'requestUri'             => $this->request->getServer('REQUEST_URI'),
             'allowedFinderAccess'    => $this->acl->allowed(Permission::ACCESS_FINDER),
-            'token'                  => $this->getSecurity()->getToken(),
-            'tokenKey'               => $this->getSecurity()->getTokenKey(),
+            'token'                  => $token,
+            'tokenKey'               => $tokenKey,
             'form'                   => $this->getForm(),
             'fields'                 => $this->fieldMap,
             'tabs'                   => $this->tabs,
