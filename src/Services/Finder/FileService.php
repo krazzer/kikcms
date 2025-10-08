@@ -235,6 +235,19 @@ class FileService extends Injectable
     }
 
     /**
+     * @param int $id
+     * @return File|null
+     */
+    public function getById(int $id): ?File
+    {
+        $query = (new Builder)
+            ->from(File::class)
+            ->inWhere(File::FIELD_ID, [$id]);
+
+        return $this->dbService->getObject($query);
+    }
+
+    /**
      * @param string $key
      * @return int|null
      */
