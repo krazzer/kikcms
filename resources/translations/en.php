@@ -189,6 +189,7 @@ return [
         '401' => [
             'title'       => 'Unauthorized',
             'description' => "You are not authorized to view this page.",
+            'backToHome'  => 'Terug naar CMS home',
         ],
 
         '404' => [

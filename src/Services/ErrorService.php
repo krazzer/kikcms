@@ -102,7 +102,7 @@ class ErrorService extends Injectable
             return $this->response->setJsonContent(['title' => $title, 'description' => $description]);
         } else {
             if (@$this->config->isProd()) {
-                return @$this->frontendService->getMessageResponse($title, $description);
+                return @$this->frontendService->getMessageResponse($title, $description, $errorType);
             } else {
                 $content = @$this->view->getPartial('@kikcms/errors/show' . $errorType, $parameters);
                 return @$this->response->setContent($content);

@@ -27,13 +27,15 @@ class FrontendService extends Injectable
      *
      * @param string $title
      * @param string $description
+     * @param string $errorType
      * @return ResponseInterface
      */
-    public function getMessageResponse(string $title, string $description): ResponseInterface
+    public function getMessageResponse(string $title, string $description, string $errorType): ResponseInterface
     {
         return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
             'title'       => $title,
             'description' => $description,
+            'errorType'   => $errorType,
             'customCss'   => $this->websiteSettings->getCustomCss(),
         ]));
     }
@@ -59,7 +61,7 @@ class FrontendService extends Injectable
             return null;
         }
 
-        if($pageLanguage->page->getType() === Page::TYPE_MENU){
+        if ($pageLanguage->page->getType() === Page::TYPE_MENU) {
             return null;
         }
 
@@ -75,7 +77,7 @@ class FrontendService extends Injectable
         $pageId   = $pageLanguage->getPageId();
         $cacheKey = CacheConfig::getOtherLangMapKey($pageLanguage);
 
-        return $this->cacheService->cache($cacheKey, function () use ($pageId, $pageLanguage){
+        return $this->cacheService->cache($cacheKey, function () use ($pageId, $pageLanguage) {
             $urlMap = $this->getUrlMapByPageId($pageId);
 
             $return = ['langUrlMap' => $urlMap];

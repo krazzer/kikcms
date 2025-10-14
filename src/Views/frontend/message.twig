@@ -9,10 +9,13 @@
     {% block head '' %}
 </head>
 <body class="message">
-<img src="{{ config('cms.errorLogo') ?: '/images/logo.png' }}" alt="" />
+<img src="{{ config('cms.errorLogo') ?: '/images/logo.png' }}" alt=""/>
 
 <h1>{{ title }}</h1>
 <div class="text">{{ description }}</div>
 {% block content '' %}
+{% if errorType == 401 %}
+    <br><a href="/cms/">{{ tl('error.401.backToHome') }}</a>
+{% endif %}
 </body>
 </html>

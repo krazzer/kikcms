@@ -190,6 +190,7 @@ return [
             'title'       => 'Geen toegang',
             'description' => "U heeft geen toegang tot de opgevraagde pagina. \n\nHeeft u het vermoeden dat u wel " .
                 "toegang tot deze pagina zou moeten hebben? \nNeem dan contact op met de ontwikkelaar",
+            'backToHome' => 'Ga terug naar CMS home',
         ],
 
         '404' => [
