@@ -67,4 +67,13 @@ abstract class CmsPlugin
     {
         return dirname($this->getSourceDirectory()) . '/resources/translations/';
     }
+
+    /**
+     * If true, the name of the plugin will be prefixed to all the plugins' services
+     * @return bool
+     */
+    public function prefixServices(): bool
+    {
+        return true;
+    }
 }

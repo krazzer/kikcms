@@ -214,7 +214,13 @@ class BaseServices extends ApplicationServices
         $services = $plugin->getSimpleServices();
 
         foreach ($services as $service) {
-            $serviceName = $plugin->getName() . last(explode('\\', $service));
+            $serviceName = last(explode('\\', $service));
+
+            if($plugin->prefixServices()) {
+                $serviceName = $plugin->getName() . $serviceName;
+            } else {
+                $serviceName = lcfirst($serviceName);
+            }
 
             $this->set($serviceName, function () use ($service) {
                 return new $service();
