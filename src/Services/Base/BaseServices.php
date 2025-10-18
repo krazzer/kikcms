@@ -79,6 +79,14 @@ class BaseServices extends ApplicationServices
     }
 
     /**
+     * @return WebsiteSettingsBase
+     */
+    public function getWebsiteSettings(): WebsiteSettingsBase
+    {
+        return $this->get('websiteSettings');
+    }
+
+    /**
      * Binds all services
      */
     protected function bindServices(): void
@@ -143,14 +151,6 @@ class BaseServices extends ApplicationServices
     protected function getAppConfig(): Config
     {
         return $this->get('config')->get('application');
-    }
-
-    /**
-     * @return WebsiteSettingsBase
-     */
-    protected function getWebsiteSettings(): WebsiteSettingsBase
-    {
-        return $this->get('websiteSettings');
     }
 
     /**

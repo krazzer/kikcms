@@ -49,7 +49,15 @@ abstract class CmsPlugin
      */
     public function getControllersNamespace(): string
     {
-        return ucfirst($this->getName()) . "Plugin\\Controllers";
+        return $this->getNamespace() . "Controllers";
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return "\\" . ucfirst($this->getName()) . "Plugin\\";
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use KikCMS\Classes\CmsPlugin;
 use KikCMS\Config\KikCMSConfig;
 use Phalcon\Cli\Console;
 use Psr\Log\LogLevel;
@@ -19,11 +20,25 @@ $arguments = [];
 
 foreach ($argv as $k => $arg) {
     if ($k === 1) {
-        $className    = KikCMSConfig::NAMESPACE_PATH_TASKS . ucfirst($arg);
-        $cmsClassName = KikCMSConfig::NAMESPACE_PATH_CMS_TASKS . ucfirst($arg);
+        $className        = null;
+        $websiteClassName = KikCMSConfig::NAMESPACE_PATH_TASKS . ucfirst($arg);
+        $cmsClassName     = KikCMSConfig::NAMESPACE_PATH_CMS_TASKS . ucfirst($arg);
 
-        if ( ! class_exists($className . 'Task')) {
+        if (class_exists($cmsClassName . 'Task')) {
             $className = $cmsClassName;
+        }
+
+        /** @var CmsPlugin $plugin */
+        foreach ($services->getWebsiteSettings()->getPluginList() as $plugin) {
+            $pluginTaskClassName = $plugin->getNamespace() . ucfirst($arg);
+
+            if (class_exists($pluginTaskClassName . 'Task')) {
+                $className = $pluginTaskClassName;
+            }
+        }
+
+        if (class_exists($websiteClassName . 'Task')) {
+            $className = $websiteClassName;
         }
 
         $arguments["task"] = $className;

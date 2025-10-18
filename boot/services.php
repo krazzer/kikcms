@@ -50,7 +50,7 @@ $loader = (new Loader)
     ->register();
 
 if( ! class_exists('ApplicationServices')) {
-    if ($cli) {
+    if (isset($cli) && $cli) {
         class ApplicationServices extends Cli{}
     } else {
         class ApplicationServices extends FactoryDefault{}
