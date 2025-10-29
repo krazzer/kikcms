@@ -27,12 +27,21 @@ class View extends PhalconView
      */
     public function exists(string $view): bool
     {
+        return $this->has($view);
+    }
+
+    /**
+     * @param string $view
+     * @return bool
+     */
+    public function has(string $view): bool
+    {
         if( ! $this->isNamespaced($view)){
             return parent::has($view);
         }
 
         foreach ($this->registeredEngines as $extension => $engine) {
-            if(file_exists($this->convertNamespace($view)) . $extension){
+            if(file_exists($this->convertNamespace($view)) || file_exists($this->convertNamespace($view) . $extension)){
                 return true;
             }
         }
