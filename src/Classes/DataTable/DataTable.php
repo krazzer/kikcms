@@ -295,21 +295,7 @@ abstract class DataTable extends Renderable
      */
     public function formatFinderImage($value): string
     {
-        if ( ! $value) {
-            return '';
-        }
-
-        $thumbUrl = $this->twigService->mediaFile($value, FinderConfig::DEFAULT_THUMB_TYPE, true);
-        $url      = $this->url->get('file', $value);
-
-        $style = 'background-image: url(' . $thumbUrl . ')';
-
-        return $this->tag->element('div', '', [
-            'class'          => 'thumb',
-            'data-url'       => $url,
-            'data-thumb-url' => $thumbUrl,
-            'style'          => $style
-        ]);
+        return $this->dataTableService->formatFinderImage($value);
     }
 
     /**

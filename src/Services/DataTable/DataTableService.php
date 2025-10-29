@@ -7,6 +7,7 @@ namespace KikCMS\Services\DataTable;
 use Exception;
 use KikCMS\Classes\DataTable\DataTable;
 use KikCMS\Classes\WebForm\DataForm\StorageData;
+use KikCMS\Config\FinderConfig;
 use KikCMS\Services\Util\QueryService;
 use Monolog\Logger;
 use KikCMS\Classes\Phalcon\Injectable;
@@ -72,6 +73,29 @@ class DataTableService extends Injectable
         }
 
         return $success ? $editId : null;
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function formatFinderImage($value): string
+    {
+        if ( ! $value) {
+            return '';
+        }
+
+        $thumbUrl = $this->twigService->mediaFile($value, FinderConfig::DEFAULT_THUMB_TYPE, true);
+        $url      = $this->url->get('file', $value);
+
+        $style = 'background-image: url(' . $thumbUrl . ')';
+
+        return $this->tag->element('div', '', [
+            'class'          => 'thumb',
+            'data-url'       => $url,
+            'data-thumb-url' => $thumbUrl,
+            'style'          => $style
+        ]);
     }
 
     /**
