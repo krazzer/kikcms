@@ -30,13 +30,25 @@ class StringService
     }
 
     /**
+     * @param string $string
+     * @return string
+     */
+    public function camelToDashCase(string $string): string
+    {
+        $output = preg_replace('/([a-z0-9])([A-Z])/', '$1-$2', $string);
+        $output = preg_replace('/([A-Z])([A-Z][a-z])/', '$1-$2', $output);
+
+        return strtolower($output);
+    }
+
+    /**
      * @param float $number
      * @param string $chars
      * @return string
      */
     public function floatToBaseString(float $number, string $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'): string
     {
-        if( ! $number){
+        if ( ! $number) {
             return '0';
         }
 
