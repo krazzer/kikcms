@@ -39,7 +39,7 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function crop(AbstractAdapter $image, $width, $height, int $x = null, int $y = null): void
     {
-        $sourceWidth = $image->getWidth();
+        $sourceWidth  = $image->getWidth();
         $sourceHeight = $image->getHeight();
 
         if ($sourceWidth < $width && $sourceHeight < $height) {
@@ -60,7 +60,7 @@ class MediaResizeBase extends WebsiteExtendable
         $x0 = $x === null ? (int) (($newWidth - $width) / 2) : $x;
         $y0 = $y === null ? (int) (($newHeight - $height) / 2) : $y;
 
-        if($newWidth != $sourceWidth || $newHeight != $sourceHeight){
+        if ($newWidth != $sourceWidth || $newHeight != $sourceHeight) {
             $image->resize($newWidth, $newHeight);
         }
 
@@ -95,8 +95,15 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function resizeByType(AbstractAdapter $image, string $type): void
     {
-        $method = $this->getMethod($type);
-        $this->$method($image);
+        if(method_exists($this, $this->getMethod($type))){
+            $method = $this->getMethod($type);
+            $this->$method($image);
+            return;
+        }
+
+        list($class, $method) = $this->getPluginMethod($type);
+
+        $class->$method($image);
     }
 
     /**
@@ -113,7 +120,36 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function typeMethodExists($type): bool
     {
-        return method_exists($this, $this->getMethod($type));
+        if(method_exists($this, $this->getMethod($type))){
+            return true;
+        }
+
+        return (bool) $this->getPluginMethod($type);
+    }
+
+    /**
+     * @param string $type
+     * @return array|null [class, method]
+     */
+    public function getPluginMethod(string $type): ?array
+    {
+        $plugins = $this->websiteSettings->getPluginList();
+
+        foreach ($plugins as $plugin) {
+            if ( ! method_exists($plugin, 'getMediaResizeService')) {
+                continue;
+            }
+
+            $resizeService = $this->di->get($plugin->getMediaResizeService());
+
+            $method = 'resize' . $this->stringService->dashesToCamelCase($type, true);
+
+            if (method_exists($resizeService, $method)) {
+                return [$resizeService, $method];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -131,13 +167,13 @@ class MediaResizeBase extends WebsiteExtendable
      */
     public function getThumbSettings(?string $type): ?ThumbSettings
     {
-        if($type == 'thumb'){
+        if ($type == 'thumb') {
             return null;
         }
 
         $settingsMethod = 'get' . $this->stringService->dashesToCamelCase($type, true) . 'Settings';
 
-        if( ! method_exists($this, $settingsMethod)){
+        if ( ! method_exists($this, $settingsMethod)) {
             return null;
         }
 
