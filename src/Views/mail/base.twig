@@ -6,8 +6,8 @@
 <!doctype html>
 <html lang="">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>{{ subject }}</title>
     <style>
         /* -------------------------------------
@@ -16,7 +16,8 @@
         img {
             border: none;
             -ms-interpolation-mode: bicubic;
-            max-width: 100%; }
+            max-width: 100%;
+        }
 
         body {
             background-color: #f6f6f6;
@@ -27,17 +28,21 @@
             margin: 0;
             padding: 0;
             -ms-text-size-adjust: 100%;
-            -webkit-text-size-adjust: 100%; }
+            -webkit-text-size-adjust: 100%;
+        }
 
         table {
             border-collapse: separate;
             mso-table-lspace: 0;
             mso-table-rspace: 0;
-            width: 100%; }
+            width: 100%;
+        }
+
         table td {
             font-family: sans-serif;
             font-size: 14px;
-            vertical-align: top; }
+            vertical-align: top;
+        }
 
         /* -------------------------------------
             BODY & CONTAINER
@@ -45,16 +50,19 @@
 
         .body {
             background-color: #f6f6f6;
-            width: 100%; }
+            width: 100%;
+        }
 
-        /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
+        /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also
+         shrink down on a phone or something */
         .container {
             display: block;
             Margin: 0 auto !important;
             /* makes it centered */
             max-width: 580px;
             padding: 10px;
-            width: 580px; }
+            width: 580px;
+        }
 
         /* This should also be a block element, so that it will fill 100% of the .container */
         .content {
@@ -62,7 +70,8 @@
             display: block;
             Margin: 0 auto;
             max-width: 580px;
-            padding: 10px; }
+            padding: 10px;
+        }
 
         /* -------------------------------------
             HEADER, FOOTER, MAIN
@@ -70,31 +79,37 @@
         .main {
             background: #fff;
             border-radius: 3px;
-            width: 100%; }
+            width: 100%;
+        }
 
         .wrapper {
             box-sizing: border-box;
-            padding: 20px; }
+            padding: 20px;
+        }
 
         .footer {
             clear: both;
             padding-top: 10px;
             text-align: center;
-            width: 100%; }
+            width: 100%;
+        }
+
         .footer td,
         .footer p,
         .footer span,
         .footer a {
             color: #999999;
             font-size: 12px;
-            text-align: center; }
+            text-align: center;
+        }
 
-        .logo{
+        .logo {
             background-color: #FFF;
             padding: 10px 15px;
             display: inline-block;
             margin: 0 auto 20px auto;
-            border-radius: 4px; }
+            border-radius: 4px;
+        }
 
         /* -------------------------------------
             TYPOGRAPHY
@@ -113,7 +128,8 @@
         h1 {
             font-size: 35px;
             font-weight: 300;
-            text-transform: capitalize; }
+            text-transform: capitalize;
+        }
 
         p,
         ul,
@@ -123,33 +139,45 @@
             font-weight: normal;
             margin: 0 0 15px;
         }
+
         p li,
         ul li,
         ol li {
             list-style-position: inside;
-            margin-left: 5px; }
+            margin-left: 5px;
+        }
 
         a {
             color: #3498db;
-            text-decoration: underline; }
-
+            text-decoration: underline;
+        }
+    </style>
+    <style>
         /* -------------------------------------
             BUTTONS
         ------------------------------------- */
         .btn {
             box-sizing: border-box;
-            width: 100%; }
+            width: 100%;
+        }
+
         .btn > tbody > tr > td {
-            padding-bottom: 0; }
+            padding-bottom: 0;
+        }
+
         .btn table {
-            width: auto; }
+            width: auto;
+        }
+
         .btn table td {
             background-color: #ffffff;
             border-radius: 5px;
-            text-align: center; }
+            text-align: center;
+        }
+
         .btn a {
             background-color: #ffffff;
-            border: solid 1px {{ mainColor }};
+            border: solid 1px{{ mainColor }};
             border-radius: 5px;
             box-sizing: border-box;
             color: #3498db;
@@ -159,23 +187,28 @@
             font-weight: normal;
             margin: 0;
             padding: 8px 25px;
-            text-decoration: none; }
+            text-decoration: none;
+        }
 
         .btn-primary table td {
-            background-color: {{ mainColor }}; }
+            background-color: {{ mainColor }};
+        }
 
         .btn-primary a {
             background-color: {{ mainColor }};
             border-color: {{ mainColor }};
-            color: #ffffff; }
+            color: #ffffff;
+        }
 
         .btn-default table td {
-            background-color: {{ colorWhite }}; }
+            background-color: {{ colorWhite }};
+        }
 
         .btn-default a {
             background-color: {{ colorWhite }};
             border-color: #ccc;
-            color: black; }
+            color: black;
+        }
 
         /* -------------------------------------
             OTHER STYLES THAT MIGHT BE USEFUL
@@ -190,15 +223,18 @@
             overflow: hidden;
             mso-hide: all;
             visibility: hidden;
-            width: 0; }
+            width: 0;
+        }
 
         .powered-by a {
-            text-decoration: none; }
+            text-decoration: none;
+        }
 
         hr {
             border: 0;
             border-bottom: 1px solid #f6f6f6;
-            Margin: 20px 0; }
+            Margin: 20px 0;
+        }
 
         /* -------------------------------------
             RESPONSIVE AND MOBILE FRIENDLY STYLES
@@ -206,31 +242,43 @@
         @media only screen and (max-width: 620px) {
             table[class=body] h1 {
                 font-size: 28px !important;
-                margin-bottom: 10px !important; }
+                margin-bottom: 10px !important;
+            }
+
             table[class=body] p,
             table[class=body] ul,
             table[class=body] ol,
             table[class=body] td,
             table[class=body] span,
             table[class=body] a {
-                font-size: 16px !important; }
+                font-size: 16px !important;
+            }
+
             table[class=body] .wrapper,
             table[class=body] .content {
-                padding: 0 !important; }
+                padding: 0 !important;
+            }
+
             table[class=body] .container {
                 padding: 0 !important;
-                width: 100% !important; }
+                width: 100% !important;
+            }
+
             table[class=body] .main {
                 border-left-width: 0 !important;
                 border-radius: 0 !important;
-                border-right-width: 0 !important; }
+                border-right-width: 0 !important;
+            }
+
             table[class=body] .btn table {
-                width: 100% !important; }
+                width: 100% !important;
+            }
+
             table[class=body] .btn a {
                 width: 100% !important;
             }
 
-            .wrapper > table > tbody > tr > td{
+            .wrapper > table > tbody > tr > td {
                 padding: 0 5px;
             }
         }
@@ -244,24 +292,35 @@
             .ExternalClass font,
             .ExternalClass td,
             .ExternalClass div {
-                line-height: 100%; }
+                line-height: 100%;
+            }
+
             .apple-link a {
                 color: inherit !important;
                 font-family: inherit !important;
                 font-size: inherit !important;
                 font-weight: inherit !important;
                 line-height: inherit !important;
-                text-decoration: none !important; }
+                text-decoration: none !important;
+            }
+
             .btn-primary table td:hover {
-                background-color: {{ mainColorDark }} !important; }
+                background-color: {{ mainColorDark }} !important;
+            }
+
             .btn-primary a:hover {
                 background-color: {{ mainColorDark }} !important;
-                border-color: {{ mainColorDark }} !important; } }
-            .btn-default table td:hover {
-                background-color: #eee !important; }
-            .btn-default a:hover {
-                background-color: #eee !important; }
+                border-color: {{ mainColorDark }} !important;
+            }
+        }
 
+        .btn-default table td:hover {
+            background-color: #eee !important;
+        }
+
+        .btn-default a:hover {
+            background-color: #eee !important;
+        }
     </style>
     {% block head '' %}
 </head>
@@ -278,7 +337,7 @@
                     <div align="center">
                         <span class="logo">
                             <img src="{{ url(logo) }}" style="max-width: 400px; height: auto;" alt="Logo"
-                                 width="{{ logoWidth }}" height="{{ logoHeight }}" />
+                                 width="{{ logoWidth }}" height="{{ logoHeight }}"/>
                         </span>
                     </div>
                 {% endif %}
@@ -313,7 +372,9 @@
                                                                                 {{ button.label }}
                                                                             </a>
                                                                         </td>
-                                                                        <td style="background-color: transparent;">&nbsp;</td>
+                                                                        <td style="background-color: transparent;">
+                                                                            &nbsp;
+                                                                        </td>
                                                                     {% endblock %}
                                                                 {% endfor %}
                                                             </tr>
