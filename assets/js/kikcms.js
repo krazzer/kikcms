@@ -1,4 +1,4 @@
-var KikCmsClass = Class.extend({
+window.KikCmsClass = Class.extend({
     baseUri: null,
     translations: {},
     errorMessages: {},
