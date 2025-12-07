@@ -1,7 +1,7 @@
 version: "3"
 services:
   mysql:
-    image: mariadb:10.6.18
+    image: mariadb:10.11.14
     restart: always
     ports:
       - "3306:3306"
