@@ -17,6 +17,7 @@ use KikCMS\Classes\Phalcon\AccessControl;
 use KikCMS\Classes\Phalcon\Url;
 use KikCMS\Classes\Translator;
 use KikCMS\Models\User;
+use KikCMS\Services\DataTable\DataTableService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\TwigService;
@@ -226,8 +227,8 @@ class DataTableTest extends TestCase
 
         $dataTable->translator = (new TestHelper)->getTranslator();
 
-        $dataTable->translator->config = new StdClass;
-        $dataTable->translator->config->application = new StdClass;
+        $dataTable->translator->config                    = new StdClass;
+        $dataTable->translator->config->application       = new StdClass;
         $dataTable->translator->config->application->path = '';
 
         $this->assertTrue(is_string($dataTable->formatBoolean(true)));
@@ -267,11 +268,9 @@ class DataTableTest extends TestCase
 
     public function testFormatFinderImage()
     {
-        $dataTable = new TestableDataTable();
-
-        $tagMock         = $this->getMockBuilder(Tag::class)->onlyMethods(['element'])->getMock();
-        $urlMock         = $this->getMockBuilder(Url::class)->onlyMethods(['get'])->getMock();
-        $twigServiceMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->onlyMethods(['mediaFile'])->getMock();
+        $tagMock  = $this->getMockBuilder(Tag::class)->onlyMethods(['element'])->getMock();
+        $urlMock  = $this->getMockBuilder(Url::class)->onlyMethods(['get'])->getMock();
+        $twigMock = $this->getMockBuilder(TwigService::class)->setConstructorArgs(['', ''])->onlyMethods(['mediaFile'])->getMock();
 
         $attributes = [
             'class'          => 'thumb',
@@ -280,17 +279,20 @@ class DataTableTest extends TestCase
             'style'          => 'background-image: url(url)',
         ];
 
-        $tagMock->expects($this->once())->method('element')->willReturn('url')->with('div', '', $attributes);
+        $twigMock->expects($this->once())->method('mediaFile')->willReturn('url');
         $urlMock->expects($this->once())->method('get')->willReturn('url');
-        $twigServiceMock->expects($this->once())->method('mediaFile')->willReturn('url');
+        $tagMock->expects($this->once())->method('element')->willReturn('url')->with('div', '', $attributes);
 
-        $dataTable->tag         = $tagMock;
-        $dataTable->url         = $urlMock;
-        $dataTable->twigService = $twigServiceMock;
+        $dataTableService = new DataTableService();
 
-        $dataTable->formatFinderImage(1);
+        $dataTableService->tag              = $tagMock;
+        $dataTableService->url              = $urlMock;
+        $dataTableService->twigService      = $twigMock;
+        $dataTableService->dataTableService = new DataTableService();
 
-        $this->assertEquals('', $dataTable->formatFinderImage(null));
+        $dataTableService->formatFinderImage(1);
+
+        $this->assertEquals('', $dataTableService->formatFinderImage(null));
     }
 
     public function testFormatValue()
