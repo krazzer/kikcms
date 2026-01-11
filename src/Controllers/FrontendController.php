@@ -9,6 +9,7 @@ use KikCMS\Classes\Frontend\Extendables\WebsiteSettingsBase;
 use KikCMS\Classes\Translator;
 use KikCMS\Config\KikCMSConfig;
 use KikCMS\Config\StatusCodes;
+use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\UserService;
 use KikCMS\Services\Website\FrontendHelper;
@@ -93,6 +94,11 @@ class FrontendController extends BaseController
 
         if ( ! $pageLanguage = $this->frontendService->getPageLanguageToLoadByUrlPath($urlPath, $existsCheck)) {
             throw new NotFoundException();
+        }
+
+        if($pageLanguage->page->getType() == Page::TYPE_LINK){
+            $linkedUrl = $this->urlService->getUrlForLinkedPage($pageLanguage);
+            return $this->response->redirect($linkedUrl);
         }
 
         $this->response->setStatusCode(200);
