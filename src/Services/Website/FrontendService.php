@@ -27,10 +27,10 @@ class FrontendService extends Injectable
      *
      * @param string $title
      * @param string $description
-     * @param string $errorType
+     * @param string|null $errorType
      * @return ResponseInterface
      */
-    public function getMessageResponse(string $title, string $description, string $errorType): ResponseInterface
+    public function getMessageResponse(string $title, string $description, ?string $errorType = null): ResponseInterface
     {
         return $this->response->setContent($this->view->getPartial('@kikcms/frontend/message', [
             'title'       => $title,
