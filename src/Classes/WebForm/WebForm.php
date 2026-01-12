@@ -564,7 +564,7 @@ abstract class WebForm extends Renderable
     {
         $errorContainer = $this->validate($this->getInput());
 
-        if ( ! $this->getSecurity()->checkToken()) {
+        if ( ! $this->getSecurity()->checkToken() && ! $this->config->isDev()) {
             $errorContainer->addFormError($this->translator->tl('webform.messages.csrf'));
         }
 
