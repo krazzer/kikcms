@@ -194,9 +194,9 @@ class PlaceholderService extends Injectable
         }
 
         $originPort = parse_url($origin)['port'] ?? null;
-        $originHost = parse_url($origin)['host'];
+        $originHost = parse_url($origin)['host'] ?? null;
 
-        if ( ! $originPort) {
+        if ( ! $originPort || ! $originHost) {
             return $content;
         }
 
