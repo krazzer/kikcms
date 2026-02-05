@@ -1,9 +1,5 @@
 {% extends '@kikcms/mail/base.twig' %}
 
-{% block subject -%}
-    {{ subject }}
-{%- endblock %}
-
 {% block mailBody -%}
     {{ body|raw }}
 {%- endblock %}
