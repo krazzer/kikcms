@@ -136,15 +136,21 @@ var WebForm = Class.extend({
         this.getWebForm().find('.colorpicker').each(function () {
             let $field  = $(this);
             let $input  = $field.find('.colorpicker__input');
+            let $hex    = $field.find('.colorpicker__hex');
             let $button = $field.find('.colorpicker__button');
+            let colors  = $field.data('colors');
+
+            let colorArray = Object.keys(colors).map((key) => colors[key]);
 
             $button.colorPick({
                 'allowRecent': false,
                 'paletteLabel': 'Kies een kleur',
                 'initialColor': $field.data('color'),
-                'palette': $field.data('colors'),
+                'palette': colorArray,
                 'onColorSelected': function () {
-                    $input.val(this.color);
+                    let colorKey = Object.keys(colors).find(key => colors[key] == this.color);
+                    $input.val(colorKey);
+                    $hex.val(this.color);
                     $button.css('background-color', this.color);
                 }
             });

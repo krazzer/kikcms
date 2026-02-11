@@ -1,5 +1,5 @@
-<div class="colorpicker" data-color="{{ value }}" data-colors="{{ colors }}">
+<div class="colorpicker" data-color="{{ colors[value] }}" data-colors="{{ colors|json_encode }}">
     <div class='colorpicker__button' style="background-color: {{ value }}"></div>
-    <input type="text" id="{{ name }}" name="{{ name }}" value="{{ value }}" readonly
-           class="colorpicker__input form-control">
+    <input type="text" value="{{ colors[value] }}" readonly class="colorpicker__hex form-control">
+    <input type="hidden" name="{{ name }}" value="{{ value }}" class="colorpicker__input">
 </div>
