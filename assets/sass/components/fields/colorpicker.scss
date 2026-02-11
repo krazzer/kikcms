@@ -1,0 +1,81 @@
+@import "../../includes/variables";
+@import "../../includes/mixins";
+
+.colorpicker{
+    display: flex;
+    gap: 5px;
+
+    &__button{
+        width: 40px;
+        height: 36px;
+        border-radius: $defaultBorderRadius;
+        border: 1px solid #e1e1e1;
+        cursor: pointer;
+    }
+}
+
+.colorPickWrapper {
+    position: relative;
+    width: 0;
+    height: 0
+}
+
+#colorPick * {
+    -webkit-transition: all linear .2s;
+    -moz-transition: all linear .2s;
+    -ms-transition: all linear .2s;
+    -o-transition: all linear .2s;
+    transition: all linear .2s
+}
+
+#colorPick {
+    background: rgba(255, 255, 255, .85);
+    -webkit-backdrop-filter: blur(15px);
+    position: absolute;
+    border-radius: 5px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .2);
+    padding: 15px;
+    font-family: "Open Sans", sans-serif;
+    box-sizing: content-box;
+    z-index: 999;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
+}
+
+#colorPick span {
+    display: none;
+}
+
+.customColorHash {
+    border-radius: 5px;
+    height: 23px;
+    width: 122px;
+    margin: 1px 4px;
+    padding: 0 4px;
+    border: 1px solid #babbba;
+    outline: 0
+}
+
+.customColorHash.error {
+    border-color: #ff424c;
+    color: #ff424c
+}
+
+.colorPickButton {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    display: block;
+    border-radius: $defaultBorderRadius;
+    border: 1px solid #e1e1e1;
+}
+
+.colorPickButton:hover {
+    transform: scale(1.2)
+}
+
+.colorPickDummy {
+    background: #fff;
+    border: 1px dashed #bbb
+}

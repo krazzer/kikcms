@@ -61,6 +61,7 @@ var WebForm = Class.extend({
         this.initPopovers();
         this.initCsrf();
         this.initTranslate();
+        this.initColorPicker();
     },
 
     /**
@@ -129,6 +130,25 @@ var WebForm = Class.extend({
                 }
             });
         }, 1500);
+    },
+
+    initColorPicker: function () {
+        this.getWebForm().find('.colorpicker').each(function () {
+            let $field  = $(this);
+            let $input  = $field.find('.colorpicker__input');
+            let $button = $field.find('.colorpicker__button');
+
+            $button.colorPick({
+                'allowRecent': false,
+                'paletteLabel': 'Kies een kleur',
+                'initialColor': $field.data('color'),
+                'palette': $field.data('colors'),
+                'onColorSelected': function () {
+                    $input.val(this.color);
+                    $button.css('background-color', this.color);
+                }
+            });
+        });
     },
 
     /**

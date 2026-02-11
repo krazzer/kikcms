@@ -14,6 +14,7 @@ use KikCMS\Classes\WebForm\Fields\AutocompleteField;
 use KikCMS\Classes\WebForm\Fields\ButtonField;
 use KikCMS\Classes\WebForm\Fields\ButtonStoreField;
 use KikCMS\Classes\WebForm\Fields\CheckboxField;
+use KikCMS\Classes\WebForm\Fields\ColorField;
 use KikCMS\Classes\WebForm\Fields\DateField;
 use KikCMS\Classes\WebForm\Fields\EmailField;
 use KikCMS\Classes\WebForm\Fields\FileField;
@@ -88,6 +89,17 @@ trait FieldShortcuts
     public function addCheckboxField(string $key, string $label, array $validators = []): CheckboxField|Field
     {
         return $this->addField(new CheckboxField($key, $label, $validators));
+    }
+
+    /**
+     * @param string $key
+     * @param string $label
+     * @param array $validators
+     * @return Field
+     */
+    public function addColorField(string $key, string $label, array $validators = []): Field
+    {
+        return $this->addField(new ColorField($key, $label, $validators));
     }
 
     /**
