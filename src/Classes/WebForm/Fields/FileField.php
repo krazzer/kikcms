@@ -84,4 +84,12 @@ class FileField extends Field
         $this->uploadOnly = $uploadOnly;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasNumericValue(): bool
+    {
+        return is_numeric($this->element->getValue());
+    }
 }

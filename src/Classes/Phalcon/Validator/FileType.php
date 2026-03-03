@@ -34,7 +34,7 @@ class FileType extends AbstractValidator
 
         $allowedFileTypes = $this->getAllowedFileTypes();
 
-        if ( ! $file = File::getById($value)) {
+        if ( ! is_numeric($value) || ! $file = File::getById($value)) {
             return $this->addInvalidFileMessageAndReturnFalse($validation, $field);
         }
 

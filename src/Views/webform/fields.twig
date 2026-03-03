@@ -73,13 +73,13 @@
 
 {%- block fieldFile %}
     {# @var field \KikCMS\Classes\WebForm\Fields\FileField #}
-    {% if element.value %}
+    {% if element.value and field.hasNumericValue %}
         {% set file = field.fileById(element.value) %}
     {% endif %}
     <div{{ fieldContainterAttributes|raw }}>
         {{ block('fieldLabel') }}
         {{ form.render(element.name)|raw }}
-        <span class="filename">{{ element.value ? '(' ~ file.name ~ ')' }}</span>
+        <span class="filename">{{ element.value and field.hasNumericValue ? '(' ~ file.name ~ ')' }}</span>
         <div class="field">
             <div class="buttons">
                 <div class="btn btn-default preview{{ not element.value ? ' hidden' }}"
