@@ -15,8 +15,6 @@ jobs:
           
       - name: Check version
         run: php -v
-      - name: Checkout code
-        uses: actions/checkout@v1
       - name: Composer install
         run: composer install
       - name: Create Docker network
