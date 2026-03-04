@@ -15,7 +15,7 @@
             "ext-sockets": "master",
             "ext-phalcon": "4.0"
         },
-        "platform-check": false,
+        "platform-check": true,
         "allow-plugins": {
             "codeception/c3": true
         }
