@@ -16,7 +16,7 @@ jobs:
       - name: Check version
         run: php -v
       - name: Composer install
-        run: composer install
+        run: COMPOSER_ALLOW_PLATFORM_REQS=0 composer install
       - name: Create Docker network
         run: docker network create kikdev
       - name: Shutdown default MySQL
