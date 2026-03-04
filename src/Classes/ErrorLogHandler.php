@@ -3,6 +3,7 @@
 namespace KikCMS\Classes;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 
 /**
  * Error handler that just calls error_log, without all the mumbo jumbo
@@ -10,12 +11,12 @@ use Monolog\Handler\AbstractProcessingHandler;
 class ErrorLogHandler extends AbstractProcessingHandler
 {
     /** @var null|string */
-    private $errorLogPath = null;
+    private ?string $errorLogPath = null;
 
     /**
      * @inheritdoc
      */
-    protected function write(array $record): void
+    protected function write(array|LogRecord $record): void
     {
         if($errorLogPath = $this->getErrorLogPath()){
             if( ! is_dir(dirname($errorLogPath))){
