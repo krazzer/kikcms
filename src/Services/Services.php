@@ -244,8 +244,9 @@ class Services extends BaseServices
                 $this->get('logger')->log(Logger::WARNING, $exception);
                 throw new ResourcesExceededException;
             } else {
-                $this->get('logger')->log(Logger::WARNING, $exception);
-                throw new DatabaseConnectionException;
+                $databaseConnectionException = new DatabaseConnectionException;
+                $this->get('logger')->log(Logger::WARNING, $databaseConnectionException);
+                throw $databaseConnectionException;
             }
         }
 
