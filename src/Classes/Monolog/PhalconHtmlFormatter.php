@@ -7,6 +7,7 @@ use Exception;
 use KikCMS\Classes\Phalcon\IniConfig;
 use Monolog\Formatter\HtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
+use Monolog\LogRecord;
 use Phalcon\Di\Di;
 
 /**
@@ -18,7 +19,7 @@ class PhalconHtmlFormatter extends HtmlFormatter
      * Attempt to filter out DB password from error messages
      * @inheritDoc
      */
-    public function format(array $record)
+    public function format(array|LogRecord $record): string
     {
         try {
             /** @var IniConfig $config */
