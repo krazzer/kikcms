@@ -50,15 +50,13 @@ use Phalcon\Session\Bag;
 use Phalcon\Storage\SerializerFactory;
 use Monolog\Logger;
 use ReCaptcha\ReCaptcha;
-use Swift_Mailer;
-use Swift_Plugins_AntiFloodPlugin;
-use Swift_SendmailTransport;
-use Swift_SmtpTransport;
 use Phalcon\Session\Manager as SessionManager;
 use Phalcon\Session\Adapter\Stream as SessionAdapter;
 use KikCMS\Classes\ObjectStorage\File as FileStorageFile;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Db\Dialect\MySQL as SqlDialect;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\Transport;
 
 class Services extends BaseServices
 {
@@ -382,22 +380,31 @@ class Services extends BaseServices
     }
 
     /**
-     * @return Swift_Mailer
+     * @return Mailer
      */
-    protected function initMailer(): Swift_Mailer
+    protected function initMailer(): Mailer
     {
-        $transport = new Swift_SendmailTransport();
+        $dsn = 'sendmail://default';
 
         if ($mailerConfig = $this->getConfig('mailer')) {
-            if ($mailerConfig->host && $mailerConfig->port) {
-                $transport = new Swift_SmtpTransport($mailerConfig->host, $mailerConfig->port);
+            if ( ! empty($mailerConfig->host) && ! empty($mailerConfig->port)) {
+                $host = $mailerConfig->host;
+                $port = $mailerConfig->port;
+
+                $user = $mailerConfig->username ?? null;
+                $pass = $mailerConfig->password ?? null;
+
+                if ($user && $pass) {
+                    $dsn = sprintf('smtp://%s:%s@%s:%s', urlencode($user), urlencode($pass), $host, $port);
+                } else {
+                    $dsn = sprintf('smtp://%s:%s', $host, $port);
+                }
             }
         }
 
-        $mailer = new Swift_Mailer($transport);
-        $mailer->registerPlugin(new Swift_Plugins_AntiFloodPlugin(50));
+        $transport = Transport::fromDsn($dsn);
 
-        return $mailer;
+        return new Mailer($transport);
     }
 
     /**
