@@ -7,10 +7,10 @@ use Exception;
 use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Classes\Phalcon\Injectable;
 use Phalcon\Config\Config;
-use Swift_Attachment;
-use Swift_Mailer;
-use Swift_Message;
-use Swift_Mime_MimePart;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Message;
 
 /**
  * Service for sending various mails
@@ -20,34 +20,41 @@ use Swift_Mime_MimePart;
  */
 class MailService extends Injectable
 {
-    /** @var Swift_Mailer */
+    /** @var Mailer */
     private $mailer;
 
     /**
      * MailService constructor.
-     * @param Swift_Mailer $mailer
+     * @param Mailer $mailer
      */
-    public function __construct(Swift_Mailer $mailer)
+    public function __construct(Mailer $mailer)
     {
         $this->mailer = $mailer;
     }
 
     /**
-     * @param Swift_Message|Swift_Mime_MimePart $message
+     * @param Message $message
      *
      * @return int
      */
-    public function send(Swift_Message|Swift_Mime_MimePart $message): int
+    public function send(Message $message): int
     {
-        return $this->mailer->send($message);
+        try {
+            $this->mailer->send($message);
+        } catch (Exception $exception) {
+            $this->logger->error($exception->getMessage());
+            return 0;
+        }
+
+        return 1;
     }
 
     /**
-     * @return Swift_Message
+     * @return Email
      */
-    public function createMessage(): Swift_Message
+    public function createMessage(): Email
     {
-        return new Swift_Message();
+        return new Email();
     }
 
     /**
@@ -106,9 +113,9 @@ class MailService extends Injectable
     }
 
     /**
-     * @return Swift_Mailer
+     * @return Mailer
      */
-    public function getMailer(): Swift_Mailer
+    public function getMailer(): Mailer
     {
         return $this->mailer;
     }
@@ -120,14 +127,14 @@ class MailService extends Injectable
      *
      * @param null $template
      * @param array $parameters
-     * @param array|Swift_Attachment $attachments
+     * @param array $attachments
      * @param array|string|null $from
      * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendMail(array|string $to, string $subject, string $body, $template = null, array $parameters = [],
-                             array|Swift_Attachment $attachments = [], array|string $from = null,
-                             bool $bcc = false): int
+        array $attachments = [], array|string $from = null,
+        bool $bcc = false): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -142,28 +149,32 @@ class MailService extends Injectable
 
         $htmlBody = $this->placeholderService->replaceAll($htmlBody);
 
-        $message = $this->createMessage()
-            ->setFrom($from)
-            ->setSubject($subject)
-            ->setBody($htmlBody, 'text/html');
+        if(is_array($from)){
+            $from = new Address(array_keys($from)[0], array_values($from)[0]);
+        }
 
-        if($bcc){
-            $message->setBcc($to);
+        $message = $this->createMessage()
+            ->addFrom($from)
+            ->subject($subject)
+            ->html($htmlBody);
+
+        if ($bcc) {
+            $message->bcc($to);
         } else {
-            $message->setTo($to);
+            $message->to($to);
         }
 
         if ($plainTextBody = $parameters['plainTextBody'] ?? null) {
-            $message->addPart($plainTextBody, 'text/plain');
+            $message->text($plainTextBody);
         } else {
-            $message->addPart(strip_tags($body), 'text/plain');
+            $message->text(strip_tags($body));
         }
 
         foreach ($attachments as $attachment) {
-            if ($attachment instanceof Swift_Attachment) {
+            if (is_string($attachment) || is_resource($attachment)) {
                 $message->attach($attachment);
             } else {
-                $message->attach(Swift_Attachment::fromPath($attachment));
+                $message->attachFromPath($attachment);
             }
         }
 
@@ -189,7 +200,7 @@ class MailService extends Injectable
      * @throws Exception
      */
     public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [],
-                                 array|string $from = null, bool $bcc = false): int
+        array|string $from = null, bool $bcc = false): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
@@ -208,7 +219,7 @@ class MailService extends Injectable
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = [],
-                                    array|string $from = null): int
+        array|string $from = null): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
 
@@ -226,7 +237,7 @@ class MailService extends Injectable
      */
     private function updateParametersWithCompanyData(array $parameters, Config $config): array
     {
-        if($config->address) {
+        if ($config->address) {
             $addressLine = implode(', ', [$config->name, $config->address, $config->zip, $config->city]);
         } else {
             $addressLine = $config->name;
