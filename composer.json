@@ -10,7 +10,7 @@
     "name": "kiksaus/kikcms",
     "config": {
         "platform": {
-            "php": "8.2.25",
+            "php": "8.4.19",
             "ext-zip": "master",
             "ext-sockets": "master",
             "ext-phalcon": "4.0"
@@ -24,11 +24,11 @@
     "require": {
         "twig/twig": "~3.0",
         "nette/php-generator": "^3.1",
-        "martijnc/php-csp": "^1.0",
         "google/recaptcha": "^1.2",
         "kiksaus/kikcms-core": "dev-monolog3",
         "google/analytics-data": "^0.8.4",
-        "symfony/var-dumper": "^5.4"
+        "symfony/var-dumper": "^5.4",
+        "symfony/mailer": "^8.0"
     },
     "autoload": {
         "psr-4": {
