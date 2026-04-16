@@ -37,7 +37,7 @@ class ErrorService extends Injectable
         $errorFromMail = 'error@' . $domain;
 
         $message = $this->mailService->createMessage();
-        $message->subject('Error on ' . $domain);
+        $message->subject('Error');
         $message->from($errorFromMail);
         $message->to($developerEmail);
 
