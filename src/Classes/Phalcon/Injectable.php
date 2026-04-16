@@ -80,7 +80,7 @@ use KikCmsCore\Services\DbService;
 use Monolog\Logger;
 use Phalcon\Cache\Cache;
 use ReCaptcha\ReCaptcha;
-use Swift_Mailer;
+use Symfony\Component\Mailer\Mailer;
 
 /**
  * @property AccessControl $acl
@@ -120,7 +120,7 @@ use Swift_Mailer;
  * @property KeyValue $keyValue
  * @property LanguageService languageService
  * @property Logger $logger
- * @property Swift_Mailer mailer
+ * @property Mailer mailer
  * @property MailformSubmissionService mailformSubmissionService
  * @property MailService mailService
  * @property MailFormService mailFormService
