@@ -11,11 +11,10 @@ use KikCMS\Classes\Monolog\PhalconHtmlFormatter;
 use KikCMS\Classes\Phalcon\Injectable;
 use Monolog\Handler\AbstractHandler;
 use Monolog\Handler\DeduplicationHandler;
-use Monolog\Handler\SwiftMailerHandler;
+use Monolog\Handler\SymfonyMailerHandler;
 use Monolog\Logger;
 use Phalcon\Http\ResponseInterface;
 use stdClass;
-use Swift_Message;
 
 class ErrorService extends Injectable
 {
@@ -37,12 +36,12 @@ class ErrorService extends Injectable
 
         $errorFromMail = 'error@' . $domain;
 
-        $message = new Swift_Message('Error');
-        $message->setFrom($errorFromMail);
-        $message->setTo($developerEmail);
-        $message->setContentType('text/html');
+        $message = $this->mailService->createMessage();
+        $message->subject('Error on ' . $domain);
+        $message->from($errorFromMail);
+        $message->to($developerEmail);
 
-        $handler = new SwiftMailerHandler($this->mailer, $message, Logger::NOTICE);
+        $handler = new SymfonyMailerHandler($this->mailer, $message, Logger::NOTICE);
         $handler->setFormatter(new PhalconHtmlFormatter);
 
         return new DeduplicationHandler($handler, null, Logger::ERROR, $deDuplicationTime);
