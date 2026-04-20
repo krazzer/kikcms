@@ -13,7 +13,7 @@ class RearrangeServiceTest extends TestCase
 {
     public function testMakeRoomForFirst()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $rearrangeService = new RearrangeService();
         $rearrangeService->setDI($di);
@@ -35,7 +35,7 @@ class RearrangeServiceTest extends TestCase
 
     public function testRearrange()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $rearrangeService = new RearrangeService();
         $rearrangeService->setDI($di);

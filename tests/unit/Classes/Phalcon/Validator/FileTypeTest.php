@@ -14,7 +14,7 @@ class FileTypeTest extends Unit
 {
     public function testValidate()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         /** @var DbService $dbService */
         $dbService = $di->get('dbService');

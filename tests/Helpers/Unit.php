@@ -88,14 +88,14 @@ class Unit extends \Codeception\Test\Unit
             'dialectClass' => new Sqlite()
         ]]);
 
-        $translator = (new TestHelper)->getTranslator();
+        $translator = new TestHelper('h')->getTranslator();
 
         $config = new Config();
         $config->application = new Config();
         $config->application->defaultLanguage = 'en';
 
         $adapter = new Stream(new SerializerFactory, [
-            'storageDir' => (new TestHelper)->getSitePath() . 'storage/keyvalue/'
+            'storageDir' => new TestHelper('h')->getSitePath() . 'storage/keyvalue/'
         ]);
 
         $keyValue = new KeyValue($adapter);

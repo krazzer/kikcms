@@ -60,11 +60,6 @@ class TestHelper extends TestCase
     /** @var DiInterface */
     private $testDbDi;
 
-    public function __construct()
-    {
-        parent::__construct('name');
-    }
-
     public function testGetterAndSetter(string $className, array $variables)
     {
         foreach ($variables as $variable) {

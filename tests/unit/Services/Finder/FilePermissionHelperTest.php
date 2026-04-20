@@ -18,7 +18,7 @@ class FilePermissionHelperTest extends Unit
 {
     public function testGetPermissionTable()
     {
-        $testHelper = new TestHelper();
+        $testHelper = new TestHelper('h');
 
         $filePermissionHelper = new FilePermissionHelper();
         $filePermissionHelper->setDI($testHelper->getTestDi());

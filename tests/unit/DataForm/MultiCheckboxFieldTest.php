@@ -17,7 +17,7 @@ class MultiCheckboxFieldTest extends TestCase
 {
     public function testSave()
     {
-        $testDi = (new TestHelper)->getTestDi();
+        $testDi = new TestHelper('h')->getTestDi();
 
         $interest       = new Interest;
         $interest->id   = 1;

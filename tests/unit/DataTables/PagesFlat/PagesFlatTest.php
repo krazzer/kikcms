@@ -39,7 +39,7 @@ class PagesFlatTest extends Unit
     {
         $pages = new PagesFlat();
 
-        $pages->translator = (new TestHelper)->getTranslator();
+        $pages->translator = new TestHelper('h')->getTranslator();
 
         $this->assertIsArray($pages->getJsData()['properties']);
     }

@@ -27,7 +27,7 @@ class FilterTest extends TestCase
 
     public function testGettersAndSetters()
     {
-        $simpleGetterSetterTester = new TestHelper();
+        $simpleGetterSetterTester = new TestHelper('h');
 
         $simpleGetterSetterTester->testGetterAndSetter(TestableFilter::class, ['alias', 'label', 'field', 'default']);
     }

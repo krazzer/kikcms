@@ -61,7 +61,7 @@ class PagesTest extends Unit
     {
         $pages = new Pages();
         $pages->setFilters((new PagesDataTableFilters)->setLanguageCode('en'));
-        $pages->translator = (new TestHelper)->getTranslator();
+        $pages->translator = new TestHelper('h')->getTranslator();
 
         $this->assertStringContainsString('page', $pages->getLabels()[0]);
 

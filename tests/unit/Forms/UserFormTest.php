@@ -27,7 +27,7 @@ class UserFormTest extends Unit
         $cmsService = $this->createMock(CmsService::class);
         $cmsService->method('getRoleMap')->willReturn([]);
 
-        $userForm->translator = (new TestHelper)->getTranslator();
+        $userForm->translator = new TestHelper('h')->getTranslator();
         $userForm->validation = new Validation();
         $userForm->cmsService = $cmsService;
 

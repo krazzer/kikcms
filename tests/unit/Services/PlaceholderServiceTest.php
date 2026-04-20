@@ -13,8 +13,8 @@ class PlaceholderServiceTest extends TestCase
 {
     public function testReplaceAll()
     {
-        $di       = (new TestHelper)->getTestDi();
-        $sitePath = (new TestHelper)->getSitePath();
+        $di       = new TestHelper('h')->getTestDi();
+        $sitePath = new TestHelper('h')->getSitePath();
 
         $placeholderService = new PlaceholderService();
 

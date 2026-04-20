@@ -14,7 +14,7 @@ class FileRemoveServiceTest extends TestCase
 {
     public function testGetDeleteErrorMessage()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $fileRemoveService = new FileRemoveService();
         $fileRemoveService->setDI($di);
@@ -47,8 +47,8 @@ class FileRemoveServiceTest extends TestCase
 
     public function testRemoveThumbNails()
     {
-        $di       = (new TestHelper)->getTestDi();
-        $sitePath = (new TestHelper)->getSitePath();
+        $di       = new TestHelper('h')->getTestDi();
+        $sitePath = new TestHelper('h')->getSitePath();
 
         $fileRemoveService = new FileRemoveService();
         $fileRemoveService->setDI($di);

@@ -225,7 +225,7 @@ class DataTableTest extends TestCase
     {
         $dataTable = new TestableDataTable();
 
-        $dataTable->translator = (new TestHelper)->getTranslator();
+        $dataTable->translator = new TestHelper('h')->getTranslator();
 
         $dataTable->translator->config                    = new StdClass;
         $dataTable->translator->config->application       = new StdClass;

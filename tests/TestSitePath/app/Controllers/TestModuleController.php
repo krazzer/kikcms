@@ -52,7 +52,7 @@ class TestModuleController extends BaseCmsController
 
     public function outputFileAction(): string
     {
-        $sitePath = (new TestHelper)->getSitePath();
+        $sitePath = new TestHelper('h')->getSitePath();
 
         return $this->outputFile($sitePath . 'storage/media/1.png', 'image/png');
     }

@@ -24,7 +24,7 @@ class PasswordResetLinkFormTest extends Unit
 
         $passwordResetLinkForm->userService = $userService;
         $passwordResetLinkForm->flash       = $flash;
-        $passwordResetLinkForm->translator  = (new TestHelper)->getTranslator();
+        $passwordResetLinkForm->translator  = new TestHelper('h')->getTranslator();
 
         $method = new ReflectionMethod(PasswordResetLinkForm::class, 'successAction');
         $method->setAccessible(true);
