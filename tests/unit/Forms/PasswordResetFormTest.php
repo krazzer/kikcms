@@ -23,7 +23,7 @@ class PasswordResetFormTest extends Unit
         $userService->method('isLoggedIn')->willReturn(true);
         $userService->method('getUserId')->willReturn(1);
 
-        $passwordResetForm->translator  = (new TestHelper)->getTranslator();
+        $passwordResetForm->translator  = new TestHelper('h')->getTranslator();
         $passwordResetForm->userService = $userService;
 
         $user = $this->createMock(User::class);

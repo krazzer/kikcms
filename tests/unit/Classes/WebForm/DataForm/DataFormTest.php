@@ -19,7 +19,7 @@ class DataFormTest extends TestCase
 {
     public function testRender()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $personForm = new PersonForm();
 
@@ -32,7 +32,7 @@ class DataFormTest extends TestCase
 
     public function testGetDataTableFieldObjects()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $personForm = new PersonForm();
         $personForm->setDI($di);
@@ -98,7 +98,7 @@ class DataFormTest extends TestCase
 
     public function testGetDataTableFieldObjectsFieldMissingException()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $personForm = new PersonForm;
         $personForm->setDI($di);
@@ -111,7 +111,7 @@ class DataFormTest extends TestCase
 
     public function testGetObject()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $personForm = new PersonForm;
         $personForm->setDI($di);

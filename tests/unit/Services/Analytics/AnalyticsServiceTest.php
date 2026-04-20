@@ -15,7 +15,7 @@ class AnalyticsServiceTest extends Unit
 {
     public function testGetOverviewData()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $analyticsService = new AnalyticsService();
         $analyticsService->setDI($di);
@@ -67,7 +67,7 @@ class AnalyticsServiceTest extends Unit
 
     public function testGetVisitorData()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $analyticsService = new AnalyticsService();
         $analyticsService->setDI($di);
@@ -135,7 +135,7 @@ class AnalyticsServiceTest extends Unit
 
     public function testRequiresUpdate()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
         $analyticsService = new AnalyticsService();
         $analyticsService->setDI($di);

@@ -17,7 +17,7 @@ class DataTableSelectTest extends TestCase
 {
     public function testSave()
     {
-        $testDi = (new TestHelper)->getTestDi();
+        $testDi = new TestHelper('h')->getTestDi();
 
         $form = new PersonDataTableSelectForm();
         $form->setDI($testDi);

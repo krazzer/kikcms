@@ -65,7 +65,7 @@ class FrontendServiceTest extends Unit
     {
         $frontendService = new FrontendService();
 
-        $frontendService->setDI((new TestHelper)->getTestDi());
+        $frontendService->setDI(new TestHelper('h')->getTestDi());
         $frontendService->userService = $this->createUserServiceMock(false);
 
         $existingPageCacheService = $this->createMock(ExistingPageCacheService::class);
@@ -183,7 +183,7 @@ class FrontendServiceTest extends Unit
      * @param string|null $key
      * @return Page
      */
-    private function createPage(int $id, string $key = null): Page
+    private function createPage(int $id, ?string $key = null): Page
     {
         $page       = new Page;
         $page->id   = $id;

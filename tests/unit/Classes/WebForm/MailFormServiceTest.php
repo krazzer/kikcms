@@ -22,7 +22,7 @@ class MailFormServiceTest extends Unit
     {
         $di = new Di();
         $di->set('validation', new Validation);
-        $di->set('translator', (new TestHelper)->getTranslator());
+        $di->set('translator', new TestHelper('h')->getTranslator());
 
         Di::setDefault($di);
 

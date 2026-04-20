@@ -40,7 +40,7 @@ class FileServiceTest extends Unit
 
         // image, but file doesnt exist
         $fileStorage = $this->createMock(FileStorage::class);
-        $fileStorage->method('getStorageDir')->willReturn((new TestHelper)->getSitePath() . 'storage/');
+        $fileStorage->method('getStorageDir')->willReturn(new TestHelper('h')->getSitePath() . 'storage/');
 
         $fileService->fileStorage = $fileStorage;
 
@@ -61,7 +61,7 @@ class FileServiceTest extends Unit
         $fileServiceMockNoOverWrite->method('create')->willReturn(1);
         $fileServiceMockNoOverWrite->method('overwrite')->willReturn(false);
 
-        $fileService->translator  = (new TestHelper)->getTranslator();
+        $fileService->translator  = new TestHelper('h')->getTranslator();
         $fileService->fileService = $fileServiceMock;
 
         $files = [$fileMock, $fileMock];
@@ -120,7 +120,7 @@ class FileServiceTest extends Unit
      * @param string|null $error
      * @return MockObject|\Phalcon\Http\Request\File
      */
-    private function getFileMock(string $mimeType, string $extension, string $error = null): MockObject
+    private function getFileMock(string $mimeType, string $extension, ?string $error = null): MockObject
     {
         $mock = $this->createMock(\Phalcon\Http\Request\File::class);
         $mock->method('getRealType')->willReturn($mimeType);

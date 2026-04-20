@@ -13,7 +13,7 @@ class TranslatorTest extends TestCase
 {
     public function testFlatten()
     {
-        $translator = (new TestHelper)->getTranslator();
+        $translator = new TestHelper('h')->getTranslator();
 
         $result = $translator->flatten(['key' => ['subkey' => ['subsubkey' => 'value']]]);
 
@@ -24,7 +24,7 @@ class TranslatorTest extends TestCase
     {
         $translator = new Translator('nl');
 
-        $translator->setDI((new TestHelper)->getTestDi());
+        $translator->setDI(new TestHelper('h')->getTestDi());
 
         $translator->db->delete(TranslationKey::TABLE);
         $translator->db->delete(TranslationValue::TABLE);
@@ -37,9 +37,9 @@ class TranslatorTest extends TestCase
 
     public function testGetCmsTranslationGroupKeys()
     {
-        $di = (new TestHelper)->getTestDi();
+        $di = new TestHelper('h')->getTestDi();
 
-        $translator = new Translator('nl', ['nl' => (new TestHelper)->getTestFilesPath() . 'nl.php']);
+        $translator = new Translator('nl', ['nl' => new TestHelper('h')->getTestFilesPath() . 'nl.php']);
         $translator->setDI($di);
 
         $expected = ['test.subtest.subsubtest'];
