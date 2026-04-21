@@ -36,7 +36,7 @@
         }
     },
     "require-dev": {
-        "codeception/codeception": "^5.1.2",
+        "codeception/codeception": "5.3.5",
         "codeception/c3": "2.*",
         "donatj/mock-webserver": "dev-master",
         "codeception/module-webdriver": "^4.0.2",
@@ -45,6 +45,6 @@
         "codeception/module-filesystem": "^3.0.1",
         "codeception/module-cli": "^2.0.1",
         "mockery/mockery": "^1.6.12",
-        "codeception/module-phalcon5": "^2.0.1"
+        "kiksaus/module-phalcon5": "dev-main"
     }
 }
