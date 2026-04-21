@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace functional;
 
 use AcceptanceTester;
+use Exception;
 use FunctionalTester;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use KikCMS\Models\User;
 
 class LoginCest
@@ -46,7 +48,9 @@ class LoginCest
 
         $I->submitForm('#login-form form', ['email' => $I::TEST_USERNAME]);
 
-        $resetPassUrl = $this->getResetPasswordUrlFromEmail();
+        if( ! $resetPassUrl = $this->getResetPasswordUrlFromEmail()){
+            throw new Exception('Could not find reset password url in email');
+        }
 
         $I->amOnPage($resetPassUrl);
 
@@ -95,14 +99,17 @@ class LoginCest
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    private function getResetPasswordUrlFromEmail(): string
+    private function getResetPasswordUrlFromEmail(): ?string
     {
         $mailCatcher = new Client(['base_uri' => 'http://mailtest:8025']);
         $message  = json_decode($mailCatcher->get('api/v2/search?query=Password&kind=containing&limit=1')->getBody()->getContents());
+
         $mailBody = quoted_printable_decode($message->items[0]->MIME->Parts[1]->Body);
 
-        return parse_url(explode("\r\n\r\n", $mailBody)[1])['path'];
+        preg_match('/href="([^"]+)"/i', $mailBody, $matches);
+
+        return $matches[1] ?? null;
     }
 }
