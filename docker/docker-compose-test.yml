@@ -1,4 +1,3 @@
-version: "3"
 services:
   phptest:
     image: kiksaus/kikdev-phalcon5-php8.4-pcov
@@ -42,5 +41,5 @@ services:
 
 networks:
   kikdev:
-    external:
-      name: kikdev
+    external: true
+    name: kikdev
