@@ -23,10 +23,10 @@ class Users extends DataTable
     public function getDefaultQuery(): BuilderInterface
     {
         return parent::getDefaultQuery()->columns([
-            User::FIELD_ID,
-            User::FIELD_EMAIL,
-            User::FIELD_ROLE,
-            User::FIELD_BLOCKED
+            'ku.' . User::FIELD_ID,
+            'ku.' . User::FIELD_EMAIL,
+            'ku.' . User::FIELD_ROLE,
+            'ku.' . User::FIELD_BLOCKED
         ]);
     }
 
