@@ -19,6 +19,7 @@ class MimeConfig
     const SVG  = 'svg';
     const WEBP = 'webp';
     const EPUB = 'epub';
+    const AVIF = 'avif';
 
     /** @const array contains all mimeTypes, extend when necessary */
     const ALL_MIME_TYPES = [
@@ -37,10 +38,11 @@ class MimeConfig
         'mp4'  => ['video/mp4', 'video/x-m4v'],
         'webp' => ['image/webp'],
         'epub' => ['application/epub+zip'],
+        'avif' => ['image/avif'],
     ];
 
     /** @const array default mimeTypes allowed to upload using the Finder */
     const UPLOAD_ALLOW_DEFAULT = [
-        'jpeg', 'jpg', 'png', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'svg', 'mp4', 'webp', 'epub'
+        'jpeg', 'jpg', 'png', 'avif', 'gif', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'svg', 'mp4', 'webp', 'epub'
     ];
 }
