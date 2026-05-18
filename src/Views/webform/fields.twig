@@ -47,7 +47,7 @@
 {%- block fieldDefault -%}
     <div{{ fieldContainterAttributes|raw }}>
         {%- block fieldDefaultInputAndField -%}
-            {% if(placeHolderAsLabel == false) %}
+            {% if(placeHolderAsLabel == false or field.isMustShowLabel) %}
                 {%- block fieldLabel -%}
                     {{ form.label(element.name)|raw|nl2br }}
                     {%- block helpText -%}

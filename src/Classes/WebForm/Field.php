@@ -43,6 +43,9 @@ abstract class Field
     /** @var string unique identifier for the field */
     protected $key;
 
+    /** @var bool set to true if the label should always be shown, even when using placeholders as label */
+    protected $mustShowLabel = false;
+
     /** @var array */
     private $cssClasses = [];
 
@@ -401,5 +404,13 @@ abstract class Field
     public function setStorageKey(?string $storageKey): void
     {
         $this->storageKey = $storageKey;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMustShowLabel(): bool
+    {
+        return $this->mustShowLabel;
     }
 }
