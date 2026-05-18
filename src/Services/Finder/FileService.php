@@ -142,8 +142,8 @@ class FileService extends Injectable
         $filePath  = $this->getFilePath($file);
         $thumbPath = $this->getMediaThumbPath($file, $type, $private, $thumbSettings?->getExtension());
 
-        // do not resize animated gifs
-        if ($this->isAnimatedGif($filePath)) {
+        // do not resize animated gifs or avifs
+        if ($this->isAnimatedGif($filePath) || $file->getExtension() == MimeConfig::AVIF) {
             copy($filePath, $thumbPath);
             return;
         }
