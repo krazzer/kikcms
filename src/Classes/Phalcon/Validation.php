@@ -19,7 +19,7 @@ class Validation extends \Phalcon\Filter\Validation
     /**
      * @inheritDoc
      */
-    public function validate($data = null, $entity = null): Messages
+    public function validate($data = null, $entity = null, $whitelist = []): Messages
     {
         $validatorFields = $this->getValidators();
 
