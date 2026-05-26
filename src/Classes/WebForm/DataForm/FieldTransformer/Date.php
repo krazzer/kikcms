@@ -19,7 +19,9 @@ class Date extends FieldTransformer
      */
     public function toStorage(mixed $value): string
     {
-        $date = DateTime::createFromFormat($this->field->getFormat(), $value);
+        if( ! $date = DateTime::createFromFormat($this->field->getFormat(), $value)){
+            return '';
+        }
 
         return $date->format($this->field->getStorageFormat());
     }
