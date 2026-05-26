@@ -56,7 +56,9 @@ class LoginController extends BaseController
      */
     public function impersonateAction(User $user): ResponseInterface
     {
-        if( ! $this->permission->isAdmin() || in_array($user->role, Permission::ADMIN_ROLES)){
+        $userToImpersonateIsAdmin = in_array($user->role, Permission::ADMIN_ROLES);
+
+        if ( ! $this->permission->isAdmin() || ($userToImpersonateIsAdmin && ! $this->permission->isDev())) {
             $this->flash->error($this->translator->tl('permissions.noImpersonateAcces'));
             return $this->response->redirect($this->url->get('cms/users'));
         }
