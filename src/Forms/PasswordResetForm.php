@@ -37,7 +37,7 @@ class PasswordResetForm extends WebForm
      */
     protected function initialize(): void
     {
-        $passwordStringLength = new StringLength(['min' => 8, 'max' => 30]);
+        $passwordStringLength = new StringLength(['min' => 8, 'max' => 30, 'included' => true]);
 
         $password = new Regex(['pattern' => '/^([^ ]*)$/', 'message' => $this->translator->tl('login.reset.password.space')]);
 
