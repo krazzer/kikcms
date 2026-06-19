@@ -20,7 +20,7 @@ services:
       - kikdev
 
   mysql:
-    image: mariadb
+    image: mariadb:10.11.14
     restart: always
     ports:
       - "3306:3306"
