@@ -2,12 +2,14 @@
 
 namespace KikCMS\Services\Model;
 
+use Exception;
 use KikCMS\Classes\Phalcon\Injectable;
 use KikCmsCore\Classes\Model;
 use KikCmsCore\Classes\ObjectList;
 use KikCmsCore\Classes\ObjectMap;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Relation;
+use ReflectionProperty;
 
 class PreloadService extends Injectable
 {
@@ -19,7 +21,7 @@ class PreloadService extends Injectable
      * @return void
      */
     public function preload(ObjectList|array $objects, array|string $relationAlias, callable|string $pathToChild = null,
-                            $order = null): void
+        $order = null): void
     {
         $idList   = [];
         $relation = null;
@@ -59,9 +61,9 @@ class PreloadService extends Injectable
             }
 
             if ($relation->getType() == Relation::HAS_MANY) {
-                $object->$relationAlias = new ObjectMap;
+                $this->setProperty($object, $relationAlias, new ObjectMap);
             } else {
-                $object->$relationAlias = null;
+                $this->setProperty($object, $relationAlias, null);
             }
 
             if ( ! array_key_exists($relationId, $relatedObjectMap)) {
@@ -71,9 +73,9 @@ class PreloadService extends Injectable
             $relatedObject = $relatedObjectMap[$relationId];
 
             if ($relation->getType() == Relation::HAS_MANY) {
-                $object->$relationAlias = new ObjectMap($relatedObject);
+                $this->setProperty($object, $relationAlias, new ObjectMap($relatedObject));
             } else {
-                $object->$relationAlias = $relatedObject;
+                $this->setProperty($object, $relationAlias, $relatedObject);
             }
         }
     }
@@ -129,5 +131,21 @@ class PreloadService extends Injectable
         }
 
         return $object;
+    }
+
+    /**
+     * @param object $object
+     * @param string $property
+     * @param $value
+     * @return void
+     */
+    private function setProperty(object $object, string $property, $value): void
+    {
+        try {
+            $object->$property = $value;
+        } catch (Exception $e) {
+            $reflection = new ReflectionProperty($object, $property);
+            $reflection->setValue($object, $value);
+        }
     }
 }
