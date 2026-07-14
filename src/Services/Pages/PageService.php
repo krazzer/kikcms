@@ -176,7 +176,7 @@ class PageService extends Injectable
                 continue;
             }
 
-            $prefix = str_repeat('&nbsp;', $level * 10) . ($level % 2 ? 'ο' : '•') . ' ';
+            $prefix = str_repeat(' - ', $level * 4) . ($level % 2 ? 'ο' : '•') . ' ';
 
             if($pageLang = $pageLangMap->get($pageId)) {
                 $selectArray[$pageId] = $prefix . $pageLang->getName();
