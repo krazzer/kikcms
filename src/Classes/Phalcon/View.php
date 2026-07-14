@@ -67,10 +67,10 @@ class View extends PhalconView
 
     /**
      * @param mixed $renderView
-     * @return PhalconView
+     * @return static
      * @throws Exception
      */
-    public function pick(mixed $renderView): PhalconView
+    public function pick(mixed $renderView): static
     {
         if( ! $this->exists($renderView)){
             throw new Exception('View "' . $renderView . '" not found.');
