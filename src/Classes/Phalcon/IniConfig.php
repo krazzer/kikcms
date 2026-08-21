@@ -10,7 +10,7 @@ use KikCMS\Classes\Phalcon\ConfigGroups\DatabaseConfig;
 use KikCMS\Classes\Phalcon\ConfigGroups\DeveloperConfig;
 use KikCMS\Classes\Phalcon\ConfigGroups\MediaConfig;
 use KikCMS\Config\KikCMSConfig;
-use Phalcon\Config\Adapter\Ini;
+use Phalcon\Config\Config;
 
 /**
  * @property ApplicationConfig $application
@@ -19,8 +19,15 @@ use Phalcon\Config\Adapter\Ini;
  * @property MediaConfig $media
  * @property CacheConfig $cache
  */
-class IniConfig extends Ini
+class IniConfig extends Config
 {
+    /**
+     * @param string $filePath
+     */
+    public function __construct(string $filePath)
+    {
+        parent::__construct(parse_ini_file($filePath, true));
+    }
     /**
      * @return bool
      */

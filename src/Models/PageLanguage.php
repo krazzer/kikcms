@@ -144,7 +144,7 @@ class PageLanguage extends Model
      */
     public function getPageId(): int
     {
-        return (int) $this->page_id;
+        return (int) ($this->page_id ?? 0);
     }
 
     /**

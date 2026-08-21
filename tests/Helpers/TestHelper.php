@@ -41,7 +41,8 @@ use KikCmsCore\Services\DbService;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Phalcon\Cache\Adapter\Memory as MemoryCache;
-use Phalcon\Config\Adapter\Ini;
+use KikCMS\Classes\Phalcon\IniConfig;
+use Phalcon\Config\Config;
 use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Di\Di;
 use Phalcon\Di\DiInterface;
@@ -141,7 +142,7 @@ class TestHelper extends TestCase
         ];
 
         // use cms default config
-        $config = new Ini(dirname(dirname(__DIR__)) . '/config/config.ini');
+        $config = new IniConfig(dirname(dirname(__DIR__)) . '/config/config.ini');
 
         $config->application->path = $this->getSitePath();
 

@@ -87,7 +87,7 @@ class FileServiceTest extends Unit
         $this->assertCount(1, $result->getErrors());
 
         // test has error
-        $files = [$this->getFileMock('image/png', 'png', 'error')];
+        $files = [$this->getFileMock('image/png', 'png', 1)];
 
         $this->assertCount(1, $fileService->uploadFiles($files)->getErrors());
 
@@ -120,7 +120,7 @@ class FileServiceTest extends Unit
      * @param string|null $error
      * @return MockObject|\Phalcon\Http\Request\File
      */
-    private function getFileMock(string $mimeType, string $extension, ?string $error = null): MockObject
+    private function getFileMock(string $mimeType, string $extension, int $error = 0): MockObject
     {
         $mock = $this->createMock(\Phalcon\Http\Request\File::class);
         $mock->method('getRealType')->willReturn($mimeType);
