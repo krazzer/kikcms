@@ -102,10 +102,6 @@ var Statistics = Class.extend({
             useCurrent: false
         };
 
-        if ($field.hasClass(this.CLASS_START)) {
-            datepickerSettings.defaultDate = this.settings.startDate;
-        }
-
         $field.datetimepicker(datepickerSettings);
         $field.on('dp.change', this.renderChart.bind(this));
     },
