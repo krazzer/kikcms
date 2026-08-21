@@ -126,7 +126,7 @@ class FrontendServiceTest extends Unit
             $pageLanguage->page = $page;
         }
 
-        $pageLanguage->page_id = property_exists($page, 'id') ? $page->id : null;
+        $pageLanguage->page_id = (is_object($page) && property_exists($page, 'id')) ? $page->id : null;
 
         if ($name) {
             $pageLanguage->setName($name)->setSlug($name);

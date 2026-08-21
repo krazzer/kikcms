@@ -106,7 +106,7 @@ class PageLanguageServiceTest extends Unit
      * @param string $pageType
      * @return PageLanguage
      */
-    private function createPageLanguage(string $slug = null, string $pageType = Page::TYPE_PAGE): PageLanguage
+    private function createPageLanguage(?string $slug = null, string $pageType = Page::TYPE_PAGE): PageLanguage
     {
         $page = new Page();
         $page->type = $pageType;

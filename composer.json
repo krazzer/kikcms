@@ -1,10 +1,4 @@
 {
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/krazzer/module-phalcon4.git"
-        }
-    ],
     "homepage": "https://kikcmsdocs.kiksaus.nl",
     "license": "MIT",
     "name": "kiksaus/kikcms",
@@ -45,6 +39,6 @@
         "codeception/module-filesystem": "^3.0.1",
         "codeception/module-cli": "^2.0.1",
         "mockery/mockery": "^1.6.12",
-        "kiksaus/module-phalcon5": "dev-main"
+        "codeception/module-phalcon5": "dev-main"
     }
 }

@@ -147,7 +147,7 @@ class UrlServiceTest extends Unit
      * @param string $type
      * @return PageLanguage
      */
-    private function createPageLanguage(string $slug, string $key = null, string $type = Page::TYPE_PAGE): PageLanguage
+    private function createPageLanguage(string $slug, ?string $key = null, string $type = Page::TYPE_PAGE): PageLanguage
     {
         $page = new Page();
 

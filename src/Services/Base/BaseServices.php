@@ -11,7 +11,6 @@ use KikCMS\Classes\Phalcon\IniConfig;
 use KikCMS\Services\NamespaceService;
 use KikCMS\Services\Routing;
 use KikCMS\Classes\Phalcon\Loader;
-use Phalcon\Config\Adapter\Ini;
 use Phalcon\Config\Config;
 use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Mvc\Model\MetaData\Stream;
@@ -40,10 +39,10 @@ class BaseServices extends ApplicationServices
     }
 
     /**
-     * @param Ini $config
+     * @param Config $config
      * @param Loader $loader
      */
-    public function __construct(Ini $config, Loader $loader)
+    public function __construct(Config $config, Loader $loader)
     {
         parent::__construct();
 
@@ -63,7 +62,7 @@ class BaseServices extends ApplicationServices
      * @param string|null $item
      * @return mixed
      */
-    public function getConfig(string $group = null, string $item = null): mixed
+    public function getConfig(?string $group = null, ?string $item = null): mixed
     {
         $config = $this->get('config');
 
