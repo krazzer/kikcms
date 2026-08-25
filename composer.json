@@ -20,6 +20,7 @@
         "nette/php-generator": "^3.1",
         "google/recaptcha": "^1.2",
         "kiksaus/kikcms-core": "dev-monolog3",
+        "guzzlehttp/psr7": "2.*",
         "google/analytics-data": "^0.8.4",
         "symfony/var-dumper": "^5.4",
         "symfony/mailer": "^8.0"
@@ -39,6 +40,6 @@
         "codeception/module-filesystem": "^3.0.1",
         "codeception/module-cli": "^2.0.1",
         "mockery/mockery": "^1.6.12",
-        "codeception/module-phalcon5": "dev-main"
+        "kiksaus/module-phalcon5": "dev-main"
     }
 }
