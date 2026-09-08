@@ -45,7 +45,7 @@ class KeyValue extends Cache
     /**
      * @inheritDoc
      */
-    public function get($key, $defaultValue = null)
+    public function get(string $key, $defaultValue = null): mixed
     {
         if($this->memoryCache && $this->memoryCache->has($this->prefixKey($key))){
             return $this->memoryCache->get($this->prefixKey($key));
