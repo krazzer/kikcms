@@ -268,7 +268,7 @@ class Services extends BaseServices
 
         $adapter = new Stream(new SerializerFactory($services), [
             'defaultSerializer' => 'Json',
-            'lifetime'          => pow(10, 20), //aka infinite by default
+            'lifetime'          => 3600 * 24 * 365 * 1000000, //aka infinite by default
             'storageDir'        => $this->getAppConfig()->path . 'storage/keyvalue/'
         ]);
 
