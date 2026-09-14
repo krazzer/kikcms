@@ -23,8 +23,6 @@ class AccessControl extends Memory
      */
     public function __construct(string $role)
     {
-        parent::__construct();
-
         $this->currentRole = $role;
         $this->updated     = new DateTime;
     }
