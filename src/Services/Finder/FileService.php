@@ -17,6 +17,7 @@ use KikCMS\ObjectLists\FileMap;
 use KikCMS\Models\Folder;
 use KikCMS\Models\File;
 use Phalcon\Http\Request\File as UploadedFile;
+use Phalcon\Http\Request\FileInterface;
 use Phalcon\Mvc\Model\Query\Builder;
 
 /**
@@ -101,7 +102,7 @@ class FileService extends Injectable
 
         $this->filePermissionService->createForFile($file);
 
-        $this->fileStorage->storeByData($fileContent, $this->mediaDir, $file->id, $extension);
+        $this->fileStorage->storeByData($fileContent, $this->mediaDir, (string) $file->id, $extension);
         $this->fileResizeService->resizeWithinBoundaries($file);
         $this->fileHashService->updateHash($file);
         $this->updateSize($file);
@@ -732,7 +733,7 @@ class FileService extends Injectable
     }
 
     /**
-     * @param UploadedFile[] $files
+     * @param UploadedFile|FileInterface[] $files
      * @param int|null $folderId
      * @param int|null $overwriteFileId
      * @return UploadStatus
