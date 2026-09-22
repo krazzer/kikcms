@@ -131,6 +131,10 @@ class UserService extends Injectable
      */
     public function isLoggedIn(): bool
     {
+        if ( ! $this->session->exists() || ! isset($_SESSION)) {
+            $_SESSION = [];
+        }
+
         if ($this->session->get('loggedIn', false)) {
             return true;
         }
@@ -174,6 +178,11 @@ class UserService extends Injectable
 
         // remove current session data, added @for unit test to pass
         @$this->session->destroy();
+
+        if ( ! isset($_SESSION)) {
+            $_SESSION = [];
+        }
+
         $this->permission->reset();
 
         // start a new session so we can still flash

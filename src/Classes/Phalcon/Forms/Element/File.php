@@ -7,7 +7,7 @@ class File extends \Phalcon\Forms\Element\File
     /**
      * @inheritDoc
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         $value = parent::getValue();
 

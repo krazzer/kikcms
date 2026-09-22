@@ -164,7 +164,8 @@ class RememberMeService extends Injectable
     {
         // Add port to cookie in dev, so different ports can be used
         if($this->config->isDev()){
-            return self::COOKIE_KEY . '-' . $this->request->getPort();
+            $port = $this->request->getServer('SERVER_PORT') ?: '80';
+            return self::COOKIE_KEY . '-' . $port;
         }
 
         return self::COOKIE_KEY;

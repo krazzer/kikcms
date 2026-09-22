@@ -132,7 +132,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true), true);
     }
 
     /**
@@ -149,7 +149,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true), true);
     }
 
     /**
@@ -236,12 +236,12 @@ class FinderController extends RenderableController
     }
 
     /**
-     * @param int $fileId
+     * @param int|string $fileId
      * @return ResponseInterface
      */
-    public function urlAction(int $fileId): ResponseInterface
+    public function urlAction(int|string $fileId): ResponseInterface
     {
-        return $this->response->setJsonContent(['url' => $this->twigService->mediaFile($fileId)]);
+        return $this->response->setJsonContent(['url' => $this->twigService->mediaFile((int) $fileId)]);
     }
 
     /**
