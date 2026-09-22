@@ -132,7 +132,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true), true);
     }
 
     /**
@@ -149,7 +149,7 @@ class FinderController extends RenderableController
             throw new UnauthorizedException();
         }
 
-        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true));
+        return $this->response->redirect($this->fileService->getUrlCreateIfMissing($file, true), true);
     }
 
     /**
