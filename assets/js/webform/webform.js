@@ -62,6 +62,7 @@ var WebForm = Class.extend({
         this.initCsrf();
         this.initTranslate();
         this.initColorPicker();
+        this.initSubmit();
     },
 
     /**
@@ -501,5 +502,21 @@ var WebForm = Class.extend({
      */
     removeExtension: function (filename) {
         return filename.replace(/\.[^/.]+$/, "");
+    },
+
+    initSubmit: function () {
+        let $webForm = this.getWebForm();
+        let $form    = $webForm.find('form');
+
+        $form.on('submit', function (e) {
+            const $submitBtn = $form.find('[type="submit"]');
+
+            if ($submitBtn.attr('disabled')) {
+                e.preventDefault();
+                return;
+            }
+
+            $submitBtn.attr('disabled', true);
+        });
     }
 });
