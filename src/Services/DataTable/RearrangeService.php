@@ -115,8 +115,12 @@ class RearrangeService extends Injectable
      */
     private function updateLeftSiblingsOrder(Model $item, string $orderField = self::SORTABLE_FIELD): void
     {
-        $this->dbService->update($item->getClassName(), [$orderField => new RawValue($orderField . " - 1")],
-            $orderField . " > " . $item->$orderField . " ORDER BY " . $orderField . " ASC");
+        $table = $this->dbService->getTableForModel($item->getClassName());
+
+        $query = "UPDATE " . $table . " SET " . $orderField . " = " . $orderField . " - 1 WHERE " .
+            $orderField . " > " . $item->$orderField . " ORDER BY " . $orderField . " ASC";
+
+        $this->db->query($query);
     }
 
     /**
@@ -186,7 +190,10 @@ class RearrangeService extends Injectable
      */
     private function updateSiblingOrder(Model $item, bool $placeAfter, string $orderField = self::SORTABLE_FIELD): void
     {
-        $this->dbService->update($item->getClassName(), [$orderField => new RawValue($orderField . " + 1")],
-            $orderField . " >= " . ($item->$orderField + ($placeAfter ? 1 : 0)) . " ORDER BY " . $orderField . " DESC");
+        $table = $this->dbService->getTableForModel($item->getClassName());
+        $query = "UPDATE " . $table . " SET " . $orderField . " = " . $orderField . " + 1 WHERE " .
+            $orderField . " >= " . ($item->$orderField + ($placeAfter ? 1 : 0)) . " ORDER BY " . $orderField . " DESC";
+
+        $this->db->query($query);
     }
 }

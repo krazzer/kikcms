@@ -8,9 +8,6 @@ class Folder extends File
     /** @var int */
     public $is_folder = 1;
 
-    /** @var int */
-    public $size = 0;
-
     /**
      * @inheritdoc
      *

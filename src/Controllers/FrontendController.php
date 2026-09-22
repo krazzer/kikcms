@@ -126,12 +126,12 @@ class FrontendController extends BaseController
 
     /**
      * @param string $languageCode
-     * @param int $pageId
+     * @param int|string $pageId
      * @throws NotFoundException
      */
-    public function pageByIdAction(string $languageCode, int $pageId): void
+    public function pageByIdAction(string $languageCode, int|string $pageId): void
     {
-        $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
+        $pageLanguage = $this->pageLanguageService->getByPageId((int) $pageId, $languageCode);
 
         if ( ! $pageLanguage) {
             throw new NotFoundException($languageCode);
@@ -159,7 +159,6 @@ class FrontendController extends BaseController
     /**
      * @param null|string $languageCode
      * @return ResponseInterface|string|null
-     * @noinspection PhpVoidFunctionResultUsedInspection
      */
     public function pageNotFoundAction(string $languageCode = null): ResponseInterface|string|null
     {

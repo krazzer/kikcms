@@ -9,3 +9,4 @@ resources/js/*.js.map
 !/tests/TestSitePath/storage/media/1.png
 /tests/TestSitePath/cache/*
 /tests/TestSitePath/public_html/media/*
+composer.lock

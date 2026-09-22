@@ -149,6 +149,9 @@ class DataTableCest
 
     public function rearrangeWorks(FunctionalTester $I)
     {
+        $I->getDbService()->truncate(Person::class);
+        $I->getDbService()->truncate(PersonImage::class);
+
         $I->getDbService()->insert(Person::class, ['id' => 1]);
         $I->getDbService()->insert(PersonImage::class, ['id' => 1, 'person_id' => 1, 'display_order' => 1]);
         $I->getDbService()->insert(PersonImage::class, ['id' => 2, 'person_id' => 1, 'display_order' => 2]);

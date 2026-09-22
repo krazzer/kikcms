@@ -29,9 +29,42 @@ class File extends Model
     const FIELD_HASH      = 'hash';
 
     const IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/avif'];
+    
+    /** @var int */
+    public $id;
 
     /** @var string|null */
     public $key;
+
+    /** @var string|null */
+    public $hash;
+
+    /** @var string|null */
+    public $name;
+
+    /** @var int|null */
+    public $folder_id;
+
+    /** @var string|null */
+    public $mimetype;
+
+    /** @var string|null */
+    public $extension;
+
+    /** @var int */
+    public $size;
+
+    /** @var int|null */
+    public $user_id;
+
+    /** @var string|null */
+    public $created;
+
+    /** @var string|null */
+    public $updated;
+
+    /** @var int */
+    public $is_folder = 0;
 
     /**
      * Initialize relations
