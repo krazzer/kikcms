@@ -431,8 +431,17 @@ class Services extends BaseServices
      */
     protected function initSession(): SessionManager
     {
+        $sessionPath = $this->getAppConfig()->path . 'storage/session';
+
+        if ( ! is_dir($sessionPath)) {
+            mkdir($sessionPath);
+        }
+
         $session = new SessionManager();
-        $files   = new SessionAdapter(['savePath' => '/tmp']);
+        $files   = new SessionAdapter(['savePath' => $sessionPath]);
+
+        $session->setAdapter($files);
+        $session->start();
 
         $session->setAdapter($files);
         $session->start();
