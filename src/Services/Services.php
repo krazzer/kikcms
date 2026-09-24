@@ -443,6 +443,9 @@ class Services extends BaseServices
         $session->setAdapter($files);
         $session->start();
 
+        $session->setAdapter($files);
+        $session->start();
+
         return $session;
     }
 
