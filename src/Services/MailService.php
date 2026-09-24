@@ -125,16 +125,15 @@ class MailService extends Injectable
      * @param string $subject
      * @param string $body
      *
-     * @param null $template
+     * @param string|null $template
      * @param array $parameters
      * @param array $attachments
      * @param array|string|null $from
      * @param bool $bcc
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
-    public function sendMail(array|string $to, string $subject, string $body, $template = null, array $parameters = [],
-        array $attachments = [], array|string $from = null,
-        bool $bcc = false): int
+    public function sendMail(array|string $to, string $subject, string $body, ?string $template = null,
+        array $parameters = [], array $attachments = [], array|string|null $from = null, bool $bcc = false): int
     {
         if ($template) {
             $parameters['body']    = $body;
@@ -149,7 +148,7 @@ class MailService extends Injectable
 
         $htmlBody = $this->placeholderService->replaceAll($htmlBody);
 
-        if(is_array($from)){
+        if (is_array($from)) {
             $from = new Address(array_keys($from)[0], array_values($from)[0]);
         }
 
@@ -170,11 +169,11 @@ class MailService extends Injectable
             $message->text(strip_tags($body));
         }
 
-        foreach ($attachments as $attachment) {
-            if (is_string($attachment) || is_resource($attachment)) {
-                $message->attach($attachment);
+        foreach ($attachments as $path => $name) {
+            if (file_exists($path)) {
+                $message->attachFromPath($path, $name);
             } else {
-                $message->attachFromPath($attachment);
+                throw new Exception('Could not attach file with path: ' . $path . ' and name: ' . $name);
             }
         }
 
@@ -186,7 +185,7 @@ class MailService extends Injectable
     }
 
     /**
-     * Send a mail from the company's name to a user
+     * Send mail from the company's name to a user
      *
      * @param $to
      * @param string $subject
@@ -200,7 +199,7 @@ class MailService extends Injectable
      * @throws Exception
      */
     public function sendMailUser($to, string $subject, string $body, array $parameters = [], array $attachments = [],
-        array|string $from = null, bool $bcc = false): int
+        array|string|null $from = null, bool $bcc = false): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->company);
 
@@ -208,7 +207,7 @@ class MailService extends Injectable
     }
 
     /**
-     * Send a service type mail, an email send from the CMS to someone using the CMS
+     * Send service type mail, an email sent from the CMS to someone using the CMS
      *
      * @param $to
      * @param string $subject
@@ -219,7 +218,7 @@ class MailService extends Injectable
      * @return int The number of successful recipients. Can be 0 which indicates failure
      */
     public function sendServiceMail($to, string $subject, string $body, array $parameters = [], array $attachments = [],
-        array|string $from = null): int
+        array|string|null $from = null): int
     {
         $parameters = $this->updateParametersWithCompanyData($parameters, $this->config->developer);
 

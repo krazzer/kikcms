@@ -9,13 +9,10 @@ use KikCMS\Classes\WebForm\Fields\HiddenField;
 use KikCMS\Classes\WebForm\Fields\ReCaptchaField;
 use KikCMS\Classes\WebForm\Fields\SelectField;
 use KikCMS\Services\MailService;
-use Monolog\Logger;
+use Monolog\Level;
 use Phalcon\Http\Request\File;
 use Phalcon\Http\Response;
 use ReCaptcha\Response as ReCaptchaResponse;
-use Swift_Attachment;
-use Swift_ByteStream_FileByteStream;
-use Swift_IoException;
 
 /**
  * @property MailService $mailService
@@ -81,7 +78,7 @@ abstract class MailForm extends WebForm
         try {
             $this->mailformSubmissionService->add($subject, $this->getReadableInput($input, $this->request->getUploadedFiles(true)));
         } catch (Exception $exception) {
-            $this->logger->log(Logger::ERROR, $exception->getMessage(), $exception->getTrace());
+            $this->logger->log(Level::Error, $exception->getMessage(), $exception->getTrace());
         }
 
         $this->flashForFormOnly();
@@ -206,8 +203,7 @@ abstract class MailForm extends WebForm
     }
 
     /**
-     * @return Swift_Attachment[]
-     * @throws Swift_IoException
+     * @return array
      */
     private function getAttachments(): array
     {
@@ -218,10 +214,7 @@ abstract class MailForm extends WebForm
         }
 
         foreach ($files as $file) {
-            $data       = new Swift_ByteStream_FileByteStream($file->getTempName());
-            $attachment = new Swift_Attachment($data, $file->getName(), $file->getType());
-
-            $attachments[] = $attachment;
+            $attachments[$file->getTempName()] = $file->getName();
         }
 
         return $attachments;
