@@ -181,7 +181,7 @@ class CmsController extends BaseCmsController
 
         $url = $this->urlService->getUrlByPageLanguage($pageLanguage);
 
-        $this->response->redirect($url);
+        $this->response->redirect($url, true);
     }
 
     /**

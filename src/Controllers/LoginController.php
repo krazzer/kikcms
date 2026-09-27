@@ -60,13 +60,13 @@ class LoginController extends BaseController
 
         if ( ! $this->permission->isAdmin() || ($userToImpersonateIsAdmin && ! $this->permission->isDev())) {
             $this->flash->error($this->translator->tl('permissions.noImpersonateAcces'));
-            return $this->response->redirect($this->url->get('cms/users'));
+            return $this->response->redirect($this->url->get('cms/users'), true);
         }
 
         $this->flash->success($this->translator->tl('permissions.impersonated', ['email' => $user->email]));
         $this->userService->setLoggedIn($user->getId());
 
-        return $this->response->redirect($this->url->get('cms'));
+        return $this->response->redirect($this->url->get('cms'), true);
     }
 
     /**
