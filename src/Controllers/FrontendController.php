@@ -98,7 +98,7 @@ class FrontendController extends BaseController
 
         if($pageLanguage->page->getType() == Page::TYPE_LINK){
             $linkedUrl = $this->urlService->getUrlForLinkedPage($pageLanguage);
-            return $this->response->redirect($linkedUrl);
+            return $this->response->redirect($linkedUrl, true);
         }
 
         $this->response->setStatusCode(200);
