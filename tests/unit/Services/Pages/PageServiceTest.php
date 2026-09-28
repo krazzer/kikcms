@@ -113,8 +113,8 @@ class PageServiceTest extends Unit
 
         $expected = [
             1 => "• page1",
-            3 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage1",
-            4 => "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ο subPage2",
+            3 => " -  -  -  - ο subPage1",
+            4 => " -  -  -  - ο subPage2",
             2 => "• page2"
         ];
 
@@ -128,7 +128,7 @@ class PageServiceTest extends Unit
      * @return Page
      * @throws Exception
      */
-    private function createPage(string $name, int $id, int $parent = null): Page
+    private function createPage(string $name, int $id, ?int $parent = null): Page
     {
         $page            = new Page();
         $page->parent_id = $parent;

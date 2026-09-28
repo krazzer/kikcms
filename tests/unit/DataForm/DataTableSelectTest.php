@@ -10,6 +10,7 @@ use Helpers\Models\Interest;
 use Helpers\Models\Person;
 use Helpers\Models\PersonInterest;
 use Phalcon\Encryption\Security;
+use Phalcon\Flash\Direct;
 use Phalcon\Mvc\Model\Query\Builder;
 use PHPUnit\Framework\TestCase;
 
@@ -29,6 +30,7 @@ class DataTableSelectTest extends TestCase
         $securityMock = $this->createMock(Security::class);
         $securityMock->method('checkToken')->willReturn(true);
 
+        $form->flash    = $this->createStub(Direct::class);
         $form->security = $securityMock;
 
         $interest       = new Interest;
@@ -45,7 +47,7 @@ class DataTableSelectTest extends TestCase
             $form->getFormId()             => $form->getFormId(),
             $form->security->getTokenKey() => $form->security->getToken(),
             'name'                         => 'Elon',
-            'personInterests:interest_id'  => json_encode([1,2]),
+            'personInterests:interest_id'  => json_encode([1, 2]),
         ];
 
         $form->render();
@@ -72,6 +74,7 @@ class DataTableSelectTest extends TestCase
         $form->setDI($testDi);
         $form->setFilters($filters);
         $form->security = $securityMock;
+        $form->flash    = $this->createStub(Direct::class);
 
         $form->render();
 

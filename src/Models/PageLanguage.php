@@ -32,6 +32,9 @@ class PageLanguage extends Model
     /** @var Page|null */
     private $aliasPage;
 
+    /** @var Page|null */
+    public $page;
+
     /**
      * @inheritDoc
      * @return PageLanguage|null
@@ -136,6 +139,10 @@ class PageLanguage extends Model
      */
     public function getId(): int
     {
+        if ( ! property_exists($this, self::FIELD_ID)) {
+            return 0;
+        }
+
         return (int) $this->id;
     }
 
@@ -144,6 +151,10 @@ class PageLanguage extends Model
      */
     public function getPageId(): int
     {
+        if ( ! property_exists($this, self::FIELD_PAGE_ID)) {
+            return 0;
+        }
+
         return (int) $this->page_id;
     }
 

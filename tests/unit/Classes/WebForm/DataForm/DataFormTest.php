@@ -13,6 +13,7 @@ use KikCMS\Services\ModelService;
 use Helpers\Models\Company;
 use Helpers\Models\Person;
 use Helpers\Models\PersonInterest;
+use Phalcon\Encryption\Security;
 use PHPUnit\Framework\TestCase;
 
 class DataFormTest extends TestCase
@@ -24,6 +25,13 @@ class DataFormTest extends TestCase
         $personForm = new PersonForm();
 
         $personForm->setDI($di);
+
+        $securityMock = $this->createMock(Security::class);
+
+        $securityMock->method('getToken')->willReturn(null);
+        $securityMock->method('getTokenKey')->willReturn(null);
+
+        $personForm->security = $securityMock;
 
         $response = $personForm->render();
 

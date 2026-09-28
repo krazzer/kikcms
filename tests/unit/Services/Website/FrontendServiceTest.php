@@ -183,7 +183,7 @@ class FrontendServiceTest extends Unit
      * @param string|null $key
      * @return Page
      */
-    private function createPage(int $id, string $key = null): Page
+    private function createPage(int $id, ?string $key = null): Page
     {
         $page       = new Page;
         $page->id   = $id;

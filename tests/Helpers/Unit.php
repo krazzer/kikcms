@@ -19,6 +19,7 @@ use KikCMS\Services\DataTable\RearrangeService;
 use KikCMS\Services\LanguageService;
 use KikCMS\Services\ModelService;
 use KikCMS\Services\Pages\PageLanguageService;
+use KikCMS\Services\Pages\ExistingPageCacheService;
 use KikCMS\Services\Pages\PageService;
 use KikCMS\Services\Pages\TemplateService;
 use KikCMS\Services\Pages\UrlService;
@@ -128,6 +129,7 @@ class Unit extends \Codeception\Test\Unit
         $di->set('templateService', new TemplateService);
         $di->set('request', new Request);
         $di->set('mailFormService', new MailFormService);
+        $di->set('existingPageCacheService', new ExistingPageCacheService());
         $di->set('cache', $memoryCache);
         $di->set('translator', $translator);
         $di->set('keyValue', $keyValue);

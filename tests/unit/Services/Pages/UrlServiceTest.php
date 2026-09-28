@@ -125,6 +125,8 @@ class UrlServiceTest extends Unit
         $page->type = 'page';
         $page->save();
 
+        $pageLanguage->page = Page::getById(1);
+
         $this->assertEquals('/', $urlService->getUrlForLinkedPage($pageLanguage));
     }
 
@@ -147,21 +149,28 @@ class UrlServiceTest extends Unit
      * @param string $type
      * @return PageLanguage
      */
-    private function createPageLanguage(string $slug, string $key = null, string $type = Page::TYPE_PAGE): PageLanguage
+    private function createPageLanguage(string $slug, ?string $key = null, string $type = Page::TYPE_PAGE): PageLanguage
     {
         $page = new Page();
 
-        $page->type = $type;
-        $page->key  = $key;
-        $page->lft  = null;
-        $page->rgt  = null;
-        $page->link = null;
+        $page->type       = $type;
+        $page->key        = $key;
+        $page->lft        = 1;
+        $page->rgt        = 2;
+        $page->level      = 0;
+        $page->link       = null;
+        $page->created_at = '2020-01-01';
+
         $page->save();
 
         $pageLanguage = new PageLanguage();
         $pageLanguage->setSlug($slug);
-        $pageLanguage->page_id          = $page->getId();
+        $pageLanguage->page_id       = $page->getId();
         $pageLanguage->language_code = 'en';
+        $pageLanguage->name          = 'Hi!';
+        $pageLanguage->active        = 1;
+
+        $pageLanguage->page = $page;
 
         return $pageLanguage;
     }

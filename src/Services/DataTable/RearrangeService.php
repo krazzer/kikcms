@@ -34,13 +34,13 @@ class RearrangeService extends Injectable
     {
         $objectListWithoutDisplayOrder = $this->getObjectListWithoutDisplayOrder($className, $orderField);
 
-        if( ! $objectListWithoutDisplayOrder->count()){
+        if ( ! $objectListWithoutDisplayOrder->count()) {
             return;
         }
 
         $newOrderValue = $this->getMax($className, $orderField);
 
-        foreach ($objectListWithoutDisplayOrder as $object){
+        foreach ($objectListWithoutDisplayOrder as $object) {
             $newOrderValue++;
             $object->$orderField = $newOrderValue;
             $object->save();
@@ -70,9 +70,12 @@ class RearrangeService extends Injectable
      */
     public function makeRoomForFirst(string $model, string $orderField = self::SORTABLE_FIELD): void
     {
-        $where = "1 = 1 ORDER BY " . $orderField . " DESC";
+        $table = $this->dbService->getTableForModel($model);
 
-        $this->dbService->update($model, [$orderField => new RawValue($orderField . " + 1")], $where);
+        $sql = sprintf("UPDATE `%s` SET `%s` = `%s` + 1 ORDER BY `%s` DESC", $table, $orderField, $orderField,
+            $orderField);
+
+        $this->db->execute($sql);
     }
 
     /**
@@ -177,7 +180,7 @@ class RearrangeService extends Injectable
      * @param string $orderField
      * @throws Exception
      */
-    private function updateItem(Model $item, int $displayOrder = null, string $orderField = self::SORTABLE_FIELD): void
+    private function updateItem(Model $item, ?int $displayOrder = null, string $orderField = self::SORTABLE_FIELD): void
     {
         $item->$orderField = $displayOrder;
         $item->save();

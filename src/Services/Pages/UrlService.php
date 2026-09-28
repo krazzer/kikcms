@@ -87,13 +87,14 @@ class UrlService extends Injectable
     public function getPageLanguageByUrlPath(string $urlPath, bool $existsCheck = false): ?PageLanguage
     {
         $urlPath  = $this->removeLeadingSlash($urlPath);
+
+        if ($existsCheck && $this->existingPageCacheService->exists($urlPath) === false) {
+            return null;
+        }
+
         $cacheKey = CacheConfig::PAGE_LANGUAGE_FOR_URL . CacheConfig::SEPARATOR . str_replace('/', '_', $urlPath);
 
-        $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath, $existsCheck) {
-            if ($existsCheck && $this->existingPageCacheService->exists($urlPath) === false) {
-                return null;
-            }
-
+        $cached = $this->cacheService->cache($cacheKey, function () use ($urlPath) {
             $urlMap = $this->getPossibleUrlMapByUrl($urlPath);
 
             foreach ($urlMap as $key => $possibleUrl) {
@@ -133,7 +134,7 @@ class UrlService extends Injectable
      * @param Page|null $aliasPage
      * @return string
      */
-    public function createUrlPathByPageLanguage(PageLanguage $pageLanguage, Page $aliasPage = null): string
+    public function createUrlPathByPageLanguage(PageLanguage $pageLanguage, ?Page $aliasPage = null): string
     {
         $page      = $pageLanguage->page;
         $aliasPage = $aliasPage ?: $page;
@@ -167,7 +168,7 @@ class UrlService extends Injectable
      * @param Page|null $aliasPage
      * @return string
      */
-    public function getUrlByPageLanguage(PageLanguage $pageLanguage, Page $aliasPage = null): string
+    public function getUrlByPageLanguage(PageLanguage $pageLanguage, ?Page $aliasPage = null): string
     {
         // hasn't been stored yet, so can't be cached
         if ( ! isset($pageLanguage->id)) {
@@ -190,7 +191,7 @@ class UrlService extends Injectable
      * @param string|null $languageCode
      * @return string
      */
-    public function getUrlByPageId(int $pageId, string $languageCode = null): string
+    public function getUrlByPageId(int $pageId, ?string $languageCode = null): string
     {
         $languageCode = $languageCode ?: $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageId($pageId, $languageCode);
@@ -209,7 +210,7 @@ class UrlService extends Injectable
      * @param string|null $languageCode
      * @return string
      */
-    public function getUrlByPageKey(string $pageKey, string $languageCode = null): string
+    public function getUrlByPageKey(string $pageKey, ?string $languageCode = null): string
     {
         $cacheKey = CacheConfig::URL_FOR_KEY . CacheConfig::SEPARATOR . $pageKey;
 
@@ -233,7 +234,7 @@ class UrlService extends Injectable
      * @param string|null $languageCode
      * @return string
      */
-    public function getUrlPathByPageKey(string $pageKey, string $languageCode = null): string
+    public function getUrlPathByPageKey(string $pageKey, ?string $languageCode = null): string
     {
         $languageCode = $languageCode ?: $this->translator->getLanguageCode();
         $pageLanguage = $this->pageLanguageService->getByPageKey($pageKey, $languageCode);
@@ -341,13 +342,15 @@ class UrlService extends Injectable
      * @param PageLanguage|null $pageLang
      * @return bool
      */
-    public function urlPathExists(string $urlPath, PageLanguage $pageLang = null): bool
+    public function urlPathExists(string $urlPath, ?PageLanguage $pageLang = null): bool
     {
-        if ( ! $existingPageLang = $this->getPageLanguageByUrlPath($urlPath)) {
+        $existingPageLang = $this->getPageLanguageByUrlPath($urlPath);
+
+        if ( ! $existingPageLang) {
             return false;
         }
 
-        if ( ! $pageLang || ! isset($pageLang->id) || ! property_exists($pageLang, PageLanguage::FIELD_ID)) {
+        if ( ! $pageLang || ! $pageLang->id) {
             return true;
         }
 
