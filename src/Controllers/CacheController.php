@@ -43,6 +43,6 @@ class CacheController extends BaseCmsController
 
         $this->cacheService->clear($key);
 
-        return $this->response->redirect($this->url->get('cacheManager'));
+        return $this->response->redirect($this->url->get('cacheManager'), true);
     }
 }
