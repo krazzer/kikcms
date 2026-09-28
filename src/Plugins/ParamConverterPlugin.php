@@ -69,6 +69,10 @@ class ParamConverterPlugin extends Injectable
                 continue;
             }
 
+            if( ! method_exists($parameter->getType(), 'getName')){
+                continue;
+            }
+
             if( ! $class = $parameter->getType()->getName()){
                 continue;
             }
