@@ -161,7 +161,7 @@ class Twig extends Engine\AbstractEngine
         }));
 
         // add date filter
-        $this->twig->addFilter(new TwigFilter('date', function ($dateTime, string $format = null) use ($di) {
+        $this->twig->addFilter(new TwigFilter('date', function ($dateTime, ?string $format = null) use ($di) {
             if( ! $dateTime){
                 return '';
             }

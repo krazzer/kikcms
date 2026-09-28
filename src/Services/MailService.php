@@ -152,6 +152,10 @@ class MailService extends Injectable
             $from = new Address(array_keys($from)[0], array_values($from)[0]);
         }
 
+        if (is_array($to)) {
+            $to = new Address(array_keys($to)[0], array_values($to)[0]);
+        }
+
         $message = $this->createMessage()
             ->addFrom($from)
             ->subject($subject)

@@ -44,7 +44,7 @@ class TwigService extends Injectable
      * @param array|null $parameters
      * @return bool
      */
-    public function allowed(string $resourceName, string $access = '*', array $parameters = null): bool
+    public function allowed(string $resourceName, string $access = '*', ?array $parameters = null): bool
     {
         return $this->acl->allowed($resourceName, $access, $parameters);
     }
@@ -91,7 +91,7 @@ class TwigService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function mediaFile(mixed $fileId, string $thumb = null, bool $private = false): string
+    public function mediaFile(mixed $fileId, ?string $thumb = null, bool $private = false): string
     {
         if ( ! $fileId) {
             return '';
@@ -116,7 +116,7 @@ class TwigService extends Injectable
      * @param bool $private
      * @return string
      */
-    public function mediaFileBg(mixed $fileId, string $thumb = null, bool $private = false): string
+    public function mediaFileBg(mixed $fileId, ?string $thumb = null, bool $private = false): string
     {
         return "background-image: url('" . $this->mediaFile($fileId, $thumb, $private) . "');";
     }
