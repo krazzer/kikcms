@@ -173,11 +173,13 @@ class MailService extends Injectable
             $message->text(strip_tags($body));
         }
 
-        foreach ($attachments as $path => $name) {
-            if (file_exists($path)) {
-                $message->attachFromPath($path, $name);
+        foreach ($attachments as $path => $nameOrPath) {
+            if (is_string($path) && file_exists($path)) {
+                $message->attachFromPath($path, $nameOrPath);
+            } elseif(is_string($nameOrPath) && file_exists($nameOrPath)) {
+                $message->attachFromPath($nameOrPath);
             } else {
-                throw new Exception('Could not attach file with path: ' . $path . ' and name: ' . $name);
+                throw new Exception('Could not attach file with key: ' . $path . ' and value: ' . $nameOrPath);
             }
         }
 
