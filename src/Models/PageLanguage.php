@@ -32,9 +32,6 @@ class PageLanguage extends Model
     /** @var Page|null */
     private $aliasPage;
 
-    /** @var Page|null */
-    public $page;
-
     /**
      * @inheritDoc
      * @return PageLanguage|null

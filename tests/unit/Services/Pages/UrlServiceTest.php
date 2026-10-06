@@ -8,6 +8,7 @@ use Helpers\Unit;
 use KikCMS\Models\Page;
 use KikCMS\Models\PageLanguage;
 use KikCMS\Services\Pages\UrlService;
+use PHPUnit\Framework\Attributes\UsesFunction;
 
 class UrlServiceTest extends Unit
 {
@@ -65,9 +66,6 @@ class UrlServiceTest extends Unit
         $this->assertEquals('/slug', $urlService->createUrlPathByPageLanguage($pageLanguage));
     }
 
-    /**
-     * @uses \KikCMS\Services\Pages\UrlService::getPageLangAndAliasByKey()
-     */
     public function testGetPageLangAndAliasByKey()
     {
         $urlService = new UrlService();
@@ -123,6 +121,7 @@ class UrlServiceTest extends Unit
         //links to a link
         $page = Page::getById(1);
         $page->type = 'page';
+        $page->link = 1;
         $page->save();
 
         $pageLanguage->page = Page::getById(1);

@@ -29,6 +29,10 @@ class PageLanguageService extends Injectable
             return;
         }
 
+        if( ! $pageLanguage->page){
+            return;
+        }
+
         // menu's and links don't require urls
         if (in_array($pageLanguage->page->type, [Page::TYPE_MENU, Page::TYPE_LINK])) {
             return;
