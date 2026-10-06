@@ -104,3 +104,6 @@ Now go to [https://localhost:9001/cms](https://localhost:9001/cms) to login (use
 
 # How to's
 - [Pagination](resources/readme/pagination.md)
+
+## Run single unit test:
+docker run --net="kikdev" -v /Users/kaz/Projecten/KikCMSPhalcon6/kiksaus/kikcms/:/opt/project -v /Users/kaz/Projecten/KikCMSPhalcon6/kiksaus/kikcms-core/:/opt/project/vendor/kiksaus/kikcms-core -v ~/.docker-kikdev/logs:/var/log/apache2/ --rm kiksaus/kikdev-phalcon6 /opt/project/vendor/bin/codecept run unit /opt/project/tests/unit/[REST_OF_PATH]:[NAME_OF_TEST] -c /opt/project/codeception.yml

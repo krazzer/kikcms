@@ -135,24 +135,24 @@ class PageLanguage extends Model
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId(): int
+    public function getId(): ?int
     {
         if ( ! property_exists($this, self::FIELD_ID)) {
-            return 0;
+            return null;
         }
 
         return (int) $this->id;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getPageId(): int
+    public function getPageId(): ?int
     {
         if ( ! property_exists($this, self::FIELD_PAGE_ID)) {
-            return 0;
+            return null;
         }
 
         return (int) $this->page_id;
