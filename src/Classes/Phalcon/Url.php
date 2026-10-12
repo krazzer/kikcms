@@ -93,7 +93,13 @@ class Url extends \Phalcon\Mvc\Url
             return $this->router;
         }
 
-        $this->router = $this->getDI()->get('router');
+        $router = $this->getDI()->get('router');
+
+        if( ! $router instanceof RouterInterface){
+            return $router;
+        }
+
+        $this->router = $router;
 
         return $this->router;
     }
