@@ -1,10 +1,10 @@
 version: "3"
 services:
   phptest:
-    image: kiksaus/kikdev-phalcon5-cov
+    image: kiksaus/kikdev-phalcon6-pcov
     restart: always
     ports:
-        - "9903:443"
+        - "9904:443"
     volumes:
         - ../tests/TestSitePath/public_html/:/var/www/html:cached
         - ../resources/:/var/www/html/cmsassets:cached
@@ -15,7 +15,7 @@ services:
     networks:
       kikdev:
         aliases:
-          - kikcmstest-phalcon5.dev
+          - kikcmstest-phalcon6.dev
     environment:
       XDEBUG_CONFIG: remote_host=docker.for.mac.host.internal
 
