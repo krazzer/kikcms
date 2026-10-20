@@ -13,7 +13,7 @@ class Url extends \Phalcon\Mvc\Url
     /**
      * @inheritdoc
      */
-    public function get($uri = null, $args = null, bool $local = null, $baseUri = null, bool $replaceArgs = false): string
+    public function get($uri = null, $args = null, ?bool $local = null, $baseUri = null, bool $replaceArgs = false): string
     {
         // transforms parameters
         if ($uri != null && is_string($uri) && $route = $this->getRouter()->getRouteByName($uri)) {
@@ -93,7 +93,13 @@ class Url extends \Phalcon\Mvc\Url
             return $this->router;
         }
 
-        $this->router = $this->getDI()->get('router');
+        $router = $this->getDI()->get('router');
+
+        if( ! $router instanceof RouterInterface){
+            return $router;
+        }
+
+        $this->router = $router;
 
         return $this->router;
     }
