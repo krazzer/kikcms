@@ -427,18 +427,17 @@ class Services extends BaseServices
 
     /**
      * Start the session the first time some component request the session service
+     *
+     * @note In case this error occurs:
+     * "Cannot assign null to property Phalcon\Acl\Adapter\Memory::$functions of type array"
+     * Clear session_ files from the save path
+     *
      * @return SessionManager
      */
     protected function initSession(): SessionManager
     {
-        $sessionPath = $this->getAppConfig()->path . 'storage/session';
-
-        if ( ! is_dir($sessionPath)) {
-            mkdir($sessionPath);
-        }
-
         $session = new SessionManager();
-        $files   = new SessionAdapter(['savePath' => $sessionPath]);
+        $files   = new SessionAdapter(['savePath' => '/tmp', 'prefix' => 'session_']);
 
         $session->setAdapter($files);
         $session->start();
