@@ -559,7 +559,7 @@ class Services extends BaseServices
             }
         ]);
 
-        $view->assets = new Manager(new TagFactory(new Escaper()));
+        $view->assets = $this->get('assets');
 
         return $view;
     }

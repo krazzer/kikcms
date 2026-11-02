@@ -8,77 +8,50 @@ use Phalcon\Html\TagFactory;
 class SafeTagFactory extends TagFactory
 {
     /**
-     * Vangt het aanroepen van de factory als functie volledig in PHP af,
-     * zonder parent::__invoke() aan te roepen om C-extension waarschuwingen te voorkomen.
-     */
-    public function __invoke(...$args)
-    {
-        if (!empty($args) && is_string($args[0])) {
-            $method = array_shift($args);
-            return $this->__call($method, $args);
-        }
-
-        throw new \BadMethodCallException("TagFactory kan niet als functie worden aangeroepen zonder geldige helpernaam.");
-    }
-
-    /**
-     * Vangt dynamische tag-aanroepen op (bijv. $tag->inputText(...))
-     */
-    public function __call(string $method, array $args)
-    {
-        try {
-            return parent::__call($method, $args);
-        } catch (\Throwable $e) {
-            return $this->resolveFallbackHelper($method, $args);
-        }
-    }
-
-    /**
-     * Vangt newInstance af met type-beveiliging tegen null-waardes
+     * @param string $name
+     * @return object
      */
     public function newInstance(string $name): object
     {
-        if ($name === null) {
-            throw new \InvalidArgumentException("Method newInstance verwacht een geldige string als element naam.");
+        if ( ! isset($this->factories[$name])) {
+            throw new \Exception($name);
         }
 
-        try {
-            return parent::newInstance($name);
-        } catch (\Throwable $e) {
-            return $this->resolveFallbackHelper($name, []);
+        if ( ! isset($this->instances[$name])) {
+            $factory = $this->factories[$name];
+
+            $this->instances[$name] = @call_user_func($factory);
         }
+
+        if ( ! $this->instances[$name]) {
+            return $this->resolveFallbackHelper($name);
+        }
+
+        return $this->instances[$name];
     }
 
-    protected function resolveFallbackHelper(?string $name, array $args)
+    /**
+     * @param string $name
+     * @return object
+     */
+    protected function resolveFallbackHelper(string $name): object
     {
-        if ($name === null) {
-            return null;
-        }
-
-        // $escaper = property_exists($this, 'escaper') ? $this->escaper : new Escaper();
         $escaper = new Escaper();
 
-        $className = "\\Phalcon\\Html\\Helper\\" . ucfirst($name);
+        $nameNoInput = strtolower(str_replace('input', '', $name));
+
+        $className      = "\\Phalcon\\Html\\Helper\\" . ucfirst($name);
+        $inputClassName = "\\Phalcon\\Html\\Helper\\Input\\" . ucfirst($nameNoInput);
+        $genericClass   = "\\Phalcon\\Html\\Helper\\Input\\Generic";
+
         if (class_exists($className)) {
-            $helper = new $className($escaper);
-            if (!empty($args)) {
-                return $helper(...$args);
-            }
-            return $helper;
+            return new $className($escaper);
         }
 
-        // Specifieke fallback voor input-elementen (zoals inputText)
-        if (str_starts_with(strtolower($name), 'input')) {
-            $genericClass = "\\Phalcon\\Html\\Helper\\Input\\Generic";
-            if (class_exists($genericClass)) {
-                $helper = new $genericClass($escaper);
-                if (!empty($args)) {
-                    return $helper(...$args);
-                }
-                return $helper;
-            }
+        if (class_exists($inputClassName)) {
+            return new $inputClassName($escaper);
         }
 
-        return null;
+        return new $genericClass($escaper, $this->newInstance('doctype'), $nameNoInput);
     }
 }
