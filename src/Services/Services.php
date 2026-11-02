@@ -8,6 +8,7 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\SafeTagFactory;
 use KikCMS\Classes\Phalcon\SecurityKeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
@@ -467,6 +468,17 @@ class Services extends BaseServices
     protected function initSecurityKeyValue(): Security
     {
         return new SecurityKeyValue();
+    }
+
+    /**
+     * @return SafeTagFactory|TagFactory
+     */
+    protected function initTag(): SafeTagFactory|TagFactory
+    {
+        $escaper = new Escaper();
+
+        // Controleer of we lokaal zijn of op de server, of gebruik altijd de Safe variant
+        return new SafeTagFactory($escaper);
     }
 
     /**
