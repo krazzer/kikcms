@@ -275,7 +275,6 @@ class Services extends BaseServices
 
         $keyValue = new KeyValue($adapter);
         $keyValue->setMemoryCache($this->getShared('cache'));
-        $keyValue->setLogger($this->getShared('logger'));
 
         return $keyValue;
     }
