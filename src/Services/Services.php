@@ -558,7 +558,7 @@ class Services extends BaseServices
             }
         ]);
 
-        $view->assets = $this->get('assets');
+        $view->assets = new Manager(new SafeTagFactory(new Escaper()));
 
         return $view;
     }
