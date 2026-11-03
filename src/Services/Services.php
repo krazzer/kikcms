@@ -8,6 +8,7 @@ use Google\Analytics\Data\V1beta\BetaAnalyticsDataClient;
 use KikCMS\Classes\ErrorLogHandler;
 use KikCMS\Classes\Exceptions\DatabaseConnectionException;
 use KikCMS\Classes\Phalcon\KeyValue;
+use KikCMS\Classes\Phalcon\SafeTagFactory;
 use KikCMS\Classes\Phalcon\SecurityKeyValue;
 use KikCMS\Classes\Phalcon\SecuritySingleToken;
 use KikCMS\Classes\Phalcon\Storage\Adapter\Stream;
@@ -344,6 +345,17 @@ class Services extends BaseServices
     }
 
     /**
+     * @return SafeTagFactory|TagFactory
+     */
+    protected function initTag(): SafeTagFactory|TagFactory
+    {
+        $escaper = new Escaper();
+
+        // Controleer of we lokaal zijn of op de server, of gebruik altijd de Safe variant
+        return new SafeTagFactory($escaper);
+    }
+
+    /**
      * @return Logger
      */
     protected function initLogger(): Logger
@@ -540,7 +552,7 @@ class Services extends BaseServices
             }
         ]);
 
-        $view->assets = new Manager(new TagFactory(new Escaper()));
+        $view->assets = new Manager(new SafeTagFactory(new Escaper()));
 
         return $view;
     }
